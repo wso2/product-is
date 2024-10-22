@@ -20,10 +20,25 @@ package org.wso2.identity.integration.test.rest.api.server.organization.manageme
 
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -31,12 +46,15 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.OAuth2Util;
 
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -49,12 +67,28 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
     private final String invalidM2MToken = "06c1f4e2-3339-44e4-a825-96585e3653b1";
     private final String invalidOrganizationID = "06c1f4e2-3339-44e4-a825-96585e3653b1";
+    protected static final String INVALID_CURSOR = "invalid-cursor";
+
+    private static final String ERROR_CODE_BAD_REQUEST = "UE-10000";
+    private static final String ERROR_CODE_INVALID_PAGINATION_CURSOR = "ORG-60026";
+    private static final String ERROR_CODE_SERVER_ERROR = "SE-50000";
 
     private List<String> organizationIDs = new ArrayList<>();
     private String applicationID;
     private String m2mToken;
+    private String switchedM2MToken;
+    private String b2bApplicationID;
+    private String b2bAppClientId;
+    private String b2bUserID;
     private HttpClient client;
+    private HttpClient httpClientWithoutAutoRedirections;
+
     protected OAuth2RestClient restClient;
+    protected OrgMgtRestClient orgMgtRestClient;
+
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private final CookieStore cookieStore = new BasicCookieStore();
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public OrganizationManagementFailureTest(TestUserMode userMode) throws Exception {
@@ -71,7 +105,22 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
+                new JSONObject(readResource("organization-self-service-apis.json")));
         client = HttpClientBuilder.create().build();
+
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore).build();
     }
 
     @AfterClass(alwaysRun = true)
@@ -79,7 +128,10 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
         super.conclude();
         OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
+        OAuth2Util.deleteApplication(oAuth2RestClient, b2bApplicationID);
         oAuth2RestClient.closeHttpClient();
+        orgMgtRestClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")
@@ -263,6 +315,71 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddDiscoveryAttributesWhenAlreadyAdded")
+    public void prepareForTestInvalidLoginHintParamInAuthRequest() throws Exception {
+
+        switchedM2MToken = orgMgtRestClient.switchM2MToken(organizationIDs.get(0));
+
+        b2bApplicationID = addApplication(B2B_APP_NAME);
+        b2bAppClientId = getAppClientId(b2bApplicationID);
+        shareApplication(b2bApplicationID);
+
+        b2bUserID = createB2BUser(switchedM2MToken);
+    }
+
+    @DataProvider(name = "invalidLoginHintParamDataProvider")
+    public Object[][] invalidLoginHintParamDataProvider() {
+
+        return new Object[][]{
+                // User email with invalid email domain.
+                {"johndoe@cde.com", EMAIL_DOMAIN_DISCOVERY, "Can't+identify+organization"},
+                // Invalid organization discovery type.
+                {B2B_USER_EMAIL, "invalidDiscovery", "invalid.organization.discovery.type"},
+        };
+    }
+
+    @Test(dependsOnMethods = "prepareForTestInvalidLoginHintParamInAuthRequest",
+            dataProvider = "invalidLoginHintParamDataProvider")
+    public void testInvalidLoginHintParamInAuthRequest(String loginHint, String orgDiscoveryType,
+                                                       String expectedErrorMessage) throws Exception {
+
+        List<NameValuePair> queryParams = new ArrayList<>();
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE,
+                OAuth2Constant.OAUTH2_SCOPE_OPENID + PLUS + OAuth2Constant.OAUTH2_SCOPE_EMAIL));
+        queryParams.add(
+                new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.AUTHORIZATION_CODE_NAME));
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+        queryParams.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, b2bAppClientId));
+        queryParams.add(new BasicNameValuePair(LOGIN_HINT_QUERY_PARAM, loginHint));
+        queryParams.add(new BasicNameValuePair(FIDP_QUERY_PARAM, ORGANIZATION_SSO));
+        queryParams.add(new BasicNameValuePair(ORG_DISCOVERY_TYPE_QUERY_PARAM, orgDiscoveryType));
+
+        String endpointURL = buildGetRequestURL(serverURL + AUTHORIZE_ENDPOINT, tenant, queryParams);
+
+        HttpResponse authorizeResponse = sendGetRequest(endpointURL, httpClientWithoutAutoRedirections);
+        Assert.assertNotNull(authorizeResponse, "Authorize response is null.");
+        Assert.assertEquals(authorizeResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Authorize response status code is invalid.");
+        Header authorizeLocationHeader = authorizeResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(authorizeLocationHeader, "Authorize response header location is null.");
+        EntityUtils.consume(authorizeResponse.getEntity());
+
+        URI authoriceResponseRedirectURI = new URI(authorizeLocationHeader.getValue());
+        String errorMsg = Arrays.stream(authoriceResponseRedirectURI.getQuery().split(AMPERSAND))
+                .filter(param -> param.startsWith(AUTH_FAILURE_MSG_QUERY_PARAM))
+                .map(param -> param.split(EQUAL)[1])
+                .findFirst()
+                .orElse(null);
+        Assert.assertEquals(errorMsg, expectedErrorMessage, "Incorrect auth failure message.");
+    }
+
+    @Test(dependsOnMethods = "testInvalidLoginHintParamInAuthRequest")
+    public void cleanupAfterTestInvalidLoginHintParamInAuthRequest() throws Exception {
+
+        unShareApplication(b2bApplicationID);
+        scim2RestClient.deleteSubOrgUser(b2bUserID, switchedM2MToken);
+    }
+
+    @Test(dependsOnMethods = "cleanupAfterTestInvalidLoginHintParamInAuthRequest")
     public void testGetDiscoveryAttributesOfOrganizationsUnauthorized() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
@@ -371,5 +488,111 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
                     .assertThat()
                     .statusCode(HttpStatus.SC_NO_CONTENT);
         }
+    }
+
+    @Test(dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
+    public void testGetPaginatedOrganizationsWithInvalidLimit() {
+
+        String invalidLimitUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "-1";
+        Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidLimit")
+    public void testGetPaginatedOrganizationsWithInvalidAfterCursor() {
+
+        String invalidAfterCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
+                        + AMPERSAND + AFTER_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidAfterCursor")
+    public void testGetPaginatedOrganizationsWithInvalidBeforeCursor() {
+
+        String invalidBeforeCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + "10"
+                        + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
+    }
+
+    @DataProvider(name = "organizationDiscoveryInvalidLimitAndOffsetDataProvider")
+    public Object[][] organizationDiscoveryInvalidLimitAndInvalidOffsetDataProvider() {
+
+        return new Object[][]{
+                {"0", "-1"}, {"5", "-1"}, {"20", "-1"}, {"25", "-1"}, {"", "-1"}, // Invalid limit.
+                {"-1", "0"}, {"-1", "2"}, {"-1", "20"}, {"-1", "25"}, {"-1", ""}, // Invalid offset
+                {"-1", "-1"} // Invalid offset and invalid limit.
+        };
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsWithInvalidAfterCursor",
+            dataProvider = "organizationDiscoveryInvalidLimitAndInvalidOffsetDataProvider")
+    public void testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset(String offset, String limit) {
+
+        String url = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+
+        Response response = getResponseOfGetWithOAuth2(url, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
+    }
+
+    /*
+     * TODO: After the issue https://github.com/wso2/product-is/issues/21025 is fixed,
+     * remove the method testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero
+     * along with its data provider organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider.
+     */
+    @DataProvider(name = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
+    public Object[][] organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider() {
+
+        return new Object[][]{
+                {"20", "0"},
+                {"25", "0"}
+        };
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset",
+            dataProvider = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
+    public void testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero(String offset,
+                                                                                    String limit) {
+
+        String url = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+
+        Response response = getResponseOfGetWithOAuth2(url, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, ERROR_CODE_SERVER_ERROR);
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset")
+    public void testGetPaginatedMetaAttributesWithInvalidLimit() {
+
+        String invalidLimitUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
+                        LIMIT_QUERY_PARAM + EQUAL + "-1";
+        Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedMetaAttributesWithInvalidLimit")
+    public void testGetPaginatedMetaAttributesWithInvalidAfterCursor() {
+
+        String invalidAfterCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
+                        LIMIT_QUERY_PARAM + EQUAL + "10" + AMPERSAND + AFTER_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedMetaAttributesWithInvalidAfterCursor")
+    public void testGetPaginatedMetaAttributesWithInvalidBeforeCursor() {
+
+        String invalidBeforeCursorUrl =
+                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
+                        LIMIT_QUERY_PARAM + EQUAL + "10" + AMPERSAND + BEFORE_QUERY_PARAM + EQUAL + INVALID_CURSOR;
+        Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_PAGINATION_CURSOR);
     }
 }

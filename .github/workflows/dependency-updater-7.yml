@@ -146,14 +146,14 @@ jobs:
           fi
       - name: Archive dependency diff file
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: dependency-updates-diff
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/dependency_updates.diff
       - name: Archive maven-build-log file
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: mvn-build.log
           path: |

@@ -4,6 +4,9 @@
 name: OIDC Conformance Test
 
 on:
+  schedule:
+    # Everyday at 08:30 UTC (2:00 AM SL time)
+    - cron:  '30 20 * * *'
   # Allows the workflow to run automatically after a release
   release:
     types: [published]
@@ -33,7 +36,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: './product-is'
       
@@ -48,18 +51,63 @@ jobs:
         pip3 install psutil
         pip3 install httpx
         pip3 install httplib2
-        
-    - name: Download IS zip
+
+    - name: Clone conformance suite
       run: |
-        INPUT_URL=${{github.event.inputs.download-url}}
+        sudo snap install jq
+        LATEST_RELEASE_BRANCH=$(curl -s https://gitlab.com/api/v4/projects/4175605/releases/ | jq '.[]' | jq -r '.name' | head -1)
+        echo ">>> Conformance suite latest release branch: $LATEST_RELEASE_BRANCH"
+        PROVIDED_VERSION=${{github.event.inputs.conformance-suite-version}}
+        if [[ -z "${PROVIDED_VERSION}" ]]; then
+              CONFORMANCE_SUITE_BRANCH=$LATEST_RELEASE_BRANCH
+              echo ">>> Conformance suite latest release branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            else
+              CONFORMANCE_SUITE_BRANCH=$PROVIDED_VERSION
+              echo ">>> Conformance suite provided branch is taken: $CONFORMANCE_SUITE_BRANCH"
+            fi
+        echo ">>> Selected conformance suite branch: $CONFORMANCE_SUITE_BRANCH"
+        git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
+
+    - name: Adding extra hosts to docker-compose-dev.yml
+      run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
+
+    - name: Get IS zip
+      run: |
         INPUT_TAG=${{github.event.inputs.tag}}
-        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          if [[ -z "${INPUT_URL}" ]] && [[ -z "${INPUT_TAG}" ]]; then
-            echo "Either 'tag' or 'download-url' must be provided."
+        if [[ -z "${INPUT_TAG}" ]]; then
+          echo ">>> Building IS from source..."
+          mkdir cloned-product-is
+          cd cloned-product-is
+          git clone https://github.com/wso2/product-is
+          cd product-is
+          mvn clean install -Dmaven.test.skip=true | tee mvn-build.log
+
+          REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+          echo "==========================================================="
+          echo "BUILD $REPO_BUILD_STATUS"
+          echo "=========================================================="
+
+          if [[ "${REPO_BUILD_STATUS}" != "SUCCESS" ]]; then
             exit 1
           fi
-        fi
-        if [[ -z "${INPUT_URL}" ]]; then
+
+          zip_file=$(find . -name 'wso2is-*.zip' -type f -not -name 'wso2is-*-src.zip' -print -quit)
+
+          if [[ -z "$zip_file" ]]; then
+            echo "Zip file not found"
+            exit 1
+          fi
+
+          echo ">>> Zip file found: $zip_file"
+          echo ">>> Copying zip file to the root directory ..."
+
+          cp "$zip_file" ./../../
+          cd ../..
+          ls
+          echo ">>> Remove cloned-product-is directory"
+          rm -rf cloned-product-is
+          ls
+        else
           owner="wso2"
           repo="product-is"
           if [[ -z "${INPUT_TAG}" ]]; then
@@ -76,43 +124,35 @@ jobs:
           list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
           asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
           curl -vLJO -H 'Accept: application/octet-stream' \
-           "${asset_url}"
-        else
-          curl -vLJO -H 'Accept: application/octet-stream' \
-           "${INPUT_URL}"
+            "${asset_url}"
         fi
-      
-    - name: Clone conformance suite
+
+    - name: Download Jacoco Agent
+      id: download_jacoco
       run: |
-        sudo snap install jq
-        LATEST_RELEASE_BRANCH=$(curl -s https://gitlab.com/api/v4/projects/4175605/releases/ | jq '.[]' | jq -r '.name' | head -1)
-        echo ">>> Conformance suite latest release branch: $LATEST_RELEASE_BRANCH"
-        PROVIDED_VERSION=${{github.event.inputs.conformance-suite-version}}
-        if [[ -z "${PROVIDED_VERSION}" ]]; then
-              CONFORMANCE_SUITE_BRANCH=$LATEST_RELEASE_BRANCH
-              echo ">>> Conformance suite latest release branch is taken: $CONFORMANCE_SUITE_BRANCH"
-            else
-              CONFORMANCE_SUITE_BRANCH=$PROVIDED_VERSION
-              echo ">>> Conformance suite provided branch is taken: $CONFORMANCE_SUITE_BRANCH"
-            fi
-        echo ">>> Selected conformance suite branch: $CONFORMANCE_SUITE_BRANCH"
-        git clone --depth 1 --branch ${CONFORMANCE_SUITE_BRANCH} https://gitlab.com/openid/conformance-suite.git
-    
-    - name: Adding extra hosts to docker-compose-dev.yml
-      run: sed -i '/^    volumes.*/i \ \ \ \ extra_hosts:\n \ \ \ \ - "localhost:\$IP\"' ./conformance-suite/docker-compose-dev.yml
-         
+        curl -vLJO -H 'Accept: application/octet-stream' https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip
+
     - name: Run IS
       run: |
         PRODUCT_IS_ZIP=$(find ./ -name wso2is* -type f -printf "%f\n")
+        ROOT_DIR=$(pwd)
+        touch jacoco.exec
+        echo "PRODUCT_IS_DIR=${PRODUCT_IS_ZIP%.zip}" >> $GITHUB_ENV
         cd ./product-is/oidc-conformance-tests
-        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP
+        python3 ./configure_is.py ../../$PRODUCT_IS_ZIP $ROOT_DIR $ROOT_DIR/jacoco.exec
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: 17
         distribution: temurin
-        
+
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+        docker-compose --version
+
     - name: Run Conformance Suite
       run: |
         DOCKER_COMPOSE_FILE=./docker-compose-dev.yml
@@ -126,7 +166,12 @@ jobs:
         
     - name: Run Tests
       run: bash ./product-is/oidc-conformance-tests/test_runner.sh
-      
+
+    - name: Stop IS
+      id: stop_is
+      run: |
+        sh ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/bin/wso2server.sh stop
+
     - name: Test Results
       run: |
         IS_SUCCESSFUL=false
@@ -148,19 +193,40 @@ jobs:
         fi
       
     - name: Archive test results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results
         path: ./*test_results.zip
         
     - name: Archive test logs
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-logs
         path: ./*log.txt
-    
+
+    - name: Build Jacoco Report Generator
+      run: |
+        cd ./product-is/modules/integration/tests-common/jacoco-report-generator
+        mvn clean install
+        ARTIFACT_ID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        JAR_NAME="${ARTIFACT_ID}-${VERSION}.jar"
+        echo "JAR_NAME=${JAR_NAME}" >> $GITHUB_ENV
+        echo "Report generator jar name: $JAR_NAME"
+
+    - name: Generate Jacoco Report
+      run: |
+        java -jar ./product-is/modules/integration/tests-common/jacoco-report-generator/target/${{ env.JAR_NAME }} ./jacoco.exec ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/deployment/server/webapps ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/plugins ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/repository/components/dropins ./product-is/oidc-conformance-tests/${{ env.PRODUCT_IS_DIR }}/lib/runtimes/cxf3
+
+    - name: Archive Jacoco report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: jacoco-xml
+        path: ./report/jacoco.xml
+
     - name: Send Email
       if: always()
       run: |

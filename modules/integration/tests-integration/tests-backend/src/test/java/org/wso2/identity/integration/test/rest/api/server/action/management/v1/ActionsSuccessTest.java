@@ -132,7 +132,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetActionByActionType"})
-    public void testGetActions() {
+    public void testGetActionTypes() {
 
         Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH + TYPES_API_PATH);
         responseOfGet.then()
@@ -145,17 +145,10 @@ public class ActionsSuccessTest extends ActionsTestBase {
                         notNullValue())
                 .body( "find { it.type == '" + PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE + "' }.count",
                         equalTo(1))
-                .body( "find { it.type == '" + PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE + "' }.self", notNullValue())
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.displayName",
-                        notNullValue())
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.description",
-                        notNullValue())
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.count",
-                        equalTo(0))
-                .body( "find { it.type == '" + PRE_UPDATE_PASSWORD_ACTION_TYPE + "' }.self", notNullValue());
+                .body( "find { it.type == '" + PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE + "' }.self", notNullValue());
     }
 
-    @Test(dependsOnMethods = {"testGetActions"})
+    @Test(dependsOnMethods = {"testGetActionTypes"})
     public void testUpdateAction() {
 
         // Update all the attributes of the action.

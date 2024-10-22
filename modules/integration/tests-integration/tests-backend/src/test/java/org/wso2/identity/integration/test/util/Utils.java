@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.util;
 
+import com.icegreen.greenmail.util.GreenMail;
 import org.apache.catalina.core.StandardHost;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.commons.codec.binary.Base64;
@@ -36,7 +37,6 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -58,7 +58,6 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +78,8 @@ public class Utils {
     public static final String USER_AGENT = "User-Agent";
     public static final String REFERER = "Referer";
     public static final String SET_COOKIE = "Set-Cookie";
+
+    private static GreenMail greenMail;
 
     private static final Log log = LogFactory.getLog(Utils.class);
 
@@ -127,12 +128,20 @@ public class Utils {
         return tomcat;
     }
 
+    public static GreenMail getMailServer() {
+        return greenMail;
+    }
+
+    public static void setMailServer(GreenMail greenMail) {
+        Utils.greenMail = greenMail;
+    }
+
     public static void setSystemProperties(Class classIn) {
 
         System.setProperty("javax.net.ssl.trustStore", FrameworkPathUtil.getSystemResourceLocation() + File.separator +
-                "keystores" + File.separator + "products" + File.separator + "wso2carbon.jks");
+                "keystores" + File.separator + "products" + File.separator + ISIntegrationTest.KEYSTORE_NAME);
         System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+        System.setProperty("javax.net.ssl.trustStoreType", ISIntegrationTest.KEYSTORE_TYPE);
     }
 
     public static HttpResponse sendPOSTMessage(String sessionKey, String url, String userAgent, String
@@ -689,5 +698,24 @@ public class Utils {
         BasicAuthHandler basicAuthHandler = new BasicAuthHandler();
         BasicAuthInfo encodedBasicAuthInfo = (BasicAuthInfo) basicAuthHandler.getAuthenticationToken(basicAuthInfo);
         return encodedBasicAuthInfo.getAuthorizationHeader();
+    }
+
+    /**
+     * Get Java Major Version from System Property.
+     *
+     * @return Java Major Version
+     */
+    public static int getJavaVersion() {
+
+        String version = System.getProperty("java.version");
+        if (version.startsWith("1.")) {
+            version = version.substring(2, 3);
+        } else {
+            int dot = version.indexOf(".");
+            if (dot != -1) {
+                version = version.substring(0, dot);
+            }
+        }
+        return Integer.parseInt(version);
     }
 }

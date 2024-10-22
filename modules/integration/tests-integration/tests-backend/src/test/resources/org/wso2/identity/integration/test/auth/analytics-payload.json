@@ -1,0 +1,39 @@
+{
+  "stringKey": "stringValue",
+  "numberKey": 123,
+  "booleanKey": true,
+  "arrayKey": [
+    "arrayString",
+    456,
+    false,
+    {
+      "nestedObjectInArrayKey": "nestedObjectValue",
+      "nestedArrayInArrayKey": ["nestedArrayValue1", "nestedArrayValue2"]
+    }
+  ],
+  "objectKey": {
+    "objectStringKey": "objectStringValue",
+    "objectNumberKey": 789,
+    "objectBooleanKey": false,
+    "nestedObjectKey": {
+      "nestedObjectStringKey": "nestedObjectStringValue",
+      "nestedObjectArrayKey": [
+        "nestedArrayValue1",
+        101112,
+        true
+      ]
+    },
+    "arrayOfObjectsKey": [
+      {
+        "arrayOfObjectsStringKey": "arrayOfObjectsStringValue1",
+        "arrayOfObjectsNumberKey": 131415,
+        "arrayOfObjectsBooleanKey": true
+      },
+      {
+        "arrayOfObjectsStringKey": "arrayOfObjectsStringValue2",
+        "arrayOfObjectsNumberKey": 161718,
+        "arrayOfObjectsBooleanKey": false
+      }
+    ]
+  }
+}

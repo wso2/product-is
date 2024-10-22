@@ -52,8 +52,12 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.AuthorizingUser;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
@@ -63,6 +67,8 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
@@ -83,6 +89,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase.INBOUND_AUTH_TYPE;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
 
 /**
@@ -105,7 +112,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public static final String OIDC = "oidc";
 	public static final String SAML = "saml";
 	private final static int TOMCAT_PORT = 8490;
-
+	private static final boolean REQUIRES_AUTHORIZATION = true;
 	protected ApplicationManagementServiceClient appMgtclient;
 	protected OauthAdminClient adminClient;
 	protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
@@ -144,6 +151,55 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return createApplication(appDTO, SERVICE_PROVIDER_NAME);
 	}
 
+	/**
+	 * Create application with the given app configurations.
+	 * Audience list and requested claims are considered optional.
+	 * Rest of the configurations are considered mandatory for the application creation from applicationConfig.
+	 *
+	 * @param applicationConfig Application configurations needed for the test case.
+	 * @return Application model created in the server.
+	 * @throws Exception
+	 */
+	public ApplicationResponseModel addApplication(ApplicationConfig applicationConfig) throws Exception {
+
+		if (applicationConfig == null) {
+			return getBasicOAuthApplication(CALLBACK_URL);
+		}
+
+		ApplicationModel application = new ApplicationModel();
+		application.setName(OAUTH_APPLICATION_NAME);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(applicationConfig.getGrantTypes());
+		oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+
+		AccessTokenConfiguration accessTokenConfiguration = new AccessTokenConfiguration();
+		accessTokenConfiguration.type(applicationConfig.getTokenType().getTokenTypeProperty());
+		accessTokenConfiguration.applicationAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+		accessTokenConfiguration.userAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+		oidcConfig.accessToken(accessTokenConfiguration);
+
+		if (applicationConfig.getAudienceList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
+			oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
+		}
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+
+		if (applicationConfig.getRequestedClaimList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
+			application.setClaimConfiguration(
+					buildClaimConfigurationForRequestedClaims(applicationConfig.getRequestedClaimList()));
+		}
+
+		application.advancedConfigurations(
+				new AdvancedApplicationConfiguration().skipLoginConsent(applicationConfig.isSkipConsent())
+						.skipLogoutConsent(applicationConfig.isSkipConsent()));
+
+		String appId = restClient.createApplication(application);
+		return restClient.getApplication(appId);
+	}
+
     public ApplicationResponseModel addApplication() throws Exception {
 
 		ApplicationModel application = new ApplicationModel();
@@ -168,6 +224,35 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		application.setClaimConfiguration(setApplicationClaimConfig()); ;
 
+		String appId = addApplication(application);
+
+		return getApplication(appId);
+	}
+
+	public ApplicationResponseModel addApplicationWithGrantType(String grantType) throws Exception {
+
+		ApplicationModel application = new ApplicationModel();
+
+		List<String> grantTypes = new ArrayList<>();
+		Collections.addAll(grantTypes, grantType);
+
+		List<String> callBackUrls = new ArrayList<>();
+		Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+		OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+		oidcConfig.setGrantTypes(grantTypes);
+		oidcConfig.setCallbackURLs(callBackUrls);
+		AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type("JWT");
+		accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+		accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+		oidcConfig.setAccessToken(accessTokenConfig);
+
+		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+		inboundProtocolsConfig.setOidc(oidcConfig);
+
+		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+		application.setName(SERVICE_PROVIDER_NAME);
+		application.setIsManagementApp(true);
 		String appId = addApplication(application);
 
 		return getApplication(appId);
@@ -430,6 +515,16 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		HttpPost request = new HttpPost(url);
 		request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+		request.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+		return client.execute(request);
+	}
+
+	public HttpResponse sendPostRequest(HttpClient client, List<Header> headerList, List<NameValuePair> urlParameters,
+										String url) throws IOException {
+
+		HttpPost request = new HttpPost(url);
+		request.setHeaders(headerList.toArray(new Header[0]));
 		request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
 		return client.execute(request);
@@ -1077,5 +1172,105 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			return roles.get(0);
 		}
 		return null;
+	}
+
+	/**
+	 * Create a domain API.
+	 *
+	 * @param domainAPICreationModel Domain API creation request model
+	 * @return ID of the created Domain API
+	 */
+	public String createDomainAPI(DomainAPICreationModel domainAPICreationModel) {
+
+		try {
+			return restClient.createDomainAPIResource(domainAPICreationModel);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while creating domain API " +
+					domainAPICreationModel.getName());
+		}
+	}
+
+	/**
+	 * Create a domain API with an external service integrated.
+	 *
+	 * @param externalServiceName Name of the external service to be integrated
+	 * @param externalServiceURI  URL of the external service
+	 * @param domainScopes        Custom scopes related to the domain API
+	 * @return ID of the created domain API resource
+	 */
+	public String createDomainAPI(String externalServiceName, String externalServiceURI,
+								  List<String> domainScopes) {
+
+		DomainAPICreationModel domainAPICreationModel = new DomainAPICreationModel();
+		domainAPICreationModel.setName(externalServiceName);
+		domainAPICreationModel.setIdentifier(externalServiceURI);
+		domainAPICreationModel.setDescription("This is a test external service");
+		domainAPICreationModel.setRequiresAuthorization(REQUIRES_AUTHORIZATION);
+		List<ScopeGetModel> newScopes = new ArrayList<>();
+		domainScopes.forEach(scope -> {
+			ScopeGetModel newCustomScope = new ScopeGetModel();
+			newCustomScope.setName(scope);
+			newCustomScope.setDescription("This is a test scope");
+			newCustomScope.setDisplayName(scope);
+			newScopes.add(newCustomScope);
+		});
+		domainAPICreationModel.setScopes(newScopes);
+		try {
+			return restClient.createDomainAPIResource(domainAPICreationModel);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while creating domain API " +
+					domainAPICreationModel.getName());
+		}
+	}
+
+	/**
+	 * Delete a domain API.
+	 *
+	 * @param domainAPIId ID of the domain API
+	 * @return Status code of the domain API deletion
+	 */
+	public int deleteDomainAPI(String domainAPIId) {
+
+		try {
+			return restClient.deleteDomainAPIResource(domainAPIId);
+		} catch (IOException e) {
+			throw new RuntimeException("Error while deleting domain API of Id " + domainAPIId);
+		}
+	}
+
+	/**
+	 * Authorize a domain API to an application.
+	 *
+	 * @param applicationId ID of the application
+	 * @param domainAPIId ID of the domain API to be authorized
+	 * @param domainScopes Custom scopes related to the domain API
+	 */
+	public void authorizeDomainAPIs(String applicationId, String domainAPIId, List<String> domainScopes) {
+
+		AuthorizedAPICreationModel authorizedDomainAPICreationModel = new AuthorizedAPICreationModel();
+		authorizedDomainAPICreationModel.setId(domainAPIId);
+		authorizedDomainAPICreationModel.setPolicyIdentifier("RBAC");
+		authorizedDomainAPICreationModel.setScopes(domainScopes);
+		try {
+			restClient.addAPIAuthorizationToApplication(applicationId, authorizedDomainAPICreationModel);
+		} catch (Exception e) {
+			throw new RuntimeException("Error while authorizing domain API " +
+					authorizedDomainAPICreationModel.getId() +
+					" to application " + applicationId, e);
+		}
+	}
+
+	private ClaimConfiguration buildClaimConfigurationForRequestedClaims(List<UserClaimConfig> requestedClaimList) {
+
+		ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.LOCAL);
+		for (UserClaimConfig claim : requestedClaimList) {
+			RequestedClaimConfiguration requestedClaimConfiguration = new RequestedClaimConfiguration();
+			requestedClaimConfiguration.setClaim(
+					new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+							claim.getLocalClaimUri()));
+			claimConfiguration.addRequestedClaimsItem(requestedClaimConfiguration);
+		}
+
+		return claimConfiguration;
 	}
 }

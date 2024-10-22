@@ -35,6 +35,12 @@
          Change this to true if you want to generate coverage statistics
         -->
         <coverage>true</coverage>
+        <coverageClassesRelativeDirectories>
+            <coverageClassesRelativeDirectory>repository/deployment/server/webapps</coverageClassesRelativeDirectory>
+            <coverageClassesRelativeDirectory>repository/components/plugins</coverageClassesRelativeDirectory>
+            <coverageClassesRelativeDirectory>repository/components/dropins</coverageClassesRelativeDirectory>
+            <coverageClassesRelativeDirectory>lib/runtimes/cxf3</coverageClassesRelativeDirectory>
+        </coverageClassesRelativeDirectories>
         <!--
          Change this to true if you want to enable framework dashboard
         -->
@@ -57,6 +63,17 @@
             </browser>
         </selenium>
     </tools>
+
+    <!--  SMTP Server configs to be added to the deployment.toml during the initial server startup  -->
+    <emailSenderConfigs>
+        <from_address>admin@wso2.com</from_address>
+        <username>admin</username>
+        <password>admin</password>
+        <hostname>localhost</hostname>
+        <port>3025</port>
+        <enable_start_tls>true</enable_start_tls>
+        <enable_authentication>true</enable_authentication>
+    </emailSenderConfigs>
     <!--
     Database configuration to be used for data service testing. DB configuration in dbs files will be replaced with
                below configuration at test run time
@@ -82,9 +99,9 @@
         -->
         <keystore name="wso2">
             <!--  Keystore file location -->
-            <fileName>keystores/products/wso2carbon.jks</fileName>
+            <fileName>keystores/products/wso2carbon.p12</fileName>
             <!--  Keystore type (JKS/PKCS12 etc.) -->
-            <type>JKS</type>
+            <type>PKCS12</type>
             <!--  Keystore password -->
             <password>wso2carbon</password>
             <!--  Private Key alias -->
@@ -98,9 +115,9 @@
         -->
         <truststore name="wso2">
             <!--  trust-store file location  -->
-            <fileName>client-truststore.jks</fileName>
+            <fileName>client-truststore.p12</fileName>
             <!--  trust-store type (JKS/PKCS12 etc.)  -->
-            <type>JKS</type>
+            <type>PKCS12</type>
             <!--  trust-store password  -->
             <password>wso2carbon</password>
         </truststore>

@@ -34,6 +34,8 @@ headers = {
 }
 # path to product is zip file
 path_to_is_zip = str(sys.argv[1])
+path_to_jacoco_agent = str(sys.argv[2])
+path_to_jacoco_exec = str(sys.argv[3])
 
 
 # use dcr to register a client
@@ -328,6 +330,10 @@ def unpack_and_run(zip_file_name):
             print("Extracting " + zip_file_name)
             zip_file.extractall()
 
+        with ZipFile(path_to_jacoco_agent + "/jacoco-0.8.12.zip", 'r') as jacoco_agent_zip:
+            print("Extracting " + path_to_jacoco_agent)
+            jacoco_agent_zip.extractall(path_to_jacoco_agent + "/jacoco-0.8.12")
+
         dir_name = ''
         # start identity server
         print("\nStarting Server")
@@ -339,6 +345,8 @@ def unpack_and_run(zip_file_name):
                 dir_name = line
                 break
 
+        agent_line = "-javaagent:" + path_to_jacoco_agent + "/jacoco-0.8.12/lib/jacocoagent.jar" + "=destfile=" + path_to_jacoco_exec + ",append=true,includes=org.wso2.carbon.idp.mgt*:org.wso2.carbon.sts*:org.wso2.carbon.user.core*:org.wso2.carbon.user.mgt*:org.wso2.carbon.claim.mgt*:org.wso2.carbon.identity.*:org.wso2.carbon.xkms.mgt* \\"
+        add_jacoco_agent("./" + dir_name + "/bin/wso2server.sh", "-Dwso2.server.standalone=true \\", agent_line)
         os.chmod("./" + dir_name + "/bin/wso2server.sh", 0o777)
         append_toml_config("./config/oidc_deployment_config.toml", "./" + dir_name + "/repository/conf/deployment.toml")
         process = subprocess.Popen("./" + dir_name + "/bin/wso2server.sh", stdout=subprocess.PIPE)
@@ -355,6 +363,20 @@ def unpack_and_run(zip_file_name):
         print()
         raise
 
+def add_jacoco_agent(file, line_to_check, line_to_replace):
+    try:
+        with open(file, 'rb') as src, open(file + ".back", 'wb') as dst: dst.write(src.read())
+        # Read the content from the source TOML file
+        with open(file + ".back") as fin, open(file, 'w') as fout:
+                for line in fin:
+                    lineout = line
+                    if line.strip() == line_to_check:
+                        lineout = f"{line_to_check}\n{line_to_replace}\n"
+                    fout.write(lineout)
+    except FileNotFoundError as e:
+        print(f"The file does not exist: {e}")
+    except IOError as e:
+        print(f"An error occurred: {e}")
 
 # Append additional toml configs to the existing deployment toml file.
 def append_toml_config(source_file, destination_file):

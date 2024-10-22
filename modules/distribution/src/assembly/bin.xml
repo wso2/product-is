@@ -1039,13 +1039,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/repository/resources/security/wso2carbon.jks
+            <source>src/repository/resources/security/wso2carbon.p12
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/security</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/repository/resources/security/client-truststore.jks
+            <source>src/repository/resources/security/client-truststore.p12
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/security</outputDirectory>
             <fileMode>644</fileMode>
