@@ -51,6 +51,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
@@ -63,7 +64,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
@@ -74,13 +74,10 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCO
  */
 public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private static final String JWT = "JWT";
-    private static final String API_USERS_V1_OFFLINE_INVITE_LINK = "/api/users/v1/offline-invite-link/";
     public static final String SCIM2_BULK = "/scim2/Bulk";
     public static final String OAUTH2_INTROSPECT = "/oauth2/introspect";
     private static final String INTERNAL_BULK_RESOURCE_CREATE = "internal_bulk_resource_create";
     private static final String INTERNAL_OFFLINE_INVITE = "internal_offline_invite";
-    private static final String SCOPE = "scope";
     private String accessToken;
     private String consumerKey;
     private String consumerSecret;
@@ -89,6 +86,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
     private final AutomationContext context;
     private Tenant tenantInfo;
     private String applicationId;
+    private OpenIDConnectConfiguration oidcConfig;
 
     private CloseableHttpClient client;
 
@@ -137,7 +135,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
 
         ApplicationResponseModel application = addApplication();
 
-        String applicationId = application.getId();
+        applicationId = application.getId();
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             // Authorize few system APIs.
             authorizeSystemAPIs(applicationId,
@@ -145,7 +143,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         }
         Assert.assertNotNull(application, "OAuth App creation failed.");
 
-        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
+        oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
 
         consumerKey = oidcConfig.getClientId();
         Assert.assertNotNull(consumerKey, "Application creation failed.");
@@ -167,7 +165,8 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         TokenRequest request = new TokenRequest(tokenEndpoint, clientAuth, clientCredentialsGrant, scope);
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
-
+        Assert.assertEquals(tokenHTTPResp.getContentType().toString(), "application/json",
+                "Token response did not indicate correct token response");
         TokenResponse tokenResponse = TokenResponse.parse(tokenHTTPResp);
         Assert.assertTrue(tokenResponse.indicatesSuccess(),
                 "Token response did not indicate success. Token request has failed.");
@@ -195,6 +194,18 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         Assert.assertFalse(scopesInResponse.contains(OAUTH2_SCOPE_OPENID), "Client credentials cannot get openid scope.");
     }
 
+    @Test(groups = "wso2.is", description = "Validate access token",
+            dependsOnMethods = "testGetTokenUsingClientCredentialsGrant")
+    public void testValidateAccessToken() throws Exception {
+
+        String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
+        org.json.simple.JSONObject responseObj = introspectTokenWithTenant(client, accessToken, introspectionUrl,
+                username, userPassword);
+        Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
+        Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
+    }
+
     @Test(groups = "wso2.is", description = "Send client credentials token request with invalid client Id.",
             dependsOnMethods = "testGetTokenUsingClientCredentialsGrant")
     public void testGetTokenUsingCCGrantWithInvalidClientId() throws Exception {
@@ -215,7 +226,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
                 "Token response indicated success. Token request should fail with invalid client id.");
 
         TokenErrorResponse accessTokenResponse = (TokenErrorResponse) tokenResponse;
-        ErrorObject errorObject =  accessTokenResponse.getErrorObject();
+        ErrorObject errorObject = accessTokenResponse.getErrorObject();
         Assert.assertEquals(errorObject.getHTTPStatusCode(), HttpStatus.SC_UNAUTHORIZED,
                 "Invalid access token response doesn't contain bad request status code.");
         Assert.assertEquals(errorObject.getCode(), "invalid_client",
@@ -245,7 +256,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
                 "Token response indicated success. Token request should fail with invalid client id.");
 
         TokenErrorResponse accessTokenResponse = (TokenErrorResponse) tokenResponse;
-        ErrorObject errorObject =  accessTokenResponse.getErrorObject();
+        ErrorObject errorObject = accessTokenResponse.getErrorObject();
         Assert.assertEquals(errorObject.getHTTPStatusCode(), HttpStatus.SC_UNAUTHORIZED,
                 "Invalid access token response doesn't contain bad request status code.");
         Assert.assertEquals(errorObject.getCode(), "invalid_client",
@@ -288,15 +299,20 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
                 "Invalid access token response doesn't contain required error description.");
     }
 
-    @Test(groups = "wso2.is", description = "Validate access token",
-            dependsOnMethods = "testGetTokenUsingClientCredentialsGrant")
-    public void testValidateAccessToken() throws Exception {
+    @Test(groups = "wso2.is", description = "Perform client credentials token request tests for JWT token type.",
+            dependsOnMethods = "testGetTokenUsingCCGrantWithoutCredentials")
+    public void testGetTokenUsingCCGrantForJWTToken() throws Exception {
 
-        String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
-                OAuth2Constant.INTRO_SPEC_ENDPOINT : OAuth2Constant.TENANT_INTRO_SPEC_ENDPOINT;
-        org.json.simple.JSONObject responseObj = introspectTokenWithTenant(client, accessToken, introspectionUrl,
-                username, userPassword);
-        Assert.assertNotNull(responseObj, "Validate access token failed. response is invalid.");
-        Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
+        AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type("JWT");
+        accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+        accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+
+        oidcConfig.setAccessToken(accessTokenConfig);
+        updateApplicationInboundConfig(applicationId, oidcConfig, OIDC);
+        testGetTokenUsingClientCredentialsGrant();
+        testValidateAccessToken();
+        testGetTokenUsingCCGrantWithInvalidClientId();
+        testGetTokenUsingCCGrantWithInvalidClientCredentials();
+        testGetTokenUsingCCGrantWithoutCredentials();
     }
 }
