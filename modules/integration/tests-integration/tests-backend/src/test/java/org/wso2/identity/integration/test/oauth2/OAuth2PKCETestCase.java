@@ -90,7 +90,6 @@ public class OAuth2PKCETestCase extends OAuth2ServiceAbstractIntegrationTest {
     private String applicationId;
     private String pkceVerifier;
 
-
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
