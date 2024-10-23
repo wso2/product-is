@@ -30,6 +30,7 @@ import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.m
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -148,5 +149,32 @@ public class TenantFailureTest extends TenantManagementBaseTest {
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "TM-60020", tenantId);
     }
 
+    @Test
+    public void testGetTenantsInvalidFilterFormat() {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + "?filter=invalid format");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "TM-60022");
+    }
+
+    @Test
+    public void testGetTenantsUnsupportedFilterAttribute() {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + "?filter=username eq mail.com");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "TM-60023", "username");
+    }
+
+    @Test
+    public void testGetTenantsInvalidFilterOperation() {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + "?filter=domainName invalid_op abc.com");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "TM-60024", "domainName");
+    }
+
+    @Test
+    public void testGetTenantsFilterIllegalDomain() {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + "?filter=domainName eq abc*");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "TM-60007");
+    }
 
 }

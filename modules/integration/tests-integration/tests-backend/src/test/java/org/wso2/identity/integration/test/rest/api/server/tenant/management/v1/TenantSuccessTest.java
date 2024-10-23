@@ -119,7 +119,7 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("id", equalTo(tenantId))
-                .body("domain", equalTo("abc1.com"))
+                .body("domain", equalTo(TENANT_DOMAIN_NAME))
                 .body(baseIdentifier, notNullValue());
         TenantResponseModel tenantResponseModel = response.getBody().as(TenantResponseModel.class);
         userId = tenantResponseModel.getOwners().get(0).getId();
@@ -182,5 +182,43 @@ public class TenantSuccessTest extends TenantManagementBaseTest {
                 .body("username", equalTo("kim"))
                 .body( "lastname", equalTo("lee"))
                 .body(claimsIdentifier + ".value", equalTo("+94 77 123 4568"));
+    }
+
+    @Test(dependsOnMethods = {"testGetTenant"})
+    public void testGetFilteredTenantsEqual() {
+
+        String baseIdentifier = "tenants.find{ it.id == '" + tenantId + "' }.";
+        String activeStatusIdentifier = "owners.find{ it.id == '" + userId + "' }.";
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + "?filter=domainName eq "
+                + TENANT_DOMAIN_NAME);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1))
+                .body(baseIdentifier + "domain", equalTo("abc1.com"))
+                .body(baseIdentifier + activeStatusIdentifier + "username", equalTo("kim"));
+    }
+
+    @Test(dependsOnMethods = {"testAddTenant"})
+    public void testGetFilteredTenantsContains() {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + "?filter=domainName co abc1");
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(1));
+    }
+
+    @Test
+    public void testGetFilteredTenantsNotAvailable() {
+
+        Response response = getResponseOfGet(TENANT_API_BASE_PATH + "?filter=domainName eq abc99.com");
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(0));
     }
 }
