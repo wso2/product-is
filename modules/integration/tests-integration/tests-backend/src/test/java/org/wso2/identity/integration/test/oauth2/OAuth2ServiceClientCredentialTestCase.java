@@ -166,7 +166,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         HTTPResponse tokenHTTPResp = request.toHTTPRequest().send();
         Assert.assertNotNull(tokenHTTPResp, "Access token http response is null.");
         Assert.assertEquals(tokenHTTPResp.getContentType().toString(), "application/json",
-                "Token response did not indicate correct token response");
+                "Token response did not indicate correct token response.");
         TokenResponse tokenResponse = TokenResponse.parse(tokenHTTPResp);
         Assert.assertTrue(tokenResponse.indicatesSuccess(),
                 "Token response did not indicate success. Token request has failed.");
@@ -269,7 +269,6 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
     @Test(groups = "wso2.is", description = "Send client credentials token request without client secret.",
             dependsOnMethods = "testGetTokenUsingCCGrantWithInvalidClientCredentials")
     public void testGetTokenUsingCCGrantWithoutCredentials() throws Exception {
-
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
