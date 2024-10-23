@@ -130,7 +130,6 @@ public class NotificationSystemTemplatesPositiveTest extends NotificationTemplat
     @Test(groups = "wso2.is")
     public void testGetSystemEmailTemplateOfTemplateType()  {
 
-
         String testSystemEmailTemplateTypeId = base64String(TEMPLATE_TYPE_SYSTEM_EMAIL);
         String resourcePath = EMAIL_TEMPLATES_PATH + TEMPLATE_TYPES_PATH + PATH_SEPARATOR
                 + testSystemEmailTemplateTypeId + SYSTEM_TEMPLATES_PATH + PATH_SEPARATOR
