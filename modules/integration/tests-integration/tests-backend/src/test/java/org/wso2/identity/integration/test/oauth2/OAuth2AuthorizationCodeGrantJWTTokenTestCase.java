@@ -67,6 +67,7 @@ import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
@@ -322,11 +323,8 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
 
         applicationConfig.getRequestedClaimList().forEach(claim -> {
             if (authorizingUser.getUserClaims().get(claim) != null) {
-                assertNotNull(accessTokenClaims.getClaim(claim.getOidcClaimUri()),
-                        "Claim " + claim.getOidcClaimUri() + " not found in the access token.");
-                assertEquals(accessTokenClaims.getClaim(claim.getOidcClaimUri()),
-                        authorizingUser.getUserClaims().get(claim),
-                        "Value for claim " + claim.getOidcClaimUri() + " is incorrect in the access token.");
+                assertNull(accessTokenClaims.getClaim(claim.getOidcClaimUri()),
+                        "User claim " + claim.getOidcClaimUri() + " found in the access token.");
             }
         });
     }
