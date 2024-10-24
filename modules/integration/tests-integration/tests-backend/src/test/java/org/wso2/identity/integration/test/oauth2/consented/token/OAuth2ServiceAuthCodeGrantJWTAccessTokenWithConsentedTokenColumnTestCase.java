@@ -241,13 +241,12 @@ public class OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTes
 
         // Check if user claims are present in access token.
         JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(accessToken.split("\\.")[1])));
-        boolean assertion = false;
         try {
             Object emailClaim = jwtJsonObject.get(EMAIL_OIDC_CLAIM);
+            Assert.fail("Requested user claim (email) is present in the JWT access token.");
         } catch (JSONException e) {
-            assertion = true;
+            Assert.assertTrue(true, "Requested user claim (email) is present in the JWT access token.");
         }
-        Assert.assertTrue(assertion, "Requested user claim (email) is present in the JWT access token.");
 
         // Get the user info from the ID token.
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM).toString(), USER_EMAIL,
