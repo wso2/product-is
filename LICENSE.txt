@@ -663,6 +663,7 @@ org.wso2.carbon.identity.api.server.branding.preference.management.v1-1.2.176.ja
 org.wso2.carbon.identity.api.server.oidc.scope.management.common-1.2.176.jar                        bundle         apache2
 org.wso2.carbon.identity.api.server.userstore.common-1.2.176.jar                                    bundle         apache2
 org.wso2.carbon.identity.rest.api.server.email.template.v1-1.2.176.jar                              bundle         apache2
+org.wso2.carbon.identity.rest.api.server.notification.template.v1-1.2.176.jar                       bundle         apache2
 org.wso2.carbon.identity.api.server.script.library.common-1.2.176.jar                               bundle         apache2
 org.wso2.carbon.identity.api.server.input.validation.common-1.2.176.jar                             bundle         apache2
 org.wso2.carbon.identity.api.server.authenticators.common-1.2.176.jar                               bundle         apache2
@@ -714,6 +715,7 @@ org.wso2.carbon.identity.rest.api.user.fido2.v1-1.3.36.jar                      
 org.wso2.carbon.identity.api.server.extension.management.common-1.2.176.jar                         bundle         apache2
 org.wso2.carbon.identity.api.server.secret.management.common-1.2.176.jar                            bundle         apache2
 org.wso2.carbon.identity.api.server.email.template.common-1.2.176.jar                               bundle         apache2
+org.wso2.carbon.identity.api.server.notification.template.common-1.2.176.jar                        bundle         apache2
 org.wso2.carbon.identity.api.server.extension.management.v1-1.2.176.jar                             bundle         apache2
 org.wso2.carbon.identity.api.server.organization.configs.v1-1.2.176.jar                             bundle         apache2
 org.wso2.carbon.identity.api.server.script.library.v1-1.2.176.jar                                   bundle         apache2

@@ -1,0 +1,7 @@
+{
+  "contentType": "{{contentType}}",
+  "subject": "{{subject}}",
+  "body": "{{body}}",
+  "footer": "{{footer}}",
+  "locale": "{{locale}}"
+}
