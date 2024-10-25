@@ -93,25 +93,36 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private CloseableHttpClient client;
+    private final TestUserMode userMode;
     private final AutomationContext context;
+    private final String activeTenant;
+    private String deviceAuthEndpoint;
+    private String deviceAuthPageEndpoint;
+    private String deviceEndpoint;
+    private String tokenEndpoint;
+
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_USER, TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_USER, TestUserMode.TENANT_ADMIN}
+        };
     }
 
     @Factory(dataProvider = "configProvider")
-    public OAuth2DeviceFlowTestCase(TestUserMode userMode) throws Exception {
+    public OAuth2DeviceFlowTestCase(TestUserMode userMode, TestUserMode adminMode) throws Exception {
 
-        super.init(userMode);
-        context = new AutomationContext("IDENTITY", userMode);
+        context = new AutomationContext("IDENTITY", adminMode);
+        this.userMode = userMode;
+        this.activeTenant = context.getContextTenant().getDomain();
     }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
+        super.init(userMode);
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -126,6 +137,26 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
                 .build();
 
         setSystemproperties();
+        setServerEndpoints();
+    }
+
+    private void setServerEndpoints() throws Exception {
+
+        String deviceAuthEndpointBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device_authorize");
+        deviceAuthEndpoint = getTenantQualifiedURL(deviceAuthEndpointBaseUrl, activeTenant);
+
+        String deviceAuthPageBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "authenticationendpoint/device.do");
+        deviceAuthPageEndpoint = getTenantQualifiedURL(deviceAuthPageBaseUrl, activeTenant);
+
+        String deviceEndpointBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device");
+        deviceEndpoint = getTenantQualifiedURL(deviceEndpointBaseUrl, activeTenant);
+
+        String tokenEndpointBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/token");
+        tokenEndpoint = getTenantQualifiedURL(tokenEndpointBaseUrl, activeTenant);
     }
 
     @AfterClass(alwaysRun = true)
@@ -163,8 +194,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
-        String deviceAuthEndpoint = context.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/device_authorize");
         JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
         deviceCode = responseObject.get(DEVICE_CODE).toString();
         userCode = responseObject.get(USER_CODE).toString();
@@ -174,12 +203,10 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
                 "interval period is incorrect.");
         Assert.assertEquals(responseObject.get(EXPIRES_IN).toString(), "600",
                 "interval period is incorrect.");
-        Assert.assertEquals(responseObject.get(VERIFICATION_URI).toString(), context.getContextUrls().getBackEndUrl()
-                        .replace("services/", "authenticationendpoint/device.do"),
+        Assert.assertEquals(responseObject.get(VERIFICATION_URI).toString(), deviceAuthPageEndpoint,
                 "verification uri is incorrect.");
         Assert.assertEquals(responseObject.get(VERIFICATION_URI_COMPLETE).toString(),
-                context.getContextUrls().getBackEndUrl()
-                .replace("services/", "authenticationendpoint/device.do") + "?user_code=" + userCode ,
+                deviceAuthPageEndpoint + "?user_code=" + userCode ,
                 "complete verification uri is incorrect.");
     }
 
@@ -215,9 +242,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        String authenticationEndpoint = context.getContextUrls().getBackEndUrl()
-                .replace("services/", "authenticationendpoint/device.do");
-        String response = responsePost(urlParameters,authenticationEndpoint);
+        String response = responsePost(urlParameters, deviceAuthPageEndpoint);
         Assert.assertNotNull(response, "Authorized response is null");
     }
     
@@ -227,8 +252,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        String deviceEndpoint = context.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/device");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, deviceEndpoint);
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -328,8 +351,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
-        String deviceAuthEndpoint = context.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/device_authorize");
         JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
         String error = responseObject.get(ERROR).toString();
         String errorDescription = responseObject.get(ERROR_DESCRIPTION).toString();
@@ -345,8 +366,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, "invalidConsumerKey"));
         urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
-        String deviceAuthEndpoint = context.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/device_authorize");
         JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
         String error = responseObject.get(ERROR).toString();
         String errorDescription = responseObject.get(ERROR_DESCRIPTION).toString();
@@ -363,8 +382,6 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         testSendDeviceAuthorize();
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, "invalidUserCode"));
-        String deviceEndpoint = context.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/device");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, deviceEndpoint);
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -461,7 +478,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
             urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
         }
 
-        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        HttpPost request = new HttpPost(tokenEndpoint);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = client.execute(request);
