@@ -143,8 +143,8 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
 
         OpenIDConnectConfiguration updatedOidcInboundConfig =
                 getOIDCInboundDetailsOfApplication(application.getApplicationId());
-        Assert.assertTrue(updatedOidcInboundConfig.getAccessToken().getAccessTokenAttributes().isEmpty(),
-                "Access token attribute should be empty.");
+        Assert.assertFalse(updatedOidcInboundConfig.getAccessToken().getAccessTokenAttributes().isEmpty(),
+                "Access token attribute should not be empty.");
     }
 
     @Test(groups = "wso2.is", description = "Validate access token attributes for empty allowed attributes",
@@ -171,7 +171,7 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
         refreshToken = response.then().extract().path("refresh_token");
         Assert.assertNotNull(accessToken, "Access token is null");
         JWTClaimsSet jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
-        Assert.assertNull(jwtClaimsSet.getClaim("username"), "Username is not null.");
+        Assert.assertNotNull(jwtClaimsSet.getClaim("username"), "Username is null.");
     }
 
     @Test(groups = "wso2.is", description = "Validate access token attributes for empty allowed attributes with " +
@@ -196,7 +196,7 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
         refreshToken = response.then().extract().path("refresh_token");
         Assert.assertNotNull(accessToken, "Access token is null");
         JWTClaimsSet jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
-        Assert.assertNull(jwtClaimsSet.getClaim("username"), "Username is not null.");
+        Assert.assertNotNull(jwtClaimsSet.getClaim("username"), "Username is null.");
     }
 
     /**

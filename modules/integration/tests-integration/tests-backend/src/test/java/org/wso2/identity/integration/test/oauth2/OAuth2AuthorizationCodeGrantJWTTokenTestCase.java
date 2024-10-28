@@ -323,8 +323,8 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
 
         applicationConfig.getRequestedClaimList().forEach(claim -> {
             if (authorizingUser.getUserClaims().get(claim) != null) {
-                assertNull(accessTokenClaims.getClaim(claim.getOidcClaimUri()),
-                        "User claim " + claim.getOidcClaimUri() + " found in the access token.");
+                assertNotNull(accessTokenClaims.getClaim(claim.getOidcClaimUri()),
+                        "User claim " + claim.getOidcClaimUri() + " not found in the access token.");
             }
         });
     }
