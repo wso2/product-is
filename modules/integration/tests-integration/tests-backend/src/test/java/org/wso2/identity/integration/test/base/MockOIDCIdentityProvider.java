@@ -30,6 +30,7 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import org.wso2.carbon.utils.security.KeystoreUtils;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.FileInputStream;
@@ -212,7 +213,7 @@ public class MockOIDCIdentityProvider {
 
         Path tenantKeystorePath = Paths.get(home, "repository", "resources", "security", keystoreName);
         FileInputStream file = new FileInputStream(tenantKeystorePath.toString());
-        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+        KeyStore keystore = KeystoreUtils.getKeystoreInstance(KeyStore.getDefaultType());
         keystore.load(file, password.toCharArray());
         return keystore;
     }

@@ -53,6 +53,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+import org.wso2.carbon.utils.security.KeystoreUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
@@ -278,7 +279,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
 
     private void initServiceProviderKeys() throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance(ISIntegrationTest.KEYSTORE_TYPE);
+        KeyStore keyStore = KeystoreUtils.getKeystoreInstance(ISIntegrationTest.KEYSTORE_TYPE);
         String pkcs12Path = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
                 File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
         String pkcs12Password = "wso2carbon";
