@@ -44,10 +44,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.utils.security.KeystoreUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
@@ -80,9 +82,14 @@ import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import sun.security.provider.X509Factory;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyStore;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -117,6 +124,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected OauthAdminClient adminClient;
 	protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 	protected OAuth2RestClient restClient;
+	protected RSAPrivateKey spPrivateKey;
+	protected X509Certificate spX509PublicCert;
 
 
 	/**
@@ -1272,5 +1281,24 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		}
 
 		return claimConfiguration;
+	}
+
+	protected void initServiceProviderKeys() throws Exception {
+
+		KeyStore keyStore = KeystoreUtils.getKeystoreInstance(ISIntegrationTest.KEYSTORE_TYPE);
+		String pkcs12Path = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
+				File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
+		String pkcs12Password = "wso2carbon";
+
+		keyStore.load(Files.newInputStream(Paths.get(pkcs12Path)), pkcs12Password.toCharArray());
+
+		String alias = "wso2carbon";
+		KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
+				new KeyStore.PasswordProtection(pkcs12Password.toCharArray()));
+		spPrivateKey = (RSAPrivateKey) pkEntry.getPrivateKey();
+
+		// Load certificate chain
+		java.security.cert.Certificate[] chain = keyStore.getCertificateChain(alias);
+		spX509PublicCert = (X509Certificate) chain[0];
 	}
 }
