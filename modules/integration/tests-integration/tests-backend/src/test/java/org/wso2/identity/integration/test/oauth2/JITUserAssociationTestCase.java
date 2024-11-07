@@ -143,8 +143,6 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
  */
 public class JITUserAssociationTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String SHARE_FEDERATED_TOKEN_CONFIG = "ShareFederatedToken";
-    private static final String FEDERATED_TOKEN_ALLOWED_SCOPE = "FederatedTokenAllowedScope";
     private static final String PRIMARY_IS_SP_NAME = "travelocity";
     private static final String PRIMARY_IS_IDP_NAME = "trustedIdP";
     private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
@@ -161,9 +159,6 @@ public class JITUserAssociationTestCase extends AbstractIdentityFederationTestCa
     private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:9854/oidc/logout";
     private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9854/oauth2/authorize";
     private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
-    private static final String TRUE = "true";
-    private static final String SCOPES_APPROVED_FOR_TOKEN_SHARING =
-            "https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar";
     private static final String NAME_KEY = "name";
     private static final String GIVEN_NAME_KEY = "givenName";
     private static final String FAMILY_NAME_KEY = "familyName";
@@ -204,7 +199,7 @@ public class JITUserAssociationTestCase extends AbstractIdentityFederationTestCa
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.TENANT_ADMIN}};
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
     }
 
     @Factory(dataProvider = "configProvider")
@@ -227,9 +222,9 @@ public class JITUserAssociationTestCase extends AbstractIdentityFederationTestCa
         createServiceClients(PORT_OFFSET_1, new IdentityConstants.ServiceClientType[]{
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT});
 
-        createApplicationInSecondaryIS();//Create application in Google and obtain the clientID and the clientSecret
-        createIDPInPrimaryIS();//Google IDP in IS
-        createApplicationInPrimaryIS();// CallMeName app in IS
+        createApplicationInSecondaryIS();
+        createIDPInPrimaryIS();
+        createApplicationInPrimaryIS();
 
         secondaryISScim2RestClient = new SCIM2RestClient(getSecondaryISURI(), tenantInfo);
         primaryISScim2RestClient = new SCIM2RestClient(getPrimaryISURI(), tenantInfo);
@@ -607,14 +602,6 @@ public class JITUserAssociationTestCase extends AbstractIdentityFederationTestCa
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key(IdentityConstants.Authenticator.OIDC.OIDC_LOGOUT_URL)
                         .value(SECONDARY_IS_LOGOUT_ENDPOINT))
-                // Enable sharing federated token
-                .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
-                        .key(SHARE_FEDERATED_TOKEN_CONFIG)
-                        .value(TRUE))
-                // Configuring the allowed scope for federated sharing
-                .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
-                        .key(FEDERATED_TOKEN_ALLOWED_SCOPE)
-                        .value(SCOPES_APPROVED_FOR_TOKEN_SHARING))
                 .addProperty(new org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property()
                         .key("commonAuthQueryParams")
                         .value("scope=" + OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
