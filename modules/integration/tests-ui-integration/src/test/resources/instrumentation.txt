@@ -9,8 +9,6 @@ org.wso2.carbon.identity.authorization.core_
 org.wso2.carbon.identity.base_
 org.wso2.carbon.identity.certificateauthority_
 org.wso2.carbon.identity.core_
-org.wso2.carbon.identity.entitlement_
-org.wso2.carbon.identity.entitlement.common_
 org.wso2.carbon.identity.mgt_
 org.wso2.carbon.identity.oauth_
 org.wso2.carbon.identity.oauth.common_
