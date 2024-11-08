@@ -31,6 +31,7 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.wso2.carbon.utils.security.KeystoreUtils;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.FileInputStream;
@@ -71,7 +72,7 @@ public class MockOIDCIdentityProvider {
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
                 .httpsPort(8089)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
-                        "wso2carbon.p12").toAbsolutePath().toString())
+                        ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())
                 .keystorePassword("wso2carbon")
                 .keyManagerPassword("wso2carbon")
                 .extensions(
@@ -179,7 +180,7 @@ public class MockOIDCIdentityProvider {
 
     private String buildIdToken() throws Exception {
 
-        KeyStore wso2KeyStore = getKeyStoreFromFile("wso2carbon.p12", "wso2carbon",
+        KeyStore wso2KeyStore = getKeyStoreFromFile(ISIntegrationTest.KEYSTORE_NAME, "wso2carbon",
                 Utils.getResidentCarbonHome());
         RSAPrivateKey rsaPrivateKey = (RSAPrivateKey) wso2KeyStore.getKey("wso2carbon", "wso2carbon".toCharArray());
 
@@ -213,7 +214,7 @@ public class MockOIDCIdentityProvider {
 
         Path tenantKeystorePath = Paths.get(home, "repository", "resources", "security", keystoreName);
         FileInputStream file = new FileInputStream(tenantKeystorePath.toString());
-        KeyStore keystore = KeystoreUtils.getKeystoreInstance(KeyStore.getDefaultType());
+        KeyStore keystore = KeystoreUtils.getKeystoreInstance(ISIntegrationTest.KEYSTORE_TYPE);
         keystore.load(file, password.toCharArray());
         return keystore;
     }
