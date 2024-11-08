@@ -42,6 +42,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
+import org.wso2.carbon.utils.security.KeystoreUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
@@ -282,7 +283,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
 
     private void initServiceProviderKeys() throws Exception {
 
-        KeyStore keyStore = KeyStore.getInstance(ISIntegrationTest.KEYSTORE_TYPE);
+        KeyStore keyStore = KeystoreUtils.getKeystoreInstance(ISIntegrationTest.KEYSTORE_TYPE);
         String pkcs12Path = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
                 File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
         String pkcs12Password = "wso2carbon";
