@@ -1,0 +1,38 @@
+{
+  "name": "Custom Auth IDP",
+  "description": "IdP with user defined federated authenticator",
+  "image": "https://example.com/image",
+  "isPrimary": false,
+  "isFederationHub": false,
+  "homeRealmIdentifier": "localhost",
+  "alias": "https://localhost:9444/oauth2/token",
+  "claims": {
+    "userIdClaim": {
+      "uri": "http://wso2.org/claims/username"
+    },
+    "roleClaim": {
+      "uri": "http://wso2.org/claims/role"
+    },
+    "provisioningClaims": [
+      {
+        "claim": {
+          "uri": "http://wso2.org/claims/username"
+        },
+        "defaultValue": "sathya"
+      }
+    ]
+  },
+  "federatedAuthenticators": {
+    "defaultAuthenticatorId": "<FEDERATED_AUTHENTICATOR_ID>",
+    "authenticators": [
+      "<FEDERATED_AUTHENTICATOR>"
+    ]
+  },
+  "provisioning": {
+    "jit": {
+      "isEnabled": true,
+      "scheme": "PROVISION_SILENTLY",
+      "userstore": "PRIMARY"
+    }
+  }
+}
