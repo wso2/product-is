@@ -1,0 +1,13 @@
+{
+  "actionStatus": "SUCCESS",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/accessToken/claims/-",
+      "value": {
+        "name": "custom_claim_string_0",
+        "value": "testCustomClaim0"
+      }
+    }
+  ]
+}
