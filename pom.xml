@@ -2500,7 +2500,7 @@
         <carbon.kernel.version>4.10.24</carbon.kernel.version>
 
         <!-- Identity Verification -->
-        <identity.verification.version>1.0.13</identity.verification.version>
+        <identity.verification.version>1.0.14</identity.verification.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.deployment.version>4.12.29</carbon.deployment.version>
