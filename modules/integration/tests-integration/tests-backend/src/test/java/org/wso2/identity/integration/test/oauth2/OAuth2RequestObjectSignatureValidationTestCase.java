@@ -281,7 +281,8 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         return signedJWT.serialize();
     }
 
-    private void initServiceProviderKeys() throws Exception {
+    @Override
+    protected void initServiceProviderKeys() throws Exception {
 
         KeyStore keyStore = KeystoreUtils.getKeystoreInstance(ISIntegrationTest.KEYSTORE_TYPE);
         String pkcs12Path = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
