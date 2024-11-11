@@ -80,7 +80,6 @@ import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
-import sun.security.provider.X509Factory;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,6 +115,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	private static final String customClaimURI2 = "http://wso2.org/claims/stateorprovince";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
+	private static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
+	private static final String END_CERT = "-----END CERTIFICATE-----";
 	public static final String OIDC = "oidc";
 	public static final String SAML = "saml";
 	private final static int TOMCAT_PORT = 8490;
@@ -912,10 +913,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
 
-		String certBegin = X509Factory.BEGIN_CERT;
-		String endCert = X509Factory.END_CERT;
-		String pemCert = new String(java.util.Base64.getEncoder().encode(x509Certificate.getEncoded()));
-		return certBegin + pemCert + endCert;
+        String pemCert = new String(java.util.Base64.getEncoder().encode(x509Certificate.getEncoded()));
+		return BEGIN_CERT + pemCert + END_CERT;
 	}
 
 	/**
