@@ -210,6 +210,8 @@
             <bean class="org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
             <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
