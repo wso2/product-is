@@ -161,6 +161,14 @@ jobs:
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
           if-no-files-found: warn
+      - name: Archive heap dump
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: heap-dump
+          path: |
+            product-is/**/heap-dump.hprof
+          if-no-files-found: ignore
       - name: Google Chat Notification
         run: |
           STATUS_COLOR=$(if [[ ${{ job.status }} == "success" ]];then echo "#009944";
