@@ -31,280 +31,293 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * SMSSender
+ * SMS Sender
  */
 public class SMSSender {
-  @SerializedName("name")
-  private String name = null;
+    @SerializedName("name")
+    private String name = null;
 
-  @SerializedName("provider")
-  private String provider = null;
+    @SerializedName("provider")
+    private String provider = null;
 
-  @SerializedName("providerURL")
-  private String providerURL = null;
+    @SerializedName("providerURL")
+    private String providerURL = null;
 
-  @SerializedName("key")
-  private String key = null;
+    @SerializedName("key")
+    private String key = null;
 
-  @SerializedName("secret")
-  private String secret = null;
+    @SerializedName("secret")
+    private String secret = null;
 
-  @SerializedName("sender")
-  private String sender = null;
+    @SerializedName("sender")
+    private String sender = null;
 
-  /**
-   * Gets or Sets contentType
-   */
-  @JsonAdapter(ContentTypeEnum.Adapter.class)
-  public enum ContentTypeEnum {
-    @SerializedName("JSON")
-    JSON("JSON"),
-    @SerializedName("FORM")
-    FORM("FORM");
+    /**
+     * Gets or Sets contentType
+     */
+    @JsonAdapter(ContentTypeEnum.Adapter.class)
+    public enum ContentTypeEnum {
+        @SerializedName("JSON")
+        JSON("JSON"),
+        @SerializedName("FORM")
+        FORM("FORM");
 
-    private String value;
+        private String value;
 
-    ContentTypeEnum(String value) {
-      this.value = value;
+        ContentTypeEnum(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        public static ContentTypeEnum fromValue(String input) {
+            for (ContentTypeEnum b : ContentTypeEnum.values()) {
+                if (b.value.equals(input)) {
+                    return b;
+                }
+            }
+            return null;
+        }
+
+        public static class Adapter extends TypeAdapter<ContentTypeEnum> {
+            @Override
+            public void write(final JsonWriter jsonWriter, final ContentTypeEnum enumeration) throws IOException {
+                jsonWriter.value(String.valueOf(enumeration.getValue()));
+            }
+
+            @Override
+            public ContentTypeEnum read(final JsonReader jsonReader) throws IOException {
+                Object value = jsonReader.nextString();
+                return ContentTypeEnum.fromValue((String) (value));
+            }
+        }
     }
-    public String getValue() {
-      return value;
+
+    @SerializedName("contentType")
+    private ContentTypeEnum contentType = null;
+
+    @SerializedName("properties")
+    private List<Properties> properties = null;
+
+    public SMSSender name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return name
+     **/
+    @Schema(example = "SMSPublisher", required = true, description = "")
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public SMSSender provider(String provider) {
+        this.provider = provider;
+        return this;
+    }
+
+    /**
+     * Get provider
+     *
+     * @return provider
+     **/
+    @Schema(example = "NEXMO", required = true, description = "")
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public SMSSender providerURL(String providerURL) {
+        this.providerURL = providerURL;
+        return this;
+    }
+
+    /**
+     * Get providerURL
+     *
+     * @return providerURL
+     **/
+    @Schema(example = "https://rest.nexmo.com/sms/json", required = true, description = "")
+    public String getProviderURL() {
+        return providerURL;
+    }
+
+    public void setProviderURL(String providerURL) {
+        this.providerURL = providerURL;
+    }
+
+    public SMSSender key(String key) {
+        this.key = key;
+        return this;
+    }
+
+    /**
+     * Get key
+     *
+     * @return key
+     **/
+    @Schema(example = "123**45", description = "")
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public SMSSender secret(String secret) {
+        this.secret = secret;
+        return this;
+    }
+
+    /**
+     * Get secret
+     *
+     * @return secret
+     **/
+    @Schema(example = "5tg**ssd", description = "")
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    public SMSSender sender(String sender) {
+        this.sender = sender;
+        return this;
+    }
+
+    /**
+     * Get sender
+     *
+     * @return sender
+     **/
+    @Schema(example = "+94 775563324", description = "")
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+
+    public SMSSender contentType(ContentTypeEnum contentType) {
+        this.contentType = contentType;
+        return this;
+    }
+
+    /**
+     * Get contentType
+     *
+     * @return contentType
+     **/
+    @Schema(required = true, description = "")
+    public ContentTypeEnum getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(ContentTypeEnum contentType) {
+        this.contentType = contentType;
+    }
+
+    public SMSSender properties(List<Properties> properties) {
+        this.properties = properties;
+        return this;
+    }
+
+    public SMSSender addPropertiesItem(Properties propertiesItem) {
+        if (this.properties == null) {
+            this.properties = new ArrayList<Properties>();
+        }
+        this.properties.add(propertiesItem);
+        return this;
+    }
+
+    /**
+     * Get properties
+     *
+     * @return properties
+     **/
+    @Schema(example = "[{\"key\":\"body.scope\",\"value\":\"internal\"},{\"key\":\"http.headers\",\"value\":\"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"}]", description = "")
+    public List<Properties> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Properties> properties) {
+        this.properties = properties;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SMSSender smSSender = (SMSSender) o;
+        return Objects.equals(this.name, smSSender.name) &&
+                Objects.equals(this.provider, smSSender.provider) &&
+                Objects.equals(this.providerURL, smSSender.providerURL) &&
+                Objects.equals(this.key, smSSender.key) &&
+                Objects.equals(this.secret, smSSender.secret) &&
+                Objects.equals(this.sender, smSSender.sender) &&
+                Objects.equals(this.contentType, smSSender.contentType) &&
+                Objects.equals(this.properties, smSSender.properties);
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(name, provider, providerURL, key, secret, sender, contentType, properties);
+    }
+
+
+    @Override
     public String toString() {
-      return String.valueOf(value);
+        StringBuilder sb = new StringBuilder();
+        sb.append("class SMSSender {\n");
+
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
+        sb.append("    providerURL: ").append(toIndentedString(providerURL)).append("\n");
+        sb.append("    key: ").append(toIndentedString(key)).append("\n");
+        sb.append("    secret: ").append(toIndentedString(secret)).append("\n");
+        sb.append("    sender: ").append(toIndentedString(sender)).append("\n");
+        sb.append("    contentType: ").append(toIndentedString(contentType)).append("\n");
+        sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
-    public static ContentTypeEnum fromValue(String input) {
-      for (ContentTypeEnum b : ContentTypeEnum.values()) {
-        if (b.value.equals(input)) {
-          return b;
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
         }
-      }
-      return null;
+        return o.toString().replace("\n", "\n    ");
     }
-    public static class Adapter extends TypeAdapter<ContentTypeEnum> {
-      @Override
-      public void write(final JsonWriter jsonWriter, final ContentTypeEnum enumeration) throws IOException {
-        jsonWriter.value(String.valueOf(enumeration.getValue()));
-      }
-
-      @Override
-      public ContentTypeEnum read(final JsonReader jsonReader) throws IOException {
-        Object value = jsonReader.nextString();
-        return ContentTypeEnum.fromValue((String)(value));
-      }
-    }
-  }  @SerializedName("contentType")
-  private ContentTypeEnum contentType = null;
-
-  @SerializedName("properties")
-  private List<Properties> properties = null;
-
-  public SMSSender name(String name) {
-    this.name = name;
-    return this;
-  }
-
-   /**
-   * Get name
-   * @return name
-  **/
-  @Schema(example = "SMSPublisher", required = true, description = "")
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public SMSSender provider(String provider) {
-    this.provider = provider;
-    return this;
-  }
-
-   /**
-   * Get provider
-   * @return provider
-  **/
-  @Schema(example = "NEXMO", required = true, description = "")
-  public String getProvider() {
-    return provider;
-  }
-
-  public void setProvider(String provider) {
-    this.provider = provider;
-  }
-
-  public SMSSender providerURL(String providerURL) {
-    this.providerURL = providerURL;
-    return this;
-  }
-
-   /**
-   * Get providerURL
-   * @return providerURL
-  **/
-  @Schema(example = "https://rest.nexmo.com/sms/json", required = true, description = "")
-  public String getProviderURL() {
-    return providerURL;
-  }
-
-  public void setProviderURL(String providerURL) {
-    this.providerURL = providerURL;
-  }
-
-  public SMSSender key(String key) {
-    this.key = key;
-    return this;
-  }
-
-   /**
-   * Get key
-   * @return key
-  **/
-  @Schema(example = "123**45", description = "")
-  public String getKey() {
-    return key;
-  }
-
-  public void setKey(String key) {
-    this.key = key;
-  }
-
-  public SMSSender secret(String secret) {
-    this.secret = secret;
-    return this;
-  }
-
-   /**
-   * Get secret
-   * @return secret
-  **/
-  @Schema(example = "5tg**ssd", description = "")
-  public String getSecret() {
-    return secret;
-  }
-
-  public void setSecret(String secret) {
-    this.secret = secret;
-  }
-
-  public SMSSender sender(String sender) {
-    this.sender = sender;
-    return this;
-  }
-
-   /**
-   * Get sender
-   * @return sender
-  **/
-  @Schema(example = "+94 775563324", description = "")
-  public String getSender() {
-    return sender;
-  }
-
-  public void setSender(String sender) {
-    this.sender = sender;
-  }
-
-  public SMSSender contentType(ContentTypeEnum contentType) {
-    this.contentType = contentType;
-    return this;
-  }
-
-   /**
-   * Get contentType
-   * @return contentType
-  **/
-  @Schema(required = true, description = "")
-  public ContentTypeEnum getContentType() {
-    return contentType;
-  }
-
-  public void setContentType(ContentTypeEnum contentType) {
-    this.contentType = contentType;
-  }
-
-  public SMSSender properties(List<Properties> properties) {
-    this.properties = properties;
-    return this;
-  }
-
-  public SMSSender addPropertiesItem(Properties propertiesItem) {
-    if (this.properties == null) {
-      this.properties = new ArrayList<Properties>();
-    }
-    this.properties.add(propertiesItem);
-    return this;
-  }
-
-   /**
-   * Get properties
-   * @return properties
-  **/
-  @Schema(example = "[{\"key\":\"body.scope\",\"value\":\"internal\"},{\"key\":\"http.headers\",\"value\":\"X-Version: 1, Authorization: bearer ,Accept: application/json ,Content-Type: application/json\"}]", description = "")
-  public List<Properties> getProperties() {
-    return properties;
-  }
-
-  public void setProperties(List<Properties> properties) {
-    this.properties = properties;
-  }
-
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SMSSender smSSender = (SMSSender) o;
-    return Objects.equals(this.name, smSSender.name) &&
-        Objects.equals(this.provider, smSSender.provider) &&
-        Objects.equals(this.providerURL, smSSender.providerURL) &&
-        Objects.equals(this.key, smSSender.key) &&
-        Objects.equals(this.secret, smSSender.secret) &&
-        Objects.equals(this.sender, smSSender.sender) &&
-        Objects.equals(this.contentType, smSSender.contentType) &&
-        Objects.equals(this.properties, smSSender.properties);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(name, provider, providerURL, key, secret, sender, contentType, properties);
-  }
-
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SMSSender {\n");
-    
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    provider: ").append(toIndentedString(provider)).append("\n");
-    sb.append("    providerURL: ").append(toIndentedString(providerURL)).append("\n");
-    sb.append("    key: ").append(toIndentedString(key)).append("\n");
-    sb.append("    secret: ").append(toIndentedString(secret)).append("\n");
-    sb.append("    sender: ").append(toIndentedString(sender)).append("\n");
-    sb.append("    contentType: ").append(toIndentedString(contentType)).append("\n");
-    sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 
 }

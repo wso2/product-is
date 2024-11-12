@@ -73,6 +73,9 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZAT
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 
+/**
+ * This class includes the test cases for passwordless SMS OTP authentication.
+ */
 public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest {
 
     public static final String USERNAME = "passwordlessuser";
@@ -164,12 +167,14 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         deleteApplication(oidcApplication);
         deleteUser(userObject);
         notificationSenderRestClient.deleteSMSProvider();
+        notificationSenderRestClient.closeHttpClient();
+        restClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
 
         mockSMSProvider.stop();
     }
 
-    @Test(groups = "wso2.is", description = "Verify token response when pre-issue access token action fails with " +
-            "authorization code grant type.")
+    @Test(groups = "wso2.is", description = "Test passwordless autehtncation with SMS OTP")
     public void testPasswordlessAuthentication() throws Exception {
 
         sendAuthorizeRequest();
@@ -208,7 +213,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         EntityUtils.consume(response.getEntity());
     }
 
-    public void performUserLogin() throws Exception {
+    private void performUserLogin() throws Exception {
 
         sendLoginPostForIdentifier(client, sessionDataKey, userObject.getUserName());
         HttpResponse response = sendLoginPostForOtp(client, sessionDataKey, mockSMSProvider.getOTP());
@@ -226,17 +231,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertNotNull(authorizationCode);
     }
 
-    /**
-     * Send identifier login post request with given username.
-     *
-     * @param client         Http client.
-     * @param sessionDataKey Session data key.
-     * @param username       Username.
-     * @throws ClientProtocolException If an error occurred while executing login post request.
-     * @throws IOException             If an error occurred while executing login post request.
-     */
-    public void sendLoginPostForIdentifier(HttpClient client, String sessionDataKey, String username)
-            throws ClientProtocolException, IOException {
+    private void sendLoginPostForIdentifier(HttpClient client, String sessionDataKey, String username)
+            throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", username));
@@ -245,18 +241,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
                 getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
     }
 
-    /**
-     * Send login post request with given username and otp credentials.
-     *
-     * @param client         Http client.
-     * @param sessionDataKey Session data key.
-     * @param otp            Otp.
-     * @return Http response.
-     * @throws ClientProtocolException If an error occurred while executing login post request.
-     * @throws IOException             If an error occurred while executing login post request.
-     */
-    public HttpResponse sendLoginPostForOtp(HttpClient client, String sessionDataKey, String otp)
-            throws ClientProtocolException, IOException {
+    private HttpResponse sendLoginPostForOtp(HttpClient client, String sessionDataKey, String otp)
+            throws IOException {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("OTPcode", otp));

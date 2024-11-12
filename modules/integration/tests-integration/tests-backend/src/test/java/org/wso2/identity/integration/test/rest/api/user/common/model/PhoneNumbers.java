@@ -28,9 +28,6 @@ public class PhoneNumbers {
     private String type;
     private String value;
 
-    /**
-     *
-     **/
     public PhoneNumbers type(String type) {
 
         this.type = type;
@@ -48,9 +45,6 @@ public class PhoneNumbers {
         this.type = type;
     }
 
-    /**
-     *
-     **/
     public PhoneNumbers value(String value) {
 
         this.value = value;
