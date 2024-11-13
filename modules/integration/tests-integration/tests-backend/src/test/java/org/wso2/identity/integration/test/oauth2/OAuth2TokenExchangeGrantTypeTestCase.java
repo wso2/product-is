@@ -557,6 +557,8 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         appDTO.setTokenType("JWT");
         appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token " +
                 "urn:ietf:params:oauth:grant-type:token-exchange");
+        String[] accessTokenClaims = {"username", "email"};
+        appDTO.setAccessTokenClaims(accessTokenClaims);
 
         return appDTO;
     }
