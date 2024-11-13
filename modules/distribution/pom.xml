@@ -582,23 +582,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <reportPlugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-project-info-reports-plugin</artifactId>
-                            <version>2.4</version>
-                            <reportSets>
-                                <reportSet>
-                                    <reports>
-                                        <report>index</report>
-                                    </reports>
-                                </reportSet>
-                            </reportSets>
-                        </plugin>
-                    </reportPlugins>
-                </configuration>
+                <version>3.21.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -638,13 +622,6 @@
                             </namespaceContexts>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.google.code.maven-config-processor-plugin</groupId>
-                <artifactId>config-processor-maven-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
                     <execution>
                         <id>add-missing-axis2-configs</id>
                         <phase>prepare-package</phase>
@@ -783,11 +760,12 @@
             </plugin>
         </plugins>
     </build>
-    <!--reporting>
+    <reporting>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>3.8.0</version>
                 <reportSets>
                     <reportSet>
                         <reports>
@@ -797,5 +775,5 @@
                 </reportSets>
             </plugin>
         </plugins>
-    </reporting-->
+    </reporting>
 </project>

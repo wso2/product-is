@@ -149,6 +149,7 @@
 <!--            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase"/>-->
 <!--            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>-->
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2ImpersonationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCAccessTokenAttributesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationCodeGrantJWTTokenTestCase"/>
             <class name="org.wso2.identity.integration.test.recovery.PasswordRecoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCIdentityFederationTestCase"/>
@@ -381,6 +382,7 @@
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.JITUserAssociationTestCase"/>
         </classes>
     </test>
     <test name="is-tests-jdbc-userstore" preserve-order="true" parallel="false" group-by-instances="true">

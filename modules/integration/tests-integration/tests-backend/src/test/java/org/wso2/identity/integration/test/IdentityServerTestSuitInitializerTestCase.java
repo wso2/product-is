@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -27,5 +28,10 @@ public class IdentityServerTestSuitInitializerTestCase {
     public void testInitialize() throws Exception {
         //save the carbon.home system property
         Utils.getResidentCarbonHome();
+        //add BC provider
+        BouncyCastleProvider bouncyCastleProvider = new BouncyCastleProvider();
+        if (java.security.Security.getProvider(bouncyCastleProvider.getName()) == null) {
+            java.security.Security.addProvider(bouncyCastleProvider);
+        }
     }
 }
