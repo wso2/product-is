@@ -42,7 +42,7 @@ public class NotificationSenderRestClient extends RestBaseClient {
     private final String username;
     private final String password;
 
-    public NotificationSenderRestClient(String serverUrl, Tenant tenantInfo){
+    public NotificationSenderRestClient(String serverUrl, Tenant tenantInfo) {
 
         this.serverUrl = serverUrl;
         this.tenantDomain = tenantInfo.getContextUser().getUserDomain();

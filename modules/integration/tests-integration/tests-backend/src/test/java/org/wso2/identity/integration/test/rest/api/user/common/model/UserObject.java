@@ -145,9 +145,6 @@ public class UserObject {
         return this;
     }
 
-    /**
-     *
-     **/
     public UserObject phoneNumbers(List<PhoneNumbers> phoneNumbers) {
 
         this.phoneNumbers = phoneNumbers;
