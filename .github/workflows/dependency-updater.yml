@@ -50,7 +50,7 @@ jobs:
       - name: Update Dependencies
         id: builder_step
         run: |
-          echo "::set-output name=REPO_NAME::${{ env.REPOSITORY }}"
+          echo "REPO_NAME=${{ env.REPOSITORY }}" >> "$GITHUB_OUTPUT"
           echo ""
           echo "Starting dependency upgrade"
           echo "=========================================================="
