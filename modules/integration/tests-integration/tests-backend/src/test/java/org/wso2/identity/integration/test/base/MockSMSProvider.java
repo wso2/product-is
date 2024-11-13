@@ -63,7 +63,7 @@ public class MockSMSProvider {
                             @Override
                             public Response transform(Response response, ServeEvent serveEvent) {
 
-                                // Extract the content value from the request body
+                                // Extract the content value from the request body.
                                 String content =
                                         JsonPath.parse(serveEvent.getRequest().getBodyAsString()).read("$.content");
 
@@ -74,7 +74,7 @@ public class MockSMSProvider {
 
                                 if (matcher.find()) {
                                     String extractedOtp = matcher.group();
-                                    // Store the content value for later use
+                                    // Store the content value for later use.
                                     otp.set(extractedOtp);
                                 }
                                 return response;
@@ -93,7 +93,7 @@ public class MockSMSProvider {
 
         wireMockServer.start();
 
-        // Configure the mock OIDC endpoints
+        // Configure the mock OIDC endpoints.
         configureMockEndpoints();
     }
 
@@ -122,5 +122,4 @@ public class MockSMSProvider {
 
         return otp.get();
     }
-
 }

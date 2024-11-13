@@ -198,7 +198,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Location header expected for authorize request is not available");
+        assertNotNull(locationHeader, "Location header expected for authorize request is not available.");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
@@ -209,7 +209,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertNotNull(keyValues, "SessionDataKey key value is null");
 
         sessionDataKey = keyValues.get(0).getValue();
-        assertNotNull(sessionDataKey, "Session data key is null");
+        assertNotNull(sessionDataKey, "Session data key is null.");
         EntityUtils.consume(response.getEntity());
     }
 
