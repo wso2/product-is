@@ -53,6 +53,7 @@ public class MockSMSProvider {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
                 .httpsPort(8090)
+                .httpDisabled(true)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())
                 .keystorePassword("wso2carbon")
@@ -93,7 +94,7 @@ public class MockSMSProvider {
 
         wireMockServer.start();
 
-        // Configure the mock OIDC endpoints.
+        // Configure the mock SMS endpoints.
         configureMockEndpoints();
     }
 
