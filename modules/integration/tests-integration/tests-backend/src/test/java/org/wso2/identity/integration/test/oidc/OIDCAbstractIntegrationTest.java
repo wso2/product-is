@@ -127,7 +127,7 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
         createApplication(applicationModel, application);
     }
 
-    private void createApplication(ApplicationModel applicationModel, OIDCApplication application) throws Exception {
+    public void createApplication(ApplicationModel applicationModel, OIDCApplication application) throws Exception {
 
         log.info("Creating application " + application.getApplicationName());
 
