@@ -119,6 +119,7 @@ public final class OAuth2Constant {
     public static final String RESPONSE_MODE_FRAGMENT_JWT = "fragment.jwt";
 
     public static final String RESPONSE_TYPE_CODE_ID_TOKEN = "code id_token";
+    public static final String OAUTH2_AUTHORIZATION_DETAILS = "authorization_details";
 
     // Tenanted urls.
     public final static String TENANT_PLACEHOLDER = "<TENANT_PLACEHOLDER>";

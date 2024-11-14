@@ -32,7 +32,7 @@ public class AuthorizedAPICreationModel {
     private String id;
     private String policyIdentifier;
     private List<String> scopes = null;
-
+    private List<String> authorizationDetailsTypes = null;
 
     /**
      **/
@@ -96,7 +96,29 @@ public class AuthorizedAPICreationModel {
         return this;
     }
 
+    public AuthorizedAPICreationModel authorizationDetailsTypes(List<String> authorizationDetailsTypes) {
 
+        this.authorizationDetailsTypes = authorizationDetailsTypes;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("authorizationDetailsTypes")
+    @Valid
+    public List<String> getAuthorizationDetailsTypes() {
+        return authorizationDetailsTypes;
+    }
+    public void setAuthorizationDetailsTypes(List<String> authorizationDetailsTypes) {
+        this.authorizationDetailsTypes = authorizationDetailsTypes;
+    }
+
+    public AuthorizedAPICreationModel addAuthorizationDetailsTypesItem(String authorizationDetailsTypesItem) {
+        if (this.authorizationDetailsTypes == null) {
+            this.authorizationDetailsTypes = new ArrayList<>();
+        }
+        this.authorizationDetailsTypes.add(authorizationDetailsTypesItem);
+        return this;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -127,6 +149,7 @@ public class AuthorizedAPICreationModel {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    policyIdentifier: ").append(toIndentedString(policyIdentifier)).append("\n");
         sb.append("    scopes: ").append(toIndentedString(scopes)).append("\n");
+        sb.append("    authorizationDetailsTypes: ").append(toIndentedString(authorizationDetailsTypes)).append("\n");
         sb.append("}");
         return sb.toString();
     }

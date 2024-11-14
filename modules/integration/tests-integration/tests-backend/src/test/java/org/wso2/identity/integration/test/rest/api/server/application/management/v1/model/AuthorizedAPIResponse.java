@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.AuthorizationDetailsType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +34,9 @@ public class AuthorizedAPIResponse {
     private String identifier;
     private String displayName;
     private String policyId;
+    private String type;
     private List<AuthorizedScope> authorizedScopes = null;
-
+    private List<AuthorizationDetailsType> authorizedAuthorizationDetailsTypes = null;
 
     /**
      **/
@@ -108,6 +110,22 @@ public class AuthorizedAPIResponse {
         this.policyId = policyId;
     }
 
+    public AuthorizedAPIResponse type(String type) {
+
+        this.type = type;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("type")
+    @Valid
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /**
      **/
     public AuthorizedAPIResponse authorizedScopes(List<AuthorizedScope> authorizedScopes) {
@@ -131,6 +149,30 @@ public class AuthorizedAPIResponse {
             this.authorizedScopes = new ArrayList<>();
         }
         this.authorizedScopes.add(authorizedScopesItem);
+        return this;
+    }
+
+    public AuthorizedAPIResponse authorizedAuthorizationDetailsTypes(List<AuthorizationDetailsType> authorizedAuthorizationDetailsTypes) {
+
+        this.authorizedAuthorizationDetailsTypes = authorizedAuthorizationDetailsTypes;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("authorizedAuthorizationDetailsTypes")
+    @Valid
+    public List<AuthorizationDetailsType> getAuthorizedAuthorizationDetailsTypes() {
+        return authorizedAuthorizationDetailsTypes;
+    }
+    public void setAuthorizedAuthorizationDetailsTypes(List<AuthorizationDetailsType> authorizedAuthorizationDetailsTypes) {
+        this.authorizedAuthorizationDetailsTypes = authorizedAuthorizationDetailsTypes;
+    }
+
+    public AuthorizedAPIResponse addAuthorizedAuthorizationDetailsTypesItem(AuthorizationDetailsType authorizedAuthorizationDetailsTypesItem) {
+        if (this.authorizedAuthorizationDetailsTypes == null) {
+            this.authorizedAuthorizationDetailsTypes = new ArrayList<>();
+        }
+        this.authorizedAuthorizationDetailsTypes.add(authorizedAuthorizationDetailsTypesItem);
         return this;
     }
 
