@@ -174,7 +174,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         mockSMSProvider.stop();
     }
 
-    @Test(groups = "wso2.is", description = "Test passwordless autehtncation with SMS OTP")
+    @Test(groups = "wso2.is", description = "Test passwordless authentication with SMS OTP")
     public void testPasswordlessAuthentication() throws Exception {
 
         sendAuthorizeRequest();
@@ -198,7 +198,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Location header expected for authorize request is not available.");
+        assertNotNull(locationHeader, "Location header for authorize request");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
@@ -206,10 +206,10 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
-        assertNotNull(keyValues, "SessionDataKey key value is null");
+        assertNotNull(keyValues, "Session data key");
 
         sessionDataKey = keyValues.get(0).getValue();
-        assertNotNull(sessionDataKey, "Session data key is null.");
+        assertNotNull(sessionDataKey, "Session data key");
         EntityUtils.consume(response.getEntity());
     }
 
@@ -219,12 +219,12 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         HttpResponse response = sendLoginPostForOtp(client, sessionDataKey, mockSMSProvider.getOTP());
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Location header expected post login is not available.");
+        assertNotNull(locationHeader, "Location header");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Redirection URL to the application with authorization code is null.");
+        assertNotNull(locationHeader, "Redirection URL to the application with authorization code");
         EntityUtils.consume(response.getEntity());
 
         authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
