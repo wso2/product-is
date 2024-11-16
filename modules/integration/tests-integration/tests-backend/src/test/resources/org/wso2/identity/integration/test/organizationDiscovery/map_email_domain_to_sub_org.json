@@ -1,0 +1,10 @@
+{
+  "attributes": [
+    {
+      "type": "emailDomain",
+      "values": [
+        "wso2.com"
+      ]
+    }
+  ]
+}

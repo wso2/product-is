@@ -1,0 +1,12 @@
+{
+  "properties": [
+    {
+      "key": "emailDomain.enable",
+      "value": "true"
+    },
+    {
+      "key": "emailDomainBasedSelfSignup.enable",
+      "value": "true"
+    }
+  ]
+}
