@@ -22,6 +22,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -50,6 +51,7 @@ import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServi
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfigurationAttestationMetaData;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -209,8 +211,30 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
                 "API Base Authentication expected to true but set as false.");
     }
 
-    @Test(groups = "wso2.is", description = "Send init authorize POST request.",
+    @Test(groups = "wso2.is", description = "Send init authorize POST request without Client Id.",
             dependsOnMethods = "testUpdateApplication")
+    public void testSendInitAuthRequestPostWithoutClientId() throws Exception {
+
+        HttpResponse response = sendPostRequestWithParameters(client, buildOAuth2Parameters(null),
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
+        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
+        int statusCode = response.getStatusLine().getStatusCode();
+        Assert.assertEquals(statusCode, 400, "Unexpected response code: " + statusCode);
+        String responseString = EntityUtils.toString(response.getEntity(), UTF_8);
+        EntityUtils.consume(response.getEntity());
+        JSONParser parser = new JSONParser();
+        JSONObject json = (org.json.simple.JSONObject) parser.parse(responseString);
+        Assert.assertNotNull(json, "Client Native Authentication Init response is null.");
+        JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(responseString);
+        Assert.assertNotNull(jsonObject, "Client Native Authentication Init response is null.");
+        Assert.assertEquals(jsonObject.get("error_description"), "Client Id not found in the request",
+                "Error description mismatch");
+        Assert.assertEquals(jsonObject.get("error"), "Bad Request",
+                "Error type mismatch");
+    }
+
+    @Test(groups = "wso2.is", description = "Send init authorize POST request.",
+            dependsOnMethods = "testSendInitAuthRequestPostWithoutClientId")
     public void testSendInitAuthRequestPost() throws Exception {
 
         HttpResponse response = sendPostRequestWithParameters(client, buildOAuth2Parameters(consumerKey),
@@ -252,6 +276,48 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         Assert.assertNotNull(extractableResponse, "Basic Authentication request failed. Authentication response is null.");
 
         validateBasicAuthenticationResponseBody(extractableResponse);
+    }
+
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration for client native authentication",
+            dependsOnMethods = "testSendBasicAuthRequestPost")
+    public void testUpdateApplicationWithAttestationEnabled() throws Exception {
+
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch = applicationPatch.advancedConfigurations(new AdvancedApplicationConfiguration());
+        applicationPatch.getAdvancedConfigurations().setEnableAPIBasedAuthentication(true);
+        applicationPatch.getAdvancedConfigurations()
+                .setAttestationMetaData(new AdvancedApplicationConfigurationAttestationMetaData()
+                        .enableClientAttestation(true));
+
+        updateApplication(appId, applicationPatch);
+        ApplicationResponseModel application = getApplication(appId);
+        Assert.assertTrue(application.getAdvancedConfigurations().getEnableAPIBasedAuthentication(),
+                "API Base Authentication expected to true but set as false.");
+        Assert.assertTrue(application.getAdvancedConfigurations().getAttestationMetaData().getEnableClientAttestation(),
+                "Client Attestation expected to true but set as false.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send init authorize POST request with Attestation enabled.",
+            dependsOnMethods = "testUpdateApplicationWithAttestationEnabled")
+    public void testSendInitAuthRequestPostWithoutAttestation() throws Exception {
+
+        HttpResponse response = sendPostRequestWithParameters(client, buildOAuth2Parameters(consumerKey),
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
+        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
+        int statusCode = response.getStatusLine().getStatusCode();
+        Assert.assertEquals(statusCode, 401, "Unexpected response code: " + statusCode);
+
+        String responseString = EntityUtils.toString(response.getEntity(), UTF_8);
+        EntityUtils.consume(response.getEntity());
+        JSONParser parser = new JSONParser();
+        JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(responseString);
+        Assert.assertNotNull(jsonObject, "Client Native Authentication Init response is null.");
+        Assert.assertEquals(jsonObject.get("code"), "401", "Code mismatch");
+        Assert.assertEquals(jsonObject.get("message"), "Unauthorized", "Message mismatch");
+        Assert.assertEquals(jsonObject.get("description"),
+                "App is configured to validate attestation but attestation object is empty.",
+                "Description mismatch");
+        Assert.assertNotNull(jsonObject.get("traceId"), "Trace ID should not be null");
     }
 
     /**
@@ -297,7 +363,9 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, OAuth2Constant.AUTHORIZATION_CODE_NAME));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_MODE, RESPONSE_MODE));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
+        if (StringUtils.isNotBlank(consumerKey)) {
+            urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
+        }
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, OAuth2Constant.OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE, UUID.randomUUID().toString()));
