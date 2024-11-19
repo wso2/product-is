@@ -187,6 +187,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		accessTokenConfiguration.type(applicationConfig.getTokenType().getTokenTypeProperty());
 		accessTokenConfiguration.applicationAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
 		accessTokenConfiguration.userAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+		// Add access token claim list.
+		List<String> accessTokenClaimList = applicationConfig.getRequestedClaimList().stream()
+				.map(UserClaimConfig::getOidcClaimUri).collect(Collectors.toList());
+		accessTokenConfiguration.accessTokenAttributes(accessTokenClaimList);
 		oidcConfig.accessToken(accessTokenConfiguration);
 
 		if (applicationConfig.getAudienceList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
