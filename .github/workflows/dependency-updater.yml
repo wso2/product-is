@@ -7,7 +7,7 @@ on:
     - cron:  '0 15 * * *'
 
 env:
-  MAVEN_OPTS: -Xmx4g -Xms1g -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./heap-dump.hprof
+  MAVEN_OPTS: -Xmx4g -Xms1g -XX:+HeapDumpOnOutOfMemoryError
   REPOSITORY: product-is
   GIT_USERNAME: jenkins-is-staging
   GIT_EMAIL: jenkins-is-staging@wso2.com
