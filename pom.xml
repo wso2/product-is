@@ -2503,7 +2503,7 @@
         <identity.verification.version>1.0.14</identity.verification.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.12.29</carbon.deployment.version>
+        <carbon.deployment.version>4.12.30</carbon.deployment.version>
         <carbon.commons.version>4.10.13</carbon.commons.version>
         <carbon.registry.version>4.8.38</carbon.registry.version>
         <carbon.multitenancy.version>4.11.29</carbon.multitenancy.version>
