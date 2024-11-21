@@ -210,8 +210,9 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         sendLoginPostForIdentifier(client, sessionDataKey, userObject.getUserName());
         HttpResponse response = sendLoginPostForOtp(client, sessionDataKey, mockSMSProvider.getOTP());
+        EntityUtils.consume(response.getEntity());
 
-        authorizationCode = EntityUtils.toString(response.getEntity());
+        authorizationCode = mockClientCallback.getAuthorizationCode();
         assertNotNull(authorizationCode);
     }
 

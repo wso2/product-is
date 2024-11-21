@@ -20,7 +20,10 @@ package org.wso2.identity.integration.test.base;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
+import com.github.tomakehurst.wiremock.http.Response;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -39,6 +42,8 @@ public class MockClientCallback {
 
     public static final String CALLBACK_URL = "https://localhost:8091/dummyApp/oauth2client";
 
+    private final AtomicReference<String> authorizationCode = new AtomicReference<>();
+
     private WireMockServer wireMockServer;
 
     public void start() {
@@ -50,7 +55,26 @@ public class MockClientCallback {
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())
                 .keystorePassword("wso2carbon")
                 .keyManagerPassword("wso2carbon")
-                .extensions(new ResponseTemplateTransformer(null, true, null, null)));
+                .extensions(new ResponseTemplateTransformer(null, true, null, null),
+                        new ResponseTransformerV2() {
+
+                            @Override
+                            public Response transform(Response response, ServeEvent serveEvent) {
+
+                                authorizationCode.set(serveEvent.getRequest().getQueryParams().get("code").firstValue());
+                                return response;
+                            }
+
+                            @Override
+                            public boolean applyGlobally() {
+                                return false;
+                            }
+
+                            @Override
+                            public String getName() {
+                                return "authz-code-transformer";
+                            }
+                        }));
 
         wireMockServer.start();
 
@@ -71,11 +95,15 @@ public class MockClientCallback {
             wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp/oauth2client"))
                     .withQueryParam("code", matching(".*"))
                     .willReturn(aResponse()
-                            .withBody("{{request.query.code}}")
-                            .withTransformers("response-template")
+                            .withTransformers("response-template", "authz-code-transformer")
                             .withStatus(200)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String getAuthorizationCode() {
+
+        return authorizationCode.get();
     }
 }
