@@ -2365,7 +2365,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.6.17</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.6.18</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2379,7 +2379,7 @@
         <identity.governance.version>1.11.16</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.9.6</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.9.7</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.9.13</identity.carbon.auth.rest.version>
@@ -2431,8 +2431,8 @@
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.4</provisioning.connector.google.version>
-        <provisioning.connector.salesforce.version>5.2.8</provisioning.connector.salesforce.version>
-        <provisioning.connector.scim.version>5.3.4</provisioning.connector.scim.version>
+        <provisioning.connector.salesforce.version>5.2.9</provisioning.connector.salesforce.version>
+        <provisioning.connector.scim.version>5.3.5</provisioning.connector.scim.version>
         <provisioning.connector.scim2.version>2.0.6</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
@@ -2488,8 +2488,8 @@
         <conditional.authentication.functions.version>1.2.67</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.35.5</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.13.11</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.35.8</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.13.14</identity.apps.myaccount.version>
         <identity.apps.core.version>2.8.1</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
