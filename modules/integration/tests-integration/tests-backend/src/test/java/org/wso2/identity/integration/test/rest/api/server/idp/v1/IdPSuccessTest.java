@@ -56,7 +56,9 @@ public class IdPSuccessTest extends IdPTestBase {
 
     private static final String FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER = "<FEDERATED_AUTHENTICATOR_ID>";
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
+    private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
     private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg==";
+    private static final String IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -303,6 +305,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 userDefinedAuthenticatorPayload.getAuthenticatorId());
         body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
                 userDefinedAuthenticatorPayload.convertToJasonPayload());
+        body = body.replace(IDP_NAME_PLACEHOLDER, IDP_NAME);
         Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()

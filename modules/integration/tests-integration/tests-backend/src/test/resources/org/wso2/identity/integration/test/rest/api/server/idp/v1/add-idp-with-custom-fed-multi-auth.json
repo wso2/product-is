@@ -25,7 +25,8 @@
   "federatedAuthenticators": {
     "defaultAuthenticatorId": "<FEDERATED_AUTHENTICATOR_ID>",
     "authenticators": [
-      "<FEDERATED_AUTHENTICATOR>"
+      "<FEDERATED_AUTHENTICATOR_1>",
+      "<FEDERATED_AUTHENTICATOR_2>"
     ]
   },
   "provisioning": {
