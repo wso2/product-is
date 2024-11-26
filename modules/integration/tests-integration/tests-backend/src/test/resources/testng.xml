@@ -140,9 +140,14 @@
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthentication2FATestCase"/>
             <class name="org.wso2.identity.integration.test.apiAuthorization.RBACWithAPIAuthorizationTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenPasswordGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenClientCredentialsGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessPasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailurePasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2ImpersonationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAccessTokenAttributesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationCodeGrantJWTTokenTestCase"/>
