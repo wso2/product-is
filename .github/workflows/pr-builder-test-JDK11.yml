@@ -13,7 +13,7 @@ on:
         required: true
 
 env:
-  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true
+  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 
 jobs:
@@ -123,7 +123,7 @@ jobs:
         with:
           name: heap-dump
           path: |
-            product-is/**/heap-dump.hprof
+            **/**.hprof
           if-no-files-found: ignore
       - name: Comment build status
         if: always()

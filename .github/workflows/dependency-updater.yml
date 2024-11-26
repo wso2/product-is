@@ -7,7 +7,7 @@ on:
     - cron:  '0 15 * * *'
 
 env:
-  MAVEN_OPTS: -Xmx4g -Xms1g
+  MAVEN_OPTS: -Xmx4g -Xms1g -XX:+HeapDumpOnOutOfMemoryError
   REPOSITORY: product-is
   GIT_USERNAME: jenkins-is-staging
   GIT_EMAIL: jenkins-is-staging@wso2.com
@@ -167,7 +167,7 @@ jobs:
         with:
           name: heap-dump
           path: |
-            product-is/**/heap-dump.hprof
+            **/**.hprof
           if-no-files-found: ignore
       - name: Google Chat Notification
         run: |
