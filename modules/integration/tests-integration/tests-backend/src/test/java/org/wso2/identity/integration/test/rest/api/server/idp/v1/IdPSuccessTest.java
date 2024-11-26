@@ -35,6 +35,7 @@ import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Federated
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.util.UserDefinedAuthenticatorPayload;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,10 +54,11 @@ public class IdPSuccessTest extends IdPTestBase {
     private String idPTemplateId;
     private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
     private String idpCreatePayload;
-
     private static final String FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER = "<FEDERATED_AUTHENTICATOR_ID>";
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
-    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg==";
+    private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
+    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
+    private static final String IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -91,6 +93,27 @@ public class IdPSuccessTest extends IdPTestBase {
 
         Endpoint endpoint = new Endpoint();
         endpoint.setUri(ENDPOINT_URI);
+        AuthenticationType authenticationType = new AuthenticationType();
+        authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(USERNAME, USERNAME_VALUE);
+        properties.put(PASSWORD, PASSWORD_VALUE);
+        authenticationType.setProperties(properties);
+        endpoint.authentication(authenticationType);
+        userDefinedAuthenticatorPayload.setEndpoint(endpoint);
+
+        return userDefinedAuthenticatorPayload;
+    }
+
+    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayload(String endpointUri) {
+
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
+        userDefinedAuthenticatorPayload.setIsEnabled(true);
+        userDefinedAuthenticatorPayload.setAuthenticatorId(FEDERATED_AUTHENTICATOR_ID);
+        userDefinedAuthenticatorPayload.setDefinedBy(FederatedAuthenticatorRequest.DefinedByEnum.USER.toString());
+
+        Endpoint endpoint = new Endpoint();
+        endpoint.setUri(endpointUri);
         AuthenticationType authenticationType = new AuthenticationType();
         authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
         Map<String, Object> properties = new HashMap<>();
@@ -303,6 +326,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 userDefinedAuthenticatorPayload.getAuthenticatorId());
         body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
                 userDefinedAuthenticatorPayload.convertToJasonPayload());
+        body = body.replace(IDP_NAME_PLACEHOLDER, IDP_NAME);
         Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -314,6 +338,60 @@ public class IdPSuccessTest extends IdPTestBase {
         assertNotNull(location);
         customIdPId = location.substring(location.lastIndexOf("/") + 1);
         assertNotNull(customIdPId);
+    }
+
+    @Test(dependsOnMethods = "testAddIdPWithUserDefinedAuthenticator")
+    public void testGetUserDefinedAuthenticatorsOfIdP() {
+
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
+                PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("defaultAuthenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
+                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.name",
+                        equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
+                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.isEnabled",
+                        equalTo(true));
+    }
+
+    @Test(dependsOnMethods = "testAddIdPWithUserDefinedAuthenticator")
+    public void testUpdateUserDefinedAuthenticatorOfIdP() {
+
+        // TODO:  check the OpenAPI validation
+        // The following patch request fails from OpenAPI validations, as the response object does not contains
+        // "authentication" field in the "endpoint" object.
+        Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
+                        PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + FEDERATED_AUTHENTICATOR_ID,
+                createUserDefinedAuthenticatorPayload(UPDATED_ENDPOINT_URI).toString());
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("authenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
+                .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
+                .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI));
+    }
+
+    @Test(dependsOnMethods = "testAddIdPWithUserDefinedAuthenticator")
+    public void testDeleteUserDefinedAuthenticatorOfIdP() throws IOException {
+
+        // TODO: check the behaviour of the DELETE functionality
+        // When a put request is tried with empty authenticators list, postman request is successful
+        // but this put request fails from openAPI validation saying
+        // "Provided request body content is not in the expected format."
+        Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
+                PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR +
+                FEDERATED_AUTHENTICATOR_ID, readResource("empty-custom-fed-auth.json"));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK) // Receiving 400
+                .body("authenticators", nullValue());
     }
 
     @Test(dependsOnMethods = {"testGetMetaOutboundConnector"})
