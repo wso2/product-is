@@ -24,60 +24,44 @@ import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
 import com.github.tomakehurst.wiremock.http.Response;
 import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
-import com.jayway.jsonpath.JsonPath;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.nio.file.Paths;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 /**
- * Mock SMS Provider for testing SMS related flows.
+ * Mock client callback endpoint to test OIDC related flows.
  */
-public class MockSMSProvider {
+public class MockClientCallback {
 
-    public static final String SMS_SENDER_URL = "https://localhost:8090/sms/send";
-    public static final String SMS_SENDER_PROVIDER_TYPE = "Custom";
+    public static final String CALLBACK_URL = "https://localhost:8091/dummyApp/oauth2client";
+
+    private final AtomicReference<String> authorizationCode = new AtomicReference<>();
 
     private WireMockServer wireMockServer;
-    private final AtomicReference<String> otp = new AtomicReference<>();
 
     public void start() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
-                .httpsPort(8090)
+                .httpsPort(8091)
                 .httpDisabled(true)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())
                 .keystorePassword("wso2carbon")
                 .keyManagerPassword("wso2carbon")
-                .extensions(
-                        new ResponseTemplateTransformer(null, true, null, null),
+                .extensions(new ResponseTemplateTransformer(null, true, null, null),
                         new ResponseTransformerV2() {
+
                             @Override
                             public Response transform(Response response, ServeEvent serveEvent) {
 
-                                // Extract the content value from the request body.
-                                String content =
-                                        JsonPath.parse(serveEvent.getRequest().getBodyAsString()).read("$.content");
-
-                                String regex = "\\b\\d{6}\\b";
-
-                                Pattern pattern = Pattern.compile(regex);
-                                Matcher matcher = pattern.matcher(content);
-
-                                if (matcher.find()) {
-                                    String extractedOtp = matcher.group();
-                                    // Store the content value for later use.
-                                    otp.set(extractedOtp);
-                                }
+                                authorizationCode.set(serveEvent.getRequest().getQueryParams().get("code").firstValue());
                                 return response;
                             }
 
@@ -88,13 +72,13 @@ public class MockSMSProvider {
 
                             @Override
                             public String getName() {
-                                return "otp-transformer";
+                                return "authz-code-transformer";
                             }
                         }));
 
         wireMockServer.start();
 
-        // Configure the mock SMS endpoints.
+        // Configure the mock client endpoints.
         configureMockEndpoints();
     }
 
@@ -108,19 +92,18 @@ public class MockSMSProvider {
     private void configureMockEndpoints() {
 
         try {
-            wireMockServer.stubFor(post(urlEqualTo("/sms/send"))
-                    .withRequestBody(matchingJsonPath("$.content"))
-                    .withRequestBody(matchingJsonPath("$.to"))
+            wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp/oauth2client"))
+                    .withQueryParam("code", matching(".*"))
                     .willReturn(aResponse()
-                            .withTransformers("response-template", "otp-transformer")
+                            .withTransformers("response-template", "authz-code-transformer")
                             .withStatus(200)));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public String getOTP() {
+    public String getAuthorizationCode() {
 
-        return otp.get();
+        return authorizationCode.get();
     }
 }

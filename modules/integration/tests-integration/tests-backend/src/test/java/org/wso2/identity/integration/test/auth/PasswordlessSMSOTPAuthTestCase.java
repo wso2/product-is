@@ -21,16 +21,14 @@ package org.wso2.identity.integration.test.auth;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
@@ -41,6 +39,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.base.MockClientCallback;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
@@ -59,8 +58,6 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +90,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     private String authorizationCode;
 
     private MockSMSProvider mockSMSProvider;
+    private MockClientCallback mockClientCallback;
+
     private TestUserMode userMode;
 
     @Factory(dataProvider = "testExecutionContextProvider")
@@ -116,6 +115,10 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         super.init(userMode);
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
+
+        mockClientCallback = new MockClientCallback();
+        mockClientCallback.start();
+
         super.init();
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
@@ -127,13 +130,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         client = HttpClientBuilder.create()
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
-                .setRedirectStrategy(new DefaultRedirectStrategy() {
-                    @Override
-                    protected boolean isRedirectable(String method) {
-
-                        return false;
-                    }
-                }).build();
+                .setRedirectStrategy(new LaxRedirectStrategy())
+                .build();
 
         backendURL = backendURL.replace("services/", "");
 
@@ -172,6 +170,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         scim2RestClient.closeHttpClient();
 
         mockSMSProvider.stop();
+        mockClientCallback.stop();
     }
 
     @Test(groups = "wso2.is", description = "Test passwordless authentication with SMS OTP")
@@ -190,18 +189,12 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("client_id", oidcApplication.getClientId()));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL));
 
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Location header for authorize request");
-        EntityUtils.consume(response.getEntity());
-
-        response = sendGetRequest(client, locationHeader.getValue());
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
@@ -217,17 +210,9 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         sendLoginPostForIdentifier(client, sessionDataKey, userObject.getUserName());
         HttpResponse response = sendLoginPostForOtp(client, sessionDataKey, mockSMSProvider.getOTP());
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Location header");
         EntityUtils.consume(response.getEntity());
 
-        response = sendGetRequest(client, locationHeader.getValue());
-        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Redirection URL to the application with authorization code");
-        EntityUtils.consume(response.getEntity());
-
-        authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
+        authorizationCode = mockClientCallback.getAuthorizationCode();
         assertNotNull(authorizationCode);
     }
 
@@ -256,7 +241,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code", authorizationCode));
         urlParameters.add(new BasicNameValuePair("grant_type", OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("client_id", oidcApplication.getClientSecret()));
 
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
@@ -272,21 +257,11 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
     }
 
-    private String getAuthorizationCodeFromURL(String location) {
-
-        URI uri = URI.create(location);
-        return URLEncodedUtils.parse(uri, StandardCharsets.UTF_8).stream()
-                .filter(param -> "code".equals(param.getName()))
-                .map(NameValuePair::getValue)
-                .findFirst()
-                .orElse(null);
-    }
-
     private OIDCApplication initOIDCApplication() {
 
         OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
                 OIDCUtilTest.playgroundAppOneAppContext,
-                OAuth2Constant.CALLBACK_URL);
+                MockClientCallback.CALLBACK_URL);
         return playgroundApp;
     }
 

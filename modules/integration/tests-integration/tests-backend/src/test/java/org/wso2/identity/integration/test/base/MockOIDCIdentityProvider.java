@@ -71,6 +71,7 @@ public class MockOIDCIdentityProvider {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
                 .httpsPort(8089)
+                .httpDisabled(true)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())
                 .keystorePassword("wso2carbon")
