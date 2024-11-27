@@ -447,21 +447,6 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>packaging-war-artifacts-openid</id>
-                        <phase>process-test-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-smartconsumerwithclaims" />
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-smartconsumerwithoutclaims" />
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-dumbconsumerwithclaims" />
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-dumbconsumerwithoutclaims" />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>packaging-war-artifacts-oauth</id>
                         <phase>process-test-resources</phase>
                         <configuration>
