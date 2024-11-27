@@ -392,11 +392,6 @@
             </includes>
         </fileSet>
 
-        <fileSet>
-            <directory>conf/policies</directory>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
-            </outputDirectory>
-        </fileSet>
 
         <!-- copying runtimes -->
         <fileSet>
@@ -761,13 +756,6 @@
         </file>
         <file>
             <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/identity/entitlement.properties
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/identity</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/samlsso_response.html
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
@@ -822,13 +810,6 @@
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/cipher-tool.properties
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/balana-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/security</outputDirectory>
             <fileMode>644</fileMode>
@@ -964,22 +945,6 @@
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/consent-mgt-config.xml
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/conf/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/policies/xacml/default/scope_based_token_validation_policy_template.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
-            </outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>
-                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/policies/xacml/default/scope_based_token_issuance_policy_template.xml
-            </source>
-            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/policies/xacml/default
-            </outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>

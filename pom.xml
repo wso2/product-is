@@ -955,16 +955,6 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.entitlement</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.securevault</groupId>
                 <artifactId>org.wso2.securevault</artifactId>
                 <version>${securevault.wso2.version}</version>
@@ -1828,17 +1818,6 @@
                 <artifactId>org.wso2.identity.apps.x509certificate.portal.server.feature</artifactId>
                 <version>${identity.apps.core.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.wso2.carbon.identity.application.authz.xacml</groupId>
-                <artifactId>org.wso2.carbon.identity.application.authz.xacml.server.feature</artifactId>
-                <version>${identity.app.authz.xacml.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
-                <artifactId>org.wso2.carbon.identity.oauth2.validators.xacml.server.feature</artifactId>
-                <version>${identity.oauth.addons.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.outbound.auth.oauth2</groupId>
                 <artifactId>org.wso2.carbon.identity.outbound.auth.oauth2.server.feature</artifactId>
@@ -2365,7 +2344,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.6.20</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.2</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2482,7 +2461,6 @@
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
-        <identity.app.authz.xacml.version>2.4.3</identity.app.authz.xacml.version>
         <identity.oauth.addons.version>2.5.19</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.13</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.67</conditional.authentication.functions.version>

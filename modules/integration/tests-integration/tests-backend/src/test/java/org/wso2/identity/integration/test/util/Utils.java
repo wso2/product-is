@@ -37,6 +37,9 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -62,6 +65,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -698,6 +704,36 @@ public class Utils {
         BasicAuthHandler basicAuthHandler = new BasicAuthHandler();
         BasicAuthInfo encodedBasicAuthInfo = (BasicAuthInfo) basicAuthHandler.getAuthenticationToken(basicAuthInfo);
         return encodedBasicAuthInfo.getAuthorizationHeader();
+    }
+
+    public static boolean areJSONObjectsEqual(Object ob1, Object ob2) throws JSONException {
+
+        Object obj1Converted = convertJsonElement(ob1);
+        Object obj2Converted = convertJsonElement(ob2);
+        return obj1Converted.equals(obj2Converted);
+    }
+
+    private static Object convertJsonElement(Object elem) throws JSONException {
+
+        if (elem instanceof JSONObject) {
+            JSONObject obj = (JSONObject) elem;
+            Iterator<String> keys = obj.keys();
+            Map<String, Object> jsonMap = new HashMap<>();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                jsonMap.put(key, convertJsonElement(obj.get(key)));
+            }
+            return jsonMap;
+        } else if (elem instanceof JSONArray) {
+            JSONArray arr = (JSONArray) elem;
+            Set<Object> jsonSet = new HashSet<>();
+            for (int i = 0; i < arr.length(); i++) {
+                jsonSet.add(convertJsonElement(arr.get(i)));
+            }
+            return jsonSet;
+        } else {
+            return elem;
+        }
     }
 
     /**

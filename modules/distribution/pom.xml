@@ -139,7 +139,6 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.event.processor.manager.core.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.application.authentication.framework.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.default.json</param>
-                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.xacml.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.captcha.server.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim2.common.feature.default.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.scim.common.feature.default.json</param>
@@ -187,7 +186,6 @@
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.core.server.feature.unit-resolve.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.event.output.adapter.unit-resolve.json</param>
                                         <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.event.server.feature.unit-resolve.json</param>
-                                        <param>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/org.wso2.carbon.identity.xacml.server.feature.unit-resolve.json</param>
                                     </include>
                                     <target>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/unit-resolve.json</target>
                                     <mergeChildren>true</mergeChildren>
@@ -210,7 +208,6 @@
                         <configuration>
                             <tasks>
                                 <property name="tempdir" value="target/docs-temp" />
-                                <property name="registryPolicyHandler" value="&lt;handler class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler&quot;&gt;${line.separator} &lt;filter class=&quot;org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher&quot;&gt;${line.separator} &lt;property name=&quot;mediaType&quot;&gt;application/xacml-policy+xml&lt;/property&gt;${line.separator} &lt;/filter&gt;${line.separator} &lt;/handler&gt;${line.separator}${line.separator} &lt;!--&lt;handler class=&quot;org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler&quot;&gt;" />
 
                                 <property name="xss-kernel-token" value="&lt;XSSPreventionConfig&gt;${line.separator} &lt;Enabled&gt;true&lt;/Enabled&gt;${line.separator} &lt;Rule&gt;allow&lt;/Rule&gt;${line.separator} &lt;Patterns&gt;${line.separator} &lt;!--Pattern&gt;&lt;/Pattern--&gt;${line.separator} &lt;/Patterns&gt;${line.separator} &lt;/XSSPreventionConfig&gt;" />
 
