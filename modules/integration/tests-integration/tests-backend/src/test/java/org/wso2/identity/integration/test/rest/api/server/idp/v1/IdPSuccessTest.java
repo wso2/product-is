@@ -16,8 +16,8 @@
 
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
-import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -56,6 +56,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
     private static final String IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
+    private static final String UPDATED_ENDPOINT_URI = "https://xyz.com/authenticate";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String USERNAME_VALUE = "testUser";
@@ -322,7 +323,6 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test
     public void testAddIdPWithUserDefinedAuthenticator() throws IOException {
 
-        RestAssured.defaultParser = Parser.JSON;
         String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
                 userDefinedAuthenticatorPayload.getAuthenticatorId());
         body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
@@ -358,25 +358,23 @@ public class IdPSuccessTest extends IdPTestBase {
                         equalTo(true));
     }
 
-//    @Test(dependsOnMethods = "testAddIdPWithUserDefinedAuthenticator")
-//    public void testUpdateUserDefinedAuthenticatorOfIdP() throws JsonProcessingException {
-//
-//        // TODO: Check the result with development improvement
-//        RestAssured.defaultParser = Parser.JSON;
-//        Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
-//                        PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + FEDERATED_AUTHENTICATOR_ID,
-//                createUserDefinedAuthenticatorPayload(UPDATED_ENDPOINT_URI).convertToJasonPayload());
-//
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_OK)
-//                .body("authenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
-//                .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
-//                .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI));
-//    }
-
     @Test(dependsOnMethods = "testGetUserDefinedAuthenticatorsOfIdP")
+    public void testUpdateUserDefinedAuthenticatorOfIdP() throws JsonProcessingException {
+
+        Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
+                        PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + FEDERATED_AUTHENTICATOR_ID,
+                createUserDefinedAuthenticatorPayload(UPDATED_ENDPOINT_URI).convertToJasonPayload());
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("authenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
+                .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
+                .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI));
+    }
+
+    @Test(dependsOnMethods = "testUpdateUserDefinedAuthenticatorOfIdP")
     public void testDeleteIdPWithUserDefinedAuthenticator() {
 
         Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId);
