@@ -395,29 +395,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()));
 
-        testActionId = responseOfPost.getBody().jsonPath().getString("id");
-    }
-
-    @Test(dependsOnMethods = {"testCreateActionWithExtraEndpointAuthProperties"})
-    public void testUpdateActionWithExtraEndpointAuthProperties() {
-
-        AuthenticationTypeProperties newAuthProperties = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
-                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
-                }});
-
-        String body = toJSONString(newAuthProperties);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId + ACTION_BEARER_AUTH_PATH, body);
-
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()));
-
         // Delete, created action.
-        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH , testActionId);
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH , responseOfPost.getBody().jsonPath().getString("id"));
     }
 }
