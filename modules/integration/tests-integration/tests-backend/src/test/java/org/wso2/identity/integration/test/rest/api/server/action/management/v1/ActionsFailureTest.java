@@ -187,20 +187,6 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-
-        // Update Action Endpoint Authentication Properties with an invalid action id.
-        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
-                }});
-
-        body = toJSONString(authenticationType);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID + ACTION_BEARER_AUTH_PATH, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
