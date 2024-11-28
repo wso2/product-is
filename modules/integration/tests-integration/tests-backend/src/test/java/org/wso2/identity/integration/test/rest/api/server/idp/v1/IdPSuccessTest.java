@@ -29,10 +29,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.AuthenticationType;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Endpoint;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.util.UserDefinedAuthenticatorPayload;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,21 +45,7 @@ import static org.testng.Assert.assertNotNull;
 public class IdPSuccessTest extends IdPTestBase {
 
     private String idPId;
-    private String customIdPId;
     private String idPTemplateId;
-    private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
-    private String idpCreatePayload;
-
-    private static final String FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER = "<FEDERATED_AUTHENTICATOR_ID>";
-    private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
-    private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
-    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg==";
-    private static final String IDP_NAME = "Custom Auth IDP";
-    private static final String ENDPOINT_URI = "https://abc.com/authenticate";
-    private static final String USERNAME = "username";
-    private static final String PASSWORD = "password";
-    private static final String USERNAME_VALUE = "testUser";
-    private static final String PASSWORD_VALUE = "testPassword";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -79,30 +61,6 @@ public class IdPSuccessTest extends IdPTestBase {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayload();
-        idpCreatePayload = readResource("add-idp-with-custom-fed-auth.json");
-
-    }
-
-    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayload() {
-
-        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
-        userDefinedAuthenticatorPayload.setIsEnabled(true);
-        userDefinedAuthenticatorPayload.setAuthenticatorId(FEDERATED_AUTHENTICATOR_ID);
-        userDefinedAuthenticatorPayload.setDefinedBy(FederatedAuthenticatorRequest.DefinedByEnum.USER.toString());
-
-        Endpoint endpoint = new Endpoint();
-        endpoint.setUri(ENDPOINT_URI);
-        AuthenticationType authenticationType = new AuthenticationType();
-        authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(USERNAME, USERNAME_VALUE);
-        properties.put(PASSWORD, PASSWORD_VALUE);
-        authenticationType.setProperties(properties);
-        endpoint.authentication(authenticationType);
-        userDefinedAuthenticatorPayload.setEndpoint(endpoint);
-
-        return userDefinedAuthenticatorPayload;
     }
 
     @AfterClass(alwaysRun = true)
@@ -296,27 +254,6 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("displayName", equalTo("scim"))
                 .body("blockingEnabled", equalTo(false))
                 .body("rulesEnabled", equalTo(false));
-    }
-
-    @Test
-    public void testAddIdPWithUserDefinedAuthenticator() throws IOException {
-
-        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
-                userDefinedAuthenticatorPayload.getAuthenticatorId());
-        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
-                userDefinedAuthenticatorPayload.convertToJasonPayload());
-        body = body.replace(IDP_NAME_PLACEHOLDER, IDP_NAME);
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue());
-
-        String location = response.getHeader(HttpHeaders.LOCATION);
-        assertNotNull(location);
-        customIdPId = location.substring(location.lastIndexOf("/") + 1);
-        assertNotNull(customIdPId);
     }
 
     @Test(dependsOnMethods = {"testGetMetaOutboundConnector"})

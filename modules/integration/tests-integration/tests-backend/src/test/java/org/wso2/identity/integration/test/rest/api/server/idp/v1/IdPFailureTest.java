@@ -38,9 +38,11 @@ import org.wso2.identity.integration.test.rest.api.server.idp.v1.util.UserDefine
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -54,8 +56,8 @@ public class IdPFailureTest extends IdPTestBase {
     private static final String PASSWORD = "password";
     private static final String FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER = "<FEDERATED_AUTHENTICATOR_ID>";
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
-    private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_1 = "<FEDERATED_AUTHENTICATOR_1>";
-    private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_2 = "<FEDERATED_AUTHENTICATOR_2>";
+    private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_1 = "\"<FEDERATED_AUTHENTICATOR_1>\"";
+    private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_2 = "\"<FEDERATED_AUTHENTICATOR_2>\"";
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
     private static final String AUTHENTICATOR_ID_1 = "Y3VzdG9tQXV0aGVudGljYXRvcjE=";
     private String idPId;
@@ -334,10 +336,9 @@ public class IdPFailureTest extends IdPTestBase {
         responseOfDuplicate.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_CONFLICT)
-                .header(HttpHeaders.LOCATION, notNullValue());
-        String locationOfDuplicate = response.getHeader(HttpHeaders.LOCATION);
-        assertNotNull(locationOfDuplicate);
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Federated authenticator name " +
+                        new String(Base64.getDecoder().decode(AUTHENTICATOR_ID_1)) + " is already taken."));
     }
 
     @Test
@@ -363,10 +364,7 @@ public class IdPFailureTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .header(HttpHeaders.LOCATION, notNullValue());
-
-        String location = response.getHeader(HttpHeaders.LOCATION);
-        assertNotNull(location);
+                .body("message", equalTo("Multiple authenticators found."));
     }
 
     private Response createUserDefAuthenticator(String idpName,
@@ -383,8 +381,8 @@ public class IdPFailureTest extends IdPTestBase {
     }
 
     private Response createMultiUserDefAuthenticators(String idpName, String idpCreatePayload,
-                                                UserDefinedAuthenticatorPayload
-                                                        userDefinedAuthenticatorPayload1,
+                                                      UserDefinedAuthenticatorPayload
+                                                              userDefinedAuthenticatorPayload1,
                                                       UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload2)
             throws JsonProcessingException {
 
