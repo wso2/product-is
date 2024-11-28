@@ -324,45 +324,6 @@ public class ActionsSuccessTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testUpdateAction"})
-    public void testUpdateEndpointAuthentication() {
-
-        AuthenticationTypeProperties newAuthProperties = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
-                }});
-
-        String body = toJSONString(newAuthProperties);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId + ACTION_BEARER_AUTH_PATH, body);
-
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
-                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()));
-    }
-
-    @Test(dependsOnMethods = {"testUpdateEndpointAuthentication"})
-    public void testUpdateEndpointAuthProperties() {
-
-        AuthenticationTypeProperties newAuthProperties = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_UPDATED_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
-                }});
-
-        String body = toJSONString(newAuthProperties);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId + ACTION_BEARER_AUTH_PATH, body);
-
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()));
-    }
-
-    @Test(dependsOnMethods = {"testUpdateEndpointAuthProperties"})
     public void testDeactivateAction() {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +

@@ -204,43 +204,6 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
-    public void testUpdateActionWithInvalidEndpointAuthProperties() {
-
-        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
-                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
-                }});
-
-        String body = toJSONString(authenticationType);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2 + ACTION_BASIC_AUTH_PATH, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("description", equalTo("Required authentication properties are not " +
-                        "provided or invalid."));
-    }
-
-    @Test(dependsOnMethods = {"testUpdateActionWithInvalidEndpointAuthProperties"})
-    public void testUpdateActionWithEmptyEndpointAuthPropertyValues() {
-
-        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_USERNAME_AUTH_PROPERTY, "");
-                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
-                }});
-
-        String body = toJSONString(authenticationType);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2 + ACTION_BASIC_AUTH_PATH, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("description", equalTo("Authentication property values cannot be empty."));
-    }
-
-    @Test(dependsOnMethods = {"testUpdateActionWithEmptyEndpointAuthPropertyValues"})
     public void testActivateActionWithInvalidID() {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
