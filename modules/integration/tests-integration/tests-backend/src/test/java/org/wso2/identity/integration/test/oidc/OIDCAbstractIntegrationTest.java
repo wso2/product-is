@@ -20,13 +20,11 @@ package org.wso2.identity.integration.test.oidc;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
@@ -52,6 +50,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 
 /**
  * This class defines basic functionality needed to initiate an OIDC test.
@@ -188,28 +188,19 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
                                               HttpClient client, CookieStore cookieStore)
             throws Exception {
 
-        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application,
-                getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()));
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("client_id", application.getClientId()));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", application.getCallBackURL()));
 
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths
-                        .appUserAuthorizePath));
+        urlParameters.add(new BasicNameValuePair("scope", "openid"));
 
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        EntityUtils.consume(response.getEntity());
-
-        if (isFirstAuthenticationRequest) {
-            response = sendGetRequest(client, locationHeader.getValue());
-        } else {
-            HttpClient httpClientWithoutAutoRedirections = HttpClientBuilder.create().disableRedirectHandling()
-                    .setDefaultCookieStore(cookieStore).build();
-            response = sendGetRequest(httpClientWithoutAutoRedirections, locationHeader.getValue());
-        }
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
 
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         if (isFirstAuthenticationRequest) {
             OIDCUtilTest.setSessionDataKey(response, keyPositionMap);
-
         } else {
             Assert.assertFalse(Utils.requestMissingClaims(response));
         }

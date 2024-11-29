@@ -189,7 +189,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("client_id", oidcApplication.getClientId()));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL_APP1));
 
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
 
@@ -241,7 +241,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code", authorizationCode));
         urlParameters.add(new BasicNameValuePair("grant_type", OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL_APP1));
         urlParameters.add(new BasicNameValuePair("client_id", oidcApplication.getClientSecret()));
 
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
@@ -261,7 +261,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
                 OIDCUtilTest.playgroundAppOneAppContext,
-                MockClientCallback.CALLBACK_URL);
+                MockClientCallback.CALLBACK_URL_APP1);
         return playgroundApp;
     }
 

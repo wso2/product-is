@@ -32,6 +32,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.identity.integration.test.base.MockClientCallback;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
@@ -44,6 +45,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 
 /**
  * This test class tests the OIDC RP-Initiated logout flows
@@ -62,6 +65,7 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     OIDCApplication playgroundAppOne;
     OIDCApplication playgroundAppTwo;
+    private MockClientCallback mockClientCallback;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -88,6 +92,9 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultRequestConfig(requestConfig)
                 .build();
+
+        mockClientCallback = new MockClientCallback();
+        mockClientCallback.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -97,6 +104,7 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         deleteApplication(playgroundAppOne);
         deleteApplication(playgroundAppTwo);
         clear();
+        mockClientCallback.stop();
     }
 
     @AfterMethod
@@ -145,12 +153,14 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
 
     private void testInitiateOIDCRequest(OIDCApplication application, HttpClient client) throws Exception {
 
-        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
-                        OAuth2Constant.PlaygroundAppPaths.appUserAuthorizePath));
-        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName() +
-                ". Authorized response is null.");
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("client_id", application.getClientId()));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", application.getCallBackURL()));
+        urlParameters.add(new BasicNameValuePair("scope", "openid email profile"));
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
 
@@ -196,13 +206,7 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
             sessionDataKeyConsent = keyValues.get(0).getValue();
             Assert.assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent is null.");
         } else {
-            keyPositionMap.put("Authorization Code", 1);
-            List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response,
-                    keyPositionMap);
-            Assert.assertNotNull(keyValues, "Authorization code not received for " +
-                    application.getApplicationName());
-
-            authorizationCode = new AuthorizationCode(keyValues.get(0).getValue());
+            authorizationCode = new AuthorizationCode(mockClientCallback.getAuthorizationCode());
             Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
                     .getApplicationName());
         }
@@ -221,17 +225,7 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         response = sendPostRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Authorization code response is invalid for " +
-                application.getApplicationName());
-
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("Authorization Code", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response,
-                keyPositionMap);
-        Assert.assertNotNull(keyValues, "Authorization code not received for " +
-                application.getApplicationName());
-
-        authorizationCode = new AuthorizationCode(keyValues.get(0).getValue());
+        authorizationCode = new AuthorizationCode(mockClientCallback.getAuthorizationCode());
         Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
                 .getApplicationName());
         EntityUtils.consume(response.getEntity());
@@ -296,10 +290,8 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
                 Assert.assertTrue(redirectUrl.contains(application.getCallBackURL()), "Not redirected to the"
                         + "post logout redirect url");
                 response = sendGetRequest(client, redirectUrl);
-                Assert.assertNotNull(response, "OIDC Logout failed.");
-                String result = DataExtractUtil.getContentData(response);
-                Assert.assertTrue(result.contains("WSO2 OAuth2 Playground"), "OIDC logout failed.");
                 EntityUtils.consume(response.getEntity());
+                mockClientCallback.verifyForLogoutRedirectionForApp1();
             } else {
                 Assert.assertTrue(redirectUrl.contains("oauth2_error.do"));
             }
