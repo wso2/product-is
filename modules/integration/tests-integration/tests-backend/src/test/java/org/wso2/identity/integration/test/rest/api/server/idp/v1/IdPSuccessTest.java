@@ -57,9 +57,13 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private static final String UPDATED_ENDPOINT_URI = "https://xyz.com/authenticate";
+    private static final String BASIC = "BASIC";
+    private static final String BEARER = "BEARER";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
+    private static final String ACCESS_TOKEN = "accessToken";
     private static final String USERNAME_VALUE = "testUser";
+    private static final String ACCESS_TOKEN_VALUE = "testBearerToken";
     private static final String PASSWORD_VALUE = "testPassword";
     private String idPId;
     private String customIdPId;
@@ -81,32 +85,11 @@ public class IdPSuccessTest extends IdPTestBase {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayload();
+        userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayloadWithBasic(ENDPOINT_URI);
         idpCreatePayload = readResource("add-idp-with-custom-fed-auth.json");
     }
 
-    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayload() {
-
-        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
-        userDefinedAuthenticatorPayload.setIsEnabled(true);
-        userDefinedAuthenticatorPayload.setAuthenticatorId(FEDERATED_AUTHENTICATOR_ID);
-        userDefinedAuthenticatorPayload.setDefinedBy(FederatedAuthenticatorRequest.DefinedByEnum.USER.toString());
-
-        Endpoint endpoint = new Endpoint();
-        endpoint.setUri(ENDPOINT_URI);
-        AuthenticationType authenticationType = new AuthenticationType();
-        authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(USERNAME, USERNAME_VALUE);
-        properties.put(PASSWORD, PASSWORD_VALUE);
-        authenticationType.setProperties(properties);
-        endpoint.authentication(authenticationType);
-        userDefinedAuthenticatorPayload.setEndpoint(endpoint);
-
-        return userDefinedAuthenticatorPayload;
-    }
-
-    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayload(String endpointUri) {
+    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayloadWithBasic(String endpointUri) {
 
         UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
         userDefinedAuthenticatorPayload.setIsEnabled(true);
@@ -120,6 +103,27 @@ public class IdPSuccessTest extends IdPTestBase {
         Map<String, Object> properties = new HashMap<>();
         properties.put(USERNAME, USERNAME_VALUE);
         properties.put(PASSWORD, PASSWORD_VALUE);
+        authenticationType.setProperties(properties);
+        endpoint.authentication(authenticationType);
+        userDefinedAuthenticatorPayload.setEndpoint(endpoint);
+
+        return userDefinedAuthenticatorPayload;
+    }
+
+    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayloadWithBearer(String endpointUri) {
+
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
+        userDefinedAuthenticatorPayload.setIsEnabled(true);
+        userDefinedAuthenticatorPayload.setAuthenticatorId(FEDERATED_AUTHENTICATOR_ID);
+        userDefinedAuthenticatorPayload.setDefinedBy(FederatedAuthenticatorRequest.DefinedByEnum.USER.toString());
+
+        Endpoint endpoint = new Endpoint();
+        endpoint.setUri(endpointUri);
+        AuthenticationType authenticationType = new AuthenticationType();
+        authenticationType.setType(AuthenticationType.TypeEnum.BEARER);
+        Map<String, Object> properties = new HashMap<>();
+        authenticationType.setType(AuthenticationType.TypeEnum.BEARER);
+        properties.put(ACCESS_TOKEN, ACCESS_TOKEN_VALUE);
         authenticationType.setProperties(properties);
         endpoint.authentication(authenticationType);
         userDefinedAuthenticatorPayload.setEndpoint(endpoint);
@@ -355,6 +359,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.name",
                         equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.isEnabled",
+                        equalTo(true))
+                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.isEnabled",
                         equalTo(true));
     }
 
@@ -363,7 +369,8 @@ public class IdPSuccessTest extends IdPTestBase {
 
         Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
                         PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + FEDERATED_AUTHENTICATOR_ID,
-                createUserDefinedAuthenticatorPayload(UPDATED_ENDPOINT_URI).convertToJasonPayload());
+                createUserDefinedAuthenticatorPayloadWithBearer(UPDATED_ENDPOINT_URI)
+                        .convertToJasonPayload());
 
         response.then()
                 .log().ifValidationFails()
@@ -371,7 +378,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("authenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
                 .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
-                .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI));
+                .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.value()));
     }
 
     @Test(dependsOnMethods = "testUpdateUserDefinedAuthenticatorOfIdP")
