@@ -77,12 +77,6 @@
             <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServiceAuthCodeGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.consented.token.OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTestCase"/>
 
-            <!--TODO Remove following open id tests since deprecated-->
-            <class name="org.wso2.identity.integration.test.openid.OpenIDAuthenticationTestCase" />
-            <class name="org.wso2.identity.integration.test.openid.OpenIDProviderServerConfigTestCase" />
-            <class name="org.wso2.identity.integration.test.openid.OpenIDRPManagementTestCase"/>
-            <!--TODO End of openid tests-->
-
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
@@ -107,7 +101,6 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCRPInitiatedLogoutTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSODifferentSubjectIDTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCCustomScopesLoginTest"/>
-            <!-- <class name="org.wso2.identity.integration.test.openid.OpenIDSSOTestCase"/> -->
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest" />
             <class name="org.wso2.identity.integration.test.saml.SAMLErrorResponseTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase"/>
