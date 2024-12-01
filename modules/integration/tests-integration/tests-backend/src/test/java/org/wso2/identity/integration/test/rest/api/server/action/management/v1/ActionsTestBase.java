@@ -45,8 +45,6 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
     protected static final String ACTION_DEACTIVATE_PATH = "/deactivate";
     protected static final String ACTION_ACTIVATE_PATH = "/activate";
-    protected static final String ACTION_BEARER_AUTH_PATH = "/bearer";
-    protected static final String ACTION_BASIC_AUTH_PATH = "/basic";
 
     protected static final String PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE = "PRE_ISSUE_ACCESS_TOKEN";
 
