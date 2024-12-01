@@ -30,14 +30,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.actions.model.User;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.util.UserDefinedAuthenticatorPayload;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +43,6 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 /**
  * Test class for Identity Provider Management REST APIs failure paths.
@@ -60,8 +57,9 @@ public class IdPFailureTest extends IdPTestBase {
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_2 = "\"<FEDERATED_AUTHENTICATOR_2>\"";
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
     private static final String AUTHENTICATOR_ID_1 = "Y3VzdG9tQXV0aGVudGljYXRvcjE=";
+    private static final String AUTHENTICATOR_ID_2 = "Y3VzdG9tQXV0aGVudGljYXRvcg==";
+    private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private String idPId;
-    private String customIdPId;
     private String idpCreatePayload;
     private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
     private UserDefinedAuthenticatorPayload duplicatedUserDefinedAuthenticatorPayload;
@@ -74,15 +72,6 @@ public class IdPFailureTest extends IdPTestBase {
         this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
         this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
-    }
-
-    @DataProvider(name = "restAPIUserConfigProvider")
-    public static Object[][] restAPIUserConfigProvider() {
-
-        return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
-        };
     }
 
     @BeforeClass(alwaysRun = true)
@@ -108,7 +97,15 @@ public class IdPFailureTest extends IdPTestBase {
     public void testFinish() {
 
         RestAssured.basePath = StringUtils.EMPTY;
-        customIdPId = null;
+    }
+
+    @DataProvider(name = "restAPIUserConfigProvider")
+    public static Object[][] restAPIUserConfigProvider() {
+
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
     }
 
     @Test
@@ -141,6 +138,7 @@ public class IdPFailureTest extends IdPTestBase {
         Response response = getResponseOfPost(IDP_API_BASE_PATH, readResource("add-idp-duplicate-properties.json"));
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-60025");
     }
+
 
     @Test(dependsOnMethods = {"addIdPConflict"})
     public void testGetIdPFederatedAuthenticatorWithInvalidAuthId() {
@@ -203,118 +201,93 @@ public class IdPFailureTest extends IdPTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDP-65005", "JWKS URI");
     }
 
-    // TODO: check 400
-//    @Test
-//    public void testAddIdPWithUserDefinedAuthenticatorWhenEndpointUriIsEmpty() throws IOException {
-//
-//        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayload(
-//                "U2VjdXJlU3RyaW5nUGFyc2Vy",
-//                "",
-//                "testUser",
-//                "testPassword");
-//
-//        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.getAuthenticatorId());
-//        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.convertToJasonPayload());
-//        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(FIELD_NOT_FOUND)
-//                .header(HttpHeaders.LOCATION, notNullValue());
-//
-//        String location = response.getHeader(HttpHeaders.LOCATION);
-//        assertNotNull(location);
-//        String customIdPId = location.substring(location.lastIndexOf("/") + 1);
-//        assertNotNull(customIdPId);
-//    }
-//
+    @Test
+    public void testAddIdPWithUserDefinedAuthenticatorWhenEndpointUriIsEmpty() throws IOException {
 
-    // TODO: check 400
-//    @Test
-//    public void testAddIdPWithUserDefinedAuthenticatorWhenEndpointUriIsInvalid() throws IOException {
-//
-//        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayload(
-//                "U2VjdXJlU3RyaW5nUGFyc2Vy",
-//                "hjdhskadhasd",
-//                "testUser",
-//                "testPassword");
-//
-//        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.getAuthenticatorId());
-//        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.convertToJasonPayload());
-//        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(FIELD_NOT_FOUND)
-//                .header(HttpHeaders.LOCATION, notNullValue());
-//
-//        String location = response.getHeader(HttpHeaders.LOCATION);
-//        assertNotNull(location);
-//        String customIdPId = location.substring(location.lastIndexOf("/") + 1);
-//        assertNotNull(customIdPId);
-//    }
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayload(
+                AUTHENTICATOR_ID_1,
+                "",
+                "testUser",
+                "testPassword");
+        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.getAuthenticatorId());
+        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.convertToJasonPayload());
 
-    // TODO: check 400
-//    @Test
-//    public void testAddIdPWithUserDefinedAuthenticatorWhenEndpointConfigIsEmpty() throws IOException {
-//
-//        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload =
-//                createUserDefinedAuthenticatorPayloadWithEmptyEndpointConfig(
-//                "Y3VzdG9tQXV0aGVudGljYXRvcg==");
-//
-//        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.getAuthenticatorId());
-//        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.convertToJasonPayload());
-//        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(FIELD_NOT_FOUND)
-//                .header(HttpHeaders.LOCATION, notNullValue());
-//
-//        String location = response.getHeader(HttpHeaders.LOCATION);
-//        assertNotNull(location);
-//        String customIdPId = location.substring(location.lastIndexOf("/") + 1);
-//        assertNotNull(customIdPId);
-//    }
-
-    // TODO: check 400
-//    @Test
-//    public void testAddIdPWithUserDefinedAuthenticatorWhenAuthenticatorAuthDetailsIsEmpty() throws IOException {
-//
-//        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload =
-//                createUserDefinedAuthenticatorPayloadWithEmptyEndpointConfig("UmFuZG9tU3RyaW5nR2VuZXJhdG9y");
-//
-//        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.getAuthenticatorId());
-//        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
-//                userDefinedAuthenticatorPayload.convertToJasonPayload());
-//        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
-//        response.then()
-//                .log().ifValidationFails()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_CREATED)
-//                .header(HttpHeaders.LOCATION, notNullValue());
-//
-//        String location = response.getHeader(HttpHeaders.LOCATION);
-//        assertNotNull(location);
-//        String customIdPId = location.substring(location.lastIndexOf("/") + 1);
-//        assertNotNull(customIdPId);
-//    }
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Invalid Request"))
+                .body("description", equalTo("must match \"^https?://.+\""));
+    }
 
     @Test
-    public void testAddIdPWithUserDefinedAuthenticatorWhenAuthenticatorNameIsDuplicated() throws IOException {
+    public void testAddIdPWithUserDefinedAuthenticatorWhenEndpointUriIsInvalid() throws IOException {
 
-        userDefinedAuthenticatorPayload =
-                createUserDefinedAuthenticatorPayload(AUTHENTICATOR_ID_1,
-                        "https://abc.com/authenticate",
-                        "testUser",
-                        "testPassword");
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayload(
+                AUTHENTICATOR_ID_1,
+                "ftp://test.com",
+                "testUser",
+                "testPassword");
+        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.getAuthenticatorId());
+        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.convertToJasonPayload());
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Invalid Request"))
+                .body("description", equalTo("must match \"^https?://.+\""));
+    }
+
+    @Test
+    public void testAddIdPWithUserDefinedAuthenticatorWhenEndpointConfigIsEmpty() throws IOException {
+
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload =
+                createUserDefinedAuthenticatorPayloadWithEmptyEndpointConfig(AUTHENTICATOR_ID_1);
+        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.getAuthenticatorId());
+        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.convertToJasonPayload());
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Endpoint configuration must be provided for the user defined " +
+                        "federated authenticators " + new String(Base64.getDecoder().decode(AUTHENTICATOR_ID_1)) + "."));
+    }
+
+    @Test
+    public void testAddIdPWithUserDefinedAuthenticatorWhenAuthenticatorAuthDetailsIsEmpty() throws IOException {
+
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload =
+                createUserDefinedAuthenticatorPayloadWithEmptyAuthenticationProperties(AUTHENTICATOR_ID_1, ENDPOINT_URI);
+        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.getAuthenticatorId());
+        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.convertToJasonPayload());
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Invalid Request"))
+                .body("description", equalTo("Property authentication cannot be null."));
+    }
+
+    @Test
+    public void testAddIdPWithUserDefinedAuthenticatorWithExistingAuthenticatorName() throws IOException {
+
+        userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayload(AUTHENTICATOR_ID_1, ENDPOINT_URI,
+                "testUser", "testPassword");
         Response response = createUserDefAuthenticator("CustomAuthIDP1", userDefinedAuthenticatorPayload);
         response.then()
                 .log().ifValidationFails()
@@ -323,7 +296,8 @@ public class IdPFailureTest extends IdPTestBase {
                 .header(HttpHeaders.LOCATION, notNullValue());
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
-        customIdPId = location.substring(location.lastIndexOf("/") + 1);
+        String customIdPId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(customIdPId);
 
         // duplicate the authenticator creation
         duplicatedUserDefinedAuthenticatorPayload =
@@ -347,13 +321,13 @@ public class IdPFailureTest extends IdPTestBase {
         String idpCreateErrorPayload = readResource("add-idp-with-custom-fed-multi-auth.json");
 
         UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload1 = createUserDefinedAuthenticatorPayload(
-                "Y3VzdG9tQXV0aGVudGljYXRvclg=",
-                "https://abc.com/authenticate",
+                AUTHENTICATOR_ID_1,
+                ENDPOINT_URI,
                 "testUser",
                 "testPassword");
         UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload2 = createUserDefinedAuthenticatorPayload(
-                "Y3VzdG9tQXV0aGVudGljYXRvclg=",
-                "https://abc.com/authenticate",
+                AUTHENTICATOR_ID_2,
+                ENDPOINT_URI,
                 "testUser",
                 "testPassword");
 
@@ -367,6 +341,14 @@ public class IdPFailureTest extends IdPTestBase {
                 .body("message", equalTo("Multiple authenticators found."));
     }
 
+    /**
+     * Create a user-defined authenticator and sends a POST request to the IDP API.
+     *
+     * @param idpName Name of the identity provider.
+     * @param userDefinedAuthenticatorPayload Payload containing authenticator details.
+     * @return Response received from the API call.
+     * @throws JsonProcessingException If there's an error while processing the JSON.
+     */
     private Response createUserDefAuthenticator(String idpName,
                                                 UserDefinedAuthenticatorPayload
                                                         userDefinedAuthenticatorPayload)
@@ -380,6 +362,16 @@ public class IdPFailureTest extends IdPTestBase {
         return getResponseOfPost(IDP_API_BASE_PATH, body);
     }
 
+    /**
+     * Create multiple user-defined authenticators for an IdP and sends a POST request to the IDP API.
+     *
+     * @param idpName Name of the identity provider.
+     * @param idpCreatePayload Base payload template for the identity provider.
+     * @param userDefinedAuthenticatorPayload1 First authenticator payload.
+     * @param userDefinedAuthenticatorPayload2 Second authenticator payload.
+     * @return Response received from the API call.
+     * @throws JsonProcessingException If there's an error while processing the JSON.
+     */
     private Response createMultiUserDefAuthenticators(String idpName, String idpCreatePayload,
                                                       UserDefinedAuthenticatorPayload
                                                               userDefinedAuthenticatorPayload1,
@@ -396,6 +388,15 @@ public class IdPFailureTest extends IdPTestBase {
         return getResponseOfPost(IDP_API_BASE_PATH, body);
     }
 
+    /**
+     * Create a user-defined authenticator payload with provided details.
+     *
+     * @param id Authenticator ID.
+     * @param endpoint_uri Endpoint URI for the authenticator.
+     * @param username Username for basic authentication.
+     * @param password Password for basic authentication.
+     * @return A user-defined authenticator payload.
+     */
     private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayload(String id, String endpoint_uri,
                                                                                   String username, String password) {
 
@@ -418,6 +419,12 @@ public class IdPFailureTest extends IdPTestBase {
         return userDefinedAuthenticatorPayload;
     }
 
+    /**
+     * Create a user-defined authenticator payload with an empty endpoint configuration.
+     *
+     * @param id Authenticator ID.
+     * @return A user-defined authenticator payload with no endpoint configuration.
+     */
     private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayloadWithEmptyEndpointConfig(String id) {
 
         UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
@@ -428,7 +435,14 @@ public class IdPFailureTest extends IdPTestBase {
         return userDefinedAuthenticatorPayload;
     }
 
-    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayloadWithEmptyAuthenticationDetails(
+    /**
+     * Create a user-defined authenticator payload with an endpoint URI with empty authentication properties.
+     *
+     * @param id Authenticator ID.
+     * @param endpoint_uri The endpoint URI for the authenticator.
+     * @return A user-defined authenticator payload with endpoint URI but without authentication details.
+     */
+    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayloadWithEmptyAuthenticationProperties(
             String id, String endpoint_uri) {
 
         UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();

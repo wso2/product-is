@@ -380,6 +380,18 @@ public class RESTTestBase extends ISIntegrationTest {
                 .post(endpointUri);
     }
 
+    protected Response getResponseOfPostNoFilter(String endpointUri, String body) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .body(body)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .post(endpointUri);
+    }
+
     /**
      * Invoke given endpointUri for POST with given body and Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
