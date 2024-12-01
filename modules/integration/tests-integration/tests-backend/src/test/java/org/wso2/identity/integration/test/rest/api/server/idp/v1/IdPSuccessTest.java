@@ -40,6 +40,8 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -57,8 +59,6 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private static final String UPDATED_ENDPOINT_URI = "https://xyz.com/authenticate";
-    private static final String BASIC = "BASIC";
-    private static final String BEARER = "BEARER";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String ACCESS_TOKEN = "accessToken";
@@ -346,7 +346,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = "testAddIdPWithUserDefinedAuthenticator")
-    public void testGetUserDefinedAuthenticatorsOfIdP() {
+    public void testGetUserDefinedAuthenticatorsOfIdP() throws XPathExpressionException {
 
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
                 PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH);
@@ -360,8 +360,10 @@ public class IdPSuccessTest extends IdPTestBase {
                         equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.isEnabled",
                         equalTo(true))
-                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.isEnabled",
-                        equalTo(true));
+                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.self",
+                        equalTo(getTenantedRelativePath("/api/server/v1/identity-providers/" +
+                                customIdPId + "/federated-authenticators/" + FEDERATED_AUTHENTICATOR_ID,
+                                context.getContextTenant().getDomain())));
     }
 
     @Test(dependsOnMethods = "testGetUserDefinedAuthenticatorsOfIdP")
@@ -378,19 +380,30 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("authenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
                 .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
+                .body("definedBy", equalTo("USER"))
                 .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.value()));
     }
 
-    @Test(dependsOnMethods = "testUpdateUserDefinedAuthenticatorOfIdP")
+    @Test(dependsOnMethods = {"testGetIdPs", "testUpdateUserDefinedAuthenticatorOfIdP"})
     public void testDeleteIdPWithUserDefinedAuthenticator() {
 
         Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId);
-
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        Response responseOfGet = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("message", equalTo("Resource not found."))
+                .body("description", equalTo("Unable to find a resource matching the provided identity " +
+                        "provider identifier " + customIdPId + "."));
+
     }
 
     @Test(dependsOnMethods = {"testGetMetaOutboundConnector"})
@@ -423,6 +436,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("description", equalTo("IDP for Google Federation"))
                 .body("isEnabled", equalTo(true))
                 .body("isPrimary", equalTo(false))
+                .body("federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
+                        SAMPLE_FEDERATED_AUTHENTICATOR_ID + "' }.definedBy", equalTo("SYSTEM"))
                 .body("image", equalTo("google-logo-url"))
                 .body("isFederationHub", equalTo(false))
                 .body("homeRealmIdentifier", equalTo("localhost"))
@@ -433,6 +448,7 @@ public class IdPSuccessTest extends IdPTestBase {
     public void testGetIdPs() throws Exception {
 
         String baseIdentifier = "identityProviders.find{ it.id == '" + idPId + "' }.";
+        String baseIdentifierUserDef = "identityProviders.find{ it.id == '" + customIdPId + "' }.";
         Response response = getResponseOfGet(IDP_API_BASE_PATH);
         response.then()
                 .log().ifValidationFails()
@@ -444,6 +460,11 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
+                        context.getContextTenant().getDomain())))
+                .body(baseIdentifierUserDef + "name", equalTo(IDP_NAME))
+                .body(baseIdentifierUserDef + "isEnabled", equalTo(true))
+                .body(baseIdentifierUserDef + "self", equalTo(getTenantedRelativePath(
+                        "/api/server/v1/identity-providers/" + customIdPId,
                         context.getContextTenant().getDomain())));
     }
 
