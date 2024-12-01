@@ -113,7 +113,7 @@ public class ActionsSuccessTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateAction"})
-    public void testGetActionByActionType() {
+    public void testGetActionsByActionType() {
 
         Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
                 PRE_ISSUE_ACCESS_TOKEN_PATH);
@@ -124,14 +124,33 @@ public class ActionsSuccessTest extends ActionsTestBase {
                 .body( "find { it.id == '" + testActionId + "' }.name", equalTo(TEST_ACTION_NAME))
                 .body( "find { it.id == '" + testActionId + "' }.description", equalTo(TEST_ACTION_DESCRIPTION))
                 .body( "find { it.id == '" + testActionId + "' }.status", equalTo(TEST_ACTION_ACTIVE_STATUS))
-                .body( "find { it.id == '" + testActionId + "' }.endpoint.uri", equalTo(TEST_ENDPOINT_URI))
-                .body( "find { it.id == '" + testActionId + "' }.endpoint.authentication.type",
-                        equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body( "find { it.id == '" + testActionId + "' }.endpoint.authentication",
-                        not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("find { it.id == '" + testActionId + "' }.links", notNullValue())
+                .body("find { it.id == '" + testActionId + "' }.links.find { it.rel == 'self' }.href",
+                        equalTo(buildBaseURL() + ACTION_MANAGEMENT_API_BASE_PATH +
+                                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId))
+                .body("find { it.id == '" + testActionId + "' }.links.find { it.rel == 'self' }.method",
+                        equalTo("GET"));
     }
 
-    @Test(dependsOnMethods = {"testGetActionByActionType"})
+    @Test(dependsOnMethods = {"testGetActionsByActionType"})
+    public void testGetActionByActionId() {
+
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+    }
+
+    @Test(dependsOnMethods = {"testGetActionByActionId"})
     public void testGetActionTypes() {
 
         Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH + TYPES_API_PATH);

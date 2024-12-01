@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
@@ -139,6 +140,20 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(object);
+    }
+
+    /**
+     * Build the base URL for the REST API.
+     *
+     * @return Base URL.
+     */
+    public String buildBaseURL() {
+
+        if (this.tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return String.format(API_SERVER_BASE_PATH, "v1");
+        } else {
+            return "/t/" + this.tenant + String.format(API_SERVER_BASE_PATH, "v1");
+        }
     }
 }
 
