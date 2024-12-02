@@ -39,7 +39,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.base.MockClientCallback;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
@@ -90,7 +90,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     private String authorizationCode;
 
     private MockSMSProvider mockSMSProvider;
-    private MockClientCallback mockClientCallback;
+    private MockApplicationServer mockApplicationServer;
 
     private TestUserMode userMode;
 
@@ -116,8 +116,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
 
-        mockClientCallback = new MockClientCallback();
-        mockClientCallback.start();
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
 
         super.init();
 
@@ -170,7 +170,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         scim2RestClient.closeHttpClient();
 
         mockSMSProvider.stop();
-        mockClientCallback.stop();
+        mockApplicationServer.stop();
     }
 
     @Test(groups = "wso2.is", description = "Test passwordless authentication with SMS OTP")
@@ -189,7 +189,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("client_id", oidcApplication.getClientId()));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL_APP1));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", oidcApplication.getCallBackURL()));
 
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
 
@@ -212,7 +212,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         HttpResponse response = sendLoginPostForOtp(client, sessionDataKey, mockSMSProvider.getOTP());
         EntityUtils.consume(response.getEntity());
 
-        authorizationCode = mockClientCallback.getAuthorizationCode();
+        authorizationCode = mockApplicationServer.getAuthorizationCodeForApp(oidcApplication.getApplicationName());
         assertNotNull(authorizationCode);
     }
 
@@ -241,7 +241,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code", authorizationCode));
         urlParameters.add(new BasicNameValuePair("grant_type", OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", MockClientCallback.CALLBACK_URL_APP1));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", oidcApplication.getCallBackURL()));
         urlParameters.add(new BasicNameValuePair("client_id", oidcApplication.getClientSecret()));
 
         urlParameters.add(new BasicNameValuePair("scope", "openid"));
@@ -259,9 +259,9 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
     private OIDCApplication initOIDCApplication() {
 
-        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
+        OIDCApplication playgroundApp = new OIDCApplication(MockApplicationServer.Constants.APP1.NAME,
                 OIDCUtilTest.playgroundAppOneAppContext,
-                MockClientCallback.CALLBACK_URL_APP1);
+                MockApplicationServer.Constants.APP1.CALLBACK_URL);
         return playgroundApp;
     }
 

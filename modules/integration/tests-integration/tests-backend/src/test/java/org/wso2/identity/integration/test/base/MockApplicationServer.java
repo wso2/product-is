@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.base;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.extension.ResponseTransformerV2;
 import com.github.tomakehurst.wiremock.extension.responsetemplating.ResponseTemplateTransformer;
@@ -29,6 +28,8 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
@@ -42,15 +43,46 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 /**
  * Mock client callback endpoint to test OIDC related flows.
  */
-public class MockClientCallback {
+public class MockApplicationServer {
 
-    public static final String CALLBACK_URL_APP1 = "https://localhost:8091/dummyApp/oauth2client";
-    public static final String CALLBACK_URL_APP2 = "https://localhost:8091/dummyApp2/oauth2client";
+    public class MockClient {
+        private final AtomicReference<String> authorizationCode = new AtomicReference<>();
+        private final AtomicReference<String> errorCode = new AtomicReference<>();
 
-    private final AtomicReference<String> authorizationCode = new AtomicReference<>();
-    private final AtomicReference<String> errorCode = new AtomicReference<>();
+        public AtomicReference<String> getAuthorizationCode() {
+            return authorizationCode;
+        }
+        
+        public AtomicReference<String> getErrorCode() {
+            return errorCode;
+        }
+    }
+
+    public static class Constants {
+        public static class APP1 {
+            public static final String CALLBACK_URL = "https://localhost:8091/dummyApp/oauth2client";
+            public static final String NAME = "playground.appone";
+            public static final String CALLBACK_URL_PATH = "/dummyApp/oauth2client";
+        }
+
+        public static class APP2 {
+            public static final String CALLBACK_URL = "https://localhost:8091/dummyApp2/oauth2client";
+            public static final String NAME = "playground.apptwo";
+            public static final String CALLBACK_URL_PATH = "/dummyApp2/oauth2client";
+        }
+    }
+
+    private final Map<String, MockClient> apps = new HashMap<>();
 
     private WireMockServer wireMockServer;
+
+    public MockApplicationServer() {
+        
+        MockClient app1 = new MockClient();
+        MockClient app2 = new MockClient();
+        apps.put(Constants.APP1.NAME, app1);
+        apps.put(Constants.APP2.NAME, app2);
+    }
 
     public void start() {
 
@@ -67,7 +99,10 @@ public class MockClientCallback {
                             @Override
                             public Response transform(Response response, ServeEvent serveEvent) {
 
-                                authorizationCode.set(serveEvent.getRequest().getQueryParams().get("code").firstValue());
+                                AtomicReference<String> authorizationCode
+                                        = (AtomicReference<String>) serveEvent.getTransformerParameters().get("code");
+                                authorizationCode.set(serveEvent.getRequest().getQueryParams().get("code")
+                                        .firstValue());
                                 return response;
                             }
 
@@ -86,6 +121,8 @@ public class MockClientCallback {
                             @Override
                             public Response transform(Response response, ServeEvent serveEvent) {
 
+                                AtomicReference<String> errorCode
+                                        = (AtomicReference<String>) serveEvent.getTransformerParameters().get("error");
                                 errorCode.set(serveEvent.getRequest().getQueryParams().get("error").firstValue());
                                 return response;
                             }
@@ -103,8 +140,10 @@ public class MockClientCallback {
 
         wireMockServer.start();
 
-        // Configure the mock client endpoints.
-        configureMockEndpoints();
+        // Configure the mock client endpoints for App 1
+        configureMockEndpointsForApp(Constants.APP1.CALLBACK_URL_PATH, apps.get(Constants.APP1.NAME));
+        // Configure the mock client endpoints for App 2
+        configureMockEndpointsForApp(Constants.APP2.CALLBACK_URL_PATH, apps.get(Constants.APP2.NAME));
     }
 
     public void stop() {
@@ -114,73 +153,48 @@ public class MockClientCallback {
         }
     }
 
-    private void configureMockEndpoints() {
+    private void configureMockEndpointsForApp(String urlPath, MockClient app) {
 
         try {
-            // Endpoints for App 1
-            wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp/oauth2client"))
+            wireMockServer.stubFor(get(urlPathEqualTo(urlPath))
                     .withQueryParam("code", matching(".*"))
                     .willReturn(aResponse()
                             .withTransformers("response-template", "authz-code-transformer")
+                            .withTransformerParameter("code", app.getAuthorizationCode())
+                            .withTransformerParameter("error", app.getErrorCode())
                             .withStatus(200)));
-            wireMockServer.stubFor(post(urlPathEqualTo("/dummyApp/oauth2client"))
+            wireMockServer.stubFor(post(urlPathEqualTo(urlPath))
                     .withQueryParam("code", matching(".*"))
                     .willReturn(aResponse()
                             .withTransformers("response-template", "authz-code-transformer")
+                            .withTransformerParameter("code", app.getAuthorizationCode())
+                            .withTransformerParameter("error", app.getErrorCode())
                             .withStatus(200)));
-            wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp/oauth2client"))
-                    .withQueryParam("code", matching(".*"))
-                    .withQueryParam("session_state", matching(".*"))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template", "authz-code-transformer")
-                            .withStatus(200)));
-            wireMockServer.stubFor(post(urlPathEqualTo("/dummyApp/oauth2client"))
+            wireMockServer.stubFor(get(urlPathEqualTo(urlPath))
                     .withQueryParam("code", matching(".*"))
                     .withQueryParam("session_state", matching(".*"))
                     .willReturn(aResponse()
                             .withTransformers("response-template", "authz-code-transformer")
+                            .withTransformerParameter("code", app.getAuthorizationCode())
+                            .withTransformerParameter("error", app.getErrorCode())
                             .withStatus(200)));
-            wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp/oauth2client"))
+            wireMockServer.stubFor(post(urlPathEqualTo(urlPath))
+                    .withQueryParam("code", matching(".*"))
+                    .withQueryParam("session_state", matching(".*"))
+                    .willReturn(aResponse()
+                            .withTransformers("response-template", "authz-code-transformer")
+                            .withTransformerParameter("code", app.getAuthorizationCode())
+                            .withTransformerParameter("error", app.getErrorCode())
+                            .withStatus(200)));
+            wireMockServer.stubFor(get(urlPathEqualTo(urlPath))
                     .withQueryParam("error_description", matching(".*"))
                     .withQueryParam("error", matching(".*"))
                     .willReturn(aResponse()
                             .withTransformers("response-template", "error-code-transformer")
+                            .withTransformerParameter("code", app.getAuthorizationCode())
+                            .withTransformerParameter("error", app.getErrorCode())
                             .withStatus(200)));
-            wireMockServer.stubFor(get(urlEqualTo("/dummyApp/oauth2client"))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template")
-                            .withStatus(200)));
-
-            // Endpoints for App 2
-            wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp2/oauth2client"))
-                    .withQueryParam("code", matching(".*"))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template", "authz-code-transformer")
-                            .withStatus(200)));
-            wireMockServer.stubFor(post(urlPathEqualTo("/dummyApp2/oauth2client"))
-                    .withQueryParam("code", matching(".*"))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template", "authz-code-transformer")
-                            .withStatus(200)));
-            wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp2/oauth2client"))
-                    .withQueryParam("code", matching(".*"))
-                    .withQueryParam("session_state", matching(".*"))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template", "authz-code-transformer")
-                            .withStatus(200)));
-            wireMockServer.stubFor(post(urlPathEqualTo("/dummyApp2/oauth2client"))
-                    .withQueryParam("code", matching(".*"))
-                    .withQueryParam("session_state", matching(".*"))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template", "authz-code-transformer")
-                            .withStatus(200)));
-            wireMockServer.stubFor(get(urlPathEqualTo("/dummyApp2/oauth2client"))
-                    .withQueryParam("error_description", matching(".*"))
-                    .withQueryParam("error", matching(".*"))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template", "error-code-transformer")
-                            .withStatus(200)));
-            wireMockServer.stubFor(get(urlEqualTo("/dummyApp2/oauth2client"))
+            wireMockServer.stubFor(get(urlEqualTo(urlPath))
                     .willReturn(aResponse()
                             .withTransformers("response-template")
                             .withStatus(200)));
@@ -189,18 +203,29 @@ public class MockClientCallback {
         }
     }
 
-    public void verifyForLogoutRedirectionForApp1() {
+    public void verifyLogoutRedirectionForApp(String appName) {
 
-        wireMockServer.verify(getRequestedFor(urlEqualTo("/dummyApp/oauth2client")));
+        wireMockServer.verify(getRequestedFor(urlEqualTo(getCallbackUrlPath(appName))));
     }
 
-    public String getAuthorizationCode() {
+    public String getAuthorizationCodeForApp(String appName) {
 
-        return authorizationCode.get();
+        return apps.get(appName).getAuthorizationCode().get();
     }
 
-    public String getErrorCode() {
+    public String getErrorCode(String appName) {
 
-        return errorCode.get();
+        return apps.get(appName).getErrorCode().get();
+    }
+
+    private String getCallbackUrlPath(String appName) {
+        switch (appName) {
+            case Constants.APP1.NAME:
+                return Constants.APP1.CALLBACK_URL_PATH;
+            case Constants.APP2.NAME:
+                return Constants.APP2.CALLBACK_URL_PATH;
+            default:
+                throw new IllegalArgumentException("Unknown app name: " + appName);
+        }
     }
 }

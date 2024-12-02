@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.apache.commons.lang.StringUtils;
-import org.wso2.identity.integration.test.base.MockClientCallback;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
@@ -87,7 +87,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     OIDCApplication playgroundApp;
     private String claimsToGetConsent;
-    private MockClientCallback mockClientCallback;
+    private MockApplicationServer mockApplicationServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -113,8 +113,8 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
                 .setDefaultRequestConfig(requestConfig)
                 .build();
 
-        mockClientCallback = new MockClientCallback();
-        mockClientCallback.start();
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -123,7 +123,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         deleteUser(user);
         deleteApplication(playgroundApp);
         clear();
-        mockClientCallback.stop();
+        mockApplicationServer.stop();
     }
 
     @Test(groups = "wso2.is", description = "Test consent management after updating " +
@@ -234,7 +234,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         response = sendPostRequest(client, locationHeader.getValue());
         EntityUtils.consume(response.getEntity());
 
-        authorizationCode = mockClientCallback.getAuthorizationCode();
+        authorizationCode = mockApplicationServer.getAuthorizationCodeForApp(application.getApplicationName());
         Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
                 .getApplicationName());
     }

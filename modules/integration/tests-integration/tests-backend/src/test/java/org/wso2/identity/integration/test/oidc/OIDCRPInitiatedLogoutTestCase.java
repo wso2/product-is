@@ -32,7 +32,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.test.base.MockClientCallback;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
@@ -65,7 +65,7 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     OIDCApplication playgroundAppOne;
     OIDCApplication playgroundAppTwo;
-    private MockClientCallback mockClientCallback;
+    private MockApplicationServer mockApplicationServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -93,8 +93,8 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
                 .setDefaultRequestConfig(requestConfig)
                 .build();
 
-        mockClientCallback = new MockClientCallback();
-        mockClientCallback.start();
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -104,7 +104,7 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         deleteApplication(playgroundAppOne);
         deleteApplication(playgroundAppTwo);
         clear();
-        mockClientCallback.stop();
+        mockApplicationServer.stop();
     }
 
     @AfterMethod
@@ -206,7 +206,8 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
             sessionDataKeyConsent = keyValues.get(0).getValue();
             Assert.assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent is null.");
         } else {
-            authorizationCode = new AuthorizationCode(mockClientCallback.getAuthorizationCode());
+            authorizationCode = new AuthorizationCode(
+                    mockApplicationServer.getAuthorizationCodeForApp(application.getApplicationName()));
             Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
                     .getApplicationName());
         }
@@ -225,7 +226,8 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         response = sendPostRequest(client, locationHeader.getValue());
-        authorizationCode = new AuthorizationCode(mockClientCallback.getAuthorizationCode());
+        authorizationCode = new AuthorizationCode(
+                mockApplicationServer.getAuthorizationCodeForApp(application.getApplicationName()));
         Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
                 .getApplicationName());
         EntityUtils.consume(response.getEntity());
@@ -291,7 +293,7 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
                         + "post logout redirect url");
                 response = sendGetRequest(client, redirectUrl);
                 EntityUtils.consume(response.getEntity());
-                mockClientCallback.verifyForLogoutRedirectionForApp1();
+                mockApplicationServer.verifyLogoutRedirectionForApp(application.getApplicationName());
             } else {
                 Assert.assertTrue(redirectUrl.contains("oauth2_error.do"));
             }

@@ -30,7 +30,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.base.MockClientCallback;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
@@ -47,7 +47,7 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
     private CookieStore cookieStore = new BasicCookieStore();
     protected String sessionDataKey;
     protected String sessionDataKeyConsent;
-    private MockClientCallback mockClientCallback;
+    private MockApplicationServer mockApplicationServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -60,8 +60,8 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
         configureSPToSkipConsent();
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
-        mockClientCallback = new MockClientCallback();
-        mockClientCallback.start();
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -69,7 +69,7 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
 
         deleteObjects();
         clear();
-        mockClientCallback.stop();
+        mockApplicationServer.stop();
     }
 
     private void deleteObjects() throws Exception {

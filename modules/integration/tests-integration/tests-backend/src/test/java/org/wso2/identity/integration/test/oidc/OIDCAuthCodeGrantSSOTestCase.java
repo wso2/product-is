@@ -41,7 +41,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.test.base.MockClientCallback;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
@@ -51,7 +51,6 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.ArrayList;
@@ -83,7 +82,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     protected RequestConfig requestConfig;
     protected HttpClient client;
     protected List<NameValuePair> consentParameters = new ArrayList<>();
-    private MockClientCallback mockClientCallback;
+    private MockApplicationServer mockApplicationServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -108,8 +107,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
                 .setDefaultCookieStore(cookieStore)
                 .build();
 
-        mockClientCallback = new MockClientCallback();
-        mockClientCallback.start();
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
 
     }
 
@@ -119,7 +118,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         deleteUser(user);
         deleteApplications();
         clear();
-        mockClientCallback.stop();
+        mockApplicationServer.stop();
     }
 
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
@@ -136,7 +135,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         HttpResponse httpResponse = sendGetRequest(client, uri.toString());
 
         EntityUtils.consume(httpResponse.getEntity());
-        Assert.assertTrue(mockClientCallback.getErrorCode().contains("login_required"));
+        Assert.assertTrue(mockApplicationServer.getErrorCode(application.getApplicationName()).contains("login_required"));
     }
 
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone",
@@ -314,7 +313,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         Assert.assertNotNull(response, "Authorization code response is invalid for "
                 + application.getApplicationName());
 
-        authorizationCode = mockClientCallback.getAuthorizationCode();
+        authorizationCode = mockApplicationServer.getAuthorizationCodeForApp(application.getApplicationName());
         Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
                 .getApplicationName());
         EntityUtils.consume(response.getEntity());

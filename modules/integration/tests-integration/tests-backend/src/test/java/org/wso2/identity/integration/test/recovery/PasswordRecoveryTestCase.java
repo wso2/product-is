@@ -43,7 +43,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.identity.integration.test.base.MockClientCallback;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
@@ -75,7 +75,7 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
     private CloseableHttpClient client;
     private OIDCApplication oidcApplication;
     private UserObject userObject;
-    private MockClientCallback mockClientCallback;
+    private MockApplicationServer mockApplicationServer;
 
     public static final String USERNAME = "recoverytestuser";
     public static final String PASSWORD = "Oidcsessiontestuser@123";
@@ -108,8 +108,8 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
         userObject = initUser();
         createUser(userObject);
 
-        mockClientCallback = new MockClientCallback();
-        mockClientCallback.start();
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -121,7 +121,7 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
         identityGovernanceRestClient.closeHttpClient();
         client.close();
         Utils.getMailServer().purgeEmailFromAllMailboxes();
-        mockClientCallback.stop();
+        mockApplicationServer.stop();
     }
 
     @Test
