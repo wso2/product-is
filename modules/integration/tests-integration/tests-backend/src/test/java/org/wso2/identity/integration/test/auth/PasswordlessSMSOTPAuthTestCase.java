@@ -260,7 +260,6 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     private OIDCApplication initOIDCApplication() {
 
         OIDCApplication playgroundApp = new OIDCApplication(MockApplicationServer.Constants.APP1.NAME,
-                OIDCUtilTest.playgroundAppOneAppContext,
                 MockApplicationServer.Constants.APP1.CALLBACK_URL);
         return playgroundApp;
     }

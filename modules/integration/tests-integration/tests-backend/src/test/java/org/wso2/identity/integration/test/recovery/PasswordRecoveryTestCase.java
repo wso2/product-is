@@ -201,7 +201,6 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
     private OIDCApplication initApplication() {
 
         OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppContext,
                 OIDCUtilTest.playgroundAppOneAppCallBackUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);

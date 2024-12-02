@@ -381,14 +381,13 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     protected void initApplications() throws Exception {
 
         OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppContext,
                 OIDCUtilTest.playgroundAppOneAppCallBackUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
         applications.put(OIDCUtilTest.playgroundAppOneAppName, playgroundApp);
 
-        playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName, OIDCUtilTest.playgroundAppTwoAppContext,
+        playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName,
                 OIDCUtilTest.playgroundAppTwoAppCallBackUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);

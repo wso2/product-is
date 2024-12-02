@@ -314,7 +314,6 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     protected OIDCApplication initApplicationOne() {
 
         playgroundAppOne = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppContext,
                 OIDCUtilTest.playgroundAppOneAppCallBackUri);
         playgroundAppOne.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundAppOne.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
@@ -324,7 +323,6 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     protected OIDCApplication initApplicationTwo() {
 
         playgroundAppTwo = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName,
-                OIDCUtilTest.playgroundAppTwoAppContext,
                 OIDCUtilTest.playgroundAppTwoAppCallBackUri);
         playgroundAppOne.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundAppOne.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);

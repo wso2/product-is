@@ -281,7 +281,6 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     protected OIDCApplication initApplication() {
 
         playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppContext,
                 OIDCUtilTest.playgroundAppOneAppCallBackUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
