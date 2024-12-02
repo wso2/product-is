@@ -41,11 +41,11 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 /**
- * Mock client callback endpoint to test OIDC related flows.
+ * Mock application server to test OIDC related flows.
  */
 public class MockApplicationServer {
 
-    public class MockClient {
+    public static class MockClient {
         private final AtomicReference<String> authorizationCode = new AtomicReference<>();
         private final AtomicReference<String> errorCode = new AtomicReference<>();
 
