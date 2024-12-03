@@ -2440,7 +2440,7 @@
         <authenticator.local.auth.smsotp.version>1.0.10</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.24</authenticator.x509.version>
-        <identity.extension.utils>1.0.21</identity.extension.utils>
+        <identity.extension.utils>1.0.19</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.7</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.4.56</identity.org.mgt.version>
