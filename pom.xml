@@ -2344,7 +2344,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.12</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.15</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2355,7 +2355,7 @@
         <carbon.consent.mgt.version>2.6.4</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.19</identity.governance.version>
+        <identity.governance.version>1.11.20</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.7</identity.carbon.auth.saml2.version>
@@ -2374,7 +2374,7 @@
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
-        <identity.user.ws.version>5.8.6</identity.user.ws.version>
+        <identity.user.ws.version>5.8.7</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
@@ -2386,7 +2386,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.13</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.24</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.25</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2439,7 +2439,7 @@
         <authenticator.local.auth.emailotp.version>1.0.24</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.10</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
-        <authenticator.x509.version>3.1.23</authenticator.x509.version>
+        <authenticator.x509.version>3.1.24</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.7</authenticator.auth.otp.commons.version>
 
@@ -2467,15 +2467,15 @@
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.35.16</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.13.21</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.8.3</identity.apps.core.version>
+        <identity.apps.myaccount.version>2.13.22</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.8.4</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.25</carbon.kernel.version>
+        <carbon.kernel.version>4.10.26</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.15</identity.verification.version>
