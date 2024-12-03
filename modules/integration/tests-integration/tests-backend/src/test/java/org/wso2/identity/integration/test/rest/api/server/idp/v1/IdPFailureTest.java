@@ -230,7 +230,6 @@ public class IdPFailureTest extends IdPTestBase {
         responseOfGet.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("message", equalTo("Resource not found."))
                 .body("description", equalTo("Unable to find a resource matching the provided identity " +
