@@ -57,7 +57,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
     private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
-    private static final String IDP_NAME = "Custom Auth IDP";
+    private static final String CUSTOM_IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private static final String UPDATED_ENDPOINT_URI = "https://xyz.com/authenticate";
     private static final String USERNAME = "username";
@@ -66,12 +66,12 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String USERNAME_VALUE = "testUser";
     private static final String ACCESS_TOKEN_VALUE = "testBearerToken";
     private static final String PASSWORD_VALUE = "testPassword";
+    private static final String IDP_NAME = "Google";
     private String idPId;
     private String customIdPId;
     private String idPTemplateId;
     private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
     private String idpCreatePayload;
-    private static final String IDP_NAME = "Google";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -333,7 +333,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 userDefinedAuthenticatorPayload.getAuthenticatorId());
         body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
                 userDefinedAuthenticatorPayload.convertToJasonPayload());
-        body = body.replace(IDP_NAME_PLACEHOLDER, IDP_NAME);
+        body = body.replace(IDP_NAME_PLACEHOLDER, CUSTOM_IDP_NAME);
         Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -463,7 +463,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
                         context.getContextTenant().getDomain())))
-                .body(baseIdentifierUserDef + "name", equalTo(IDP_NAME))
+                .body(baseIdentifierUserDef + "name", equalTo(CUSTOM_IDP_NAME))
                 .body(baseIdentifierUserDef + "isEnabled", equalTo(true))
                 .body(baseIdentifierUserDef + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + customIdPId,
