@@ -265,6 +265,21 @@ public class IdPFailureTest extends IdPTestBase {
     }
 
     @Test
+    public void testAddIdPWithUserDefinedAuthenticatorWhenAuthenticatorPasswordIsAbsent()
+            throws JsonProcessingException {
+
+        UserDefinedAuthenticatorPayload userDefAuthPayload = createInvalidUserDefinedAuthenticatorPayload(
+                "USER", USER_DEFINED_AUTHENTICATOR_ID_1, ENDPOINT_URI, USERNAME, null);
+        Response response = createUserDefAuthenticator(CUSTOM_IDP_NAME, userDefAuthPayload);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("The property password must be provided as an authentication " +
+                        "property for the BASIC authentication type."));
+    }
+
+    @Test
     public void testAddIdPWithUserDefinedAuthenticatorWhenAuthenticatorPasswordIsEmpty()
             throws JsonProcessingException {
 
@@ -275,8 +290,7 @@ public class IdPFailureTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("message", equalTo("The property password must be provided as an authentication " +
-                        "property for the BASIC authentication type."));
+                .body("message", equalTo("The Property password cannot be blank."));
     }
 
     @Test
@@ -458,7 +472,7 @@ public class IdPFailureTest extends IdPTestBase {
         authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
         Map<String, Object> properties = new HashMap<>();
         properties.put(USERNAME, username);
-        if (!password.isEmpty()) {
+        if (password != null) {
             properties.put(PASSWORD, password);
         }
         authenticationType.setProperties(properties);
