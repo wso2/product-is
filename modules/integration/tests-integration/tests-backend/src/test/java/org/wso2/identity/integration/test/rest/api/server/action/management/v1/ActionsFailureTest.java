@@ -32,7 +32,6 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationTypeProperties;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
 
 import java.io.IOException;
@@ -159,6 +158,18 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
+    public void testGetActionByActionIdWithInvalidID() {
+
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID);
+
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No action is found for given action id and action type"));
+    }
+
+    @Test(dependsOnMethods = {"testGetActionByActionIdWithInvalidID"})
     public void testCreateActionWithNotImplementedActionTypes() {
 
         for (String actionTypePath : NOT_IMPLEMENTED_ACTION_TYPE_PATHS) {
