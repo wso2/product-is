@@ -380,6 +380,15 @@ public class RESTTestBase extends ISIntegrationTest {
                 .post(endpointUri);
     }
 
+    /**
+     * Invoke given endpointUri for POST with given body and Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential.
+     * This implementation does not incorporate any additional filters.
+     *
+     * @param endpointUri endpoint to be invoked
+     * @param body        payload
+     * @return response
+     */
     protected Response getResponseOfPostNoFilter(String endpointUri, String body) {
 
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
