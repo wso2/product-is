@@ -31,8 +31,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -46,6 +49,7 @@ public class IdPSuccessTest extends IdPTestBase {
 
     private String idPId;
     private String idPTemplateId;
+    private static final String IDP_NAME = "Google";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -306,6 +310,22 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
+                        "/api/server/v1/identity-providers/" + idPId,
+                        context.getContextTenant().getDomain())));
+    }
+
+    @Test(dependsOnMethods = "testGetIdP")
+    public void testSearchAllIdPs() throws XPathExpressionException {
+
+        Response response = getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, Collections.singletonMap("filter",
+                "name sw " + IDP_NAME));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("identityProviders.find { it.id == '" + idPId + "' }.name", equalTo(IDP_NAME))
+                .body("identityProviders.find { it.id == '" + idPId + "' }.isEnabled", equalTo(true))
+                .body("identityProviders.find { it.id == '" + idPId + "' }.self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
                         context.getContextTenant().getDomain())));
     }
