@@ -2344,7 +2344,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.19</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.20</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2443,7 +2443,7 @@
         <identity.extension.utils>1.0.19</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.8</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.58</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.59</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.19</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.42</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
