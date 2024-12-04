@@ -16,6 +16,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
@@ -29,8 +30,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.util.UserDefinedAuthenticatorPayload;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,9 +53,25 @@ import static org.testng.Assert.assertNotNull;
  */
 public class IdPSuccessTest extends IdPTestBase {
 
-    private String idPId;
-    private String idPTemplateId;
+    private static final String FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER = "<FEDERATED_AUTHENTICATOR_ID>";
+    private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
+    private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
+    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
+    private static final String CUSTOM_IDP_NAME = "Custom Auth IDP";
+    private static final String ENDPOINT_URI = "https://abc.com/authenticate";
+    private static final String UPDATED_ENDPOINT_URI = "https://xyz.com/authenticate";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String ACCESS_TOKEN = "accessToken";
+    private static final String USERNAME_VALUE = "testUser";
+    private static final String ACCESS_TOKEN_VALUE = "testBearerToken";
+    private static final String PASSWORD_VALUE = "testPassword";
     private static final String IDP_NAME = "Google";
+    private String idPId;
+    private String customIdPId;
+    private String idPTemplateId;
+    private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
+    private String idpCreatePayload;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -65,6 +87,50 @@ public class IdPSuccessTest extends IdPTestBase {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
+        userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayloadWithBasic(ENDPOINT_URI);
+        idpCreatePayload = readResource("add-idp-with-custom-fed-auth.json");
+    }
+
+    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayloadWithBasic(String endpointUri) {
+
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
+        userDefinedAuthenticatorPayload.setIsEnabled(true);
+        userDefinedAuthenticatorPayload.setAuthenticatorId(FEDERATED_AUTHENTICATOR_ID);
+        userDefinedAuthenticatorPayload.setDefinedBy(FederatedAuthenticatorRequest.DefinedByEnum.USER.toString());
+
+        Endpoint endpoint = new Endpoint();
+        endpoint.setUri(endpointUri);
+        AuthenticationType authenticationType = new AuthenticationType();
+        authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
+        Map<String, Object> properties = new HashMap<>();
+        properties.put(USERNAME, USERNAME_VALUE);
+        properties.put(PASSWORD, PASSWORD_VALUE);
+        authenticationType.setProperties(properties);
+        endpoint.authentication(authenticationType);
+        userDefinedAuthenticatorPayload.setEndpoint(endpoint);
+
+        return userDefinedAuthenticatorPayload;
+    }
+
+    private UserDefinedAuthenticatorPayload createUserDefinedAuthenticatorPayloadWithBearer(String endpointUri) {
+
+        UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload = new UserDefinedAuthenticatorPayload();
+        userDefinedAuthenticatorPayload.setIsEnabled(true);
+        userDefinedAuthenticatorPayload.setAuthenticatorId(FEDERATED_AUTHENTICATOR_ID);
+        userDefinedAuthenticatorPayload.setDefinedBy(FederatedAuthenticatorRequest.DefinedByEnum.USER.toString());
+
+        Endpoint endpoint = new Endpoint();
+        endpoint.setUri(endpointUri);
+        AuthenticationType authenticationType = new AuthenticationType();
+        authenticationType.setType(AuthenticationType.TypeEnum.BEARER);
+        Map<String, Object> properties = new HashMap<>();
+        authenticationType.setType(AuthenticationType.TypeEnum.BEARER);
+        properties.put(ACCESS_TOKEN, ACCESS_TOKEN_VALUE);
+        authenticationType.setProperties(properties);
+        endpoint.authentication(authenticationType);
+        userDefinedAuthenticatorPayload.setEndpoint(endpoint);
+
+        return userDefinedAuthenticatorPayload;
     }
 
     @AfterClass(alwaysRun = true)
@@ -260,6 +326,88 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("rulesEnabled", equalTo(false));
     }
 
+    @Test
+    public void testAddIdPWithUserDefinedAuthenticator() throws IOException {
+
+        String body = idpCreatePayload.replace(FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.getAuthenticatorId());
+        body = body.replace(FEDERATED_AUTHENTICATOR_PLACEHOLDER,
+                userDefinedAuthenticatorPayload.convertToJasonPayload());
+        body = body.replace(IDP_NAME_PLACEHOLDER, CUSTOM_IDP_NAME);
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        customIdPId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(customIdPId);
+    }
+
+    @Test(dependsOnMethods = "testAddIdPWithUserDefinedAuthenticator")
+    public void testGetUserDefinedAuthenticatorsOfIdP() throws XPathExpressionException {
+
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
+                PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("defaultAuthenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
+                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.name",
+                        equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
+                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.isEnabled",
+                        equalTo(true))
+                .body("authenticators.find { it.authenticatorId == '" + FEDERATED_AUTHENTICATOR_ID + "' }.self",
+                        equalTo(getTenantedRelativePath("/api/server/v1/identity-providers/" +
+                                customIdPId + "/federated-authenticators/" + FEDERATED_AUTHENTICATOR_ID,
+                                context.getContextTenant().getDomain())));
+    }
+
+    @Test(dependsOnMethods = "testGetUserDefinedAuthenticatorsOfIdP")
+    public void testUpdateUserDefinedAuthenticatorOfIdP() throws JsonProcessingException {
+
+        Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
+                        PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + FEDERATED_AUTHENTICATOR_ID,
+                createUserDefinedAuthenticatorPayloadWithBearer(UPDATED_ENDPOINT_URI)
+                        .convertToJasonPayload());
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("authenticatorId", equalTo(FEDERATED_AUTHENTICATOR_ID))
+                .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
+                .body("definedBy", equalTo("USER"))
+                .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.value()));
+    }
+
+    @Test(dependsOnMethods = {"testGetIdPs", "testUpdateUserDefinedAuthenticatorOfIdP"})
+    public void testDeleteIdPWithUserDefinedAuthenticator() {
+
+        Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        Response responseOfGet = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("message", equalTo("Resource not found."))
+                .body("description", equalTo("Unable to find a resource matching the provided identity " +
+                        "provider identifier " + customIdPId + "."));
+
+    }
+
     @Test(dependsOnMethods = {"testGetMetaOutboundConnector"})
     public void testAddIdP() throws IOException {
 
@@ -290,6 +438,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("description", equalTo("IDP for Google Federation"))
                 .body("isEnabled", equalTo(true))
                 .body("isPrimary", equalTo(false))
+                .body("federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
+                        SAMPLE_FEDERATED_AUTHENTICATOR_ID + "' }.definedBy", equalTo("SYSTEM"))
                 .body("image", equalTo("google-logo-url"))
                 .body("isFederationHub", equalTo(false))
                 .body("homeRealmIdentifier", equalTo("localhost"))
@@ -300,6 +450,7 @@ public class IdPSuccessTest extends IdPTestBase {
     public void testGetIdPs() throws Exception {
 
         String baseIdentifier = "identityProviders.find{ it.id == '" + idPId + "' }.";
+        String baseIdentifierUserDef = "identityProviders.find{ it.id == '" + customIdPId + "' }.";
         Response response = getResponseOfGet(IDP_API_BASE_PATH);
         response.then()
                 .log().ifValidationFails()
@@ -311,6 +462,11 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
+                        context.getContextTenant().getDomain())))
+                .body(baseIdentifierUserDef + "name", equalTo(CUSTOM_IDP_NAME))
+                .body(baseIdentifierUserDef + "isEnabled", equalTo(true))
+                .body(baseIdentifierUserDef + "self", equalTo(getTenantedRelativePath(
+                        "/api/server/v1/identity-providers/" + customIdPId,
                         context.getContextTenant().getDomain())));
     }
 
