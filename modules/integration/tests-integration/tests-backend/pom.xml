@@ -459,19 +459,6 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>packaging-war-artifacts-oidc</id>
-                        <phase>process-test-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.appone-app-build" />
-                                <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.apptwo-app-build" />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>packaging-war-artifacts-passivests</id>
                         <phase>process-test-resources</phase>
                         <configuration>
