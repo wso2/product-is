@@ -2344,7 +2344,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.16</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.18</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2358,17 +2358,17 @@
         <identity.governance.version>1.11.20</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.9.7</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.9.8</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.9.14</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.192</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.193</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.46</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.11.12</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.11.13</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.102</identity.inbound.provisioning.scim2.version>
 
@@ -2437,11 +2437,11 @@
         <authenticator.magiclink.version>1.1.29</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.30</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.24</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.10</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.11</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.24</authenticator.x509.version>
         <identity.extension.utils>1.0.19</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.7</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.8</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.4.58</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.19</identity.org.mgt.core.version>
@@ -2456,7 +2456,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.4</identity.server.api.version>
+        <identity.server.api.version>1.3.5</identity.server.api.version>
         <identity.user.api.version>1.3.45</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2466,8 +2466,8 @@
         <conditional.authentication.functions.version>1.2.67</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.35.16</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.13.22</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.35.18</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.13.24</identity.apps.myaccount.version>
         <identity.apps.core.version>2.8.4</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
@@ -2612,7 +2612,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.10</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.11</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
