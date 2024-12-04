@@ -43,8 +43,6 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
             "travelocity.com-registrymount",
             "avis.com",
             "PassiveSTSSampleApp",
-            "playground.appone",
-            "playground.apptwo",
             "playground2"
     };
     private static final Log LOG = LogFactory.getLog(TomcatInitializerTestCase.class);

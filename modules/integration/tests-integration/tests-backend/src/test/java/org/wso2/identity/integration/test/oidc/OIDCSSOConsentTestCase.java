@@ -31,9 +31,11 @@ import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -41,6 +43,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.apache.commons.lang.StringUtils;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
@@ -55,8 +58,11 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +87,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     protected List<NameValuePair> consentParameters = new ArrayList<>();
     OIDCApplication playgroundApp;
     private String claimsToGetConsent;
+    private MockApplicationServer mockApplicationServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -105,6 +112,9 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultRequestConfig(requestConfig)
                 .build();
+
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -113,6 +123,7 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         deleteUser(user);
         deleteApplication(playgroundApp);
         clear();
+        mockApplicationServer.stop();
     }
 
     @Test(groups = "wso2.is", description = "Test consent management after updating " +
@@ -140,17 +151,16 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     public void testSendAuthenticationRequest(OIDCApplication application, HttpClient client)
             throws Exception {
 
-        List<NameValuePair> urlParameters = OIDCUtilTest.getNameValuePairs(application);
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
-                        OAuth2Constant.PlaygroundAppPaths.appUserAuthorizePath));
-        Assert.assertNotNull(response, "Authorization request failed for " + application.getApplicationName() +
-                ". Authorized response is null.");
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("client_id", application.getClientId()));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", application.getCallBackURL()));
 
+        urlParameters.add(new BasicNameValuePair("scope", "openid email profile"));
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-
-        Assert.assertNotNull(locationHeader, "Authorization request failed for " +
-                application.getApplicationName() + ". Authorized response header is null.");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
@@ -222,53 +232,41 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         response = sendPostRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Authorization code response is invalid for " +
-                application.getApplicationName());
+        EntityUtils.consume(response.getEntity());
 
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("Authorization Code", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response,
-                keyPositionMap);
-        Assert.assertNotNull(keyValues, "Authorization code not received for " +
-                application.getApplicationName());
-
-        authorizationCode = keyValues.get(0).getValue();
+        authorizationCode = mockApplicationServer.getAuthorizationCodeForApp(application.getApplicationName());
         Assert.assertNotNull(authorizationCode, "Authorization code not received for " + application
                 .getApplicationName());
-        EntityUtils.consume(response.getEntity());
     }
 
     private void testGetAccessToken(OIDCApplication application) throws Exception {
 
-        HttpResponse response = sendGetAccessTokenPost(client, application);
-        Assert.assertNotNull(response, "Access token response is invalid for " +
-                application.getApplicationName());
-        EntityUtils.consume(response.getEntity());
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("code", authorizationCode));
+        urlParameters.add(new BasicNameValuePair("grant_type", OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", application.getCallBackURL()));
+        urlParameters.add(new BasicNameValuePair("client_id", application.getClientSecret()));
 
-        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl,
-                application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
+        urlParameters.add(new BasicNameValuePair("scope", "openid"));
 
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("name=\"accessToken\"", 1);
-        List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractInputValueFromResponse(response,
-                keyPositionMap);
-        Assert.assertNotNull(keyValues, "Access token not received for " + application.getApplicationName());
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER,
+                OAuth2Constant.BASIC_HEADER + " " + getBase64EncodedString(application.getClientId(),
+                        application.getClientSecret())));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
 
-        accessToken = keyValues.get(0).getValue();
-        Assert.assertNotNull(accessToken, "Access token not received for " + application.getApplicationName());
-        EntityUtils.consume(response.getEntity());
+        HttpResponse response = sendPostRequest(client, headers, urlParameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        String responseString = EntityUtils.toString(response.getEntity());
+        Map<String, Object> responseMap = (Map<String, Object>) JSONValue.parse(responseString);
+        accessToken = (String) responseMap.get("access_token");
 
-        response = sendPostRequest(client, String.format(OIDCUtilTest.targetApplicationUrl,
-                application.getApplicationContext() + OAuth2Constant.PlaygroundAppPaths.appAuthorizePath));
-
-        keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("id=\"loggedUser\"", 1);
-        keyValues = DataExtractUtil.extractLabelValueFromResponse(response, keyPositionMap);
-        Assert.assertNotNull(keyValues, "No user logged in for " + application.getApplicationName());
-
-        String loggedUser = keyValues.get(0).getValue();
-        Assert.assertNotNull(loggedUser, "Logged user is null for " + application.getApplicationName());
-        EntityUtils.consume(response.getEntity());
+        String idToken = (String) responseMap.get("id_token");
+        String[] tokenParts = idToken.split("\\.");
+        String payload = new String(java.util.Base64.getUrlDecoder().decode(tokenParts[1]));
+        Map<String, Object> parsedIdToken = (Map<String, Object>) JSONValue.parse(payload);
+        Assert.assertNotNull(parsedIdToken.get("sub"), "No user logged in for " + application.getApplicationName());
     }
 
     protected void initUser() throws Exception {
@@ -283,7 +281,6 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     protected OIDCApplication initApplication() {
 
         playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppContext,
                 OIDCUtilTest.playgroundAppOneAppCallBackUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
@@ -304,19 +301,6 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
         claimConfig.addRequestedClaimsItem(requestedClaim);
 
         updateApplication(playgroundApp.getApplicationId(), new ApplicationPatchModel().claimConfiguration(claimConfig));
-    }
-
-    protected HttpResponse sendGetAccessTokenPost(HttpClient client, OIDCApplication application) throws IOException {
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("callbackurl", application.getCallBackURL()));
-        urlParameters.add(new BasicNameValuePair("accessEndpoint", OAuth2Constant.ACCESS_TOKEN_ENDPOINT));
-        urlParameters.add(new BasicNameValuePair("consumerSecret", application.getClientSecret()));
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, String.format
-                (OIDCUtilTest.targetApplicationUrl, application.getApplicationContext() +
-                        OAuth2Constant.PlaygroundAppPaths.accessTokenRequestPath));
-
-        return response;
     }
 
     private void performOIDCLogout() {

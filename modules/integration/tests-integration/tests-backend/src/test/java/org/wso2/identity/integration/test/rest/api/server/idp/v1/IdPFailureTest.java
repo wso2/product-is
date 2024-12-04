@@ -63,6 +63,7 @@ public class IdPFailureTest extends IdPTestBase {
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private String idPId;
     private String idpCreatePayload;
+    private static final String OIDC_IDP_ID = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPFailureTest(TestUserMode userMode) throws Exception {
@@ -556,6 +557,60 @@ public class IdPFailureTest extends IdPTestBase {
         responseOfGet.then()
                 .log().ifValidationFails()
                 .assertThat()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("message", equalTo("Resource not found."))
+                .body("description", equalTo("Unable to find a resource matching the provided identity " +
+                        "provider identifier " + idPId + "."));
+    }
+
+    @Test
+    public void testUpdateIdPWithDuplicateOIDCScopes() throws IOException {
+
+        String body = readResource("add-idp-oidc-standard-based.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String oidcIdPId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(oidcIdPId);
+
+        // update the OIDC IDP with duplicated scopes
+        String updateBody = readResource("update-idp-oidc-standard-based-duplicated-scopes.json");
+        Response updateResponse = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + oidcIdPId +
+                PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + OIDC_IDP_ID, updateBody);
+        updateResponse.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Duplicate OIDC Scopes."))
+                .body("description", equalTo("Cannot set scopes in both Scopes and Additional Query Parameters. " +
+                        "Recommend to use Scopes field."));
+
+        deleteCreatedIdP(oidcIdPId);
+    }
+
+    /**
+     * Deletes an Identity Provider by its ID and verifies the deletion.
+     *
+     * @param idPId ID of the Identity Provider to be deleted.
+     */
+    private void deleteCreatedIdP(String idPId) {
+
+        Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        Response responseOfGet = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
+        responseOfGet.then()
+                .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("message", equalTo("Resource not found."))
