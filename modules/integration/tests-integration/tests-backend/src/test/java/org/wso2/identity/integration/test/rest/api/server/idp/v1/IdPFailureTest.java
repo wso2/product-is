@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 
@@ -209,6 +210,36 @@ public class IdPFailureTest extends IdPTestBase {
                 .body("message", equalTo("Duplicate OIDC Scopes."))
                 .body("description", equalTo("Cannot set scopes in both Scopes and Additional Query Parameters. " +
                         "Recommend to use Scopes field."));
+
+        deleteCreatedIdP(oidcIdPId);
+    }
+
+    @Test
+    public void testUpdateOIDCIdPWithoutOpenidScope() throws IOException {
+
+        String body = readResource("add-idp-oidc-standard-based.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String oidcIdPId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(oidcIdPId);
+
+        // update the OIDC IdP without openid scope
+        String updateBody = readResource("update-idp-oidc-without-openid-scope.json");
+        Response updateResponse = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + oidcIdPId +
+                PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + OIDC_IDP_ID, updateBody);
+        updateResponse.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Invalid OIDC Scopes."))
+                .body("description", equalTo("Scopes must contain 'openid'."));
 
         deleteCreatedIdP(oidcIdPId);
     }

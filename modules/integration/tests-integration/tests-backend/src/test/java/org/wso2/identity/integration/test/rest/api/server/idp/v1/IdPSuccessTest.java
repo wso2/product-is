@@ -21,6 +21,7 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -275,6 +276,64 @@ public class IdPSuccessTest extends IdPTestBase {
         assertNotNull(location);
         idPId = location.substring(location.lastIndexOf("/") + 1);
         assertNotNull(idPId);
+    }
+
+    @Test()
+    public void addIdPWithoutAuthenticator() throws IOException {
+
+        String body = readResource("add-idp-without-authenticator.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("federatedAuthenticators.authenticators", Matchers.emptyIterable())
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String idpIdWithoutAuth = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(idpIdWithoutAuth);
+
+        deleteCreatedIdP(idpIdWithoutAuth);
+    }
+
+    @Test
+    public void addIdPWithDuplicatedOIDCScopes() throws IOException {
+
+        String body = readResource("add-oidc-idp-with-duplicated-scopes.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String oidcIdpId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(oidcIdpId);
+
+        deleteCreatedIdP(oidcIdpId);
+    }
+
+    @Test
+    public void addOIDCIdPWithoutOpenidScope() throws IOException {
+
+        String body = readResource("add-oidc-idp-without-openid-scope.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String oidcIdpId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(oidcIdpId);
+
+        deleteCreatedIdP(oidcIdpId);
     }
 
     @Test(dependsOnMethods = {"testAddIdP"})
@@ -759,5 +818,28 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    /**
+     * Deletes an Identity Provider by its ID and verifies the deletion.
+     *
+     * @param idPId ID of the Identity Provider to be deleted.
+     */
+    private void deleteCreatedIdP(String idPId) {
+
+        Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        Response responseOfGet = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("message", equalTo("Resource not found."))
+                .body("description", equalTo("Unable to find a resource matching the provided identity " +
+                        "provider identifier " + idPId + "."));
     }
 }

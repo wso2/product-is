@@ -1,0 +1,11 @@
+{
+  "authenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
+  "isEnabled": true,
+  "isDefault": true,
+  "properties": [
+    {
+      "key": "Scopes",
+      "value": "country profile"
+    }
+  ]
+}
