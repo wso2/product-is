@@ -2284,6 +2284,18 @@
                 <version>${identity.integration.ui.templates.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.zoom</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.slack</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -2466,7 +2478,7 @@
         <conditional.authentication.functions.version>1.2.68</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.35.18</identity.apps.console.version>
+        <identity.apps.console.version>2.35.19</identity.apps.console.version>
         <identity.apps.myaccount.version>2.13.24</identity.apps.myaccount.version>
         <identity.apps.core.version>2.8.4</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
