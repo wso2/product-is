@@ -77,6 +77,16 @@
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.microsoft-365</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.zoom</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.slack</artifactId>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
