@@ -246,7 +246,8 @@ public class IdPFailureTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("message", equalTo("Endpoint configuration must be provided for the user defined " +
+                .body("message", equalTo("No endpoint provided."))
+                .body("description", equalTo("Endpoint configuration must be provided for the user defined " +
                         "federated authenticators " + new String(Base64.getDecoder().decode(
                         USER_DEFINED_AUTHENTICATOR_ID_1)) + "."));
     }
@@ -276,7 +277,8 @@ public class IdPFailureTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("message", equalTo("The property password must be provided as an authentication " +
+                .body("message", equalTo("Invalid input."))
+                .body("description", equalTo("The property password must be provided as an authentication " +
                         "property for the BASIC authentication type."));
     }
 
@@ -291,7 +293,8 @@ public class IdPFailureTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("message", equalTo("The Property password cannot be blank."));
+                .body("message", equalTo("Invalid input."))
+                .body("description", equalTo("The Property password cannot be blank."));
     }
 
     @Test
@@ -353,7 +356,7 @@ public class IdPFailureTest extends IdPTestBase {
     }
 
     @Test
-    public void testAddUserDeAuthenticatorWithSystemProperty() throws JsonProcessingException {
+    public void testAddUserDefAuthenticatorWithSystemProperty() throws JsonProcessingException {
 
         UserDefinedAuthenticatorPayload useDefAuthPayload = createInvalidUserDefinedAuthenticatorPayload(
                 "SYSTEM", USER_DEFINED_AUTHENTICATOR_ID_1, ENDPOINT_URI, USERNAME, PASSWORD);
@@ -362,7 +365,8 @@ public class IdPFailureTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("message", equalTo("No endpoint configuration must be provided for the system defined " +
+                .body("message", equalTo("No endpoint configuration is allowed."))
+                .body("description", equalTo("No endpoint configuration must be provided for the system defined " +
                         "federated authenticators " +
                         new String(Base64.getDecoder().decode(USER_DEFINED_AUTHENTICATOR_ID_1)) + "."));
     }
