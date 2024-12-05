@@ -31,10 +31,15 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
@@ -97,6 +102,19 @@ public class IdPFailureTest extends IdPTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDP-60002", "random-id");
     }
 
+    @Test
+    public void testInvalidSearchAllIdPs() throws XPathExpressionException {
+
+        Response response = getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, Collections.singletonMap("filter",
+                "name sw InvalidIdP"));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(0))
+                .body("count", equalTo(0));
+    }
+
     @Test(dependsOnMethods = {"testGetIdPWithInvalidId"})
     public void addIdPConflict() throws IOException {
 
@@ -121,6 +139,19 @@ public class IdPFailureTest extends IdPTestBase {
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "IDP-60025");
     }
 
+    @Test
+    public void testAddIdPWithDuplicatedPropertyKeys() throws IOException {
+
+        String body = readResource("add-idp-with-duplicated-property-keys.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Invalid input."))
+                .body("description", equalTo("One of the given inputs is invalid. Duplicate properties are " +
+                        "found in the request."));
+    }
 
     @Test(dependsOnMethods = {"addIdPConflict"})
     public void testGetIdPFederatedAuthenticatorWithInvalidAuthId() {
@@ -242,6 +273,20 @@ public class IdPFailureTest extends IdPTestBase {
                 .body("description", equalTo("Scopes must contain 'openid'."));
 
         deleteCreatedIdP(oidcIdPId);
+    }
+
+    @Test
+    public void addSamlIdPWithoutMetadata() throws IOException {
+
+        String body = readResource("add-saml-idp-without-metadata.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Invalid SAML metadata."))
+                .body("description", equalTo("SAML metadata is invalid/empty."));
     }
 
     /**

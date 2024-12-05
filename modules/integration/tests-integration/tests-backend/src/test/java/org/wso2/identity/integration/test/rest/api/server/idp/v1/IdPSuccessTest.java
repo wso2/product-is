@@ -298,6 +298,7 @@ public class IdPSuccessTest extends IdPTestBase {
         deleteCreatedIdP(idpIdWithoutAuth);
     }
 
+    // TODO: add a comment
     @Test
     public void addIdPWithDuplicatedOIDCScopes() throws IOException {
 
@@ -317,6 +318,7 @@ public class IdPSuccessTest extends IdPTestBase {
         deleteCreatedIdP(oidcIdpId);
     }
 
+    // TODO: add a comment
     @Test
     public void addOIDCIdPWithoutOpenidScope() throws IOException {
 
@@ -334,6 +336,25 @@ public class IdPSuccessTest extends IdPTestBase {
         assertNotNull(oidcIdpId);
 
         deleteCreatedIdP(oidcIdpId);
+    }
+
+    @Test
+    public void addSAMLStandardBasedIdP() throws IOException {
+
+        String body = readResource("add-saml-idp.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String samlIdpId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(samlIdpId);
+
+        deleteCreatedIdP(samlIdpId);
     }
 
     @Test(dependsOnMethods = {"testAddIdP"})
