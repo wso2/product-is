@@ -540,30 +540,6 @@ public class IdPFailureTest extends IdPTestBase {
         return getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
     }
 
-    /**
-     * Deletes an Identity Provider by its ID and verifies the deletion.
-     *
-     * @param idPId ID of the Identity Provider to be deleted.
-     */
-    private void deleteCreatedIdP(String idPId) {
-
-        Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-
-        Response responseOfGet = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
-        responseOfGet.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("message", equalTo("Resource not found."))
-                .body("description", equalTo("Unable to find a resource matching the provided identity " +
-                        "provider identifier " + idPId + "."));
-    }
-
     @Test
     public void testUpdateIdPWithDuplicateOIDCScopes() throws IOException {
 
