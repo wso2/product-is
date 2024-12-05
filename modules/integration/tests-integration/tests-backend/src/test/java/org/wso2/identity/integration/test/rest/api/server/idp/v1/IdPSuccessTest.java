@@ -51,6 +51,8 @@ public class IdPSuccessTest extends IdPTestBase {
     private String idPId;
     private String idPTemplateId;
     private static final String IDP_NAME = "Google";
+    private static final String AUTHENTICATOR_NAME = "GoogleOIDCAuthenticator";
+    private static final String DEFINED_BY_SYSTEM = "SYSTEM";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -461,7 +463,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("definedBy", equalTo("SYSTEM"));
+                .body("definedBy", equalTo(DEFINED_BY_SYSTEM));
     }
 
     @Test(dependsOnMethods = {"testUpdateIdPFederatedAuthenticator"})
@@ -478,7 +480,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("isEnabled", equalTo(true))
                 .body("isDefault", equalTo(true))
                 .body("properties", notNullValue())
-                .body("definedBy", equalTo("SYSTEM"))
+                .body("definedBy", equalTo(DEFINED_BY_SYSTEM))
                 .body("properties.find{ it.key == 'ClientId' }.value", equalTo
                         ("165474950684-7mvqd8m6hieb8mdnffcarnku2aua0tpl.apps.googleusercontent.com"))
                 .body("properties.find{ it.key == 'ClientSecret' }.value", equalTo("testclientsecret"))
@@ -710,7 +712,21 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("certificate.certificates", nullValue());
     }
 
-    @Test(dependsOnMethods = {"testPatchIdP"})
+    @Test(dependsOnMethods = "testPatchIdP")
+    public void testExportIDPToFile() {
+
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId + PATH_SEPARATOR +
+                "export");
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("identityProviderName", equalTo(IDP_NAME))
+                .body("federatedAuthenticatorConfigs.find { it.name == '" + AUTHENTICATOR_NAME + "' }.definedByType",
+                        equalTo(DEFINED_BY_SYSTEM));
+    }
+
+    @Test(dependsOnMethods = {"testExportIDPToFile"})
     public void testDeleteIdP() {
 
         getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId)
