@@ -74,6 +74,11 @@
         <enable_start_tls>true</enable_start_tls>
         <enable_authentication>true</enable_authentication>
     </emailSenderConfigs>
+
+    <loggingConfigs>
+        <enableV2AuditLogs>true</enableV2AuditLogs>
+        <diagnostic_log_mode>full</diagnostic_log_mode>
+    </loggingConfigs>
     <!--
     Database configuration to be used for data service testing. DB configuration in dbs files will be replaced with
                below configuration at test run time
