@@ -448,7 +448,11 @@ public class IdPSuccessTest extends IdPTestBase {
         deleteCreatedIdP(idpIdWithoutAuth);
     }
 
-    // TODO: add a comment
+
+    /* This test method has been added in order to test the current behaviour.
+     * There seem to be some concerns related to internal validations used in functionality associated with this.
+     * This is being tracked with the issue: https://github.com/wso2/product-is/issues/21928
+     */
     @Test
     public void addIdPWithDuplicatedOIDCScopes() throws IOException {
 
@@ -468,7 +472,10 @@ public class IdPSuccessTest extends IdPTestBase {
         deleteCreatedIdP(oidcIdpId);
     }
 
-    // TODO: add a comment
+    /* This test method has been added in order to test the current behaviour.
+     * There seem to be some concerns related to internal validations used in functionality associated with this.
+     * This is being tracked with the issue: https://github.com/wso2/product-is/issues/21928
+     */
     @Test
     public void addOIDCIdPWithoutOpenidScope() throws IOException {
 
@@ -566,6 +573,19 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("identityProviders.find { it.id == '" + idPId + "' }.self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
                         context.getContextTenant().getDomain())));
+    }
+
+    @Test
+    public void testInvalidSearchAllIdPs() {
+
+        Response response = getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, Collections.singletonMap("filter",
+                "name sw InvalidIdP"));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(0))
+                .body("count", equalTo(0));
     }
 
     @Test(dependsOnMethods = {"testGetIdPs"})

@@ -122,19 +122,6 @@ public class IdPFailureTest extends IdPTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "IDP-60002", "random-id");
     }
 
-    @Test
-    public void testInvalidSearchAllIdPs() throws XPathExpressionException {
-
-        Response response = getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, Collections.singletonMap("filter",
-                "name sw InvalidIdP"));
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", equalTo(0))
-                .body("count", equalTo(0));
-    }
-
     @Test(dependsOnMethods = {"testGetIdPWithInvalidId"})
     public void addIdPConflict() throws IOException {
 
