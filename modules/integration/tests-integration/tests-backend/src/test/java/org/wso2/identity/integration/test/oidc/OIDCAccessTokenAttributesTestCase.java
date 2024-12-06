@@ -137,13 +137,15 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
         accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
         accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
         // Add access token attributes
-        accessTokenConfig.setAccessTokenAttributes(new ArrayList<>());
+        List<String> accessTokenAttributes = new ArrayList<>();
+        accessTokenAttributes.add("username");
+        accessTokenConfig.setAccessTokenAttributes(accessTokenAttributes);
         oidcInboundConfig.setAccessToken(accessTokenConfig);
         updateApplicationInboundConfig(application.getApplicationId(), oidcInboundConfig, OIDC);
 
         OpenIDConnectConfiguration updatedOidcInboundConfig =
                 getOIDCInboundDetailsOfApplication(application.getApplicationId());
-        Assert.assertFalse(updatedOidcInboundConfig.getAccessToken().getAccessTokenAttributes().isEmpty(),
+        Assert.assertEquals(updatedOidcInboundConfig.getAccessToken().getAccessTokenAttributes().size(),1,
                 "Access token attribute should not be empty.");
     }
 
