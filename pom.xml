@@ -2378,7 +2378,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.oauth.version>7.0.195</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.11.46</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.11.47</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.13</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
@@ -2449,7 +2449,7 @@
         <authenticator.magiclink.version>1.1.29</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.30</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.24</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.11</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.13</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.24</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
@@ -2478,8 +2478,8 @@
         <conditional.authentication.functions.version>1.2.69</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.35.20</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.13.26</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.35.22</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.13.28</identity.apps.myaccount.version>
         <identity.apps.core.version>2.8.5</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
