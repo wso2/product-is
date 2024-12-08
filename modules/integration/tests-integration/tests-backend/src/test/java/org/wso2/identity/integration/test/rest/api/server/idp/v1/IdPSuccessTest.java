@@ -22,6 +22,7 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -67,11 +68,13 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String ACCESS_TOKEN_VALUE = "testBearerToken";
     private static final String PASSWORD_VALUE = "testPassword";
     private static final String IDP_NAME = "Google";
+    private static final String AUTHENTICATOR_NAME = "GoogleOIDCAuthenticator";
+    private static final String DEFINED_BY_SYSTEM = "SYSTEM";
+    private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
+    private String idpCreatePayload;
     private String idPId;
     private String customIdPId;
     private String idPTemplateId;
-    private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
-    private String idpCreatePayload;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPSuccessTest(TestUserMode userMode) throws Exception {
@@ -425,6 +428,92 @@ public class IdPSuccessTest extends IdPTestBase {
         assertNotNull(idPId);
     }
 
+    @Test()
+    public void addIdPWithoutAuthenticator() throws IOException {
+
+        String body = readResource("add-idp-without-authenticator.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("federatedAuthenticators.authenticators", Matchers.emptyIterable())
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String idpIdWithoutAuth = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(idpIdWithoutAuth);
+
+        deleteCreatedIdP(idpIdWithoutAuth);
+    }
+
+
+    /* This test method has been added in order to test the current behaviour.
+     * There seem to be some concerns related to internal validations used in functionality associated with this.
+     * This is being tracked with the issue: https://github.com/wso2/product-is/issues/21928
+     */
+    @Test
+    public void addIdPWithDuplicatedOIDCScopes() throws IOException {
+
+        String body = readResource("add-oidc-idp-with-duplicated-scopes.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String oidcIdpId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(oidcIdpId);
+
+        deleteCreatedIdP(oidcIdpId);
+    }
+
+    /* This test method has been added in order to test the current behaviour.
+     * There seem to be some concerns related to internal validations used in functionality associated with this.
+     * This is being tracked with the issue: https://github.com/wso2/product-is/issues/21928
+     */
+    @Test
+    public void addOIDCIdPWithoutOpenidScope() throws IOException {
+
+        String body = readResource("add-oidc-idp-without-openid-scope.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String oidcIdpId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(oidcIdpId);
+
+        deleteCreatedIdP(oidcIdpId);
+    }
+
+    @Test
+    public void addSAMLStandardBasedIdP() throws IOException {
+
+        String body = readResource("add-saml-idp.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String samlIdpId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(samlIdpId);
+
+        deleteCreatedIdP(samlIdpId);
+    }
+
     @Test(dependsOnMethods = {"testAddIdP"})
     public void testGetIdP() throws IOException {
 
@@ -486,6 +575,19 @@ public class IdPSuccessTest extends IdPTestBase {
                         context.getContextTenant().getDomain())));
     }
 
+    @Test
+    public void testInvalidSearchAllIdPs() {
+
+        Response response = getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, Collections.singletonMap("filter",
+                "name sw InvalidIdP"));
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(0))
+                .body("count", equalTo(0));
+    }
+
     @Test(dependsOnMethods = {"testGetIdPs"})
     public void testGetIdPsWithRequiredAttribute() throws Exception {
 
@@ -537,7 +639,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("definedBy", equalTo("SYSTEM"));
+                .body("definedBy", equalTo(DEFINED_BY_SYSTEM));
     }
 
     @Test(dependsOnMethods = {"testUpdateIdPFederatedAuthenticator"})
@@ -554,7 +656,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("isEnabled", equalTo(true))
                 .body("isDefault", equalTo(true))
                 .body("properties", notNullValue())
-                .body("definedBy", equalTo("SYSTEM"))
+                .body("definedBy", equalTo(DEFINED_BY_SYSTEM))
                 .body("properties.find{ it.key == 'ClientId' }.value", equalTo
                         ("165474950684-7mvqd8m6hieb8mdnffcarnku2aua0tpl.apps.googleusercontent.com"))
                 .body("properties.find{ it.key == 'ClientSecret' }.value", equalTo("testclientsecret"))
@@ -786,7 +888,21 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("certificate.certificates", nullValue());
     }
 
-    @Test(dependsOnMethods = {"testPatchIdP"})
+    @Test(dependsOnMethods = "testPatchIdP")
+    public void testExportIDPToFile() {
+
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId + PATH_SEPARATOR +
+                "export");
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("identityProviderName", equalTo(IDP_NAME))
+                .body("federatedAuthenticatorConfigs.find { it.name == '" + AUTHENTICATOR_NAME + "' }.definedByType",
+                        equalTo(DEFINED_BY_SYSTEM));
+    }
+
+    @Test(dependsOnMethods = {"testExportIDPToFile"})
     public void testDeleteIdP() {
 
         getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId)
@@ -915,5 +1031,28 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    /**
+     * Deletes an Identity Provider by its ID and verifies the deletion.
+     *
+     * @param idPId ID of the Identity Provider to be deleted.
+     */
+    private void deleteCreatedIdP(String idPId) {
+
+        Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        Response responseOfGet = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("message", equalTo("Resource not found."))
+                .body("description", equalTo("Unable to find a resource matching the provided identity " +
+                        "provider identifier " + idPId + "."));
     }
 }
