@@ -12,7 +12,7 @@ body:
     id: steps
     attributes:
       label: Steps to Reproduce
-      description: List the steps you followed when you encountered the issue. Provide sample source code to reproduce the issue where applicable.
+      description: List the steps you followed when you encountered the issue.
     validations:
       required: true
   - type: input
@@ -26,6 +26,6 @@ body:
     id: environment
     attributes:
       label: Environment Details (with versions)
-      description: Mention the environment details (OS, Client, etc.) that the product is running on.
+      description: Mention the environment details (OS, Database, Userstore, etc..) that the product is running on.
     validations:
       required: false
