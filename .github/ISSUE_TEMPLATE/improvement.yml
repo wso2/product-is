@@ -20,6 +20,6 @@ body:
     id: version
     attributes:
       label: Version
-      description: Enter component version.
+      description: Enter product/component version.
     validations:
       required: false
