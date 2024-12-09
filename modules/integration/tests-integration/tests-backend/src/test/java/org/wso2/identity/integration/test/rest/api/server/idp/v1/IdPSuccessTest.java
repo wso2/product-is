@@ -60,6 +60,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
     private static final String METADATA_SAML_PLACEHOLDER = "<METADATA_SAML>";
     private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
+    private static final String AUTHENTICATOR_PROPERTIES_PLACEHOLDER = "\"<AUTHENTICATOR_PROPERTIES>\"";
     private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
     private static final String CUSTOM_IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
@@ -417,7 +418,11 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test(dependsOnMethods = {"testGetMetaOutboundConnector"})
     public void testAddIdP() throws IOException {
 
-        String body = readResource("add-idp.json");
+        String addIdpPayload = readResource("add-idp.json");
+        String properties = convertDuplicatedPropertiesToJson(
+                createAuthenticatorProperties("username","admin"), null);
+        String body = addIdpPayload.replace(AUTHENTICATOR_PROPERTIES_PLACEHOLDER, properties);
+
         Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -460,11 +465,9 @@ public class IdPSuccessTest extends IdPTestBase {
     public void addIdPWithDuplicatedOIDCScopes() throws IOException {
 
         String oidcIdpPayload = readResource("add-oidc-idp.json");
-        String oidcScopesProperties = convertToJasonPayload(
+        String oidcScopesProperties = convertDuplicatedPropertiesToJson(
                 createAuthenticatorProperties("Scopes","openid country profile"),
                 createAuthenticatorProperties("commonAuthQueryParams","scope=openid country profile"));
-//        String oidcScopesProperties = convertToJasonPayload(
-//                createAuthenticatorProperties("openid country profile","scope=openid country profile"));
         String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
 
         Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
@@ -490,7 +493,7 @@ public class IdPSuccessTest extends IdPTestBase {
     public void addOIDCIdPWithoutOpenidScope() throws IOException {
 
         String oidcIdpPayload = readResource("add-oidc-idp.json");
-        String oidcScopesProperties = convertToJasonPayload(
+        String oidcScopesProperties = convertDuplicatedPropertiesToJson(
                 createAuthenticatorProperties("Scopes","country profile"), null);
         String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
 
@@ -513,7 +516,7 @@ public class IdPSuccessTest extends IdPTestBase {
     public void addSAMLStandardBasedIdP() throws IOException {
 
         String samlIdpPayload = readResource("add-saml-idp.json");
-        String body = samlIdpPayload.replace(METADATA_SAML_PLACEHOLDER, retrieveMetadataSamlFile(
+        String body = samlIdpPayload.replace(METADATA_SAML_PLACEHOLDER, loadMetadataSamlFile(
                 "test-metadata-saml.xml"));
 
         Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
@@ -593,7 +596,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test
-    public void testInvalidSearchAllIdPs() {
+    public void testSearchIdPByNonExistentIdPName() {
 
         Response response = getResponseOfGetWithQueryParams(IDP_API_BASE_PATH, Collections.singletonMap("filter",
                 "name sw InvalidIdP"));
@@ -1074,16 +1077,24 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     /**
-     * Retrieves saml metadata content from the provided file.
+     * Load saml metadata content from the provided file.
+     *
      * @return content of file as String
      * @throws IOException if an error occurred while reading the file.
      */
-    private String retrieveMetadataSamlFile(String xmlFileName) throws IOException {
+    private String loadMetadataSamlFile(String xmlFileName) throws IOException {
 
         String metadata = readResource(xmlFileName);
         return new String(Base64.getEncoder().encode(metadata.getBytes()));
     }
 
+    /**
+     * Creates a map of authenticator properties with a provided key and value.
+     *
+     * @param key   Authenticator key.
+     * @param value Authenticator value.
+     * @return a map containing the authenticator properties.
+     */
     private Map<String, String> createAuthenticatorProperties(String key, String value) {
 
         Map<String, String> authenticatorProps = new HashMap<>();
@@ -1092,13 +1103,23 @@ public class IdPSuccessTest extends IdPTestBase {
         return authenticatorProps;
     }
 
-    private String convertToJasonPayload(Map<String, String> scopes, Map<String, String> commonAuthQueryParams)
+    /**
+     * Converts a map of properties and an optional map of duplicated properties into a JSON string.
+     * If duplicated properties are provided, they are appended to the JSON string of the original properties.
+     *
+     * @param properties           Main map of properties.
+     * @param duplicatedProperties Map of duplicated properties.
+     * @return a JSON string representation of the properties and duplicated properties.
+     * @throws JsonProcessingException if there is an error during JSON conversion.
+     */
+    private String convertDuplicatedPropertiesToJson(Map<String, String> properties,
+                                                     Map<String, String> duplicatedProperties)
             throws JsonProcessingException {
 
         ObjectMapper objectMapper = new ObjectMapper();
-        if (commonAuthQueryParams != null) {
-            return objectMapper.writeValueAsString(scopes) + "," + objectMapper.writeValueAsString(commonAuthQueryParams);
+        if (duplicatedProperties != null) {
+            return objectMapper.writeValueAsString(properties) + "," + objectMapper.writeValueAsString(duplicatedProperties);
         }
-        return objectMapper.writeValueAsString(scopes);
+        return objectMapper.writeValueAsString(properties);
     }
 }
