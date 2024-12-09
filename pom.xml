@@ -2398,7 +2398,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.13</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.26</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.27</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2445,11 +2445,11 @@
         <authenticator.totp.version>3.3.30</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.3</authenticator.office365.version>
-        <authenticator.smsotp.version>3.3.31</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.3.32</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.29</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.30</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.24</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.13</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.25</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.14</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.24</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
