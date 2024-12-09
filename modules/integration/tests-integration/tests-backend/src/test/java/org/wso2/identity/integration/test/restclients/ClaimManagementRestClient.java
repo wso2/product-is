@@ -130,6 +130,17 @@ public class ClaimManagementRestClient extends RestBaseClient {
         }
     }
 
+    public void updateExternalClaim(String dialectId, String claimId, ExternalClaimReq claimRequest) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        String jsonRequest = toJSONString(claimRequest);
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "External claim update failed");
+        }
+    }
+
     private Header[] getHeaders() {
 
         Header[] headerList = new Header[2];

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>7.1.0-m5-SNAPSHOT</version>
+        <version>7.1.0-m6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,7 +32,6 @@
         <module>admin-clients</module>
         <module>ui-pages</module>
         <module>integration-test-utils</module>
-        <module>extensions</module>
         <module>jacoco-report-generator</module>
     </modules>
 

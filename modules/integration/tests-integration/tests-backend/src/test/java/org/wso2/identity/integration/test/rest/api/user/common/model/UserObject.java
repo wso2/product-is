@@ -33,6 +33,7 @@ public class UserObject {
     private String userName;
     private String password;
     private List<Email> emails = null;
+    private List<PhoneNumbers> phoneNumbers = null;
     private String locale;
     private ScimSchemaExtensionEnterprise scimSchemaExtensionEnterprise;
 
@@ -141,6 +142,31 @@ public class UserObject {
             this.emails = new ArrayList<>();
         }
         this.emails.add(email);
+        return this;
+    }
+
+    public UserObject phoneNumbers(List<PhoneNumbers> phoneNumbers) {
+
+        this.phoneNumbers = phoneNumbers;
+        return this;
+    }
+
+    @ApiModelProperty()
+    @JsonProperty("phoneNumbers")
+    @Valid
+    public List<PhoneNumbers> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public void setPhoneNumbers(List<PhoneNumbers> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
+
+    public UserObject addPhoneNumbers(PhoneNumbers phoneNumbers) {
+        if (this.phoneNumbers == null) {
+            this.phoneNumbers = new ArrayList<>();
+        }
+        this.phoneNumbers.add(phoneNumbers);
         return this;
     }
 

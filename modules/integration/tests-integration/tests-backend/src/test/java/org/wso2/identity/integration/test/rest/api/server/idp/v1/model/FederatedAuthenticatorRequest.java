@@ -23,6 +23,9 @@ import io.swagger.annotations.ApiModelProperty;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 
 import javax.validation.Valid;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -107,6 +110,38 @@ public class FederatedAuthenticatorRequest {
                 "}";
     }
 
+    @XmlType(name="DefinedByEnum")
+    @XmlEnum(String.class)
+    public enum DefinedByEnum {
+
+        @XmlEnumValue("SYSTEM") SYSTEM(String.valueOf("SYSTEM")), @XmlEnumValue("USER") USER(String.valueOf("USER"));
+
+
+        private String value;
+
+        DefinedByEnum(String v) {
+            value = v;
+        }
+
+        public String value() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        public static DefinedByEnum fromValue(String value) {
+            for (DefinedByEnum b : DefinedByEnum.values()) {
+                if (b.value.equals(value)) {
+                    return b;
+                }
+            }
+            throw new IllegalArgumentException("Unexpected value '" + value + "'");
+        }
+    }
+
     /**
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
@@ -125,6 +160,8 @@ public class FederatedAuthenticatorRequest {
         private Boolean isEnabled = false;
         private Boolean isDefault = false;
         private List<Property> properties = null;
+        private DefinedByEnum definedBy;
+        private Endpoint endpoint;
 
         /**
          *
@@ -234,16 +271,63 @@ public class FederatedAuthenticatorRequest {
             return this;
         }
 
+        /**
+         *
+         **/
+        public FederatedAuthenticator definedBy(DefinedByEnum definedBy) {
+
+            this.definedBy = definedBy;
+            return this;
+        }
+
+        @ApiModelProperty(value = "")
+        @JsonProperty("definedBy")
+        @Valid
+        public DefinedByEnum getDefinedBy() {
+            return definedBy;
+        }
+        public void setDefinedBy(DefinedByEnum definedBy) {
+            this.definedBy = definedBy;
+        }
+
+        /**
+         **/
+        public FederatedAuthenticator endpoint(Endpoint endpoint) {
+
+            this.endpoint = endpoint;
+            return this;
+        }
+
+        @ApiModelProperty(value = "")
+        @JsonProperty("endpoint")
+        @Valid
+        public Endpoint getEndpoint() {
+            return endpoint;
+        }
+        public void setEndpoint(Endpoint endpoint) {
+            this.endpoint = endpoint;
+        }
+
         @Override
         public String toString() {
 
-            return "class FederatedAuthenticator {\n" +
+            String classToString = "class FederatedAuthenticator {\n" +
                     "    authenticatorId: " + toIndentedString(authenticatorId) + "\n" +
                     "    name: " + toIndentedString(name) + "\n" +
                     "    isEnabled: " + toIndentedString(isEnabled) + "\n" +
-                    "    isDefault: " + toIndentedString(isDefault) + "\n" +
-                    "    properties: " + toIndentedString(properties) + "\n" +
-                    "}";
+
+                    "    isDefault: " + toIndentedString(isDefault) + "\n";
+            if (properties != null) {
+                classToString += "    properties: " + toIndentedString(properties) + "\n";
+            }
+            if (definedBy != null) {
+                classToString += "    definedBy: " + toIndentedString(definedBy) + "\n";
+            }
+            if (endpoint != null) {
+                classToString += "    endpoint: " + toIndentedString(endpoint) + "\n";
+            }
+
+            return classToString + "}";
         }
     }
 }

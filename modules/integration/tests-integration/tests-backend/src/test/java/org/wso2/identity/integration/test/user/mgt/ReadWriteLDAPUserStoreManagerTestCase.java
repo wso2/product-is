@@ -21,11 +21,19 @@ package org.wso2.identity.integration.test.user.mgt;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 
-import java.io.File;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.HashSet;
 
 public class ReadWriteLDAPUserStoreManagerTestCase extends UserManagementServiceAbstractTest {
+
+    // These attributes are not supported by the default LDAP schema.
+    private static final Set<String> UNSUPPORTED_CLAIMS = new HashSet<>(Arrays.asList(
+            "http://wso2.org/claims/emailAddresses",
+            "http://wso2.org/claims/verifiedEmailAddresses",
+            "http://wso2.org/claims/mobileNumbers",
+            "http://wso2.org/claims/verifiedMobileNumbers"));
 
     @BeforeClass(alwaysRun = true)
     public void configureServer() throws Exception {
@@ -51,6 +59,12 @@ public class ReadWriteLDAPUserStoreManagerTestCase extends UserManagementService
     @Override
     protected void setUserRole() {
        newUserRole = "ReadWriteLDAPUserRole";
+    }
+
+    @Override
+    protected Set<String> getExcludedClaims() {
+
+        return UNSUPPORTED_CLAIMS;
     }
 }
 

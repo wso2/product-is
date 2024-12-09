@@ -45,15 +45,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.hamcrest.collection.IsIn;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -64,15 +61,9 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.UserUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,8 +73,6 @@ import java.util.List;
 public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     public static final String TEST_NONCE = "test_nonce";
-    private RSAPrivateKey spPrivateKey;
-    private X509Certificate spX509PublicCert;
     private static final String CALLBACK_URL = "https://localhost/callback";
     private CloseableHttpClient client;
     private String sessionDataKey;
@@ -274,24 +263,5 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
         Header location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(location);
         return location.getValue();
-    }
-
-    private void initServiceProviderKeys() throws Exception {
-
-        KeyStore keyStore = KeyStore.getInstance(ISIntegrationTest.KEYSTORE_TYPE);
-        String pkcs12Path = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
-                File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
-        String pkcs12Password = "wso2carbon";
-
-        keyStore.load(new FileInputStream(pkcs12Path), pkcs12Password.toCharArray());
-
-        String alias = "wso2carbon";
-        KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
-                new KeyStore.PasswordProtection(pkcs12Password.toCharArray()));
-        spPrivateKey = (RSAPrivateKey) pkEntry.getPrivateKey();
-
-        // Load certificate chain
-        Certificate[] chain = keyStore.getCertificateChain(alias);
-        spX509PublicCert = (X509Certificate) chain[0];
     }
 }

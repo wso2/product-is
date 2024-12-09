@@ -22,6 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
@@ -54,17 +55,11 @@ public class OIDCUtilTest {
     public static final String profile = "default";
     protected static String sessionDataKey;
 
-    public static final String playgroundAppOneAppName = "playground.appone";
-    public static final String playgroundAppOneAppCallBackUri = "http://localhost:" + TOMCAT_PORT + "/playground" + "" +
-            ".appone/oauth2client";
-    public static final String playgroundAppOneAppContext = "/playground.appone";
+    public static final String playgroundAppOneAppName = MockApplicationServer.Constants.APP1.NAME;
+    public static final String playgroundAppOneAppCallBackUri = MockApplicationServer.Constants.APP1.CALLBACK_URL;
 
-    public static final String playgroundAppTwoAppName = "playground.apptwo";
-    public static final String playgroundAppTwoAppCallBackUri = "http://localhost:" + TOMCAT_PORT + "/playground" + "" +
-            ".apptwo/oauth2client";
-    public static final String playgroundAppTwoAppContext = "/playground.apptwo";
-
-    public static final String targetApplicationUrl = "http://localhost:" + TOMCAT_PORT + "%s";
+    public static final String playgroundAppTwoAppName = MockApplicationServer.Constants.APP2.NAME;
+    public static final String playgroundAppTwoAppCallBackUri = MockApplicationServer.Constants.APP2.CALLBACK_URL;
 
     public static final String emailClaimUri = "http://wso2.org/claims/emailaddress";
     public static final String firstNameClaimUri = "http://wso2.org/claims/givenname";
@@ -87,14 +82,14 @@ public class OIDCUtilTest {
      */
     public static void initApplications() {
 
-        OIDCApplication playgroundApp = new OIDCApplication(playgroundAppOneAppName, playgroundAppOneAppContext,
+        OIDCApplication playgroundApp = new OIDCApplication(playgroundAppOneAppName,
                 playgroundAppOneAppCallBackUri);
         playgroundApp.addRequiredClaim(emailClaimUri);
         playgroundApp.addRequiredClaim(firstNameClaimUri);
         playgroundApp.addRequiredClaim(lastNameClaimUri);
         applications.put(playgroundAppOneAppName, playgroundApp);
 
-        playgroundApp = new OIDCApplication(playgroundAppTwoAppName, playgroundAppTwoAppContext,
+        playgroundApp = new OIDCApplication(playgroundAppTwoAppName,
                 playgroundAppTwoAppCallBackUri);
         playgroundApp.addRequiredClaim(emailClaimUri);
         playgroundApp.addRequiredClaim(firstNameClaimUri);

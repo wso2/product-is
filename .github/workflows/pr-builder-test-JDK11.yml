@@ -13,7 +13,7 @@ on:
         required: true
 
 env:
-  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true
+  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 
 jobs:
@@ -32,9 +32,9 @@ jobs:
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Adopt JDK 8
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: "8"
           distribution: "adopt"
@@ -43,7 +43,7 @@ jobs:
           echo "J8HOME=$JAVA_HOME" >> ${GITHUB_ENV}
         id: java-8-setup
       - name: Set up Adopt JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: "11"
           distribution: "adopt"
@@ -55,7 +55,7 @@ jobs:
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
       - name: Cache maven packages
         id: cache-maven-m2
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.m2
@@ -63,7 +63,7 @@ jobs:
           key: ${{ runner.os }}-pr-builder-${{ env.CURRENT_MONTH }}
       - name: Setup pnpm
         id: setup-pnpm
-        uses: pnpm/action-setup@v2.1.0
+        uses: pnpm/action-setup@v4
         with:
           version: latest
           run_install: false
@@ -117,6 +117,14 @@ jobs:
           path: |
             product-is/**/surefire-reports
           if-no-files-found: warn
+      - name: Archive heap dump
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: heap-dump
+          path: |
+            **/**.hprof
+          if-no-files-found: ignore
       - name: Comment build status
         if: always()
         run: |
