@@ -31,6 +31,9 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * Rest client for organization discovery configuration management API.
+ */
 public class OrgDiscoveryConfigRestClient extends RestBaseClient {
 
     private static final String API_BASE_PATH = "api/server/v1";

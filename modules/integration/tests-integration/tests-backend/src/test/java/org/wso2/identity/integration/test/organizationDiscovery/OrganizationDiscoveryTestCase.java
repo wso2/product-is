@@ -76,6 +76,9 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.REDIRECT_U
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
 
+/**
+ * This class contains the tests for the organization discovery feature with email domain based organization discovery.
+ */
 public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String EMAIL_AS_USERNAME_TOML = "email_as_username.toml";
@@ -329,6 +332,10 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
 
         Map<String, String> queryParams = new HashMap<>();
         List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), StandardCharsets.UTF_8);
+        if (params.isEmpty()) {
+            return queryParams;
+        }
+
         for (NameValuePair param : params) {
             queryParams.put(param.getName(), param.getValue());
         }
@@ -337,6 +344,10 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
     }
 
     private String buildQueryString(Map<String, String> queryParams) throws Exception {
+
+        if (queryParams.isEmpty()) {
+            return "";
+        }
 
         StringBuilder queryString = new StringBuilder();
         for (Map.Entry<String, String> entry : queryParams.entrySet()) {
@@ -355,6 +366,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
      * This method parses the user registration page content and checks the values of three specific variables in the
      * page. If all three variables are true, it will return true indicating that the page will redirect to the domain
      * discovery page.
+     *
      * @param pageContent The content of the registration page.
      * @return true if the page content will redirect to the domain discovery page.
      */
