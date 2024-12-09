@@ -2,10 +2,8 @@
   "authenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
   "isEnabled": true,
   "isDefault": true,
+  "definedBy": "SYSTEM",
   "properties": [
-    {
-      "key": "Scopes",
-      "value": "country profile"
-    }
+    "<OIDC_SCOPES>"
   ]
 }

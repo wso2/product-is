@@ -17,6 +17,7 @@
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
@@ -37,16 +38,10 @@ import org.wso2.identity.integration.test.rest.api.server.idp.v1.util.UserDefine
 
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.hasKey;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 
@@ -62,6 +57,8 @@ public class IdPFailureTest extends IdPTestBase {
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_1 = "\"<FEDERATED_AUTHENTICATOR_1>\"";
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_2 = "\"<FEDERATED_AUTHENTICATOR_2>\"";
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
+    private static final String METADATA_SAML_PLACEHOLDER = "<METADATA_SAML>";
+    private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String CUSTOM_IDP_NAME = "CustomAuthIDP";
     private static final String USER_DEFINED_AUTHENTICATOR_ID_1 = "Y3VzdG9tQXV0aGVudGljYXRvcjE=";
     private static final String USER_DEFINED_AUTHENTICATOR_ID_2 = "Y3VzdG9tQXV0aGVudGljYXRvcg==";
@@ -566,8 +563,12 @@ public class IdPFailureTest extends IdPTestBase {
     @Test
     public void testUpdateIdPWithDuplicateOIDCScopes() throws IOException {
 
-        String body = readResource("add-idp-oidc-standard-based.json");
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        String oidcIdpPayload = readResource("add-oidc-idp.json");
+        String oidcScopesProperties = convertToJasonPayload(
+                createAuthenticatorProperties("Scopes","openid country profile"), null);
+        String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -580,8 +581,13 @@ public class IdPFailureTest extends IdPTestBase {
         assertNotNull(oidcIdPId);
 
         // update the OIDC IDP with duplicated scopes
-        String updateBody = readResource("update-idp-oidc-standard-based-duplicated-scopes.json");
-        Response updateResponse = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + oidcIdPId +
+        String updateOidcIdpPayload = readResource("update-oidc-idp.json");
+        String updateOidcScopesProperties = convertToJasonPayload(
+                createAuthenticatorProperties("Scopes","openid country profile"),
+                createAuthenticatorProperties("commonAuthQueryParams","scope=openid country profile"));
+        String updateBody = updateOidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, updateOidcScopesProperties);
+
+        Response updateResponse = getResponseOfPutWithNoFilter(IDP_API_BASE_PATH + PATH_SEPARATOR + oidcIdPId +
                 PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + OIDC_IDP_ID, updateBody);
         updateResponse.then()
                 .log().ifValidationFails()
@@ -597,8 +603,12 @@ public class IdPFailureTest extends IdPTestBase {
     @Test
     public void testUpdateOIDCIdPWithoutOpenidScope() throws IOException {
 
-        String body = readResource("add-idp-oidc-standard-based.json");
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        String oidcIdpPayload = readResource("add-oidc-idp.json");
+        String oidcScopesProperties = convertToJasonPayload(
+                createAuthenticatorProperties("Scopes","openid country profile"), null);
+        String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -611,8 +621,12 @@ public class IdPFailureTest extends IdPTestBase {
         assertNotNull(oidcIdPId);
 
         // update the OIDC IdP without openid scope
-        String updateBody = readResource("update-idp-oidc-without-openid-scope.json");
-        Response updateResponse = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + oidcIdPId +
+        String updateOidcIdpPayload = readResource("update-oidc-idp.json");
+        String updateOidcScopesProperties = convertToJasonPayload(
+                createAuthenticatorProperties("Scopes","country profile"), null);
+        String updateBody = updateOidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, updateOidcScopesProperties);
+
+        Response updateResponse = getResponseOfPutWithNoFilter(IDP_API_BASE_PATH + PATH_SEPARATOR + oidcIdPId +
                 PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + OIDC_IDP_ID, updateBody);
         updateResponse.then()
                 .log().ifValidationFails()
@@ -627,9 +641,10 @@ public class IdPFailureTest extends IdPTestBase {
     @Test
     public void addSamlIdPWithoutMetadata() throws IOException {
 
-        String body = readResource("add-saml-idp-without-metadata.json");
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        String samlIdpPayload = readResource("add-saml-idp.json");
+        String body = samlIdpPayload.replace(METADATA_SAML_PLACEHOLDER, "");
 
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -659,5 +674,24 @@ public class IdPFailureTest extends IdPTestBase {
                 .body("message", equalTo("Resource not found."))
                 .body("description", equalTo("Unable to find a resource matching the provided identity " +
                         "provider identifier " + idPId + "."));
+    }
+
+    private Map<String, String> createAuthenticatorProperties(String key, String value) {
+
+        Map<String, String> authenticatorProps = new HashMap<>();
+        authenticatorProps.put("key", key);
+        authenticatorProps.put("value", value);
+        return authenticatorProps;
+    }
+
+    public String convertToJasonPayload(Map<String, String> scopes, Map<String, String> commonAuthQueryParams)
+            throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (commonAuthQueryParams != null) {
+            return objectMapper.writeValueAsString(scopes) + "," +
+                    objectMapper.writeValueAsString(commonAuthQueryParams);
+        }
+        return objectMapper.writeValueAsString(scopes);
     }
 }

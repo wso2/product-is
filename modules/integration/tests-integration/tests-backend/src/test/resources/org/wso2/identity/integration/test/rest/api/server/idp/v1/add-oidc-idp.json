@@ -9,7 +9,7 @@
     "outboundProvisioningRoles": []
   },
   "certificate": {
-    "jwksUri": "https://test.com/jwks",
+    "jwksUri": "https://localhost:9443/t/carbon.super/console/connections/templates",
     "certificates": [
       ""
     ]
@@ -30,25 +30,26 @@
         "isEnabled": true,
         "authenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
         "properties": [
+          "<OIDC_SCOPES>",
           {
             "key": "ClientId",
-            "value": "abcd1234wxyz5678ijklmnopqrst9012"
+            "value": "abcd1234-5678-90ef-ghij-klmnopqrstuv"
           },
           {
             "key": "ClientSecret",
-            "value": "mnop3456qrst1234uvwx5678abcd9012"
+            "value": "A1b2C3d4E5F6g7H8i9J0kL1mN2oP3qR4"
           },
           {
             "key": "OAuth2AuthzEPUrl",
-            "value": "https://test.com/authz"
+            "value": "https://localhost:9443/t/carbon.super/console/connections/templates"
           },
           {
             "key": "OAuth2TokenEPUrl",
-            "value": "https://test.com/token"
+            "value": "https://localhost:9443/t/carbon.super/console/connections/templates"
           },
           {
             "key": "callbackUrl",
-            "value": "https://test.com/commonauth"
+            "value": "https://localhost:9443/commonauth"
           }
         ]
       }

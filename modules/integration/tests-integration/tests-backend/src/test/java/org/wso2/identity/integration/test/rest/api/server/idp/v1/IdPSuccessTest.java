@@ -17,6 +17,7 @@
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
@@ -57,6 +58,8 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER = "<FEDERATED_AUTHENTICATOR_ID>";
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
+    private static final String METADATA_SAML_PLACEHOLDER = "<METADATA_SAML>";
+    private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
     private static final String CUSTOM_IDP_NAME = "Custom Auth IDP";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
@@ -456,8 +459,15 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test
     public void addIdPWithDuplicatedOIDCScopes() throws IOException {
 
-        String body = readResource("add-oidc-idp-with-duplicated-scopes.json");
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        String oidcIdpPayload = readResource("add-oidc-idp.json");
+        String oidcScopesProperties = convertToJasonPayload(
+                createAuthenticatorProperties("Scopes","openid country profile"),
+                createAuthenticatorProperties("commonAuthQueryParams","scope=openid country profile"));
+//        String oidcScopesProperties = convertToJasonPayload(
+//                createAuthenticatorProperties("openid country profile","scope=openid country profile"));
+        String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -479,8 +489,12 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test
     public void addOIDCIdPWithoutOpenidScope() throws IOException {
 
-        String body = readResource("add-oidc-idp-without-openid-scope.json");
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        String oidcIdpPayload = readResource("add-oidc-idp.json");
+        String oidcScopesProperties = convertToJasonPayload(
+                createAuthenticatorProperties("Scopes","country profile"), null);
+        String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -498,8 +512,11 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test
     public void addSAMLStandardBasedIdP() throws IOException {
 
-        String body = readResource("add-saml-idp.json");
-        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        String samlIdpPayload = readResource("add-saml-idp.json");
+        String body = samlIdpPayload.replace(METADATA_SAML_PLACEHOLDER, retrieveMetadataSamlFile(
+                "test-metadata-saml.xml"));
+
+        Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -1054,5 +1071,34 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("message", equalTo("Resource not found."))
                 .body("description", equalTo("Unable to find a resource matching the provided identity " +
                         "provider identifier " + idPId + "."));
+    }
+
+    /**
+     * Retrieves saml metadata content from the provided file.
+     * @return content of file as String
+     * @throws IOException if an error occurred while reading the file.
+     */
+    private String retrieveMetadataSamlFile(String xmlFileName) throws IOException {
+
+        String metadata = readResource(xmlFileName);
+        return new String(Base64.getEncoder().encode(metadata.getBytes()));
+    }
+
+    private Map<String, String> createAuthenticatorProperties(String key, String value) {
+
+        Map<String, String> authenticatorProps = new HashMap<>();
+        authenticatorProps.put("key", key);
+        authenticatorProps.put("value", value);
+        return authenticatorProps;
+    }
+
+    private String convertToJasonPayload(Map<String, String> scopes, Map<String, String> commonAuthQueryParams)
+            throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (commonAuthQueryParams != null) {
+            return objectMapper.writeValueAsString(scopes) + "," + objectMapper.writeValueAsString(commonAuthQueryParams);
+        }
+        return objectMapper.writeValueAsString(scopes);
     }
 }
