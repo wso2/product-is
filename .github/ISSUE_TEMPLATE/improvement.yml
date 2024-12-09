@@ -6,14 +6,14 @@ body:
     id: limitation
     attributes:
       label: Current Limitation
-      description: Describe the the current limitation.
+      description: Describe the current limitation.
     validations:
       required: true
   - type: textarea
     id: suggestion
     attributes:
       label: Suggested Improvement
-      description: Describe the the improvement you suggest.
+      description: Describe the improvement you suggest.
     validations:
       required: true
   - type: input
