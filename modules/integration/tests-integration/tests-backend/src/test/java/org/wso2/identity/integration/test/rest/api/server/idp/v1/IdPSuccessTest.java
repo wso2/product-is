@@ -531,7 +531,7 @@ public class IdPSuccessTest extends IdPTestBase {
     @Test(dependsOnMethods = "addIdPWithDuplicatedOIDCScopes")
     public void addOIDCIdPWithoutOpenidScope() throws IOException {
 
-        String baseIdentifier = "\"federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
+        String baseIdentifier = "federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
                 OIDC_AUTHENTICATOR_ID + "' }.";
 
         String oidcIdpPayload = readResource("add-oidc-idp.json");
