@@ -45,6 +45,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
@@ -106,7 +107,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
     private OAuth2RestClient oAuth2RestClient;
     private OrgMgtRestClient orgMgtRestClient;
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeClass(dependsOnGroups = "wso2.is", alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init();
@@ -131,8 +132,13 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
                     }
                 }).build();
 
+        List<UserClaimConfig> userClaimConfigs = Collections.singletonList(
+                new UserClaimConfig.Builder().localClaimUri("http://wso2.org/claims/emailaddress").oidcClaimUri("email")
+                        .build());
+
         // Create an application.
         ApplicationConfig applicationConfig = new ApplicationConfig.Builder()
+                .claimsList(userClaimConfigs)
                 .grantTypes(new ArrayList<>(Collections.singleton(OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE)))
                 .tokenType(ApplicationConfig.TokenType.OPAQUE)
                 .expiryTime(3600)
@@ -165,7 +171,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         organizationDiscoveryConfigRestClient.mapDiscoveryAttributes(subOrgId, mapEmailDomainRequestBody);
     }
 
-    @Test(description = "Test email domain based organization discovery not initiated " +
+    @Test(dependsOnGroups = "wso2.is", description = "Test email domain based organization discovery not initiated " +
             "for unshared app", priority = 1)
     public void testSelfRegistrationOrgDiscoveryForUnsharedApp() throws Exception {
 
@@ -182,7 +188,9 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
                 "Should not be redirected to domain discovery page for an unshared app.");
     }
 
-    @Test(description = "Test email domain based organization discovery for self-registration", priority = 2)
+    @Test(dependsOnGroups = "wso2.is", dependsOnMethods = "testSelfRegistrationOrgDiscoveryForUnsharedApp",
+            description = "Test email domain based organization discovery for self-registration",
+            priority = 2)
     public void testSelfRegistrationOrgDiscovery() throws Exception {
 
         // Share the app
@@ -222,8 +230,9 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         EntityUtils.consume(response.getEntity());
     }
 
-    @Test(description = "Test email domain based organization discovery for self-registration with an " +
-            "invalid email domain", priority = 3)
+    @Test(dependsOnGroups = "wso2.is",
+            description = "Test email domain based organization discovery for self-registration with an " +
+                    "invalid email domain", priority = 3)
     public void testSelfRegistrationOrgDiscoveryWithInvalidEmail() throws Exception {
 
         // Initiate the authorize request to get the login page and retrieve the session data key.
@@ -255,8 +264,8 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         EntityUtils.consume(response.getEntity());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void testClear() throws Exception {
+    @AfterClass(dependsOnGroups = "wso2.is", alwaysRun = true)
+    public void atEnd() throws Exception {
 
         organizationDiscoveryConfigRestClient.deleteOrganizationDiscoveryConfig();
         deleteApp(application.getId());
