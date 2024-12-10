@@ -2617,7 +2617,7 @@
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
-        <org.xmlunit.version>2.6.3</org.xmlunit.version>
+        <org.xmlunit.version>2.10.0</org.xmlunit.version>
         <org.apache.logging.log4j.version>2.17.1</org.apache.logging.log4j.version>
         <org.apache.log4j.wso2.version>1.2.17.wso2v1</org.apache.log4j.wso2.version>
 
