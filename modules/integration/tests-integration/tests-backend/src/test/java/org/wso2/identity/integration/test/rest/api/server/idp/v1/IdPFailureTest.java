@@ -57,6 +57,7 @@ public class IdPFailureTest extends IdPTestBase {
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_1 = "\"<FEDERATED_AUTHENTICATOR_1>\"";
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER_2 = "\"<FEDERATED_AUTHENTICATOR_2>\"";
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
+    private static final String OIDC_IDP_NAME_PLACEHOLDER = "<OIDC_IDP_NAME>";
     private static final String METADATA_SAML_PLACEHOLDER = "<METADATA_SAML>";
     private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String AUTHENTICATOR_PROPERTIES_PLACEHOLDER = "\"<AUTHENTICATOR_PROPERTIES>\"";
@@ -573,6 +574,7 @@ public class IdPFailureTest extends IdPTestBase {
         String oidcScopesProperties = convertDuplicatedPropertiesToJson(
                 createAuthenticatorProperties("Scopes","openid country profile"), null);
         String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+        body = body.replace(OIDC_IDP_NAME_PLACEHOLDER, "OIDC-IdP-3");
 
         Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
@@ -606,13 +608,14 @@ public class IdPFailureTest extends IdPTestBase {
         deleteCreatedIdP(oidcIdPId);
     }
 
-    @Test
+    @Test(dependsOnMethods = "testUpdateIdPWithDuplicateOIDCScopes")
     public void testUpdateOIDCIdPWithoutOpenidScope() throws IOException {
 
         String oidcIdpPayload = readResource("add-oidc-idp.json");
         String oidcScopesProperties = convertDuplicatedPropertiesToJson(
                 createAuthenticatorProperties("Scopes","openid country profile"), null);
         String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+        body = body.replace(OIDC_IDP_NAME_PLACEHOLDER, "OIDC-IdP-4");
 
         Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()

@@ -1,5 +1,5 @@
 {
-  "name": "OIDC IdP",
+  "name": "<OIDC_IDP_NAME>",
   "alias": "",
   "description": "Authenticate users with Enterprise OIDC connections.",
   "image": "assets/images/logos/enterprise.svg",

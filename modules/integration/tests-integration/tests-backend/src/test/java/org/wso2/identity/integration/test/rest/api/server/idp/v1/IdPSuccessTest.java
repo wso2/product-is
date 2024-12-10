@@ -58,6 +58,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String FEDERATED_AUTHENTICATOR_ID_PLACEHOLDER = "<FEDERATED_AUTHENTICATOR_ID>";
     private static final String FEDERATED_AUTHENTICATOR_PLACEHOLDER = "\"<FEDERATED_AUTHENTICATOR>\"";
     private static final String IDP_NAME_PLACEHOLDER = "<IDP_NAME>";
+    private static final String OIDC_IDP_NAME_PLACEHOLDER = "<OIDC_IDP_NAME>";
     private static final String METADATA_SAML_PLACEHOLDER = "<METADATA_SAML>";
     private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String AUTHENTICATOR_PROPERTIES_PLACEHOLDER = "\"<AUTHENTICATOR_PROPERTIES>\"";
@@ -471,6 +472,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 createAuthenticatorProperties("Scopes","openid country profile"),
                 createAuthenticatorProperties("commonAuthQueryParams","scope=openid country profile"));
         String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+        body = body.replace(OIDC_IDP_NAME_PLACEHOLDER, "OIDC-IdP-1");
 
         Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
@@ -491,13 +493,14 @@ public class IdPSuccessTest extends IdPTestBase {
      * There seem to be some concerns related to internal validations used in functionality associated with this.
      * This is being tracked with the issue: https://github.com/wso2/product-is/issues/21928
      */
-    @Test
+    @Test(dependsOnMethods = "addIdPWithDuplicatedOIDCScopes")
     public void addOIDCIdPWithoutOpenidScope() throws IOException {
 
         String oidcIdpPayload = readResource("add-oidc-idp.json");
         String oidcScopesProperties = convertDuplicatedPropertiesToJson(
                 createAuthenticatorProperties("Scopes","country profile"), null);
         String body = oidcIdpPayload.replace(OIDC_SCOPES_PLACEHOLDER, oidcScopesProperties);
+        body = body.replace(OIDC_IDP_NAME_PLACEHOLDER, "OIDC-IdP-2");
 
         Response response = getResponseOfPostNoFilter(IDP_API_BASE_PATH, body);
         response.then()
