@@ -1,5 +1,5 @@
 {
-  "name": "Google",
+  "name": "Google-3",
   "description": "IDP for Google Federation",
   "image": "google-logo-url",
   "isPrimary": false,
@@ -36,34 +36,6 @@
     ],
     "outboundProvisioningRoles": [
       "admin"
-    ]
-  },
-  "federatedAuthenticators": {
-    "defaultAuthenticatorId": "R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I",
-    "authenticators": [
-      {
-        "authenticatorId": "R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I",
-        "isEnabled": true,
-        "properties": [
-          {
-            "key": "AdditionalQueryParameters",
-            "value": "scope=openid email profile"
-          },
-          {
-            "key": "ClientId",
-            "value": "165474950684-7mvqd8m6hieb8mdnffcarnku2aua0tpl.apps.googleusercontent.com"
-          },
-          {
-            "key": "ClientSecret",
-            "value": "testclientsecret"
-          },
-          {
-            "key": "callbackUrl",
-            "value": "https://mydomain2.com:9443/commonauth"
-          },
-          "<AUTHENTICATOR_PROPERTIES>"
-        ]
-      }
     ]
   },
   "provisioning": {
