@@ -72,11 +72,13 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String ACCESS_TOKEN_VALUE = "testBearerToken";
     private static final String PASSWORD_VALUE = "testPassword";
     private static final String IDP_NAME = "Google";
+    private static final String TRUSTED_TOKEN_ISS_IDP_NAME = "Trusted Token Issuer IdP";
     private static final String AUTHENTICATOR_NAME = "GoogleOIDCAuthenticator";
     private static final String DEFINED_BY_SYSTEM = "SYSTEM";
     private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
     private String idpCreatePayload;
     private String idPId;
+    private String trustedTokenIdPId;
     private String customIdPId;
     private String idPTemplateId;
 
@@ -1121,5 +1123,53 @@ public class IdPSuccessTest extends IdPTestBase {
             return objectMapper.writeValueAsString(properties) + "," + objectMapper.writeValueAsString(duplicatedProperties);
         }
         return objectMapper.writeValueAsString(properties);
+    }
+
+    @Test
+    public void testAddTrustedTokenIssuerIdP() throws IOException {
+
+        String body = readResource("add-trusted-token-issuer-idp.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        trustedTokenIdPId = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(trustedTokenIdPId);
+    }
+
+    @Test(dependsOnMethods = "testAddTrustedTokenIssuerIdP")
+    public void testGetTrustedTokenIssuerIdP() {
+
+        Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + trustedTokenIdPId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(trustedTokenIdPId))
+                .body("name", equalTo(TRUSTED_TOKEN_ISS_IDP_NAME));
+    }
+
+    @Test (dependsOnMethods = "testGetTrustedTokenIssuerIdP")
+    public void testDeleteTrustedTokenIssuerIdP() {
+
+        Response response = getResponseOfDelete(IDP_API_BASE_PATH + PATH_SEPARATOR + trustedTokenIdPId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        Response responseOfGet = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + trustedTokenIdPId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("message", equalTo("Resource not found."))
+                .body("description", equalTo("Unable to find a resource matching the provided identity " +
+                        "provider identifier " + trustedTokenIdPId + "."));
     }
 }
