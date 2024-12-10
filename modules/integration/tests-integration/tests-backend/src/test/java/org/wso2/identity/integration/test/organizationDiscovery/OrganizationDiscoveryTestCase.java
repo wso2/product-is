@@ -45,6 +45,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
@@ -131,8 +132,13 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
                     }
                 }).build();
 
+        List<UserClaimConfig> userClaimConfigs = Collections.singletonList(
+                new UserClaimConfig.Builder().localClaimUri("http://wso2.org/claims/emailaddress").oidcClaimUri("email")
+                        .build());
+
         // Create an application.
         ApplicationConfig applicationConfig = new ApplicationConfig.Builder()
+                .claimsList(userClaimConfigs)
                 .grantTypes(new ArrayList<>(Collections.singleton(OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE)))
                 .tokenType(ApplicationConfig.TokenType.OPAQUE)
                 .expiryTime(3600)
