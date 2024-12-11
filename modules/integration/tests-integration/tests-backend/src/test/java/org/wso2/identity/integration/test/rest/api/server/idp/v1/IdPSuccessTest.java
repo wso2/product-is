@@ -46,6 +46,8 @@ import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.emptyIterable;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.testng.Assert.assertNotNull;
@@ -341,7 +343,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test
-    public void testAddIdPWithUserDefinedAuthenticator() throws IOException {
+    public void testAddIdPWithUserDefinedAuthenticator() throws IOException, XPathExpressionException {
 
         String baseIdentifier = "federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
                 FEDERATED_AUTHENTICATOR_ID + "' }.";
@@ -363,7 +365,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_USER))
-                .body(baseIdentifier + "tags", Matchers.hasItems("Custom"));
+                .body(baseIdentifier + "tags", hasItems("Custom"))
+                .body(baseIdentifier + "self", notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
@@ -386,7 +389,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_USER))
-                .body(baseIdentifier + "tags", Matchers.hasItems("Custom"))
+                .body(baseIdentifier + "tags", hasItems("Custom"))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + customIdPId +
                                 "/federated-authenticators/" + FEDERATED_AUTHENTICATOR_ID,
@@ -394,7 +397,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = "testGetUserDefinedAuthenticatorsOfIdP")
-    public void testUpdateUserDefinedAuthenticatorOfIdP() throws JsonProcessingException {
+    public void testUpdateUserDefinedAuthenticatorOfIdP() throws JsonProcessingException, XPathExpressionException {
 
         Response response = getResponseOfPut(IDP_API_BASE_PATH + PATH_SEPARATOR + customIdPId +
                         PATH_SEPARATOR + IDP_FEDERATED_AUTHENTICATORS_PATH + PATH_SEPARATOR + FEDERATED_AUTHENTICATOR_ID,
@@ -409,7 +412,11 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body("isEnabled", equalTo(true))
                 .body("definedBy", equalTo(DEFINED_BY_USER))
-                .body( "tags", Matchers.hasItems("Custom"))
+                .body( "tags", hasItems("Custom"))
+                .body("self", equalTo(getTenantedRelativePath(
+                        "/api/server/v1/identity-providers/" + customIdPId +
+                                "/federated-authenticators/" + FEDERATED_AUTHENTICATOR_ID,
+                        context.getContextTenant().getDomain())))
                 .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.value()));
     }
@@ -436,7 +443,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetMetaOutboundConnector"})
-    public void testAddIdP() throws IOException {
+    public void testAddIdP() throws IOException, XPathExpressionException {
 
         String baseIdentifier = "federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
                 SAMPLE_FEDERATED_AUTHENTICATOR_ID + "' }.";
@@ -457,7 +464,8 @@ public class IdPSuccessTest extends IdPTestBase {
                         decode(SAMPLE_FEDERATED_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_SYSTEM))
-                .body(baseIdentifier + "tags", Matchers.hasItems("Social-Login", "APIAuth"));
+                .body(baseIdentifier + "tags", hasItems("Social-Login", "APIAuth"))
+                .body(baseIdentifier + "self", notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
@@ -474,7 +482,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .body("federatedAuthenticators.authenticators", Matchers.emptyIterable())
+                .body("federatedAuthenticators.authenticators", emptyIterable())
                 .header(HttpHeaders.LOCATION, notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
@@ -514,7 +522,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(OIDC_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_SYSTEM))
-                .body(baseIdentifier + "tags", Matchers.hasItems("OIDC", "APIAuth"));
+                .body(baseIdentifier + "tags", hasItems("OIDC", "APIAuth"))
+                .body(baseIdentifier + "self", notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
@@ -551,7 +560,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(OIDC_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_SYSTEM))
-                .body(baseIdentifier + "tags", Matchers.hasItems("OIDC", "APIAuth"));
+                .body(baseIdentifier + "tags", hasItems("OIDC", "APIAuth"))
+                .body(baseIdentifier + "self", notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
@@ -582,8 +592,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(SAML_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_SYSTEM))
-                .body(baseIdentifier + "tags", Matchers.hasItems("SAML"))
-                .body(baseIdentifier + "self", Matchers.notNullValue());
+                .body(baseIdentifier + "tags", hasItems("SAML"))
+                .body(baseIdentifier + "self", notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
@@ -613,7 +623,7 @@ public class IdPSuccessTest extends IdPTestBase {
                         decode(SAMPLE_FEDERATED_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_SYSTEM))
-                .body(baseIdentifier + "tags", Matchers.hasItems("Social-Login", "APIAuth"))
+                .body(baseIdentifier + "tags", hasItems("Social-Login", "APIAuth"))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId + "/federated-authenticators/"
                                 + SAMPLE_FEDERATED_AUTHENTICATOR_ID, context.getContextTenant().getDomain())))
@@ -711,7 +721,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "authenticatorId", equalTo(SAMPLE_FEDERATED_AUTHENTICATOR_ID))
                 .body(baseIdentifier + "name", equalTo("GoogleOIDCAuthenticator"))
-                .body(baseIdentifier + "tags", Matchers.hasItems("Social-Login", "APIAuth"))
+                .body(baseIdentifier + "tags", hasItems("Social-Login", "APIAuth"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId + "/federated-authenticators/" +
