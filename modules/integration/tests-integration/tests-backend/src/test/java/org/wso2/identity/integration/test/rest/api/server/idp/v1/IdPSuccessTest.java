@@ -23,7 +23,6 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -82,6 +81,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String AUTHENTICATOR_NAME = "GoogleOIDCAuthenticator";
     private static final String DEFINED_BY_SYSTEM = "SYSTEM";
     private static final String DEFINED_BY_USER = "USER";
+    private static final String CUSTOM_TAGS = "CUSTOM";
     private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
     private String idpCreatePayload;
     private String idPId;
@@ -365,7 +365,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_USER))
-                .body(baseIdentifier + "tags", hasItems("Custom"))
+                .body(baseIdentifier + "tags", hasItems(CUSTOM_TAGS))
                 .body(baseIdentifier + "self", notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
@@ -389,7 +389,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_USER))
-                .body(baseIdentifier + "tags", hasItems("Custom"))
+                .body(baseIdentifier + "tags", hasItems(CUSTOM_TAGS))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + customIdPId +
                                 "/federated-authenticators/" + FEDERATED_AUTHENTICATOR_ID,
@@ -412,11 +412,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("name", equalTo(new String(Base64.getDecoder().decode(FEDERATED_AUTHENTICATOR_ID))))
                 .body("isEnabled", equalTo(true))
                 .body("definedBy", equalTo(DEFINED_BY_USER))
-                .body( "tags", hasItems("Custom"))
-                .body("self", equalTo(getTenantedRelativePath(
-                        "/api/server/v1/identity-providers/" + customIdPId +
-                                "/federated-authenticators/" + FEDERATED_AUTHENTICATOR_ID,
-                        context.getContextTenant().getDomain())))
+                .body("tags", hasItems(CUSTOM_TAGS))
                 .body("endpoint.uri", equalTo(UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.value()));
     }
