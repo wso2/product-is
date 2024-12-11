@@ -562,7 +562,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test
-    public void addSAMLStandardBasedIdP() throws IOException {
+    public void addSAMLStandardBasedIdP() throws IOException, XPathExpressionException {
 
         String baseIdentifier = "federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
                 SAML_AUTHENTICATOR_ID + "' }.";
@@ -582,7 +582,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "name", equalTo(new String(Base64.getDecoder().decode(SAML_AUTHENTICATOR_ID))))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_SYSTEM))
-                .body(baseIdentifier + "tags", Matchers.hasItems("SAML"));
+                .body(baseIdentifier + "tags", Matchers.hasItems("SAML"))
+                .body(baseIdentifier + "self", Matchers.notNullValue());
 
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
@@ -593,7 +594,7 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = {"testAddIdP"})
-    public void testGetIdP() throws IOException {
+    public void testGetIdP() throws IOException, XPathExpressionException {
 
         String baseIdentifier = "federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
                 SAMPLE_FEDERATED_AUTHENTICATOR_ID + "' }.";
@@ -613,6 +614,9 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "definedBy", equalTo(DEFINED_BY_SYSTEM))
                 .body(baseIdentifier + "tags", Matchers.hasItems("Social-Login", "APIAuth"))
+                .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
+                        "/api/server/v1/identity-providers/" + idPId + "/federated-authenticators/"
+                                + SAMPLE_FEDERATED_AUTHENTICATOR_ID, context.getContextTenant().getDomain())))
                 .body("image", equalTo("google-logo-url"))
                 .body("isFederationHub", equalTo(false))
                 .body("homeRealmIdentifier", equalTo("localhost"))
@@ -688,7 +692,6 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body(baseIdentifier + "description", equalTo("IDP for Google Federation"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
                 .body(baseIdentifier + "image", equalTo("google-logo-url"))
-                .body(baseIdentifier + "tags", Matchers.hasItems("Social-Login", "APIAuth"))
                 .body(baseIdentifier + "self", equalTo(getTenantedRelativePath(
                         "/api/server/v1/identity-providers/" + idPId,
                         context.getContextTenant().getDomain())))
@@ -706,6 +709,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
+                .body(baseIdentifier + "authenticatorId", equalTo(SAMPLE_FEDERATED_AUTHENTICATOR_ID))
                 .body(baseIdentifier + "name", equalTo("GoogleOIDCAuthenticator"))
                 .body(baseIdentifier + "tags", Matchers.hasItems("Social-Login", "APIAuth"))
                 .body(baseIdentifier + "isEnabled", equalTo(true))
