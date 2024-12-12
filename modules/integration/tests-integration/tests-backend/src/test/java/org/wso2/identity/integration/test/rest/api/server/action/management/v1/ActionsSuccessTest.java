@@ -389,6 +389,17 @@ public class ActionsSuccessTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testDeleteAction"})
+    public void testDeleteNonExistingAction() {
+
+        getResponseOfDelete(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
+                "/" + TEST_ACTION_INVALID_ID)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(dependsOnMethods = {"testDeleteNonExistingAction"})
     public void testCreateActionWithExtraEndpointAuthProperties() {
 
         action = new ActionModel()
