@@ -2475,7 +2475,7 @@
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.19</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.13</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.69</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.70</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.35.26</identity.apps.console.version>
