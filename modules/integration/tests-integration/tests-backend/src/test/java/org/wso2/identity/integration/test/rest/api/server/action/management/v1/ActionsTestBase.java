@@ -70,6 +70,8 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE = "key";
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY = "value";
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY_VALUE = "secret";
+    protected static final String TEST_USERNAME_INVALID_AUTH_PROPERTY = "invalidUsername";
+    protected static final String TEST_ACTION_INVALID_ID = "invalid_id";
 
     protected static final Set<String> NOT_IMPLEMENTED_ACTION_TYPE_PATHS = new HashSet<>();
 
