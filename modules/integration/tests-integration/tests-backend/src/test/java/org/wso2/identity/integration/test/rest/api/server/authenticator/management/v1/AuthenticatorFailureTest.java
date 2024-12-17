@@ -70,7 +70,6 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
         testAuthenticatorConfig = createBaseUserDefinedLocalAuthenticator(
                 AuthenticatorPropertyConstants.AuthenticationType.IDENTIFICATION);
         addUserDefinedAuthenticatorToIS();
-
     }
 
     @AfterClass(alwaysRun = true)
