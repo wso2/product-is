@@ -2377,12 +2377,12 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.195</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.11.47</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>7.0.198</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.11.48</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.13</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.104</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.106</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2392,7 +2392,7 @@
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
-        <identity.data.publisher.authentication.version>5.7.4</identity.data.publisher.authentication.version>
+        <identity.data.publisher.authentication.version>5.7.5</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.7.4</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.6</identity.data.publisher.audit.version>
 
@@ -2414,17 +2414,17 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.6</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.15</social.authenticator.facebook.version>
+        <social.authenticator.facebook.version>5.2.17</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.15</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.3</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.6</social.authenticator.apple.version>
         <social.authenticator.github.version>1.1.14</social.authenticator.github.version>
 
         <!-- Provisioning connector Versions -->
-        <provisioning.connector.google.version>5.2.5</provisioning.connector.google.version>
+        <provisioning.connector.google.version>5.2.6</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.9</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.5</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>2.0.7</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>2.0.8</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.18</identity.local.auth.basicauth.version>
@@ -2446,10 +2446,10 @@
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.3</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.32</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.29</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.30</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.30</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.27</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.15</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.16</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.24</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
@@ -2478,9 +2478,9 @@
         <conditional.authentication.functions.version>1.2.70</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.35.30</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.13.32</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.8.6</identity.apps.core.version>
+        <identity.apps.console.version>2.35.32</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.13.37</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.8.7</identity.apps.core.version>
         <identity.apps.tests.version>1.6.378</identity.apps.tests.version>
 
         <!-- Charon -->
