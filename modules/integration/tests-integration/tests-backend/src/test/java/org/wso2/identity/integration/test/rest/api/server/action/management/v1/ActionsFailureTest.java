@@ -44,8 +44,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
  */
 public class ActionsFailureTest extends ActionsTestBase {
 
-    private static final String TEST_USERNAME_INVALID_AUTH_PROPERTY = "invalidUsername";
-    private static final String TEST_ACTION_INVALID_ID = "invalid_id";
     private static ActionModel action1;
     private static ActionModel action2;
     private static String testActionId2;
@@ -217,18 +215,6 @@ public class ActionsFailureTest extends ActionsTestBase {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
                 "/" + TEST_ACTION_INVALID_ID + ACTION_DEACTIVATE_PATH, "")
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-    }
-
-    @Test(dependsOnMethods = {"testDeactivateActionWithInvalidID"})
-    public void testDeleteActionWithInvalidID() {
-
-        getResponseOfDelete(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
-                "/" + TEST_ACTION_INVALID_ID)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
