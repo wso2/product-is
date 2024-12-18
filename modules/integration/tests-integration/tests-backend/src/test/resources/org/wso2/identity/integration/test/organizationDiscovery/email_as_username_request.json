@@ -1,0 +1,15 @@
+{
+  "claimURI": "http://wso2.org/claims/username",
+  "description": "Username",
+  "displayOrder": 0,
+  "displayName": "Username",
+  "readOnly": false,
+  "required": false,
+  "supportedByDefault": false,
+  "attributeMapping": [
+    {
+      "mappedAttribute": "mail",
+      "userstore": "PRIMARY"
+    }
+  ]
+}
