@@ -45,7 +45,8 @@ import org.wso2.identity.integration.test.rest.api.server.authenticator.manageme
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -58,6 +59,8 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     private UserDefinedLocalAuthenticatorUpdate updatePayload;
 
     private final String CUSTOM_TAG = "Custom";
+    private final String[] CURRENT_TAGS_LIST = new String[]{"APIAuth","MFA","Passwordless","Passkey",
+            "Username-Password", "Request-Path","Social-Login","OIDC","SAML","Enterprise"};
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public AuthenticatorSuccessTest(TestUserMode userMode) throws Exception {
@@ -129,27 +132,18 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     }
 
     @Test(dependsOnMethods = {"getAuthenticators"})
-    public void testGetMetaTags() throws JsonProcessingException {
+    public void testGetMetaTags() {
 
-        Response responseBefore = getResponseOfGet(AUTHENTICATOR_META_TAGS_PATH);
-        responseBefore.then()
+        Response response = getResponseOfGet(AUTHENTICATOR_META_TAGS_PATH);
+        response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("$", not(hasItem(CUSTOM_TAG)));
-
-        getResponseOfPost(AUTHENTICATOR_CUSTOM_API_BASE_PATH,
-                UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(creationPayload));
-
-        Response responseAfter = getResponseOfGet(AUTHENTICATOR_META_TAGS_PATH);
-        responseAfter.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("$", hasItem(CUSTOM_TAG));
-
-        getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR
-                + customIdPId);
+        for (String tag : CURRENT_TAGS_LIST) {
+            response.then()
+                    .body("$", hasItem(tag));
+        }
     }
 
     @Test(dependsOnMethods = {"testGetMetaTags"})
@@ -168,7 +162,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 .body("type", equalTo("LOCAL"))
                 .body("definedBy", equalTo("USER"))
                 .body("isEnabled", equalTo(true))
-                .body("tags", hasItems(CUSTOM_TAG))
+                .body("tags", hasItem(CUSTOM_TAG))
                 .body("self", equalTo(getTenantedRelativePath(
                         AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant)));
     }
@@ -202,6 +196,21 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateUserDefinedLocalAuthenticator"})
+    public void testValidateCustomTagInGetMetaTags() {
+
+        Response response = getResponseOfGet(AUTHENTICATOR_META_TAGS_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("$", hasItem(CUSTOM_TAG));
+        for (String tag : CURRENT_TAGS_LIST) {
+            response.then()
+                    .body("$", hasItem(tag));
+        }
+    }
+
+    @Test(dependsOnMethods = {"testCreateUserDefinedLocalAuthenticator"})
     public void testUpdateUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         updatePayload.displayName(AUTHENTICATOR_DISPLAY_NAME + UPDATE_VALUE_POSTFIX);
@@ -220,7 +229,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 .body("type", equalTo("LOCAL"))
                 .body("definedBy", equalTo("USER"))
                 .body("isEnabled", equalTo(false))
-                .body("tags", hasItems(CUSTOM_TAG))
+                .body("tags", hasItem(CUSTOM_TAG))
                 .body("self", equalTo(getTenantedRelativePath(
                         AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant)));
     }
