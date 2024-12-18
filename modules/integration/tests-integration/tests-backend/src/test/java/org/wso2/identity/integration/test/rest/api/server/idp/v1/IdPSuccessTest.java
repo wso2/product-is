@@ -81,7 +81,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String AUTHENTICATOR_NAME = "GoogleOIDCAuthenticator";
     private static final String DEFINED_BY_SYSTEM = "SYSTEM";
     private static final String DEFINED_BY_USER = "USER";
-    private static final String CUSTOM_TAGS = "CUSTOM";
+    private static final String CUSTOM_TAGS = "Custom";
     private UserDefinedAuthenticatorPayload userDefinedAuthenticatorPayload;
     private String idpCreatePayload;
     private String idPId;
