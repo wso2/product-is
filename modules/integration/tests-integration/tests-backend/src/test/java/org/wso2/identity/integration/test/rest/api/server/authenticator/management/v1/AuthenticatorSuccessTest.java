@@ -234,7 +234,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                         AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant)));
     }
 
-    @Test(dependsOnMethods = {"testUpdateUserDefinedLocalAuthenticator"})
+    @Test(dependsOnMethods = {"testValidateCustomTagInGetMetaTags", "testUpdateUserDefinedLocalAuthenticator"})
     public void testDeleteUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         Response response = getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR
@@ -245,7 +245,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnMethods = {"testUpdateUserDefinedLocalAuthenticator"})
+    @Test(dependsOnMethods = {"testDeleteUserDefinedLocalAuthenticator"})
     public void testDeleteNonExistingUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         Response response = getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR
