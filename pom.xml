@@ -2356,7 +2356,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.49</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.50</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2487,7 +2487,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.28</carbon.kernel.version>
+        <carbon.kernel.version>4.10.29</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.15</identity.verification.version>
