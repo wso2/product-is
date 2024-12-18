@@ -71,6 +71,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RoleClaimTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ScopesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.PermissionBasedScopeValidatorTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthzCodeIdTokenValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSPWiseSkipLoginConsentTestCase"/>
 
@@ -407,7 +408,6 @@
             <class name="org.wso2.identity.integration.test.application.mgt.ServiceProviderUserRoleValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
@@ -426,6 +426,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenScopeValidatorTestCase" />
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
+            <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
         </classes>
     </test>
 
