@@ -37,6 +37,3 @@ federatedEmailAttributeKey = "email"
 EmailOTPEnableByUserClaim = true
 CaptureAndUpdateEmailAddress = true
 showEmailAddressInUI = true
-
-[notification_templates]
-enable_unicode_support = true

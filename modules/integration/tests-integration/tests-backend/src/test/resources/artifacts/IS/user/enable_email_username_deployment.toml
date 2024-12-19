@@ -47,6 +47,3 @@ enable_email_domain = true
 
 [identity_mgt.events.schemes.liteUserRegistration.properties]
 enable = true
-
-[notification_templates]
-enable_unicode_support = true
