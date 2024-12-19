@@ -42,6 +42,7 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
     protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.authenticators.v1";
 
     protected static final String AUTHENTICATOR_API_BASE_PATH = "/authenticators";
+    protected static final String AUTHENTICATOR_META_TAGS_PATH = "/authenticators/meta/tags";
     protected static final String AUTHENTICATOR_CUSTOM_API_BASE_PATH = "/authenticators/custom";
     protected static final String AUTHENTICATOR_CONFIG_API_BASE_PATH = "/api/server/v1/configs/authenticators/";
     protected static final String PATH_SEPARATOR = "/";

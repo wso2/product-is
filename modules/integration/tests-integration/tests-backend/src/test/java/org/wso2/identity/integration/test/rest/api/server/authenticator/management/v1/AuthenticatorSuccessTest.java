@@ -24,7 +24,6 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.checkerframework.checker.units.qual.A;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
@@ -46,6 +45,8 @@ import org.wso2.identity.integration.test.rest.api.server.authenticator.manageme
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
 
 /**
@@ -56,6 +57,10 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     private UserDefinedLocalAuthenticatorConfig testAuthenticatorConfig;
     private UserDefinedLocalAuthenticatorCreation creationPayload;
     private UserDefinedLocalAuthenticatorUpdate updatePayload;
+
+    private final String CUSTOM_TAG = "Custom";
+    private final String[] CURRENT_TAGS_LIST = new String[]{"APIAuth","MFA","Passwordless","Passkey",
+            "Username-Password", "Request-Path","Social-Login","OIDC","SAML","Enterprise"};
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public AuthenticatorSuccessTest(TestUserMode userMode) throws Exception {
@@ -127,6 +132,21 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     }
 
     @Test(dependsOnMethods = {"getAuthenticators"})
+    public void testGetMetaTags() {
+
+        Response response = getResponseOfGet(AUTHENTICATOR_META_TAGS_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("$", not(hasItem(CUSTOM_TAG)));
+        for (String tag : CURRENT_TAGS_LIST) {
+            response.then()
+                    .body("$", hasItem(tag));
+        }
+    }
+
+    @Test(dependsOnMethods = {"testGetMetaTags"})
     public void testCreateUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(creationPayload);
@@ -142,6 +162,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 .body("type", equalTo("LOCAL"))
                 .body("definedBy", equalTo("USER"))
                 .body("isEnabled", equalTo(true))
+                .body("tags", hasItem(CUSTOM_TAG))
                 .body("self", equalTo(getTenantedRelativePath(
                         AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant)));
     }
@@ -166,11 +187,27 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 Assert.assertEquals(authenticator.getString("displayName"), AUTHENTICATOR_DISPLAY_NAME);
                 Assert.assertEquals(authenticator.getString("type"), "LOCAL");
                 Assert.assertTrue(authenticator.getBoolean("isEnabled"));
+                Assert.assertTrue(authenticator.getString("tags").contains(CUSTOM_TAG));
                 Assert.assertEquals(authenticator.getString("self"),
                         getTenantedRelativePath(AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant));
             }
         }
         Assert.assertTrue(isUserDefinedAuthenticatorFound);
+    }
+
+    @Test(dependsOnMethods = {"testCreateUserDefinedLocalAuthenticator"})
+    public void testValidateCustomTagInGetMetaTags() {
+
+        Response response = getResponseOfGet(AUTHENTICATOR_META_TAGS_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("$", hasItem(CUSTOM_TAG));
+        for (String tag : CURRENT_TAGS_LIST) {
+            response.then()
+                    .body("$", hasItem(tag));
+        }
     }
 
     @Test(dependsOnMethods = {"testCreateUserDefinedLocalAuthenticator"})
@@ -192,11 +229,12 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 .body("type", equalTo("LOCAL"))
                 .body("definedBy", equalTo("USER"))
                 .body("isEnabled", equalTo(false))
+                .body("tags", hasItem(CUSTOM_TAG))
                 .body("self", equalTo(getTenantedRelativePath(
                         AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant)));
     }
 
-    @Test(dependsOnMethods = {"testUpdateUserDefinedLocalAuthenticator"})
+    @Test(dependsOnMethods = {"testValidateCustomTagInGetMetaTags", "testUpdateUserDefinedLocalAuthenticator"})
     public void testDeleteUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         Response response = getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR
@@ -207,7 +245,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(dependsOnMethods = {"testUpdateUserDefinedLocalAuthenticator"})
+    @Test(dependsOnMethods = {"testDeleteUserDefinedLocalAuthenticator"})
     public void testDeleteNonExistingUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         Response response = getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR
