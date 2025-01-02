@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>7.1.0-m6-SNAPSHOT</version>
+        <version>7.1.0-m7-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
