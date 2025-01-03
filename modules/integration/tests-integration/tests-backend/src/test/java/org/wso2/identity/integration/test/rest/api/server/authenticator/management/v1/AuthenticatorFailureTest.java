@@ -114,7 +114,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("AUT-60004"))
+                .body("code", equalTo("AUT-60014"))
                 .body("message", equalTo("Authenticator name is invalid."))
                 .body("description", equalTo("The provided authenticator name invalid@name is not in the " +
                         "expected format ^[a-zA-Z0-9][a-zA-Z0-9-_]*$."));
@@ -130,7 +130,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("AUT-60003"))
+                .body("code", equalTo("AUT-60011"))
                 .body("message", equalTo("Invalid endpoint configuration provided."))
                 .body("description", equalTo("The property username must be provided as an authentication " +
                         "property for the BASIC authentication type."));
@@ -146,7 +146,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("AUT-60004"))
+                .body("code", equalTo("AUT-60015"))
                 .body("message", equalTo("Invalid empty or blank value."))
                 .body("description", equalTo("Value for displayName should not be empty or blank."));
     }
@@ -176,7 +176,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("AUT-60003"))
+                .body("code", equalTo("AUT-60011"))
                 .body("message", equalTo("Invalid endpoint configuration provided."))
                 .body("description", equalTo("The Property username cannot be blank."));
     }
@@ -240,7 +240,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("AUT-60003"))
+                .body("code", equalTo("AUT-60013"))
                 .body("message", equalTo("The authenticator already exists."))
                 .body("description", equalTo("The authenticator already exists for the given name:" +
                         " customAuthenticator."));
@@ -257,7 +257,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("AUT-60003"))
+                .body("code", equalTo("AUT-60011"))
                 .body("message", equalTo("Invalid endpoint configuration provided."))
                 .body("description", equalTo("The property username must be provided as an authentication " +
                         "property for the BASIC authentication type."));
@@ -274,7 +274,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("code", equalTo("AUT-60004"))
+                .body("code", equalTo("AUT-60015"))
                 .body("message", equalTo("Invalid empty or blank value."))
                 .body("description", equalTo("Value for displayName should not be empty or blank."));
     }
