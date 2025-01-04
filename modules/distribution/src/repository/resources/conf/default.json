@@ -68,5 +68,6 @@
 
   "default_management_ui.path": "console",
   "legacy_authz_runtime.enable": false,
-  "management_console_deprecation_banner.enable": true
+  "management_console_deprecation_banner.enable": true,
+  "data_storage_type.keystores": "registry"
 }
