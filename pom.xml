@@ -2356,7 +2356,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.69</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.73</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2473,7 +2473,7 @@
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
-        <identity.oauth.addons.version>2.5.19</identity.oauth.addons.version>
+        <identity.oauth.addons.version>2.5.21</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.13</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.70</conditional.authentication.functions.version>
 
