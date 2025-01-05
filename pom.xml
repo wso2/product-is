@@ -2589,7 +2589,7 @@
         <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
 
         <!--  Test dependencies -->
-        <carbon.automation.version>4.4.13</carbon.automation.version>
+        <carbon.automation.version>4.4.14</carbon.automation.version>
         <carbon.automationutils.version>4.5.4</carbon.automationutils.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
