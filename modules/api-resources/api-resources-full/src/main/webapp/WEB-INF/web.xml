@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2021-2024, WSO2 LLC. (http://www.wso2.com).
   ~
-  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ WSO2 LLC. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License.
   ~ You may obtain a copy of the License at
@@ -24,27 +24,218 @@
     <display-name>WSO2 Identity Server REST API</display-name>
     <description>WSO2 Identity Server REST API</description>
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>WEB-INF/beans*.xml</param-value>
-    </context-param>
-
-    <listener>
-        <listener-class>
-            org.springframework.web.context.ContextLoaderListener
-        </listener-class>
-    </listener>
-
+    <!-- Servlet instance for /server/v1 -->
+    <servlet-mapping>
+        <servlet-name>ServerV1ApiServlet</servlet-name>
+        <url-pattern>/server/v1/*</url-pattern>
+    </servlet-mapping>
     <servlet>
-        <servlet-name>CXFServlet</servlet-name>
+        <servlet-name>ServerV1ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.transport.servlet.CXFServlet
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
+                org.wso2.carbon.identity.api.server.action.management.v1.ActionsApi,
+                org.wso2.carbon.identity.api.server.admin.advisory.management.v1.AdminAdvisoryManagementApi,
+                org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
+                org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi,
+                org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi,
+                org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi,
+                org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi,
+                org.wso2.carbon.identity.api.server.configs.v1.ConfigsApi,
+                org.wso2.carbon.identity.api.server.cors.v1.CorsApi,
+                org.wso2.carbon.identity.rest.api.server.email.template.v1.EmailApi,
+                org.wso2.carbon.identity.api.server.extension.management.v1.ExtensionsApi,
+                org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi,
+                org.wso2.carbon.identity.api.server.idp.v1.IdentityProvidersApi,
+                org.wso2.carbon.identity.api.server.idv.provider.v1.IdvProvidersApi,
+                org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi,
+                org.wso2.carbon.identity.api.server.keystore.management.v1.KeystoresApi,
+                org.wso2.carbon.identity.api.server.notification.sender.v1.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.permission.management.v1.PermissionManagementApi,
+                org.wso2.carbon.identity.api.server.oidc.scope.management.v1.OidcApi,
+                org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi,
+                org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi,
+                org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi,
+                org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi,
+                org.wso2.carbon.identity.api.server.script.library.v1.ScriptLibrariesApi,
+                org.wso2.carbon.identity.api.server.secret.management.v1.SecretsApi,
+                org.wso2.carbon.identity.api.server.secret.management.v1.SecretTypeApi,
+                org.wso2.carbon.identity.api.server.tenant.management.v1.TenantsApi,
+                org.wso2.carbon.identity.api.server.tenant.management.v1.ChannelVerifiedTenantsApi,
+                org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
+                org.wso2.carbon.identity.api.server.userstore.v1.UserstoresApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper,
+                org.apache.cxf.jaxrs.ext.search.SearchContextProvider
+            </param-value>
+        </init-param>
     </servlet>
 
+    <!-- Servlet instance for /server/v2 -->
     <servlet-mapping>
-        <servlet-name>CXFServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <servlet-name>ServerV2ApiServlet</servlet-name>
+        <url-pattern>/server/v2/*</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ServerV2ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper,
+                org.apache.cxf.jaxrs.ext.search.SearchContextProvider
+            </param-value>
+        </init-param>
+    </servlet>
+
+    <!--  Servlet instance for /o/server/v1 -->
+    <servlet-mapping>
+        <servlet-name>OrganizationServerV1ApiServlet</servlet-name>
+        <url-pattern>/o/server/v1/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>OrganizationServerV1ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.rest.api.server.claim.management.v1.ClaimManagementApi,
+                org.wso2.carbon.identity.rest.api.server.email.template.v1.EmailApi,
+                org.wso2.carbon.identity.rest.api.server.notification.template.v1.NotificationApi,
+                org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi,
+                org.wso2.carbon.identity.api.server.admin.advisory.management.v1.AdminAdvisoryManagementApi,
+                org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi,
+                org.wso2.carbon.identity.api.server.userstore.v1.UserstoresApi,
+                org.wso2.carbon.identity.api.server.permission.management.v1.PermissionManagementApi,
+                org.wso2.carbon.identity.api.server.keystore.management.v1.KeystoresApi,
+                org.wso2.carbon.identity.api.server.idp.v1.IdentityProvidersApi,
+                org.wso2.carbon.identity.api.server.idp.v1.TrustedTokenIssuersApi,
+                org.wso2.carbon.identity.api.server.configs.v1.ConfigsApi,
+                org.wso2.carbon.identity.api.server.oidc.scope.management.v1.OidcApi,
+                org.wso2.carbon.identity.api.server.script.library.v1.ScriptLibrariesApi,
+                org.wso2.carbon.identity.api.server.tenant.management.v1.TenantsApi,
+                org.wso2.carbon.identity.api.server.tenant.management.v1.ChannelVerifiedTenantsApi,
+                org.wso2.carbon.identity.api.server.cors.v1.CorsApi,
+                org.wso2.carbon.identity.api.server.notification.sender.v1.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi,
+                org.wso2.carbon.identity.api.server.secret.management.v1.SecretsApi,
+                org.wso2.carbon.identity.api.server.secret.management.v1.SecretTypeApi,
+                org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi,
+                org.wso2.carbon.identity.api.server.input.validation.v1.ValidationRulesApi,
+                org.wso2.carbon.identity.api.server.extension.management.v1.ExtensionsApi,
+                org.wso2.carbon.identity.api.server.idv.provider.v1.IdvProvidersApi,
+                org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi,
+                org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi,
+                org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi,
+                org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi,
+                org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
+                org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
+                org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi,
+                org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
+                org.wso2.carbon.identity.api.server.api.resource.v1.MetaApi,
+                org.wso2.carbon.identity.api.server.action.management.v1.ActionsApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper,
+                org.apache.cxf.jaxrs.ext.search.SearchContextProvider
+            </param-value>
+        </init-param>
+    </servlet>
+
+    <!--  Servlet instance for /o/server/v2 -->
+    <servlet-mapping>
+        <servlet-name>OrganizationServerV2ApiServlet</servlet-name>
+        <url-pattern>/o/server/v2/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>OrganizationServerV2ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.api.server.authenticators.v1.AuthenticatorsApi,
+                org.wso2.carbon.identity.api.server.branding.preference.management.v1.BrandingPreferenceApi,
+                org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper,
+                org.apache.cxf.jaxrs.ext.search.SearchContextProvider
+            </param-value>
+        </init-param>
+    </servlet>
+
+    <!--  Servlet instance for /idle-account-identification/v1/ -->
+    <servlet-mapping>
+        <servlet-name>IdleAccountIdentificationV1Servlet</servlet-name>
+        <url-pattern>/idle-account-identification/v1/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>IdleAccountIdentificationV1Servlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.api.idle.account.identification.v1.InactiveUsersApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper
+            </param-value>
+        </init-param>
+    </servlet>
 </web-app>
