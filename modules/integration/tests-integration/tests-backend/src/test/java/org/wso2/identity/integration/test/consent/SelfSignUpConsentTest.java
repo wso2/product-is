@@ -53,6 +53,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.ws.rs.core.MediaType;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.util.Utils.getBasicAuthHeader;
 
@@ -65,10 +66,9 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     public static final String CONSNT_ENDPOINT_SUFFIX = "/api/identity/consent-mgt/v1.0/consents";
     public static final String USER_RECOVERY_ME_ENDPOINT = "/api/identity/user/v1.0/me";
-    private static final String CALLBACK_ENDPOINT = "https://localhost:9853/carbon/callback";
-    private static final String TENANTED_CALLBACK_ENDPOINT = "https://localhost:9853/t/wso2.com/carbon/callback";
     private static final String COUNTRY_WSO2_CLAIM = "http://wso2.org/claims/country";
     private static final String CALLBACK_QUERY_PARAM = "callback";
+    private static final String CALLBACK_PATH = "/carbon/callback";
     private static final String USERNAME_QUERY_PARAM = "username";
     private static final String ADMIN = "admin";
     private static final String EBONY = "ebony";
@@ -138,17 +138,19 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     @Test(alwaysRun = true, groups = "wso2.is", description = "Testing self sign-up page without purposes enter " +
             "username")
 
-    public void testInitialSelfSignUpPage() throws IOException {
+    public void testInitialSelfSignUpPage() throws IOException, XPathExpressionException {
 
+        String CallbackEndpoint = getBaseURL() + CALLBACK_PATH;
         HttpClient client = HttpClientBuilder.create().build();
-        String selfRegisterEndpoint = selfRegisterDoEndpoint + "?" + CALLBACK_QUERY_PARAM + "=" + CALLBACK_ENDPOINT;
+        String selfRegisterEndpoint = selfRegisterDoEndpoint + "?" + CALLBACK_QUERY_PARAM + "=" + CallbackEndpoint;
         selfRegisterEndpoint = getTenantQualifiedURL(selfRegisterEndpoint, secondaryTenantDomain);
         HttpResponse httpResponse = sendGetRequest(client, selfRegisterEndpoint);
         String content = DataExtractUtil.getContentData(httpResponse);
         Assert.assertNotNull(content);
         Assert.assertTrue(content.contains("Enter your username"), "Page for entering username is not prompted while" +
                 " self registering");
-        Assert.assertTrue(content.contains(TENANTED_CALLBACK_ENDPOINT), "Callback endpoint is not available in self " +
+        Assert.assertTrue(content.contains(getTenantQualifiedURL(CallbackEndpoint, secondaryTenantDomain)),
+                "Callback endpoint is not available in self " +
                 "registration username input page.");
     }
 

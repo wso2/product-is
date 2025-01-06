@@ -194,7 +194,7 @@ public class ISIntegrationTest {
      *
      * @return The base URL.
      */
-    private String getBaseURL() throws XPathExpressionException {
+    protected String getBaseURL() throws XPathExpressionException {
 
         Instance instance = isServer.getInstance();
         String httpsPort = isServer.getInstance().getPorts().get(PRODUCT_GROUP_PORT_HTTPS);
