@@ -118,6 +118,9 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
 
         return new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(200,
+                        FileUtils.readFileInClassPathAsString("actions/response/incomplete-response.json")),
+                        new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
+                {TestUserMode.SUPER_TENANT_USER, new ActionResponse(200,
                         FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
                         new ExpectedTokenResponse(400, "Some failure reason", "Some description")},
                 {TestUserMode.TENANT_USER, new ActionResponse(200,
