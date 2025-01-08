@@ -1,4 +1,4 @@
-name: pr-builder-test
+name: Integration Test Runner
 
 on:
   workflow_dispatch:
