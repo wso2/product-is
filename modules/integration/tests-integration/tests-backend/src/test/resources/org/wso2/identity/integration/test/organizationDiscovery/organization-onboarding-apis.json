@@ -1,0 +1,7 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_delete"
+  ]
+}

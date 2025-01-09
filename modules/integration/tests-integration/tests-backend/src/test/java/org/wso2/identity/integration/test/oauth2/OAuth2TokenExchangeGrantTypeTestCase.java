@@ -566,8 +566,7 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
     private void updateServiceProviderWithOIDCConfigs(int portOffset, String applicationName,
                                                       ServiceProvider serviceProvider) throws Exception {
 
-        OIDCApplication application = new OIDCApplication(applicationName, "/" + applicationName,
-                OAuth2Constant.CALLBACK_URL);
+        OIDCApplication application = new OIDCApplication(applicationName, OAuth2Constant.CALLBACK_URL);
 
         OAuthConsumerAppDTO appDTO = getOAuthConsumerAppDTO(application);
 

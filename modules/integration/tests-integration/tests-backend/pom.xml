@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>7.1.0-m5-SNAPSHOT</version>
+        <version>7.1.0-m7-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -47,7 +47,7 @@
                         <version>2.22.1</version>
                         <configuration>
                             <!--<argLine>-Xmx1024m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
-                            <argLine>-Xmx1024m
+                            <argLine>-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError
                                 -Dorg.apache.jasper.compiler.disablejsr199=true
                                 --add-opens=java.base/java.lang=ALL-UNNAMED
                                 --add-opens=java.base/java.util=ALL-UNNAMED
@@ -447,39 +447,11 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>packaging-war-artifacts-openid</id>
-                        <phase>process-test-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-smartconsumerwithclaims" />
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-smartconsumerwithoutclaims" />
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-dumbconsumerwithclaims" />
-                                <ant antfile="src/test/resources/artifacts/IS/openId/openid-app-build.xml" target="openid-dumbconsumerwithoutclaims" />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>packaging-war-artifacts-oauth</id>
                         <phase>process-test-resources</phase>
                         <configuration>
                             <tasks>
                                 <ant antfile="src/test/resources/artifacts/IS/oauth/oauth-app-build.xml" target="default" />
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>packaging-war-artifacts-oidc</id>
-                        <phase>process-test-resources</phase>
-                        <configuration>
-                            <tasks>
-                                <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.appone-app-build" />
-                                <ant antfile="src/test/resources/artifacts/IS/oidc/oidc-sso-app-build.xml" target="playground.apptwo-app-build" />
                             </tasks>
                         </configuration>
                         <goals>
@@ -854,10 +826,6 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
             <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.identity.framework</groupId>
-            <artifactId>org.wso2.carbon.identity.entitlement.stub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>

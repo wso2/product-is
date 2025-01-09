@@ -36,7 +36,11 @@ import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
+import java.util.Arrays;
 import java.io.File;
+import java.util.Collections;
+import java.util.Set;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
@@ -78,6 +82,16 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         if (userMgtClient.roleNameExists(newUserRole + "tmp")) {
             userMgtClient.deleteRole(newUserRole + "tmp");
         }
+    }
+
+    /**
+     * Retrieves a set of skipped claim URIs.
+     *
+     * @return Set of skipped claim URIs.
+     */
+    protected Set<String> getExcludedClaims() {
+
+        return Collections.emptySet();
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
@@ -304,27 +318,25 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
                 = new UserProfileMgtServiceClient(backendURL, getSessionCookie());
         UserProfileDTO profile
                 = userProfileMgtServiceClient.getUserProfile(newUserName, "default");
-        UserFieldDTO[] fields = userProfileMgtServiceClient.getProfileFieldsForInternalStore().getFieldValues();
         String profileConfigs = profile.getProfileName();
-        for (UserFieldDTO field : fields) {
-            if (field.getDisplayName().equalsIgnoreCase("Last Name")) {
-                field.setFieldValue(newUserName + "LastName");
-                continue;
-            }
+        Set<String> excludedClaims = getExcludedClaims();
 
-            if (field.getRequired()) {
-                if (field.getDisplayName().equalsIgnoreCase("Email")) {
-                    field.setFieldValue(newUserName + "@wso2.com");
-                } else {
-                    field.setFieldValue(newUserName);
+        UserFieldDTO[] fields = Arrays.stream(
+                userProfileMgtServiceClient.getProfileFieldsForInternalStore().getFieldValues())
+            .filter(field -> !excludedClaims.contains(field.getClaimUri()))
+            .map(field -> {
+                if ("Last Name".equalsIgnoreCase(field.getDisplayName())) {
+                    field.setFieldValue(newUserName + "LastName");
+                } else if (field.getRequired()) {
+                    field.setFieldValue("Email".equalsIgnoreCase(field.getDisplayName())
+                            ? newUserName + "@wso2.com"
+                            : newUserName);
+                } else if (field.getFieldValue() == null) {
+                    field.setFieldValue("");
                 }
-                continue;
-            }
-            if (field.getFieldValue() == null) {
-                field.setFieldValue("");
-            }
+                return field;
+            }).toArray(UserFieldDTO[]::new);
 
-        }
         //creating a new profile with updated values
         UserProfileDTO newProfile = new UserProfileDTO();
         newProfile.setProfileName(profile.getProfileName());
