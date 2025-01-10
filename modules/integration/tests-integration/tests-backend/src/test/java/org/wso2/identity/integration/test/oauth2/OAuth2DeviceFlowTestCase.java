@@ -15,11 +15,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -29,6 +31,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
@@ -40,6 +43,8 @@ import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -69,7 +74,14 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
     private static final String DEVICE_CODE = "device_code";
     private static final String USER_CODE = "user_code";
+    private static final String ERROR = "error";
+    private static final String ERROR_DESCRIPTION = "error_description";
+    private static final String INTERVAL = "interval";
+    private static final String EXPIRES_IN = "expires_in";
+    private static final String VERIFICATION_URI = "verification_uri";
+    private static final String VERIFICATION_URI_COMPLETE = "verification_uri_complete";
     private static final String CLIENT_ID_PARAM = "client_id";
+    private static final String GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code";
     private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String consumerKey;
@@ -77,15 +89,40 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     private String appId;
     private String userCode;
     private String deviceCode;
-
+    private final CookieStore cookieStore = new BasicCookieStore();
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private CloseableHttpClient client;
+    private final TestUserMode userMode;
+    private final AutomationContext context;
+    private final String activeTenant;
+    private String deviceAuthEndpoint;
+    private String deviceAuthPageEndpoint;
+    private String deviceEndpoint;
+    private String tokenEndpoint;
+
+
+    @DataProvider(name = "configProvider")
+    public static Object[][] configProvider() {
+
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_USER, TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_USER, TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "configProvider")
+    public OAuth2DeviceFlowTestCase(TestUserMode userMode, TestUserMode adminMode) throws Exception {
+
+        context = new AutomationContext("IDENTITY", adminMode);
+        this.userMode = userMode;
+        this.activeTenant = context.getContextTenant().getDomain();
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init(userMode);
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -94,11 +131,32 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
         client = HttpClientBuilder.create()
+                .setDefaultCookieStore(cookieStore)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultRequestConfig(requestConfig)
                 .build();
 
         setSystemproperties();
+        setServerEndpoints();
+    }
+
+    private void setServerEndpoints() throws Exception {
+
+        String deviceAuthEndpointBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device_authorize");
+        deviceAuthEndpoint = getTenantQualifiedURL(deviceAuthEndpointBaseUrl, activeTenant);
+
+        String deviceAuthPageBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "authenticationendpoint/device.do");
+        deviceAuthPageEndpoint = getTenantQualifiedURL(deviceAuthPageBaseUrl, activeTenant);
+
+        String deviceEndpointBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/device");
+        deviceEndpoint = getTenantQualifiedURL(deviceEndpointBaseUrl, activeTenant);
+
+        String tokenEndpointBaseUrl = context.getContextUrls().getBackEndUrl()
+                .replace("services/", "oauth2/token");
+        tokenEndpoint = getTenantQualifiedURL(tokenEndpointBaseUrl, activeTenant);
     }
 
     @AfterClass(alwaysRun = true)
@@ -108,6 +166,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         consumerKey = null;
         consumerSecret = null;
         appId = null;
+        cookieStore.clear();
         client.close();
         restClient.closeHttpClient();
     }
@@ -135,47 +194,64 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
         urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
-        AutomationContext automationContext = new AutomationContext("IDENTITY",
-                TestUserMode.SUPER_TENANT_ADMIN);
-        String deviceAuthEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/device_authorize");
         JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
         deviceCode = responseObject.get(DEVICE_CODE).toString();
         userCode = responseObject.get(USER_CODE).toString();
         Assert.assertNotNull(deviceCode, "device_code is null");
         Assert.assertNotNull(userCode, "user_code is null");
+        Assert.assertEquals(responseObject.get(INTERVAL).toString(), "5",
+                "interval period is incorrect.");
+        Assert.assertEquals(responseObject.get(EXPIRES_IN).toString(), "600",
+                "interval period is incorrect.");
+        Assert.assertEquals(responseObject.get(VERIFICATION_URI).toString(), deviceAuthPageEndpoint,
+                "verification uri is incorrect.");
+        Assert.assertEquals(responseObject.get(VERIFICATION_URI_COMPLETE).toString(),
+                deviceAuthPageEndpoint + "?user_code=" + userCode ,
+                "complete verification uri is incorrect.");
     }
 
     @Test(groups = "wso2.is", description = "Send unapproved token", dependsOnMethods = "testSendDeviceAuthorize")
     public void testNonUsedDeviceTokenRequest() throws Exception {
 
-        JSONObject obj = fireTokenRequest();
+        // Wait 5 seconds because of the token polling interval.
+        Thread.sleep(5000);
+        JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
         String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
         Assert.assertNotNull(error, "error is null");
+        Assert.assertEquals(error,"authorization_pending", "Error message is not valid.");
+        Assert.assertEquals(errorDescription,"Precondition required",
+                "Error Description is not valid.");
     }
 
-    @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testSendDeviceAuthorize")
+    @Test(groups = "wso2.is", description = "Send unapproved token",
+            dependsOnMethods = "testNonUsedDeviceTokenRequest")
+    public void testSlowDownDeviceTokenRequest() throws Exception {
+
+        JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
+        String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
+        Assert.assertNotNull(error, "error is null");
+        Assert.assertEquals(error,"slow_down", "Error message is not valid.");
+        Assert.assertEquals(errorDescription,"Forbidden", "Error Description is not valid.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request",
+            dependsOnMethods = "testSlowDownDeviceTokenRequest")
     public void testSendDeviceAuthorozedPost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        AutomationContext automationContext = new AutomationContext("IDENTITY",
-                TestUserMode.SUPER_TENANT_ADMIN);
-        String authenticationEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "authenticationendpoint/device.do");
-        String response = responsePost(urlParameters,authenticationEndpoint);
+        String response = responsePost(urlParameters, deviceAuthPageEndpoint);
         Assert.assertNotNull(response, "Authorized response is null");
     }
     
-    @Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testSendDeviceAuthorize")
+    @Test(groups = "wso2.is", description = "Send authorize user request",
+            dependsOnMethods = "testSendDeviceAuthorozedPost")
     public void testDevicePost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(USER_CODE, userCode));
-        AutomationContext automationContext = new AutomationContext("IDENTITY",
-                TestUserMode.SUPER_TENANT_ADMIN);
-        String deviceEndpoint = automationContext.getContextUrls().getBackEndUrl()
-                .replace("services/", "oauth2/device");
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters, deviceEndpoint);
         Header locationHeader =
                 response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -253,7 +329,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         // Wait 5 seconds because of the token polling interval.
         Thread.sleep(5000);
-        JSONObject obj = fireTokenRequest();
+        JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
         String accessToken = obj.get("access_token").toString();
         Assert.assertNotNull(accessToken, "Assess token is null");
     }
@@ -264,24 +340,151 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         // Wait 5 seconds because of the token polling interval.
         Thread.sleep(5000);
-        JSONObject obj = fireTokenRequest();
+        JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
         String error = obj.get("error").toString();
         Assert.assertEquals(error, "expired_token");
     }
 
-    private JSONObject fireTokenRequest() throws IOException {
+    @Test(groups = "wso2.is", description = "Send authorize user request without client id ", dependsOnMethods
+            = "testExpiredDeviceTokenRequest")
+    public void testSendDeviceAuthorizeWithoutClientId() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
-                "urn:ietf:params:oauth:grant-type:device_code"));
-        urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
-        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
-        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
+        JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
+        String error = responseObject.get(ERROR).toString();
+        String errorDescription = responseObject.get(ERROR_DESCRIPTION).toString();
+        Assert.assertEquals(error, "invalid_request", "invalid error retrieved");
+        Assert.assertEquals(errorDescription, "Client ID not found in the request.",
+                "invalid error description received");
+    }
+
+    @Test(groups = "wso2.is", description = "Send authorize user request with invalid client  ", dependsOnMethods
+            = "testSendDeviceAuthorizeWithoutClientId")
+    public void testSendDeviceAuthorizeWithInvalidClientId() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, "invalidConsumerKey"));
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
+        JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
+        String error = responseObject.get(ERROR).toString();
+        String errorDescription = responseObject.get(ERROR_DESCRIPTION).toString();
+        Assert.assertEquals(error, "invalid_request", "invalid error retrieved");
+        Assert.assertEquals(errorDescription, "A valid OAuth client could not be found for client_id: invalidConsumerKey",
+                "invalid error description received");
+    }
+
+    @Test(groups = "wso2.is", description = "Send device user request with invalid user code  ", dependsOnMethods
+            = "testSendDeviceAuthorizeWithInvalidClientId")
+    public void testSendUserLoginWithInvalidUserCode() throws Exception {
+
+        refreshHTTPClient();
+        testSendDeviceAuthorize();
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(USER_CODE, "invalidUserCode"));
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters, deviceEndpoint);
+        Header locationHeader =
+                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(response);
+        Assert.assertNotNull(locationHeader, "Authorized response header is null");
+        Assert.assertTrue(locationHeader.toString().contains("error=invalid.code"),
+                "Authorized error response header doesn't contain valid error");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(groups = "wso2.is", description = "Send token request without grant type",
+            dependsOnMethods = "testSendUserLoginWithInvalidUserCode")
+    public void testTokenRequestWithoutGrantType() throws IOException {
+
+        JSONObject obj = sendTokenRequest(null, consumerKey, deviceCode);
+        String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
+        Assert.assertEquals(error, "invalid_request", "Error message is not valid.");
+        Assert.assertEquals(errorDescription, "Missing grant_type parameter value", "Error Description is not valid.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send token request with invalid grant type",
+            dependsOnMethods = "testTokenRequestWithoutGrantType")
+    public void testTokenRequestWithInvalidGrantType() throws IOException {
+
+        JSONObject obj = sendTokenRequest("invalidGrantType", consumerKey, deviceCode);
+        String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
+        Assert.assertEquals(error, "invalid_request", "Error message is not valid.");
+        Assert.assertEquals(errorDescription, "Unsupported grant_type value",
+                "Error Description is not valid.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send token request without client id",
+            dependsOnMethods = "testTokenRequestWithInvalidGrantType")
+    public void testTokenRequestWithoutClientId() throws IOException {
+
+        JSONObject obj = sendTokenRequest(GRANT_TYPE, null, deviceCode);
+        String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
+        Assert.assertEquals(error, "invalid_client", "Error message is not valid.");
+        Assert.assertEquals(errorDescription, "Client ID not found in the request.",
+                "Error Description is not valid.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send token request with invalid client id",
+            dependsOnMethods = "testTokenRequestWithoutClientId")
+    public void testTokenRequestWithInvalidClientId() throws IOException {
+
+        JSONObject obj = sendTokenRequest(GRANT_TYPE, "invalidConsumerKey", deviceCode);
+        String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
+        Assert.assertEquals(error, "invalid_client", "Error message is not valid.");
+        Assert.assertEquals(errorDescription,
+                "A valid OAuth client could not be found for client_id: invalidConsumerKey",
+                "Error Description is not valid.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send token request without device code",
+            dependsOnMethods = "testTokenRequestWithInvalidClientId")
+    public void testTokenRequestWithoutDeviceCode() throws IOException {
+
+        JSONObject obj = sendTokenRequest(GRANT_TYPE
+                , consumerKey, null);
+        String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
+        Assert.assertEquals(error, "invalid_request", "Error message is not valid.");
+        Assert.assertEquals(errorDescription, "Missing parameters: device_code",
+                "Error Description is not valid.");
+    }
+
+    @Test(groups = "wso2.is", description = "Send token request with invalid device code",
+            dependsOnMethods = "testTokenRequestWithoutDeviceCode")
+    public void testTokenRequestWithInvalidDeviceCode() throws IOException {
+
+        JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, "invalidDeviceCode");
+        String error = obj.get("error").toString();
+        String errorDescription = obj.get("error_description").toString();
+        Assert.assertEquals(error, "invalid_request", "Error message is not valid.");
+        Assert.assertEquals(errorDescription, "The provided device code is not registered or is invalid.",
+                "Error Description is not valid.");
+    }
+
+    private JSONObject sendTokenRequest(String grantType, String clientId, String deviceCode) throws IOException {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        if (grantType != null) {
+            urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, grantType));
+        }
+        if (clientId != null) {
+            urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, clientId));
+        }
+        if (deviceCode != null) {
+            urlParameters.add(new BasicNameValuePair(DEVICE_CODE, deviceCode));
+        }
+
+        HttpPost request = new HttpPost(tokenEndpoint);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = client.execute(request);
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        return (JSONObject)JSONValue.parse(rd);
+
+        BufferedReader responseBuffer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        return (JSONObject) JSONValue.parse(responseBuffer);
     }
 
     private JSONObject responseObjectNew(List<NameValuePair> postParameters, String uri) throws Exception {
@@ -357,5 +560,18 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         String appId = addApplication(application);
 
         return getApplication(appId);
+    }
+
+    /**
+     * Refresh the cookie store and http client.
+     */
+    private void refreshHTTPClient() {
+
+        cookieStore.clear();
+        client = HttpClientBuilder.create().disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 }

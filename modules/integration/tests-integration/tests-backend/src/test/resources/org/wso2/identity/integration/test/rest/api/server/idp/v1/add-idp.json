@@ -60,7 +60,8 @@
           {
             "key": "callbackUrl",
             "value": "https://mydomain2.com:9443/commonauth"
-          }
+          },
+          "<AUTHENTICATOR_PROPERTIES>"
         ]
       }
     ]

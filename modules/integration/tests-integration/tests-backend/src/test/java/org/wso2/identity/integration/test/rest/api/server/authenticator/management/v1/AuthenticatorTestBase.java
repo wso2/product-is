@@ -24,9 +24,16 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.wso2.carbon.identity.api.server.authenticators.v1.model.AuthenticationType;
+import org.wso2.carbon.identity.application.common.model.UserDefinedAuthenticatorEndpointConfig;
+import org.wso2.carbon.identity.application.common.model.UserDefinedLocalAuthenticatorConfig;
+import org.wso2.carbon.identity.base.AuthenticatorPropertyConstants;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
 
 public class AuthenticatorTestBase extends RESTAPIServerTestBase {
 
@@ -35,6 +42,17 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
     protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.authenticators.v1";
 
     protected static final String AUTHENTICATOR_API_BASE_PATH = "/authenticators";
+    protected static final String AUTHENTICATOR_META_TAGS_PATH = "/authenticators/meta/tags";
+    protected static final String AUTHENTICATOR_CUSTOM_API_BASE_PATH = "/authenticators/custom";
+    protected static final String AUTHENTICATOR_CONFIG_API_BASE_PATH = "/api/server/v1/configs/authenticators/";
+    protected static final String PATH_SEPARATOR = "/";
+
+    protected final String AUTHENTICATOR_NAME = "customAuthenticator";
+    protected final String AUTHENTICATOR_DISPLAY_NAME = "ABC custom authenticator";
+    protected final String AUTHENTICATOR_ENDPOINT_URI = "https://test.com/authenticate";
+    protected final String customIdPId = Base64.getUrlEncoder().withoutPadding().encodeToString(
+            AUTHENTICATOR_NAME.getBytes(StandardCharsets.UTF_8));
+    protected final String UPDATE_VALUE_POSTFIX = "Updated";
 
     protected static String swaggerDefinition;
 
@@ -63,5 +81,26 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
     public void testFinish() {
 
         RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    protected UserDefinedLocalAuthenticatorConfig createBaseUserDefinedLocalAuthenticator(
+            AuthenticatorPropertyConstants.AuthenticationType type) {
+
+        UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(type);
+        config.setName(AUTHENTICATOR_NAME);
+        config.setDisplayName(AUTHENTICATOR_DISPLAY_NAME);
+        config.setEnabled(true);
+
+        UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =
+                new UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder();
+        endpointConfig.uri(AUTHENTICATOR_ENDPOINT_URI);
+        endpointConfig.authenticationType(String.valueOf(AuthenticationType.TypeEnum.BASIC));
+        endpointConfig.authenticationProperties(new HashMap<String, String>() {{
+                put("username", "adminUsername");
+                put("password", "adminPassword");
+            }});
+        config.setEndpointConfig(endpointConfig.build());
+
+        return config;
     }
 }

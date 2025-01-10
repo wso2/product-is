@@ -7,7 +7,7 @@ on:
     - cron:  '0 15 * * *'
 
 env:
-  MAVEN_OPTS: -Xmx4g -Xms1g
+  MAVEN_OPTS: -Xmx4g -Xms1g -XX:+HeapDumpOnOutOfMemoryError
   REPOSITORY: product-is
   GIT_USERNAME: jenkins-is-staging
   GIT_EMAIL: jenkins-is-staging@wso2.com
@@ -26,9 +26,9 @@ jobs:
       JAVA_TOOL_OPTIONS: "-Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Set up Adopt JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v4
         with:
           java-version: "11"
           distribution: "adopt"
@@ -37,7 +37,7 @@ jobs:
           echo $JAVA_HOME
       - name: Cache local Maven repository
         id: cache-maven-m2
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: cache-m2
         with:
@@ -50,7 +50,7 @@ jobs:
       - name: Update Dependencies
         id: builder_step
         run: |
-          echo "::set-output name=REPO_NAME::${{ env.REPOSITORY }}"
+          echo "REPO_NAME=${{ env.REPOSITORY }}" >> "$GITHUB_OUTPUT"
           echo ""
           echo "Starting dependency upgrade"
           echo "=========================================================="
@@ -161,6 +161,14 @@ jobs:
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
           if-no-files-found: warn
+      - name: Archive heap dump
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: heap-dump
+          path: |
+            **/**.hprof
+          if-no-files-found: ignore
       - name: Google Chat Notification
         run: |
           STATUS_COLOR=$(if [[ ${{ job.status }} == "success" ]];then echo "#009944";

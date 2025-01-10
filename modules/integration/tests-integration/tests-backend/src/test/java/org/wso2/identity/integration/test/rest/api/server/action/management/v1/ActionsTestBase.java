@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
@@ -44,8 +45,6 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
     protected static final String ACTION_DEACTIVATE_PATH = "/deactivate";
     protected static final String ACTION_ACTIVATE_PATH = "/activate";
-    protected static final String ACTION_BEARER_AUTH_PATH = "/bearer";
-    protected static final String ACTION_BASIC_AUTH_PATH = "/basic";
 
     protected static final String PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE = "PRE_ISSUE_ACCESS_TOKEN";
 
@@ -71,6 +70,8 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE = "key";
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY = "value";
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY_VALUE = "secret";
+    protected static final String TEST_USERNAME_INVALID_AUTH_PROPERTY = "invalidUsername";
+    protected static final String TEST_ACTION_INVALID_ID = "invalid_id";
 
     protected static final Set<String> NOT_IMPLEMENTED_ACTION_TYPE_PATHS = new HashSet<>();
 
@@ -139,6 +140,20 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(object);
+    }
+
+    /**
+     * Build the base URL for the REST API.
+     *
+     * @return Base URL.
+     */
+    public String buildBaseURL() {
+
+        if (this.tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return String.format(API_SERVER_BASE_PATH, "v1");
+        } else {
+            return "/t/" + this.tenant + String.format(API_SERVER_BASE_PATH, "v1");
+        }
     }
 }
 

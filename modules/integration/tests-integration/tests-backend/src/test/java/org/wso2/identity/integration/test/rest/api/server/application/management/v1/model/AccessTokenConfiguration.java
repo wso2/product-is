@@ -34,7 +34,6 @@ public class AccessTokenConfiguration  {
     private Boolean revokeTokensWhenIDPSessionTerminated;
     private Boolean validateTokenBinding;
     private List<String> accessTokenAttributes = null;
-    private Boolean accessTokenAttributesEnabled;
 
     /**
     **/
@@ -152,24 +151,6 @@ public class AccessTokenConfiguration  {
         return this;
     }
 
-    /**
-     **/
-    public AccessTokenConfiguration accessTokenAttributesEnabled(Boolean accessTokenAttributesEnabled) {
-
-        this.accessTokenAttributesEnabled = accessTokenAttributesEnabled;
-        return this;
-    }
-
-    @ApiModelProperty(value = "")
-    @JsonProperty("accessTokenAttributesEnabled")
-    @Valid
-    public Boolean getAccessTokenAttributesEnabled() {
-        return accessTokenAttributesEnabled;
-    }
-    public void setAccessTokenAttributesEnabled(Boolean accessTokenAttributesEnabled) {
-        this.accessTokenAttributesEnabled = accessTokenAttributesEnabled;
-    }
-
     @Override
     public boolean equals(Object o) {
 
@@ -183,14 +164,13 @@ public class AccessTokenConfiguration  {
         return Objects.equals(this.type, accessTokenConfiguration.type) &&
             Objects.equals(this.userAccessTokenExpiryInSeconds, accessTokenConfiguration.userAccessTokenExpiryInSeconds) &&
             Objects.equals(this.applicationAccessTokenExpiryInSeconds, accessTokenConfiguration.applicationAccessTokenExpiryInSeconds) &&
-                Objects.equals(this.accessTokenAttributes, accessTokenConfiguration.accessTokenAttributes) &&
-                Objects.equals(this.accessTokenAttributesEnabled, accessTokenConfiguration.accessTokenAttributesEnabled);
+                Objects.equals(this.accessTokenAttributes, accessTokenConfiguration.accessTokenAttributes);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(type, userAccessTokenExpiryInSeconds, applicationAccessTokenExpiryInSeconds,
-                accessTokenAttributes, accessTokenAttributesEnabled);
+                accessTokenAttributes);
     }
 
     @Override
@@ -203,7 +183,6 @@ public class AccessTokenConfiguration  {
         sb.append("    userAccessTokenExpiryInSeconds: ").append(toIndentedString(userAccessTokenExpiryInSeconds)).append("\n");
         sb.append("    applicationAccessTokenExpiryInSeconds: ").append(toIndentedString(applicationAccessTokenExpiryInSeconds)).append("\n");
         sb.append("    accessTokenAttributes: ").append(toIndentedString(accessTokenAttributes)).append("\n");
-        sb.append("    accessTokenAttributesEnabled: ").append(toIndentedString(accessTokenAttributesEnabled)).append("\n");
         sb.append("}");
         return sb.toString();
     }
