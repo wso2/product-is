@@ -409,7 +409,7 @@
     <servlet>
         <servlet-name>OrganizationUsersV2ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.impl.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
