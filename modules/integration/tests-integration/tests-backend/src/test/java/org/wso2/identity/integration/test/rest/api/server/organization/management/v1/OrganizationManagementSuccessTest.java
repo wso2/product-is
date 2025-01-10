@@ -798,6 +798,32 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         validateOrganizationsOnPage(previousPageResponse, 1, NUM_OF_ORGANIZATIONS_FOR_PAGINATION_TESTS, limit);
     }
 
+    @DataProvider(name = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
+    public Object[][] organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider() {
+
+        return new Object[][]{
+                {"20", "0"},
+                {"25", "0"}
+        };
+    }
+
+    @Test(groups = "organizationPaginationTests",
+            dependsOnMethods = "createOrganizationsForPaginationTests",
+            dataProvider = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
+    public void testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero(String offset,
+                                                                                    String limit) {
+
+        String url = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
+                OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
+
+        Response response = getResponseOfGetWithOAuth2(url, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        List<Map<String, String>> returnedOrganizations = response.jsonPath().getList(ORGANIZATIONS_PATH_PARAM);
+        Assert.assertNull(returnedOrganizations);
+        int totalResults = response.jsonPath().getInt("totalResults");
+        Assert.assertEquals(totalResults, 0, "Total results should be 0 when the limit is 0.");
+    }
+
     @DataProvider(name = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public Object[][] organizationPaginationNumericEdgeCasesOfLimitDataProvider() {
 
@@ -806,7 +832,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(groups = "organizationPaginationTests", dependsOnMethods = "createOrganizationsForPaginationTests",
+    @Test(groups = "organizationPaginationTests",
+            dependsOnMethods = "testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero",
             dataProvider = "organizationPaginationNumericEdgeCasesOfLimitDataProvider")
     public void testGetPaginatedOrganizationsForNumericEdgeCasesOfLimit(int limit) {
 

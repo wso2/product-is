@@ -102,6 +102,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
     private static final String COUNTRY_OIDC_CLAIM = "country";
     private static final String COUNTRY_NEW_OIDC_CLAIM = "customclaim";
     private static final String COUNTRY_LOCAL_CLAIM_URI = "http://wso2.org/claims/country";
+    private static final String STATE_LOCAL_CLAIM_URI = "http://wso2.org/claims/stateorprovince";
     private static final String EMAIL_OIDC_CLAIM = "email";
     private static final String EMAIL_CLAIM_VALUE = "email@email.com";
     private static final String EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
@@ -590,7 +591,9 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
      */
     private void changeCountryOIDCDialect() throws Exception {
 
-        claimManagementRestClient.deleteExternalClaim(ENCODED_OIDC_CLAIM_DIALECT, COUNTRY_CLAIM_ID);
+        ExternalClaimReq updateCountryReq = new ExternalClaimReq().claimURI(COUNTRY_OIDC_CLAIM)
+                .mappedLocalClaimURI(STATE_LOCAL_CLAIM_URI);
+        claimManagementRestClient.updateExternalClaim(ENCODED_OIDC_CLAIM_DIALECT, COUNTRY_CLAIM_ID, updateCountryReq);
 
         ExternalClaimReq externalClaimReq = new ExternalClaimReq();
         externalClaimReq.setClaimURI(COUNTRY_NEW_OIDC_CLAIM);

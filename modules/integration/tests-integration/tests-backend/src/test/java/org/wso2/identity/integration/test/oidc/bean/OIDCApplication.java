@@ -27,7 +27,6 @@ public class OIDCApplication {
     private String applicationName;
     private String clientId;
     private String clientSecret;
-    private String applicationContext;
     private String callBackURL;
     private String subjectClaimURI;
     private List<String> requiredClaims = null;
@@ -36,9 +35,8 @@ public class OIDCApplication {
 
     }
 
-    public OIDCApplication(String applicationName, String applicationContext, String callBackURL) {
+    public OIDCApplication(String applicationName, String callBackURL) {
         this.applicationName = applicationName;
-        this.applicationContext = applicationContext;
         this.callBackURL = callBackURL;
     }
 
@@ -72,14 +70,6 @@ public class OIDCApplication {
 
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
-    }
-
-    public String getApplicationContext() {
-        return applicationContext;
-    }
-
-    public void setApplicationContext(String applicationContext) {
-        this.applicationContext = applicationContext;
     }
 
     public String getCallBackURL() {

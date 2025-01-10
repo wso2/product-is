@@ -53,6 +53,8 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
     private static final String ENABLE_SELF_REGISTRATION_PROP_KEY = "SelfRegistration.Enable";
     private static final String ENABLE_USERNAME_RECOVERY_PROP_KEY = "Recovery.Notification.Username.Enable";
+    private static final String ENABLE_USERNAME_EMAIL_RECOVERY_PROP_KEY = "Recovery.Notification.Username.Email.Enable";
+    private static final String ENABLE_USERNAME_SMS_RECOVERY_PROP_KEY = "Recovery.Notification.Username.SMS.Enable";
     private static final String ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY = "Recovery.Question.Password.Enable";
     private static final String ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY =
             "Recovery.Notification.Password.Enable";
@@ -129,6 +131,8 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         updateResidentIDPProperties(superTenantResidentIDP, Map.of(
                 ENABLE_SELF_REGISTRATION_PROP_KEY, "false",
                 ENABLE_USERNAME_RECOVERY_PROP_KEY, "false",
+                ENABLE_USERNAME_EMAIL_RECOVERY_PROP_KEY, "false",
+                ENABLE_USERNAME_SMS_RECOVERY_PROP_KEY, "false",
                 ENABLE_PASSWORD_QS_RECOVERY_PROP_KEY, "false",
                 ENABLE_PASSWORD_NOTIFICATION_RECOVERY_PROP_KEY, "false",
                 ENABLE_PASSWORD_EMAIL_LINK_RECOVERY_PROP_KEY, "false",
@@ -155,7 +159,10 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
     @Test(groups = "wso2.is", description = "Check Username recovery Login Page")
     public void testUsernameRecovery() throws Exception {
 
-        updateResidentIDPProperty(superTenantResidentIDP, ENABLE_USERNAME_RECOVERY_PROP_KEY, "true");
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_USERNAME_EMAIL_RECOVERY_PROP_KEY, "true",
+                ENABLE_USERNAME_RECOVERY_PROP_KEY, "true"
+               ));
         String content = sendAuthorizeRequest();
         Assert.assertTrue(content.contains(RECOVERY_USERNAME_CONTENT));
     }

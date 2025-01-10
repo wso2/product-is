@@ -43,16 +43,7 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
             "travelocity.com-registrymount",
             "avis.com",
             "PassiveSTSSampleApp",
-            "playground.appone",
-            "playground.apptwo",
-            "playground2",
-            // TODO: Check and remove the following with openid tests
-            "travelocity.com-openid-smartconsumerwithclaims",
-            "travelocity.com-openid-smartconsumerwithoutclaims",
-            "travelocity.com-openid-dumbconsumerwithclaims",
-            "travelocity.com-openid-dumbconsumerwithoutclaims"
-            // TODO: End of openid apps
-
+            "playground2"
     };
     private static final Log LOG = LogFactory.getLog(TomcatInitializerTestCase.class);
 

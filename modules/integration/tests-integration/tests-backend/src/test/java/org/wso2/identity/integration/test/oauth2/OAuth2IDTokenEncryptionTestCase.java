@@ -57,21 +57,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.text.ParseException;
@@ -83,10 +76,6 @@ import java.util.UUID;
  * Integration test cases for id token encryption.
  */
 public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegrationTest {
-
-    private RSAPrivateKey spPrivateKey;
-
-    private X509Certificate spX509PublicCert;
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String ENCRYPTION_ALGORITHM = "RSA-OAEP";
@@ -434,30 +423,6 @@ public class OAuth2IDTokenEncryptionTestCase extends OAuth2ServiceAbstractIntegr
         Header location = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(location);
         return location.getValue();
-    }
-
-    /**
-     * Initiate service provider keys required for the tests.
-     *
-     * @throws Exception If an error occurred while getting certificate.
-     */
-    private void initServiceProviderKeys() throws Exception {
-
-        KeyStore keyStore = KeyStore.getInstance(ISIntegrationTest.KEYSTORE_TYPE);
-        String pkcs12Path = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
-                File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
-        String pkcs12Password = "wso2carbon";
-
-        keyStore.load(Files.newInputStream(Paths.get(pkcs12Path)), pkcs12Password.toCharArray());
-
-        String alias = "wso2carbon";
-        KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
-                new KeyStore.PasswordProtection(pkcs12Password.toCharArray()));
-        spPrivateKey = (RSAPrivateKey) pkEntry.getPrivateKey();
-
-        // Load certificate chain
-        Certificate[] chain = keyStore.getCertificateChain(alias);
-        spX509PublicCert = (X509Certificate) chain[0];
     }
 
     /**

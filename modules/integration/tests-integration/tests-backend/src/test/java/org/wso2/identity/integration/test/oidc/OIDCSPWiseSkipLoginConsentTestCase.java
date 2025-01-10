@@ -30,6 +30,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
@@ -46,6 +47,7 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
     private CookieStore cookieStore = new BasicCookieStore();
     protected String sessionDataKey;
     protected String sessionDataKeyConsent;
+    private MockApplicationServer mockApplicationServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -57,6 +59,9 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
         createApplications();
         configureSPToSkipConsent();
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
+
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -64,6 +69,7 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
 
         deleteObjects();
         clear();
+        mockApplicationServer.stop();
     }
 
     private void deleteObjects() throws Exception {
@@ -83,16 +89,16 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
     public void testCreateUserSession() throws Exception {
 
-        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppOneAppName), true, client,
-                cookieStore);
+        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppOneAppName), true,
+                client, cookieStore);
         testAuthentication();
     }
 
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.apptwo")
-    public void testIntiateLoginRequestForAlreadyLoggedUser() throws Exception {
+    public void testInitiateLoginRequestForAlreadyLoggedUser() throws Exception {
 
-        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName), false, client
-                , cookieStore);
+        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName), false,
+                client, cookieStore);
     }
 
     private void testAuthentication() throws Exception {

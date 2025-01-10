@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.1.0-m5-SNAPSHOT</version>
+        <version>7.1.0-m7-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>api-resources</artifactId>
-    <version>7.1.0-m5-SNAPSHOT</version>
+    <version>7.1.0-m7-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>WSO2 Identity Server - Rest API</name>
@@ -515,6 +515,16 @@
                 <artifactId>org.wso2.carbon.identity.api.server.action.management.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.rule.metadata.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.rule.metadata.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
 
             <!-- Legacy API dependencies -->
             <dependency>
@@ -534,11 +544,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.api.server.entitlement</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.api.server.configuration.mgt</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
@@ -551,11 +556,6 @@
                 <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
                 <artifactId>org.wso2.carbon.identity.api.server.dcr</artifactId>
                 <version>${identity.inbound.auth.oauth.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.consent.mgt</groupId>
-                <artifactId>org.wso2.carbon.api.server.consent.mgt</artifactId>
-                <version>${carbon.consent.mgt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.consent.mgt</groupId>

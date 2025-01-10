@@ -65,7 +65,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     public static final String CONSNT_ENDPOINT_SUFFIX = "/api/identity/consent-mgt/v1.0/consents";
     public static final String USER_RECOVERY_ME_ENDPOINT = "/api/identity/user/v1.0/me";
-    private static final String CALLBACK_ENDPOINT = "https://localhost:9443/carbon/callback";
+    private static final String CALLBACK_ENDPOINT = "https://localhost:9853/carbon/callback";
+    private static final String TENANTED_CALLBACK_ENDPOINT = "https://localhost:9853/t/wso2.com/carbon/callback";
     private static final String COUNTRY_WSO2_CLAIM = "http://wso2.org/claims/country";
     private static final String CALLBACK_QUERY_PARAM = "callback";
     private static final String USERNAME_QUERY_PARAM = "username";
@@ -147,7 +148,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         Assert.assertNotNull(content);
         Assert.assertTrue(content.contains("Enter your username"), "Page for entering username is not prompted while" +
                 " self registering");
-        Assert.assertTrue(content.contains(CALLBACK_ENDPOINT), "Callback endpoint is not available in self " +
+        Assert.assertTrue(content.contains(TENANTED_CALLBACK_ENDPOINT), "Callback endpoint is not available in self " +
                 "registration username input page.");
     }
 

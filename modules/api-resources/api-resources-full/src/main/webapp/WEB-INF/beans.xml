@@ -80,6 +80,7 @@
     <import resource="classpath:META-INF/cxf/user-organization-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/api-resource-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/action-server-v1-cxf.xml"/>
+    <import resource="classpath:META-INF/cxf/rule-metadata-server-v1-cxf.xml"/>
 
     <context:property-placeholder/>
     <context:annotation-config/>
@@ -147,6 +148,7 @@
             <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.MetaApi"/>
             <bean class="org.wso2.carbon.identity.api.server.action.management.v1.ActionsApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.rule.metadata.v1.RulesApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -210,6 +212,8 @@
             <bean class="org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi"/>
             <bean class="org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
@@ -421,15 +425,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="entitlement" address="/identity/entitlement/decision">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.entitlement.endpoint.resources.DecisionResource"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.entitlement.endpoint.filter.EntitlementExceptionMapper"/>
         </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="recovery" address="/identity/recovery/v0.9">

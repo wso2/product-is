@@ -51,17 +51,4 @@
                 ]]>
         </value>
     </add>
-     <!-- Add the RegistryPolicyHandler -->
-        <add>
-            <before>//wso2registry/staticConfiguration</before>
-            <value>
-                <![CDATA[
-                   <handler class="org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler">
-                        <filter class="org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher">
-                            <property name="mediaType">application/xacml-policy+xml</property>
-                        </filter>
-                   </handler>
-                   ]]>
-            </value>
-        </add>
 </processor>

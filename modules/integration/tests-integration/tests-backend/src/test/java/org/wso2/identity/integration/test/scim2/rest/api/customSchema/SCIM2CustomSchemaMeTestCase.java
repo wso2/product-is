@@ -87,7 +87,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     private static final String MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI =
             MANAGER_CLAIM_ATTRIBUTE_URI + "." + MANAGER_EMAIL_CLAIM_ATTRIBUTE_NAME;
     private static final String MANAGER_LOCAL_CLAIM_URI = "http://wso2.org/claims/manager";
-    private static final String MANAGER_EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+    private static final String MANAGER_EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emails.work";
     private static final String MANAGER_EMAIL_LOCAL_CLAIM_VALUE = "piraveena@gmail.com";
     private static final String MANAGER_EMAIL_LOCAL_CLAIM_VALUE_AFTER_REPLACE = "piraveenaReplace@gmail.com";
 

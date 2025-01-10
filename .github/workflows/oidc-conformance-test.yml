@@ -36,14 +36,15 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         path: './product-is'
       
     - name: Set up JDK 11
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v4
       with:
         java-version: 11.0.18+10
+        distribution: temurin
     
     - name: Setup Python
       run: |
@@ -142,7 +143,7 @@ jobs:
         python3 ./configure_is.py ../../$PRODUCT_IS_ZIP $ROOT_DIR $ROOT_DIR/jacoco.exec
 
     - name: Set up JDK 17
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: 17
         distribution: temurin

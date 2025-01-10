@@ -33,11 +33,6 @@
         <dataSource>jdbc/WSO2CarbonDB</dataSource>
     </dbConfig>
 
-    <handler class="org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyHandler">
-        <filter class="org.wso2.carbon.identity.entitlement.policy.finder.registry.RegistryPolicyMediaTypeMatcher">
-            <property name="mediaType">application/xacml-policy+xml</property>
-        </filter>
-    </handler>
 
     <!--<handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
          <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">

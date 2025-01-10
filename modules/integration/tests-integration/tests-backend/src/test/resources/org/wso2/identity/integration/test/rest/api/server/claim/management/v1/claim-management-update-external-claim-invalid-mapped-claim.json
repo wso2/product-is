@@ -1,0 +1,4 @@
+{
+  "claimURI": "http://updateddummy.org/claim/emailaddress",
+  "mappedLocalClaimURI": "http://wso2.org/claims/dummyclaim"
+}

@@ -1,0 +1,21 @@
+{
+  "claimURI": "http://wso2.org/claims/fullname",
+  "description": "Full Name Duplicate",
+  "displayOrder": 4,
+  "displayName": "Full Name Duplicate",
+  "readOnly": false,
+  "required": true,
+  "supportedByDefault": true,
+  "attributeMapping": [
+    {
+      "mappedAttribute": "fullname",
+      "userstore": "PRIMARY"
+    }
+  ],
+  "properties": [
+    {
+      "key": "isVerifiable",
+      "value": "false"
+    }
+  ]
+}

@@ -77,7 +77,6 @@
     <grantTypes>refresh_token urn:ietf:params:oauth:grant-type:saml2-bearer implicit password client_credentials iwa:ntlm authorization_code urn:ietf:params:oauth:grant-type:jwt-bearer </grantTypes>
     <scopeValidators>
         <scopeValidator>Role based scope validator</scopeValidator>
-        <scopeValidator>XACML Scope Validator</scopeValidator>
     </scopeValidators>
     <pkceSupportPlain>true</pkceSupportPlain>
     <pkceMandatory>false</pkceMandatory>

@@ -23,7 +23,7 @@ PULL_NUMBER=$(echo $PR_LINK | awk -F'/' '{print $7}')
 echo "    USER: $USER"
 echo "    REPO: $REPO"
 echo "    PULL_NUMBER: $PULL_NUMBER"
-echo "::set-output name=REPO_NAME::$REPO"
+echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="

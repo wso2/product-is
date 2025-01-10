@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -108,6 +108,36 @@ public class ClaimManagementRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "External claim deletion failed");
+        }
+    }
+
+    /**
+     * Update the claim referenced by the provided id.
+     *
+     * @param dialectId   Claim dialect id.
+     * @param claimId     Claim id.
+     * @param requestBody Request body.
+     */
+    public void updateClaim(String dialectId, String claimId, String requestBody) {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, requestBody, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Claim update failed");
+        } catch (IOException e) {
+            Assert.fail("Error occurred while updating the claim.");
+        }
+    }
+
+    public void updateExternalClaim(String dialectId, String claimId, ExternalClaimReq claimRequest) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        String jsonRequest = toJSONString(claimRequest);
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "External claim update failed");
         }
     }
 

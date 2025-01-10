@@ -1,0 +1,34 @@
+{
+  "name": "Trusted Token Issuer IdP",
+  "description": "A trusted token issuer to exchange its token for a token issued by WSO2 Identity Server",
+  "alias": "sample",
+  "image": "assets/images/icons/trusted-token-issuer.svg",
+  "isPrimary": false,
+  "roles": {
+    "mappings": [],
+    "outboundProvisioningRoles": []
+  },
+  "certificate": {
+    "jwksUri": "https://localhost:9443/t/carbon.super/console/connections/templates",
+    "certificates": [
+      ""
+    ]
+  },
+  "claims": {
+    "userIdClaim": {
+      "uri": ""
+    },
+    "provisioningClaims": [],
+    "roleClaim": {
+      "uri": ""
+    }
+  },
+  "federatedAuthenticators": {
+    "defaultAuthenticatorId": "",
+    "authenticators": []
+  },
+  "homeRealmIdentifier": "",
+  "isFederationHub": false,
+  "idpIssuerName": "test-issuer",
+  "templateId": "trusted-token-issuer"
+}

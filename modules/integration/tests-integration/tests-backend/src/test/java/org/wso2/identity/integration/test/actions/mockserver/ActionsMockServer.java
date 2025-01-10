@@ -39,6 +39,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 public class ActionsMockServer {
 
     private WireMockServer wireMockServer;
+
     public void startServer() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8587));
@@ -58,6 +59,17 @@ public class ActionsMockServer {
                 .withHeader("Authorization", matching(authMethod))
                 .willReturn(aResponse()
                         .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "Close")
+                        .withBody(responseBody)));
+    }
+
+    public void setupStub(String url, String authMethod, String responseBody, int statusCode) {
+
+        wireMockServer.stubFor(post(urlEqualTo(url))
+                .withHeader("Authorization", matching(authMethod))
+                .willReturn(aResponse()
+                        .withStatus(statusCode)
                         .withHeader("Content-Type", "application/json")
                         .withHeader("Connection", "Close")
                         .withBody(responseBody)));

@@ -44,10 +44,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.Claim;
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.*;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
+import org.wso2.carbon.utils.security.KeystoreUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
@@ -78,11 +80,15 @@ import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
-import sun.security.provider.X509Factory;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.KeyStore;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -109,6 +115,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	private static final String customClaimURI2 = "http://wso2.org/claims/stateorprovince";
 	private static final String GRANT_TYPE_PASSWORD = "password";
 	private static final String SCOPE_PRODUCTION = "PRODUCTION";
+	private static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
+	private static final String END_CERT = "-----END CERTIFICATE-----";
 	public static final String OIDC = "oidc";
 	public static final String SAML = "saml";
 	private final static int TOMCAT_PORT = 8490;
@@ -117,6 +125,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected OauthAdminClient adminClient;
 	protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
 	protected OAuth2RestClient restClient;
+	protected RSAPrivateKey spPrivateKey;
+	protected X509Certificate spX509PublicCert;
 
 
 	/**
@@ -177,6 +187,10 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		accessTokenConfiguration.type(applicationConfig.getTokenType().getTokenTypeProperty());
 		accessTokenConfiguration.applicationAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
 		accessTokenConfiguration.userAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+		// Add access token claim list.
+		List<String> accessTokenClaimList = applicationConfig.getRequestedClaimList().stream()
+				.map(UserClaimConfig::getOidcClaimUri).collect(Collectors.toList());
+		accessTokenConfiguration.accessTokenAttributes(accessTokenClaimList);
 		oidcConfig.accessToken(accessTokenConfiguration);
 
 		if (applicationConfig.getAudienceList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
@@ -903,10 +917,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	 */
 	public String convertToPem(X509Certificate x509Certificate) throws CertificateEncodingException {
 
-		String certBegin = X509Factory.BEGIN_CERT;
-		String endCert = X509Factory.END_CERT;
-		String pemCert = new String(java.util.Base64.getEncoder().encode(x509Certificate.getEncoded()));
-		return certBegin + pemCert + endCert;
+        String pemCert = new String(java.util.Base64.getEncoder().encode(x509Certificate.getEncoded()));
+		return BEGIN_CERT + pemCert + END_CERT;
 	}
 
 	/**
@@ -1272,5 +1284,24 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		}
 
 		return claimConfiguration;
+	}
+
+	protected void initServiceProviderKeys() throws Exception {
+
+		KeyStore keyStore = KeystoreUtils.getKeystoreInstance(ISIntegrationTest.KEYSTORE_TYPE);
+		String pkcs12Path = TestConfigurationProvider.getResourceLocation("IS") + File.separator + "sp" +
+				File.separator + "keystores" + File.separator + "sp1KeyStore.p12";
+		String pkcs12Password = "wso2carbon";
+
+		keyStore.load(Files.newInputStream(Paths.get(pkcs12Path)), pkcs12Password.toCharArray());
+
+		String alias = "wso2carbon";
+		KeyStore.PrivateKeyEntry pkEntry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(alias,
+				new KeyStore.PasswordProtection(pkcs12Password.toCharArray()));
+		spPrivateKey = (RSAPrivateKey) pkEntry.getPrivateKey();
+
+		// Load certificate chain
+		java.security.cert.Certificate[] chain = keyStore.getCertificateChain(alias);
+		spX509PublicCert = (X509Certificate) chain[0];
 	}
 }

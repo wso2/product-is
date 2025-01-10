@@ -32,7 +32,6 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationTypeProperties;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
 
 import java.io.IOException;
@@ -45,8 +44,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
  */
 public class ActionsFailureTest extends ActionsTestBase {
 
-    private static final String TEST_USERNAME_INVALID_AUTH_PROPERTY = "invalidUsername";
-    private static final String TEST_ACTION_INVALID_ID = "invalid_id";
     private static ActionModel action1;
     private static ActionModel action2;
     private static String testActionId2;
@@ -159,6 +156,18 @@ public class ActionsFailureTest extends ActionsTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
+    public void testGetActionByActionIdWithInvalidID() {
+
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID);
+
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
+                .body("description", equalTo("No action is found for given action id and action type"));
+    }
+
+    @Test(dependsOnMethods = {"testGetActionByActionIdWithInvalidID"})
     public void testCreateActionWithNotImplementedActionTypes() {
 
         for (String actionTypePath : NOT_IMPLEMENTED_ACTION_TYPE_PATHS) {
@@ -187,60 +196,9 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-
-        // Update Action Endpoint Authentication Properties with an invalid action id.
-        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_ACCESS_TOKEN_AUTH_PROPERTY, TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE);
-                }});
-
-        body = toJSONString(authenticationType);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + TEST_ACTION_INVALID_ID + ACTION_BEARER_AUTH_PATH, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
-    public void testUpdateActionWithInvalidEndpointAuthProperties() {
-
-        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_USERNAME_INVALID_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
-                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
-                }});
-
-        String body = toJSONString(authenticationType);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2 + ACTION_BASIC_AUTH_PATH, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("description", equalTo("Required authentication properties are not " +
-                        "provided or invalid."));
-    }
-
-    @Test(dependsOnMethods = {"testUpdateActionWithInvalidEndpointAuthProperties"})
-    public void testUpdateActionWithEmptyEndpointAuthPropertyValues() {
-
-        AuthenticationTypeProperties authenticationType = new AuthenticationTypeProperties()
-                .properties(new HashMap<String, Object>() {{
-                    put(TEST_USERNAME_AUTH_PROPERTY, "");
-                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
-                }});
-
-        String body = toJSONString(authenticationType);
-        Response responseOfPut = getResponseOfPut(ACTION_MANAGEMENT_API_BASE_PATH +
-                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + testActionId2 + ACTION_BASIC_AUTH_PATH, body);
-        responseOfPut.then()
-                .log().ifValidationFails()
-                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("description", equalTo("Authentication property values cannot be empty."));
-    }
-
-    @Test(dependsOnMethods = {"testUpdateActionWithEmptyEndpointAuthPropertyValues"})
     public void testActivateActionWithInvalidID() {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
@@ -257,18 +215,6 @@ public class ActionsFailureTest extends ActionsTestBase {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
                 "/" + TEST_ACTION_INVALID_ID + ACTION_DEACTIVATE_PATH, "")
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND)
-                .body("description", equalTo("No Action is configured on the given Action Type and Id."));
-    }
-
-    @Test(dependsOnMethods = {"testDeactivateActionWithInvalidID"})
-    public void testDeleteActionWithInvalidID() {
-
-        getResponseOfDelete(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
-                "/" + TEST_ACTION_INVALID_ID)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()

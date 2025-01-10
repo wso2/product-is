@@ -18,10 +18,19 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.wink.client.ClientConfig;
 import org.apache.wink.client.Resource;
 import org.apache.wink.client.RestClient;
@@ -36,16 +45,19 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 
 import static org.testng.Assert.assertEquals;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 public class OIDCDiscoveryTestCase extends ISIntegrationTest {
 
     public static final String WEBFINGER_ENDPOINT_SUFFIX = "/.well-known/webfinger";
     public static final String RESOURCE = "resource";
     public static final String REL = "rel";
+    private CloseableHttpClient client;
     private String isServerBackendUrl;
 
     private static final String[] expectedResponseModes = {"fragment", "jwt", "fragment.jwt", "query", "form_post",
@@ -64,11 +76,23 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         isServerBackendUrl = isServer.getContextUrls().getWebAppURLHttps();
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
     }
 
     @AfterClass(alwaysRun = true)
-    public void atEnd() {
+    public void atEnd() throws Exception {
 
+        client.close();
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "webfinger test",
@@ -239,5 +263,81 @@ public class OIDCDiscoveryTestCase extends ISIntegrationTest {
             assertEquals(response.getStatusLine().getStatusCode(), 400, "Expected a Bad Request " +
                     "(HTTP 400) response");
         }
+    }
+
+    @Test(dataProvider = "webFingerNegativeTestCases", alwaysRun = true, groups = "wso2.is",
+            dependsOnMethods = { "testDiscoveryForInvalidIssuer" }, description = "WebFinger negative test")
+    public void testWebFingerNegativeCases(String resource, String rel, int expectedStatusCode, String message)
+            throws Exception {
+
+        String webFingerEndpoint = constructWebFingerEndpoint(resource,
+                (rel != null ? REL + "=" + rel : null));
+        HttpResponse response = executeWebFingerRequest(webFingerEndpoint);
+        assertEquals(response.getStatusLine().getStatusCode(), expectedStatusCode, message);
+    }
+
+    /**
+     * Data provider for WebFinger negative test cases.
+     */
+    @DataProvider(name = "webFingerNegativeTestCases")
+    public Object[][] webFingerNegativeTestCases() {
+        return new Object[][]{
+                {"acct:admin@localhost", null, 400, "Without REL URI, response should be BAD REQUEST."},
+                {null, "http://openid.net/specs/connect/1.0/issuer", 400,
+                        "Without resource, response should be BAD REQUEST."},
+                {"", "http://openid.net/specs/connect/1.0/issuer", 404,
+                        "Without resource, response should be NOT FOUND."},
+                {"acct:admin", "http://openid.net/specs/connect/1.0/issuer", 400,
+                        "Without proper resource, response should be BAD REQUEST."}
+        };
+    }
+
+    /**
+     * Utility method to construct the WebFinger endpoint.
+     */
+    private String constructWebFingerEndpoint(String resource,
+                                              String relURI) {
+
+        StringBuilder endpoint = new StringBuilder(isServerBackendUrl
+                + OIDCDiscoveryTestCase.WEBFINGER_ENDPOINT_SUFFIX + "?");
+        if (resource != null) {
+            endpoint.append(OIDCDiscoveryTestCase.RESOURCE).append("=").append(resource);
+        }
+        if (relURI != null) {
+            endpoint.append("&");
+            endpoint.append(relURI);
+        }
+        return endpoint.toString();
+    }
+
+    /**
+     * Utility method to execute a WebFinger request.
+     */
+    private HttpResponse executeWebFingerRequest(String webFingerEndpoint) throws Exception {
+
+        ClientConfig clientConfig = new ClientConfig();
+        BasicAuthSecurityHandler basicAuth = new BasicAuthSecurityHandler();
+        basicAuth.setUserName(userInfo.getUserName());
+        basicAuth.setPassword(userInfo.getPassword());
+        clientConfig.handlers(basicAuth);
+
+        HttpGet request = new HttpGet(webFingerEndpoint);
+        request.addHeader(HttpHeaders.AUTHORIZATION, OAuth2Constant.BASIC_HEADER + " "
+                + getBase64EncodedString(userInfo.getUserName(), userInfo.getPassword()));
+        request.addHeader("User-Agent", USER_AGENT);
+
+        return client.execute(request);
+    }
+
+    /**
+     * Get base64 encoded string of username and password.
+     *
+     * @param username  Username of Admin.
+     * @param password  Password of Admin.
+     * @return Base 64 encoded string.
+     */
+    private String getBase64EncodedString(String username, String password) {
+
+        return new String(Base64.encodeBase64((username + ":" + password).getBytes()));
     }
 }

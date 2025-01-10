@@ -98,7 +98,7 @@ public class SSOAgentX509KeyStoreCredential implements SSOAgentX509Credential {
                                        char[] privateKeyPassword)
             throws Exception {
         try {
-            KeyStore keyStore = KeyStore.getInstance("PKCS12");
+            KeyStore keyStore = Keystore.getInstance("PKCS12");
             keyStore.load(keyStoreInputStream, keyStorePassword);
             readX509Credentials(keyStore, publicCertAlias, privateKeyAlias, privateKeyPassword);
         } catch (Exception e) {

@@ -1,0 +1,62 @@
+{
+  "name": "<OIDC_IDP_NAME>",
+  "alias": "",
+  "description": "Authenticate users with Enterprise OIDC connections.",
+  "image": "assets/images/logos/enterprise.svg",
+  "isPrimary": false,
+  "roles": {
+    "mappings": [],
+    "outboundProvisioningRoles": []
+  },
+  "certificate": {
+    "jwksUri": "https://test.com/jwks",
+    "certificates": [
+      ""
+    ]
+  },
+  "claims": {
+    "userIdClaim": {
+      "uri": ""
+    },
+    "provisioningClaims": [],
+    "roleClaim": {
+      "uri": ""
+    }
+  },
+  "federatedAuthenticators": {
+    "defaultAuthenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
+    "authenticators": [
+      {
+        "isEnabled": true,
+        "authenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
+        "properties": [
+          "<OIDC_SCOPES>",
+          {
+            "key": "ClientId",
+            "value": "abcd1234wxyz5678ijklmnopqrst9012"
+          },
+          {
+            "key": "ClientSecret",
+            "value": "mnop3456qrst1234uvwx5678abcd9012"
+          },
+          {
+            "key": "OAuth2AuthzEPUrl",
+            "value": "https://test.com/authz"
+          },
+          {
+            "key": "OAuth2TokenEPUrl",
+            "value": "https://test.com/token"
+          },
+          {
+            "key": "callbackUrl",
+            "value": "https://test.com/commonauth"
+          }
+        ]
+      }
+    ]
+  },
+  "homeRealmIdentifier": "",
+  "isFederationHub": false,
+  "idpIssuerName": "",
+  "templateId": "enterprise-oidc-idp"
+}
