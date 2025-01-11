@@ -48,7 +48,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -68,7 +67,6 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -100,7 +98,6 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     private static final String TENANT_2_USER_EMAIL = "userTenant2@wso2.com";
     public final static String TENANT_1_AUTHORIZE_URL = "https://localhost:9853/t/tenant1.com/oauth2/authorize";
 
-    private ServerConfigurationManager serverConfigurationManager;
     private TenantMgtRestClient tenantMgtRestClient;
     private OAuth2RestClient oAuth2RestClientTenant1;
     private OAuth2RestClient oAuth2RestClientTenant2;
@@ -119,10 +116,6 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     private void testInit() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        // We have to restart the server, since the configs were restored from the previous test,
-        // but has not restarted the server after that.
-        serverConfigurationManager.restartGracefully();
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
 
         // Create the test tenants.
@@ -157,7 +150,6 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     @AfterClass(alwaysRun = true)
     public void testClear() throws IOException, AutomationUtilException {
 
-        serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
         oAuth2RestClientTenant1.closeHttpClient();
         oAuth2RestClientTenant2.closeHttpClient();
@@ -396,37 +388,6 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         authenticateUser(true, TENANT_2_USER_USERNAME, TENANT_2_USER_PASSWORD, TENANT_1_DOMAIN);
         Assert.fail("Expected exception not received.");
     }
-
-//    @Test(description = "Create an OAuth app in tenant 1 and try to login when tenant qualified urls are disabled.",
-//            dependsOnMethods = "testOAuthApplicationLoginIncorrectTenant")
-//    public void testOAuthApplicationLoginWhenTenantQualifiedUrlsDisabled() throws Exception {
-//
-//        // Disable tenant qualified urls/ tenanted sessions and restart the server.
-//        changeISConfigurations();
-//
-//        // Create oauth app and add user.
-//        ApplicationResponseModel tenant1App = createApplication(TENANT_1_DOMAIN);
-//        Assert.assertNotNull(tenant1App, "OAuth app creation failed for tenant 1.");
-//        tenant1UserId = createUser(TENANT_1_DOMAIN);
-//
-//        // Authenticate.
-//        initiateAuthorizationRequest(false);
-//        authenticateUser(false, TENANT_1_USER_USERNAME + "@" + TENANT_1_DOMAIN, TENANT_1_USER_PASSWORD,
-//                TENANT_1_DOMAIN);
-//        performConsentApproval(false, TENANT_1_DOMAIN);
-//        generateAuthzCodeAccessToken(false, TENANT_1_DOMAIN);
-//        introspectActiveAccessToken(TENANT_1_DOMAIN, TENANT_1_ADMIN_USERNAME, TENANT_1_ADMIN_PASSWORD);
-//    }
-//
-//    private void changeISConfigurations() throws AutomationUtilException, IOException {
-//
-//        String carbonHome = Utils.getResidentCarbonHome();
-//        File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-//        File modifiedConfigFile = new File(getISResourceLocation()
-//                + File.separator + "tenant.qualified" + File.separator
-//                + "tenant_qualified_url_tenanted_sessions_disabled.toml");
-//        serverConfigurationManager.applyConfiguration(modifiedConfigFile, defaultTomlFile, true, true);
-//    }
 
     private void addTenant(String tenantDomain, String adminUsername, String adminPassword,
                            String adminTenantAwareUsername) throws Exception {
