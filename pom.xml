@@ -2475,11 +2475,11 @@
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.21</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.13</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.70</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.71</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.37.1</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.14.1</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.37.2</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.14.2</identity.apps.myaccount.version>
         <identity.apps.core.version>2.10.0</identity.apps.core.version>
         <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
 
