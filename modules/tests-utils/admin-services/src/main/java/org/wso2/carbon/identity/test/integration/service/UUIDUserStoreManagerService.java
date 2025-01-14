@@ -64,7 +64,7 @@ public class UUIDUserStoreManagerService {
                                  String profileName) throws UserStoreException {
 
         try {
-            return getUserDTO(getUserStoreManager().addUserWithID(userName, credential, roleList,
+            return getUserDTO(getUserStoreManager().addUniqueIdToUser(userName, credential, roleList,
                     convertClaimValueToMap(claims), profileName));
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
             log.error("Error while calling the service method.", e);

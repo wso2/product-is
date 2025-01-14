@@ -67,12 +67,12 @@ public class UserManagementClient {
         userAdminStub.addRole(roleName, userList, permissions, isSharedRole);
     }
 
-    public void addUser(String userName, String password, String[] roles,
+    public void addUniqueIdToUser(String userName, String password, String[] roles,
                         String profileName) throws RemoteException, UserAdminUserAdminException {
         userAdminStub.addUser(userName, password, roles, null, profileName);
     }
 
-    public void addUser(String userName, String password, String[] roles,
+    public void addUniqueIdToUser(String userName, String password, String[] roles,
                         String profileName, ClaimValue[] claims) throws RemoteException, UserAdminUserAdminException {
 
         userAdminStub.addUser(userName, password, roles, claims, profileName);
