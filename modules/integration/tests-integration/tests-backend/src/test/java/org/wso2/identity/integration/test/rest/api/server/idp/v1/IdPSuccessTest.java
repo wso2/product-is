@@ -31,6 +31,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.util.UserDefinedLocalAuthenticatorPayload;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
@@ -103,6 +104,7 @@ public class IdPSuccessTest extends IdPTestBase {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
+        userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayloadWithBasic(ENDPOINT_URI);
         userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayloadWithBasic(ENDPOINT_URI);
         idpCreatePayload = readResource("add-idp-with-custom-fed-auth.json");
     }

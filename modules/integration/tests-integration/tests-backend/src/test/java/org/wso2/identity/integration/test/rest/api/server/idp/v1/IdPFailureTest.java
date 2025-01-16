@@ -69,6 +69,7 @@ public class IdPFailureTest extends IdPTestBase {
     private String idPId;
     private String idpCreatePayload;
     private static final String OIDC_IDP_ID = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
+    private static final String CONFLICTING_AUTH_NAME = "Y3VzdG9tX2NvbmZsaWN0QXV0aE5hbWU=";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPFailureTest(TestUserMode userMode) throws Exception {
@@ -85,6 +86,7 @@ public class IdPFailureTest extends IdPTestBase {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         idpCreatePayload = readResource("add-idp-with-custom-fed-auth.json");
+        createUserDefinedLocalAuthenticator();
     }
 
     @AfterClass(alwaysRun = true)
@@ -231,6 +233,23 @@ public class IdPFailureTest extends IdPTestBase {
         UserDefinedAuthenticatorPayload userDefAuthPayload = createUserDefinedAuthenticatorPayload(
                 USER_DEFINED_AUTHENTICATOR_ID_1,
                 "",
+                "testUser",
+                "testPassword");
+        Response response = createUserDefAuthenticator(CUSTOM_IDP_NAME, userDefAuthPayload);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo("Invalid Request"))
+                .body("description", equalTo("must match \"^https?://.+\""));
+    }
+
+    @Test
+    public void testAddIdPWithUserDefinedAuthenticatorWithExistingAuthName() throws IOException {
+
+        UserDefinedAuthenticatorPayload userDefAuthPayload = createUserDefinedAuthenticatorPayload(
+                CONFLICTING_AUTH_NAME,
+                "https://abc.com/authenticate",
                 "testUser",
                 "testPassword");
         Response response = createUserDefAuthenticator(CUSTOM_IDP_NAME, userDefAuthPayload);
@@ -718,5 +737,27 @@ public class IdPFailureTest extends IdPTestBase {
             return objectMapper.writeValueAsString(properties) + "," + objectMapper.writeValueAsString(duplicatedProperties);
         }
         return objectMapper.writeValueAsString(properties);
+    }
+
+    private void createUserDefinedLocalAuthenticator() throws JsonProcessingException {
+
+        String body = "{\n" +
+                "  \"name\": \"custom_conflictAuthName\",\n" +
+                "  \"displayName\": \"Custom auth\",\n" +
+                "  \"isEnabled\": true,\n" +
+                "  \"description\": \"The user defined custom local authenticator.\",\n" +
+                "  \"endpoint\": {\n" +
+                "    \"uri\": \"https://abc.com/token\",\n" +
+                "    \"authentication\": {\n" +
+                "      \"type\": \"NONE\",\n" +
+                "\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        Response response = getResponseOfPostNoFilter("/authenticators/custom", body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
     }
 }
