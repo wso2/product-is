@@ -29,10 +29,13 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ANDRule;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Expression;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ORRule;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -155,7 +158,41 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .body("description", equalTo("Maximum number of actions per action type is reached."));
     }
 
-    @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
+    @Test(dependsOnMethods = {"testCreateActionWithEmptyEndpointAuthPropertyValues"})
+    public void testCreateActionWithInvalidRule() {
+
+        // Create an action, with an expression with an invalid field name.
+        ORRule rule = new ORRule()
+                .condition(ORRule.ConditionEnum.OR)
+                .addRulesItem(new ANDRule().condition(ANDRule.ConditionEnum.AND)
+                        .addExpressionsItem(new Expression().field("invalid").operator("equals")
+                                .value("855bb864-2839-4bdf-aabd-4cc635b6faba")));
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})))
+                .rule(rule);
+
+        String body = toJSONString(action);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST).body("code", equalTo("ACTION-60013"))
+                .body("message", equalTo("Invalid rule."))
+                .body("description", equalTo("Rule validation failed: Field invalid is not supported"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithInvalidRule"})
     public void testGetActionByActionIdWithInvalidID() {
 
         Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
@@ -196,6 +233,35 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .log().ifValidationFails()
                 .assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
+    public void testUpdateActionWithInvalidRule() {
+
+        String createdActionId = createActionWithRule();
+
+        // Update the action, with an expression with an invalid operator.
+        ORRule rule = new ORRule()
+                .condition(ORRule.ConditionEnum.OR)
+                .addRulesItem(new ANDRule().condition(ANDRule.ConditionEnum.AND)
+                        .addExpressionsItem(new Expression().field("application").operator("invalid")
+                                .value("855bb864-2839-4bdf-aabd-4cc635b6faba")));
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel().rule(rule);
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId, body);
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST).body("code", equalTo("ACTION-60013"))
+                .body("message", equalTo("Invalid rule."))
+                .body("description",
+                        equalTo("Rule validation failed: Operator invalid is not supported for field application"));
+
+        // Delete, created action.
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
     }
 
     @Test(dependsOnMethods = {"testUpdateActionWithInvalidID"})
@@ -247,6 +313,35 @@ public class ActionsFailureTest extends ActionsTestBase {
         String body = toJSONString(action2);
         Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
                 actionTypePath, body);
+        responseOfPost.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+
+        return responseOfPost.getBody().jsonPath().getString("id");
+    }
+
+    private String createActionWithRule() {
+
+        ORRule rule = new ORRule()
+                .condition(ORRule.ConditionEnum.OR)
+                .addRulesItem(new ANDRule().condition(ANDRule.ConditionEnum.AND)
+                        .addExpressionsItem(new Expression().field("application").operator("equals")
+                                .value("855bb864-2839-4bdf-aabd-4cc635b6faba")));
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})))
+                .rule(rule);
+
+        String body = toJSONString(action);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
         responseOfPost.then().assertThat().statusCode(HttpStatus.SC_CREATED);
 
         return responseOfPost.getBody().jsonPath().getString("id");
