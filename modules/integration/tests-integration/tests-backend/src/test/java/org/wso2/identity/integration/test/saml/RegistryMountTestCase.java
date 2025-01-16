@@ -74,7 +74,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
+    private static final String APPLICATION_NAME = "SAML-Registry-Mount-Application";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
 
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
