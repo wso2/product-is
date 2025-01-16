@@ -34,6 +34,7 @@ import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 
 import java.util.Map;
 
@@ -45,6 +46,8 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
     protected Log log = LogFactory.getLog(getClass());
     protected HttpClient client;
     private CookieStore cookieStore = new BasicCookieStore();
+    private UserObject user;
+    private Map<String, OIDCApplication> applications;
     protected String sessionDataKey;
     protected String sessionDataKeyConsent;
     private MockApplicationServer mockApplicationServer;
@@ -53,10 +56,10 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        OIDCUtilTest.initUser();
-        createUser(OIDCUtilTest.user);
-        OIDCUtilTest.initApplications();
-        createApplications();
+        user = OIDCUtilTest.initUser();
+        createUser(user);
+        applications = OIDCUtilTest.initApplications();
+        createApplications(applications);
         configureSPToSkipConsent();
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
 
@@ -74,13 +77,13 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
 
     private void deleteObjects() throws Exception {
 
-        deleteUser(OIDCUtilTest.user);
-        deleteApplications();
+        deleteUser(user);
+        deleteApplications(applications);
     }
 
     private void configureSPToSkipConsent() throws Exception {
 
-        OIDCApplication oidcApplication = OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName);
+        OIDCApplication oidcApplication = applications.get(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME);
         ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
         applicationPatch.setAdvancedConfigurations(new AdvancedApplicationConfiguration().skipLoginConsent(true));
         updateApplication(oidcApplication.getApplicationId(), applicationPatch);
@@ -89,7 +92,7 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
     public void testCreateUserSession() throws Exception {
 
-        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppOneAppName), true,
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME), true,
                 client, cookieStore);
         testAuthentication();
     }
@@ -97,7 +100,7 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.apptwo")
     public void testInitiateLoginRequestForAlreadyLoggedUser() throws Exception {
 
-        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName), false,
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME), false,
                 client, cookieStore);
     }
 
@@ -107,16 +110,16 @@ public class OIDCSPWiseSkipLoginConsentTestCase extends OIDCAbstractIntegrationT
         EntityUtils.consume(response.getEntity());
     }
 
-    private void createApplications() throws Exception {
+    private void createApplications(Map<String, OIDCApplication> applications) throws Exception {
 
-        for (Map.Entry<String, OIDCApplication> entry : OIDCUtilTest.applications.entrySet()) {
+        for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
             createApplication(entry.getValue());
         }
     }
 
-    private void deleteApplications() throws Exception {
+    private void deleteApplications(Map<String, OIDCApplication> applications) throws Exception {
 
-        for (Map.Entry<String, OIDCApplication> entry : OIDCUtilTest.applications.entrySet()) {
+        for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
             deleteApplication(entry.getValue());
         }
     }

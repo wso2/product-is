@@ -41,8 +41,8 @@ public class OIDCAuthCodeGrantSSODifferentSubjectIDTestCase extends OIDCAuthCode
 
         super.initApplications();
 
-        applications.get(OIDCUtilTest.playgroundAppOneAppName).setSubjectClaimURI(OIDCUtilTest.emailClaimUri);
-        applications.get(OIDCUtilTest.playgroundAppTwoAppName).setSubjectClaimURI(OIDCUtilTest.lastNameClaimUri);
+        applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME).setSubjectClaimURI(OIDCUtilTest.EMAIL_CLAIM_URI);
+        applications.get(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME).setSubjectClaimURI(OIDCUtilTest.LAST_NAME_CLAIM_URI);
     }
 
     @Override

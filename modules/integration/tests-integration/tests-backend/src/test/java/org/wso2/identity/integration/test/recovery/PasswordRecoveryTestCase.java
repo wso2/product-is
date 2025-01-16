@@ -200,11 +200,11 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
     private OIDCApplication initApplication() {
 
-        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppCallBackUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME,
+                OIDCUtilTest.PLAYGROUND_APP_ONE_APP_CALL_BACK_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.EMAIL_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.FIRST_NAME_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.LAST_NAME_CLAIM_URI);
         return playgroundApp;
     }
 
@@ -213,8 +213,8 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
         UserObject user = new UserObject();
         user.setUserName(USERNAME);
         user.setPassword(PASSWORD);
-        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
-        user.addEmail(new Email().value(OIDCUtilTest.email));
+        user.setName(new Name().givenName(OIDCUtilTest.FIRST_NAME).familyName(OIDCUtilTest.LAST_NAME));
+        user.addEmail(new Email().value(OIDCUtilTest.EMAIL));
         return user;
     }
 

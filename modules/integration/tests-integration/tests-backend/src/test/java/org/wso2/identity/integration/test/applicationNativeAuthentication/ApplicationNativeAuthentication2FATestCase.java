@@ -190,8 +190,8 @@ public class ApplicationNativeAuthentication2FATestCase extends OAuth2ServiceAbs
         UserObject user = new UserObject();
         user.setUserName(TEST_USER_NAME);
         user.setPassword(TEST_PASSWORD);
-        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
-        user.addEmail(new Email().value(OIDCUtilTest.email));
+        user.setName(new Name().givenName(OIDCUtilTest.FIRST_NAME).familyName(OIDCUtilTest.LAST_NAME));
+        user.addEmail(new Email().value(OIDCUtilTest.EMAIL));
         return user;
     }
 

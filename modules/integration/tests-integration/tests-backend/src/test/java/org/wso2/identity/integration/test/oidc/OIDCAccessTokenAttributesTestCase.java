@@ -32,6 +32,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
     private static final String SERVICES = "/services";
     private OIDCApplication application;
     private OpenIDConnectConfiguration oidcInboundConfig;
+    private UserObject user;
     protected String refreshToken;
     protected String sessionDataKey;
 
@@ -60,19 +62,19 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
         RestAssured.baseURI = backendURL.replace(SERVICES, "");
 
         // Create a user
-        OIDCUtilTest.initUser();
-        createUser(OIDCUtilTest.user);
+        user = OIDCUtilTest.initUser();
+        createUser(user);
 
         // Create application
-        OIDCUtilTest.initApplications();
-        application = OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName);
+        OIDCUtilTest.initApplicationOne();
+        application = OIDCUtilTest.initApplicationOne();
         createApplication(application);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
-        deleteUser(OIDCUtilTest.user);
+        deleteUser(user);
         deleteApplication(application);
         clear();
     }
@@ -83,8 +85,8 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
         Map<String, String> params = new HashMap<>();
         params.put("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER);
         params.put("scope", "");
-        params.put("username", OIDCUtilTest.user.getUserName());
-        params.put("password", OIDCUtilTest.user.getPassword());
+        params.put("username", user.getUserName());
+        params.put("password", user.getPassword());
 
         Response response = getResponseOfFormPostWithAuth(OAUTH2_TOKEN_ENDPOINT_URI, params, new HashMap<>(),
                 application.getClientId(), application.getClientSecret());
@@ -156,8 +158,8 @@ public class OIDCAccessTokenAttributesTestCase extends OIDCAbstractIntegrationTe
         Map<String, String> params = new HashMap<>();
         params.put("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER);
         params.put("scope", "");
-        params.put("username", OIDCUtilTest.user.getUserName());
-        params.put("password", OIDCUtilTest.user.getPassword());
+        params.put("username", user.getUserName());
+        params.put("password", user.getPassword());
 
         Response response = getResponseOfFormPostWithAuth(OAUTH2_TOKEN_ENDPOINT_URI, params, new HashMap<>(),
                 application.getClientId(), application.getClientSecret());
