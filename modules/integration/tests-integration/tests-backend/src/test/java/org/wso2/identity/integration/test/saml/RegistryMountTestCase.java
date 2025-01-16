@@ -285,7 +285,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         return registryMountTenant;
     }
 
-    private void createApplication() throws Exception{
+    private void createApplication() throws Exception {
 
         ApplicationModel applicationCreationModel = new ApplicationModel()
                 .name(APPLICATION_NAME)
@@ -294,7 +294,12 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                         .saml(getSAMLConfigurations()))
                 .claimConfiguration(getClaimConfiguration());
 
-        appId = applicationMgtRestClient.createApplication(applicationCreationModel);
+        try {
+            appId = applicationMgtRestClient.createApplication(applicationCreationModel);
+        } catch (RuntimeException e) {
+            log.error("Error while creating the application", e);
+            throw new Exception("Error while creating the application", e);
+        }
     }
 
     private void deleteApplication() throws Exception{
