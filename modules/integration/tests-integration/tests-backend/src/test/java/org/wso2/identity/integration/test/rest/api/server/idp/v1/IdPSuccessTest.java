@@ -63,7 +63,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String METADATA_SAML_PLACEHOLDER = "<METADATA_SAML>";
     private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String AUTHENTICATOR_PROPERTIES_PLACEHOLDER = "\"<AUTHENTICATOR_PROPERTIES>\"";
-    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
+    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tX0F1dGhlbnRpY2F0b3Ix";
     private static final String OIDC_AUTHENTICATOR_ID = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
     private static final String SAML_AUTHENTICATOR_ID = "U0FNTFNTT0F1dGhlbnRpY2F0b3I";
     private static final String CUSTOM_IDP_NAME = "Custom Auth IDP";
