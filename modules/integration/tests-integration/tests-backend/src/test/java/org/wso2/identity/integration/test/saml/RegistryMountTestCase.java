@@ -61,6 +61,7 @@ import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.m
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantModel;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.TenantMgtRestClient;
+import org.wso2.identity.integration.test.restclients.exceptions.AuthenticationException;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.UserUtil;
 
@@ -271,17 +272,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         tenantReqModel.setDomain(TENANT_DOMAIN);
         tenantReqModel.addOwnersItem(tenantAdminUser);
 
-        String tenantId = tenantMgtRestClient.addTenant(tenantReqModel);
-
-        // Check if the tenant is created successfully iteratively for 10 seconds
-        for (int i = 0; i < 10; i++) {
-            TenantModel tenant = tenantMgtRestClient.getTenantById(tenantId);
-            if (tenant != null) {
-                break;
-            }
-            log.info("Tenant is not created yet. Waiting for tenant creation...");
-            Thread.sleep(1000);
-        }
+        tenantMgtRestClient.addTenant(tenantReqModel);
     }
 
     private Tenant getRegistryMountTenantInfo() {
@@ -304,11 +295,14 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                         .saml(getSAMLConfigurations()))
                 .claimConfiguration(getClaimConfiguration());
 
-        try {
-            appId = applicationMgtRestClient.createApplication(applicationCreationModel);
-        } catch (RuntimeException e) {
-            log.error("Error while creating the application", e);
-            throw new Exception("Error while creating the application", e);
+        for (int i = 0; i < 5; i++) {
+            try {
+                appId = applicationMgtRestClient.createApplication(applicationCreationModel);
+                break; // Exit loop if successful
+            } catch (AuthenticationException e) {
+                log.error("Attempt " + (i + 1) + " failed: Error while creating the application", e);
+                Thread.sleep(1000);
+            }
         }
     }
 

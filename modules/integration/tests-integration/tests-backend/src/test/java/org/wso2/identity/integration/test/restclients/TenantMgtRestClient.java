@@ -18,19 +18,14 @@
 
 package org.wso2.identity.integration.test.restclients;
 
-import com.google.gson.Gson;
 import io.restassured.http.ContentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantModel;
-import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -67,24 +62,6 @@ public class TenantMgtRestClient extends RestBaseClient {
                     "Tenant creation failed");
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
-        }
-    }
-
-    /**
-     * Create a tenant
-     *
-     * @param tenantId Id of the tenant.
-     * @return TenantModel object with tenant details.
-     * @throws Exception If an error occurred while adding a tenant.
-     */
-    public TenantModel getTenantById(String tenantId) throws Exception {
-        String endPoint = serverUrl + TENANT_MGT_BASE_PATH + PATH_SEPARATOR + tenantId;
-
-        try (CloseableHttpResponse response = getResponseOfHttpGet(endPoint, getHeaders())) {
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                    "Tenant retrieval failed");
-            //convert the response to a TenantModel object
-            return new Gson().fromJson(EntityUtils.toString(response.getEntity()), TenantModel.class);
         }
     }
 
