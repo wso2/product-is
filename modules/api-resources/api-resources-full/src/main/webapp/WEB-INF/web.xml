@@ -35,6 +35,71 @@
         </listener-class>
     </listener>
 
+    <!--  Servlet instance for /identity/user/v1.0 -->
+    <servlet>
+        <servlet-name>IdentityUserV1ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.user.endpoint.IntrospectCodeApi,
+                org.wso2.carbon.identity.user.endpoint.LiteApi,
+                org.wso2.carbon.identity.user.endpoint.MeApi,
+                org.wso2.carbon.identity.user.endpoint.PiInfoApi,
+                org.wso2.carbon.identity.user.endpoint.ResendCodeApi,
+                org.wso2.carbon.identity.user.endpoint.UpdateUsernameApi,
+                org.wso2.carbon.identity.user.endpoint.ValidateCodeApi,
+                org.wso2.carbon.identity.user.endpoint.ValidateUsernameApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.user.endpoint.exceptions.UserEndpointExceptionMapper
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityUserV1ApiServlet</servlet-name>
+        <url-pattern>/identity/user/v1.0/*</url-pattern>
+    </servlet-mapping>
+
+    <!--  Servlet instance for /identity/recovery/v0.9 -->
+    <servlet>
+        <servlet-name>IdentityRecoveryV0_9ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.recovery.endpoint.ClaimsApi,
+                org.wso2.carbon.identity.recovery.endpoint.RecoverPasswordApi,
+                org.wso2.carbon.identity.recovery.endpoint.RecoverUsernameApi,
+                org.wso2.carbon.identity.recovery.endpoint.SetPasswordApi,
+                org.wso2.carbon.identity.recovery.endpoint.ValidateCodeApi,
+                org.wso2.carbon.identity.recovery.endpoint.CaptchaApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.recovery.endpoint.filter.ResponseValidationFilter,
+                org.wso2.carbon.identity.recovery.endpoint.Exceptions.RecoveryEndpointExceptionMapper
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityRecoveryV0_9ApiServlet</servlet-name>
+        <url-pattern>/identity/recovery/v0.9/*</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>CXFServlet</servlet-name>
         <servlet-class>
@@ -42,7 +107,6 @@
         </servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-
     <servlet-mapping>
         <servlet-name>CXFServlet</servlet-name>
         <url-pattern>/*</url-pattern>
