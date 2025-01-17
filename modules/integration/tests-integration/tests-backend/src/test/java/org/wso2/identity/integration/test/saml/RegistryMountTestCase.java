@@ -271,7 +271,17 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         tenantReqModel.setDomain(TENANT_DOMAIN);
         tenantReqModel.addOwnersItem(tenantAdminUser);
 
-        tenantMgtRestClient.addTenant(tenantReqModel);
+        String tenantId = tenantMgtRestClient.addTenant(tenantReqModel);
+
+        // Check if the tenant is created successfully iteratively for 10 seconds
+        for (int i = 0; i < 10; i++) {
+            TenantModel tenant = tenantMgtRestClient.getTenantById(tenantId);
+            if (tenant != null) {
+                break;
+            }
+            log.info("Tenant is not created yet. Waiting for tenant creation...");
+            Thread.sleep(1000);
+        }
     }
 
     private Tenant getRegistryMountTenantInfo() {
