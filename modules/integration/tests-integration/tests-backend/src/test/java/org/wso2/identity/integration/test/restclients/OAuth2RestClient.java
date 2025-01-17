@@ -48,6 +48,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
+import org.wso2.identity.integration.test.restclients.exceptions.AuthenticationException;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
@@ -104,7 +105,10 @@ public class OAuth2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
                 getHeaders())) {
 
-            if (response.getStatusLine().getStatusCode() >= 400) {
+            if (response.getStatusLine().getStatusCode() == HttpServletResponse.SC_UNAUTHORIZED) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                throw new AuthenticationException("Error occurred while creating the application. Response: " + responseBody);
+            } else if (response.getStatusLine().getStatusCode() >= HttpServletResponse.SC_BAD_REQUEST) {
                 String responseBody = EntityUtils.toString(response.getEntity());
                 throw new RuntimeException("Error occurred while creating the application. Response: " + responseBody);
             }

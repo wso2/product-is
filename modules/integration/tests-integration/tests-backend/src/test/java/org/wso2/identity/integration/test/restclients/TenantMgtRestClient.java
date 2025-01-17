@@ -23,13 +23,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantModel;
-import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
