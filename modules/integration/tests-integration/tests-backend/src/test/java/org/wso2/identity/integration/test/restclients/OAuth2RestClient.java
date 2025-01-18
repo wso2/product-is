@@ -104,7 +104,7 @@ public class OAuth2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
                 getHeaders())) {
 
-            if (response.getStatusLine().getStatusCode() >= 400) {
+            if (response.getStatusLine().getStatusCode() >= HttpServletResponse.SC_BAD_REQUEST) {
                 String responseBody = EntityUtils.toString(response.getEntity());
                 throw new RuntimeException("Error occurred while creating the application. Response: " + responseBody);
             }

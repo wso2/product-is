@@ -20,6 +20,8 @@ package org.wso2.identity.integration.test.restclients;
 import io.restassured.http.ContentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
@@ -41,6 +43,7 @@ import java.io.IOException;
 
 public class SCIM2RestClient extends RestBaseClient {
 
+    private final Log log = LogFactory.getLog(SCIM2RestClient.class);
     private static final String SCIM2_USERS_ENDPOINT = "scim2/Users";
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
     private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
@@ -80,6 +83,10 @@ public class SCIM2RestClient extends RestBaseClient {
         }
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+            if (response.getStatusLine().getStatusCode() >= HttpServletResponse.SC_BAD_REQUEST) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                log.error("Error occurred while creating the user. Response: " + responseBody);
+            }
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
                     "User creation failed");
             JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
