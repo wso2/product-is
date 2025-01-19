@@ -1,4 +1,4 @@
-name: product-is-builder-jdk21
+name: Integration Test Runner JDK21
 
 on:
   workflow_dispatch:
