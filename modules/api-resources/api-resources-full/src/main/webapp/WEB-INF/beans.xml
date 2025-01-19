@@ -65,8 +65,6 @@
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-recovery-v0-9-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-governance-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-fido2-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oauth2-dcr-v1-1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oauth2-scope-v1-cxf.xml"/>
@@ -425,37 +423,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="recovery" address="/identity/recovery/v0.9">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.ClaimsApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverPasswordApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverUsernameApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.SetPasswordApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.ValidateCodeApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.CaptchaApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.filter.ResponseValidationFilter" />
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.Exceptions.RecoveryEndpointExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="userGovernance" address="/identity/user/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.user.endpoint.IntrospectCodeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.LiteApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.MeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.PiInfoApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.ResendCodeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.UpdateUsernameApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.ValidateCodeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.ValidateUsernameApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.exceptions.UserEndpointExceptionMapper"/>
         </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="fido2v2" address="/users/v2/me/webauthn">

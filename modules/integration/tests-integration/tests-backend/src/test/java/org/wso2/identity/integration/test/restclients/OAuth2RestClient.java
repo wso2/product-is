@@ -103,6 +103,11 @@ public class OAuth2RestClient extends RestBaseClient {
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(applicationManagementApiBasePath, jsonRequest,
                 getHeaders())) {
+
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                throw new RuntimeException("Error occurred while creating the application. Response: " + responseBody);
+            }
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
         }

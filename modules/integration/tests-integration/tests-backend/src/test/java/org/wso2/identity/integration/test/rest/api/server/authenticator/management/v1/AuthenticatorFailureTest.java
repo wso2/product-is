@@ -243,7 +243,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .body("code", equalTo("AUT-60013"))
                 .body("message", equalTo("The authenticator already exists."))
                 .body("description", equalTo("The authenticator already exists for the given name:" +
-                        " customAuthenticator."));
+                        " custom_Authenticator."));
     }
 
     @Test(priority = 10)
