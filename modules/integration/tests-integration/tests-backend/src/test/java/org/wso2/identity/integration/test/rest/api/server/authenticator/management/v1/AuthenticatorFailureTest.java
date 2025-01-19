@@ -117,7 +117,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .body("code", equalTo("AUT-60014"))
                 .body("message", equalTo("Authenticator name is invalid."))
                 .body("description", equalTo("The provided authenticator name invalid@name is not in the " +
-                        "expected format ^custom_[a-zA-Z0-9-_]{3,}$."));
+                        "expected format ^custom-[a-zA-Z0-9-_]{3,}$."));
     }
 
     @Test(priority = 2)
@@ -243,7 +243,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .body("code", equalTo("AUT-60013"))
                 .body("message", equalTo("The authenticator already exists."))
                 .body("description", equalTo("The authenticator already exists for the given name:" +
-                        " custom_Authenticator."));
+                        " custom-Authenticator."));
     }
 
     @Test(priority = 10)

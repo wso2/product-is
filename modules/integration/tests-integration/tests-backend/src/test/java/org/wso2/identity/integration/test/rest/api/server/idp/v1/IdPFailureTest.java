@@ -62,8 +62,8 @@ public class IdPFailureTest extends IdPTestBase {
     private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String AUTHENTICATOR_PROPERTIES_PLACEHOLDER = "\"<AUTHENTICATOR_PROPERTIES>\"";
     private static final String CUSTOM_IDP_NAME = "CustomAuthIDP";
-    private static final String USER_DEFINED_AUTHENTICATOR_ID_1 = "Y3VzdG9tX0F1dGhlbnRpY2F0b3Ix";
-    private static final String USER_DEFINED_AUTHENTICATOR_ID_2 = "Y3VzdG9tX0F1dGhlbnRpY2F0b3Iy";
+    private static final String USER_DEFINED_AUTHENTICATOR_ID_1 = "Y3VzdG9tLUF1dGhlbnRpY2F0b3Ix";
+    private static final String USER_DEFINED_AUTHENTICATOR_ID_2 = "Y3VzdG9tLUF1dGhlbnRpY2F0b3Iy";
     private static final String SYSTEM_DEFINED_AUTHENTICATOR_ID = "R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private String idPId;
