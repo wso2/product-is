@@ -49,7 +49,6 @@
     <import resource="classpath:META-INF/cxf/secret-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/branding-preference-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/idle-account-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/expired-password-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
@@ -65,10 +64,8 @@
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-fido2-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oauth2-dcr-v1-1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oauth2-scope-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/consent-mgt-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/auth-v1-1-cfx.xml"/>
     <import resource="classpath:META-INF/cxf/extension-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-provider-v1-cxf.xml"/>
@@ -231,18 +228,6 @@
         <jaxrs:inInterceptors>
             <ref bean="validationInInterceptor"/>
         </jaxrs:inInterceptors>
-    </jaxrs:server>
-    <jaxrs:server id="idleAccountIdentification" address="/idle-account-identification/v1/">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.api.idle.account.identification.v1.InactiveUsersApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
-        </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="users" address="/users/v1">
         <jaxrs:serviceBeans>
@@ -425,18 +410,6 @@
             <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
-    <jaxrs:server id="fido2v2" address="/users/v2/me/webauthn">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.DefaultApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.FinishRegistrationApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.StartRegistrationApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.StartUsernamelessRegistrationApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.CredentialIdApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
     <jaxrs:server id="oauthDCR" address="/identity/oauth2/dcr/v1.1">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.oauth2.dcr.endpoint.RegisterApi"/>
@@ -455,15 +428,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.wso2.carbon.identity.oauth.scope.endpoint.expmapper.JsonProcessingExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="consentMgt" address="/identity/consent-mgt/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.consent.mgt.endpoint.ConsentsApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.consent.mgt.endpoint.expmapper.ConsentEndpointExceptionMapper"/>
         </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="localAuth" address="/identity/auth/v1.1">
