@@ -68,7 +68,6 @@
     <import resource="classpath:META-INF/cxf/user-fido2-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oauth2-dcr-v1-1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/oauth2-scope-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/consent-mgt-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/auth-v1-1-cfx.xml"/>
     <import resource="classpath:META-INF/cxf/extension-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-provider-v1-cxf.xml"/>
@@ -455,15 +454,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.wso2.carbon.identity.oauth.scope.endpoint.expmapper.JsonProcessingExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="consentMgt" address="/identity/consent-mgt/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.consent.mgt.endpoint.ConsentsApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.consent.mgt.endpoint.expmapper.ConsentEndpointExceptionMapper"/>
         </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="localAuth" address="/identity/auth/v1.1">

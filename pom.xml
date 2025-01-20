@@ -1387,11 +1387,6 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.servlet.mgt</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.saml.common</groupId>
                 <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
                 <version>${saml.common.util.version}</version>
@@ -1904,11 +1899,6 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.servlet.mgt.server.feature</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.identity.governance</groupId>
                 <artifactId>org.wso2.carbon.identity.multi.attribute.login.service.server.feature</artifactId>
                 <version>${identity.governance.version}</version>
@@ -2384,7 +2374,7 @@
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.6.4</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.6.5</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
         <identity.governance.version>1.11.30</identity.governance.version>
