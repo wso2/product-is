@@ -100,6 +100,32 @@
         <url-pattern>/identity/recovery/v0.9/*</url-pattern>
     </servlet-mapping>
 
+    <!--  Servlet instance for /identity/consent-mgt/v1.0 -->
+    <servlet>
+        <servlet-name>IdentityConsentMgtV1ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.consent.mgt.endpoint.ConsentsApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.consent.mgt.endpoint.expmapper.ConsentEndpointExceptionMapper,
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityConsentMgtV1ApiServlet</servlet-name>
+        <url-pattern>/identity/consent-mgt/v1.0/*</url-pattern>
+    </servlet-mapping>
+  
     <!--  Servlet instance for /users/v2/me/webauthn -->
     <servlet>
         <servlet-name>UsersV2MeWebauthnApiServlet</servlet-name>
