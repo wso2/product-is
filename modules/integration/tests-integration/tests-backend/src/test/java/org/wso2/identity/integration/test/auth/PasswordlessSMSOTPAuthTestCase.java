@@ -286,7 +286,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         UserObject user = new UserObject();
         user.setUserName(USERNAME);
         user.setPassword(PASSWORD);
-        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
+        user.setName(new Name().givenName(OIDCUtilTest.FIRST_NAME).familyName(OIDCUtilTest.LAST_NAME));
         user.addPhoneNumbers(new PhoneNumbers().value(MOBILE).type("mobile"));
         return user;
     }

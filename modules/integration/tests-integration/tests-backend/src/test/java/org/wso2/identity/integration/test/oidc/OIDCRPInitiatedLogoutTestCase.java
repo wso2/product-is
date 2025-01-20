@@ -305,27 +305,27 @@ public class OIDCRPInitiatedLogoutTestCase extends OIDCAbstractIntegrationTest {
     protected void initUser() {
 
         user = new UserObject();
-        user.setUserName(OIDCUtilTest.username);
-        user.setPassword(OIDCUtilTest.password);
-        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
-        user.addEmail(new Email().value(OIDCUtilTest.email));
+        user.setUserName(OIDCUtilTest.USERNAME);
+        user.setPassword(OIDCUtilTest.PASSWORD);
+        user.setName(new Name().givenName(OIDCUtilTest.FIRST_NAME).familyName(OIDCUtilTest.LAST_NAME));
+        user.addEmail(new Email().value(OIDCUtilTest.EMAIL));
     }
 
     protected OIDCApplication initApplicationOne() {
 
-        playgroundAppOne = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppCallBackUri);
-        playgroundAppOne.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundAppOne.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        playgroundAppOne = new OIDCApplication(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME,
+                OIDCUtilTest.PLAYGROUND_APP_ONE_APP_CALL_BACK_URI);
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.EMAIL_CLAIM_URI);
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.FIRST_NAME_CLAIM_URI);
         return playgroundAppOne;
     }
 
     protected OIDCApplication initApplicationTwo() {
 
-        playgroundAppTwo = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName,
-                OIDCUtilTest.playgroundAppTwoAppCallBackUri);
-        playgroundAppOne.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundAppOne.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        playgroundAppTwo = new OIDCApplication(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME,
+                OIDCUtilTest.PLAYGROUND_APP_TWO_APP_CALL_BACK_URI);
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.EMAIL_CLAIM_URI);
+        playgroundAppOne.addRequiredClaim(OIDCUtilTest.FIRST_NAME_CLAIM_URI);
         return playgroundAppTwo;
     }
 }
