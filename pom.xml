@@ -2438,7 +2438,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.18</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.16</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.17</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->

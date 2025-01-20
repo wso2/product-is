@@ -100,6 +100,35 @@
         <url-pattern>/identity/recovery/v0.9/*</url-pattern>
     </servlet-mapping>
 
+    <!--  Servlet instance for /users/v2/me/webauthn -->
+    <servlet>
+        <servlet-name>UsersV2MeWebauthnApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.application.authenticator.fido2.endpoint.DefaultApi,
+                org.wso2.carbon.identity.application.authenticator.fido2.endpoint.FinishRegistrationApi,
+                org.wso2.carbon.identity.application.authenticator.fido2.endpoint.StartRegistrationApi,
+                org.wso2.carbon.identity.application.authenticator.fido2.endpoint.StartUsernamelessRegistrationApi,
+                org.wso2.carbon.identity.application.authenticator.fido2.endpoint.CredentialIdApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UsersV2MeWebauthnApiServlet</servlet-name>
+        <url-pattern>/users/v2/me/webauthn/*</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>CXFServlet</servlet-name>
         <servlet-class>
