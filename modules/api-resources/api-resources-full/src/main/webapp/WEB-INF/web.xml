@@ -155,6 +155,35 @@
         <url-pattern>/users/v2/me/webauthn/*</url-pattern>
     </servlet-mapping>
 
+    <!--  Servlet instance for /idle-account-identification/v1/ -->
+    <servlet>
+        <servlet-name>IdleAccountIdentificationV1Servlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.api.idle.account.identification.v1.InactiveUsersApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdleAccountIdentificationV1Servlet</servlet-name>
+        <url-pattern>/idle-account-identification/v1/*</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>CXFServlet</servlet-name>
         <servlet-class>

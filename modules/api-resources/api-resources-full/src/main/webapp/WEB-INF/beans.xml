@@ -49,7 +49,6 @@
     <import resource="classpath:META-INF/cxf/secret-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/branding-preference-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/idle-account-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/expired-password-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
@@ -229,18 +228,6 @@
         <jaxrs:inInterceptors>
             <ref bean="validationInInterceptor"/>
         </jaxrs:inInterceptors>
-    </jaxrs:server>
-    <jaxrs:server id="idleAccountIdentification" address="/idle-account-identification/v1/">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.api.idle.account.identification.v1.InactiveUsersApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
-        </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="users" address="/users/v1">
         <jaxrs:serviceBeans>
