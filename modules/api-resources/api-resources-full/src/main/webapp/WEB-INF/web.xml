@@ -155,6 +155,60 @@
         <url-pattern>/users/v2/me/webauthn/*</url-pattern>
     </servlet-mapping>
 
+    <!--  Servlet instance for /identity/oauth2/dcr/v1.1 -->
+    <servlet-mapping>
+        <servlet-name>IdentityOAuth2DcrV1_1ApiServlet</servlet-name>
+        <url-pattern>/identity/oauth2/dcr/v1.1/*</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>IdentityOAuth2DcrV1_1ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.oauth2.dcr.endpoint.RegisterApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.oauth2.dcr.endpoint.exmapper.JsonProcessingExceptionMapper,
+                com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper,
+                com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper
+            </param-value>
+        </init-param>
+    </servlet>
+
+    <!--  Servlet instance for /identity/oauth2/v1.0 -->
+    <servlet>
+        <servlet-name>IdentityOAuth2V1ApiServlet</servlet-name>
+        <servlet-class>
+            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.oauth.scope.endpoint.ScopesApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.oauth.scope.endpoint.expmapper.JsonProcessingExceptionMapper
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityOAuth2V1ApiServlet</servlet-name>
+        <url-pattern>/identity/oauth2/v1.0/*</url-pattern>
+    </servlet-mapping>
+
     <servlet>
         <servlet-name>CXFServlet</servlet-name>
         <servlet-class>
