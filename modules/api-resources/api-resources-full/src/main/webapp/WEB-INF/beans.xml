@@ -64,8 +64,6 @@
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/oauth2-dcr-v1-1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/oauth2-scope-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/auth-v1-1-cfx.xml"/>
     <import resource="classpath:META-INF/cxf/extension-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-provider-v1-cxf.xml"/>
@@ -408,26 +406,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="oauthDCR" address="/identity/oauth2/dcr/v1.1">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.oauth2.dcr.endpoint.RegisterApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.oauth2.dcr.endpoint.exmapper.JsonProcessingExceptionMapper"/>
-            <bean class="com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper"/>
-            <bean class="com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="oauth2Scope" address="/identity/oauth2/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.oauth.scope.endpoint.ScopesApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.oauth.scope.endpoint.expmapper.JsonProcessingExceptionMapper"/>
         </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="localAuth" address="/identity/auth/v1.1">
