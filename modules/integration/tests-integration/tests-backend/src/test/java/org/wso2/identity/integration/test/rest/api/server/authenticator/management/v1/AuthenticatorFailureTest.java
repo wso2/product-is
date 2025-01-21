@@ -148,7 +148,8 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("code", equalTo("AUT-60015"))
                 .body("message", equalTo("Invalid empty or blank value."))
-                .body("description", equalTo("Value for displayName should not be empty or blank."));
+                .body("description", equalTo(
+                        "The provided authenticator name is not in the expected format ^.{3,}$."));
     }
 
     @Test(priority = 4)
@@ -276,7 +277,8 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("code", equalTo("AUT-60015"))
                 .body("message", equalTo("Invalid empty or blank value."))
-                .body("description", equalTo("Value for displayName should not be empty or blank."));
+                .body("description", equalTo(
+                        "The provided authenticator name is not in the expected format ^.{3,}$."));
     }
 
     @Test(priority = 12)
