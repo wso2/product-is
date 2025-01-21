@@ -137,9 +137,10 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
     }
 
     @Test(priority = 3)
-    public void createUserDefinedLocalAuthenticatorEmptyDisplayName() throws JsonProcessingException {
+    public void createUserDefinedLocalAuthenticatorTwoCharacterDisplayName() throws JsonProcessingException {
 
-        creationPayload.setDisplayName("");
+        String displayName = "te";
+        creationPayload.setDisplayName(displayName);
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(creationPayload);
         Response response = getResponseOfPost(AUTHENTICATOR_CUSTOM_API_BASE_PATH, body);
         response.then()
@@ -148,8 +149,8 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("code", equalTo("AUT-60015"))
                 .body("message", equalTo("Authenticator display name is invalid."))
-                .body("description", equalTo(
-                        "The provided authenticator name is not in the expected format ^.{3,}$."));
+                .body("description", equalTo(String.format(
+                        "The provided authenticator name %s is not in the expected format ^.{3,}$.", displayName)));
     }
 
     @Test(priority = 4)
@@ -267,7 +268,8 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
     @Test(priority = 11)
     public void updateUserDefinedLocalAuthenticatorEmptyDisplayName() throws JsonProcessingException {
 
-        updatePayload.setDisplayName("");
+        String displayName = "";
+        updatePayload.setDisplayName(displayName);
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
         Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
                 customIdPId, body);
@@ -277,8 +279,8 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("code", equalTo("AUT-60015"))
                 .body("message", equalTo("Authenticator display name is invalid."))
-                .body("description", equalTo(
-                        "The provided authenticator name is not in the expected format ^.{3,}$."));
+                .body("description", equalTo(String.format(
+                        "The provided authenticator name %s is not in the expected format ^.{3,}$.", displayName)));
     }
 
     @Test(priority = 12)
