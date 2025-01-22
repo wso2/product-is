@@ -183,7 +183,7 @@
                                     org.wso2.carbon.identity.event.handler.notification:org.wso2.carbon.event.handler.notification.server.feature:${identity.event.handler.notification.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.pre.update.password.action.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.action.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.framework.version}
@@ -691,7 +691,7 @@
                                     <version>${identity.event.handler.notification.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.user.pre.update.password.action.feature.group</id>
+                                    <id>org.wso2.carbon.identity.user.action.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
