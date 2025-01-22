@@ -64,7 +64,6 @@
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/auth-v1-1-cfx.xml"/>
     <import resource="classpath:META-INF/cxf/extension-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-provider-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-v1-cxf.xml"/>
@@ -406,19 +405,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="localAuth" address="/identity/auth/v1.1">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.local.auth.api.endpoint.AuthenticateApi"/>
-            <bean class="org.wso2.carbon.identity.local.auth.api.endpoint.ContextApi"/>
-            <bean class="org.wso2.carbon.identity.local.auth.api.endpoint.DataApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean id="exceptionMapper" class="org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper">
-                <property name="printStackTrace" value="false" />
-            </bean>
         </jaxrs:providers>
     </jaxrs:server>
     <cxf:bus>
