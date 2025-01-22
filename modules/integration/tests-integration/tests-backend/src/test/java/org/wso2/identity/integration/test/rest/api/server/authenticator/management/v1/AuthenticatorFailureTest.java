@@ -117,7 +117,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .body("code", equalTo("AUT-60014"))
                 .body("message", equalTo("Authenticator name is invalid."))
                 .body("description", equalTo("The provided authenticator name invalid@name is not in the " +
-                        "expected format ^[a-zA-Z0-9][a-zA-Z0-9-_]*$."));
+                        "expected format ^custom-[a-zA-Z0-9-_]{3,}$."));
     }
 
     @Test(priority = 2)
@@ -137,9 +137,10 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
     }
 
     @Test(priority = 3)
-    public void createUserDefinedLocalAuthenticatorEmptyDisplayName() throws JsonProcessingException {
+    public void createUserDefinedLocalAuthenticatorTwoCharacterDisplayName() throws JsonProcessingException {
 
-        creationPayload.setDisplayName("");
+        String displayName = "te";
+        creationPayload.setDisplayName(displayName);
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(creationPayload);
         Response response = getResponseOfPost(AUTHENTICATOR_CUSTOM_API_BASE_PATH, body);
         response.then()
@@ -147,8 +148,9 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("code", equalTo("AUT-60015"))
-                .body("message", equalTo("Invalid empty or blank value."))
-                .body("description", equalTo("Value for displayName should not be empty or blank."));
+                .body("message", equalTo("Authenticator display name is invalid."))
+                .body("description", equalTo(String.format(
+                        "The provided authenticator name %s is not in the expected format ^.{3,}$.", displayName)));
     }
 
     @Test(priority = 4)
@@ -243,7 +245,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .body("code", equalTo("AUT-60013"))
                 .body("message", equalTo("The authenticator already exists."))
                 .body("description", equalTo("The authenticator already exists for the given name:" +
-                        " custom_Authenticator."));
+                        " custom-Authenticator."));
     }
 
     @Test(priority = 10)
@@ -266,7 +268,8 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
     @Test(priority = 11)
     public void updateUserDefinedLocalAuthenticatorEmptyDisplayName() throws JsonProcessingException {
 
-        updatePayload.setDisplayName("");
+        String displayName = "";
+        updatePayload.setDisplayName(displayName);
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
         Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
                 customIdPId, body);
@@ -275,8 +278,9 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("code", equalTo("AUT-60015"))
-                .body("message", equalTo("Invalid empty or blank value."))
-                .body("description", equalTo("Value for displayName should not be empty or blank."));
+                .body("message", equalTo("Authenticator display name is invalid."))
+                .body("description", equalTo(String.format(
+                        "The provided authenticator name %s is not in the expected format ^.{3,}$.", displayName)));
     }
 
     @Test(priority = 12)
