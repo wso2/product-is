@@ -54,13 +54,20 @@
                 "op": "replace",
                 "value": {
                     "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
-                        "emailVerified": "true",
                         "manager": {
                             "value": "female"
                         },
-                        "phoneVerified": "true",
-                        "dateOfBirth": "1997-11-26",
                         "organization": "organization2"
+                    }
+                }
+            },
+            {
+                "op": "replace",
+                "value": {
+                    "urn:scim:wso2:schema": {
+                        "emailVerified": "true",
+                        "phoneVerified": "true",
+                        "dateOfBirth": "1997-11-26"
                     }
                 }
             },

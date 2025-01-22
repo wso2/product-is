@@ -37,7 +37,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ENDPOINT;
@@ -137,7 +136,7 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
     @Test(dependsOnMethods = "getSchemas")
     public void validateUserExtensionSchemaElement() {
 
-        String baseIdentifier = "find{ it.name == 'EnterpriseUser' }.attributes.find {it.name == 'country'}.";
+        String baseIdentifier = "find{ it.name == 'SystemUser' }.attributes.find {it.name == 'country'}.";
         this.response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -150,7 +149,7 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
     @Test(dependsOnMethods = "getSchemas")
     public void validateUserExtensionSchemaBooleanElement() {
 
-        String baseIdentifier = "find{ it.name == 'EnterpriseUser' }.attributes.find {it.name == 'emailVerified'}.";
+        String baseIdentifier = "find{ it.name == 'SystemUser' }.attributes.find {it.name == 'emailVerified'}.";
         this.response.then()
                 .log().ifValidationFails()
                 .assertThat()
