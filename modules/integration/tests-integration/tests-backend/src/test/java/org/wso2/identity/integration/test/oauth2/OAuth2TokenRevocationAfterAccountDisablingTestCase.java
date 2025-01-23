@@ -105,7 +105,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     private static final String CONNECTOR_ACCOUNT_DISABLE_HANDLER = "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI";
     private static final String CATEGORY_ACCOUNT_MANAGEMENT = "QWNjb3VudCBNYW5hZ2VtZW50";
 
-    private static final String USER_SCHEMA_ATTRIBUTE ="urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
+    private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
     private static final String ACCOUNT_DISABLED_ATTRIBUTE ="accountDisabled";
     private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
 
@@ -233,12 +233,12 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     private void testDisableUserAccount() throws Exception {
 
         UserItemAddGroupobj disableUserPatchOp = new UserItemAddGroupobj().op(OpEnum.REPLACE);
-        disableUserPatchOp.setPath(USER_SCHEMA_ATTRIBUTE + ":" + ACCOUNT_DISABLED_ATTRIBUTE);
+        disableUserPatchOp.setPath(USER_SYSTEM_SCHEMA_ATTRIBUTE + ":" + ACCOUNT_DISABLED_ATTRIBUTE);
         disableUserPatchOp.setValue(true);
         scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(disableUserPatchOp), userId);
 
-        Boolean accountActiveValue = (Boolean) ((JSONObject) scim2RestClient.getUser(userId, null).get(USER_SCHEMA_ATTRIBUTE))
-                .get(ACCOUNT_DISABLED_ATTRIBUTE);
+        Boolean accountActiveValue = (Boolean) ((JSONObject) scim2RestClient.getUser(userId, null)
+                .get(USER_SYSTEM_SCHEMA_ATTRIBUTE)).get(ACCOUNT_DISABLED_ATTRIBUTE);
         Assert.assertTrue(accountActiveValue, "User account didn't disabled");
     }
 

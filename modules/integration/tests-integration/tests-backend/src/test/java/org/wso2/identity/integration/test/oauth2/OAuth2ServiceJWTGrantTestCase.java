@@ -70,7 +70,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
@@ -571,7 +571,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         userInfo.setPassword(JWT_USER_PASSWORD);
         userInfo.setName(new Name().givenName(JWT_USER));
         userInfo.addEmail(new Email().value(EMAIL_CLAIM_VALUE));
-        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY_CLAIM_VALUE));
+        userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().country(COUNTRY_CLAIM_VALUE));
 
         userId = scim2RestClient.createUser(userInfo);
         String roleId = scim2RestClient.getRoleIdByName("admin");
