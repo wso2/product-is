@@ -5,7 +5,7 @@
     "familyName": "jackson",
     "givenName": "kim"
   },
-  "urn:scim:wso2:schema": {
+  "urn:scim:schemas:extension:custom:User": {
     "country": "India"
   }
 }

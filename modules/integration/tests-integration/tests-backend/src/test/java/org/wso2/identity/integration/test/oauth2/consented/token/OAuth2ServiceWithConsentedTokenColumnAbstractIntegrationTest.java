@@ -61,7 +61,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -121,7 +121,7 @@ public class OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest extend
         userInfo.setUserName(USERNAME);
         userInfo.setPassword(PASSWORD);
         userInfo.addEmail(new Email().value(USER_EMAIL));
-        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY));
+        userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().country(COUNTRY));
 
         userId = scim2RestClient.createUser(userInfo);
         String roleId = scim2RestClient.getRoleIdByName("admin");

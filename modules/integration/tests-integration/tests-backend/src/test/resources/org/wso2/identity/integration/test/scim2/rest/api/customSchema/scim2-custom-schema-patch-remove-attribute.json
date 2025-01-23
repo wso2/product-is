@@ -5,11 +5,11 @@
   "Operations": [
     {
       "op": "remove",
-      "path": "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User:country"
+      "path": "urn:scim:wso2:schema:country"
     },
     {
       "op": "remove",
-      "path": "urn:scim:wso2:schema:country"
+      "path": "urn:scim:schemas:extension:custom:User:country"
     }
   ]
 }
