@@ -2366,7 +2366,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.120</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.121</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2392,7 +2392,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.11.14</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.113</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.112</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2488,16 +2488,16 @@
         <conditional.authentication.functions.version>1.2.73</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.38.7</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.14.17</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.10.8</identity.apps.core.version>
+        <identity.apps.console.version>2.38.3</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.14.13</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.10.7</identity.apps.core.version>
         <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.33</carbon.kernel.version>
+        <carbon.kernel.version>4.10.32</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>
