@@ -32,8 +32,6 @@
     <import resource="classpath:META-INF/cxf/permission-management-v1-cxf.xml"/>
     <!--<import resource="classpath:META-INF/cxf/workflow-engine-server-v1-cxf.xml"/>-->
     <import resource="classpath:META-INF/cxf/claim-management-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/email-template-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/email-template-server-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/notification-template-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/applications-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/application-user-v1-cxf.xml"/>
