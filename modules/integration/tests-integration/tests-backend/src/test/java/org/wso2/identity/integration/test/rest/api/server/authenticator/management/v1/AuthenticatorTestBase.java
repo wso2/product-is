@@ -48,7 +48,7 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
     protected static final String AUTHENTICATOR_CONFIG_API_BASE_PATH = "/configs/authenticators/";
     protected static final String PATH_SEPARATOR = "/";
 
-    protected final String AUTHENTICATOR_NAME = "customAuthenticator";
+    protected final String AUTHENTICATOR_NAME = "custom-Authenticator";
     protected final String AUTHENTICATOR_DISPLAY_NAME = "ABC custom authenticator";
     protected final String AUTHENTICATOR_ENDPOINT_URI = "https://test.com/authenticate";
     protected final String customIdPId = Base64.getUrlEncoder().withoutPadding().encodeToString(

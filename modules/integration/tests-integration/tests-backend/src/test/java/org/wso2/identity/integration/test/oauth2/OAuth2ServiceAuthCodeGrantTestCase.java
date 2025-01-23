@@ -21,16 +21,20 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
@@ -50,32 +54,34 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_BODY_ELEMENT;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 
 public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private String accessToken;
-    private String sessionDataKeyConsent;
     private String sessionDataKey;
     private String authorizationCode;
     private String consumerKey;
     private String consumerSecret;
 
-    private static final String PLAYGROUND_RESET_PAGE = "http://localhost:" + CommonConstants.DEFAULT_TOMCAT_PORT +
-            "/playground2/oauth2.jsp?reset=true";
-
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private CloseableHttpClient client;
     private String applicationId;
+    CookieStore cookieStore = new BasicCookieStore();
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -87,8 +93,9 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
-        client = HttpClientBuilder.create()
+        client = HttpClientBuilder.create().disableRedirectHandling()
                 .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieStore(cookieStore)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
 
@@ -122,16 +129,14 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     public void testSendAuthorizedPost() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("grantType", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-        urlParameters.add(new BasicNameValuePair("consumerKey", consumerKey));
-        urlParameters.add(new BasicNameValuePair("callbackurl", OAuth2Constant.CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair("authorizeEndpoint", OAuth2Constant.APPROVAL_URL));
-        urlParameters.add(new BasicNameValuePair("authorize", OAuth2Constant.AUTHORIZE_PARAM));
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("scope", ""));
 
-        HttpResponse response =
-                sendPostRequestWithParameters(client, urlParameters,
-                        OAuth2Constant.AUTHORIZED_USER_URL);
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
+
         Assert.assertNotNull(response, "Authorized response is null");
 
         Header locationHeader =
@@ -157,81 +162,44 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     public void testSendLoginPost() throws Exception {
 
         HttpResponse response = sendLoginPost(client, sessionDataKey);
-        Assert.assertNotNull(response, "Login request failed. Login response is null.");
-        if (Utils.requestMissingClaims(response)) {
-            Assert.assertTrue(response.getFirstHeader("Set-Cookie").getValue().contains("pastr"),
-                    "pastr cookie not found in response.");
-            String pastreCookie = response.getFirstHeader("Set-Cookie").getValue().split(";")[0];
-            EntityUtils.consume(response.getEntity());
-
-            response = Utils.sendPOSTConsentMessage(response, COMMON_AUTH_URL, USER_AGENT, Utils.getRedirectUrl
-                    (response), client, pastreCookie);
-            EntityUtils.consume(response.getEntity());
-        }
-        Header locationHeader =
-                response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Login response header is null");
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        assertNotNull(locationHeader, "Location header expected post login is not available.");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
-        // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
-        //  intermittent issue.
-        Map<String, Integer> keyPositionMap = new HashMap<>(2);
-        keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
-        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
-        List<KeyValue> keyValues =
-                DataExtractUtil.extractSessionConsentDataFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-
-        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
-            sessionDataKeyConsent = keyValues.get(0).getValue();
-            EntityUtils.consume(response.getEntity());
-            testSendApprovalPost();
-        } else {
-            authorizationCode = keyValues.get(0).getValue();
-            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
-            EntityUtils.consume(response.getEntity());
-        }
-    }
-
-    private void testSendApprovalPost() throws Exception {
-
-        HttpResponse response = sendApprovalPost(client, sessionDataKeyConsent);
-        Assert.assertNotNull(response, "Approval response is invalid.");
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Approval Location header is null.");
-
+        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        assertNotNull(locationHeader, "Redirection URL to the application with authorization code is null.");
         EntityUtils.consume(response.getEntity());
 
-        response = sendPostRequest(client, locationHeader.getValue());
-        Assert.assertNotNull(response, "Get Activation response is invalid.");
-
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 1);
-        List<KeyValue> keyValues = DataExtractUtil.extractTableRowDataFromResponse(response, keyPositionMap);
-        Assert.assertNotNull(keyValues, "Authorization Code key value is invalid.");
-        authorizationCode = keyValues.get(0).getValue();
-        Assert.assertNotNull(authorizationCode, "Authorization code is null.");
-        EntityUtils.consume(response.getEntity());
+        authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
+        assertNotNull(authorizationCode);
     }
 
     @Test(groups = "wso2.is", description = "Get access token", dependsOnMethods = "testSendLoginPost")
     public void testGetAccessToken() throws Exception {
 
-        HttpResponse response = sendGetAccessTokenPost(client, consumerSecret);
-        Assert.assertNotNull(response, "Error occured while getting access token.");
-        EntityUtils.consume(response.getEntity());
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("code", authorizationCode));
+        urlParameters.add(new BasicNameValuePair("grant_type", OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair("client_id", consumerKey));
+        urlParameters.add(new BasicNameValuePair("scope", ""));
 
-        response = sendPostRequest(client, OAuth2Constant.AUTHORIZED_URL);
-        Map<String, Integer> keyPositionMap = new HashMap<>(1);
-        keyPositionMap.put("name=\"accessToken\"", 1);
-        List<KeyValue> keyValues =
-                DataExtractUtil.extractInputValueFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(keyValues, "Access token Key value is null.");
-        accessToken = keyValues.get(0).getValue();
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER,
+                OAuth2Constant.BASIC_HEADER + " " + getBase64EncodedString(consumerKey, consumerSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, urlParameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+        assertNotNull(response, "Failed to receive a response for access token request.");
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        org.json.JSONObject jsonResponse = new org.json.JSONObject(responseString);
+
+        assertTrue(jsonResponse.has("access_token"), "Access token not found in the token response.");
+        accessToken = jsonResponse.getString("access_token");
         Assert.assertNotNull(accessToken, "Access token is null.");
 
         EntityUtils.consume(response.getEntity());
@@ -262,13 +230,12 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     public void testAuthzCodeResend() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, OAuth2Constant
-                .OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZATION_CODE_NAME, authorizationCode));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
-        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        HttpPost request = new HttpPost(ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
-        request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
+        request.setHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
                 .encodeBase64String((consumerKey + ":" + consumerSecret).getBytes()).trim());
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -288,49 +255,9 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
     public void testAuthzCodeGrantRetry() throws Exception {
 
         String oldAccessToken = accessToken;
-
-        HttpResponse response = sendGetRequest(client, PLAYGROUND_RESET_PAGE);
-        EntityUtils.consume(response.getEntity());
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_PLAYGROUND_NAME, OAuth2Constant
-                .OAUTH2_GRANT_TYPE_CODE));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.CONSUMER_KEY_PLAYGROUND_NAME, consumerKey));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.CALLBACKURL_PLAYGROUND_NAME, OAuth2Constant
-                .CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_ENDPOINT_PLAYGROUND_NAME, OAuth2Constant
-                .APPROVAL_URL));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZE_PLAYGROUND_NAME, OAuth2Constant
-                .AUTHORIZE_PARAM));
-        urlParameters.add(new BasicNameValuePair(OAuth2Constant.SCOPE_PLAYGROUND_NAME, ""));
-
-        response = sendPostRequestWithParameters(client, urlParameters, OAuth2Constant.AUTHORIZED_USER_URL);
-        Assert.assertNotNull(response, "Authorized response is null");
-
-        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Authorized response header is null");
-        EntityUtils.consume(response.getEntity());
-
-        response = sendGetRequest(client, locationHeader.getValue());
-        // TODO: This fix is done to handle situations where consent page is skipped. Need to identify cause for this
-        //  intermittent issue.
-        Map<String, Integer> keyPositionMap = new HashMap<>(2);
-        keyPositionMap.put("name=\"" + OAuth2Constant.SESSION_DATA_KEY_CONSENT + "\"", 1);
-        keyPositionMap.put(AUTH_CODE_BODY_ELEMENT, 2);
-        List<KeyValue> keyValues =
-                DataExtractUtil.extractSessionConsentDataFromResponse(response,
-                        keyPositionMap);
-        Assert.assertNotNull(keyValues, "SessionDataKeyConsent key value is null");
-
-        if (!AUTH_CODE_BODY_ELEMENT.equals(keyValues.get(0).getKey())) {
-            sessionDataKeyConsent = keyValues.get(0).getValue();
-            EntityUtils.consume(response.getEntity());
-            testSendApprovalPost();
-        } else {
-            authorizationCode = keyValues.get(0).getValue();
-            Assert.assertNotNull(authorizationCode, "Authorization code is null.");
-            EntityUtils.consume(response.getEntity());
-        }
+        refreshHTTPClient();
+        testSendAuthorizedPost();
+        testSendLoginPost();
         testGetAccessToken();
         Assert.assertNotEquals(oldAccessToken, accessToken, "Access token not revoked from authorization code reusing");
         testAuthzCodeResend();
@@ -343,13 +270,13 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME,
-                OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+                OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.AUTHORIZATION_CODE_NAME,
                 "authorizationinvalidcode12345678"));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
-        HttpPost request = new HttpPost(OAuth2Constant.ACCESS_TOKEN_ENDPOINT);
+        HttpPost request = new HttpPost(ACCESS_TOKEN_ENDPOINT);
         request.setHeader(CommonConstants.USER_AGENT_HEADER, OAuth2Constant.USER_AGENT);
-        request.setHeader(OAuth2Constant.AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
+        request.setHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " + Base64
                 .encodeBase64String((consumerKey + ":" + consumerSecret).getBytes()).trim());
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
@@ -396,5 +323,34 @@ public class OAuth2ServiceAuthCodeGrantTestCase extends OAuth2ServiceAbstractInt
         Assert.assertTrue(locationHeader.getValue().startsWith(OAuth2Constant.OAUTH2_DEFAULT_ERROR_URL),
                 "Error response is not redirected to default OAuth error URI");
         EntityUtils.consume(response.getEntity());
+    }
+
+    /**
+     * Refresh the cookie store and http client.
+     */
+    private void refreshHTTPClient() {
+
+        cookieStore.clear();
+        client = HttpClientBuilder.create().disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
+    }
+
+    /**
+     * Get authorization code from the provided URL.
+     *
+     * @param location Location header
+     * @return Authorization code
+     */
+    private String getAuthorizationCodeFromURL(String location) {
+
+        URI uri = URI.create(location);
+        return URLEncodedUtils.parse(uri, StandardCharsets.UTF_8).stream()
+                .filter(param -> "code".equals(param.getName()))
+                .map(NameValuePair::getValue)
+                .findFirst()
+                .orElse(null);
     }
 }
