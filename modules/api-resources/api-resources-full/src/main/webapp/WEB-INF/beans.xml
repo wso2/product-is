@@ -37,7 +37,6 @@
     <import resource="classpath:META-INF/cxf/application-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/keystore-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idp-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/oidc-scope-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/script-libraries-server-v1-cxf.xml"/>
@@ -47,7 +46,6 @@
     <import resource="classpath:META-INF/cxf/secret-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/branding-preference-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/expired-password-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
