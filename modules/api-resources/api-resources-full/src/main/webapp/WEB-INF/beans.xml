@@ -66,7 +66,6 @@
     <import resource="classpath:META-INF/cxf/org-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/org-role-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-organization-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/api-resource-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/action-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/rule-metadata-server-v1-cxf.xml"/>
 
