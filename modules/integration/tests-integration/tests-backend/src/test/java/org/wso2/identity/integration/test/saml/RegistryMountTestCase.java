@@ -125,7 +125,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
 
-        applicationMgtRestClient = new OAuth2RestClient(serverURL, getRegistryMountTenantInfo());
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, buildRegistryMountTenantInfo());
         createApplication();
 
         userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(TENANT_ADMIN_USERNAME),
@@ -274,13 +274,14 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         tenantMgtRestClient.addTenant(tenantReqModel);
     }
 
-    private Tenant getRegistryMountTenantInfo() {
+    private Tenant buildRegistryMountTenantInfo() {
 
         User registryMountTenantAdmin = new User();
         registryMountTenantAdmin.setUserName(TENANT_ADMIN_USERNAME);
         registryMountTenantAdmin.setPassword(TENANT_ADMIN_PASSWORD);
         Tenant registryMountTenant =  new Tenant();
         registryMountTenant.setContextUser(registryMountTenantAdmin);
+        registryMountTenant.setDomain(TENANT_DOMAIN);
 
         return registryMountTenant;
     }
