@@ -49,7 +49,6 @@
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
     <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/admin-advisory-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-store-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/tenant-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/cors-server-v1-cxf.xml"/>
