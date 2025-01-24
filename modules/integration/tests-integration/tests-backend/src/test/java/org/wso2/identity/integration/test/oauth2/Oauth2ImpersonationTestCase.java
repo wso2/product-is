@@ -61,7 +61,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
@@ -214,7 +214,7 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         userInfo.setPassword(IMPERSONATOR_PASSWORD);
         userInfo.setName(new Name().givenName(IMPERSONATOR_USERNAME));
         userInfo.addEmail(new Email().value(IMPERSONATOR_EMAIL));
-        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY_CLAIM_VALUE));
+        userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().country(COUNTRY_CLAIM_VALUE));
 
         impersonatorId = scim2RestClient.createUser(userInfo);
         String roleId = scim2RestClient.getRoleIdByName("everyone");
@@ -234,7 +234,7 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         userInfo.setPassword(END_USER_PASSWORD);
         userInfo.setName(new Name().givenName(END_USER_USERNAME));
         userInfo.addEmail(new Email().value(END_USER_EMAIL));
-        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().country(COUNTRY_CLAIM_VALUE));
+        userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().country(COUNTRY_CLAIM_VALUE));
 
         endUserId = scim2RestClient.createUser(userInfo);
         String roleId = scim2RestClient.getRoleIdByName("everyone");

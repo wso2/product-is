@@ -62,13 +62,14 @@ public class IdPFailureTest extends IdPTestBase {
     private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String AUTHENTICATOR_PROPERTIES_PLACEHOLDER = "\"<AUTHENTICATOR_PROPERTIES>\"";
     private static final String CUSTOM_IDP_NAME = "CustomAuthIDP";
-    private static final String USER_DEFINED_AUTHENTICATOR_ID_1 = "Y3VzdG9tQXV0aGVudGljYXRvcjE=";
-    private static final String USER_DEFINED_AUTHENTICATOR_ID_2 = "Y3VzdG9tQXV0aGVudGljYXRvcg==";
+    private static final String USER_DEFINED_AUTHENTICATOR_ID_1 = "Y3VzdG9tLUF1dGhlbnRpY2F0b3Ix";
+    private static final String USER_DEFINED_AUTHENTICATOR_ID_2 = "Y3VzdG9tLUF1dGhlbnRpY2F0b3Iy";
     private static final String SYSTEM_DEFINED_AUTHENTICATOR_ID = "R29vZ2xlT0lEQ0F1dGhlbnRpY2F0b3I";
     private static final String ENDPOINT_URI = "https://abc.com/authenticate";
     private String idPId;
     private String idpCreatePayload;
     private static final String OIDC_IDP_ID = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
+    private static final String CONFLICTING_AUTH_NAME = "Y3VzdG9tLWNvbmZsaWN0QXV0aE5hbWU=";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public IdPFailureTest(TestUserMode userMode) throws Exception {
@@ -240,6 +241,26 @@ public class IdPFailureTest extends IdPTestBase {
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("message", equalTo("Invalid Request"))
                 .body("description", equalTo("must match \"^https?://.+\""));
+    }
+
+    @Test
+    public void testAddIdPWithUserDefinedAuthenticatorWithExistingAuthName() throws IOException {
+
+        createUserDefinedLocalAuthenticator();
+        UserDefinedAuthenticatorPayload userDefAuthPayload = createUserDefinedAuthenticatorPayload(
+                CONFLICTING_AUTH_NAME,
+                "https://abc.com/authenticate",
+                "testUser",
+                "testPassword");
+        Response response = createUserDefAuthenticator(CUSTOM_IDP_NAME, userDefAuthPayload);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("message", equalTo(
+                        "Federated authenticator name custom-conflictAuthName is already taken."))
+                .body("description", equalTo(
+                        "Federated authenticator name custom-conflictAuthName is already taken."));
     }
 
     @Test
@@ -718,5 +739,30 @@ public class IdPFailureTest extends IdPTestBase {
             return objectMapper.writeValueAsString(properties) + "," + objectMapper.writeValueAsString(duplicatedProperties);
         }
         return objectMapper.writeValueAsString(properties);
+    }
+
+    private void createUserDefinedLocalAuthenticator() throws JsonProcessingException {
+
+        String body = "{\n" +
+                "  \"name\": \"custom-conflictAuthName\",\n" +
+                "  \"displayName\": \"Custom auth\",\n" +
+                "  \"isEnabled\": true,\n" +
+                "  \"authenticationType\": \"IDENTIFICATION\",\n" +
+                "  \"endpoint\": {\n" +
+                "    \"uri\": \"https://abc.com/token\",\n" +
+                "    \"authentication\": {\n" +
+                "      \"type\": \"BASIC\",\n" +
+                "      \"properties\": {\n" +
+                "        \"username\": \"auth_username\",\n" +
+                "        \"password\": \"auth_password\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+        Response response = getResponseOfPostNoFilter("/authenticators/custom", body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
     }
 }

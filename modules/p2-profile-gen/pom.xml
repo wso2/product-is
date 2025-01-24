@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.1.0-m8-SNAPSHOT</version>
+        <version>7.1.0-m9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -365,6 +365,16 @@
                                 <!-- Rule Management Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.rule.management.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- AI Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.ai.service.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- Custom Servlet Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.servlet.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
                                 <!-- SAML Request/Response Validator Toolkit Feature -->
@@ -854,6 +864,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.ai.service.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.action.management.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -977,6 +991,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.notification.mgt.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.servlet.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>

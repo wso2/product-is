@@ -137,12 +137,15 @@
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailurePasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtPasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2ImpersonationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAccessTokenAttributesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationCodeGrantJWTTokenTestCase"/>
             <class name="org.wso2.identity.integration.test.recovery.PasswordRecoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCIdentityFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.PasswordlessSMSOTPAuthTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>
         </classes>
@@ -427,7 +430,6 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.liteUserRegister.LiteUserRegisterTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenScopeValidatorTestCase" />
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
             <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
         </classes>
     </test>
