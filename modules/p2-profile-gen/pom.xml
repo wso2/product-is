@@ -539,6 +539,9 @@
                                     org.wso2.carbon.identity.notification.push:org.wso2.carbon.identity.notification.push.feature:${identity.notification.push.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.local.auth.push:org.wso2.carbon.identity.local.auth.push.feature:${identity.local.auth.push.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.trusted.app.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -1097,6 +1100,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.notification.push.feature.group</id>
                                     <version>${identity.notification.push.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.local.auth.push.feature.group</id>
+                                    <version>${identity.local.auth.push.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.trusted.app.mgt.server.feature.group</id>
