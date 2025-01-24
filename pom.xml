@@ -1934,6 +1934,16 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.notification.push</groupId>
+                <artifactId>org.wso2.carbon.identity.notification.push.provider</artifactId>
+                <version>${identity.notification.push.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.notification.push</groupId>
+                <artifactId>org.wso2.carbon.identity.notification.push.feature</artifactId>
+                <version>${identity.notification.push.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.trusted.app.mgt</artifactId>
                 <version>${carbon.identity.framework.version}</version>
@@ -2378,6 +2388,9 @@
         <!--Carbon Identity Framework Version-->
         <carbon.identity.framework.version>7.7.127</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
+
+        <identity.notification.push.version>1.0.1</identity.notification.push.version>
+        <identity.notification.push.version.range>[1.0.0,2.0.0)</identity.notification.push.version.range>
 
         <!--SAML Common Utils Version-->
         <saml.common.util.version>1.4.2</saml.common.util.version>
