@@ -21,7 +21,6 @@
        xmlns:jaxrs="http://cxf.apache.org/jaxrs" xmlns:context="http://www.springframework.org/schema/context"
        xmlns:cxf="http://cxf.apache.org/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd">
-    <import resource="classpath:META-INF/cxf/user-totp-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-mfa-v1-cxf.xml"/>
     <!--<import resource="classpath:META-INF/cxf/workflow-engine-server-v1-cxf.xml"/>-->
     <import resource="classpath:META-INF/cxf/notification-template-server-v1-cxf.xml"/>
@@ -32,7 +31,6 @@
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/rule-metadata-server-v1-cxf.xml"/>
 
     <context:property-placeholder/>
     <context:annotation-config/>
