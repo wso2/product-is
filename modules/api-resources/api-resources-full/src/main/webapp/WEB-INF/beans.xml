@@ -38,7 +38,6 @@
     <import resource="classpath:META-INF/cxf/secret-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
-    <import resource="classpath:META-INF/cxf/tenant-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-functionality-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
 
