@@ -40,7 +40,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -91,7 +90,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private static final String TENANT_ADMIN_USERNAME = "admin@registrymount.com";
     private static final String TENANT_ADMIN_PASSWORD = "Admin_123";
     private static final String TENANT_ADMIN_TENANT_AWARE_USERNAME = "admin";
-    private ServerConfigurationManager serverConfigurationManager;
     private final String artifact = "travelocity.com-registrymount";
 
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
@@ -109,7 +107,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
 
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
         addRegistryMountTenant();
@@ -136,7 +133,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     public void testClear() throws Exception{
 
         deleteApplication();
-        serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
         applicationMgtRestClient.closeHttpClient();
         httpClient.close();
