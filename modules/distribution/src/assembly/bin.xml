@@ -1087,13 +1087,6 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/lib/</outputDirectory>
             <includes>
                 <include>org.slf4j:slf4j-simple</include>
-                <include>io.netty:netty-handler</include>
-                <include>io.netty:netty-common</include>
-                <include>io.netty:netty-buffer</include>
-                <include>io.netty:netty-transport</include>
-                <include>io.netty:netty-resolver</include>
-                <include>io.vertx:vertx-core</include>
-                <include>io.vertx:vertx-json-schema</include>
             </includes>
         </dependencySet>
     </dependencySets>

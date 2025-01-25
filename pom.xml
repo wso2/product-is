@@ -2135,11 +2135,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <groupId>io.vertx</groupId>
-                <artifactId>vertx-json-schema</artifactId>
-                <version>${io.vertx.version}</version>
-            </dependency>
             <!-- Pax Logging -->
             <dependency>
                 <groupId>org.wso2.org.ops4j.pax.logging</groupId>
@@ -2518,7 +2513,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.38.13</identity.apps.console.version>
         <identity.apps.myaccount.version>2.14.20</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.10.10</identity.apps.core.version>
+        <identity.apps.core.version>2.11.0</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
 
@@ -2558,7 +2553,6 @@
         <axis2-transports.version>2.0.0-wso2v42</axis2-transports.version>
         <h2database.wso2.version>2.2.224.wso2v2</h2database.wso2.version>
         <slf4j.version>1.7.28</slf4j.version>
-        <io.vertx.version>4.5.11</io.vertx.version>
 
         <!-- UI styles dependency versions -->
         <equinox.http.servlet.version>2.2.2</equinox.http.servlet.version>

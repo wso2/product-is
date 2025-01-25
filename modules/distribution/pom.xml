@@ -58,10 +58,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-json-schema</artifactId>
-        </dependency>
         <!--
               dependency> <groupId>org.wso2.carbon</groupId>
               <artifactId>com.wso2.carbon.multitenancy.tenant.mgt</artifactId>
