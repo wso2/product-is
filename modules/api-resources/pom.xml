@@ -108,6 +108,16 @@
                 <artifactId>org.wso2.carbon.identity.api.user.organization.common</artifactId>
                 <version>${identity.user.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.user.push.common</artifactId>
+                <version>${identity.user.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.api</groupId>
+                <artifactId>org.wso2.carbon.identity.rest.api.user.push.v1</artifactId>
+                <version>${identity.user.api.version}</version>
+            </dependency>
 
 
             <!-- Server REST API Dependencies. -->
