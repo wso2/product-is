@@ -2465,7 +2465,7 @@
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Local Authentication API Connector Version -->
-        <identity.local.auth.api.version>3.0.3</identity.local.auth.api.version>
+        <identity.local.auth.api.version>3.0.4</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.2</identity.oauth2.jwt.bearer.grant.version>
