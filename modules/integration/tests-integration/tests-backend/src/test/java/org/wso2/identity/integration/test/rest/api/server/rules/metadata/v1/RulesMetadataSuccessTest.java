@@ -110,7 +110,8 @@ public class RulesMetadataSuccessTest extends RulesMetadataTestBase {
                 .body("[0].value.valueReferenceAttribute", equalTo("id"))
                 .body("[0].value.valueDisplayAttribute", equalTo("name"))
                 .body("[0].value.links.href",
-                        hasItems("/applications?offset=0&limit=10", "/applications?filter=&limit=10"))
+                        hasItems("/applications?excludeSystemPortals=true&offset=0&limit=10",
+                                "/applications?excludeSystemPortals=true&filter=&limit=10"))
                 .body("[0].value.links.method", hasItems("GET"))
                 .body("[0].value.links.rel", hasItems("values", "filter"))
                 .body("[1].field.name", equalTo("grantType"))
