@@ -52,7 +52,7 @@ jobs:
     - name: Get Jacoco Agent
       id: download_jacoco
       run: |
-        curl -vLJO -H 'Accept: application/octet-stream' https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip
+        curl -vLJ -H 'Accept: application/octet-stream' -o jacoco-0.8.12.zip "https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip"
         unzip jacoco-0.8.12.zip -d jacoco-0.8.12
 
     - name: Get IS zip

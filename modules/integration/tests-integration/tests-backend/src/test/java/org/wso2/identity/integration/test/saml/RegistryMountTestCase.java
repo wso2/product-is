@@ -40,7 +40,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -74,7 +73,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
+    private static final String APPLICATION_NAME = "SAML-Registry-Mount-Application";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
 
     private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
@@ -91,7 +90,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private static final String TENANT_ADMIN_USERNAME = "admin@registrymount.com";
     private static final String TENANT_ADMIN_PASSWORD = "Admin_123";
     private static final String TENANT_ADMIN_TENANT_AWARE_USERNAME = "admin";
-    private ServerConfigurationManager serverConfigurationManager;
     private final String artifact = "travelocity.com-registrymount";
 
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
@@ -109,7 +107,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     public void testInit() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
 
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, tenantInfo);
         addRegistryMountTenant();
@@ -125,7 +122,7 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
 
-        applicationMgtRestClient = new OAuth2RestClient(serverURL, getRegistryMountTenantInfo());
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, buildRegistryMountTenantInfo());
         createApplication();
 
         userId = UserUtil.getUserId(MultitenantUtils.getTenantAwareUsername(TENANT_ADMIN_USERNAME),
@@ -136,7 +133,6 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     public void testClear() throws Exception{
 
         deleteApplication();
-        serverConfigurationManager.restoreToLastConfiguration(false);
         tenantMgtRestClient.closeHttpClient();
         applicationMgtRestClient.closeHttpClient();
         httpClient.close();
@@ -274,18 +270,19 @@ public class RegistryMountTestCase extends ISIntegrationTest {
         tenantMgtRestClient.addTenant(tenantReqModel);
     }
 
-    private Tenant getRegistryMountTenantInfo() {
+    private Tenant buildRegistryMountTenantInfo() {
 
         User registryMountTenantAdmin = new User();
         registryMountTenantAdmin.setUserName(TENANT_ADMIN_USERNAME);
         registryMountTenantAdmin.setPassword(TENANT_ADMIN_PASSWORD);
         Tenant registryMountTenant =  new Tenant();
         registryMountTenant.setContextUser(registryMountTenantAdmin);
+        registryMountTenant.setDomain(TENANT_DOMAIN);
 
         return registryMountTenant;
     }
 
-    private void createApplication() throws Exception{
+    private void createApplication() throws Exception {
 
         ApplicationModel applicationCreationModel = new ApplicationModel()
                 .name(APPLICATION_NAME)
@@ -294,7 +291,12 @@ public class RegistryMountTestCase extends ISIntegrationTest {
                         .saml(getSAMLConfigurations()))
                 .claimConfiguration(getClaimConfiguration());
 
-        appId = applicationMgtRestClient.createApplication(applicationCreationModel);
+        try {
+            appId = applicationMgtRestClient.createApplication(applicationCreationModel);
+        } catch (RuntimeException e) {
+            log.error("Error while creating the application", e);
+            throw new Exception("Error while creating the application", e);
+        }
     }
 
     private void deleteApplication() throws Exception{

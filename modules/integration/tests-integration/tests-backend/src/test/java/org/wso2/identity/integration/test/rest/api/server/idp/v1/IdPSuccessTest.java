@@ -31,6 +31,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.util.UserDefinedLocalAuthenticatorPayload;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
@@ -63,7 +64,7 @@ public class IdPSuccessTest extends IdPTestBase {
     private static final String METADATA_SAML_PLACEHOLDER = "<METADATA_SAML>";
     private static final String OIDC_SCOPES_PLACEHOLDER = "\"<OIDC_SCOPES>\"";
     private static final String AUTHENTICATOR_PROPERTIES_PLACEHOLDER = "\"<AUTHENTICATOR_PROPERTIES>\"";
-    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tQXV0aGVudGljYXRvcg";
+    private static final String FEDERATED_AUTHENTICATOR_ID = "Y3VzdG9tLUF1dGhlbnRpY2F0b3Ix";
     private static final String OIDC_AUTHENTICATOR_ID = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
     private static final String SAML_AUTHENTICATOR_ID = "U0FNTFNTT0F1dGhlbnRpY2F0b3I";
     private static final String CUSTOM_IDP_NAME = "Custom Auth IDP";
@@ -103,6 +104,7 @@ public class IdPSuccessTest extends IdPTestBase {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
+        userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayloadWithBasic(ENDPOINT_URI);
         userDefinedAuthenticatorPayload = createUserDefinedAuthenticatorPayloadWithBasic(ENDPOINT_URI);
         idpCreatePayload = readResource("add-idp-with-custom-fed-auth.json");
     }

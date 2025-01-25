@@ -6,7 +6,7 @@
         {
             "op": "replace",
             "value": {
-                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+                "urn:scim:wso2:schema": {
                     "verifyEmail": true
                 }
             }

@@ -29,57 +29,24 @@
     <import resource="classpath:META-INF/cxf/user-totp-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-backupcode-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-mfa-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/permission-management-v1-cxf.xml"/>
     <!--<import resource="classpath:META-INF/cxf/workflow-engine-server-v1-cxf.xml"/>-->
-    <import resource="classpath:META-INF/cxf/claim-management-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/email-template-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/email-template-server-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/notification-template-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/applications-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/application-user-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/keystore-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/idp-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/oidc-scope-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/script-libraries-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/configs-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/notification-sender-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/authenticators-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/secret-management-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/branding-preference-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/input-validation-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/idle-account-identification-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/expired-password-identification-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
-    <import resource="classpath:META-INF/cxf/identity-governance-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/admin-advisory-management-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-store-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/tenant-management-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/cors-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-functionality-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/organization-configs-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/self-service-mgt-v1-cxf.xml"/>
 
     <!-- Legacy identity APIs   -->
     <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-recovery-v0-9-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-governance-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/user-fido2-v2-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/oauth2-dcr-v1-1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/oauth2-scope-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/consent-mgt-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/auth-v1-1-cfx.xml"/>
-    <import resource="classpath:META-INF/cxf/extension-mgt-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/idv-provider-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/org-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/org-role-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-organization-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/api-resource-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/action-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/rule-metadata-server-v1-cxf.xml"/>
 
     <context:property-placeholder/>
@@ -234,18 +201,6 @@
         <jaxrs:inInterceptors>
             <ref bean="validationInInterceptor"/>
         </jaxrs:inInterceptors>
-    </jaxrs:server>
-    <jaxrs:server id="idleAccountIdentification" address="/idle-account-identification/v1/">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.api.idle.account.identification.v1.InactiveUsersApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
-            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
-        </jaxrs:providers>
     </jaxrs:server>
     <jaxrs:server id="users" address="/users/v1">
         <jaxrs:serviceBeans>
@@ -426,91 +381,6 @@
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
             <bean class="org.apache.cxf.jaxrs.ext.search.SearchContextProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="recovery" address="/identity/recovery/v0.9">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.ClaimsApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverPasswordApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.RecoverUsernameApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.SetPasswordApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.ValidateCodeApi"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.CaptchaApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.filter.ResponseValidationFilter" />
-            <bean class="org.wso2.carbon.identity.recovery.endpoint.Exceptions.RecoveryEndpointExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="userGovernance" address="/identity/user/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.user.endpoint.IntrospectCodeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.LiteApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.MeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.PiInfoApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.ResendCodeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.UpdateUsernameApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.ValidateCodeApi"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.ValidateUsernameApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.user.endpoint.exceptions.UserEndpointExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="fido2v2" address="/users/v2/me/webauthn">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.DefaultApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.FinishRegistrationApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.StartRegistrationApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.StartUsernamelessRegistrationApi"/>
-            <bean class="org.wso2.carbon.identity.application.authenticator.fido2.endpoint.CredentialIdApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="oauthDCR" address="/identity/oauth2/dcr/v1.1">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.oauth2.dcr.endpoint.RegisterApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.oauth2.dcr.endpoint.exmapper.JsonProcessingExceptionMapper"/>
-            <bean class="com.fasterxml.jackson.jaxrs.base.JsonMappingExceptionMapper"/>
-            <bean class="com.fasterxml.jackson.jaxrs.base.JsonParseExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="oauth2Scope" address="/identity/oauth2/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.oauth.scope.endpoint.ScopesApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.identity.oauth.scope.endpoint.expmapper.JsonProcessingExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="consentMgt" address="/identity/consent-mgt/v1.0">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.consent.mgt.endpoint.ConsentsApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean class="org.wso2.carbon.consent.mgt.endpoint.expmapper.ConsentEndpointExceptionMapper"/>
-        </jaxrs:providers>
-    </jaxrs:server>
-    <jaxrs:server id="localAuth" address="/identity/auth/v1.1">
-        <jaxrs:serviceBeans>
-            <bean class="org.wso2.carbon.identity.local.auth.api.endpoint.AuthenticateApi"/>
-            <bean class="org.wso2.carbon.identity.local.auth.api.endpoint.ContextApi"/>
-            <bean class="org.wso2.carbon.identity.local.auth.api.endpoint.DataApi"/>
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider"/>
-            <bean id="exceptionMapper" class="org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper">
-                <property name="printStackTrace" value="false" />
-            </bean>
         </jaxrs:providers>
     </jaxrs:server>
     <cxf:bus>

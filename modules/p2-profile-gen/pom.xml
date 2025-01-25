@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.1.0-m8-SNAPSHOT</version>
+        <version>7.1.0-m9-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -367,6 +367,16 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.rule.management.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
+                                <!-- AI Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.ai.service.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- Custom Servlet Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.servlet.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
                                 <!-- SAML Request/Response Validator Toolkit Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.tool.validator.sso.saml2:org.wso2.carbon.identity.tools.saml.validator.feature:${identity.tool.samlsso.validator.version}
@@ -524,6 +534,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.client.attestation.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.notification.push:org.wso2.carbon.identity.notification.push.feature:${identity.notification.push.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.trusted.app.mgt.server.feature:${carbon.identity.framework.version}
@@ -854,6 +867,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.ai.service.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.action.management.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -980,6 +997,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.servlet.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.apache.axis2.transport.mail.feature.group</id>
                                     <version>${axis2-transports.version}</version>
                                 </feature>
@@ -1072,6 +1093,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.client.attestation.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.notification.push.feature.group</id>
+                                    <version>${identity.notification.push.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.trusted.app.mgt.server.feature.group</id>
