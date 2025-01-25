@@ -40,7 +40,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -369,7 +369,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 			UserObject userInfo = new UserObject();
 			userInfo.setUserName(lockedUser);
 			userInfo.setPassword(lockedUserPassword);
-			userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().accountLocked(true));
+			userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().accountLocked(true));
 			userId = scim2RestClient.createUser(userInfo);
 		} catch (Exception e) {
 			Assert.fail("Error while creating the user", e);
