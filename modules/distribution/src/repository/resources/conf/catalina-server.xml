@@ -91,6 +91,7 @@
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestCorrelationIdValve"
                        headerToCorrelationIdMapping="{'activityid':'Correlation-ID'}" queryToCorrelationIdMapping="{'RelayState':'Correlation-ID'}"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonContextCreatorValve"/>
+                <Valve className="org.wso2.carbon.identity.core.context.valve.IdentityContextCreatorValve"/>
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="${carbon.home}/repository/logs"
                        prefix="http_access_" suffix=".log" pattern="%h %l %u %t %r %s %b %{Referer}i %{User-Agent}i %T"/>
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.CarbonStuckThreadDetectionValve" threshold="600"/>
