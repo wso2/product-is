@@ -42,7 +42,6 @@
     <import resource="classpath:META-INF/cxf/organization-user-invitation-mgt-v1-cxf.xml"/>
 
     <!-- Legacy identity APIs   -->
-    <import resource="classpath:META-INF/cxf/config-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/idv-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/org-mgt-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/org-role-mgt-server-v1-cxf.xml"/>
