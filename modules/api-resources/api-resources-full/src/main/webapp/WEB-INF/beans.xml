@@ -24,7 +24,6 @@
     <import resource="classpath:META-INF/cxf/user-association-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/authorized-apps-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/authorized-apps-user-v2-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/session-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-fido2-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-totp-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-backupcode-v1-cxf.xml"/>
