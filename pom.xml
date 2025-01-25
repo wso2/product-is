@@ -2417,7 +2417,7 @@
         <identity.notification.push.version>1.0.2</identity.notification.push.version>
         <identity.notification.push.version.range>[1.0.0,2.0.0)</identity.notification.push.version.range>
 
-        <identity.local.auth.push.version>1.0.0</identity.local.auth.push.version>
+        <identity.local.auth.push.version>1.0.1</identity.local.auth.push.version>
         <identity.local.auth.push.version.range>[1.0.0,2.0.0)</identity.local.auth.push.version.range>
 
         <!--SAML Common Utils Version-->
