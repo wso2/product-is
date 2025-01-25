@@ -22,6 +22,7 @@ import io.restassured.http.ContentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
@@ -74,6 +75,28 @@ public class ActionsRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequestBody, getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Update an action of the specified type by the provided ID.
+     *
+     * @param actionType  Type of action
+     * @param actionId    ID of the action
+     * @param actionModel Request object to update the action
+     * @return Status of the action update
+     * @throws IOException If an error occurred while updating the action
+     */
+    public boolean updateAction(String actionType, String actionId, ActionUpdateModel actionModel)
+            throws IOException {
+
+        String jsonRequestBody = toJSONString(actionModel);
+
+        String endPointUrl;
+        endPointUrl = getActionEndpointOfType(actionType) + "/" + actionId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequestBody, getHeaders())) {
+            return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
         }
     }
 

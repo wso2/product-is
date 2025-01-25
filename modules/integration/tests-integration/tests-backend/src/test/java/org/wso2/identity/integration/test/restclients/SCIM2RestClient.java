@@ -48,7 +48,9 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
     private static final String ROLE_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
     private static final String USER_ENTERPRISE_SCHEMA = "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
+    private static final String USER_SYSTEM_SCHEMA = "urn:scim:wso2:schema";
     private static final String SCIM_SCHEMA_EXTENSION_ENTERPRISE = "scimSchemaExtensionEnterprise";
+    private static final String SCIM_SCHEMA_EXTENSION_SYSTEM = "scimSchemaExtensionSystem";
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     private static final String ATTRIBUTES_PART = "?attributes=";
     private static final String EQ_OP = "eq";
@@ -78,6 +80,9 @@ public class SCIM2RestClient extends RestBaseClient {
         if (userInfo.getScimSchemaExtensionEnterprise() != null) {
             jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
         }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
+        }
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
@@ -100,6 +105,9 @@ public class SCIM2RestClient extends RestBaseClient {
         String jsonRequest = toJSONString(userInfo);
         if (userInfo.getScimSchemaExtensionEnterprise() != null) {
             jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
+        }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
         }
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getSubOrgUsersPath(), jsonRequest,

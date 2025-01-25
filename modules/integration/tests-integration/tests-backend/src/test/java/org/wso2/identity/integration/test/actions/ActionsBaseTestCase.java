@@ -63,6 +63,20 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
     }
 
     /**
+     * Update an action.
+     *
+     * @param actionType  Type of action
+     * @param actionId    ID of the action
+     * @param actionModel Request object to update the action
+     * @return Status of the action update
+     * @throws IOException If an error occurred while updating the action
+     */
+    public boolean updateAction(String actionType, String actionId, ActionUpdateModel actionModel) throws IOException {
+
+        return actionsRestClient.updateAction(actionType, actionId, actionModel);
+    }
+
+    /**
      * Delete an action.
      *
      * @param actionType Type of action

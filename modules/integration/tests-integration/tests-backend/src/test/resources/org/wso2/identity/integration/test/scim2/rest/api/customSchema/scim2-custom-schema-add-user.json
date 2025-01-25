@@ -6,7 +6,7 @@
   },
   "userName": "userkim",
   "password": "Wso2@test123",
-  "urn:scim:wso2:schema": {
+  "urn:scim:schemas:extension:custom:User": {
     "country": "France",
     "manager": {
       "email": "piraveena@gmail.com"
