@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.action.management.v1;
+package org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -27,14 +27,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ANDRule;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.EndpointUpdateModel;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Expression;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ORRule;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ANDRule;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.EndpointUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Expression;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ORRule;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -47,13 +47,13 @@ import static org.hamcrest.Matchers.hasKey;
 /**
  * Tests for happy paths of the Action Management REST API.
  */
-public class ActionsSuccessTest extends ActionsTestBase {
+public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTestBase {
 
     private static ActionModel action;
     private static String testActionId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public ActionsSuccessTest(TestUserMode userMode) throws Exception {
+    public PreIssueAccessTokenActionSuccessTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
