@@ -137,6 +137,8 @@
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailurePasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtPasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2ImpersonationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAccessTokenAttributesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationCodeGrantJWTTokenTestCase"/>
@@ -144,6 +146,8 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCIdentityFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.PasswordlessSMSOTPAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
+            <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
         </classes>
     </test>
 
@@ -407,7 +411,6 @@
     <test name="is-tests-with-individual-configuration-changes" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.application.mgt.ServiceProviderUserRoleValidationTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase"/>
@@ -417,7 +420,6 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceJWTGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2TokenRenewalPerRequestTestCase"/>
-            <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.ChallengeQuestionsUITestCase"/>

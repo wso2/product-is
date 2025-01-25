@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2021-2025, WSO2 LLC. (http://www.wso2.com).
   ~
-  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ WSO2 LLC. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
   ~ in compliance with the License.
   ~ You may obtain a copy of the License at
@@ -154,8 +154,8 @@
         <servlet-name>UsersV2MeWebauthnApiServlet</servlet-name>
         <url-pattern>/users/v2/me/webauthn/*</url-pattern>
     </servlet-mapping>
-  
-      <!--  Servlet instance for /idle-account-identification/v1/ -->
+
+    <!--  Servlet instance for /idle-account-identification/v1/ -->
     <servlet>
         <servlet-name>IdleAccountIdentificationV1Servlet</servlet-name>
         <servlet-class>
@@ -184,11 +184,7 @@
         <url-pattern>/idle-account-identification/v1/*</url-pattern>
     </servlet-mapping>
 
-      <!--  Servlet instance for /identity/oauth2/dcr/v1.1 -->
-    <servlet-mapping>
-        <servlet-name>IdentityOAuth2DcrV1_1ApiServlet</servlet-name>
-        <url-pattern>/identity/oauth2/dcr/v1.1/*</url-pattern>
-    </servlet-mapping>
+    <!--  Servlet instance for /identity/oauth2/dcr/v1.1 -->
     <servlet>
         <servlet-name>IdentityOAuth2DcrV1_1ApiServlet</servlet-name>
         <servlet-class>
@@ -211,8 +207,12 @@
             </param-value>
         </init-param>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityOAuth2DcrV1_1ApiServlet</servlet-name>
+        <url-pattern>/identity/oauth2/dcr/v1.1/*</url-pattern>
+    </servlet-mapping>
 
-      <!--  Servlet instance for /identity/oauth2/v1.0 -->
+    <!--  Servlet instance for /identity/oauth2/v1.0 -->
     <servlet>
         <servlet-name>IdentityOAuth2V1ApiServlet</servlet-name>
         <servlet-class>
@@ -236,6 +236,34 @@
     <servlet-mapping>
         <servlet-name>IdentityOAuth2V1ApiServlet</servlet-name>
         <url-pattern>/identity/oauth2/v1.0/*</url-pattern>
+    </servlet-mapping>
+
+    <!--  Servlet instance for /identity/auth/v1.1 -->
+    <servlet>
+        <servlet-name>IdentityAuthV1_1ApiServlet</servlet-name>
+        <servlet-class>
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.local.auth.api.endpoint.AuthenticateApi,
+                org.wso2.carbon.identity.local.auth.api.endpoint.ContextApi,
+                org.wso2.carbon.identity.local.auth.api.endpoint.DataApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.apache.cxf.jaxrs.impl.WebApplicationExceptionMapper(printStackTrace=false)
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityAuthV1_1ApiServlet</servlet-name>
+        <url-pattern>/identity/auth/v1.1/*</url-pattern>
     </servlet-mapping>
 
     <servlet>
