@@ -35,7 +35,6 @@
     <import resource="classpath:META-INF/cxf/user-recovery-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v2-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/script-libraries-server-v1-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/authenticators-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/secret-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
