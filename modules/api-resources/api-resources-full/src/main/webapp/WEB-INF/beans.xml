@@ -34,10 +34,8 @@
     <import resource="classpath:META-INF/cxf/application-user-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-recovery-v2-cxf.xml"/>
-    <import resource="classpath:META-INF/cxf/authenticators-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-onboard-management-cxf.xml"/>
 
-    <import resource="classpath:META-INF/cxf/tenant-management-server-v1-cxf.xml"/>
     <import resource="classpath:META-INF/cxf/user-functionality-v1-cxf.xml"/>
 
     <!-- Legacy identity APIs   -->
