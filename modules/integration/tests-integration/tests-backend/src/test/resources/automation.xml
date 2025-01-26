@@ -242,7 +242,7 @@
                     <parameter name="-DenableRemoteShutdownAndRestart" value="true"/>
                     <!--<parameter name="backup-test-pack" value="true"/>-->
                     <!--<parameter name="backup-location" value="<Absolute path for backup location with trailing foreword slash>"/>-->
-                    <!--<parameter name="cmdArg" value="debug 5005" />-->
+<!--                    <parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
                     <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>
