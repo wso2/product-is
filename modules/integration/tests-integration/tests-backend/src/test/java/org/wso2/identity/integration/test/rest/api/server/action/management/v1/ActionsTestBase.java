@@ -78,7 +78,6 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static String swaggerDefinition;
 
     static {
-        NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preUpdatePassword");
         NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preUpdateProfile");
         NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preRegistration");
 
