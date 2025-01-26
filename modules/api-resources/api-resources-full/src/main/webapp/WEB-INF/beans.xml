@@ -251,6 +251,50 @@
             <ref bean="validationInInterceptor"/>
         </jaxrs:inInterceptors>
     </jaxrs:server>
+    <jaxrs:server id="pushDeviceMe" address="/users/v1/me/push">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.user.push.v1.DevicesApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.push.v1.DiscoveryDataApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+            <ref bean="validationInInterceptor"/>
+        </jaxrs:inInterceptors>
+    </jaxrs:server>
+    <jaxrs:server id="pushDeviceMeOrgPerspective" address="/o/users/v1/me/push">
+        <jaxrs:serviceBeans>
+            <bean class="org.wso2.carbon.identity.rest.api.user.push.v1.DevicesApi"/>
+            <bean class="org.wso2.carbon.identity.rest.api.user.push.v1.DiscoveryDataApi"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">
+                <constructor-arg>
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion" value="NON_NULL" />
+                    </bean>
+                </constructor-arg>
+            </bean>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper"/>
+            <bean class="org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper"/>
+        </jaxrs:providers>
+        <jaxrs:inInterceptors>
+            <ref bean="validationInInterceptor"/>
+        </jaxrs:inInterceptors>
+    </jaxrs:server>
     <jaxrs:server id="orgUser" address="/users/v1/me/organizations">
         <jaxrs:serviceBeans>
             <bean class="org.wso2.carbon.identity.rest.api.user.organization.v1.RootApi"/>
