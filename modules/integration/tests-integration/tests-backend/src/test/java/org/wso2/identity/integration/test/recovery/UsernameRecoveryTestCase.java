@@ -223,15 +223,16 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         String baseURL = usernameRecoveryLink.substring(0, usernameRecoveryLink.lastIndexOf('/') + 1);
         String usernameFormSubmissionResponseContent = submitUsernameRecoveryForm(usernameRecoveryLink, user, client);
 
+        String recoveredUsername;
         if (channelType == ChannelType.EMAIL) {
             selectPreferredChannel(ChannelType.EMAIL, usernameFormSubmissionResponseContent, baseURL);
-            String recoveredUsername = getUsernameFromEmail();
-            Assert.assertEquals(user.getUserName(), recoveredUsername, "Received username does not match.");
+            recoveredUsername = getUsernameFromEmail();
         } else {
             selectPreferredChannel(ChannelType.SMS, usernameFormSubmissionResponseContent, baseURL);
-            String recoveredUsername = getUsernameFromSms();
-            Assert.assertEquals(user.getUserName(), recoveredUsername, "Received username does not match.");
+            recoveredUsername = getUsernameFromSms();
         }
+        Assert.assertEquals(user.getUserName(), recoveredUsername, "Received username does not match.");
+
 
         // Delete the user and clear the email, sms.
         deleteUser(user);
