@@ -162,6 +162,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         mockSMSProvider.stop();
         mockApplicationServer.stop();
         userStoreMgtRestClient.deleteUserStore(userStoreId);
+        notificationSenderRestClient.deleteSMSProvider();
         serverConfigurationManager.restoreToLastConfiguration();
     }
 
