@@ -109,6 +109,7 @@
             <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.MetaApi"/>
             <bean class="org.wso2.carbon.identity.api.server.action.management.v1.ActionsApi"/>
             <bean class="org.wso2.carbon.identity.api.server.rule.metadata.v1.RulesApi"/>
+            <bean class="org.wso2.carbon.identity.api.server.api.resource.v1.AuthorizationDetailsTypesApi"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider">

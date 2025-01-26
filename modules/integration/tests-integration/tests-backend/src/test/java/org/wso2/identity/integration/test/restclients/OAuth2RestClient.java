@@ -34,11 +34,15 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListResponse;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourcePatchModel;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceResponse;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.AuthorizationDetailsType;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPIPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPIResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -70,6 +74,7 @@ public class OAuth2RestClient extends RestBaseClient {
     private static final String AUTHORIZED_API_BASE_PATH = "/authorized-apis";
     private static final String SCIM_BASE_PATH = "scim2";
     private static final String ROLE_V2_BASE_PATH = "/v2/Roles";
+    private static final String AUTHORIZATION_DETAILS_TYPES_PATH = "/authorization-details-types";
     private final String applicationManagementApiBasePath;
     private final String subOrgApplicationManagementApiBasePath;
     private final String apiResourceManagementApiBasePath;
@@ -597,6 +602,239 @@ public class OAuth2RestClient extends RestBaseClient {
                 PATH_SEPARATOR + appId + PATH_SEPARATOR + "share", jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "Application sharing failed");
+        }
+    }
+
+
+    /**
+     * To create API Resources.
+     *
+     * @param apiResource an instance of APIResource
+     * @return the api resource ID
+     * @throws IOException throws if an error occurs while creating the api resource.
+     */
+    public String createAPIResource(APIResourceResponse apiResource) throws IOException {
+
+        String jsonRequest = toJSONString(apiResource);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(apiResourceManagementApiBasePath, jsonRequest,
+                getHeaders())) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Delete API Resources.
+     *
+     * @param apiId API resource id.
+     * @throws IOException If an error occurred while deleting an application.
+     */
+    public void deleteAPIResource(String apiId) throws IOException {
+
+        String endpointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "API resource deletion failed");
+        }
+    }
+
+    /**
+     * Update an existing API resource.
+     *
+     * @param apiId       API resource id.
+     * @param apiResource an instance of APIResource to be updated
+     * @throws IOException If an error occurred while updating an API resource.
+     */
+    public void updateAPIResource(String apiId, APIResourcePatchModel apiResource)
+            throws IOException {
+
+        String endPointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiId;
+
+        try (CloseableHttpResponse response =
+                     getResponseOfHttpPatch(endPointUrl, toJSONString(apiResource), getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "API resource update failed");
+        }
+    }
+
+    /**
+     * Get API resource authorization details types.
+     *
+     * @param apiIdentifier API identifier.
+     * @return List of API resource authorization details types.
+     * @throws IOException Error when getting the authorization details types.
+     */
+    public List<AuthorizationDetailsType> getAPIResourceAuthorizationDetailsTypes(String apiIdentifier)
+            throws IOException {
+
+        String endPointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiIdentifier;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+
+            if (HttpServletResponse.SC_NOT_FOUND == response.getStatusLine().getStatusCode()) {
+                return null;
+            }
+
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            APIResourceResponse apiResourceResponse = jsonWriter.readValue(responseBody, APIResourceResponse.class);
+            return apiResourceResponse.getAuthorizationDetailsTypes();
+        }
+    }
+
+    /**
+     * Get API authorizations to an application.
+     *
+     * @param appId Application id.
+     * @return Authorized API response.
+     * @throws IOException Error when getting the response.
+     */
+    public List<AuthorizedAPIResponse> getAPIAuthorizationsFromApplication(String appId) throws IOException {
+
+        final String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + AUTHORIZED_API_BASE_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+
+            if (HttpServletResponse.SC_NOT_FOUND == response.getStatusLine().getStatusCode()) {
+                return null;
+            }
+
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody,
+                    jsonWriter.getTypeFactory().constructCollectionType(List.class, AuthorizedAPIResponse.class));
+        }
+    }
+
+    /**
+     * Update an existing authorized API resource.
+     *
+     * @param appId                   Application id.
+     * @param authorizedApiId         API identifier.
+     * @param authorizedAPIPatchModel an instance of Authorized APIResource to be updated
+     * @throws IOException If an error occurred while updating an API resource.
+     */
+    public int updateAPIAuthorizationsFromApplication(String appId, String authorizedApiId,
+                                                      AuthorizedAPIPatchModel authorizedAPIPatchModel)
+            throws IOException {
+
+        String jsonRequest = toJSONString(authorizedAPIPatchModel);
+        final String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId +
+                AUTHORIZED_API_BASE_PATH + PATH_SEPARATOR + authorizedApiId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Delete an existing authorized API resource.
+     *
+     * @param appId           Application id.
+     * @param authorizedApiId API identifier.
+     * @throws IOException If an error occurred while updating an API resource.
+     */
+    public void deleteAPIAuthorizationsFromApplication(String appId, String authorizedApiId)
+            throws IOException {
+
+        final String endpointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId +
+                AUTHORIZED_API_BASE_PATH + PATH_SEPARATOR + authorizedApiId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Authorized API resource deletion failed");
+        }
+    }
+
+    /**
+     * To create authorization details type.
+     *
+     * @param apiId       API resource id.
+     * @param detailTypes authorization details types to be added
+     * @return a list of authorization details type IDs
+     * @throws IOException throws if an error occurs while creating the api resource.
+     */
+    public List<AuthorizationDetailsType> addAuthorizationDetailsTypes(
+            String apiId, List<AuthorizationDetailsType> detailTypes) throws IOException {
+
+        final String endPointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiId +
+                AUTHORIZATION_DETAILS_TYPES_PATH;
+        String jsonRequest = toJSONString(detailTypes);
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
+
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Authorization details type addition failed");
+
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody,
+                    jsonWriter.getTypeFactory().constructCollectionType(List.class, AuthorizationDetailsType.class));
+        }
+    }
+
+    /**
+     * Get authorization details type.
+     *
+     * @param apiId       API resource id.
+     * @param typeId       Authorization details type id.
+     * @return Authorization Details Type response.
+     * @throws IOException Error when getting the response.
+     */
+    public AuthorizationDetailsType getAuthorizationDetailsType(String apiId, String typeId) throws IOException {
+
+        final String endPointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiId +
+                AUTHORIZATION_DETAILS_TYPES_PATH + PATH_SEPARATOR + typeId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+
+            if (HttpServletResponse.SC_NOT_FOUND == response.getStatusLine().getStatusCode()) {
+                return null;
+            }
+
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, AuthorizationDetailsType.class);
+        }
+    }
+
+    /**
+     * Update authorization details type.
+     *
+     * @param apiId       API resource id.
+     * @param typeId       Authorization details type id.
+     * @param detailTypes authorization details types to be updated
+     * @throws IOException Error when getting the response.
+     */
+    public void updateAuthorizationDetailsType(String apiId, String typeId, AuthorizationDetailsType detailTypes)
+            throws IOException {
+
+        final String endPointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiId +
+                AUTHORIZATION_DETAILS_TYPES_PATH + PATH_SEPARATOR + typeId;
+
+        String jsonRequest = toJSONString(detailTypes);
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Authorization details type update failed");
+        }
+    }
+
+    /**
+     * Delete authorization details type.
+     *
+     * @param apiId       API resource id.
+     * @param typeId       Authorization details type id.
+     * @throws IOException Error when getting the response.
+     */
+    public void deleteAuthorizationDetailsType(String apiId, String typeId)
+            throws IOException {
+
+        final String endpointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiId +
+                AUTHORIZATION_DETAILS_TYPES_PATH + PATH_SEPARATOR + typeId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Authorization details type deletion failed");
         }
     }
 
