@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.action.management.v1;
+package org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -29,30 +29,33 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ANDRule;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.AuthenticationType;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Endpoint;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.Expression;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ORRule;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.ActionTestBase;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ANDRule;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Expression;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ORRule;
 
 import java.io.IOException;
 import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken
+        .PreIssueAccessTokenTestBase.PRE_ISSUE_ACCESS_TOKEN_PATH;
 
 /**
  * Tests for negative paths of the Action Management REST API.
  */
-public class ActionsFailureTest extends ActionsTestBase {
+public class PreIssueAccessTokenActionFailureTest extends ActionTestBase {
 
     private static ActionModel action1;
     private static ActionModel action2;
     private static String testActionId2;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public ActionsFailureTest(TestUserMode userMode) throws Exception {
+    public PreIssueAccessTokenActionFailureTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
@@ -258,7 +261,8 @@ public class ActionsFailureTest extends ActionsTestBase {
                 .statusCode(HttpStatus.SC_BAD_REQUEST).body("code", equalTo("ACTION-60013"))
                 .body("message", equalTo("Invalid rule."))
                 .body("description",
-                        equalTo("Rule validation failed: Operator invalid is not supported for field application"));
+                        equalTo("Rule validation failed: Operator invalid is not supported for field " +
+                                "application"));
 
         // Delete, created action.
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
