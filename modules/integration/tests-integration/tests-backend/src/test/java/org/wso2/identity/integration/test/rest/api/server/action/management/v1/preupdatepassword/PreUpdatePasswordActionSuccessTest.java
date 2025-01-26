@@ -531,7 +531,6 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
                 .body("passwordSharing", not(hasKey(TEST_PROPERTIES_CERTIFICATE_ATTRIBUTE)));
 
-        //Delete created action.
         deleteAction(PRE_UPDATE_PASSWORD_PATH, responseOfPost.getBody().jsonPath().getString("id"));
     }
 

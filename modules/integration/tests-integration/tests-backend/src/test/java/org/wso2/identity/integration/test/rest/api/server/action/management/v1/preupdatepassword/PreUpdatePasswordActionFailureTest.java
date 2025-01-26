@@ -153,10 +153,9 @@ public class PreUpdatePasswordActionFailureTest extends PreUpdatePasswordTestBas
                 .body("description", equalTo("Maximum number of actions per action type is reached."));
     }
 
-    @Test(dependsOnMethods = {"testCreateActionWithEmptyEndpointAuthPropertyValues"})
+    @Test(dependsOnMethods = {"testCreateActionAfterReachingMaxActionCount"})
     public void testUpdateActionWithInvalidID() {
 
-        // Update Action basic information with an invalid action id.
         ActionUpdateModel actionUpdateModel = new PreUpdatePasswordActionUpdateModel()
                 .name(TEST_ACTION_UPDATED_NAME);
 
@@ -192,7 +191,6 @@ public class PreUpdatePasswordActionFailureTest extends PreUpdatePasswordTestBas
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
 
-        //Delete, created action.
         deleteAction(PRE_UPDATE_PASSWORD_PATH , testActionId2);
     }
 
