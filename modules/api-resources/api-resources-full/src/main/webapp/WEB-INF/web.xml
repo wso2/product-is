@@ -28,7 +28,7 @@
     <servlet>
         <servlet-name>ServerV1ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -101,7 +101,7 @@
     <servlet>
         <servlet-name>ServerV2Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -131,7 +131,7 @@
     <servlet>
         <servlet-name>OrganizationServerV1Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -190,7 +190,7 @@
     <servlet>
         <servlet-name>OrganizationServerV2Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -221,7 +221,7 @@
     <servlet>
         <servlet-name>OrgUserServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -257,7 +257,7 @@
     <servlet>
         <servlet-name>UsersPushApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -293,7 +293,7 @@
     <servlet>
         <servlet-name>OrgUsersPushApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -329,7 +329,7 @@
     <servlet>
         <servlet-name>UserV1Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -381,7 +381,7 @@
     <servlet>
         <servlet-name>UsersV2MeWebauthnApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -410,7 +410,7 @@
     <servlet>
         <servlet-name>UsersV2Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -448,7 +448,7 @@
     <servlet>
         <servlet-name>OrganizationOrgUserServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -484,7 +484,7 @@
     <servlet>
         <servlet-name>OrganizationUsersV1Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -536,7 +536,7 @@
     <servlet>
         <servlet-name>OrganizationUsersV2Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -574,7 +574,7 @@
     <servlet>
         <servlet-name>ConfigMgtServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -602,7 +602,7 @@
     <servlet>
         <servlet-name>IdentityUserV1ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -635,7 +635,7 @@
     <servlet>
         <servlet-name>IdentityRecoveryV0_9ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -667,7 +667,7 @@
     <servlet>
         <servlet-name>IdentityConsentMgtV1ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -693,7 +693,7 @@
     <servlet>
         <servlet-name>IdentityOAuth2DcrV1_1ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -721,7 +721,7 @@
     <servlet>
         <servlet-name>IdentityOAuth2V1ApiServlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
@@ -775,7 +775,7 @@
     <servlet>
         <servlet-name>IdleAccountIdentificationV1Servlet</servlet-name>
         <servlet-class>
-            org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
         </servlet-class>
         <load-on-startup>1</load-on-startup>
         <init-param>
