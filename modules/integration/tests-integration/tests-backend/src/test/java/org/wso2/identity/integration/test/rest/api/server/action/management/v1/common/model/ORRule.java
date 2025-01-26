@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.action.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -27,20 +27,19 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
-@ApiModel(description = "Expressions combined with AND condition.")
-public class ANDRule  {
+@ApiModel(description = "Rule configuration for the action. Combined with OR condition.")
+public class ORRule  {
   
 
 @XmlType(name="ConditionEnum")
 @XmlEnum(String.class)
 public enum ConditionEnum {
 
-    @XmlEnumValue("AND") AND(String.valueOf("AND"));
+    @XmlEnumValue("OR") OR(String.valueOf("OR"));
 
 
     private String value;
@@ -69,22 +68,20 @@ public enum ConditionEnum {
 }
 
     private ConditionEnum condition;
-    private List<Expression> expressions = new ArrayList<Expression>();
+    private List<ANDRule> rules = null;
 
 
     /**
     **/
-    public ANDRule condition(ConditionEnum condition) {
+    public ORRule condition(ConditionEnum condition) {
 
         this.condition = condition;
         return this;
     }
     
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(value = "")
     @JsonProperty("condition")
     @Valid
-    @NotNull(message = "Property condition cannot be null.")
-
     public ConditionEnum getCondition() {
         return condition;
     }
@@ -94,26 +91,27 @@ public enum ConditionEnum {
 
     /**
     **/
-    public ANDRule expressions(List<Expression> expressions) {
+    public ORRule rules(List<ANDRule> rules) {
 
-        this.expressions = expressions;
+        this.rules = rules;
         return this;
     }
     
-    @ApiModelProperty(required = true, value = "")
-    @JsonProperty("expressions")
-    @Valid
-    @NotNull(message = "Property expressions cannot be null.")
-    @Size(min=1)
-    public List<Expression> getExpressions() {
-        return expressions;
+    @ApiModelProperty(value = "")
+    @JsonProperty("rules")
+    @Valid @Size(min=1)
+    public List<ANDRule> getRules() {
+        return rules;
     }
-    public void setExpressions(List<Expression> expressions) {
-        this.expressions = expressions;
+    public void setRules(List<ANDRule> rules) {
+        this.rules = rules;
     }
 
-    public ANDRule addExpressionsItem(Expression expressionsItem) {
-        this.expressions.add(expressionsItem);
+    public ORRule addRulesItem(ANDRule rulesItem) {
+        if (this.rules == null) {
+            this.rules = new ArrayList<ANDRule>();
+        }
+        this.rules.add(rulesItem);
         return this;
     }
 
@@ -128,24 +126,24 @@ public enum ConditionEnum {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ANDRule anDRule = (ANDRule) o;
-        return Objects.equals(this.condition, anDRule.condition) &&
-            Objects.equals(this.expressions, anDRule.expressions);
+        ORRule orRule = (ORRule) o;
+        return Objects.equals(this.condition, orRule.condition) &&
+            Objects.equals(this.rules, orRule.rules);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(condition, expressions);
+        return Objects.hash(condition, rules);
     }
 
     @Override
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class ANDRule {\n");
+        sb.append("class ORRule {\n");
         
         sb.append("    condition: ").append(toIndentedString(condition)).append("\n");
-        sb.append("    expressions: ").append(toIndentedString(expressions)).append("\n");
+        sb.append("    rules: ").append(toIndentedString(rules)).append("\n");
         sb.append("}");
         return sb.toString();
     }

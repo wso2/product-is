@@ -148,6 +148,9 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
+            <!-- Temporary disabling until FW PR gets merge -->
+<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>-->
+<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>-->
         </classes>
     </test>
 
@@ -242,8 +245,10 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.admin.advisory.management.v1.AdminAdvisoryManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken.PreIssueAccessTokenActionSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken.PreIssueAccessTokenActionFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
