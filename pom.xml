@@ -2411,7 +2411,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.140</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.141</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.2</identity.notification.push.version>
@@ -2459,7 +2459,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.13</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.33</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.34</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2525,7 +2525,7 @@
         <hashprovider.pbkdf2.version>0.1.7</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.1.18</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.1.19</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
@@ -2539,8 +2539,8 @@
         <conditional.authentication.functions.version>1.2.73</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.38.13</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.14.20</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.39.2</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.15.3</identity.apps.myaccount.version>
         <identity.apps.core.version>2.11.0</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
