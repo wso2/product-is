@@ -163,7 +163,9 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         mockApplicationServer.stop();
         userStoreMgtRestClient.deleteUserStore(userStoreId);
         notificationSenderRestClient.deleteSMSProvider();
-        serverConfigurationManager.restoreToLastConfiguration();
+        client.close();
+        serverConfigurationManager.restoreToLastConfiguration(false);
+        super.clear();
     }
 
     @Test(dataProvider = "userProvider")
@@ -560,8 +562,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         File nonUniqueUserSupportToml = new File(getISResourceLocation() + File.separator + "recovery" +
                 File.separator + NON_UNIQUE_USER_TOML);
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(nonUniqueUserSupportToml, defaultTomlFile, true);
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.applyConfiguration(nonUniqueUserSupportToml, defaultTomlFile, true, true);
     }
 
     private static SMSSender initSMSSender() {
