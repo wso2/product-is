@@ -125,7 +125,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     public void testAuthzRequestWithoutValidSessionForIDENTITY5581() throws Exception {
 
         //When accessing the below endpoint from with invalid session it should provide a message with login_required
-        OIDCApplication application = applications.get(OIDCUtilTest.playgroundAppOneAppName);
+        OIDCApplication application = applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME);
         URI uri = new URIBuilder(OAuth2Constant.APPROVAL_URL)
                 .addParameter("client_id", application.getClientId())
                 .addParameter("scope", "openid")
@@ -142,28 +142,28 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
             dependsOnMethods = "testAuthzRequestWithoutValidSessionForIDENTITY5581")
     public void testSendAuthenticationRequestFromRP1() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppOneAppName), true, client, cookieStore);
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME), true, client, cookieStore);
     }
 
     @Test(groups = "wso2.is", description = "Authenticate for playground.appone", dependsOnMethods =
             "testSendAuthenticationRequestFromRP1")
     public void testAuthenticationFromRP1() throws Exception {
 
-        testAuthentication(applications.get(OIDCUtilTest.playgroundAppOneAppName));
+        testAuthentication(applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME));
     }
 
     @Test(groups = "wso2.is", description = "Approve consent for playground.appone", dependsOnMethods =
             "testAuthenticationFromRP1")
     public void testConsentApprovalFromRP1() throws Exception {
 
-        testConsentApproval(applications.get(OIDCUtilTest.playgroundAppOneAppName));
+        testConsentApproval(applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME));
     }
 
     @Test(groups = "wso2.is", description = "Get access token for playground.appone", dependsOnMethods =
             "testConsentApprovalFromRP1")
     public void testGetAccessTokenFromRP1() throws Exception {
 
-        testGetAccessToken(applications.get(OIDCUtilTest.playgroundAppOneAppName));
+        testGetAccessToken(applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME));
     }
 
     @Test(groups = "wso2.is", description = "Get user claim values for playground.appone", dependsOnMethods =
@@ -176,7 +176,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.apptwo")
     public void testSendAuthenticationRequestFromRP2() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppTwoAppName), false, client,
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME), false, client,
                 cookieStore);
     }
 
@@ -184,14 +184,14 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
             "testSendAuthenticationRequestFromRP2")
     public void testConsentApprovalFromRP2() throws Exception {
 
-        testConsentApproval(applications.get(OIDCUtilTest.playgroundAppTwoAppName));
+        testConsentApproval(applications.get(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME));
     }
 
     @Test(groups = "wso2.is", description = "Get access token for playground.apptwo", dependsOnMethods =
             "testConsentApprovalFromRP2")
     public void testGetAccessTokenFromRP2() throws Exception {
 
-        testGetAccessToken(applications.get(OIDCUtilTest.playgroundAppTwoAppName));
+        testGetAccessToken(applications.get(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME));
     }
 
     @Test(groups = "wso2.is", description = "Get user claim values for playground.apptwo", dependsOnMethods =
@@ -366,33 +366,33 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         String email = ((org.json.simple.JSONObject) obj).get("email").toString();
 
         EntityUtils.consume(response.getEntity());
-        Assert.assertEquals(OIDCUtilTest.email, email, "Incorrect email claim value");
+        Assert.assertEquals(OIDCUtilTest.EMAIL, email, "Incorrect email claim value");
     }
 
     protected void initUser() throws Exception {
 
         user = new UserObject();
-        user.setUserName(OIDCUtilTest.username);
-        user.setPassword(OIDCUtilTest.password);
-        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
-        user.addEmail(new Email().value(OIDCUtilTest.email));
+        user.setUserName(OIDCUtilTest.USERNAME);
+        user.setPassword(OIDCUtilTest.PASSWORD);
+        user.setName(new Name().givenName(OIDCUtilTest.FIRST_NAME).familyName(OIDCUtilTest.LAST_NAME));
+        user.addEmail(new Email().value(OIDCUtilTest.EMAIL));
     }
 
     protected void initApplications() throws Exception {
 
-        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppCallBackUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
-        applications.put(OIDCUtilTest.playgroundAppOneAppName, playgroundApp);
+        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME,
+                OIDCUtilTest.PLAYGROUND_APP_ONE_APP_CALL_BACK_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.EMAIL_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.FIRST_NAME_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.LAST_NAME_CLAIM_URI);
+        applications.put(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME, playgroundApp);
 
-        playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName,
-                OIDCUtilTest.playgroundAppTwoAppCallBackUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
-        applications.put(OIDCUtilTest.playgroundAppTwoAppName, playgroundApp);
+        playgroundApp = new OIDCApplication(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME,
+                OIDCUtilTest.PLAYGROUND_APP_TWO_APP_CALL_BACK_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.EMAIL_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.FIRST_NAME_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.LAST_NAME_CLAIM_URI);
+        applications.put(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME, playgroundApp);
     }
 
     protected void createApplications() throws Exception {

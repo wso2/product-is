@@ -36,65 +36,67 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest.TOMCAT_PORT;
-
 /**
  * This class will contain the common methods using in all OIDC related test cases.
  */
 public class OIDCUtilTest {
 
-    protected static UserObject user;
     protected HttpClient client;
-    protected static Map<String, OIDCApplication> applications = new HashMap<>(2);
-    public static final String username = "oidcsessiontestuser";
-    public static final String password = "Oidcsessiontestuser@123";
-    public static final String email = "oidcsessiontestuser@wso2.com";
-    public static final String firstName = "oidcsessiontestuser-first";
-    public static final String lastName = "oidcsessiontestuser-last";
-    public static final String role = "internal/everyone";
-    public static final String profile = "default";
-    protected static String sessionDataKey;
+    public static final String USERNAME = "oidcsessiontestuser";
+    public static final String PASSWORD = "Oidcsessiontestuser@123";
+    public static final String EMAIL = "oidcsessiontestuser@wso2.com";
+    public static final String FIRST_NAME = "oidcsessiontestuser-first";
+    public static final String LAST_NAME = "oidcsessiontestuser-last";
 
-    public static final String playgroundAppOneAppName = MockApplicationServer.Constants.APP1.NAME;
-    public static final String playgroundAppOneAppCallBackUri = MockApplicationServer.Constants.APP1.CALLBACK_URL;
+    public static final String PLAYGROUND_APP_ONE_APP_NAME = MockApplicationServer.Constants.APP1.NAME;
+    public static final String PLAYGROUND_APP_ONE_APP_CALL_BACK_URI = MockApplicationServer.Constants.APP1.CALLBACK_URL;
 
-    public static final String playgroundAppTwoAppName = MockApplicationServer.Constants.APP2.NAME;
-    public static final String playgroundAppTwoAppCallBackUri = MockApplicationServer.Constants.APP2.CALLBACK_URL;
+    public static final String PLAYGROUND_APP_TWO_APP_NAME = MockApplicationServer.Constants.APP2.NAME;
+    public static final String PLAYGROUND_APP_TWO_APP_CALL_BACK_URI = MockApplicationServer.Constants.APP2.CALLBACK_URL;
 
-    public static final String emailClaimUri = "http://wso2.org/claims/emailaddress";
-    public static final String firstNameClaimUri = "http://wso2.org/claims/givenname";
-    public static final String lastNameClaimUri = "http://wso2.org/claims/lastname";
+    public static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+    public static final String FIRST_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
+    public static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
 
     /**
      * Initiates a user.
      */
-    public static void initUser() {
+    public static UserObject initUser() {
 
-        user = new UserObject();
-        user.setUserName(username);
-        user.setPassword(password);
-        user.setName(new Name().givenName(firstName).familyName(lastName));
-        user.addEmail(new Email().value(email));
+        UserObject user = new UserObject();
+        user.setUserName(USERNAME);
+        user.setPassword(PASSWORD);
+        user.setName(new Name().givenName(FIRST_NAME).familyName(LAST_NAME));
+        user.addEmail(new Email().value(EMAIL));
+        return user;
     }
 
     /**
      * Initiate an Application.
      */
-    public static void initApplications() {
+    public static Map<String, OIDCApplication> initApplications() {
 
-        OIDCApplication playgroundApp = new OIDCApplication(playgroundAppOneAppName,
-                playgroundAppOneAppCallBackUri);
-        playgroundApp.addRequiredClaim(emailClaimUri);
-        playgroundApp.addRequiredClaim(firstNameClaimUri);
-        playgroundApp.addRequiredClaim(lastNameClaimUri);
-        applications.put(playgroundAppOneAppName, playgroundApp);
+        Map<String, OIDCApplication> applications = new HashMap<>(2);
+        OIDCApplication playgroundApp = initApplicationOne();
+        applications.put(PLAYGROUND_APP_ONE_APP_NAME, playgroundApp);
 
-        playgroundApp = new OIDCApplication(playgroundAppTwoAppName,
-                playgroundAppTwoAppCallBackUri);
-        playgroundApp.addRequiredClaim(emailClaimUri);
-        playgroundApp.addRequiredClaim(firstNameClaimUri);
-        playgroundApp.addRequiredClaim(lastNameClaimUri);
-        applications.put(playgroundAppTwoAppName, playgroundApp);
+        playgroundApp = new OIDCApplication(PLAYGROUND_APP_TWO_APP_NAME,
+                PLAYGROUND_APP_TWO_APP_CALL_BACK_URI);
+        playgroundApp.addRequiredClaim(EMAIL_CLAIM_URI);
+        playgroundApp.addRequiredClaim(FIRST_NAME_CLAIM_URI);
+        playgroundApp.addRequiredClaim(LAST_NAME_CLAIM_URI);
+        applications.put(PLAYGROUND_APP_TWO_APP_NAME, playgroundApp);
+        return applications;
+    }
+
+    public static OIDCApplication initApplicationOne() {
+
+        OIDCApplication playgroundApp = new OIDCApplication(PLAYGROUND_APP_ONE_APP_NAME,
+                PLAYGROUND_APP_ONE_APP_CALL_BACK_URI);
+        playgroundApp.addRequiredClaim(EMAIL_CLAIM_URI);
+        playgroundApp.addRequiredClaim(FIRST_NAME_CLAIM_URI);
+        playgroundApp.addRequiredClaim(LAST_NAME_CLAIM_URI);
+        return playgroundApp;
     }
 
     /**
@@ -135,7 +137,8 @@ public class OIDCUtilTest {
                 keyPositionMap);
 
         if (keyValues != null) {
-            sessionDataKey = keyValues.get(0).getValue();
+            // There is no value in doing this.
+            String sessionDataKey = keyValues.get(0).getValue();
         }
     }
 }
