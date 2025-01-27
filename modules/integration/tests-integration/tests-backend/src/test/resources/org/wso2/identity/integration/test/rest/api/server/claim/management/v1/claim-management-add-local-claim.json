@@ -18,5 +18,21 @@
       "key": "isVerifiable",
       "value": "true"
     }
-  ]
+  ],
+  "profiles": {
+    "console": {
+      "required": false,
+      "readOnly": true,
+      "supportedByDefault": false
+    },
+    "endUser": {
+      "readOnly": false,
+      "required": true,
+      "supportedByDefault": true
+    },
+    "selfRegistration": {
+      "required": false,
+      "supportedByDefault": false
+    }
+  }
 }
