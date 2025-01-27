@@ -588,6 +588,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.oauth2.grantType.token.exchange:org.wso2.carbon.extension.identity.oauth2.token.exchange.feature:${identity.oauth2.token.exchange.grant.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.outbound.auth.adapter:org.wso2.carbon.identity.application.authenticator.adapter.feature:${identity.outbound.auth.adapter.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -1212,6 +1215,10 @@
                                 <feature>
                                     <id>org.wso2.ciphertool.feature.group</id>
                                     <version>${cipher-tool.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.outbound.auth.adapter.feature.group</id>
+                                    <version>${identity.outbound.auth.adapter.version}</version>
                                 </feature>
                             </features>
                         </configuration>

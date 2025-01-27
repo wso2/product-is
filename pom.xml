@@ -2293,6 +2293,11 @@
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus-jose-jwt.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.outbound.auth.adapter</groupId>
+                <artifactId>identity-outbound-auth-adapter</artifactId>
+                <version>${identity.outbound.auth.adapter.version}</version>
+            </dependency>
 
             <!-- Integration UI Templates -->
             <dependency>
@@ -2507,6 +2512,9 @@
         <identity.local.auth.basicauth.version>6.8.18</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
+
+        <!-- Custom Authenticator extension adapter -->
+        <identity.outbound.auth.adapter.version>1.0.0</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.4</identity.local.auth.api.version>
