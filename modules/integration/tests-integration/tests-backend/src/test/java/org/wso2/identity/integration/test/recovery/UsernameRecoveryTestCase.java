@@ -100,6 +100,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
     private static final String DB_USER_PASSWORD = "wso2automation";
     private static final String SECONDARY_DOMAIN_ID = "WSO2TEST.COM";
     private static final String PRIMARY_DOMAIN_ID = "PRIMARY";
+    private static final String FIRST_NAME = "urTestFirst";
+    private static final String LAST_NAME = "urTestLast";
 
     private final CookieStore cookieStore = new BasicCookieStore();
     private IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -286,7 +288,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         UserObject user = new UserObject();
         user.setUserName(domain + "/" + username);
         user.setPassword(USER_PASSWORD);
-        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
+        user.setName(new Name().givenName(FIRST_NAME).familyName(LAST_NAME));
         user.addEmail(new Email().value(OIDCUtilTest.email));
         user.addPhoneNumbers(new PhoneNumbers().value(USER_MOBILE).type(MOBILE));
 
