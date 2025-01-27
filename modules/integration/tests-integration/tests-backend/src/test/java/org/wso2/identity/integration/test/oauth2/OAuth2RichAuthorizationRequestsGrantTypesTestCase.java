@@ -297,9 +297,23 @@ public class OAuth2RichAuthorizationRequestsGrantTypesTestCase extends OAuth2Ser
             description = "Test authorization code grant flow with invalid authorization details")
     public void testAuthorizationCodeGrantFlowWithInvalidAuthorizationDetails(Asserter asserter) throws Exception {
 
-        final HttpResponse response = super.sendPostRequestWithParameters(this.client,
-                this.getAuthzRequestParams(asserter), OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
-        final Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        HttpResponse response = super.sendPostRequestWithParameters(this.client, this.getAuthzRequestParams(asserter),
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        final String sessionDataKey = DataExtractUtil.getParamFromURIString(locationHeader.getValue(),
+                OAuth2Constant.SESSION_DATA_KEY);
+        EntityUtils.consume(response.getEntity());
+
+        if (StringUtils.isNotBlank(sessionDataKey)) {
+            // A user session might not available - trying to authenticate the user
+            response = sendLoginPost(this.client, sessionDataKey);
+            locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+
+            response = sendGetRequest(this.client, locationHeader.getValue());
+            locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+        }
 
         assertEquals(DataExtractUtil.getParamFromURIString(locationHeader.getValue(), ERROR),
                 INVALID_AUTHORIZATION_DETAILS);
