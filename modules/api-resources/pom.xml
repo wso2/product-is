@@ -535,6 +535,16 @@
                 <artifactId>org.wso2.carbon.identity.api.server.rule.metadata.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.organization.user.sharing.management.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
 
             <!-- Legacy API dependencies -->
             <dependency>
