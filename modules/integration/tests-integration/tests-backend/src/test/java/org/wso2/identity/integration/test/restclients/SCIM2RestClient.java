@@ -45,6 +45,7 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
     private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
     private static final String SCIM2_SEARCH_PATH = "/.search";
+    public static final String SCHEMAS_ENDPOINT = "scim2/Schemas";
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
     private static final String ROLE_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
     private static final String USER_ENTERPRISE_SCHEMA = "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
@@ -323,6 +324,20 @@ public class SCIM2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Group deletion failed");
+        }
+    }
+
+    /**
+     * Get SCIM2 schemas.
+     *
+     * @return JSONArray of SCIM2 schemas.
+     * @throws Exception If an error occurred while getting SCIM2 schemas.
+     */
+    public JSONArray getScim2Schemas() throws Exception {
+
+        String endPointUrl = serverUrl + SCHEMAS_ENDPOINT;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONArray(EntityUtils.toString(response.getEntity()));
         }
     }
 
