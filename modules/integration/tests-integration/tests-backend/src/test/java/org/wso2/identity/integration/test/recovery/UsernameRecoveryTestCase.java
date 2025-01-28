@@ -84,16 +84,17 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_
 public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
     // Constants
-    public static final String SMS_SENDER_REQUEST_FORMAT = "{\"content\": {{body}}, \"to\": {{mobile}} }";
-    public static final String USERNAME = "testUser1";
-    public static final String USER_MOBILE = "+94674898234";
-    public static final String USER_PASSWORD = "Sample1$";
-    public static final String MOBILE = "mobile";
-    public static final String USERNAME_RECOVERY_EMAIL_ENABLE = "Recovery.Notification.Username.Email.Enable";
-    public static final String USERNAME_RECOVERY_SMS_ENABLE = "Recovery.Notification.Username.SMS.Enable";
-    public static final String CATEGORY_ID = "QWNjb3VudCBNYW5hZ2VtZW50";
-    public static final String CONNECTOR_ID = "YWNjb3VudC1yZWNvdmVyeQ";
-    private static final String NON_UNIQUE_USER_TOML = "non_unique_user_enable.toml";
+    private static final String SMS_SENDER_REQUEST_FORMAT = "{\"content\": {{body}}, \"to\": {{mobile}} }";
+    private static final String USERNAME = "testUser1";
+    private static final String USER_MOBILE = "+94674898234";
+    private static final String USER_PASSWORD = "Sample1$";
+    private static final String MOBILE = "mobile";
+    private static final String USERNAME_RECOVERY_EMAIL_ENABLE = "Recovery.Notification.Username.Email.Enable";
+    private static final String USERNAME_RECOVERY_SMS_ENABLE = "Recovery.Notification.Username.SMS.Enable";
+    private static final String CATEGORY_ID = "QWNjb3VudCBNYW5hZ2VtZW50";
+    private static final String CONNECTOR_ID = "YWNjb3VudC1yZWNvdmVyeQ";
+    private static final String NON_UNIQUE_USER_ENABLE_TOML = "non_unique_user_enable.toml";
+    private static final String NON_UNIQUE_USER_DISABLE_TOML = "non_unique_user_disable.toml";
     private static final String USER_STORE_DB_NAME = "SECONDARY_USER_STORE_DB";
     private static final String DB_USER_NAME = "wso2automation";
     private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
@@ -120,6 +121,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         super.init();
+        changeISConfiguration(false);
+        super.init();
 
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
@@ -144,7 +147,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Adding custom sms sender.
         notificationSenderRestClient = new NotificationSenderRestClient(
-                backendURL.replace("services/", ""), tenantInfo);
+               serverURL, tenantInfo);
         SMSSender smsSender = initSMSSender();
         notificationSenderRestClient.createSMSProvider(smsSender);
 
@@ -166,8 +169,11 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         userStoreMgtRestClient.deleteUserStore(userStoreId);
         notificationSenderRestClient.deleteSMSProvider();
         client.close();
-        serverConfigurationManager.restoreToLastConfiguration(false);
+        scim2RestClient.closeHttpClient();
+        restClient.closeHttpClient();
         super.clear();
+        serverConfigurationManager.restoreToLastConfiguration(false);
+
     }
 
     @Test(dataProvider = "userProvider")
@@ -249,7 +255,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
     public void testUsernameRecoveryWithMultipleUsersSupport() throws Exception {
 
         // Restarting the server with non-unique user recovery support config.
-        changeISConfiguration();
+        changeISConfiguration(true);
         super.init();
 
         // Create two users with same attributes in two user stores.
@@ -556,15 +562,22 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         return null;
     }
 
-    private void changeISConfiguration()
+    private void changeISConfiguration(boolean  nonUniqueUserSupport)
             throws IOException, XPathExpressionException, AutomationUtilException {
 
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File nonUniqueUserSupportToml = new File(getISResourceLocation() + File.separator + "recovery" +
-                File.separator + NON_UNIQUE_USER_TOML);
+        File tartgetTomlFile;
+        if (nonUniqueUserSupport) {
+            tartgetTomlFile = new File(getISResourceLocation() + File.separator + "recovery" +
+                    File.separator + NON_UNIQUE_USER_ENABLE_TOML);
+        } else {
+            tartgetTomlFile = new File(getISResourceLocation() + File.separator + "recovery" +
+                    File.separator + NON_UNIQUE_USER_DISABLE_TOML);
+        }
+
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfiguration(nonUniqueUserSupportToml, defaultTomlFile, true, true);
+        serverConfigurationManager.applyConfiguration(tartgetTomlFile, defaultTomlFile, true, true);
     }
 
     private static SMSSender initSMSSender() {
