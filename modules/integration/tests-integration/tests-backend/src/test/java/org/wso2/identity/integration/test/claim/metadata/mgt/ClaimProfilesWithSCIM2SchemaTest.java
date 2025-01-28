@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.claim.metadata.mgt;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -34,8 +33,12 @@ import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.mo
 import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
+import java.util.Collections;
 import java.util.HashMap;
 
+/**
+ * Test class to verify the claim profiles with SCIM2 schemas endpoint.
+ */
 public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
 
     private static final String LOCAL_CLAIM_URI_PREFIX = "http://wso2.org/claims/";
@@ -59,7 +62,8 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
 
     private String consoleLocalClaimId;
     private String consoleExternalClaimId;
-
+    private String endUserLocalClaimId;
+    private String endUserExternalClaimId;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -73,10 +77,18 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
     public void cleanUpClass() throws Exception {
 
         if (StringUtils.isNotBlank(consoleExternalClaimId)) {
-            claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI, consoleExternalClaimId);
+            claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI,
+                    consoleExternalClaimId);
         }
         if (StringUtils.isNotBlank(consoleLocalClaimId)) {
             claimManagementRestClient.deleteLocalClaim(consoleLocalClaimId);
+        }
+        if (StringUtils.isNotBlank(endUserExternalClaimId)) {
+            claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI,
+                    endUserExternalClaimId);
+        }
+        if (StringUtils.isNotBlank(endUserLocalClaimId)) {
+            claimManagementRestClient.deleteLocalClaim(endUserLocalClaimId);
         }
     }
 
@@ -89,11 +101,11 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
         String profileName = "console";
 
         HashMap<String, AttributeProfileDTO> attributeProfiles = new HashMap<>();
-        AttributeProfileDTO consoleProfile = new AttributeProfileDTO();
-        consoleProfile.setSupportedByDefault(true);
-        consoleProfile.setRequired(true);
-        consoleProfile.setReadOnly(false);
-        attributeProfiles.put(profileName, consoleProfile);
+        AttributeProfileDTO attributeProfile = new AttributeProfileDTO();
+        attributeProfile.setSupportedByDefault(true);
+        attributeProfile.setRequired(true);
+        attributeProfile.setReadOnly(false);
+        attributeProfiles.put(profileName, attributeProfile);
 
         LocalClaimReq localClaimReq = createLocalClaim(claimName, false, false,
                 true, attributeProfiles);
@@ -103,12 +115,12 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
 
         // Assert local claim response.
         JSONObject localClaimResponse = claimManagementRestClient.getExternalClaim("local", consoleLocalClaimId);
-        JSONObject responseConsoleProfile =
+        JSONObject localClaimProfile =
                 (JSONObject) ((JSONObject) localClaimResponse.get(PROFILES_PROPERTY)).get(profileName);
-        Assert.assertNotNull(responseConsoleProfile);
-        Assert.assertTrue((Boolean) responseConsoleProfile.get(SUPPORTED_BY_DEFAULT_PROPERTY));
-        Assert.assertTrue((Boolean) responseConsoleProfile.get(REQUIRED_PROPERTY));
-        Assert.assertFalse((Boolean) responseConsoleProfile.get(READ_ONLY_PROPERTY));
+        Assert.assertNotNull(localClaimProfile);
+        Assert.assertTrue((Boolean) localClaimProfile.get(SUPPORTED_BY_DEFAULT_PROPERTY));
+        Assert.assertTrue((Boolean) localClaimProfile.get(REQUIRED_PROPERTY));
+        Assert.assertFalse((Boolean) localClaimProfile.get(READ_ONLY_PROPERTY));
 
         // Add external claim.
         ExternalClaimReq externalClaimReq = new ExternalClaimReq();
@@ -128,12 +140,69 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
         JSONObject attributeSchema = getSchemaProfileForAttribute(scim2Schemas, claimName);
         Assert.assertNotNull(attributeSchema, "Attribute schema not found");
 
-        JSONObject attributeProfile = getAttributeProfile(attributeSchema, profileName);
-        Assert.assertNotNull(attributeProfile, "Attribute profile not found");
+        JSONObject attributeSchemaProfile = getAttributeProfile(attributeSchema, profileName);
+        Assert.assertNotNull(attributeSchemaProfile, "Attribute profile not found");
 
-        Assert.assertTrue((Boolean) attributeProfile.get(SUPPORTED_BY_DEFAULT_PROPERTY));
-        Assert.assertTrue((Boolean) attributeProfile.get(REQUIRED_PROPERTY));
-        Assert.assertEquals(attributeProfile.get(MUTABILITY_PROPERTY), READ_WRITE_VALUE);
+        Assert.assertTrue((Boolean) attributeSchemaProfile.get(SUPPORTED_BY_DEFAULT_PROPERTY));
+        Assert.assertTrue((Boolean) attributeSchemaProfile.get(REQUIRED_PROPERTY));
+        Assert.assertEquals(attributeSchemaProfile.get(MUTABILITY_PROPERTY), READ_WRITE_VALUE);
+    }
+
+    @Test
+    public void testSupportedByEndUserClaim() throws Exception {
+
+        String claimName = "endusertest1";
+        String localClaimURI = LOCAL_CLAIM_URI_PREFIX + claimName;
+        String externalClaimURI = SCIM2_SYSTEM_SCHEMA_DIALECT_URI + ":" + claimName;
+        String profileName = "endUser";
+
+        HashMap<String, AttributeProfileDTO> attributeProfiles = new HashMap<>();
+        AttributeProfileDTO attributeProfile = new AttributeProfileDTO();
+        attributeProfile.setSupportedByDefault(true);
+        attributeProfile.setRequired(false);
+        attributeProfile.setReadOnly(true);
+        attributeProfiles.put(profileName, attributeProfile);
+
+        LocalClaimReq localClaimReq = createLocalClaim(claimName, false, false,
+                true, attributeProfiles);
+
+        endUserLocalClaimId = claimManagementRestClient.addLocalClaim(localClaimReq);
+        Assert.assertNotNull(endUserLocalClaimId, "Claim addition failed");
+
+        // Assert local claim response.
+        JSONObject localClaimResponse =
+                claimManagementRestClient.getExternalClaim("local", endUserLocalClaimId);
+        JSONObject localClaimProfile =
+                (JSONObject) ((JSONObject) localClaimResponse.get(PROFILES_PROPERTY)).get(profileName);
+        Assert.assertNotNull(localClaimProfile);
+        Assert.assertTrue((Boolean) localClaimProfile.get(SUPPORTED_BY_DEFAULT_PROPERTY));
+        Assert.assertNull(localClaimProfile.get(REQUIRED_PROPERTY));
+        Assert.assertNull(localClaimProfile.get(READ_ONLY_PROPERTY));
+
+        // Add external claim.
+        ExternalClaimReq externalClaimReq = new ExternalClaimReq();
+        externalClaimReq.setClaimURI(externalClaimURI);
+        externalClaimReq.setMappedLocalClaimURI(localClaimURI);
+
+        endUserExternalClaimId =
+                claimManagementRestClient.addExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI, externalClaimReq);
+        Assert.assertNotNull(endUserExternalClaimId, "External claim addition failed");
+
+        // Assert SCIM2/Schemas response.
+        JSONArray scim2Schemas = scim2RestClient.getScim2Schemas();
+
+        Assert.assertNotNull(scim2Schemas, "SCIM2 schemas retrieval failed");
+        Assert.assertFalse(scim2Schemas.isEmpty(), "SCIM2 schemas array is empty");
+
+        JSONObject attributeSchema = getSchemaProfileForAttribute(scim2Schemas, claimName);
+        Assert.assertNotNull(attributeSchema, "Attribute schema not found");
+
+        JSONObject attributeSchemaProfile = getAttributeProfile(attributeSchema, profileName);
+        Assert.assertNotNull(attributeSchemaProfile, "Attribute profile not found");
+
+        Assert.assertTrue((Boolean) attributeSchemaProfile.get(SUPPORTED_BY_DEFAULT_PROPERTY));
+        Assert.assertNull(attributeSchemaProfile.get(REQUIRED_PROPERTY));
+        Assert.assertNull(attributeSchemaProfile.get(MUTABILITY_PROPERTY));
     }
 
     private JSONObject getSchemaProfileForAttribute(JSONArray scim2Schemas, String claimName) {
