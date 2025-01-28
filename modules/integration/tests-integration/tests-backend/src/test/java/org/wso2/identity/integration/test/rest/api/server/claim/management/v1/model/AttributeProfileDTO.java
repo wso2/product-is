@@ -90,9 +90,21 @@ public class AttributeProfileDTO {
     public String toString() {
 
         return "class AttributeProfileDTO {\n" +
-                "    readOnly: " + readOnly + "\n" +
-                "    required: " + required + "\n" +
-                "    supportedByDefault: " + supportedByDefault + "\n" +
+                "    readOnly: " + toIndentedString(readOnly) + "\n" +
+                "    required: " + toIndentedString(required) + "\n" +
+                "    supportedByDefault: " + toIndentedString(supportedByDefault) + "\n" +
                 "}\n";
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n");
     }
 }

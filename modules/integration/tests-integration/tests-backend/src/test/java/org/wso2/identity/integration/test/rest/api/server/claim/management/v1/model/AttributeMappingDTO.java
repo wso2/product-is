@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
@@ -27,7 +26,6 @@ import java.util.Objects;
 /**
  * Claim userstore attribute mapping.
  **/
-@ApiModel(description = "Claim user store attribute mapping.")
 public class AttributeMappingDTO {
 
     private String mappedAttribute = null;
@@ -81,8 +79,20 @@ public class AttributeMappingDTO {
     public String toString() {
 
         return "class AttributeMappingDTO {\n" +
-                "    mappedAttribute: " + mappedAttribute + "\n" +
-                "    userstore: " + userstore + "\n" +
+                "    mappedAttribute: " + toIndentedString(mappedAttribute) + "\n" +
+                "    userstore: " + toIndentedString(userstore) + "\n" +
                 "}\n";
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n");
     }
 }

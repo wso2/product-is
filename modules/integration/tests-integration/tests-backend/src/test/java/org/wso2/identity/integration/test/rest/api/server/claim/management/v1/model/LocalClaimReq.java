@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+import javax.validation.Valid;
+
 public class LocalClaimReq {
 
     private String claimURI = null;
@@ -60,6 +62,7 @@ public class LocalClaimReq {
      **/
     @ApiModelProperty(required = true, value = "A unique URI specific to the claim.")
     @JsonProperty("claimURI")
+    @Valid
     public String getClaimURI() {
 
         return claimURI;
@@ -287,19 +290,31 @@ public class LocalClaimReq {
     public String toString() {
 
         return "class LocalClaimReqDTO {\n" +
-                "    claimURI: " + claimURI + "\n" +
-                "    description: " + description + "\n" +
-                "    displayOrder: " + displayOrder + "\n" +
-                "    displayName: " + displayName + "\n" +
-                "    readOnly: " + readOnly + "\n" +
-                "    regEx: " + regEx + "\n" +
-                "    required: " + required + "\n" +
-                "    supportedByDefault: " + supportedByDefault + "\n" +
-                "    uniquenessScope: " + uniquenessScope + "\n" +
-                "    sharedProfileValueResolvingMethod: " + sharedProfileValueResolvingMethod + "\n" +
-                "    attributeMapping: " + attributeMapping + "\n" +
-                "    properties: " + properties + "\n" +
-                "    profiles: " + profiles + "\n" +
+                "    claimURI: " + toIndentedString(claimURI) + "\n" +
+                "    description: " + toIndentedString(description) + "\n" +
+                "    displayOrder: " + toIndentedString(displayOrder) + "\n" +
+                "    displayName: " + toIndentedString(displayName) + "\n" +
+                "    readOnly: " + toIndentedString(readOnly) + "\n" +
+                "    regEx: " + toIndentedString(regEx) + "\n" +
+                "    required: " + toIndentedString(required) + "\n" +
+                "    supportedByDefault: " + toIndentedString(supportedByDefault) + "\n" +
+                "    uniquenessScope: " + toIndentedString(uniquenessScope) + "\n" +
+                "    sharedProfileValueResolvingMethod: " + toIndentedString(sharedProfileValueResolvingMethod) + "\n" +
+                "    attributeMapping: " + toIndentedString(attributeMapping) + "\n" +
+                "    properties: " + toIndentedString(properties) + "\n" +
+                "    profiles: " + toIndentedString(profiles) + "\n" +
                 "}\n";
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n");
     }
 }

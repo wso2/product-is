@@ -75,8 +75,20 @@ public class PropertyDTO {
     public String toString() {
 
         return "class PropertyDTO {\n" +
-                "    key: " + key + "\n" +
-                "    value: " + value + "\n" +
+                "    key: " + toIndentedString(key) + "\n" +
+                "    value: " + toIndentedString(value) + "\n" +
                 "}\n";
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n");
     }
 }
