@@ -1,0 +1,22 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create"
+  ],
+  "/o/api/server/v1/userstore": [
+    "internal_org_userstore_create",
+    "internal_org_userstore_delete",
+    "internal_org_userstore_view"
+  ],
+  "/o/scim2/Users": [
+    "internal_org_user_mgt_create",
+    "internal_org_user_mgt_view",
+    "internal_org_user_mgt_list",
+    "internal_org_user_mgt_delete"
+  ],
+  "/o/scim2/Groups": [
+    "internal_org_group_mgt_create",
+    "internal_org_group_mgt_view",
+    "internal_org_group_mgt_delete"
+  ]
+}

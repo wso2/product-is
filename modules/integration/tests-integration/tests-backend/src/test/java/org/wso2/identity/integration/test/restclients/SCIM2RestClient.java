@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -59,7 +59,7 @@ public class SCIM2RestClient extends RestBaseClient {
     private final String username;
     private final String password;
 
-    public SCIM2RestClient(String serverUrl, Tenant tenantInfo){
+    public SCIM2RestClient(String serverUrl, Tenant tenantInfo) {
 
         this.serverUrl = serverUrl;
         this.tenantDomain = tenantInfo.getContextUser().getUserDomain();
@@ -137,6 +137,24 @@ public class SCIM2RestClient extends RestBaseClient {
         }
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Get the details of a user of a sub organization.
+     *
+     * @param userId           ID of the user.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while getting a user.
+     */
+    public JSONObject getSubOrgUser(String userId, String switchedM2MToken) throws Exception {
+
+        String endPointUrl = getSubOrgUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(switchedM2MToken))) {
             return getJSONObject(EntityUtils.toString(response.getEntity()));
         }
     }
@@ -260,7 +278,7 @@ public class SCIM2RestClient extends RestBaseClient {
         RoleSearchRequestObject roleSearchObj = new RoleSearchRequestObject();
         roleSearchObj.addSchemas(ROLE_SEARCH_SCHEMA);
 
-        String filterString =  DISPLAY_NAME_ATTRIBUTE + " " + EQ_OP + " " + roleName;
+        String filterString = DISPLAY_NAME_ATTRIBUTE + " " + EQ_OP + " " + roleName;
         roleSearchObj.setFilter(filterString);
 
         String jsonRequest = toJSONString(roleSearchObj);
@@ -300,6 +318,7 @@ public class SCIM2RestClient extends RestBaseClient {
      * @throws Exception If an error occurred while adding a group.
      */
     public String createGroup(GroupRequestObject groupInfo) throws Exception {
+
         String jsonRequest = toJSONString(groupInfo);
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getGroupsPath(), jsonRequest, getHeaders())) {
@@ -307,6 +326,44 @@ public class SCIM2RestClient extends RestBaseClient {
                     groupInfo.getDisplay() + " Group creation failed");
             JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
             return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Add a new group to a sub organization.
+     *
+     * @param groupInfo        Group request object.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return Group id.
+     * @throws Exception If an error occurred while adding a group.
+     */
+    public String createSubOrgGroup(GroupRequestObject groupInfo, String switchedM2MToken) throws Exception {
+
+        String jsonRequest = toJSONString(groupInfo);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getSubOrgGroupsPath(), jsonRequest,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    groupInfo.getDisplay() + " Group creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Get the details of a group in a sub organization.
+     *
+     * @param groupId Group id.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while getting a group.
+     */
+    public JSONObject getSubOrgGroup(String groupId, String switchedM2MToken) throws Exception {
+
+        String endPointUrl = getSubOrgGroupsPath() + PATH_SEPARATOR + groupId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
         }
     }
 
@@ -321,6 +378,24 @@ public class SCIM2RestClient extends RestBaseClient {
         String endPointUrl = getGroupsPath() + PATH_SEPARATOR + groupId;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Group deletion failed");
+        }
+    }
+
+    /**
+     * Delete an existing group of a sub organization.
+     *
+     * @param groupId          Group id.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @throws IOException If an error occurred while deleting a group.
+     */
+    public void deleteSubOrgGroup(String groupId, String switchedM2MToken) throws IOException {
+
+        String endPointUrl = getSubOrgGroupsPath() + PATH_SEPARATOR + groupId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl,
+                getHeadersWithBearerToken(switchedM2MToken))) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Group deletion failed");
         }
@@ -362,7 +437,7 @@ public class SCIM2RestClient extends RestBaseClient {
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return serverUrl + ORGANIZATION_PATH + SCIM2_USERS_ENDPOINT;
         }
-        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH +SCIM2_USERS_ENDPOINT;
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + SCIM2_USERS_ENDPOINT;
     }
 
     private String getRolesPath() {
@@ -380,6 +455,15 @@ public class SCIM2RestClient extends RestBaseClient {
             return serverUrl + SCIM2_GROUPS_ENDPOINT;
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_GROUPS_ENDPOINT;
+        }
+    }
+
+    private String getSubOrgGroupsPath() {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + SCIM2_GROUPS_ENDPOINT;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + SCIM2_GROUPS_ENDPOINT;
         }
     }
 
