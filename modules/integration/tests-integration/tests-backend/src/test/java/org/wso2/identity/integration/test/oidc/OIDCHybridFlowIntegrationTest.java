@@ -215,4 +215,3 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
                 OAuth2Constant.SESSION_DATA_KEY_CONSENT);
     }
 }
-
