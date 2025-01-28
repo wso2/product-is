@@ -354,6 +354,7 @@ public class SCIM2RestClient extends RestBaseClient {
      * Get the details of a group in a sub organization.
      *
      * @param groupId Group id.
+     * @param switchedM2MToken Switched M2M token for the given organization.
      * @return JSONObject of the HTTP response.
      * @throws Exception If an error occurred while getting a group.
      */

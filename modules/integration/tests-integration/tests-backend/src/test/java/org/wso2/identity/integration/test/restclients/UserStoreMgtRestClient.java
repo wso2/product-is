@@ -185,18 +185,18 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     }
 
     /**
-     * Check user store deployment in a sub organization
+     * Check user store deployment in a sub organization.
      *
      * @param domain   User Store name.
-     * @param m2mToken Switched M2M token.
+     * @param switchedM2MToken Switched M2M token.
      * @return True if the user store is deployed.
      * @throws Exception If an error occurred while checking the user store creation.
      */
-    public boolean waitForSubOrgUserStoreDeployment(String domain, String m2mToken) throws Exception {
+    public boolean waitForSubOrgUserStoreDeployment(String domain, String switchedM2MToken) throws Exception {
 
         long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS; //wait for 30 seconds
         while (System.currentTimeMillis() < waitTime) {
-            JSONArray userStores = getSubOrgUserStores(m2mToken);
+            JSONArray userStores = getSubOrgUserStores(switchedM2MToken);
             for (Object userStore : userStores) {
                 String userStoreName = ((JSONObject) userStore).get("name").toString();
                 if (userStoreName.equalsIgnoreCase(domain)) {

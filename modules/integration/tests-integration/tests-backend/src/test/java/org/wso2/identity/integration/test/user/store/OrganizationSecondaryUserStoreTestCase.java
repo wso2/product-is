@@ -152,6 +152,8 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        deleteApp(application.getId());
+        orgMgtRestClient.deleteOrganization(subOrgId);
         orgMgtRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         oAuth2RestClient.closeHttpClient();
