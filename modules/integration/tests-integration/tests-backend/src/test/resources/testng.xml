@@ -433,6 +433,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenScopeValidatorTestCase" />
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
+            <class name="org.wso2.identity.integration.test.recovery.UsernameRecoveryTestCase"/>
         </classes>
     </test>
 
