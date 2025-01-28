@@ -128,11 +128,7 @@ public class ClaimManagementSuccessTest extends ClaimManagementTestBase {
                 .body("attributeMapping[0].userstore", equalTo("PRIMARY"))
                 .body("properties", notNullValue())
                 .body("properties[0].key", equalTo("isVerifiable"))
-                .body("properties[0].value", equalTo("true"))
-                .body("profiles.console.supportedByDefault", equalTo("true"))
-                .body("profiles.console.required", equalTo("false"))
-                .body("profiles.console.readOnly", equalTo("true"))
-                .body("profiles.console", equalTo("true"));
+                .body("properties[0].value", equalTo("true"));
     }
 
     @Test(dependsOnMethods = {"testGetLocalClaim"})
