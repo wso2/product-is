@@ -83,7 +83,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_
  */
 public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
-    // Constants
+    // Constants.
     private static final String SMS_SENDER_REQUEST_FORMAT = "{\"content\": {{body}}, \"to\": {{mobile}} }";
     private static final String USERNAME = "testUser1";
     private static final String USER_MOBILE = "+94674898234";
@@ -173,7 +173,6 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         restClient.closeHttpClient();
         super.clear();
         serverConfigurationManager.restoreToLastConfiguration(false);
-
     }
 
     @Test(dataProvider = "userProvider")
