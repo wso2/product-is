@@ -52,6 +52,7 @@ import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.Us
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq.Property;
 import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -99,6 +100,11 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     private static final String DISPLAY = "display";
     private static final String DISPLAY_NAME = "displayName";
     private static final String MEMBERS = "members";
+    private static final String LOCAL_CLAIM_DIALECT = "local";
+    private static final String CLAIM_UPDATE_JSON = "update-claim.json";
+    private static final String PRIMARY_CLAIM_MAPPING_UPDATE_JSON = "update-claim-mapping-primary.json";
+    private static final String CLAIM_MAPPING_UPDATE_JSON = "update-claim-mapping.json";
+    public static final String ADDRESS_CLAIM_ID = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9zdHJlZXRhZGRyZXNz";
 
     private final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private final CookieStore cookieStore = new BasicCookieStore();
@@ -106,6 +112,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     private OAuth2RestClient oAuth2RestClient;
     private OrgMgtRestClient orgMgtRestClient;
     private SCIM2RestClient scim2RestClient;
+    private ClaimManagementRestClient claimManagementRestClient;
     private CloseableHttpClient client;
     private String switchedM2MToken;
     private ApplicationResponseModel application;
@@ -135,6 +142,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
         userStoreMgtRestClient = new UserStoreMgtRestClient(serverURL, tenantInfo);
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(AUTHORIZED_APIS_JSON, this.getClass())));
 
@@ -158,6 +166,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
         scim2RestClient.closeHttpClient();
         oAuth2RestClient.closeHttpClient();
         userStoreMgtRestClient.closeHttpClient();
+        claimManagementRestClient.closeHttpClient();
         client.close();
     }
 
@@ -254,6 +263,39 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
 
         String accessToken = getAccessToken(code);
         Assert.assertNotNull(accessToken, "Access token is null.");
+    }
+
+    @Test(dependsOnMethods = {"testGetAccessTokenSecondaryJDBCUserStore"},
+            description = "Update the general claim details of a claim in the sub organization.")
+    public void testUpdateSubOrgClaim() throws Exception {
+
+        String claimUpdateRequestBody = RESTTestBase.readResource(CLAIM_UPDATE_JSON, this.getClass());
+        int responseCode = claimManagementRestClient.updateSubOrgClaim(LOCAL_CLAIM_DIALECT, ADDRESS_CLAIM_ID,
+                claimUpdateRequestBody, switchedM2MToken);
+        Assert.assertEquals(responseCode, HttpStatus.SC_FORBIDDEN,
+                "Claim property update should be restricted for sub organizations.");
+    }
+
+    @Test(dependsOnMethods = {"testUpdateSubOrgClaim"},
+            description = "Update the claim mapping for the primary user store in a sub organization claim.")
+    public void testUpdateSubOrgClaimMappingPrimaryUserStore() throws Exception {
+
+        String claimUpdateRequestBody = RESTTestBase.readResource(PRIMARY_CLAIM_MAPPING_UPDATE_JSON, this.getClass());
+        int responseCode = claimManagementRestClient.updateSubOrgClaim(LOCAL_CLAIM_DIALECT, ADDRESS_CLAIM_ID,
+                claimUpdateRequestBody, switchedM2MToken);
+        Assert.assertEquals(responseCode, HttpStatus.SC_FORBIDDEN,
+                "Claim mapping update of PRIMARY user store should be restricted for sub organizations.");
+    }
+
+    @Test(dependsOnMethods = {"testUpdateSubOrgClaimMappingPrimaryUserStore"},
+            description = "Update the claim mapping for the primary user store in a sub organization claim.")
+    public void testUpdateSubOrgClaimMappingSecondaryUserStore() throws Exception {
+
+        String claimUpdateRequestBody = RESTTestBase.readResource(CLAIM_MAPPING_UPDATE_JSON, this.getClass());
+        int responseCode = claimManagementRestClient.updateSubOrgClaim(LOCAL_CLAIM_DIALECT, ADDRESS_CLAIM_ID,
+                claimUpdateRequestBody, switchedM2MToken);
+        Assert.assertEquals(responseCode, HttpStatus.SC_OK,
+                "Secondary user store claim mapping update should be successful for sub organizations.");
     }
 
     @Test(dependsOnMethods = {"testGetAccessTokenSecondaryJDBCUserStore"},

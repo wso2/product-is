@@ -29,10 +29,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public class ClaimManagementRestClient extends RestBaseClient {
@@ -41,10 +43,13 @@ public class ClaimManagementRestClient extends RestBaseClient {
     private static final String CLAIM_DIALECTS_ENDPOINT_URI = "/claim-dialects";
 
     public static final String CLAIMS_ENDPOINT_URI = "/claims";
+    public static final String ORGANIZATION_PATH = "o";
+    public static final String PATH_SEPARATOR = "/";
     private final CloseableHttpClient client;
     private final String username;
     private final String password;
     private final String serverBasePath;
+    private final String subOrgBasePath;
 
     public ClaimManagementRestClient(String backendURL, Tenant tenantInfo) {
 
@@ -56,6 +61,8 @@ public class ClaimManagementRestClient extends RestBaseClient {
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
 
         serverBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH, tenantDomain);
+        subOrgBasePath = getSubOrgBasePath(backendURL, tenantDomain);
+
     }
 
     /**
@@ -130,7 +137,29 @@ public class ClaimManagementRestClient extends RestBaseClient {
         }
     }
 
-    public void updateExternalClaim(String dialectId, String claimId, ExternalClaimReq claimRequest) throws IOException {
+    /**
+     * Update the sub organization claim referenced by the provided id.
+     *
+     * @param dialectId        Claim dialect id.
+     * @param claimId          Claim id.
+     * @param requestBody      Request body.
+     * @param switchedM2MToken Switched M2M token.
+     * @return status code of the response.
+     * @throws Exception If an error occurred while updating the claim.
+     */
+    public int updateSubOrgClaim(String dialectId, String claimId, String requestBody, String switchedM2MToken)
+            throws Exception {
+
+        String endPointUrl = subOrgBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, requestBody,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    public void updateExternalClaim(String dialectId, String claimId, ExternalClaimReq claimRequest)
+            throws IOException {
 
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
@@ -159,5 +188,23 @@ public class ClaimManagementRestClient extends RestBaseClient {
     public void closeHttpClient() throws IOException {
 
         client.close();
+    }
+
+    private Header[] getHeadersWithBearerToken(String accessToken) {
+
+        Header[] headerList = new Header[2];
+        headerList[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BEARER_TOKEN_AUTHORIZATION_ATTRIBUTE +
+                accessToken);
+        headerList[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
+
+        return headerList;
+    }
+
+    private String getSubOrgBasePath(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH;
+        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH;
     }
 }
