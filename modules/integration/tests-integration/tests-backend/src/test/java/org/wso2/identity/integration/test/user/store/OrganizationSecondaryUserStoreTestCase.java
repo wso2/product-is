@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.user.store;
 
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -42,6 +44,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
@@ -113,6 +116,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     private OrgMgtRestClient orgMgtRestClient;
     private SCIM2RestClient scim2RestClient;
     private ClaimManagementRestClient claimManagementRestClient;
+    private IdentityProviderMgtServiceClient idpMgtServiceClient;
     private CloseableHttpClient client;
     private String switchedM2MToken;
     private ApplicationResponseModel application;
@@ -155,6 +159,10 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
 
         subOrgId = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
         switchedM2MToken = orgMgtRestClient.switchM2MToken(subOrgId);
+
+        ConfigurationContext configContext =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
     }
 
     @AfterClass(alwaysRun = true)
@@ -162,6 +170,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
 
         deleteApp(application.getId());
         orgMgtRestClient.deleteOrganization(subOrgId);
+        idpMgtServiceClient.deleteIdP("SSO");
         orgMgtRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         oAuth2RestClient.closeHttpClient();
