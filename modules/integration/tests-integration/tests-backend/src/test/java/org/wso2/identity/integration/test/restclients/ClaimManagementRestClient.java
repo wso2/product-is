@@ -64,7 +64,6 @@ public class ClaimManagementRestClient extends RestBaseClient {
 
         serverBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH, tenantDomain);
         subOrgBasePath = getSubOrgBasePath(backendURL, tenantDomain);
-
     }
 
     /**
