@@ -48,6 +48,7 @@ public class MockSMSProvider {
 
     private WireMockServer wireMockServer;
     private final AtomicReference<String> otp = new AtomicReference<>();
+    private final AtomicReference<String> smsContent = new AtomicReference<>();
 
     public void start() {
 
@@ -67,6 +68,9 @@ public class MockSMSProvider {
                                 // Extract the content value from the request body.
                                 String content =
                                         JsonPath.parse(serveEvent.getRequest().getBodyAsString()).read("$.content");
+
+                                // Store the content value for later use.
+                                smsContent.set(content);
 
                                 String regex = "\\b\\d{6}\\b";
 
@@ -122,5 +126,15 @@ public class MockSMSProvider {
     public String getOTP() {
 
         return otp.get();
+    }
+
+    public String getSmsContent() {
+
+        return smsContent.get();
+    }
+
+    public void clearSmsContent() {
+
+        smsContent.set(null);
     }
 }
