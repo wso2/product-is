@@ -150,6 +150,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
+            <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimProfilesWithSCIM2SchemaTest"/>
         </classes>
     </test>
 
