@@ -60,6 +60,7 @@
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.ClaimMappingsOnSecondaryUserStoreTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.JDBCUserStoreAddingTestCase"/>
+            <class name="org.wso2.identity.integration.test.user.store.OrganizationSecondaryUserStoreTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.LegacyJDBCUserStoreAddingTestCase"/>
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RequestObjectSignatureValidationTestCase"/>
