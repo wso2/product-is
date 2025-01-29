@@ -31,6 +31,7 @@ import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     private static final String CLAIM_DIALECTS_ENDPOINT_URI = "/claim-dialects";
 
+    public static final String LOCAL_CLAIMS_ENDPOINT_URI = "/local";
     public static final String CLAIMS_ENDPOINT_URI = "/claims";
     private final CloseableHttpClient client;
     private final String username;
@@ -56,6 +58,42 @@ public class ClaimManagementRestClient extends RestBaseClient {
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
 
         serverBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH, tenantDomain);
+    }
+
+    /**
+     * Add Local Claim.
+     *
+     * @param claimRequest Local Claim request object.
+     * @return Claim id.
+     * @throws IOException If an error occurred while adding a local claim.
+     */
+    public String addLocalClaim(LocalClaimReq claimRequest) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + LOCAL_CLAIMS_ENDPOINT_URI +
+                CLAIMS_ENDPOINT_URI;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, toJSONString(claimRequest),
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Local claim addition failed");
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Delete a Local Claim.
+     *
+     * @param claimId   Claim id.
+     * @throws IOException If an error occurred while deleting a local claim.
+     */
+    public void deleteLocalClaim(String claimId) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + LOCAL_CLAIMS_ENDPOINT_URI +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Local claim deletion failed");
+        }
     }
 
     /**

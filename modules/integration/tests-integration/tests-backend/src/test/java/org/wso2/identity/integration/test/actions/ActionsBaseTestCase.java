@@ -20,8 +20,8 @@ package org.wso2.identity.integration.test.actions;
 
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.restclients.ActionsRestClient;
 
 import java.io.IOException;

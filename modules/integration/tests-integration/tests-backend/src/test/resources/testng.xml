@@ -139,6 +139,8 @@
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtPasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2ImpersonationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAccessTokenAttributesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationCodeGrantJWTTokenTestCase"/>
@@ -146,6 +148,9 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCIdentityFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.PasswordlessSMSOTPAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
+            <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
+            <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimProfilesWithSCIM2SchemaTest"/>
         </classes>
     </test>
 
@@ -240,8 +245,10 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.admin.advisory.management.v1.AdminAdvisoryManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementFailureTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.ActionsFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken.PreIssueAccessTokenActionSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken.PreIssueAccessTokenActionFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
@@ -409,7 +416,6 @@
     <test name="is-tests-with-individual-configuration-changes" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.application.mgt.ServiceProviderUserRoleValidationTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase"/>
@@ -419,7 +425,6 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceJWTGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2TokenRenewalPerRequestTestCase"/>
-            <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.ChallengeQuestionsUITestCase"/>
@@ -429,6 +434,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenScopeValidatorTestCase" />
             <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
             <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
+            <class name="org.wso2.identity.integration.test.recovery.UsernameRecoveryTestCase"/>
         </classes>
     </test>
 

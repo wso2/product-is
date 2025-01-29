@@ -177,6 +177,12 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
         assertNotNull(smsNotificationSenderName);
         response = getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
         validateErrorResponse(response, HttpStatus.SC_CONFLICT, "NSM-60002");
+
+        // Cleaning the first sms provider created.
+        response =
+                getResponseOfDelete(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
+                smsNotificationSenderName);
+        response.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
     @Test

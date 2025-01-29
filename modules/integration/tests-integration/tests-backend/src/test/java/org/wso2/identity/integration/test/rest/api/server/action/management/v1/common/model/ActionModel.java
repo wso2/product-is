@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.action.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,26 +24,29 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class ActionUpdateModel  {
+public class ActionModel  {
 
     private String name;
     private String description;
-    private EndpointUpdateModel endpoint;
+    private Endpoint endpoint;
     private ORRule rule;
 
     /**
      **/
-    public ActionUpdateModel name(String name) {
+    public ActionModel name(String name) {
 
         this.name = name;
         return this;
     }
 
-    @ApiModelProperty(example = "Access Token Pre Issue", value = "")
+    @ApiModelProperty(example = "Access Token Pre Issue", required = true, value = "")
     @JsonProperty("name")
-    @Valid @Size(min=1,max=255)
+    @Valid
+    @NotNull(message = "Property name cannot be null.")
+    @Size(min=1,max=255)
     public String getName() {
         return name;
     }
@@ -53,7 +56,7 @@ public class ActionUpdateModel  {
 
     /**
      **/
-    public ActionUpdateModel description(String description) {
+    public ActionModel description(String description) {
 
         this.description = description;
         return this;
@@ -71,25 +74,27 @@ public class ActionUpdateModel  {
 
     /**
      **/
-    public ActionUpdateModel endpoint(EndpointUpdateModel endpoint) {
+    public ActionModel endpoint(Endpoint endpoint) {
 
         this.endpoint = endpoint;
         return this;
     }
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(required = true, value = "")
     @JsonProperty("endpoint")
     @Valid
-    public EndpointUpdateModel getEndpoint() {
+    @NotNull(message = "Property endpoint cannot be null.")
+
+    public Endpoint getEndpoint() {
         return endpoint;
     }
-    public void setEndpoint(EndpointUpdateModel endpoint) {
+    public void setEndpoint(Endpoint endpoint) {
         this.endpoint = endpoint;
     }
 
     /**
      **/
-    public ActionUpdateModel rule(ORRule rule) {
+    public ActionModel rule(ORRule rule) {
 
         this.rule = rule;
         return this;
@@ -116,11 +121,11 @@ public class ActionUpdateModel  {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        ActionUpdateModel actionUpdateModel = (ActionUpdateModel) o;
-        return Objects.equals(this.name, actionUpdateModel.name) &&
-                Objects.equals(this.description, actionUpdateModel.description) &&
-                Objects.equals(this.endpoint, actionUpdateModel.endpoint) &&
-                Objects.equals(this.rule, actionUpdateModel.rule);
+        ActionModel actionModel = (ActionModel) o;
+        return Objects.equals(this.name, actionModel.name) &&
+                Objects.equals(this.description, actionModel.description) &&
+                Objects.equals(this.endpoint, actionModel.endpoint) &&
+                Objects.equals(this.rule, actionModel.rule);
     }
 
     @Override
@@ -132,8 +137,7 @@ public class ActionUpdateModel  {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class ActionUpdateModel {\n");
-
+        sb.append("class ActionModel {\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    endpoint: ").append(toIndentedString(endpoint)).append("\n");

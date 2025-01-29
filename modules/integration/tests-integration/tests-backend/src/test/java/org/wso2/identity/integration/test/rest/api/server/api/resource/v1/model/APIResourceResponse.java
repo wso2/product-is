@@ -44,6 +44,8 @@ public class APIResourceResponse {
 
     private String self;
 
+    private List<AuthorizationDetailsType> authorizationDetailsTypes = null;
+
     /**
      **/
     public APIResourceResponse id(String id) {
@@ -256,7 +258,30 @@ public class APIResourceResponse {
         this.self = self;
     }
 
+    public APIResourceResponse authorizationDetailsTypes(List<AuthorizationDetailsType> authorizationDetailsTypes) {
 
+        this.authorizationDetailsTypes = authorizationDetailsTypes;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("authorizationDetailsTypes")
+    @Valid
+    public List<AuthorizationDetailsType> getAuthorizationDetailsTypes() {
+        return authorizationDetailsTypes;
+    }
+
+    public void setAuthorizationDetailsTypes(List<AuthorizationDetailsType> authorizationDetailsTypes) {
+        this.authorizationDetailsTypes = authorizationDetailsTypes;
+    }
+
+    public APIResourceResponse addAuthorizationDetailsTypesItem(AuthorizationDetailsType authorizationDetailsTypeItem) {
+        if (this.authorizationDetailsTypes == null) {
+            this.authorizationDetailsTypes = new ArrayList<AuthorizationDetailsType>();
+        }
+        this.authorizationDetailsTypes.add(authorizationDetailsTypeItem);
+        return this;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -301,6 +326,7 @@ public class APIResourceResponse {
         sb.append("    subscribedApplications: ").append(toIndentedString(subscribedApplications)).append("\n");
         sb.append("    properties: ").append(toIndentedString(properties)).append("\n");
         sb.append("    self: ").append(toIndentedString(self)).append("\n");
+        sb.append("    authorizationDetailsTypes: ").append(toIndentedString(authorizationDetailsTypes)).append("\n");
         sb.append("}");
         return sb.toString();
     }

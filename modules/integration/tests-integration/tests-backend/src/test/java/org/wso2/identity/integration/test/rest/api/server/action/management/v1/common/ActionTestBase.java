@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.action.management.v1;
+package org.wso2.identity.integration.test.rest.api.server.action.management.v1.common;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,21 +35,18 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ActionsTestBase extends RESTAPIServerTestBase {
+public class ActionTestBase extends RESTAPIServerTestBase {
 
     private static final String API_DEFINITION_NAME = "Actions.yaml";
     protected static final String API_VERSION = "v1";
 
     protected static final String ACTION_MANAGEMENT_API_BASE_PATH = "/actions";
     protected static final String TYPES_API_PATH = "/types";
-    protected static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
     protected static final String ACTION_DEACTIVATE_PATH = "/deactivate";
     protected static final String ACTION_ACTIVATE_PATH = "/activate";
 
-    protected static final String PRE_ISSUE_ACCESS_TOKEN_ACTION_TYPE = "PRE_ISSUE_ACCESS_TOKEN";
-
-    protected static final String TEST_ACTION_NAME = "Access Token Pre Issue";
-    protected static final String TEST_ACTION_DESCRIPTION = "This is the configuration of pre-action for issuing access token.";
+    protected static final String TEST_ACTION_NAME = "Action name";
+    protected static final String TEST_ACTION_DESCRIPTION = "This is the configuration of action.";
     protected static final String TEST_ACTION_ACTIVE_STATUS = "ACTIVE";
     protected static final String TEST_ACTION_INACTIVE_STATUS = "INACTIVE";
     protected static final String TEST_ENDPOINT_URI = "https://abc.com/token";
@@ -59,8 +56,8 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_PASSWORD_AUTH_PROPERTY_VALUE = "myPassword123";
     protected static final String TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE = "adminUpdated";
     protected static final String TEST_UPDATED_PASSWORD_AUTH_PROPERTY_VALUE = "myPassword123Updated";
-    protected static final String TEST_ACTION_UPDATED_NAME = "Access Token Pre Issue Updated";
-    protected static final String TEST_ACTION_UPDATED_DESCRIPTION = "This is the updated configuration of pre-action for issuing access token.";
+    protected static final String TEST_ACTION_UPDATED_NAME = "Action name Updated";
+    protected static final String TEST_ACTION_UPDATED_DESCRIPTION = "This is the updated configuration of action.";
     protected static final String TEST_UPDATED_ENDPOINT_URI = "https://abc.com/tokenUpdated";
     protected static final String TEST_PROPERTIES_AUTH_ATTRIBUTE = "properties";
     protected static final String TEST_ACCESS_TOKEN_AUTH_PROPERTY = "accessToken";
@@ -78,7 +75,6 @@ public class ActionsTestBase extends RESTAPIServerTestBase {
     protected static String swaggerDefinition;
 
     static {
-        NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preUpdatePassword");
         NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preUpdateProfile");
         NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preRegistration");
 
