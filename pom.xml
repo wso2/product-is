@@ -2500,7 +2500,7 @@
         <social.authenticator.google.version>5.2.15</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.3</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.6</social.authenticator.apple.version>
-        <social.authenticator.github.version>1.1.14</social.authenticator.github.version>
+        <social.authenticator.github.version>1.1.17</social.authenticator.github.version>
 
         <!-- Provisioning connector Versions -->
         <provisioning.connector.google.version>5.2.6</provisioning.connector.google.version>
