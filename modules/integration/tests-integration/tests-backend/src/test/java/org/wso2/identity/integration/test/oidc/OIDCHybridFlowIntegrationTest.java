@@ -114,7 +114,7 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
         inboundProtocolsConfig.setOidc(oidcConfig);
 
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName("RarServiceProvider1");
+        application.setName("HybridAuthTestSP");
         application.setDescription(SERVICE_PROVIDER_DESC);
         application.setIsManagementApp(true);
         application.setClaimConfiguration(super.setApplicationClaimConfig());
