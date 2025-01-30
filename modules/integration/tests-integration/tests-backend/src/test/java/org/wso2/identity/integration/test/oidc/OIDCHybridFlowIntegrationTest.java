@@ -91,10 +91,10 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApp(applicationId);
+        super.deleteApp(this.opaqueAppId);
 
-        client.close();
-        restClient.closeHttpClient();
+        this.client.close();
+        super.restClient.closeHttpClient();
     }
 
     private ApplicationModel getApplicationWithOpaqueTokens() {
@@ -127,7 +127,7 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     public void testHybridFlowWithConfiguredResponseType() throws Exception {
 
         final String sessionDataKeyConsent =
-                this.sendAuthCodeGrantAuthRequestPost(this.getConfiguredHybridFlowRequestParams());
+                this.sendHybridAuthRequestPost(this.getConfiguredHybridFlowRequestParams());
         final HttpResponse response = sendApprovalPost(this.client, sessionDataKeyConsent);
         final Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         final String authorizationCode = DataExtractUtil
@@ -143,7 +143,7 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     public void testHybridFlowWithNonConfiguredResponseType() throws Exception {
 
         final String sessionDataKeyConsent =
-                this.sendAuthCodeGrantAuthRequestPost(this.getNonConfiguredHybridFlowRequestParams());
+                this.sendHybridAuthRequestPost(this.getNonConfiguredHybridFlowRequestParams());
         final HttpResponse response = sendApprovalPost(this.client, sessionDataKeyConsent);
         final Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         final String oauthErrorCode = DataExtractUtil
@@ -152,9 +152,9 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     }
 
     /**
-     * Initiates an authorization request to IS and obtain session data key.
+     * Initiate the hybrid flow by sending an authorization request to IS and obtain session data key.
      */
-    private String sendAuthCodeGrantAuthRequestPost(final List<NameValuePair> urlParameters) throws Exception {
+    private String sendHybridAuthRequestPost(final List<NameValuePair> urlParameters) throws Exception {
 
         final HttpResponse response = super.sendPostRequestWithParameters(this.client, urlParameters,
                 OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
