@@ -416,10 +416,10 @@
     </test>
     <test name="is-tests-with-individual-configuration-changes" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCHybridFlowIntegrationTest"/>
             <class name="org.wso2.identity.integration.test.application.mgt.ServiceProviderUserRoleValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.provisioning.DBSeperationTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCFileBasedSkipLoginConsentTestCase"/>
-            <class name="org.wso2.identity.integration.test.oidc.OIDCHybridFlowIntegrationTest"/>
             <class name="org.wso2.identity.integration.test.scim.IDENTITY4776SCIMServiceWithOAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.UserInformationRecoveryServiceTenantEmailUserTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2HashAlgorithmTestCase"/>

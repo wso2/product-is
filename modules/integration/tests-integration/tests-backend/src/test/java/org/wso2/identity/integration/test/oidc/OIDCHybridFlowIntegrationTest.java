@@ -33,6 +33,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -205,7 +206,10 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     private String sendAuthCodeGrantAuthenticatePost(String sessionDataKey) throws Exception {
 
         HttpResponse response = sendLoginPost(this.client, sessionDataKey);
+        Assert.assertNotNull(response, "Login request failed. response is null.");
+
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Login response header is null");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(this.client, locationHeader.getValue());
@@ -215,4 +219,3 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
                 OAuth2Constant.SESSION_DATA_KEY_CONSENT);
     }
 }
-
