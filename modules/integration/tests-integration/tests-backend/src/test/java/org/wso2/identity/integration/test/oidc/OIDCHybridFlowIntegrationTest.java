@@ -61,7 +61,6 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     private CloseableHttpClient client;
 
     private String applicationId;
-    private String accessToken;
     private String opaqueAppId;
     private String clientID;
 
@@ -93,10 +92,6 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     public void atEnd() throws Exception {
 
         deleteApp(applicationId);
-
-        consumerKey = null;
-        consumerSecret = null;
-        accessToken = null;
 
         client.close();
         restClient.closeHttpClient();
