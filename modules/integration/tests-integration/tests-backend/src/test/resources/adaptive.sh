@@ -210,27 +210,5 @@ else
      mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-tree:$ASM_VERSION -DoutputDirectory=$LIB_REPO
      echo "ASM-Tree download completed. Downloaded version : asm-tree-${ASM_VERSION}"
   fi
-
-  if compgen -G "$CARBON_HOME/repository/components/lib/geronimo-spec-jms-*.jar" > /dev/null; then
-      location=$(find "$CARBON_HOME/repository/components/lib/" ~+ -type f -name "geronimo-spec-jms-*.jar" | head -1)
-      full_artifact_name=$(basename ${location})
-      artifact_name=$(echo "$full_artifact_name" | awk -F'-' '{print $3}')
-      LOCAL_JMS_VERSION=$(echo "$artifact_name" | awk -F'.' '{print $1 "." $2}')
-      if [ "$JMS_VERSION" = "$LOCAL_JMS_VERSION" ]; then
-        echo "Geronimo-Spec-Jms library exists. No need to download."
-      else
-        echo "Required Geronimo-Spec-Jms library not found. Remove existing library : ${full_artifact_name}"
-        rm $location
-        echo "Downloading required Geronimo-Spec-Jms library : geronimo-spec-jms-${JMS_VERSION}"
-        mvn dependency:get --batch-mode -DremoteRepositories=https://dist.wso2.org/maven2/ -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:${JMS_VERSION}
-        mvn dependency:copy --batch-mode -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:${JMS_VERSION} -DoutputDirectory=$LIB_REPO
-        echo "Geronimo-Spec-Jms library updated."
-      fi
-  else
-     echo "Geronimo-Spec-Jms library not found. Starting to download....."
-     mvn dependency:get --batch-mode -DremoteRepositories=https://dist.wso2.org/maven2/ -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:${JMS_VERSION}
-     mvn dependency:copy --batch-mode -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:${JMS_VERSION} -DoutputDirectory=$LIB_REPO
-     echo "Geronimo-Spec-Jms download completed. Downloaded version : geronimo-spec-jms-${JMS_VERSION}"
-  fi
   echo "Adaptive authentication successfully enabled."
 fi

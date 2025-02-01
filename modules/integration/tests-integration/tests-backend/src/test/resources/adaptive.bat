@@ -216,31 +216,6 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-tree-*.jar" (
   echo ASM-Tree download completed. Downloaded version : asm-tree-%ASM_VERSION%
 )
 
-if exist "%CARBON_HOME%\repository\components\lib\geronimo-spec-jms-*.jar" (
-  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\geronimo-spec-jms-*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-  for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
-  for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_JMS_VERSION=%%l.%%m"
-
-  if %JMS_VERSION%==!LOCAL_JMS_VERSION!  (
-    echo Geronimo-Spec-Jms library exists. No need to download.
-  ) else (
-    set SERVER_RESTART_REQUIRED="true"
-    echo Required Geronimo-Spec-Jms library not found. Remove existing library : !full_artifact_name!
-    del !location!
-    call :removeLibrary "Geronimo Spec Jms", "dropins", "%CARBON_HOME%\repository\components\dropins\geronimo_spec_jms_!LOCAL_JMS_VERSION!*.jar"
-    echo Downloading required Geronimo-Spec-Jms library : geronimo-spec-jms-%JMS_VERSION%
-    call mvn dependency:get --batch-mode -DremoteRepositories=https://dist.wso2.org/maven2/ -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:%JMS_VERSION%
-    call mvn dependency:copy --batch-mode -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:%JMS_VERSION% -DoutputDirectory=%LIB_REPO%
-    echo Geronimo-Spec-Jms library updated.
-  )
-) else (
-  set SERVER_RESTART_REQUIRED="true"
-  echo Geronimo-Spec-Jms library not found. Starting to download.....
-  call mvn dependency:get --batch-mode -DremoteRepositories=https://dist.wso2.org/maven2/ -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:%JMS_VERSION%
-  call mvn dependency:copy --batch-mode -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:%JMS_VERSION% -DoutputDirectory=%LIB_REPO%
-  echo Geronimo-Spec-Jms download completed. Downloaded version : geronimo-spec-jms-%JMS_VERSION%
-)
 echo Adaptive authentication successfully enabled.
 goto printRestartMsg
 
