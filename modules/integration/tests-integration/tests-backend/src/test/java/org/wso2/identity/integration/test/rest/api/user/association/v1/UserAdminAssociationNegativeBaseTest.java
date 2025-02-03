@@ -100,7 +100,7 @@ public class UserAdminAssociationNegativeBaseTest extends UserAssociationTestBas
     @Test
     public void testCreateFederatedAssociationWithoutUser() {
 
-        createFederatedAssociation(testUser1Id, EXTERNAL_USER_ID_1, 404);
+        createFederatedAssociation(testUser1Id, EXTERNAL_USER_ID_1, HttpStatus.SC_NOT_FOUND);
     }
 
     @Test(dependsOnMethods = "testCreateFederatedAssociationWithoutUser")
@@ -111,7 +111,7 @@ public class UserAdminAssociationNegativeBaseTest extends UserAssociationTestBas
         } catch (Exception e) {
             log.error("Error while creating the users :" + TEST_USER_1 + ".");
         }
-        createFederatedAssociation(testUser1Id, null, 400);
+        createFederatedAssociation(testUser1Id, null, HttpStatus.SC_BAD_REQUEST);
     }
 
     private void createFederatedAssociation(String userId, String federatedUserId, int statusCode) {

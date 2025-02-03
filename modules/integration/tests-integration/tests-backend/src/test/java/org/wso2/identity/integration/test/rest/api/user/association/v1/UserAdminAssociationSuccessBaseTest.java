@@ -159,7 +159,7 @@ public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase
         getResponseOfPost(url, body)
                 .then()
                 .assertThat()
-                .statusCode(HttpStatus.SC_NO_CONTENT)
+                .statusCode(HttpStatus.SC_OK)
                 .log().ifValidationFails();
     }
 
