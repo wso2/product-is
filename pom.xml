@@ -2462,7 +2462,7 @@
         <identity.inbound.auth.oauth.version>7.0.228</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.50</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.11.15</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.11.16</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.7</identity.inbound.provisioning.scim.version>
         <identity.inbound.provisioning.scim2.version>3.4.116</identity.inbound.provisioning.scim2.version>
 
@@ -2540,7 +2540,7 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.88</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.91</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.20</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.42</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
@@ -2563,8 +2563,8 @@
         <conditional.authentication.functions.version>1.2.73</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.40.21</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.16.19</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.40.23</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.16.21</identity.apps.myaccount.version>
         <identity.apps.core.version>2.12.5</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
