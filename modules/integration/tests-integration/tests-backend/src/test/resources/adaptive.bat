@@ -126,13 +126,15 @@ if exist "%CARBON_HOME%\repository\components\lib\nashorn-core-*.jar" (
     del !location!
     call :removeLibrary "Nashorn", "dropins", "%CARBON_HOME%\repository\components\dropins\nashorn_core_!LOCAL_NASHORN_VERSION!*.jar"    
     echo Downloading required Nashorn library : nashorn-core-%NASHORN_VERSION%
-    call mvn dependency:get -Dartifact=org.openjdk.nashorn:nashorn-core:%NASHORN_VERSION% -Ddest=%LIB_REPO%
+    call mvn dependency:get --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:%NASHORN_VERSION%
+    call mvn dependency:copy --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:%NASHORN_VERSION% -DoutputDirectory=%LIB_REPO%
     echo Nashorn library updated.
   )
 ) else (
   set SERVER_RESTART_REQUIRED="true"
   echo Nashorn library not found. Starting to download.....
-  call mvn dependency:get -Dartifact=org.openjdk.nashorn:nashorn-core:%NASHORN_VERSION% -Ddest=%LIB_REPO%
+  call mvn dependency:get --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:%NASHORN_VERSION%
+  call mvn dependency:copy --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:%NASHORN_VERSION% -DoutputDirectory=%LIB_REPO%
   echo Nashorn download completed. Downloaded version : nashorn-core-%NASHORN_VERSION%
 )
 
@@ -150,13 +152,15 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-util-*.jar" (
     del !location!
     call :removeLibrary "ASM Util", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_util_!LOCAL_ASM_VERSION!*.jar"    
     echo Downloading required ASM-Util library : asm-util-%ASM_VERSION%
-    call mvn dependency:get -Dartifact=org.ow2.asm:asm-util:%ASM_VERSION% -Ddest=%LIB_REPO%
+    call mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-util:%ASM_VERSION%
+    call mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-util:%ASM_VERSION% -DoutputDirectory=%LIB_REPO%
     echo ASM-Util library updated.
   )
 ) else (
   set SERVER_RESTART_REQUIRED="true"
   echo ASM-Util library not found. Starting to download.....
-  call mvn dependency:get -Dartifact=org.ow2.asm:asm-util:%ASM_VERSION% -Ddest=%LIB_REPO%
+  call mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-util:%ASM_VERSION%
+  call mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-util:%ASM_VERSION% -DoutputDirectory=%LIB_REPO%
   echo ASM-Util download completed. Downloaded version : asm-util-%ASM_VERSION%
 )
 
@@ -174,13 +178,15 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-commons-*.jar" (
     del !location!
     call :removeLibrary "ASM Commons", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_commons_!LOCAL_ASM_VERSION!*.jar"
     echo Downloading required ASM-Commons library : asm-commons-%ASM_VERSION%
-    call mvn dependency:get -Dartifact=org.ow2.asm:asm-commons:%ASM_VERSION% -Ddest=%LIB_REPO%
+    call mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-commons:%ASM_VERSION%
+    call mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-commons:%ASM_VERSION% -DoutputDirectory=%LIB_REPO%
     echo ASM-Commons library updated.
   )
 ) else (
   set SERVER_RESTART_REQUIRED="true"
   echo ASM-Commons library not found. Starting to download.....
-  call mvn dependency:get -Dartifact=org.ow2.asm:asm-commons:%ASM_VERSION% -Ddest=%LIB_REPO%
+  call mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-commons:%ASM_VERSION%
+  call mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-commons:%ASM_VERSION% -DoutputDirectory=%LIB_REPO%
   echo ASM-Commons download completed. Downloaded version : asm-commons-%ASM_VERSION%
 )
 
@@ -198,39 +204,18 @@ if exist "%CARBON_HOME%\repository\components\lib\asm-tree-*.jar" (
     del !location!
     call :removeLibrary "ASM Tree", "dropins", "%CARBON_HOME%\repository\components\dropins\asm_tree_!LOCAL_ASM_VERSION!*.jar"
     echo Downloading required ASM-Tree library : asm-tree-%ASM_VERSION%
-    call mvn dependency:get -Dartifact=org.ow2.asm:asm-tree:%ASM_VERSION% -Ddest=%LIB_REPO%
+    call mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-tree:%ASM_VERSION%
+    call mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-tree:%ASM_VERSION% -DoutputDirectory=%LIB_REPO%
     echo ASM-Tree library updated.
   )
 ) else (
   set SERVER_RESTART_REQUIRED="true"
   echo ASM-Tree library not found. Starting to download.....
-  call mvn dependency:get -Dartifact=org.ow2.asm:asm-tree:%ASM_VERSION% -Ddest=%LIB_REPO%
+  call mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-tree:%ASM_VERSION%
+  call mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-tree:%ASM_VERSION% -DoutputDirectory=%LIB_REPO%
   echo ASM-Tree download completed. Downloaded version : asm-tree-%ASM_VERSION%
 )
 
-if exist "%CARBON_HOME%\repository\components\lib\geronimo-spec-jms-*.jar" (
-  for /f "delims=" %%i in ('dir /s /b %CARBON_HOME%\repository\components\lib\geronimo-spec-jms-*.jar') do set "location=%%i"
-  for %%j in (!location!!) do set "full_artifact_name=%%~nxj"
-  for /f "tokens=3 delims=-" %%k in ("!full_artifact_name!") do set "artifact_name=%%k"
-  for /f "tokens=1,2 delims=." %%l in ("!artifact_name!") do set "LOCAL_JMS_VERSION=%%l.%%m"
-
-  if %JMS_VERSION%==!LOCAL_JMS_VERSION!  (
-    echo Geronimo-Spec-Jms library exists. No need to download.
-  ) else (
-    set SERVER_RESTART_REQUIRED="true"
-    echo Required Geronimo-Spec-Jms library not found. Remove existing library : !full_artifact_name!
-    del !location!
-    call :removeLibrary "Geronimo Spec Jms", "dropins", "%CARBON_HOME%\repository\components\dropins\geronimo_spec_jms_!LOCAL_JMS_VERSION!*.jar"
-    echo Downloading required Geronimo-Spec-Jms library : geronimo-spec-jms-%JMS_VERSION%
-    call mvn dependency:get -DrepoUrl=https://dist.wso2.org/maven2/ -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:%JMS_VERSION% -Ddest=%LIB_REPO%
-    echo Geronimo-Spec-Jms library updated.
-  )
-) else (
-  set SERVER_RESTART_REQUIRED="true"
-  echo Geronimo-Spec-Jms library not found. Starting to download.....
-  call mvn dependency:get -DrepoUrl=https://dist.wso2.org/maven2/ -Dartifact=geronimo-spec/wso2:geronimo-spec-jms:%JMS_VERSION% -Ddest=%LIB_REPO%
-  echo Geronimo-Spec-Jms download completed. Downloaded version : geronimo-spec-jms-%JMS_VERSION%
-)
 echo Adaptive authentication successfully enabled.
 goto printRestartMsg
 

@@ -56,7 +56,7 @@ jobs:
           echo "::warning::$PR_BUILD_RESULT_LOG"
           
           PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-          if [ "$PR_BUILD_SUCCESS_COUNT" != "11" ]; then
+          if [ "$PR_BUILD_SUCCESS_COUNT" != "17" ]; then
             echo "Success Count $PR_BUILD_SUCCESS_COUNT"
             echo "PR BUILD not successfull. Aborting."
             echo "::error::PR BUILD not successfull. Check artifacts for logs."
