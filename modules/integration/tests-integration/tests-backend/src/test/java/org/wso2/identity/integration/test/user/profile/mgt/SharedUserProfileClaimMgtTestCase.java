@@ -41,9 +41,6 @@ import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.restclients.UserSharingRestClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 
 /**
@@ -181,9 +178,23 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         UserItemAddGroupobj givenNameUpdatePatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
         givenNameUpdatePatchOp.setPath("name.givenName");
         givenNameUpdatePatchOp.setValue("UpdatedGivenName");
-        org.json.simple.JSONObject userUpdateResponse = scim2RestClient.updateSubOrgUser(
-                new PatchOperationRequestObject().addOperations(givenNameUpdatePatchOp), sharedUserIdInLevel1Org,
+        // Try to update given name of shared user in level 1 org.
+        updateGivenNameInSharedUserProfile(givenNameUpdatePatchOp, sharedUserIdInLevel1Org,
                 switchedM2MTokenForLevel1Org);
-        Assert.assertEquals(userUpdateResponse.get("status"), 400);
+        // Try to update given name of shared user in level 2 org.
+        updateGivenNameInSharedUserProfile(givenNameUpdatePatchOp, sharedUserIdInLevel2Org,
+                switchedM2MTokenForLevel2Org);
+
+    }
+
+    private void updateGivenNameInSharedUserProfile(UserItemAddGroupobj givenNameUpdatePatchOp, String sharedUserId,
+                                                    String switchedM2MTokenForOrg) throws Exception {
+
+        org.json.simple.JSONObject userUpdateResponse = scim2RestClient.updateSubOrgUser(
+                new PatchOperationRequestObject().addOperations(givenNameUpdatePatchOp), sharedUserId,
+                switchedM2MTokenForOrg);
+        Assert.assertEquals(userUpdateResponse.get("status"), "400");
+        Assert.assertEquals(userUpdateResponse.get("detail"),
+                "Claim: http://wso2.org/claims/givenname is not allowed to be updated for shared users.");
     }
 }
