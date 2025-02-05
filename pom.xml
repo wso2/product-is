@@ -1842,6 +1842,7 @@
                 <groupId>org.wso2.carbon.utils</groupId>
                 <artifactId>org.wso2.carbon.database.utils</artifactId>
                 <version>${carbon.database.utils.version}</version>
+                <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.registry</groupId>
