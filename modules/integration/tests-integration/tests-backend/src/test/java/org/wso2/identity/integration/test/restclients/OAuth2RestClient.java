@@ -78,7 +78,9 @@ public class OAuth2RestClient extends RestBaseClient {
     private final String applicationManagementApiBasePath;
     private final String subOrgApplicationManagementApiBasePath;
     private final String apiResourceManagementApiBasePath;
+    private final String subOrgApiResourceManagementApiBasePath;
     private final String roleV2ApiBasePath;
+    private final String subOrgRoleV2ApiBasePath;
     private final String username;
     private final String password;
 
@@ -91,7 +93,9 @@ public class OAuth2RestClient extends RestBaseClient {
         applicationManagementApiBasePath = getApplicationsPath(backendUrl, tenantDomain);
         subOrgApplicationManagementApiBasePath = getSubOrgApplicationsPath(backendUrl, tenantDomain);
         apiResourceManagementApiBasePath = getAPIResourcesPath(backendUrl, tenantDomain);
+        subOrgApiResourceManagementApiBasePath = getSubOrgAPIResourcesPath(backendUrl, tenantDomain);
         roleV2ApiBasePath = getSCIM2RoleV2Path(backendUrl, tenantDomain);
+        subOrgRoleV2ApiBasePath = getSubOrgSCIM2RoleV2Path(backendUrl, tenantDomain);
     }
 
     /**
@@ -119,6 +123,27 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create an Application in sub organization.
+     *
+     * @param jsonRequest Application Model with application creation details.
+     * @return Id of the created application.
+     * @throws IOException   If an error occurred while creating an application.
+     */
+    public String createApplicationInSubOrganization(String jsonRequest, String switchedM2MToken) throws IOException {
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(subOrgApplicationManagementApiBasePath, jsonRequest,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                throw new RuntimeException("Error occurred while creating the application. Response: " + responseBody);
+            }
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
      * To create V2 roles.
      *
      * @param role an instance of RoleV2
@@ -130,6 +155,27 @@ public class OAuth2RestClient extends RestBaseClient {
         String jsonRequest = toJSONString(role);
         try (CloseableHttpResponse response = getResponseOfHttpPost(roleV2ApiBasePath, jsonRequest,
                 getHeaders())) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * To create V2 roles in sub organization.
+     *
+     * @param role an instance of RoleV2
+     * @return the roleID
+     * @throws IOException throws if an error occurs while creating the role.
+     */
+    public String createV2RolesInSubOrganization(RoleV2 role, String switchedM2MToken) throws IOException {
+
+        String jsonRequest = toJSONString(role);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(subOrgRoleV2ApiBasePath, jsonRequest,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                throw new RuntimeException("Error occurred while creating the role. Response: " + responseBody);
+            }
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
         }
@@ -178,6 +224,26 @@ public class OAuth2RestClient extends RestBaseClient {
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ApplicationResponseModel.class);
+        }
+    }
+
+    /**
+     * Get Application details.
+     *
+     * @param appId Application id.
+     * @return ApplicationResponseModel object.
+     * @throws IOException If an error occurred while getting an application.
+     */
+    public ApplicationResponseModel getSubOrgApplication(String appId, String switchedToken) throws IOException {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeadersWithBearerToken(
+                switchedToken))) {
             String responseBody = EntityUtils.toString(response.getEntity());
 
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
@@ -320,6 +386,13 @@ public class OAuth2RestClient extends RestBaseClient {
         return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
     }
 
+    public OpenIDConnectConfiguration getOIDCInboundDetailsForSubOrgApplications(String appId, String switchedToken) throws Exception {
+
+        String responseBody = getInboundProtocolConfigForSubOrgApplication(appId, OIDC, switchedToken);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
+    }
+
     /**
      * Get SAML inbound configuration details of an application.
      *
@@ -341,6 +414,16 @@ public class OAuth2RestClient extends RestBaseClient {
                 PATH_SEPARATOR + inboundType;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return EntityUtils.toString(response.getEntity());
+        }
+    }
+
+    private String getInboundProtocolConfigForSubOrgApplication(String appId, String inboundType, String switchedToken) throws Exception {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + inboundType;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeadersWithBearerToken(switchedToken))) {
             return EntityUtils.toString(response.getEntity());
         }
     }
@@ -412,6 +495,15 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
+    private String getSubOrgAPIResourcesPath(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH + API_RESOURCE_MANAGEMENT_PATH;
+        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH +
+                API_RESOURCE_MANAGEMENT_PATH;
+    }
+
     private String getSCIM2RoleV2Path(String serverUrl, String tenantDomain) {
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
@@ -419,6 +511,15 @@ public class OAuth2RestClient extends RestBaseClient {
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
         }
+    }
+
+    private String getSubOrgSCIM2RoleV2Path(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
+        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + SCIM_BASE_PATH +
+                ROLE_V2_BASE_PATH;
     }
 
     private Header[] getHeaders() {
@@ -463,6 +564,26 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Add API authorization to an application registered in a sub organization.
+     *
+     * @param appId                      Sub organization application id.
+     * @param authorizedAPICreationModel AuthorizedAPICreationModel object with api authorization details.
+     * @return Status code of the response.
+     * @throws IOException Error when getting the response.
+     */
+    public int addAPIAuthorizationToSubOrgApplication(String appId, AuthorizedAPICreationModel
+            authorizedAPICreationModel, String switchedM2MToken) throws IOException {
+
+        String jsonRequestBody = toJSONString(authorizedAPICreationModel);
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId + AUTHORIZED_API_BASE_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequestBody,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
      * Get API resources by filtering.
      *
      * @param apiResourceFilter API resource filter.
@@ -482,6 +603,28 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Get API resources by filtering from sub organization.
+     *
+     * @param apiResourceFilter API resource filter.
+     * @return List of API resources.
+     * @throws IOException Error when getting the filtered API resource.
+     */
+    public List<APIResourceListItem> getAPIResourcesWithFilteringFromSubOrganization(String apiResourceFilter,
+                                                                                     String switchedM2MToken)
+            throws IOException {
+
+        String endPointUrl = subOrgApiResourceManagementApiBasePath + "?filter=" + apiResourceFilter;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeadersWithBearerToken(
+                switchedM2MToken))) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            APIResourceListResponse apiResourceListResponse =
+                    jsonWriter.readValue(responseBody, APIResourceListResponse.class);
+            return apiResourceListResponse.getApiResources();
+        }
+    }
+
+    /**
      * Get API resource scopes.
      *
      * @param apiIdentifier API identifier.
@@ -492,6 +635,26 @@ public class OAuth2RestClient extends RestBaseClient {
 
         String endPointUrl = apiResourceManagementApiBasePath + PATH_SEPARATOR + apiIdentifier;
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            APIResourceResponse apiResourceResponse = jsonWriter.readValue(responseBody, APIResourceResponse.class);
+            return apiResourceResponse.getScopes();
+        }
+    }
+
+    /**
+     * Get API resource scopes in sub organization.
+     *
+     * @param apiIdentifier API identifier.
+     * @return List of API resource scopes.
+     * @throws IOException Error when getting the scopes.
+     */
+    public List<ScopeGetModel> getAPIResourceScopesInSubOrganization(String apiIdentifier, String switchedM2MToken)
+            throws IOException {
+
+        String endPointUrl = subOrgApiResourceManagementApiBasePath + PATH_SEPARATOR + apiIdentifier;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeadersWithBearerToken(
+                switchedM2MToken))) {
             String responseBody = EntityUtils.toString(response.getEntity());
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
             APIResourceResponse apiResourceResponse = jsonWriter.readValue(responseBody, APIResourceResponse.class);
