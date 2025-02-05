@@ -1,0 +1,20 @@
+{
+  "name": "My SAMPLE APP",
+  "description": "my application 2",
+  "imageUrl": "https://localhost/image",
+  "accessUrl": "https://localhost/accessUrl",
+  "associatedRoles": {
+    "allowedAudience": "APPLICATION",
+    "roles": []
+  },
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "grantTypes": [
+        "client_credentials",
+        "password",
+        "refresh_token"
+      ],
+      "isFAPIApplication": false
+    }
+  }
+}
