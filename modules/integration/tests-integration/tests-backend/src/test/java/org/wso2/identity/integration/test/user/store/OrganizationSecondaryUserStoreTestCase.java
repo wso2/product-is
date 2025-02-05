@@ -93,8 +93,8 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DA
 public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String AUTHORIZED_APIS_JSON = "authorized-apis.json";
-    private static final String SUB_ORG_USER_STORE_DB = "SUB_ORG_USER_STORE_DB";
-    private static final String SUB_ORG_TENANT_USER_STORE_DB = "SUB_ORG_TENANT_USER_STORE_DB";
+    private static final String SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE = "SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE";
+    private static final String TENANTED_SUB_ORG_SECONDARY_USER_STORE = "TENANTED_SUB_ORG_SECONDARY_USER_STORE";
     private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final String DOMAIN_NAME = "JDBC";
     private static final String SECONDARY_USERNAME = "secondaryUser";
@@ -351,10 +351,10 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     private PropertyDTO[] getJDBCUserStoreProperties() throws IOException, SQLException, ClassNotFoundException {
 
         if (userMode == TestUserMode.SUPER_TENANT_ADMIN) {
-            return userStoreConfigUtils.getJDBCUserStoreProperties(SUB_ORG_USER_STORE_DB);
+            return userStoreConfigUtils.getJDBCUserStoreProperties(SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE);
         }
 
-        return userStoreConfigUtils.getJDBCUserStoreProperties(SUB_ORG_TENANT_USER_STORE_DB);
+        return userStoreConfigUtils.getJDBCUserStoreProperties(TENANTED_SUB_ORG_SECONDARY_USER_STORE);
     }
 
     private String getAccessToken(String authCode) throws Exception {
