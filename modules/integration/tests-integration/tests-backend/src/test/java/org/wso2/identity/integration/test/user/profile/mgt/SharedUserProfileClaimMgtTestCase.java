@@ -111,10 +111,10 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     public void atEnd() throws Exception {
 
         scim2RestClient.deleteUser(rootOrgUserId);
-        idpMgtServiceClient.deleteIdP("SSO");
         orgMgtRestClient.deleteSubOrganization(level2OrgId, level1OrgId);
         orgMgtRestClient.deleteOrganization(level1OrgId);
         orgMgtRestClient.closeHttpClient();
+        idpMgtServiceClient.deleteIdP("SSO");
         scim2RestClient.closeHttpClient();
         userSharingRestClient.closeHttpClient();
         claimManagementRestClient.closeHttpClient();
