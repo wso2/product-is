@@ -32,6 +32,17 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.AttributeMappingDTO;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ClaimDialectReqDTO;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -40,9 +51,12 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperat
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.restclients.UserSharingRestClient;
+
+import java.util.Collections;
 
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 
@@ -58,11 +72,17 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private static final String ROOT_ORG_USER_PASSWORD = "Wso2@123";
     private static final String ROOT_ORG_USER_EMAIL = "alex@gmail.com";
     private static final String ROOT_ORG_USER_GIVEN_NAME = "Alex";
+    private static final String SCIM2_CUSTOM_SCHEMA_DIALECT_URI = "urn:scim:schemas:extension:custom:User";
+    private static final String ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI =
+            "dXJuOnNjaW06c2NoZW1hczpleHRlbnNpb246Y3VzdG9tOlVzZXI";
+    private static final String CUSTOM_CLAIM_URI = "http://wso2.org/claims/customAttribute1";
+    private static final String CUSTOM_CLAIM_NAME = "customAttribute1";
     private final TestUserMode userMode;
     private ClaimManagementRestClient claimManagementRestClient;
     private SCIM2RestClient scim2RestClient;
     private UserSharingRestClient userSharingRestClient;
     private OrgMgtRestClient orgMgtRestClient;
+    private OAuth2RestClient oAuth2RestClient;
     private IdentityProviderMgtServiceClient idpMgtServiceClient;
     private String level1OrgId;
     private String level2OrgId;
@@ -71,6 +91,11 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private String rootOrgUserId;
     private String sharedUserIdInLevel1Org;
     private String sharedUserIdInLevel2Org;
+    private ApplicationResponseModel application;
+    private String clientId;
+    private String clientSecret;
+    private String customClaimId;
+    private String scimClaimIdOfCustomClaim;
 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
@@ -96,6 +121,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         userSharingRestClient = new UserSharingRestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(AUTHORIZED_APIS_JSON, this.getClass())));
+        oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         ConfigurationContext configContext =
                 ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
@@ -105,6 +131,29 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
         switchedM2MTokenForLevel1Org = orgMgtRestClient.switchM2MToken(level1OrgId);
         switchedM2MTokenForLevel2Org = orgMgtRestClient.switchM2MToken(level2OrgId);
+
+        // Create a custom claim setting FromFirstFoundInHierarchy as SharedProfileValueResolvingMethod.
+        LocalClaimReq localClaimReq = buildLocalClaimReq(CUSTOM_CLAIM_URI, CUSTOM_CLAIM_NAME, CUSTOM_CLAIM_NAME,
+                LocalClaimReq.SharedProfileValueResolvingMethodEnum.FromFirstFoundInHierarchy);
+        customClaimId = claimManagementRestClient.addLocalClaim(localClaimReq);
+        // Add external scim2 claim.
+        ClaimDialectReqDTO claimDialectReqDTO = new ClaimDialectReqDTO();
+        claimDialectReqDTO.setDialectURI(SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
+        claimManagementRestClient.addExternalDialect(claimDialectReqDTO);
+        String externalClaimURI = SCIM2_CUSTOM_SCHEMA_DIALECT_URI + ":" + CUSTOM_CLAIM_NAME;
+        ExternalClaimReq externalClaimReq = new ExternalClaimReq();
+        externalClaimReq.setClaimURI(externalClaimURI);
+        externalClaimReq.setMappedLocalClaimURI(CUSTOM_CLAIM_URI);
+        scimClaimIdOfCustomClaim =
+                claimManagementRestClient.addExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI, externalClaimReq);
+
+        // Create a new application and share with all children.
+        application = addApplication();
+        String applicationId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        clientId = oidcConfig.getClientId();
+        clientSecret = oidcConfig.getClientSecret();
+        shareApplication();
     }
 
     @AfterClass(alwaysRun = true)
@@ -113,11 +162,18 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         scim2RestClient.deleteUser(rootOrgUserId);
         orgMgtRestClient.deleteSubOrganization(level2OrgId, level1OrgId);
         orgMgtRestClient.deleteOrganization(level1OrgId);
+        oAuth2RestClient.deleteApplication(application.getId());
         orgMgtRestClient.closeHttpClient();
         idpMgtServiceClient.deleteIdP("SSO");
         scim2RestClient.closeHttpClient();
         userSharingRestClient.closeHttpClient();
+        deleteApp(application.getId());
+        claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI,
+                scimClaimIdOfCustomClaim);
+        claimManagementRestClient.deleteExternalDialect(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
+        claimManagementRestClient.deleteLocalClaim(customClaimId);
         claimManagementRestClient.closeHttpClient();
+        oAuth2RestClient.closeHttpClient();
     }
 
     @Test(description = "Add a user in root organization and share with level 1 org and level 2 org.")
@@ -203,5 +259,129 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         Assert.assertEquals(userUpdateResponse.get("status"), "400");
         Assert.assertEquals(userUpdateResponse.get("detail"),
                 "Claim: http://wso2.org/claims/givenname is not allowed to be updated for shared users.");
+    }
+
+    @Test(dependsOnMethods = {"testClaimsResolvedFromOriginCanNotBeUpdatedInSharedProfiles"},
+            description = "Verify the claims resolved from first found in hierarchy.")
+    public void testClaimsResolvedFromFirstFoundInHierarchy() throws Exception {
+
+        //  Sub orgs should not have custom claim before shared app mark it as requested claim.
+        verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel1Org);
+        verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel2Org);
+
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.setClaimConfiguration(getClaimConfigurations());
+        oAuth2RestClient.updateApplication(application.getId(), applicationPatch);
+
+        //  Sub orgs should have custom claim after marking that claim as requested claim in shared app.
+        verifyCustomClaimIsShared(customClaimId, switchedM2MTokenForLevel1Org);
+        verifyCustomClaimIsShared(customClaimId, switchedM2MTokenForLevel2Org);
+
+        // Update the custom claim in root org user.
+        String customClaimValueSetInRootOrgUser = "ValueInRootOrgUser";
+        UserItemAddGroupobj customClaimUpdatePatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        customClaimUpdatePatchOp.setPath(SCIM2_CUSTOM_SCHEMA_DIALECT_URI + ":" + CUSTOM_CLAIM_NAME);
+        customClaimUpdatePatchOp.setValue(customClaimValueSetInRootOrgUser);
+        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(customClaimUpdatePatchOp),
+                rootOrgUserId);
+
+        validateCustomClaimValueOfSharedUser(sharedUserIdInLevel1Org, switchedM2MTokenForLevel1Org,
+                customClaimValueSetInRootOrgUser);
+        validateCustomClaimValueOfSharedUser(sharedUserIdInLevel2Org, switchedM2MTokenForLevel2Org,
+                customClaimValueSetInRootOrgUser);
+
+        // Update the custom claim in level 1 org's shared user.
+        String customClaimValueSetInLevel1OrgUser = "ValueInLevel1OrgUser";
+        customClaimUpdatePatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        customClaimUpdatePatchOp.setPath(SCIM2_CUSTOM_SCHEMA_DIALECT_URI + ":" + CUSTOM_CLAIM_NAME);
+        customClaimUpdatePatchOp.setValue(customClaimValueSetInLevel1OrgUser);
+        org.json.simple.JSONObject userUpdateResponse = scim2RestClient.updateSubOrgUser(
+                new PatchOperationRequestObject().addOperations(customClaimUpdatePatchOp), sharedUserIdInLevel1Org,
+                switchedM2MTokenForLevel1Org);
+        Assert.assertNotNull(userUpdateResponse);
+        Assert.assertEquals(userUpdateResponse.get("id"), sharedUserIdInLevel1Org,
+                "Failed to update custom claim in level 1 org's shared user.");
+        validateCustomClaimValueOfSharedUser(sharedUserIdInLevel1Org, switchedM2MTokenForLevel1Org,
+                customClaimValueSetInLevel1OrgUser);
+        validateCustomClaimValueOfSharedUser(sharedUserIdInLevel2Org, switchedM2MTokenForLevel2Org,
+                customClaimValueSetInLevel1OrgUser);
+    }
+
+    private void validateCustomClaimValueOfSharedUser(String sharedUserId, String switchedM2MToken,
+                                                      String expectedValue) throws Exception {
+
+        org.json.simple.JSONObject sharedUser = scim2RestClient.getSubOrgUser(sharedUserId, switchedM2MToken);
+        String customClaimValueOfSharedUser =
+                (String) ((org.json.simple.JSONObject) sharedUser.get(SCIM2_CUSTOM_SCHEMA_DIALECT_URI)).get(
+                        CUSTOM_CLAIM_NAME);
+        Assert.assertEquals(customClaimValueOfSharedUser, expectedValue, "Unexpected custom claim value.");
+    }
+
+    private void verifyCustomClaimIsShared(String customClaimId, String switchedM2MToken) throws Exception {
+
+        org.json.simple.JSONObject customClaimInSubOrg =
+                claimManagementRestClient.getSubOrgLocalClaim(customClaimId, switchedM2MToken);
+        Assert.assertNotNull(customClaimInSubOrg, "Failed to get custom claim in sub org at level.");
+        Assert.assertEquals(customClaimInSubOrg.get("claimURI"), CUSTOM_CLAIM_URI);
+        Assert.assertEquals(customClaimInSubOrg.get("id"), customClaimId);
+        Assert.assertEquals(customClaimInSubOrg.get("sharedProfileValueResolvingMethod"),
+                LocalClaimReq.SharedProfileValueResolvingMethodEnum.FromFirstFoundInHierarchy.toString());
+    }
+
+    private void verifyCustomClaimIsNotShared(String customClaimId, String switchedM2MToken) throws Exception {
+
+        org.json.simple.JSONObject customClaimInSubOrg =
+                claimManagementRestClient.getSubOrgLocalClaim(customClaimId, switchedM2MToken);
+        Assert.assertEquals(customClaimInSubOrg.get("message"), "Resource not found.");
+        Assert.assertEquals(customClaimInSubOrg.get("code"), "CMT-50019");
+    }
+
+    private ClaimConfiguration getClaimConfigurations() {
+
+        ClaimConfiguration claimConfiguration = new ClaimConfiguration();
+        claimConfiguration.addClaimMappingsItem(getClaimMapping(CUSTOM_CLAIM_URI));
+        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(CUSTOM_CLAIM_URI));
+
+        return claimConfiguration;
+    }
+
+    private ClaimMappings getClaimMapping(String claimUri) {
+
+        ClaimMappings claim = new ClaimMappings().applicationClaim(claimUri);
+        claim.setLocalClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+                        claimUri));
+        return claim;
+    }
+
+    private RequestedClaimConfiguration getRequestedClaim(String claimUri) {
+
+        RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
+        requestedClaim.setClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+                        claimUri));
+        return requestedClaim;
+    }
+
+    private LocalClaimReq buildLocalClaimReq(String claimURI, String displayName, String description,
+                                             LocalClaimReq.SharedProfileValueResolvingMethodEnum sharedProfileValueResolvingMethod) {
+
+        LocalClaimReq localClaimReq = new LocalClaimReq();
+        localClaimReq.setClaimURI(claimURI);
+        localClaimReq.setDisplayName(displayName);
+        localClaimReq.setDescription(description);
+        AttributeMappingDTO attributeMappingDTO = new AttributeMappingDTO();
+        attributeMappingDTO.setMappedAttribute(displayName);
+        attributeMappingDTO.setUserstore("PRIMARY");
+        localClaimReq.setAttributeMapping(Collections.singletonList(attributeMappingDTO));
+        localClaimReq.setSharedProfileValueResolvingMethod(sharedProfileValueResolvingMethod);
+        return localClaimReq;
+    }
+
+    private void shareApplication() throws Exception {
+
+        ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
+        applicationSharePOSTRequest.setShareWithAllChildren(true);
+        oAuth2RestClient.shareApplication(application.getId(), applicationSharePOSTRequest);
     }
 }
