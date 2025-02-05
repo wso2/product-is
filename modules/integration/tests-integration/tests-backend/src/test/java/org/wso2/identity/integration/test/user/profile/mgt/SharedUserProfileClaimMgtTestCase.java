@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.user.profile.mgt;
 
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -27,6 +29,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
@@ -60,6 +63,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private SCIM2RestClient scim2RestClient;
     private UserSharingRestClient userSharingRestClient;
     private OrgMgtRestClient orgMgtRestClient;
+    private IdentityProviderMgtServiceClient idpMgtServiceClient;
     private String level1OrgId;
     private String level2OrgId;
     private String switchedM2MTokenForLevel1Org;
@@ -92,6 +96,9 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         userSharingRestClient = new UserSharingRestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(AUTHORIZED_APIS_JSON, this.getClass())));
+        ConfigurationContext configContext =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
 
         level1OrgId = orgMgtRestClient.addOrganization(L1_SUB_ORG_NAME);
         level2OrgId = orgMgtRestClient.addSubOrganization(L2_SUB_ORG_NAME, level1OrgId);
@@ -104,7 +111,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     public void atEnd() throws Exception {
 
         scim2RestClient.deleteUser(rootOrgUserId);
-
+        idpMgtServiceClient.deleteIdP("SSO");
         orgMgtRestClient.deleteSubOrganization(level2OrgId, level1OrgId);
         orgMgtRestClient.deleteOrganization(level1OrgId);
         orgMgtRestClient.closeHttpClient();
