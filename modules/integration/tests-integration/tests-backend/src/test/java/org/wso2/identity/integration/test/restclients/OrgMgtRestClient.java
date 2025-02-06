@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -42,6 +42,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -55,6 +56,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -72,6 +74,11 @@ public class OrgMgtRestClient extends RestBaseClient {
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
     private static final String AUTHORIZED_APIS_PATH = "/authorized-apis";
     private static final String B2B_APP_NAME = "b2b-app";
+    private static final String API_RESOURCES = "apiResources";
+    private static final String ID = "id";
+    private static final String POLICY_IDENTIFIER = "policyIdentifier";
+    private static final String RBAC_POLICY = "RBAC";
+    private static final String SCOPES = "scopes";
 
     private final OAuth2RestClient oAuth2RestClient;
     private final Tenant tenantInfo;
@@ -233,6 +240,45 @@ public class OrgMgtRestClient extends RestBaseClient {
         return (String) responseJSONBody.get(OAuth2Constant.ACCESS_TOKEN);
     }
 
+    /**
+     * Authorize the given API for the B2B application.
+     * Note: Use this method only for api resources in which api resource identifier cannot be used for filtering.
+     * For other APIs, authorize APIs using {@link #OrgMgtRestClient(AutomationContext, Tenant, String, JSONObject)}.
+     *
+     * @param apiName Name of the API.
+     * @param type    Type of the API.
+     * @param scopes  Scopes to be authorized.
+     * @throws Exception If an error occurs while authorizing the API.
+     */
+    public void authorizeAPIForB2BApp(String apiName, String type, List<String> scopes) throws Exception {
+
+        String apiUUID;
+        try (CloseableHttpResponse apiResourceResponse = getResponseOfHttpGet(
+                apiResourceManagementApiBasePath + "?filter=name+eq+" + URLEncoder.encode(apiName) + "+and+type+eq+" +
+                        type,
+                getHeaders())) {
+            JSONObject apiResourceResponseBody =
+                    new JSONObject(EntityUtils.toString(apiResourceResponse.getEntity()));
+            apiUUID = apiResourceResponseBody.getJSONArray(API_RESOURCES).getJSONObject(0).getString(ID);
+        }
+
+        JSONArray requiredScopes = new JSONArray();
+        scopes.forEach(requiredScopes::put);
+
+        JSONObject authorizedAPIRequestBody = new JSONObject();
+        authorizedAPIRequestBody.put(ID, apiUUID);
+        authorizedAPIRequestBody.put(POLICY_IDENTIFIER, RBAC_POLICY);
+        authorizedAPIRequestBody.put(SCOPES, requiredScopes);
+
+        try (CloseableHttpResponse appAuthorizedAPIsResponse = getResponseOfHttpPost(
+                applicationManagementApiBasePath + PATH_SEPARATOR + b2bAppId + AUTHORIZED_APIS_PATH,
+                authorizedAPIRequestBody.toString(), getHeaders())) {
+            assertEquals(appAuthorizedAPIsResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                    String.format("API authorization failed for the application with ID: %s for API: %s.",
+                            b2bAppId, apiName));
+        }
+    }
+
     private void createB2BApplication(JSONObject authorizedAPIs)
             throws IOException, JSONException, InterruptedException {
 
@@ -269,13 +315,13 @@ public class OrgMgtRestClient extends RestBaseClient {
                     getHeaders())) {
                 JSONObject apiResourceResponseBody =
                         new JSONObject(EntityUtils.toString(apiResourceResponse.getEntity()));
-                apiUUID = apiResourceResponseBody.getJSONArray("apiResources").getJSONObject(0).getString("id");
+                apiUUID = apiResourceResponseBody.getJSONArray(API_RESOURCES).getJSONObject(0).getString(ID);
             }
 
             JSONObject authorizedAPIRequestBody = new JSONObject();
-            authorizedAPIRequestBody.put("id", apiUUID);
-            authorizedAPIRequestBody.put("policyIdentifier", "RBAC");
-            authorizedAPIRequestBody.put("scopes", requiredScopes);
+            authorizedAPIRequestBody.put(ID, apiUUID);
+            authorizedAPIRequestBody.put(POLICY_IDENTIFIER, RBAC_POLICY);
+            authorizedAPIRequestBody.put(SCOPES, requiredScopes);
 
             try (CloseableHttpResponse appAuthorizedAPIsResponse = getResponseOfHttpPost(
                     applicationManagementApiBasePath + PATH_SEPARATOR + b2bAppId + AUTHORIZED_APIS_PATH,
