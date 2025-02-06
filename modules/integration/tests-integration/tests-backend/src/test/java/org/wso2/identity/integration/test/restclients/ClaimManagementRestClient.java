@@ -270,7 +270,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, toJSONString(claimDialectReqDTO),
                 getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
-                    "External dialect addition failed");
+                    "External dialect addition failed.");
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
         }
@@ -287,7 +287,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId;
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
-                    "External dialect deletion failed");
+                    "External dialect deletion failed.");
         }
     }
 

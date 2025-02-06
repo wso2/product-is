@@ -181,7 +181,6 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         idpMgtServiceClient.deleteIdP("SSO");
         scim2RestClient.closeHttpClient();
         userSharingRestClient.closeHttpClient();
-        deleteApp(application.getId());
         claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI,
                 scimClaimIdOfCustomClaim);
         claimManagementRestClient.deleteExternalDialect(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
@@ -279,7 +278,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
             description = "Verify the claims resolved from first found in hierarchy.")
     public void testClaimsResolvedFromFirstFoundInHierarchy() throws Exception {
 
-        //  Sub orgs should not have custom claim before shared app mark it as requested claim.
+        // Sub orgs should not have custom claim before shared app mark it as requested claim.
         verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel1Org);
         verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel2Org);
 
@@ -287,7 +286,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         applicationPatch.setClaimConfiguration(getClaimConfigurations());
         oAuth2RestClient.updateApplication(application.getId(), applicationPatch);
 
-        //  Sub orgs should have custom claim after marking that claim as requested claim in shared app.
+        // Sub orgs should have custom claim after marking that claim as requested claim in shared app.
         verifyCustomClaimIsShared(customClaimId, switchedM2MTokenForLevel1Org);
         verifyCustomClaimIsShared(customClaimId, switchedM2MTokenForLevel2Org);
 
