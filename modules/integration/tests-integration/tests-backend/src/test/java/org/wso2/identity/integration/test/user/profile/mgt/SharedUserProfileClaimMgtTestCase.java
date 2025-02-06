@@ -139,7 +139,12 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         // Add external scim2 claim.
         ClaimDialectReqDTO claimDialectReqDTO = new ClaimDialectReqDTO();
         claimDialectReqDTO.setDialectURI(SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
-        claimManagementRestClient.addExternalDialect(claimDialectReqDTO);
+        org.json.simple.JSONObject externalDialect =
+                claimManagementRestClient.getExternalDialect(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
+        boolean isExistingDialect = isExistingDialect(externalDialect);
+        if (!isExistingDialect) {
+            claimManagementRestClient.addExternalDialect(claimDialectReqDTO);
+        }
         String externalClaimURI = SCIM2_CUSTOM_SCHEMA_DIALECT_URI + ":" + CUSTOM_CLAIM_NAME;
         ExternalClaimReq externalClaimReq = new ExternalClaimReq();
         externalClaimReq.setClaimURI(externalClaimURI);
@@ -154,6 +159,14 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         clientId = oidcConfig.getClientId();
         clientSecret = oidcConfig.getClientSecret();
         shareApplication();
+    }
+
+    private boolean isExistingDialect(org.json.simple.JSONObject externalDialectGetResponse) {
+
+        if (externalDialectGetResponse.get("code") != null &&
+                externalDialectGetResponse.get("code").equals("CMT-50016")) {
+            return false;
+        } else return externalDialectGetResponse.get("id") != null;
     }
 
     @AfterClass(alwaysRun = true)

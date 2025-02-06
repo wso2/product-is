@@ -243,6 +243,21 @@ public class ClaimManagementRestClient extends RestBaseClient {
     }
 
     /**
+     * Get External Dialect.
+     *
+     * @param dialectId Dialect id.
+     * @return JSON object of the response.
+     * @throws Exception If an error occurred while getting an external dialect.
+     */
+    public JSONObject getExternalDialect(String dialectId) throws Exception {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
      * Add External Dialect.
      *
      * @param claimDialectReqDTO Claim Dialect request object.
