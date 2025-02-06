@@ -180,6 +180,27 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update the details of an existing user of a sub organization.
+     *
+     * @param patchUserInfo    User patch request object.
+     * @param userId           ID of the user.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return JSONObject of the HTTP response.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public JSONObject updateSubOrgUser(PatchOperationRequestObject patchUserInfo, String userId, String switchedM2MToken)
+            throws Exception {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getSubOrgUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
      * Search a user and get requested attributes.
      *
      * @param userSearchReq Json String of user search request.
@@ -191,6 +212,26 @@ public class SCIM2RestClient extends RestBaseClient {
         String endPointUrl = getUsersPath() + SCIM2_SEARCH_PATH;
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, userSearchReq, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "User search failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Search a user and get requested attributes of a sub organization.
+     *
+     * @param userSearchReq    Json String of user search request.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return JSONObject of the user search response.
+     * @throws Exception If an error occurred while getting a user.
+     */
+    public JSONObject searchSubOrgUser(String userSearchReq, String switchedM2MToken) throws Exception {
+
+        String endPointUrl = getSubOrgUsersPath() + SCIM2_SEARCH_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, userSearchReq,
+                getHeadersWithBearerToken(switchedM2MToken))) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "User search failed");
             return getJSONObject(EntityUtils.toString(response.getEntity()));

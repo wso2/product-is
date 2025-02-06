@@ -7,6 +7,7 @@
   "regEx": "^\\S+@\\S+$",
   "required": true,
   "supportedByDefault": true,
+  "sharedProfileValueResolvingMethod": "FromFirstFoundInHierarchy",
   "attributeMapping": [
     {
       "mappedAttribute": "dummymail",
