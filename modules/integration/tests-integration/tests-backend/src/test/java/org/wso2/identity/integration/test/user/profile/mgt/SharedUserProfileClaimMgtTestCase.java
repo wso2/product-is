@@ -166,7 +166,8 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         if (externalDialectGetResponse.get("code") != null &&
                 externalDialectGetResponse.get("code").equals("CMT-50016")) {
             return false;
-        } else return externalDialectGetResponse.get("id") != null;
+        }
+        return externalDialectGetResponse.get("id") != null;
     }
 
     @AfterClass(alwaysRun = true)
