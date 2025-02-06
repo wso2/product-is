@@ -111,8 +111,6 @@ install_apr() {
     # Download APR
     cd "$1" \
         && git clone https://github.com/apache/apr.git
-    cd "$1/apr" \
-        && git checkout $APR_VERSION
     echo "Installing APR"
     cd "$1/apr" \
         && git checkout $APR_VERSION \
