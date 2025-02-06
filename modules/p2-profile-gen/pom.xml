@@ -441,9 +441,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.consent.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.utils:org.wso2.carbon.database.utils.feature:${carbon.database.utils.version}
-                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.carbon.extension.identity.x509certificate:org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature:${org.wso2.carbon.extension.identity.x509certificate.version}
@@ -1066,10 +1063,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.consent.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.database.utils.feature.group</id>
-                                    <version>${carbon.database.utils.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.extension.identity.x509Certificate.validation.server.feature.group</id>
