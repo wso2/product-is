@@ -114,7 +114,9 @@ install_apr() {
     cd "$1/apr" \
         && git checkout $APR_VERSION
     echo "Installing APR"
-        ./buildconf \
+    cd "$1/apr" \
+        && git checkout $APR_VERSION \
+        && ./buildconf \
         && ./configure --prefix="$2" \
         && make \
         && make install
