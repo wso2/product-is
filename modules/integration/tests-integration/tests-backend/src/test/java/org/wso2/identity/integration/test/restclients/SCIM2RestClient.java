@@ -56,6 +56,8 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     private static final String ATTRIBUTES_PART = "?attributes=";
     private static final String EQ_OP = "eq";
+    private static final int TIMEOUT_MILLIS = 30000;
+    private static final int POLLING_INTERVAL_MILLIS = 500;
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -457,6 +459,29 @@ public class SCIM2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             return getJSONArray(EntityUtils.toString(response.getEntity()));
         }
+    }
+
+    /**
+     * Check whether the shared user creation is completed.
+     *
+     * @param userSearchReq    User search request.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return True if the shared user creation is completed.
+     * @throws Exception If an error occurred while checking the shared user creation.
+     */
+    public boolean isSharedUserCreationCompleted(String userSearchReq, String switchedM2MToken) throws Exception {
+
+        // Wait for 30 seconds.
+        long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS;
+        while (System.currentTimeMillis() < waitTime) {
+            JSONObject jsonObject = searchSubOrgUser(userSearchReq, switchedM2MToken);
+            Long totalResults = (Long) jsonObject.get("totalResults");
+            if (totalResults == 1) {
+                return true;
+            }
+            Thread.sleep(POLLING_INTERVAL_MILLIS);
+        }
+        return false;
     }
 
     private Header[] getHeaders() {
