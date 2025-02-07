@@ -18,11 +18,14 @@
 
 package org.wso2.identity.integration.test.notification.template.mgt;
 
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 import org.wso2.identity.integration.test.rest.api.server.notification.template.v1.model.EmailTemplateWithID;
@@ -87,6 +90,7 @@ public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationT
 
     private OrgMgtRestClient orgMgtRestClient;
     private NotificationTemplatesRestClient notificationTemplatesRestClient;
+    private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
 
     private String level1Org1Id;
     private String level2Org1Id;
@@ -107,6 +111,11 @@ public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationT
 
         notificationTemplatesRestClient = new NotificationTemplatesRestClient(serverURL, tenantInfo);
 
+        ConfigurationContext configContext =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        identityProviderMgtServiceClient =
+                new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
+
         level1Org1Id = orgMgtRestClient.addOrganization(L1_SUB_ORG1_NAME);
         level2Org1Id = orgMgtRestClient.addSubOrganization(L2_SUB_ORG1_NAME, level1Org1Id);
 
@@ -123,6 +132,8 @@ public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationT
         orgMgtRestClient.deleteSubOrganization(level2Org1Id, level1Org1Id);
         orgMgtRestClient.deleteOrganization(level1Org1Id);
         orgMgtRestClient.closeHttpClient();
+
+        identityProviderMgtServiceClient.deleteIdP("SSO");
     }
 
     @Test(description = "Add email org template in root organization.")
