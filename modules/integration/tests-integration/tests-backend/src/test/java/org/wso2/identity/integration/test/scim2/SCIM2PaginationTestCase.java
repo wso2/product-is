@@ -77,28 +77,18 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     public static final String ITEMS_PER_PAGE_ATTRIBUTE = "itemsPerPage";
     public static final String START_INDEX = "2";
     public static final String COUNT = "4";
-    private final String adminUsername;
-    private final String adminPassword;
-    private final String tenant;
+    private String adminUsername;
+    private String adminPassword;
+    private String tenant;
     List<String> userIds = new ArrayList<>();
     UserManagementClient userMgtClient;
-    AutomationContext automationContext;
-    String backendUrl = null;
-    String sessionCookie = null;
+    TestUserMode userMode;
     private CloseableHttpClient client;
 
     @Factory(dataProvider = "scim2UserConfigProvider")
     public SCIM2PaginationTestCase(TestUserMode userMode) throws Exception {
 
-        AutomationContext context = new AutomationContext("IDENTITY", userMode);
-        this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
-        this.adminPassword = context.getContextTenant().getTenantAdmin().getPassword();
-        this.tenant = context.getContextTenant().getDomain();
-
-        automationContext = new AutomationContext("IDENTITY", userMode);
-        backendUrl = automationContext.getContextUrls().getBackEndUrl();
-        sessionCookie = new LoginLogoutClient(automationContext).login();
-        userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
+        this.userMode = userMode;
     }
 
     @DataProvider(name = "scim2UserConfigProvider")
@@ -112,7 +102,13 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
+        super.init(userMode);
+        this.adminUsername = isServer.getContextTenant().getTenantAdmin().getUserName();
+        this.adminPassword = isServer.getContextTenant().getTenantAdmin().getPassword();
+        this.tenant = isServer.getContextTenant().getDomain();
+
+        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
+
         client = HttpClients.createDefault();
     }
 
