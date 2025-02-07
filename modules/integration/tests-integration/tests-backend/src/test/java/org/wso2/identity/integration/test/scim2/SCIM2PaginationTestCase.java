@@ -98,7 +98,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         automationContext = new AutomationContext("IDENTITY", userMode);
         backendUrl = automationContext.getContextUrls().getBackEndUrl();
         sessionCookie = new LoginLogoutClient(automationContext).login();
-        userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
+        userMgtClient = new UserManagementClient(backendUrl, adminUsername, adminPassword);
     }
 
     @DataProvider(name = "scim2UserConfigProvider")
