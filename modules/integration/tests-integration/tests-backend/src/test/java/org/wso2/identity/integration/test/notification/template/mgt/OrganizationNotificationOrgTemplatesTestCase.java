@@ -24,7 +24,10 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
@@ -88,6 +91,8 @@ public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationT
     private static final String TEST_DATA_FOOTER_6 = "Test email footer 6";
     private static final String TEST_EMAIL_TEMPLATE_ID = "aWRsZUFjY291bnRSZW1pbmRlcg";
 
+    private final TestUserMode userMode;
+
     private OrgMgtRestClient orgMgtRestClient;
     private NotificationTemplatesRestClient notificationTemplatesRestClient;
     private IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
@@ -97,10 +102,25 @@ public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationT
     private String switchedM2MTokenLevel1Org1;
     private String switchedM2MTokenLevel2Org1;
 
+    @DataProvider(name = "testExecutionContextProvider")
+    public static Object[][] getTestExecutionContext() throws Exception {
+
+        return new Object[][] {
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "testExecutionContextProvider")
+    public OrganizationNotificationOrgTemplatesTestCase(TestUserMode userMode) {
+
+        this.userMode = userMode;
+    }
+
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
-        super.init();
+        super.init(userMode);
 
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(AUTHORIZED_APIS_JSON_FILE, this.getClass())));
