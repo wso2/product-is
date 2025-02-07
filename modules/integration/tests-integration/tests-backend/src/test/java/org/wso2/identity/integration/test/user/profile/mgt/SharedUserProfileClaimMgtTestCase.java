@@ -142,7 +142,16 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
                 .put("attributes", new JSONArray().put("id"))
                 .put("filter", "userName eq " + ROOT_ORG_USERNAME )
                 .toString();
-
+        boolean isUserSharedToL1Org =
+                scim2RestClient.isSharedUserCreationCompleted(userSearchReq, switchedM2MTokenForLevel1Org);
+        if (!isUserSharedToL1Org) {
+            Assert.fail("Failed sharing user to level 1 organization.");
+        }
+        boolean isUserSharedToL2Org =
+                scim2RestClient.isSharedUserCreationCompleted(userSearchReq, switchedM2MTokenForLevel2Org);
+        if (!isUserSharedToL2Org) {
+            Assert.fail("Failed sharing user to level 2 organization.");
+        }
         org.json.simple.JSONObject sharedUserInLevel1Org =
                 scim2RestClient.searchSubOrgUser(userSearchReq, switchedM2MTokenForLevel1Org);
         sharedUserIdInLevel1Org =
