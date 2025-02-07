@@ -41,7 +41,7 @@ public class ISIntegrationTest {
 
     public static final String URL_SEPARATOR = "/";
     public static final String TENANTED_URL_PATH_SPECIFIER = "/t/";
-    public static final String ORGANIZATION_PATH = "/o";
+    public static final String ORGANIZATION_PATH_SPECIFIER = "/o";
     public static final String KEYSTORE_TYPE = "PKCS12";
     public static final String KEYSTORE_NAME = "wso2carbon.p12";
     private static final String PRODUCT_GROUP_PORT_HTTPS = "https";
@@ -202,9 +202,9 @@ public class ISIntegrationTest {
 
         if (StringUtils.isBlank(endpointURLWithoutHostname) ||
                 tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return ORGANIZATION_PATH + endpointURLWithoutHostname;
+            return ORGANIZATION_PATH_SPECIFIER + endpointURLWithoutHostname;
         }
-        return TENANTED_URL_PATH_SPECIFIER + tenantDomain + ORGANIZATION_PATH + endpointURLWithoutHostname;
+        return TENANTED_URL_PATH_SPECIFIER + tenantDomain + ORGANIZATION_PATH_SPECIFIER + endpointURLWithoutHostname;
     }
 
     /**
