@@ -56,8 +56,8 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     private static final String ATTRIBUTES_PART = "?attributes=";
     private static final String EQ_OP = "eq";
-    public static final int TIMEOUT_MILLIS = 30000;
-    public static final int POLLING_INTERVAL_MILLIS = 500;
+    private static final int TIMEOUT_MILLIS = 30000;
+    private static final int POLLING_INTERVAL_MILLIS = 500;
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
