@@ -48,6 +48,8 @@ public class ClaimManagementRestClient extends RestBaseClient {
     public static final String CLAIMS_ENDPOINT_URI = "/claims";
     public static final String ORGANIZATION_PATH = "o";
     public static final String PATH_SEPARATOR = "/";
+    private static final int TIMEOUT_MILLIS = 30000;
+    private static final int POLLING_INTERVAL_MILLIS = 500;
     private final CloseableHttpClient client;
     private final String username;
     private final String password;
@@ -135,6 +137,29 @@ public class ClaimManagementRestClient extends RestBaseClient {
                 getHeadersWithBearerToken(switchedM2MToken))) {
             return getJSONObject(EntityUtils.toString(response.getEntity()));
         }
+    }
+
+    /**
+     * Check whether the claim sharing is completed.
+     *
+     * @param claimId          Claim id.
+     * @param switchedM2MToken Switched M2M token.
+     * @return True if the claim sharing is completed.
+     * @throws Exception If an error occurred while checking the claim sharing status.
+     */
+    public boolean isClaimSharingCompleted(String claimId, String switchedM2MToken) throws Exception {
+
+        // Wait for 30 seconds.
+        long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS;
+        while (System.currentTimeMillis() < waitTime) {
+            JSONObject claimGetObject = getSubOrgLocalClaim(claimId, switchedM2MToken);
+            String id = (String) claimGetObject.get("id");
+            if (claimId.equals(id)) {
+                return true;
+            }
+            Thread.sleep(POLLING_INTERVAL_MILLIS);
+        }
+        return false;
     }
 
     /**
