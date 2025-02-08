@@ -73,6 +73,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private static final String ROOT_ORG_USER_EMAIL = "alex@gmail.com";
     private static final String ROOT_ORG_USER_GIVEN_NAME = "Alex";
     private static final String SCIM2_CUSTOM_SCHEMA_DIALECT_URI = "urn:scim:schemas:extension:custom:User";
+    private static final String SCIM2_SYSTEM_SCHEMA_DIALECT_URI = "urn:scim:wso2:schema";
     private static final String ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI =
             "dXJuOnNjaW06c2NoZW1hczpleHRlbnNpb246Y3VzdG9tOlVzZXI";
     private static final String CUSTOM_CLAIM_URI = "http://wso2.org/claims/customAttribute1";
@@ -263,24 +264,14 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         UserItemAddGroupobj givenNameUpdatePatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
         givenNameUpdatePatchOp.setPath("name.givenName");
         givenNameUpdatePatchOp.setValue("UpdatedGivenName");
+        String givenNameUpdateFailureDetail =
+                "Claim: http://wso2.org/claims/givenname is not allowed to be updated for shared users.";
         // Try to update given name of shared user in level 1 org.
-        updateGivenNameInSharedUserProfile(givenNameUpdatePatchOp, sharedUserIdInLevel1Org,
-                switchedM2MTokenForLevel1Org);
+        tryToUpdateUnmodifiableAttributes(givenNameUpdatePatchOp, sharedUserIdInLevel1Org,
+                switchedM2MTokenForLevel1Org, givenNameUpdateFailureDetail);
         // Try to update given name of shared user in level 2 org.
-        updateGivenNameInSharedUserProfile(givenNameUpdatePatchOp, sharedUserIdInLevel2Org,
-                switchedM2MTokenForLevel2Org);
-
-    }
-
-    private void updateGivenNameInSharedUserProfile(UserItemAddGroupobj givenNameUpdatePatchOp, String sharedUserId,
-                                                    String switchedM2MTokenForOrg) throws Exception {
-
-        org.json.simple.JSONObject userUpdateResponse = scim2RestClient.updateSubOrgUser(
-                new PatchOperationRequestObject().addOperations(givenNameUpdatePatchOp), sharedUserId,
-                switchedM2MTokenForOrg);
-        Assert.assertEquals(userUpdateResponse.get("status"), "400");
-        Assert.assertEquals(userUpdateResponse.get("detail"),
-                "Claim: http://wso2.org/claims/givenname is not allowed to be updated for shared users.");
+        tryToUpdateUnmodifiableAttributes(givenNameUpdatePatchOp, sharedUserIdInLevel2Org,
+                switchedM2MTokenForLevel2Org, givenNameUpdateFailureDetail);
     }
 
     @Test(dependsOnMethods = {"testClaimsResolvedFromOriginCanNotBeUpdatedInSharedProfiles"},
@@ -356,6 +347,33 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
                 claimManagementRestClient.getSubOrgLocalClaim(customClaimId, switchedM2MToken);
         Assert.assertEquals(customClaimInSubOrg.get("message"), "Resource not found.");
         Assert.assertEquals(customClaimInSubOrg.get("code"), "CMT-50019");
+    }
+
+    @Test(dependsOnMethods = {"testClaimsResolvedFromFirstFoundInHierarchy"},
+            description = "Verify the managedOrg claim is non modifiable from shared users even though " +
+                    "the value is resolved from shared profile.")
+    public void testManagedOrgClaimIsNonModifiableFromSharedUsers() throws Exception {
+
+        UserItemAddGroupobj managedOrgUpdatePatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        managedOrgUpdatePatchOp.setPath(SCIM2_SYSTEM_SCHEMA_DIALECT_URI + ":managedOrg");
+        managedOrgUpdatePatchOp.setValue("UpdatedManagedOrg");
+        String managedOrgUpdateFailureDetail = "The managed organization is a read only property.";
+        // Try to update managed org of shared user in level 1 org.
+        tryToUpdateUnmodifiableAttributes(managedOrgUpdatePatchOp, sharedUserIdInLevel1Org,
+                switchedM2MTokenForLevel1Org, managedOrgUpdateFailureDetail);
+        // Try to update managed org of shared user in level 2 org.
+        tryToUpdateUnmodifiableAttributes(managedOrgUpdatePatchOp, sharedUserIdInLevel2Org,
+                switchedM2MTokenForLevel2Org, managedOrgUpdateFailureDetail);
+    }
+
+    private void tryToUpdateUnmodifiableAttributes(UserItemAddGroupobj givenNameUpdatePatchOp, String sharedUserId,
+                                                   String switchedM2MTokenForOrg, String errorDetail) throws Exception {
+
+        org.json.simple.JSONObject userUpdateResponse = scim2RestClient.updateSubOrgUser(
+                new PatchOperationRequestObject().addOperations(givenNameUpdatePatchOp), sharedUserId,
+                switchedM2MTokenForOrg);
+        Assert.assertEquals(userUpdateResponse.get("status"), "400");
+        Assert.assertEquals(userUpdateResponse.get("detail"), errorDetail);
     }
 
     private ClaimConfiguration getClaimConfigurations() {
