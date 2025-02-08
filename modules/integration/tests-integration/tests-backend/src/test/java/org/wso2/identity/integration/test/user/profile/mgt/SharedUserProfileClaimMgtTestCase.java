@@ -334,7 +334,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
         org.json.simple.JSONObject customClaimInSubOrg =
                 claimManagementRestClient.getSubOrgLocalClaim(customClaimId, switchedM2MToken);
-        Assert.assertNotNull(customClaimInSubOrg, "Failed to get custom claim in sub org at level.");
+        Assert.assertNotNull(customClaimInSubOrg, "Failed to get custom claim in sub org level.");
         Assert.assertEquals(customClaimInSubOrg.get("claimURI"), CUSTOM_CLAIM_URI);
         Assert.assertEquals(customClaimInSubOrg.get("id"), customClaimId);
         Assert.assertEquals(customClaimInSubOrg.get("sharedProfileValueResolvingMethod"),
