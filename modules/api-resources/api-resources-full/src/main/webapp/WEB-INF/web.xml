@@ -70,6 +70,7 @@
                 org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.MetaApi,
                 org.wso2.carbon.identity.api.server.action.management.v1.ActionsApi,
+                org.wso2.carbon.identity.api.server.certificate.validation.management.v1.CertificateValidationApi,
                 org.wso2.carbon.identity.api.server.rule.metadata.v1.RulesApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.AuthorizationDetailsTypesApi
             </param-value>
