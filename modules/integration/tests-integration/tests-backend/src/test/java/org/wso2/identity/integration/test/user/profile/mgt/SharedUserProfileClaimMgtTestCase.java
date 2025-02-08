@@ -334,6 +334,11 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
         org.json.simple.JSONObject customClaimInSubOrg =
                 claimManagementRestClient.getSubOrgLocalClaim(customClaimId, switchedM2MToken);
+        boolean isClaimSharingCompleted =
+                claimManagementRestClient.isClaimSharingCompleted(customClaimId, switchedM2MToken);
+        if (!isClaimSharingCompleted) {
+            Assert.fail("Failed to share custom claim to sub org.");
+        }
         Assert.assertNotNull(customClaimInSubOrg, "Failed to get custom claim in sub org level.");
         Assert.assertEquals(customClaimInSubOrg.get("claimURI"), CUSTOM_CLAIM_URI);
         Assert.assertEquals(customClaimInSubOrg.get("id"), customClaimId);
@@ -423,5 +428,8 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(true);
         oAuth2RestClient.shareApplication(application.getId(), applicationSharePOSTRequest);
+
+        // Since application sharing is an async operation, wait for some time for it to finish.
+        Thread.sleep(5000);
     }
 }
