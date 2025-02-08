@@ -58,6 +58,7 @@ import org.wso2.identity.integration.test.restclients.UserSharingRestClient;
 
 import java.util.Collections;
 
+import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 
 /**
@@ -66,6 +67,10 @@ import static org.wso2.identity.integration.test.rest.api.server.user.sharing.ma
 public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String AUTHORIZED_APIS_JSON = "authorized-apis.json";
+    private static final String CUSTOM_CLAIM_UPDATE_TO_RESOLVE_FROM_ORIGIN_JSON =
+            "custom-claim-update-to-resolve-from-origin.json";
+    private static final String CUSTOM_CLAIM_UPDATE_TO_RESOLVE_FROM_SHARED_PROFILE_JSON =
+            "custom-claim-update-to-resolve-from-shared-profile.json";
     private static final String L1_SUB_ORG_NAME = "L1_Sub_Org";
     private static final String L2_SUB_ORG_NAME = "L2_Sub_Org";
     private static final String ROOT_ORG_USERNAME = "alex";
@@ -74,6 +79,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private static final String ROOT_ORG_USER_GIVEN_NAME = "Alex";
     private static final String SCIM2_CUSTOM_SCHEMA_DIALECT_URI = "urn:scim:schemas:extension:custom:User";
     private static final String SCIM2_SYSTEM_SCHEMA_DIALECT_URI = "urn:scim:wso2:schema";
+    private static final String LOCAL_CLAIM_DIALECT = "local";
     private static final String ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI =
             "dXJuOnNjaW06c2NoZW1hczpleHRlbnNpb246Y3VzdG9tOlVzZXI";
     private static final String CUSTOM_CLAIM_URI = "http://wso2.org/claims/customAttribute1";
@@ -121,7 +127,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         userSharingRestClient = new UserSharingRestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
-                new JSONObject(RESTTestBase.readResource(AUTHORIZED_APIS_JSON, this.getClass())));
+                new JSONObject(readResource(AUTHORIZED_APIS_JSON, this.getClass())));
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         ConfigurationContext configContext =
                 ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
@@ -355,6 +361,39 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(dependsOnMethods = {"testClaimsResolvedFromFirstFoundInHierarchy"},
+            description = "Verify the claim behavior for shared user when change it FromFirstFoundInHierarchy to FromOrigin.")
+    public void testChangeSharedClaimBehaviorFromFirstFoundInHierarchyToFromOrigin() throws Exception {
+
+        String customClaimUpdateRequest =
+                readResource(CUSTOM_CLAIM_UPDATE_TO_RESOLVE_FROM_ORIGIN_JSON, this.getClass());
+        claimManagementRestClient.updateClaim(LOCAL_CLAIM_DIALECT, customClaimId, customClaimUpdateRequest);
+        String customClaimValueSetInRootOrgUser = "ValueInRootOrgUser";
+        validateCustomClaimValueOfSharedUser(sharedUserIdInLevel1Org, switchedM2MTokenForLevel1Org,
+                customClaimValueSetInRootOrgUser);
+        validateCustomClaimValueOfSharedUser(sharedUserIdInLevel2Org, switchedM2MTokenForLevel2Org,
+                customClaimValueSetInRootOrgUser);
+    }
+
+    @Test(dependsOnMethods = {"testChangeSharedClaimBehaviorFromFirstFoundInHierarchyToFromOrigin"},
+            description = "Verify the claim behavior for shared user when change it FromOrigin to FromSharedProfile.")
+    public void testChangeSharedUserProfileBehaviorFromOriginToFromSharedProfile() throws Exception {
+
+        String customClaimUpdateRequest =
+                readResource(CUSTOM_CLAIM_UPDATE_TO_RESOLVE_FROM_SHARED_PROFILE_JSON, this.getClass());
+        claimManagementRestClient.updateClaim(LOCAL_CLAIM_DIALECT, customClaimId, customClaimUpdateRequest);
+        validateCustomClaimValueOfSharedUser(sharedUserIdInLevel1Org, switchedM2MTokenForLevel1Org,
+                "ValueInLevel1OrgUser");
+        /*
+        No value available for the custom claim in shared user in level 2 org.
+        Therefore, custom schema should not be returned.
+         */
+        org.json.simple.JSONObject sharedUser =
+                scim2RestClient.getSubOrgUser(sharedUserIdInLevel2Org, switchedM2MTokenForLevel2Org);
+        Assert.assertNull(sharedUser.get(SCIM2_CUSTOM_SCHEMA_DIALECT_URI),
+                "Unexpected custom schema in shared user in level 2 org.");
+    }
+
+    @Test(dependsOnMethods = {"testChangeSharedUserProfileBehaviorFromOriginToFromSharedProfile"},
             description = "Verify the managedOrg claim is non modifiable from shared users even though " +
                     "the value is resolved from shared profile.")
     public void testManagedOrgClaimIsNonModifiableFromSharedUsers() throws Exception {
