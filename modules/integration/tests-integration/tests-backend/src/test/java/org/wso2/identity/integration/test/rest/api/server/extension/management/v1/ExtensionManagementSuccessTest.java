@@ -32,7 +32,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 public class ExtensionManagementSuccessTest extends ExtensionManagementBaseTest{
 
     private final static String APPLICATION_EXTENSIONS = "applications";
-    private final static  String SIMPLE_TEMPLATE = "google-workspace";
+    private final static  String SIMPLE_TEMPLATE = "google";
     private final static String COMPLEX_TEMPLATE = "salesforce";
     private final static String TEMPLATE = "template";
 
