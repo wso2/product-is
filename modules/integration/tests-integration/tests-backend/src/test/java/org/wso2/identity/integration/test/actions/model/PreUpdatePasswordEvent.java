@@ -35,7 +35,7 @@ public class PreUpdatePasswordEvent extends Event {
      * FlowInitiator Enum.
      * Defines the initiator type for the password update flow.
      */
-    public enum FlowInitiator {
+    public enum FlowInitiatorType {
         USER,
         ADMIN,
         APPLICATION
@@ -51,14 +51,14 @@ public class PreUpdatePasswordEvent extends Event {
         INVITE
     }
 
-    private final FlowInitiator initiator;
+    private final FlowInitiatorType initiatorType;
     private final Action action;
     private final Request request;
     private final PasswordUpdatingUser user;
 
     private PreUpdatePasswordEvent(Builder builder) {
 
-        this.initiator = builder.initiator;
+        this.initiatorType = builder.initiatorType;
         this.action = builder.action;
         this.request = builder.request;
         this.organization = builder.organization;
@@ -67,9 +67,9 @@ public class PreUpdatePasswordEvent extends Event {
         this.userStore = builder.userStore;
     }
 
-    public FlowInitiator getInitiator() {
+    public FlowInitiatorType getInitiatorType() {
 
-        return initiator;
+        return initiatorType;
     }
 
     public Action getAction() {
@@ -95,7 +95,7 @@ public class PreUpdatePasswordEvent extends Event {
         PreUpdatePasswordEvent that = (PreUpdatePasswordEvent) o;
 
         return Objects.equals(request, that.request) &&
-                Objects.equals(initiator, that.initiator) &&
+                Objects.equals(initiatorType, that.initiatorType) &&
                 Objects.equals(action, that.action) &&
                 Objects.equals(user, that.user) &&
                 Objects.equals(userStore, that.userStore) &&
@@ -105,7 +105,7 @@ public class PreUpdatePasswordEvent extends Event {
     @Override
     public int hashCode() {
 
-        return Objects.hash(request, initiator, action, user, userStore, tenant);
+        return Objects.hash(request, initiatorType, action, user, userStore, tenant);
     }
 
     /**
@@ -119,7 +119,7 @@ public class PreUpdatePasswordEvent extends Event {
         private Organization organization;
         private PasswordUpdatingUser user;
         private UserStore userStore;
-        private FlowInitiator initiator;
+        private FlowInitiatorType initiatorType;
         private Action action;
 
         public Builder request(Request request) {
@@ -152,9 +152,9 @@ public class PreUpdatePasswordEvent extends Event {
             return this;
         }
 
-        public Builder initiator(FlowInitiator initiator) {
+        public Builder initiatorType(FlowInitiatorType initiatorType) {
 
-            this.initiator = initiator;
+            this.initiatorType = initiatorType;
             return this;
         }
 

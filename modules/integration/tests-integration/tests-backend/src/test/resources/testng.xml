@@ -409,8 +409,8 @@
     </test>
     <test name="is-tests-oauth-jwt-token-gen-enabled" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
-<!--            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase"/>-->
-<!--            <class name="org.wso2.identity.integration.test.oauth2.OpenIdUserInfoTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OpenIdUserInfoTestCase"/>
         </classes>
     </test>
     <test name="is-tests-email-username" preserve-order="true" parallel="false" group-by-instances="true">

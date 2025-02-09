@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.actions;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
@@ -37,21 +38,19 @@ import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.action.execution.exception.ActionExecutionRequestBuilderException;
 import org.wso2.identity.integration.test.actions.mockserver.ActionsMockServer;
 import org.wso2.identity.integration.test.actions.model.*;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PasswordSharing;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model
-        .PreUpdatePasswordActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PreUpdatePasswordActionModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
@@ -72,7 +71,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
@@ -83,14 +82,14 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
  */
 public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase {
 
-    private static final String USERNAME = "testusername";
-    private static final String USERNAME_1 = "testusername1";
-    private static final String PASSWORD = "TestPassword@123";
-    private static final String UPDATED_PASSWORD = "UpdatedTestPassword@123";
+    private static final String TEST_USER1_USERNAME = "testUsername";
+    private static final String TEST_USER2_USERNAME = "testUsername2";
+    private static final String TEST_USER_PASSWORD = "TestPassword@123";
+    private static final String TEST_USER_UPDATED_PASSWORD = "UpdatedTestPassword@123";
     private static final String RESET_PASSWORD = "ResetTestPassword@123";
-    private static final String USER_GIVENNAME = "test_user_given_name";
-    private static final String USER_LASTNAME = "test_user_last_name";
-    private static final String USER_EMAIL = "test.user@gmail.com";
+    private static final String TEST_USER_GIVEN_NAME = "test_user_given_name";
+    private static final String TEST_USER_LASTNAME = "test_user_last_name";
+    private static final String TEST_USER_EMAIL = "test.user@gmail.com";
     private static final String USERNAME_PROPERTY = "username";
     private static final String PASSWORD_PROPERTY = "password";
     private static final String PRIMARY_USER_STORE_ID = "UFJJTUFSWQ==";
@@ -101,40 +100,34 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
     private static final String ACTION_DESCRIPTION = "This is a test for pre update password action type";
     private static final String PRE_UPDATE_PASSWORD_API_PATH = "preUpdatePassword";
     private static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
-
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
-
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
-
     private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
     private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
-    private Lookup<CookieSpecProvider> cookieSpecRegistry;
-    private RequestConfig requestConfig;
+
+    private final String tenantId;
+    private final TestUserMode userMode;
+
     private CloseableHttpClient client;
     private SCIM2RestClient scim2RestClient;
-    private List<String> requestedScopes;
-    private String accessToken;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
+
     private String clientId;
     private String clientSecret;
     private String actionId;
     private String applicationId;
-    private String tenantId;
-    private TestUserMode userMode;
-    private ActionsMockServer actionsMockServer;
     private String userId;
     private ApplicationResponseModel application;
-    private IdentityGovernanceRestClient identityGovernanceRestClient;
+    private ActionsMockServer actionsMockServer;
 
     private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
     private static final String FORCE_PASSWORD_RESET_ATTRIBUTE = "forcePasswordReset";
-    private static final String ASK_PASSWORD_RESET_ATTRIBUTE = "askPassword";
-    private static final String ACCOUNT_LOCKED_ATTRIBUTE = "accountLocked";
 
     @Factory(dataProvider = "testExecutionContextProvider")
     public PreUpdatePasswordActionSuccessTestCase(TestUserMode testUserMode) {
 
-        this.userMode = testUserMode;
+        userMode = testUserMode;
         this.tenantId = testUserMode == TestUserMode.SUPER_TENANT_USER ? "-1234" : "1";
     }
 
@@ -147,21 +140,16 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         };
     }
 
-    /**
-     * Initializes Test environment and sets up necessary configurations.
-     *
-     * @throws Exception If an error occurs during initialization
-     */
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         super.init(userMode);
 
-        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
-        requestConfig = RequestConfig.custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
         client = HttpClientBuilder.create()
@@ -175,6 +163,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
                     }
                 }).build();
 
+
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
@@ -185,15 +174,12 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         clientId = oidcConfig.getClientId();
         clientSecret = oidcConfig.getClientSecret();
 
-        requestedScopes = new ArrayList<>();
-        Collections.addAll(requestedScopes,INTERNAL_USER_MANAGEMENT_UPDATE);
-
         UserObject userInfo = new UserObject();
-        userInfo.setUserName(USERNAME);
-        userInfo.setPassword(PASSWORD);
-        userInfo.setName(new Name().givenName(USER_GIVENNAME));
-        userInfo.getName().setFamilyName(USER_LASTNAME);
-        userInfo.addEmail(new Email().value(USER_EMAIL));
+        userInfo.setUserName(TEST_USER1_USERNAME);
+        userInfo.setPassword(TEST_USER_PASSWORD);
+        userInfo.setName(new Name().givenName(TEST_USER_GIVEN_NAME));
+        userInfo.getName().setFamilyName(TEST_USER_LASTNAME);
+        userInfo.addEmail(new Email().value(TEST_USER_EMAIL));
         userId = scim2RestClient.createUser(userInfo);
 
         updatePasswordRecoveryFeatureStatus(true);
@@ -208,6 +194,13 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 FileUtils.readFileInClassPathAsString("actions/response/pre-update-password-response.json"));
+    }
+
+    @BeforeMethod
+    public void setUp() throws Exception {
+
+        actionsMockServer.resetRequests();
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 
     @AfterClass(alwaysRun = true)
@@ -230,210 +223,130 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         actionsMockServer = null;
     }
 
-    @BeforeMethod
-    public void setUp() throws Exception {
-
-
-    }
-
-    @Test(groups = "wso2.is", description =
-            "Verify the password update with the execution of pre update password extension")
-    public void testPreUpdatePasswordOnAdminUpdateTestCase() throws Exception {
+    @Test(description = "Verify the password update in self service portal with pre update password action")
+    public void testUserUpdatePassword() throws Exception {
 
         UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
         Map<String, String> passwordValue = new HashMap<>();
-        passwordValue.put(PASSWORD_PROPERTY, UPDATED_PASSWORD);
-        updateUserPatchOp.setValue(passwordValue);
-        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(updateUserPatchOp), userId);
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnAdminUpdateTestCase", description =
-            "Verify the pre update password action request")
-    public void testPreUpdatePasswordOnAdminUpdateRequestTestCase() throws Exception {
-
-        String actualRequestPayload = actionsMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        PreUpdatePasswordActionRequest actualRequest =
-                new ObjectMapper().readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
-        PreUpdatePasswordActionRequest expectedRequest = getRequest();
-        //assertEquals(actualRequest, expectedRequest);
-        actionsMockServer.resetRequests();
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnAdminUpdateRequestTestCase",  description =
-            "Verify the password update admin force password reset email invite with the execution of pre update " +
-                    "password extension")
-    public void testPreUpdatePasswordOnAdminForcePasswordResetTestCase() throws Exception {
-
-        UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        updateUserPatchOp.setPath(USER_SYSTEM_SCHEMA_ATTRIBUTE+":"+FORCE_PASSWORD_RESET_ATTRIBUTE);
-        updateUserPatchOp.setValue(true);
-        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(updateUserPatchOp), userId);
-        Boolean accountActiveValue = (Boolean) ((JSONObject) scim2RestClient.getUser(userId, null)
-                .get(USER_SYSTEM_SCHEMA_ATTRIBUTE)).get(ACCOUNT_LOCKED_ATTRIBUTE);
-        Assert.assertTrue(accountActiveValue, "User account wasn't locked to self reset the password");
-
-        String recoveryLink = getRecoveryURLFromEmail();
-        HttpResponse postResponse = resetPassword(recoveryLink);
-        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
-        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnAdminForcePasswordResetTestCase", description =
-            "Verify the pre update password action request")
-    public void testPreUpdatePasswordOnAdminForcePasswordResetActionRequest() throws Exception {
-
-        String actualRequestPayload = actionsMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        PreUpdatePasswordActionRequest actualRequest =
-                new ObjectMapper().readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
-        PreUpdatePasswordActionRequest expectedRequest = getRequest();
-        //assertEquals(actualRequest, expectedRequest);
-        actionsMockServer.resetRequests();
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnAdminForcePasswordResetActionRequest",
-            description = "Verify the password update admin initiated ask password reset by email invite with the " +
-                    "execution of pre update password extension")
-    public void testPreUpdatePasswordOnAdminAskPasswordResetTestCase() throws Exception {
-
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
-
-        UserObject userInfo = new UserObject();
-        userInfo.setUserName(USERNAME_1);
-        userInfo.setPassword(PASSWORD);
-        userInfo.setName(new Name().givenName(USER_GIVENNAME));
-        userInfo.getName().setFamilyName(USER_LASTNAME);
-        userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().askPassword(true));
-        userInfo.addEmail(new Email().value(USER_EMAIL));
-        String userId = scim2RestClient.createUser(userInfo);
-
-        Boolean accountActiveValue = (Boolean) ((JSONObject) scim2RestClient.getUser(userId, null)
-                .get(USER_SYSTEM_SCHEMA_ATTRIBUTE)).get(ASK_PASSWORD_RESET_ATTRIBUTE);
-        //Assert.assertTrue(accountActiveValue, "User account wasn't locked to self reset the password");
-
-        String recoveryLink = getRecoveryURLFromEmail();
-        HttpResponse postResponse = resetPassword(recoveryLink);
-        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
-        //Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Set Successfully"));
-
-        scim2RestClient.deleteUser(userId);
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnAdminAskPasswordResetTestCase", description =
-            "Verify the pre update password action request")
-    public void testPreUpdatePasswordOnAdminInitiatedPasswordResetActionRequest() throws Exception {
-
-        String actualRequestPayload = actionsMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        PreUpdatePasswordActionRequest actualRequest =
-            new ObjectMapper().readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
-        PreUpdatePasswordActionRequest expectedRequest = getRequest();
-        //assertEquals(actualRequest, expectedRequest);
-        actionsMockServer.resetRequests();
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnAdminInitiatedPasswordResetActionRequest",
-            description = "Verify the password update by an authorized application with the execution of pre update " +
-                    "password extension")
-    public void testPreUpdatePasswordOnApplicationUserUpdateTestCase() throws Exception {
-
-        List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("grant_type",
-                OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
-
-        String scopes = String.join(" ", requestedScopes);
-        parameters.add(new BasicNameValuePair("scope", scopes));
-
-        List<Header> headers = new ArrayList<>();
-        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
-                getBase64EncodedString(clientId, clientSecret)));
-        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
-        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
-
-        if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
-            authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));
-        }
-
-        HttpResponse response = sendPostRequest(client, headers, parameters,
-                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
-
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        org.json.JSONObject jsonResponse = new org.json.JSONObject(responseString);
-
-        assertTrue(jsonResponse.has("access_token"), "Access token not found in the token response.");
-        accessToken = jsonResponse.getString("access_token");
-        assertNotNull(accessToken, "Access token is null.");
-
-        UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        Map<String, String> passwordValue = new HashMap<>();
-        passwordValue.put(PASSWORD_PROPERTY, PASSWORD);
-        updateUserPatchOp.setValue(passwordValue);
-
-        scim2RestClient.updateUserWithBearerToken(new PatchOperationRequestObject().addOperations(updateUserPatchOp),
-                userId, accessToken);
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnApplicationUserUpdateTestCase", description =
-            "Verify the pre update password action request")
-    public void testPreUpdatePasswordOnApplicationUserUpdateActionRequest() throws Exception {
-
-        String actualRequestPayload = actionsMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        PreUpdatePasswordActionRequest actualRequest =
-            new ObjectMapper().readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
-        PreUpdatePasswordActionRequest expectedRequest = getRequest();
-        //assertEquals(actualRequest, expectedRequest);
-        actionsMockServer.resetRequests();
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnApplicationUserUpdateActionRequest",
-            description = "Verify the password update admin reset password invite with the execution of pre update " +
-                    "password extension")
-    public void testPreUpdatePasswordOnForgotPasswordResetTestCase() throws Exception {
-
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
-
-        String passwordRecoveryFormURL = retrievePasswordResetURL(application, client);
-        submitPasswordRecoveryForm(passwordRecoveryFormURL, USERNAME, client);
-
-        String recoveryLink = getRecoveryURLFromEmail();
-        HttpResponse postResponse = resetPassword(recoveryLink);
-        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
-        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnForgotPasswordResetTestCase", description =
-            "Verify the pre update password action request")
-    public void testPreUpdatePasswordOnForgotPasswordResetActionRequest() throws Exception {
-
-        String actualRequestPayload = actionsMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        PreUpdatePasswordActionRequest actualRequest =
-            new ObjectMapper().readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
-        PreUpdatePasswordActionRequest expectedRequest = getRequest();
-        //assertEquals(actualRequest, expectedRequest);
-        actionsMockServer.resetRequests();
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnForgotPasswordResetActionRequest",
-            description = "Verify the password update in self service portal with the execution of pre update " +
-                    "password extension")
-    public void testPreUpdatePasswordOnUserUpdateTestCase() throws Exception {
-
-        UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        Map<String, String> passwordValue = new HashMap<>();
-        passwordValue.put(PASSWORD_PROPERTY, PASSWORD);
+        passwordValue.put(PASSWORD_PROPERTY, TEST_USER_UPDATED_PASSWORD);
         updateUserPatchOp.setValue(passwordValue);
         scim2RestClient.updateUserMe(new PatchOperationRequestObject().addOperations(updateUserPatchOp),
-                userInfo.getUserName(), userInfo.getPassword());
+                TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
+
+        assertActionRequestPayload(userId, TEST_USER_UPDATED_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.UPDATE);
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = "testPreUpdatePasswordOnUserUpdateTestCase", description =
-            "Verify the pre update password action request")
-    public void testPreUpdatePasswordOnUserUpdateActionRequest() throws Exception {
+    @Test(dependsOnMethods = "testUserUpdatePassword" ,
+            description = "Verify the admin update password with pre update password action")
+    public void testAdminUpdatePassword() throws Exception {
+
+        UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        Map<String, String> passwordValue = new HashMap<>();
+        passwordValue.put(PASSWORD_PROPERTY, TEST_USER_PASSWORD);
+        updateUserPatchOp.setValue(passwordValue);
+        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(updateUserPatchOp), userId);
+
+        assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+                PreUpdatePasswordEvent.Action.UPDATE);
+    }
+
+    @Test(dependsOnMethods = "testAdminUpdatePassword",
+            description = "Verify the admin force password reset with pre update password action")
+    public void testAdminForcePasswordReset() throws Exception {
+
+        UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        updateUserPatchOp.setPath(USER_SYSTEM_SCHEMA_ATTRIBUTE + ":" + FORCE_PASSWORD_RESET_ATTRIBUTE);
+        updateUserPatchOp.setValue(true);
+        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(updateUserPatchOp), userId);
+
+        String recoveryLink = getRecoveryURLFromEmail();
+        HttpResponse postResponse = resetPassword(recoveryLink);
+        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
+        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
+
+        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+                PreUpdatePasswordEvent.Action.RESET);
+    }
+
+    @Test(dependsOnMethods = "testAdminForcePasswordReset",
+            description = "Verify the admin invite user to set password with pre update password action")
+    public void testAdminInviteUserToSetPassword() throws Exception {
+
+        UserObject userInfo = new UserObject();
+        userInfo.setUserName(TEST_USER2_USERNAME);
+        userInfo.setPassword(TEST_USER_PASSWORD);
+        userInfo.setName(new Name().givenName(TEST_USER_GIVEN_NAME));
+        userInfo.getName().setFamilyName(TEST_USER_LASTNAME);
+        userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().askPassword(true));
+        userInfo.addEmail(new Email().value(TEST_USER_EMAIL));
+        String tempUserId = scim2RestClient.createUser(userInfo);
+
+        String recoveryLink = getRecoveryURLFromEmail();
+        HttpResponse postResponse = resetPassword(recoveryLink);
+        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
+        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Set Successfully"));
+
+        assertActionRequestPayload(tempUserId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+                PreUpdatePasswordEvent.Action.INVITE);
+        scim2RestClient.deleteUser(tempUserId);
+    }
+
+    @Test(dependsOnMethods = "testAdminInviteUserToSetPassword",
+            description = "Verify the password update by an authorized application with pre update password action")
+    public void testApplicationUpdatePassword() throws Exception {
+
+        String token = getTokenWithClientCredentialsGrant();
+
+        Map<String, String> passwordValue = new HashMap<>();
+        passwordValue.put(PASSWORD_PROPERTY, TEST_USER_PASSWORD);
+        UserItemAddGroupobj updateUserPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        updateUserPatchOp.setValue(passwordValue);
+        scim2RestClient.updateUserWithBearerToken(new PatchOperationRequestObject().addOperations(updateUserPatchOp),
+                userId, token);
+
+        assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
+                PreUpdatePasswordEvent.Action.UPDATE);
+    }
+
+    @Test(dependsOnMethods = "testApplicationUpdatePassword",
+            description = "Verify the user password reset with pre update password action")
+    public void testUserResetPassword() throws Exception {
+
+        String passwordRecoveryFormURL = retrievePasswordResetURL(application, client);
+        submitPasswordRecoveryForm(passwordRecoveryFormURL, TEST_USER1_USERNAME, client);
+
+        String recoveryLink = getRecoveryURLFromEmail();
+        HttpResponse postResponse = resetPassword(recoveryLink);
+        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
+        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
+
+        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.RESET);
+    }
+
+    private void assertActionRequestPayload(String userId, String updatedPassword,
+                                            PreUpdatePasswordEvent.FlowInitiatorType initiatorType,
+                                            PreUpdatePasswordEvent.Action action) throws JsonProcessingException {
 
         String actualRequestPayload = actionsMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        PreUpdatePasswordActionRequest actualRequest =
-                new ObjectMapper().readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
-        PreUpdatePasswordActionRequest expectedRequest = getRequest();
-        //assertEquals(actualRequest, expectedRequest);
-        actionsMockServer.resetRequests();
+        PreUpdatePasswordActionRequest actionRequest = new ObjectMapper()
+                .readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
+
+        assertEquals(actionRequest.getActionType(), ActionType.PRE_UPDATE_PASSWORD);
+        assertEquals(actionRequest.getEvent().getTenant().getName(), tenantInfo.getDomain());
+        assertEquals(actionRequest.getEvent().getTenant().getId(), tenantId);
+        assertEquals(actionRequest.getEvent().getUserStore().getName(), PRIMARY_USER_STORE_NAME);
+        assertEquals(actionRequest.getEvent().getUserStore().getId(), PRIMARY_USER_STORE_ID);
+
+        PasswordUpdatingUser user = actionRequest.getEvent().getPasswordUpdatingUser();
+
+        assertEquals(user.getId(), userId);
+        assertEquals(user.getUpdatingCredential().getType(), Credential.Type.PASSWORD);
+        assertEquals(user.getUpdatingCredential().getFormat(), Credential.Format.PLAIN_TEXT);
+        assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
+        assertEquals(actionRequest.getEvent().getInitiatorType(), initiatorType);
+        assertEquals(actionRequest.getEvent().getAction(), action);
     }
 
     private void updatePasswordRecoveryFeatureStatus(boolean enable) throws IOException {
@@ -476,7 +389,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         identityGovernanceRestClient.updateConnectors("VXNlciBPbmJvYXJkaW5n",
                 "dXNlci1lbWFpbC12ZXJpZmljYXRpb24", connectorsPatchReq);
     }
-
 
     private HttpResponse resetPassword(String recoveryLink) throws IOException {
 
@@ -565,62 +477,16 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         EntityUtils.consume(postResponse.getEntity());
     }
 
-
-    /**
-     * Retrieves pre issue access token action request.
-     *
-     * @return pre issue access token request object
-     */
-    private PreUpdatePasswordActionRequest getRequest() throws ActionExecutionRequestBuilderException {
-
-        Tenant tenant = new Tenant(tenantId, tenantInfo.getDomain());
-
-        PasswordUpdatingUser user = new PasswordUpdatingUser.Builder()
-                .id(userId)
-                .updatingCredential(new Credential.Builder()
-                        .type(Credential.Type.PASSWORD)
-                        .format(Credential.Format.PLAIN_TEXT)
-                        .value("Hello@123".toCharArray())
-                        .build())
-                .build();
-
-        UserStore userStore = new UserStore();
-        userStore.setId(PRIMARY_USER_STORE_ID);
-        userStore.setName(PRIMARY_USER_STORE_NAME);
-
-        PreUpdatePasswordEvent event = new PreUpdatePasswordEvent.Builder()
-                .tenant(tenant)
-                .user(user)
-                .userStore(userStore)
-                .initiator(PreUpdatePasswordEvent.FlowInitiator.ADMIN)
-                .action(PreUpdatePasswordEvent.Action.UPDATE)
-                .build();
-
-        return new PreUpdatePasswordActionRequest.Builder()
-                .actionType(ActionType.PRE_UPDATE_PASSWORD)
-                .event(event)
-                .build();
-
-    }
-
-    /**
-     * Creates an action for pre-issuing an access token with basic authentication.
-     *
-     * @return ID of the created action
-     * @throws IOException If an error occurred while creating the action
-     */
     private String createPreUpdatePasswordAction() throws IOException {
 
-        AuthenticationType authenticationType = new AuthenticationType();
-        authenticationType.setType(AuthenticationType.TypeEnum.BASIC);
-        Map<String, Object> authProperties = new HashMap<>();
-        authProperties.put(USERNAME_PROPERTY, MOCK_SERVER_AUTH_BASIC_USERNAME);
-        authProperties.put(PASSWORD_PROPERTY, MOCK_SERVER_AUTH_BASIC_PASSWORD);
-        authenticationType.setProperties(authProperties);
+        AuthenticationType authentication = new AuthenticationType()
+                .type(AuthenticationType.TypeEnum.BASIC)
+                .putPropertiesItem(USERNAME_PROPERTY, MOCK_SERVER_AUTH_BASIC_USERNAME)
+                .putPropertiesItem(PASSWORD_PROPERTY, MOCK_SERVER_AUTH_BASIC_PASSWORD);
 
-        Endpoint endpoint = new Endpoint();
-        endpoint.setUri(EXTERNAL_SERVICE_URI);
-        endpoint.setAuthentication(authenticationType);
+        Endpoint endpoint = new Endpoint()
+                .uri(EXTERNAL_SERVICE_URI)
+                .authentication(authentication);
 
         PreUpdatePasswordActionModel actionModel = new PreUpdatePasswordActionModel();
         actionModel.setName(ACTION_NAME);
@@ -629,5 +495,35 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         actionModel.setPasswordSharing(new PasswordSharing().format(PasswordSharing.FormatEnum.PLAIN_TEXT));
 
         return createAction(PRE_UPDATE_PASSWORD_API_PATH, actionModel);
+    }
+
+    private String getTokenWithClientCredentialsGrant() throws Exception {
+
+        if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
+            authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));
+        }
+
+        List<String> requestedScopes = new ArrayList<>();
+        Collections.addAll(requestedScopes,INTERNAL_USER_MANAGEMENT_UPDATE);
+        String scopes = String.join(" ", requestedScopes);
+
+        List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
+        parameters.add(new BasicNameValuePair("scope", scopes));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(clientId, clientSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, parameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        JSONObject jsonResponse = new JSONObject(responseString);
+
+        assertTrue(jsonResponse.has("access_token"));
+        return jsonResponse.getString("access_token");
     }
 }
