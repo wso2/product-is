@@ -2455,7 +2455,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.oauth.version>7.0.235</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.11.50</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.11.51</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.0</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
@@ -2548,7 +2548,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.72</identity.server.api.version>
+        <identity.server.api.version>1.3.74</identity.server.api.version>
         <identity.user.api.version>1.3.58</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2558,7 +2558,7 @@
         <conditional.authentication.functions.version>1.2.75</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.41.10</identity.apps.console.version>
+        <identity.apps.console.version>2.41.11</identity.apps.console.version>
         <identity.apps.myaccount.version>2.17.8</identity.apps.myaccount.version>
         <identity.apps.core.version>2.12.13</identity.apps.core.version>
 
@@ -2704,7 +2704,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.13</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.14</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
