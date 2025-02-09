@@ -63,8 +63,8 @@ public class UserStoreMgtRestClient extends RestBaseClient {
                 ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH + USER_STORES_ENDPOINT_URI,
                         tenantDomain);
 
-        userStoreSubOrgBasePath =
-                backendURL + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH + USER_STORES_ENDPOINT_URI;
+        userStoreSubOrgBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(
+                PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH + USER_STORES_ENDPOINT_URI, tenantDomain);
     }
 
     /**
