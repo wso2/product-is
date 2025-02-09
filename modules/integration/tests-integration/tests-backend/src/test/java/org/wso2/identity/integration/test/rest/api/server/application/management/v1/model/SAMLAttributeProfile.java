@@ -65,6 +65,7 @@ public class SAMLAttributeProfile {
     public Boolean getAlwaysIncludeAttributesInResponse() {
         return alwaysIncludeAttributesInResponse;
     }
+
     public void setAlwaysIncludeAttributesInResponse(Boolean alwaysIncludeAttributesInResponse) {
         this.alwaysIncludeAttributesInResponse = alwaysIncludeAttributesInResponse;
     }
