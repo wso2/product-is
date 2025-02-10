@@ -133,6 +133,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
+
         return new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
@@ -169,10 +170,8 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         organizationWithRoles.setOrgId(l1Org1Id);
         organizationWithRoles.setPolicy(
                 UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
-        organizationWithRoles.setRoles(Arrays.asList(
-                createRoleWithAudience(APP_ROLE_1, APP_1, APPLICATION_AUDIENCE),
-                createRoleWithAudience(ORG_ROLE_1, APP_2, ORGANIZATION_AUDIENCE)
-                                                    ));
+        organizationWithRoles.setRoles(Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1, APPLICATION_AUDIENCE),
+                createRoleWithAudience(ORG_ROLE_1, APP_2, ORGANIZATION_AUDIENCE)));
 
         UserShareRequestBodyOrganizations organizationWithoutRoles = new UserShareRequestBodyOrganizations();
         organizationWithoutRoles.setOrgId(l1Org2Id);
@@ -319,104 +318,4 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         scim2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
     }
-
-    /*@Test(dependsOnMethods = "testShareUsersWithOrganizations")
-    public void testShareUsersWithAllOrganizations() throws Exception {
-
-        UserShareRequestBodyUserCriteria userCriteria = new UserShareRequestBodyUserCriteria();
-        userCriteria.setUserIds(Arrays.asList(userId1, userId2));
-
-
-        UserShareWithAllRequestBody requestBody = new UserShareWithAllRequestBody()
-                .userCriteria(new UserShareWithAllRequestBody.UserCriteria().userIds(Arrays.asList(userId1, userId2)))
-                .policy("ALL_EXISTING_ORGS_ONLY")
-                .roles(Arrays.asList(
-                        new UserShareWithAllRequestBody.RoleWithAudience()
-                                .displayName("role_1")
-                                .audience(new UserShareWithAllRequestBody.Audience()
-                                        .display("My Org 1")
-                                        .type("organization"))
-                                    ));
-
-        Response response = given()
-                .auth().preemptive().oauth2(m2mToken)
-                .contentType("application/json")
-                .body(requestBody)
-                .post(USER_SHARING_API_BASE_PATH + SHARE_WITH_ALL_PATH);
-
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_ACCEPTED)
-                .body("status", equalTo("Processing"))
-                .body("details", equalTo("User sharing process triggered successfully."));
-    }
-
-    @Test(dependsOnMethods = "testShareUsersWithAllOrganizations")
-    public void testUnshareUsersFromOrganizations() throws Exception {
-        UserUnshareRequestBody requestBody = new UserUnshareRequestBody()
-                .userCriteria(new UserUnshareRequestBody.UserCriteria().userIds(Arrays.asList(userId1, userId2)))
-                .organizations(Arrays.asList(orgId1, orgId2));
-
-        Response response = given()
-                .auth().preemptive().oauth2(m2mToken)
-                .contentType("application/json")
-                .body(requestBody)
-                .post(USER_SHARING_API_BASE_PATH + UNSHARE_PATH);
-
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_ACCEPTED)
-                .body("status", equalTo("Processing"))
-                .body("details", equalTo("Unsharing process triggered successfully."));
-    }
-
-    @Test(dependsOnMethods = "testUnshareUsersFromOrganizations")
-    public void testUnshareUsersFromAllOrganizations() throws Exception {
-        UserUnshareWithAllRequestBody requestBody = new UserUnshareWithAllRequestBody()
-                .userCriteria(new UserUnshareWithAllRequestBody.UserCriteria().userIds(Arrays.asList(userId1, userId2)));
-
-        Response response = given()
-                .auth().preemptive().oauth2(m2mToken)
-                .contentType("application/json")
-                .body(requestBody)
-                .post(USER_SHARING_API_BASE_PATH + UNSHARE_WITH_ALL_PATH);
-
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_ACCEPTED)
-                .body("status", equalTo("Processing"))
-                .body("details", equalTo("Share removal process triggered successfully."));
-    }
-
-    @Test(dependsOnMethods = "testUnshareUsersFromAllOrganizations")
-    public void testGetSharedOrganizations() throws Exception {
-        Response response = given()
-                .auth().preemptive().oauth2(m2mToken)
-                .queryParam("limit", 10)
-                .get(USER_SHARING_API_BASE_PATH + "/" + userId1 + SHARED_ORGANIZATIONS_PATH);
-
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("sharedOrganizations", notNullValue());
-    }
-
-    @Test(dependsOnMethods = "testGetSharedOrganizations")
-    public void testGetSharedRoles() throws Exception {
-        Response response = given()
-                .auth().preemptive().oauth2(m2mToken)
-                .queryParam("orgId", orgId1)
-                .queryParam("limit", 10)
-                .get(USER_SHARING_API_BASE_PATH + "/" + userId1 + SHARED_ROLES_PATH);
-
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("roles", notNullValue());
-    }*/
 }
