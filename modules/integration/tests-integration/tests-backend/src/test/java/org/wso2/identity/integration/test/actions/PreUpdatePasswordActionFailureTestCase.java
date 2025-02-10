@@ -46,6 +46,8 @@ import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.actions.dataprovider.model.ActionResponse;
+import org.wso2.identity.integration.test.actions.dataprovider.model.ExpectedPasswordUpdateResponse;
 import org.wso2.identity.integration.test.actions.mockserver.ActionsMockServer;
 import org.wso2.identity.integration.test.actions.model.*;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
@@ -65,6 +67,7 @@ import org.wso2.identity.integration.test.utils.FileUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,10 +82,10 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
 /**
  * Integration test class for testing the pre update password action execution.
- * This test case extends {@link ActionsBaseTestCase} and focuses on success scenarios related
+ * This test case extends {@link ActionsBaseTestCase} and focuses on failed and error scenarios related
  * to password update flows.
  */
-public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase {
+public class PreUpdatePasswordActionFailureTestCase extends ActionsBaseTestCase {
 
     private static final String TEST_USER1_USERNAME = "testUsername";
     private static final String TEST_USER2_USERNAME = "testUsername2";
@@ -107,6 +110,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
     private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
+    private static final String EMAIL_INVITE_PASSWORD_RESET_ERROR = "The server encountered an internal error.";
 
     private final String tenantId;
     private final TestUserMode userMode;
@@ -124,23 +128,42 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
     private String userId;
     private ApplicationResponseModel application;
     private ActionsMockServer actionsMockServer;
+    private final ActionResponse actionResponse;
+    private final ExpectedPasswordUpdateResponse expectedPasswordUpdateResponse;
 
     private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
     private static final String FORCE_PASSWORD_RESET_ATTRIBUTE = "forcePasswordReset";
 
     @Factory(dataProvider = "testExecutionContextProvider")
-    public PreUpdatePasswordActionSuccessTestCase(TestUserMode testUserMode) {
+    public PreUpdatePasswordActionFailureTestCase(TestUserMode testUserMode, ActionResponse actionResponse,
+                                                  ExpectedPasswordUpdateResponse expectedPasswordUpdateResponse) {
 
-        userMode = testUserMode;
+        this.userMode = testUserMode;
         this.tenantId = testUserMode == TestUserMode.SUPER_TENANT_USER ? "-1234" : "1";
+        this.actionResponse = actionResponse;
+        this.expectedPasswordUpdateResponse = expectedPasswordUpdateResponse;
     }
 
     @DataProvider(name = "testExecutionContextProvider")
-    public static Object[][] getTestExecutionContext() {
+    public static Object[][] getTestExecutionContext() throws IOException, URISyntaxException {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER},
-                {TestUserMode.TENANT_USER}
+                {TestUserMode.SUPER_TENANT_USER, new ActionResponse(200,
+                        FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
+                        new ExpectedPasswordUpdateResponse("400", "Some failure reason. " +
+                                "Some description")},
+                {TestUserMode.TENANT_USER, new ActionResponse(200,
+                        FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
+                        new ExpectedPasswordUpdateResponse("400", "Some failure reason. " +
+                                "Some description")},
+                {TestUserMode.SUPER_TENANT_USER, new ActionResponse(500,
+                        FileUtils.readFileInClassPathAsString("actions/response/error-response.json")),
+                        new ExpectedPasswordUpdateResponse("500", "Error while updating " +
+                                "attributes of user")},
+                {TestUserMode.TENANT_USER, new ActionResponse(500,
+                        FileUtils.readFileInClassPathAsString("actions/response/error-response.json")),
+                        new ExpectedPasswordUpdateResponse("500", "Error while updating " +
+                                "attributes of user")},
         };
     }
 
@@ -161,7 +184,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .setDefaultCookieStore(cookieStore)
                 .build();
-
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
@@ -192,7 +214,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         actionsMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
-                FileUtils.readFileInClassPathAsString("actions/response/pre-update-password-response.json"));
+                actionResponse.getResponseBody());
     }
 
     @BeforeMethod
@@ -232,7 +254,10 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         org.json.simple.JSONObject response = scim2RestClient.updateUserMe(new PatchOperationRequestObject()
                         .addOperations(updateUserPatchOp), TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(),
                 TEST_USER_PASSWORD);
+
         assertNotNull(response);
+        assertEquals(response.get("status"), expectedPasswordUpdateResponse.getStatusCode());
+        assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_UPDATED_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.UPDATE);
     }
@@ -245,13 +270,39 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         Map<String, String> passwordValue = new HashMap<>();
         passwordValue.put(PASSWORD_PROPERTY, TEST_USER_PASSWORD);
         updateUserPatchOp.setValue(passwordValue);
-        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(updateUserPatchOp), userId);
+        org.json.simple.JSONObject response = scim2RestClient.updateUserAndReturnResponse(
+                new PatchOperationRequestObject().addOperations(updateUserPatchOp), userId);
 
+        assertNotNull(response);
+        assertEquals(response.get("status"), expectedPasswordUpdateResponse.getStatusCode());
+        assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.UPDATE);
     }
 
     @Test(dependsOnMethods = "testAdminUpdatePassword",
+            description = "Verify the user password reset with pre update password action")
+    public void testUserResetPassword() throws Exception {
+
+        String passwordRecoveryFormURL = retrievePasswordResetURL(application, client);
+        submitPasswordRecoveryForm(passwordRecoveryFormURL, TEST_USER1_USERNAME, client);
+
+        String recoveryLink = getRecoveryURLFromEmail();
+        HttpResponse postResponse = resetPassword(recoveryLink);
+        String htmlContent = EntityUtils.toString(postResponse.getEntity());
+        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
+
+        if (expectedPasswordUpdateResponse.getStatusCode().equals("400")) {
+            assertTrue(htmlContent.contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        }else{
+            assertTrue(htmlContent.contains(EMAIL_INVITE_PASSWORD_RESET_ERROR));
+        }
+
+        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.RESET);
+    }
+
+    @Test(dependsOnMethods = "testUserResetPassword",
             description = "Verify the admin force password reset with pre update password action")
     public void testAdminForcePasswordReset() throws Exception {
 
@@ -262,8 +313,14 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
 
         String recoveryLink = getRecoveryURLFromEmail();
         HttpResponse postResponse = resetPassword(recoveryLink);
+        String htmlContent = EntityUtils.toString(postResponse.getEntity());
         Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
-        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
+
+        if (expectedPasswordUpdateResponse.getStatusCode().equals("400")) {
+            assertTrue(htmlContent.contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        }else{
+            assertTrue(htmlContent.contains(EMAIL_INVITE_PASSWORD_RESET_ERROR));
+        }
 
         assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.RESET);
@@ -284,8 +341,14 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
 
         String recoveryLink = getRecoveryURLFromEmail();
         HttpResponse postResponse = resetPassword(recoveryLink);
+        String htmlContent = EntityUtils.toString(postResponse.getEntity());
         Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
-        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Set Successfully"));
+
+        if (expectedPasswordUpdateResponse.getStatusCode().equals("400")) {
+            assertTrue(htmlContent.contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        }else{
+            assertTrue(htmlContent.contains(EMAIL_INVITE_PASSWORD_RESET_ERROR));
+        }
 
         assertActionRequestPayload(tempUserId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.INVITE);
@@ -304,25 +367,12 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         updateUserPatchOp.setValue(passwordValue);
         org.json.simple.JSONObject response = scim2RestClient.updateUserWithBearerToken(
                 new PatchOperationRequestObject().addOperations(updateUserPatchOp), userId, token);
+
         assertNotNull(response);
+        assertEquals(response.get("status"), expectedPasswordUpdateResponse.getStatusCode());
+        assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.UPDATE);
-    }
-
-    @Test(dependsOnMethods = "testApplicationUpdatePassword",
-            description = "Verify the user password reset with pre update password action")
-    public void testUserResetPassword() throws Exception {
-
-        String passwordRecoveryFormURL = retrievePasswordResetURL(application, client);
-        submitPasswordRecoveryForm(passwordRecoveryFormURL, TEST_USER1_USERNAME, client);
-
-        String recoveryLink = getRecoveryURLFromEmail();
-        HttpResponse postResponse = resetPassword(recoveryLink);
-        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
-        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
-
-        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
-                PreUpdatePasswordEvent.Action.RESET);
     }
 
     private void assertActionRequestPayload(String userId, String updatedPassword,
