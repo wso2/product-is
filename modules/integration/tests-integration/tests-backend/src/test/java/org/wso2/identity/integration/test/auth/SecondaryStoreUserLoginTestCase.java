@@ -209,9 +209,9 @@ public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest
     private void createAndRegisterPlaygroundApplication() throws Exception {
 
         playgroundApp = new OIDCApplication(PLAYGROUND_APP_NAME, PLAYGROUND_APP_CALLBACK_URI);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.EMAIL_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.FIRST_NAME_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.LAST_NAME_CLAIM_URI);
 
         createApplication(playgroundApp);
         clientID = playgroundApp.getClientId();
