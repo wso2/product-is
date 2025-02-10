@@ -43,7 +43,6 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperat
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 
 import java.util.Collections;
-import java.util.HashMap;
 
 public class ClaimUniquenessValidationTestCase extends ISIntegrationTest {
     private static final Log log = LogFactory.getLog(ClaimUniquenessValidationTestCase.class);
@@ -105,11 +104,14 @@ public class ClaimUniquenessValidationTestCase extends ISIntegrationTest {
     public void cleanUp() {
 
         try {
+            // Reset email claim uniqueness scope to NONE
+            setClaimUniquenessScope(LocalClaimReq.UniquenessScopeEnum.NONE);
+
             if (userStoreId != null) {
                 userStoreMgtRestClient.deleteUserStore(userStoreId);
             }
         } catch (Exception e) {
-            log.error("Error deleting user store", e);
+            log.error("Error during cleanup", e);
         } finally {
             closeClients();
         }
