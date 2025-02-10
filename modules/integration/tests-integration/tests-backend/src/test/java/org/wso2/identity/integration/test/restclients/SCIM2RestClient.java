@@ -42,6 +42,7 @@ import java.io.IOException;
 
 public class SCIM2RestClient extends RestBaseClient {
 
+    private static final String SCIM2_ME_ENDPOINT  = "scim2/Me";
     private static final String SCIM2_USERS_ENDPOINT = "scim2/Users";
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
     private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
@@ -56,6 +57,8 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     private static final String ATTRIBUTES_PART = "?attributes=";
     private static final String EQ_OP = "eq";
+    private static final int TIMEOUT_MILLIS = 30000;
+    private static final int POLLING_INTERVAL_MILLIS = 500;
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -180,6 +183,56 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update the details of an existing user of a sub organization.
+     *
+     * @param patchUserInfo    User patch request object.
+     * @param userId           ID of the user.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return JSONObject of the HTTP response.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public JSONObject updateSubOrgUser(PatchOperationRequestObject patchUserInfo, String userId, String switchedM2MToken)
+            throws Exception {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getSubOrgUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Update the details of an existing user.
+     *
+     * @param patchUserInfo User patch request object.
+     * @param userId        Id of the user.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public void updateUserWithBearerToken(PatchOperationRequestObject patchUserInfo, String userId, String bearerToken) throws IOException {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeadersWithBearerToken(bearerToken))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "User update failed");
+        }
+    }
+
+    public void updateUserMe(PatchOperationRequestObject patchUserInfo, String username, String password) throws IOException {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersMePath();
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeadersForSCIMME(username, password))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "User Me update failed");
+        }
+    }
+
+    /**
      * Search a user and get requested attributes.
      *
      * @param userSearchReq Json String of user search request.
@@ -191,6 +244,26 @@ public class SCIM2RestClient extends RestBaseClient {
         String endPointUrl = getUsersPath() + SCIM2_SEARCH_PATH;
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, userSearchReq, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "User search failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Search a user and get requested attributes of a sub organization.
+     *
+     * @param userSearchReq    Json String of user search request.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return JSONObject of the user search response.
+     * @throws Exception If an error occurred while getting a user.
+     */
+    public JSONObject searchSubOrgUser(String userSearchReq, String switchedM2MToken) throws Exception {
+
+        String endPointUrl = getSubOrgUsersPath() + SCIM2_SEARCH_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, userSearchReq,
+                getHeadersWithBearerToken(switchedM2MToken))) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "User search failed");
             return getJSONObject(EntityUtils.toString(response.getEntity()));
@@ -419,6 +492,29 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Check whether the shared user creation is completed.
+     *
+     * @param userSearchReq    User search request.
+     * @param switchedM2MToken Switched M2M token for the given organization.
+     * @return True if the shared user creation is completed.
+     * @throws Exception If an error occurred while checking the shared user creation.
+     */
+    public boolean isSharedUserCreationCompleted(String userSearchReq, String switchedM2MToken) throws Exception {
+
+        // Wait for 30 seconds.
+        long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS;
+        while (System.currentTimeMillis() < waitTime) {
+            JSONObject jsonObject = searchSubOrgUser(userSearchReq, switchedM2MToken);
+            Long totalResults = (Long) jsonObject.get("totalResults");
+            if (totalResults == 1) {
+                return true;
+            }
+            Thread.sleep(POLLING_INTERVAL_MILLIS);
+        }
+        return false;
+    }
+
+    /**
      * Attempt to create a user and return the response status code.
      *
      * @param userInfo object with user creation details.
@@ -500,6 +596,17 @@ public class SCIM2RestClient extends RestBaseClient {
         return headerList;
     }
 
+    private Header[] getHeadersForSCIMME(String username, String password) {
+
+        Header[] headerList = new Header[3];
+        headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
+        headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
+                Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
+        headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, SCIM_JSON_CONTENT_TYPE);
+
+        return headerList;
+    }
+
     private Header[] getHeadersWithBearerToken(String accessToken) {
 
         Header[] headerList = new Header[3];
@@ -517,6 +624,15 @@ public class SCIM2RestClient extends RestBaseClient {
             return serverUrl + SCIM2_USERS_ENDPOINT;
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_USERS_ENDPOINT;
+        }
+    }
+
+    private String getUsersMePath() {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + SCIM2_ME_ENDPOINT;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_ME_ENDPOINT;
         }
     }
 

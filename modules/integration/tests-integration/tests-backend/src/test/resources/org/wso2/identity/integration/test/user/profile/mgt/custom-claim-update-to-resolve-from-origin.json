@@ -1,0 +1,16 @@
+{
+  "claimURI": "http://wso2.org/claims/customAttribute1",
+  "description": "customAttribute1",
+  "displayOrder": 0,
+  "displayName": "customAttribute1",
+  "readOnly": false,
+  "required": false,
+  "supportedByDefault": false,
+  "sharedProfileValueResolvingMethod": "FromOrigin",
+  "attributeMapping": [
+    {
+      "mappedAttribute": "customAttribute1",
+      "userstore": "PRIMARY"
+    }
+  ]
+}

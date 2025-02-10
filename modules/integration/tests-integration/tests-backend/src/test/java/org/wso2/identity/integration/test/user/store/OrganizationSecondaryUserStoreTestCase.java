@@ -42,7 +42,10 @@ import org.json.simple.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
@@ -66,6 +69,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,7 +93,8 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DA
 public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String AUTHORIZED_APIS_JSON = "authorized-apis.json";
-    private static final String SUB_ORG_USER_STORE_DB = "SUB_ORG_USER_STORE_DB";
+    private static final String SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE = "SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE";
+    private static final String TENANTED_SUB_ORG_SECONDARY_USER_STORE = "TENANTED_SUB_ORG_SECONDARY_USER_STORE";
     private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final String DOMAIN_NAME = "JDBC";
     private static final String SECONDARY_USERNAME = "secondaryUser";
@@ -111,6 +116,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
 
     private final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
     private final CookieStore cookieStore = new BasicCookieStore();
+    private final TestUserMode userMode;
     private UserStoreMgtRestClient userStoreMgtRestClient;
     private OAuth2RestClient oAuth2RestClient;
     private OrgMgtRestClient orgMgtRestClient;
@@ -126,10 +132,25 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     private String groupId;
     private String subOrgId;
 
+    @DataProvider(name = "testExecutionContextProvider")
+    public static Object[][] getTestExecutionContext() {
+
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "testExecutionContextProvider")
+    public OrganizationSecondaryUserStoreTestCase(TestUserMode userMode) {
+
+        this.userMode = userMode;
+    }
+
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
-        super.init();
+        super.init(userMode);
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -182,8 +203,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     @Test(description = "Add a secondary JDBC user store to a sub organization.")
     public void testAddSecondaryJDBCUserStore() throws Exception {
 
-        PropertyDTO[] userStoreProperties = userStoreConfigUtils.getJDBCUserStoreProperties(SUB_ORG_USER_STORE_DB);
-
+        PropertyDTO[] userStoreProperties = getJDBCUserStoreProperties();
         UserStoreReq userStoreReq = new UserStoreReq().typeId(USER_STORE_TYPE).name(DOMAIN_NAME);
         for (PropertyDTO propertyDTO : userStoreProperties) {
             userStoreReq.addPropertiesItem(new Property().name(propertyDTO.getName()).value(propertyDTO.getValue()));
@@ -326,6 +346,15 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     public void testDeleteSecondaryJDBCUserStore() throws Exception {
 
         userStoreMgtRestClient.deleteSubOrgUserStore(DOMAIN_NAME, switchedM2MToken);
+    }
+
+    private PropertyDTO[] getJDBCUserStoreProperties() throws IOException, SQLException, ClassNotFoundException {
+
+        if (userMode == TestUserMode.SUPER_TENANT_ADMIN) {
+            return userStoreConfigUtils.getJDBCUserStoreProperties(SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE);
+        }
+
+        return userStoreConfigUtils.getJDBCUserStoreProperties(TENANTED_SUB_ORG_SECONDARY_USER_STORE);
     }
 
     private String getAccessToken(String authCode) throws Exception {
