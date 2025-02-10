@@ -418,6 +418,77 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Attempt to create a user and return the response status code.
+     *
+     * @param userInfo object with user creation details.
+     * @return Response status code and user ID (if created successfully)
+     * @throws Exception If an error occurred while making the request
+     */
+    public CreateUserResponse attemptUserCreation(UserObject userInfo) throws Exception {
+
+        String jsonRequest = toJSONString(userInfo);
+        if (userInfo.getScimSchemaExtensionEnterprise() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
+        }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
+        }
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String userId = null;
+            if (statusCode == HttpServletResponse.SC_CREATED) {
+                JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+                userId = jsonResponse.get("id").toString();
+            }
+            return new CreateUserResponse(statusCode, userId);
+        }
+    }
+
+    /**
+     * Attempt to update a user and return the response status code.
+     *
+     * @param patchUserInfo Patch operations to update user
+     * @param userId        ID of the user to update
+     * @return Response status code
+     * @throws IOException If an error occurred while making the request
+     */
+    public int attemptUserUpdate(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Response object for user creation attempts
+     */
+    public static class CreateUserResponse {
+
+        private final int statusCode;
+        private final String userId;
+
+        public CreateUserResponse(int statusCode, String userId) {
+
+            this.statusCode = statusCode;
+            this.userId = userId;
+        }
+
+        public int getStatusCode() {
+
+            return statusCode;
+        }
+
+        public String getUserId() {
+
+            return userId;
+        }
+    }
+
     private Header[] getHeaders() {
 
         Header[] headerList = new Header[3];
