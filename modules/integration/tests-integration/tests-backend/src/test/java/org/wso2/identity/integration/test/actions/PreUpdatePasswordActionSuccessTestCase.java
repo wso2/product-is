@@ -76,9 +76,9 @@ import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
 /**
- * Integration test class for testing the pre issue access token flow with client credentials grant.
- * This test case extends {@link ActionsBaseTestCase} and focuses on scenarios related
- * to scopes and claims modifications through an external service.
+ * Integration test class for testing the pre update password action execution.
+ * This test case extends {@link ActionsBaseTestCase} and focuses on success scenarios related
+ * to password update flows.
  */
 public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase {
 
