@@ -2427,7 +2427,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.225</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.227</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.5</identity.notification.push.version>
@@ -2531,7 +2531,7 @@
         <authenticator.local.auth.emailotp.version>1.0.29</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.18</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
-        <authenticator.x509.version>3.1.26</authenticator.x509.version>
+        <authenticator.x509.version>3.1.27</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
@@ -2554,7 +2554,7 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.22</identity.oauth.addons.version>
-        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.19</org.wso2.carbon.extension.identity.x509certificate.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.20</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.76</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
