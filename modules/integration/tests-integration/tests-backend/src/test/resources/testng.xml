@@ -141,6 +141,7 @@
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtPasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.actions.PreUpdatePasswordActionSuccessTestCase"/>
+            <class name="org.wso2.identity.integration.test.actions.PreUpdatePasswordActionFailureTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCHybridFlowIntegrationTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>
