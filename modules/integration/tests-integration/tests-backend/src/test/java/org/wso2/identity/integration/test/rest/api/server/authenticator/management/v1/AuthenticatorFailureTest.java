@@ -76,7 +76,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
     public void testConclude() {
 
         super.conclude();
-        getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR + customIdPId);
+        getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR + customAuthenticatorId);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -219,7 +219,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
 
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
         Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
-                customIdPId, body);
+                customAuthenticatorId, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -254,7 +254,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
         updatePayload.getEndpoint().getAuthentication().getProperties().remove("username");
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
         Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
-                customIdPId, body);
+                customAuthenticatorId, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -272,7 +272,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
         updatePayload.setDisplayName(displayName);
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
         Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
-                customIdPId, body);
+                customAuthenticatorId, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -289,7 +289,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
         updatePayload.getEndpoint().setUri("htt://test.com");
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
         Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
-                customIdPId, body);
+                customAuthenticatorId, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -305,7 +305,7 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
         String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
         body = StringUtils.replace(body, AuthenticationType.TypeEnum.BASIC.toString(), "InvalidType.");
         Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
-                customIdPId, body);
+                customAuthenticatorId, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()

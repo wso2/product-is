@@ -50,8 +50,10 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
 
     protected final String AUTHENTICATOR_NAME = "custom-Authenticator";
     protected final String AUTHENTICATOR_DISPLAY_NAME = "ABC custom authenticator";
+    protected final String AUTHENTICATOR_IMAGE = "https://test.com/authenticator.png";
+    protected final String AUTHENTICATOR_DESCRIPTION = "This is custom local authenticator.";
     protected final String AUTHENTICATOR_ENDPOINT_URI = "https://test.com/authenticate";
-    protected final String customIdPId = Base64.getUrlEncoder().withoutPadding().encodeToString(
+    protected final String customAuthenticatorId = Base64.getUrlEncoder().withoutPadding().encodeToString(
             AUTHENTICATOR_NAME.getBytes(StandardCharsets.UTF_8));
     protected final String UPDATE_VALUE_POSTFIX = "Updated";
 
@@ -90,6 +92,8 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
         UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(type);
         config.setName(AUTHENTICATOR_NAME);
         config.setDisplayName(AUTHENTICATOR_DISPLAY_NAME);
+        config.setImageUrl(AUTHENTICATOR_IMAGE);
+        config.setDescription(AUTHENTICATOR_DESCRIPTION);
         config.setEnabled(true);
 
         UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =

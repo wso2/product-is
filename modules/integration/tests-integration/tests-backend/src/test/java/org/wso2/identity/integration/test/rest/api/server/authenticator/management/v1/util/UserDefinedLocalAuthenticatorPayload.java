@@ -65,6 +65,8 @@ public class UserDefinedLocalAuthenticatorPayload {
         configForCreation.setName(config.getName());
         configForCreation.setDisplayName(config.getDisplayName());
         configForCreation.setIsEnabled(config.isEnabled());
+        configForCreation.setImage(config.getImageUrl());
+        configForCreation.setDescription(config.getDescription());
         configForCreation.setAuthenticationType(UserDefinedLocalAuthenticatorCreation.AuthenticationTypeEnum.valueOf(
                 config.getAuthenticationType().toString()));
         configForCreation.setEndpoint(convertToEndpoint(config.getEndpointConfig()));
@@ -83,6 +85,8 @@ public class UserDefinedLocalAuthenticatorPayload {
         UserDefinedLocalAuthenticatorUpdate configForUpdate = new UserDefinedLocalAuthenticatorUpdate();
         configForUpdate.setDisplayName(config.getDisplayName());
         configForUpdate.setIsEnabled(config.isEnabled());
+        configForUpdate.setImage(config.getImageUrl());
+        configForUpdate.setDescription(config.getDescription());
         configForUpdate.setEndpoint(convertToEndpoint(config.getEndpointConfig()));
         return configForUpdate;
     }

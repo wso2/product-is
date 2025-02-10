@@ -232,7 +232,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         Assert.assertEquals(errorObject.getCode(), "invalid_client",
                 "Invalid access token response doesn't contain required error message.");
         Assert.assertEquals(errorObject.getDescription(),
-                "A valid OAuth client could not be found for client_id: invalidConsumerKey",
+                "Client credentials are invalid.",
                 "Invalid access token response doesn't contain required error description.");
     }
 

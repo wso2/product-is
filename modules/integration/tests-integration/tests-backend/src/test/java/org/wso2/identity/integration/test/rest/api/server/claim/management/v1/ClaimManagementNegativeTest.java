@@ -169,6 +169,18 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
     }
 
     @Test
+    public void testChangeSharedProfileValueResolvingMethodOfSystemClaim() throws IOException {
+
+        String firstNameClaimURI = "http://wso2.org/claims/givenname";
+        String firstNameClaimId = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9naXZlbm5hbWU";
+        String body = readResource("claim-management-update-sharedProfileValueResolvingMethod-of-system-claim.json");
+        Response response =
+                getResponseOfPut(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/" + firstNameClaimId,
+                        body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-60013", firstNameClaimURI);
+    }
+
+    @Test
     public void testAddLocalClaimWithInvalidUsertore() throws IOException {
 
         String userstore = "DUMMY";

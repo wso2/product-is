@@ -23,4 +23,5 @@ package org.wso2.identity.integration.test.actions.model;
  */
 public enum ActionType {
     PRE_ISSUE_ACCESS_TOKEN,
+    PRE_UPDATE_PASSWORD
 }

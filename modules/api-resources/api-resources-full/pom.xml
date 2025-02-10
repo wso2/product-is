@@ -366,6 +366,14 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.certificate.validation.management.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.certificate.validation.management.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.server.tenant.management.common</artifactId>
         </dependency>
         <dependency>

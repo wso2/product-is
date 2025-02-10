@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.common.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
@@ -40,6 +41,7 @@ public class ISIntegrationTest {
 
     public static final String URL_SEPARATOR = "/";
     public static final String TENANTED_URL_PATH_SPECIFIER = "/t/";
+    public static final String ORGANIZATION_PATH_SPECIFIER = "/o";
     public static final String KEYSTORE_TYPE = "PKCS12";
     public static final String KEYSTORE_NAME = "wso2carbon.p12";
     private static final String PRODUCT_GROUP_PORT_HTTPS = "https";
@@ -187,6 +189,22 @@ public class ISIntegrationTest {
             endpointURLWithHostname = TENANTED_URL_PATH_SPECIFIER + tenantDomain + endpointURLWithHostname;
         }
         return endpointURLWithHostname;
+    }
+
+    /**
+     * Get the tenant qualified org URL without the hostname for the given tenant.
+     *
+     * @param endpointURLWithoutHostname The endpointURLWithHostname URL without the hostname.
+     * @param tenantDomain               Tenanted domain.
+     * @return Tenant qualified org URL without hostname.
+     */
+    public static String getTenantedOrgRelativePath(String endpointURLWithoutHostname, String tenantDomain) {
+
+        if (StringUtils.isBlank(endpointURLWithoutHostname) ||
+                tenantDomain.equalsIgnoreCase(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return ORGANIZATION_PATH_SPECIFIER + endpointURLWithoutHostname;
+        }
+        return TENANTED_URL_PATH_SPECIFIER + tenantDomain + ORGANIZATION_PATH_SPECIFIER + endpointURLWithoutHostname;
     }
 
     /**

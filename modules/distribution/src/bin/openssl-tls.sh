@@ -110,10 +110,11 @@ install_oqs_provider() {
 install_apr() {
     # Download APR
     cd "$1" \
-        && wget https://dlcdn.apache.org//apr/apr-$APR_VERSION.tar.gz \
-        && tar -xf apr-$APR_VERSION.tar.gz
+        && git clone https://github.com/apache/apr.git
     echo "Installing APR"
-    cd "$1/apr-$APR_VERSION" \
+    cd "$1/apr" \
+        && git checkout $APR_VERSION \
+        && ./buildconf \
         && ./configure --prefix="$2" \
         && make \
         && make install

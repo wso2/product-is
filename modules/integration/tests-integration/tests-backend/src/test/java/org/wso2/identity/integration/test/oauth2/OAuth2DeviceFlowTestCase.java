@@ -370,7 +370,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         String error = responseObject.get(ERROR).toString();
         String errorDescription = responseObject.get(ERROR_DESCRIPTION).toString();
         Assert.assertEquals(error, "invalid_request", "invalid error retrieved");
-        Assert.assertEquals(errorDescription, "A valid OAuth client could not be found for client_id: invalidConsumerKey",
+        Assert.assertEquals(errorDescription, "Client credentials are invalid.",
                 "invalid error description received");
     }
 
@@ -436,7 +436,7 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         String errorDescription = obj.get("error_description").toString();
         Assert.assertEquals(error, "invalid_client", "Error message is not valid.");
         Assert.assertEquals(errorDescription,
-                "A valid OAuth client could not be found for client_id: invalidConsumerKey",
+                "Client credentials are invalid.",
                 "Error Description is not valid.");
     }
 
