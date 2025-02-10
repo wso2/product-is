@@ -380,12 +380,8 @@ public class PreUpdatePasswordActionSuccessTestCase extends ActionsBaseTestCase 
         PropertyReq propertyReq = new PropertyReq();
         propertyReq.setName("EmailVerification.Enable");
         propertyReq.setValue(enable ? "true" : "false");
-        PropertyReq expiryTimeProperty = new PropertyReq();
-        expiryTimeProperty.setName("EmailVerification.AskPassword.ExpiryTime");
-        expiryTimeProperty.setValue("60");
 
         connectorsPatchReq.addProperties(propertyReq);
-        connectorsPatchReq.addProperties(expiryTimeProperty);
         identityGovernanceRestClient.updateConnectors("VXNlciBPbmJvYXJkaW5n",
                 "dXNlci1lbWFpbC12ZXJpZmljYXRpb24", connectorsPatchReq);
     }
