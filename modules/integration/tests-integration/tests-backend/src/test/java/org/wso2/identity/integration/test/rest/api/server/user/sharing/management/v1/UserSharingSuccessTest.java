@@ -171,12 +171,11 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         organizationWithRoles.setPolicy(
                 UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
         organizationWithRoles.setRoles(Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1, APPLICATION_AUDIENCE),
-                createRoleWithAudience(ORG_ROLE_1, APP_2, ORGANIZATION_AUDIENCE)));
+                createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE)));
 
         UserShareRequestBodyOrganizations organizationWithoutRoles = new UserShareRequestBodyOrganizations();
         organizationWithoutRoles.setOrgId(l1Org2Id);
-        organizationWithoutRoles.setPolicy(
-                UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
+        organizationWithoutRoles.setPolicy(UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_ONLY);
 
         return Arrays.asList(organizationWithRoles, organizationWithoutRoles);
     }
