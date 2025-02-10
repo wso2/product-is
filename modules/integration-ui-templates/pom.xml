@@ -69,7 +69,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
-            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.google-workspace</artifactId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.google</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>

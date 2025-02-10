@@ -70,6 +70,7 @@
                 org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.MetaApi,
                 org.wso2.carbon.identity.api.server.action.management.v1.ActionsApi,
+                org.wso2.carbon.identity.api.server.certificate.validation.management.v1.CertificateValidationApi,
                 org.wso2.carbon.identity.api.server.rule.metadata.v1.RulesApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.AuthorizationDetailsTypesApi
             </param-value>
@@ -800,17 +801,5 @@
     <servlet-mapping>
         <servlet-name>IdleAccountIdentificationV1Servlet</servlet-name>
         <url-pattern>/idle-account-identification/v1/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>CXFServlet</servlet-name>
-        <servlet-class>
-            org.apache.cxf.transport.servlet.CXFServlet
-        </servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CXFServlet</servlet-name>
-        <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>

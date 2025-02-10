@@ -267,7 +267,7 @@ public class RESTTestBase extends ISIntegrationTest {
      * authenticatingUserName and authenticatingCredential with no filter.
      *
      * @param endpointUri endpoint to be invoked
-     * @return response
+     * @return response of GET
      */
     protected Response getResponseOfGetNoFilter(String endpointUri) {
 

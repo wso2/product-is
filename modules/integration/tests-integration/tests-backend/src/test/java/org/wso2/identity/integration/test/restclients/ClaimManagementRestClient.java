@@ -29,11 +29,14 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ClaimDialectReqDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public class ClaimManagementRestClient extends RestBaseClient {
@@ -43,10 +46,15 @@ public class ClaimManagementRestClient extends RestBaseClient {
 
     public static final String LOCAL_CLAIMS_ENDPOINT_URI = "/local";
     public static final String CLAIMS_ENDPOINT_URI = "/claims";
+    public static final String ORGANIZATION_PATH = "o";
+    public static final String PATH_SEPARATOR = "/";
+    private static final int TIMEOUT_MILLIS = 30000;
+    private static final int POLLING_INTERVAL_MILLIS = 500;
     private final CloseableHttpClient client;
     private final String username;
     private final String password;
     private final String serverBasePath;
+    private final String subOrgBasePath;
 
     public ClaimManagementRestClient(String backendURL, Tenant tenantInfo) {
 
@@ -58,6 +66,7 @@ public class ClaimManagementRestClient extends RestBaseClient {
         String tenantDomain = tenantInfo.getContextUser().getUserDomain();
 
         serverBasePath = backendURL + ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH, tenantDomain);
+        subOrgBasePath = getSubOrgBasePath(backendURL, tenantDomain);
     }
 
     /**
@@ -94,6 +103,63 @@ public class ClaimManagementRestClient extends RestBaseClient {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Local claim deletion failed");
         }
+    }
+
+    /**
+     * Get a Local Claim.
+     *
+     * @param claimId Claim id.
+     * @return JSON object of the response.
+     * @throws IOException If an error occurred while getting a local claim.
+     */
+    public JSONObject getLocalClaim(String claimId) throws Exception {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + LOCAL_CLAIMS_ENDPOINT_URI +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Get a Local Claim in sub organization.
+     *
+     * @param claimId          Claim id.
+     * @param switchedM2MToken Switched M2M token.
+     * @return JSON object of the response.
+     * @throws Exception If an error occurred while getting a local claim.
+     */
+    public JSONObject getSubOrgLocalClaim(String claimId, String switchedM2MToken) throws Exception {
+
+        String endPointUrl = subOrgBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + LOCAL_CLAIMS_ENDPOINT_URI +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Check whether the claim sharing is completed.
+     *
+     * @param claimId          Claim id.
+     * @param switchedM2MToken Switched M2M token.
+     * @return True if the claim sharing is completed.
+     * @throws Exception If an error occurred while checking the claim sharing status.
+     */
+    public boolean isClaimSharingCompleted(String claimId, String switchedM2MToken) throws Exception {
+
+        // Wait for 30 seconds.
+        long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS;
+        while (System.currentTimeMillis() < waitTime) {
+            JSONObject claimGetObject = getSubOrgLocalClaim(claimId, switchedM2MToken);
+            String id = (String) claimGetObject.get("id");
+            if (claimId.equals(id)) {
+                return true;
+            }
+            Thread.sleep(POLLING_INTERVAL_MILLIS);
+        }
+        return false;
     }
 
     /**
@@ -168,7 +234,29 @@ public class ClaimManagementRestClient extends RestBaseClient {
         }
     }
 
-    public void updateExternalClaim(String dialectId, String claimId, ExternalClaimReq claimRequest) throws IOException {
+    /**
+     * Update the sub organization claim referenced by the provided id.
+     *
+     * @param dialectId        Claim dialect id.
+     * @param claimId          Claim id.
+     * @param requestBody      Request body.
+     * @param switchedM2MToken Switched M2M token.
+     * @return status code of the response.
+     * @throws Exception If an error occurred while updating the claim.
+     */
+    public int updateSubOrgClaim(String dialectId, String claimId, String requestBody, String switchedM2MToken)
+            throws Exception {
+
+        String endPointUrl = subOrgBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, requestBody,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    public void updateExternalClaim(String dialectId, String claimId, ExternalClaimReq claimRequest)
+            throws IOException {
 
         String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId +
                 CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
@@ -176,6 +264,55 @@ public class ClaimManagementRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "External claim update failed");
+        }
+    }
+
+    /**
+     * Get External Dialect.
+     *
+     * @param dialectId Dialect id.
+     * @return JSON object of the response.
+     * @throws Exception If an error occurred while getting an external dialect.
+     */
+    public JSONObject getExternalDialect(String dialectId) throws Exception {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Add External Dialect.
+     *
+     * @param claimDialectReqDTO Claim Dialect request object.
+     * @return Dialect id.
+     * @throws IOException If an error occurred while adding an external dialect.
+     */
+    public String addExternalDialect(ClaimDialectReqDTO claimDialectReqDTO) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, toJSONString(claimDialectReqDTO),
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "External dialect addition failed.");
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Delete an External Dialect.
+     *
+     * @param dialectId Dialect id.
+     * @throws IOException If an error occurred while deleting an external dialect.
+     */
+    public void deleteExternalDialect(String dialectId) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + dialectId;
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "External dialect deletion failed.");
         }
     }
 
@@ -197,5 +334,23 @@ public class ClaimManagementRestClient extends RestBaseClient {
     public void closeHttpClient() throws IOException {
 
         client.close();
+    }
+
+    private Header[] getHeadersWithBearerToken(String accessToken) {
+
+        Header[] headerList = new Header[2];
+        headerList[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BEARER_TOKEN_AUTHORIZATION_ATTRIBUTE +
+                accessToken);
+        headerList[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
+
+        return headerList;
+    }
+
+    private String getSubOrgBasePath(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH;
+        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH;
     }
 }

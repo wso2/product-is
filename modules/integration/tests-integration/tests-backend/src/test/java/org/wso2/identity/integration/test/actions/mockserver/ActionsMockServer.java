@@ -84,4 +84,8 @@ public class ActionsMockServer {
 
         return requestList.get(0).getBodyAsString();
     }
+
+    public void resetRequests() {
+        wireMockServer.resetRequests();
+    }
 }

@@ -7,6 +7,7 @@
   "regEx": "",
   "required": true,
   "supportedByDefault": true,
+  "sharedProfileValueResolvingMethod": "FromSharedProfile",
   "attributeMapping": [
     {
       "mappedAttribute": "dummymail",

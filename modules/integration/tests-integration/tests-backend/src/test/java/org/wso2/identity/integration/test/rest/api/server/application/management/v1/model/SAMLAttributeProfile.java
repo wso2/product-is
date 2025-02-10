@@ -28,6 +28,7 @@ public class SAMLAttributeProfile {
 
     private Boolean enabled = false;
     private Boolean alwaysIncludeAttributesInResponse = false;
+    private String nameFormat = "urn:oasis:names:tc:SAML:2.0:attrname-format:basic";
 
     /**
      *
@@ -69,6 +70,28 @@ public class SAMLAttributeProfile {
         this.alwaysIncludeAttributesInResponse = alwaysIncludeAttributesInResponse;
     }
 
+    /**
+     * The name format of attributes in the SAML assertion attribute statement.
+     **/
+    public SAMLAttributeProfile nameFormat(String nameFormat) {
+
+        this.nameFormat = nameFormat;
+        return this;
+    }
+
+    @ApiModelProperty(value = "The name format of attributes in the SAML assertion attribute statement.")
+    @JsonProperty("nameFormat")
+    @Valid
+    public String getNameFormat() {
+
+        return nameFormat;
+    }
+
+    public void setNameFormat(String nameFormat) {
+
+        this.nameFormat = nameFormat;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -81,12 +104,13 @@ public class SAMLAttributeProfile {
         SAMLAttributeProfile samlAttributeProfile = (SAMLAttributeProfile) o;
         return Objects.equals(this.enabled, samlAttributeProfile.enabled) &&
                 Objects.equals(this.alwaysIncludeAttributesInResponse,
-                        samlAttributeProfile.alwaysIncludeAttributesInResponse);
+                        samlAttributeProfile.alwaysIncludeAttributesInResponse) &&
+                Objects.equals(this.nameFormat, samlAttributeProfile.nameFormat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(enabled, alwaysIncludeAttributesInResponse);
+        return Objects.hash(enabled, alwaysIncludeAttributesInResponse, nameFormat);
     }
 
     @Override
@@ -95,6 +119,7 @@ public class SAMLAttributeProfile {
         return "class SAMLAttributeProfile {\n" +
                 "    enabled: " + toIndentedString(enabled) + "\n" +
                 "    alwaysIncludeAttributesInResponse: " + toIndentedString(alwaysIncludeAttributesInResponse) + "\n" +
+                "    nameFormat: " + toIndentedString(nameFormat) + "\n" +
                 "}";
     }
 

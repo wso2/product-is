@@ -1,4 +1,4 @@
-name: Integration Test Runner
+name: Integration Test Runner For PRs
 
 on:
   workflow_dispatch:
