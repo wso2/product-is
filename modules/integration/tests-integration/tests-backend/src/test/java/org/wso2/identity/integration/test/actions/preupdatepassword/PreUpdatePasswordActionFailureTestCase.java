@@ -237,7 +237,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         if (expectedPasswordUpdateResponse.getStatusCode().equals("400")) {
             assertTrue(htmlContent.contains(expectedPasswordUpdateResponse.getErrorDetail()));
-        }else{
+        } else {
             assertTrue(htmlContent.contains(EMAIL_INVITE_PASSWORD_RESET_ERROR));
         }
 
@@ -261,7 +261,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         if (expectedPasswordUpdateResponse.getStatusCode().equals("400")) {
             assertTrue(htmlContent.contains(expectedPasswordUpdateResponse.getErrorDetail()));
-        }else{
+        } else {
             assertTrue(htmlContent.contains(EMAIL_INVITE_PASSWORD_RESET_ERROR));
         }
 
@@ -289,7 +289,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         if (expectedPasswordUpdateResponse.getStatusCode().equals("400")) {
             assertTrue(htmlContent.contains(expectedPasswordUpdateResponse.getErrorDetail()));
-        }else{
+        } else {
             assertTrue(htmlContent.contains(EMAIL_INVITE_PASSWORD_RESET_ERROR));
         }
 
