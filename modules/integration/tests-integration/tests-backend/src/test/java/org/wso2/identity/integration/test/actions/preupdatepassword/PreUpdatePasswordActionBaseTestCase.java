@@ -67,11 +67,6 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
-    private static final String USERNAME_PROPERTY = "username";
-    private static final String PASSWORD_PROPERTY = "password";
-    private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
-    private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
-    private static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
     private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
     private static final String PRE_UPDATE_PASSWORD_API_PATH = "preUpdatePassword";
 
@@ -106,7 +101,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     }
 
-    public void updatePasswordRecoveryFeatureStatus(boolean enable) throws IOException {
+    protected void updatePasswordRecoveryFeatureStatus(boolean enable) throws IOException {
 
         ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
         connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
@@ -118,7 +113,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 "YWNjb3VudC1yZWNvdmVyeQ", connectorsPatchReq);
     }
 
-    public void updateAdminPasswordResetRecoveryEmailFeatureStatus(boolean enable) throws IOException {
+    protected void updateAdminPasswordResetRecoveryEmailFeatureStatus(boolean enable) throws IOException {
 
         ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
         connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
@@ -130,7 +125,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 "YWRtaW4tZm9yY2VkLXBhc3N3b3JkLXJlc2V0", connectorsPatchReq);
     }
 
-    public void updateAdminInitiatedPasswordResetEmailFeatureStatus(boolean enable) throws IOException {
+    protected void updateAdminInitiatedPasswordResetEmailFeatureStatus(boolean enable) throws IOException {
 
         ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
         connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
@@ -143,7 +138,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 "dXNlci1lbWFpbC12ZXJpZmljYXRpb24", connectorsPatchReq);
     }
 
-    public HttpResponse resetPassword(String recoveryLink, String resetPassword) throws IOException {
+    protected HttpResponse resetPassword(String recoveryLink, String newPassword) throws IOException {
 
         HttpResponse response = sendGetRequest(client, recoveryLink);
 
@@ -160,7 +155,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
             String name = input.attr("name");
             String value = input.attr("value");
             if ("reset-password".equals(name) || "reset-password2".equals(name)) {
-                value = resetPassword;
+                value = newPassword;
             }
             formParams.add(new BasicNameValuePair(name, value));
         }
@@ -168,7 +163,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return sendPostRequestWithParameters(client, formParams, actionURL);
     }
 
-    public String getRecoveryURLFromEmail() {
+    protected String getRecoveryURLFromEmail() {
 
         Assert.assertTrue(org.wso2.identity.integration.test.util.Utils.getMailServer().waitForIncomingEmail(10000, 1));
         Message[] messages = org.wso2.identity.integration.test.util.Utils.getMailServer().getReceivedMessages();
@@ -178,7 +173,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return doc.selectFirst("#bodyCell").selectFirst("a").attr("href");
     }
 
-    public String retrievePasswordResetURL(ApplicationResponseModel application) throws Exception {
+    protected String retrievePasswordResetURL(ApplicationResponseModel application) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
@@ -199,7 +194,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return link.attr("href");
     }
 
-    public void submitPasswordRecoveryForm(String url, String username) throws Exception {
+    protected void submitPasswordRecoveryForm(String url, String username) throws Exception {
 
         HttpResponse response = sendGetRequest(client, url);
         String htmlContent = EntityUtils.toString(response.getEntity());
@@ -230,7 +225,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         EntityUtils.consume(postResponse.getEntity());
     }
 
-    public String createPreUpdatePasswordAction(String actionName, String actionDescription) throws IOException {
+    protected String createPreUpdatePasswordAction(String actionName, String actionDescription) throws IOException {
 
         AuthenticationType authentication = new AuthenticationType()
                 .type(AuthenticationType.TypeEnum.BASIC)
@@ -250,7 +245,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return createAction(PRE_UPDATE_PASSWORD_API_PATH, actionModel);
     }
 
-    public String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret) throws Exception {
+    protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret) throws Exception {
 
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));

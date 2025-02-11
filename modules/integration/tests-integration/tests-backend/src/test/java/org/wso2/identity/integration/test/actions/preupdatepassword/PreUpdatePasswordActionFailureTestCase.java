@@ -69,8 +69,6 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     private static final String PRE_UPDATE_PASSWORD_API_PATH = "preUpdatePassword";
     private static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
-    private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
-    private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
     private static final String EMAIL_INVITE_PASSWORD_RESET_ERROR = "The server encountered an internal error.";
 
     private final String tenantId;
@@ -88,7 +86,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     private final ActionResponse actionResponse;
     private final ExpectedPasswordUpdateResponse expectedPasswordUpdateResponse;
 
-    private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
+    private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE = "urn:scim:wso2:schema";
     private static final String FORCE_PASSWORD_RESET_ATTRIBUTE = "forcePasswordReset";
 
     @Factory(dataProvider = "testExecutionContextProvider")
@@ -157,7 +155,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         actionsMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
-                actionResponse.getResponseBody());
+                actionResponse.getResponseBody(), actionResponse.getStatusCode());
     }
 
     @BeforeMethod
