@@ -183,6 +183,24 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update the details of an existing user.
+     *
+     * @param patchUserInfo User patch request object.
+     * @param userId        Id of the user.
+     * @return JSONObject of the Closaeable HTTP response.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public JSONObject updateUserAndReturnResponse(PatchOperationRequestObject patchUserInfo, String userId) throws Exception {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+    }
+
+    /**
      * Update the details of an existing user of a sub organization.
      *
      * @param patchUserInfo    User patch request object.
@@ -208,27 +226,35 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param patchUserInfo User patch request object.
      * @param userId        Id of the user.
+     * @return JSONObject of the Closaeable HTTP response.
      * @throws IOException If an error occurred while updating a user.
      */
-    public void updateUserWithBearerToken(PatchOperationRequestObject patchUserInfo, String userId, String bearerToken) throws IOException {
+    public JSONObject updateUserWithBearerToken(PatchOperationRequestObject patchUserInfo, String userId, String bearerToken) throws Exception {
 
         String jsonRequest = toJSONString(patchUserInfo);
         String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
 
         try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeadersWithBearerToken(bearerToken))) {
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                    "User update failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
         }
     }
 
-    public void updateUserMe(PatchOperationRequestObject patchUserInfo, String username, String password) throws IOException {
+    /**
+     * Update the details of an existing user.
+     *
+     * @param patchUserInfo User patch request object.
+     * @param username      username of the user.
+     * @param password      password of the user.
+     * @return JSONObject of the Closaeable HTTP response.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public JSONObject updateUserMe(PatchOperationRequestObject patchUserInfo, String username, String password) throws Exception {
 
         String jsonRequest = toJSONString(patchUserInfo);
         String endPointUrl = getUsersMePath();
 
         try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeadersForSCIMME(username, password))) {
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
-                    "User Me update failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
         }
     }
 
