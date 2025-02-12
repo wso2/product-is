@@ -21,12 +21,16 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
+import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.testng.Assert;
@@ -63,6 +67,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthzRuntimeEnabled;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_CLIENT_ID;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_RESPONSE_TYPE;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.REDIRECT_URI_NAME;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
 
 public class OAuth2RestClient extends RestBaseClient {
 
@@ -92,6 +102,7 @@ public class OAuth2RestClient extends RestBaseClient {
         subOrgApplicationManagementApiBasePath = getSubOrgApplicationsPath(backendUrl, tenantDomain);
         apiResourceManagementApiBasePath = getAPIResourcesPath(backendUrl, tenantDomain);
         roleV2ApiBasePath = getSCIM2RoleV2Path(backendUrl, tenantDomain);
+
     }
 
     /**
@@ -207,6 +218,18 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Get application id using application name in a root organization.
+     *
+     * @param appName Application name.
+     * @return Application id.
+     * @throws IOException If an error occurred while retrieving the application.
+     */
+    public String getAppIdUsingAppName(String appName) throws IOException {
+
+        return getAppIdUsingAppNameInOrganization(appName, null);
+    }
+
+    /**
      * Get application id using application name in an organization.
      *
      * @param appName          Application name.
@@ -216,11 +239,13 @@ public class OAuth2RestClient extends RestBaseClient {
      */
     public String getAppIdUsingAppNameInOrganization(String appName, String switchedM2MToken) throws IOException {
 
-        String endPointUrl = subOrgApplicationManagementApiBasePath + "?filter=name eq " + appName;
+        String endPointUrl = (switchedM2MToken != null
+                ? subOrgApplicationManagementApiBasePath : applicationManagementApiBasePath) +
+                "?filter=name eq " + appName;
         endPointUrl = endPointUrl.replace(" ", "%20");
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
-                getHeadersWithBearerToken(switchedM2MToken))) {
+                switchedM2MToken != null ? getHeadersWithBearerToken(switchedM2MToken) : getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
 
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
@@ -264,6 +289,46 @@ public class OAuth2RestClient extends RestBaseClient {
                 } else {
                     try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
                             getHeaders())) {
+                        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                                "Application update failed");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Error("Unable to update the Application");
+        }
+    }
+
+    /**
+     * Update an existing sub organization application.
+     *
+     * @param appId            Application id.
+     * @param application      Updated application patch object.
+     * @param switchedM2MToken Switched m2m token generated for the given organization.
+     */
+    public void updateSubOrgApplication(String appId, ApplicationPatchModel application, String switchedM2MToken) {
+
+        String jsonRequest = toJSONString(application);
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId;
+
+        try {
+            if (isLegacyAuthzRuntimeEnabled()) {
+                try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                        getHeadersWithBearerToken(switchedM2MToken))) {
+                    Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                            "Application update failed");
+                }
+            }
+            if (!isLegacyAuthzRuntimeEnabled()) {
+                if ((application.getAssociatedRoles() != null) && application.getAssociatedRoles().getRoles() != null) {
+                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                            getHeadersWithBearerToken(switchedM2MToken))) {
+                        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_FORBIDDEN,
+                                "Application update failed");
+                    }
+                } else {
+                    try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                            getHeadersWithBearerToken(switchedM2MToken))) {
                         Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                                 "Application update failed");
                     }
@@ -381,6 +446,25 @@ public class OAuth2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
             return response.getStatusLine().getStatusCode() == HttpServletResponse.SC_NO_CONTENT;
         }
+    }
+
+    public String initiateAuthRequest(String clientId, String scopes, boolean isOrganizationSSO) throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAUTH2_RESPONSE_TYPE, OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair(OAUTH2_CLIENT_ID, clientId));
+        urlParameters.add(new BasicNameValuePair(REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, scopes));
+        if (isOrganizationSSO) {
+            urlParameters.add(new BasicNameValuePair("fidp", "OrganizationSSO"));
+        }
+
+        HttpResponse response = getResponseOfHttpPost(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
+        Assert.assertNotNull(response, "Authorized response is null");
+        Header locationHeader = getLocationHeader(response);
+        Map<String, String> queryParams = extractQueryParams(locationHeader.getValue());
+        return queryParams.get(SESSION_DATA_KEY);
     }
 
     private String getApplicationsPath(String serverUrl, String tenantDomain) {

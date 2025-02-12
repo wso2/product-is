@@ -20,19 +20,28 @@ package org.wso2.identity.integration.test.rest.api.user.application.v1;
 
 import io.restassured.RestAssured;
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DiscoverableGroup;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.GroupBasicInfo;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestBase {
 
@@ -41,11 +50,28 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     public static final String USER_APPLICATION_ENDPOINT_URI = "/me/applications";
     protected static String swaggerDefinition;
     protected static String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.application.v1";
-    protected static int TOTAL_DISCOVERABLE_APP_COUNT = 13;
-    private static final String APP_NAME_PREFIX = "APP_";
+    protected static final int TOTAL_DISCOVERABLE_APP_COUNT = 19;
+    protected static final int TOTAL_NON_DISCOVERABLE_APP_COUNT = 2;
+    protected static final int TOTAL_GROUP_COUNT = 3;
+    private static final String[] GROUP_IDS = new String[TOTAL_GROUP_COUNT];
+    protected static final int TOTAL_USER_COUNT  = 3;
+    private static final String[] USER_IDS = new String[TOTAL_USER_COUNT];
+    protected static final int TOTAL_SUB_ORG_GROUP_COUNT = 3;
+    protected static final int TOTAL_SUB_ORG_USER_COUNT  = 3;
+    private static final String[] SUB_ORG_USER_IDS = new String[TOTAL_SUB_ORG_USER_COUNT];
+    private static final String[] SUB_ORG_GROUP_IDS = new String[TOTAL_SUB_ORG_GROUP_COUNT];
+    protected static final String USER_NAME_PREFIX = "user-";
+    protected static final String USER_PASSWORD = "Wso2@test";
+    protected static final String GROUP_NAME_PREFIX = "GROUP_";
+    protected static final String APP_NAME_PREFIX = "APP_";
     private static final String APP_DESC_PREFIX = "This is APP_";
     private static final String APP_IMAGE_URL = "https://dummy-image-url.com";
     private static final String APP_ACCESS_URL = "https://dummy-access-url.com";
+    private static final String SUB_ORG_NAME = "sub-org";
+    private static final String PRIMARY_USER_STORE = "PRIMARY";
+    private static final String MY_ACCOUNT_APP_NAME = "My Account";
+
+    private static String subOrgToken;
 
     static {
         try {
@@ -56,21 +82,33 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         }
     }
 
-    protected List<ServiceProvider> serviceProviders = new ArrayList<>();
-    protected ApplicationManagementServiceClient appMgtclient;
+    protected OAuth2RestClient oAuth2RestClient;
+    protected SCIM2RestClient scim2RestClient;
+    protected OrgMgtRestClient orgMgtRestClient;
 
     @BeforeClass(alwaysRun = true)
     public void testStart() throws Exception {
 
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        createServiceProviders();
+        oAuth2RestClient = new OAuth2RestClient(serverURL, context.getContextTenant());
+        scim2RestClient = new SCIM2RestClient(serverURL, context.getContextTenant());
+        orgMgtRestClient =
+                new OrgMgtRestClient(context, context.getContextTenant(), serverURL, getAuthorizedAPIList());
+        String subOrgID = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
+        subOrgToken = orgMgtRestClient.switchM2MToken(subOrgID);
+
+        createUsers();
+        createGroup();
+        createSubOrgUsers();
+        createSubOrgGroups();
+        createApplications();
+        enablePasswordGrantForMyAccount();
     }
 
     @AfterClass(alwaysRun = true)
     public void testEnd() throws Exception {
 
         super.conclude();
-        deleteServiceProviders();
+        //deleteServiceProviders();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -85,50 +123,214 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    private void createServiceProviders() throws Exception {
+    /**
+     * Create root tenant users for the test.
+     *
+     * @throws Exception If an error occurred while creating users.
+     */
+    private void createUsers() throws Exception {
+
+        for (int i = 1; i <= TOTAL_USER_COUNT; i++) {
+            UserObject userObject = new UserObject();
+            userObject.setUserName(USER_NAME_PREFIX + i);
+            userObject.setPassword(USER_PASSWORD);
+            USER_IDS[i - 1] = scim2RestClient.createUser(userObject);
+        }
+    }
+
+    /**
+     * Create root tenant groups for the test.
+     *
+     * @throws Exception If an error occurred while creating groups.
+     */
+    private void createGroup() throws Exception {
+
+        for (int i = 1; i <= TOTAL_GROUP_COUNT; i++) {
+            GroupRequestObject groupRequestObject = new GroupRequestObject();
+            groupRequestObject.displayName(GROUP_NAME_PREFIX + i);
+            assignMembersToGroup(groupRequestObject, i, USER_IDS);
+            GROUP_IDS[i - 1] = scim2RestClient.createGroup(groupRequestObject);
+        }
+    }
+
+    /**
+     * Create sub organization users for the test.
+     *
+     * @throws Exception If an error occurred while creating users.
+     */
+    private void createSubOrgUsers() throws Exception {
+
+        for (int i = 1; i <= TOTAL_SUB_ORG_USER_COUNT; i++) {
+            UserObject userObject = new UserObject();
+            userObject.setUserName(USER_NAME_PREFIX + i);
+            userObject.setPassword(USER_PASSWORD);
+            SUB_ORG_USER_IDS[i - 1] = scim2RestClient.createSubOrgUser(userObject, subOrgToken);
+        }
+    }
+
+    /**
+     * Create sub organization groups for the test.
+     *
+     * @throws Exception If an error occurred while creating groups.
+     */
+    private void createSubOrgGroups() throws Exception {
+
+        for (int i = 1; i <= TOTAL_SUB_ORG_GROUP_COUNT; i++) {
+            GroupRequestObject groupRequestObject = new GroupRequestObject();
+            groupRequestObject.displayName(GROUP_NAME_PREFIX + i);
+            assignMembersToGroup(groupRequestObject, i, SUB_ORG_USER_IDS);
+            SUB_ORG_GROUP_IDS[i - 1] = scim2RestClient.createSubOrgGroup(groupRequestObject, subOrgToken);
+        }
+    }
+
+    /**
+     * Assign members to the group.
+     * The first user will be assigned to the first group.
+     * The second user will be assigned to the second and third groups.
+     * The third user will not be assigned to any group.
+     *
+     * @param groupRequestObject Group request object.
+     * @param groupNum           Group number.
+     * @param userIDs            User IDs.
+     */
+    private void assignMembersToGroup(GroupRequestObject groupRequestObject, int groupNum, String[] userIDs) {
+
+        GroupRequestObject.MemberItem member = new GroupRequestObject.MemberItem();
+        if (groupNum == 1) {
+            member.value(userIDs[0]);
+            groupRequestObject.addMember(member);
+        } else if (groupNum == 2) {
+            member.value(userIDs[1]);
+            groupRequestObject.addMember(member);
+        } else if (groupNum == 3) {
+            member.value(userIDs[1]);
+            groupRequestObject.addMember(member);
+        }
+    }
+
+    /**
+     * Get the list of sub APIs that need to be authorized for the B2B application.
+     *
+     * @return A JSON object containing the API and scopes list.
+     * @throws JSONException If an error occurs while creating the JSON object.
+     */
+    private JSONObject getAuthorizedAPIList() throws JSONException {
+
+        JSONObject jsonObject = new JSONObject();
+        // SCIM2 Users.
+        jsonObject.put("/o/scim2/Users", new String[] {"internal_org_user_mgt_create"});
+        // SCIM2 Groups.
+        jsonObject.put("/o/scim2/Groups", new String[] {"internal_org_group_mgt_create"});
+        // Application management.
+        jsonObject.put("/o/api/server/v1/applications",
+                new String[] {"internal_org_application_mgt_view", "internal_org_application_mgt_create",
+                        "internal_org_application_mgt_update"});
+        jsonObject.put("/api/server/v1/applications", new String[] {"internal_application_mgt_view"});
+        // Organization management.
+        jsonObject.put("/api/server/v1/organizations", new String[] {"internal_organization_create"});
+
+        return jsonObject;
+    }
+
+    /**
+     * Create applications for the test.
+     *
+     * @throws Exception If an error occurred while creating applications.
+     */
+    private void createApplications() throws Exception {
 
         for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
-            ServiceProvider serviceProvider = createServiceProvider(APP_NAME_PREFIX + i, APP_DESC_PREFIX + i);
-            if (serviceProvider != null) {
-                serviceProviders.add(serviceProvider);
-            }
+            ApplicationModel application = new ApplicationModel();
+            application.setName(APP_NAME_PREFIX + i);
+            application.setDescription(APP_DESC_PREFIX + i);
+            application.setImageUrl(APP_IMAGE_URL);
+            AdvancedApplicationConfiguration advancedApplicationConfiguration = new AdvancedApplicationConfiguration();
+            advancedApplicationConfiguration.setDiscoverableByEndUsers(true);
+            assignDiscoverableGroups(advancedApplicationConfiguration, i, GROUP_IDS);
+            application.setAdvancedConfigurations(advancedApplicationConfiguration);
+            application.setAccessUrl(APP_ACCESS_URL);
+            String appId = oAuth2RestClient.createApplication(application);
+            oAuth2RestClient.shareApplication(appId, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
+            String sharedAppId = null;
+            do {
+                if (sharedAppId != null) {
+                    Thread.sleep(1000);
+                }
+                sharedAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(APP_NAME_PREFIX + i, subOrgToken);
+            } while (StringUtils.isEmpty(sharedAppId));
+            ApplicationPatchModel sharedAppPatch = new ApplicationPatchModel();
+            AdvancedApplicationConfiguration sharedAppAdvancedConfig = new AdvancedApplicationConfiguration();
+            assignDiscoverableGroups(sharedAppAdvancedConfig, i, SUB_ORG_GROUP_IDS);
+            sharedAppPatch.advancedConfigurations(sharedAppAdvancedConfig);
+            oAuth2RestClient.updateSubOrgApplication(sharedAppId, sharedAppPatch, subOrgToken);
         }
-
-        // Reverse the SP list as they are ordered by created timestamp.
-        Collections.reverse(serviceProviders);
+        for (int i = 1; i <= TOTAL_NON_DISCOVERABLE_APP_COUNT; i++) {
+            ApplicationModel application = new ApplicationModel();
+            application.setName(APP_NAME_PREFIX + (i + TOTAL_DISCOVERABLE_APP_COUNT));
+            application.setDescription(APP_DESC_PREFIX + (i + TOTAL_DISCOVERABLE_APP_COUNT));
+            application.setImageUrl(APP_IMAGE_URL);
+            oAuth2RestClient.createApplication(application);
+        }
     }
 
-    private void deleteServiceProviders() throws Exception {
+    /**
+     * Assign discoverable groups to the application.
+     *
+     * @param advancedApplicationConfiguration Advanced application configuration.
+     * @param applicationNum                   Application number.
+     * @param groupIDs                         Group IDs.
+     */
+    private void assignDiscoverableGroups(AdvancedApplicationConfiguration advancedApplicationConfiguration,
+                                          int applicationNum, String[] groupIDs) {
 
-        for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
-
-            ServiceProvider serviceProvider = appMgtclient.getApplication(APP_NAME_PREFIX + i);
-            if (serviceProvider != null) {
-                appMgtclient.deleteApplication(serviceProvider.getApplicationName());
-                log.info("############## " + "Deleted app: " + serviceProvider.getApplicationName());
-            }
+        DiscoverableGroup discoverableGroup = new DiscoverableGroup();
+        discoverableGroup.setUserStore(PRIMARY_USER_STORE);
+        if (applicationNum >= 1 && applicationNum <= 8) {
+            GroupBasicInfo group = new GroupBasicInfo();
+            group.setId(groupIDs[0]);
+            discoverableGroup.addGroupsItem(group);
         }
-
-        serviceProviders.clear();
+        if (applicationNum >= 3 && applicationNum <= 10) {
+            GroupBasicInfo group = new GroupBasicInfo();
+            group.setId(groupIDs[1]);
+            discoverableGroup.addGroupsItem(group);
+        }
+        if (applicationNum >= 5 && applicationNum <= 12) {
+            GroupBasicInfo group = new GroupBasicInfo();
+            group.setId(groupIDs[2]);
+            discoverableGroup.addGroupsItem(group);
+        }
+        if (applicationNum < 13) {
+            advancedApplicationConfiguration.addDiscoverableGroupsItem(discoverableGroup);
+        }
     }
 
-    protected ServiceProvider createServiceProvider(String appName, String appDescription) throws Exception {
+    /**
+     * Enable password grant for the My Account application.
+     *
+     * @throws Exception If an error occurred while enabling password grant.
+     */
+    private void enablePasswordGrantForMyAccount() throws Exception {
 
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(appName);
-        serviceProvider.setDescription(appDescription);
-        appMgtclient.createApplication(serviceProvider);
-
-        serviceProvider = appMgtclient.getApplication(appName);
-        if (serviceProvider != null) {
-            serviceProvider.setDiscoverable(true);
-            serviceProvider.setImageUrl(APP_IMAGE_URL);
-            serviceProvider.setAccessUrl(APP_ACCESS_URL);
-            appMgtclient.updateApplicationData(serviceProvider);
-
-            return serviceProvider;
-        }
-
-        return null;
+        String rootMyAccountAppId = oAuth2RestClient.getAppIdUsingAppName(MY_ACCOUNT_APP_NAME);
+        OpenIDConnectConfiguration rootMyAccountAppOIDC = oAuth2RestClient.getOIDCInboundDetails(rootMyAccountAppId);
+        rootMyAccountAppOIDC.addGrantTypesItem("password");
+        oAuth2RestClient.updateInboundDetailsOfApplication(rootMyAccountAppId, rootMyAccountAppOIDC, "oidc");
+        oAuth2RestClient.shareApplication(
+                rootMyAccountAppId, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
     }
+
+//    private void deleteServiceProviders() throws Exception {
+//
+//        for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
+//
+//            ServiceProvider serviceProvider = appMgtclient.getApplication(APP_NAME_PREFIX + i);
+//            if (serviceProvider != null) {
+//                appMgtclient.deleteApplication(serviceProvider.getApplicationName());
+//                log.info("############## " + "Deleted app: " + serviceProvider.getApplicationName());
+//            }
+//        }
+//
+//        serviceProviders.clear();
+//    }
 }
