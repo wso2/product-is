@@ -88,10 +88,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
  */
 public class PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase extends ActionsBaseTestCase {
 
-    private static final String USERNAME_PROPERTY = "username";
-    private static final String PASSWORD_PROPERTY = "password";
     private static final String EXTERNAL_SERVICE_NAME = "TestExternalService";
-    private static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
     private static final String PRE_ISSUE_ACCESS_TOKEN_API_PATH = "preIssueAccessToken";
     private static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
 
@@ -115,8 +112,6 @@ public class PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase exte
 
     private static final int UPDATED_EXPIRY_TIME_PERIOD = 7200;
     private static final int CURRENT_EXPIRY_TIME_PERIOD = 3600;
-    private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
-    private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;
     private CloseableHttpClient client;

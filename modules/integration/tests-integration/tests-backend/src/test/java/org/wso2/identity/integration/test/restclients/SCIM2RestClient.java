@@ -42,6 +42,7 @@ import java.io.IOException;
 
 public class SCIM2RestClient extends RestBaseClient {
 
+    private static final String SCIM2_ME_ENDPOINT  = "scim2/Me";
     private static final String SCIM2_USERS_ENDPOINT = "scim2/Users";
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
     private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
@@ -182,6 +183,24 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update the details of an existing user.
+     *
+     * @param patchUserInfo User patch request object.
+     * @param userId        Id of the user.
+     * @return JSONObject of the Closaeable HTTP response.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public JSONObject updateUserAndReturnResponse(PatchOperationRequestObject patchUserInfo, String userId) throws Exception {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+    }
+
+    /**
      * Update the details of an existing user of a sub organization.
      *
      * @param patchUserInfo    User patch request object.
@@ -199,6 +218,43 @@ public class SCIM2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
                 getHeadersWithBearerToken(switchedM2MToken))) {
             return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Update the details of an existing user.
+     *
+     * @param patchUserInfo User patch request object.
+     * @param userId        Id of the user.
+     * @return JSONObject of the Closaeable HTTP response.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public JSONObject updateUserWithBearerToken(PatchOperationRequestObject patchUserInfo, String userId, String bearerToken) throws Exception {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeadersWithBearerToken(bearerToken))) {
+            return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+    }
+
+    /**
+     * Update the details of an existing user.
+     *
+     * @param patchUserInfo User patch request object.
+     * @param username      username of the user.
+     * @param password      password of the user.
+     * @return JSONObject of the Closaeable HTTP response.
+     * @throws IOException If an error occurred while updating a user.
+     */
+    public JSONObject updateUserMe(PatchOperationRequestObject patchUserInfo, String username, String password) throws Exception {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersMePath();
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeadersForSCIMME(username, password))) {
+            return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
         }
     }
 
@@ -484,7 +540,89 @@ public class SCIM2RestClient extends RestBaseClient {
         return false;
     }
 
+    /**
+     * Attempt to create a user and return the response status code.
+     *
+     * @param userInfo object with user creation details.
+     * @return Response status code and user ID (if created successfully)
+     * @throws Exception If an error occurred while making the request
+     */
+    public CreateUserResponse attemptUserCreation(UserObject userInfo) throws Exception {
+
+        String jsonRequest = toJSONString(userInfo);
+        if (userInfo.getScimSchemaExtensionEnterprise() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
+        }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
+        }
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String userId = null;
+            if (statusCode == HttpServletResponse.SC_CREATED) {
+                JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+                userId = jsonResponse.get("id").toString();
+            }
+            return new CreateUserResponse(statusCode, userId);
+        }
+    }
+
+    /**
+     * Attempt to update a user and return the response status code.
+     *
+     * @param patchUserInfo Patch operations to update user
+     * @param userId        ID of the user to update
+     * @return Response status code
+     * @throws IOException If an error occurred while making the request
+     */
+    public int attemptUserUpdate(PatchOperationRequestObject patchUserInfo, String userId) throws IOException {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Response object for user creation attempts
+     */
+    public static class CreateUserResponse {
+
+        private final int statusCode;
+        private final String userId;
+
+        public CreateUserResponse(int statusCode, String userId) {
+
+            this.statusCode = statusCode;
+            this.userId = userId;
+        }
+
+        public int getStatusCode() {
+
+            return statusCode;
+        }
+
+        public String getUserId() {
+
+            return userId;
+        }
+    }
+
     private Header[] getHeaders() {
+
+        Header[] headerList = new Header[3];
+        headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
+        headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
+                Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
+        headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, SCIM_JSON_CONTENT_TYPE);
+
+        return headerList;
+    }
+
+    private Header[] getHeadersForSCIMME(String username, String password) {
 
         Header[] headerList = new Header[3];
         headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
@@ -512,6 +650,15 @@ public class SCIM2RestClient extends RestBaseClient {
             return serverUrl + SCIM2_USERS_ENDPOINT;
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_USERS_ENDPOINT;
+        }
+    }
+
+    private String getUsersMePath() {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + SCIM2_ME_ENDPOINT;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_ME_ENDPOINT;
         }
     }
 

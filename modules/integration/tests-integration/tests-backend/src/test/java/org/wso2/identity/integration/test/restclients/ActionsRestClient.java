@@ -40,8 +40,10 @@ import java.io.IOException;
 public class ActionsRestClient extends RestBaseClient {
 
     private static final String PRE_ISSUE_ACCESS_TOKEN_TYPE = "preIssueAccessToken";
+    private static final String PRE_UPDATE_PASSWORD_TYPE = "preUpdatePassword";
     private static final String ACTIONS_PATH = "/actions";
     private static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
+    private static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -130,6 +132,8 @@ public class ActionsRestClient extends RestBaseClient {
         switch (actionType) {
             case PRE_ISSUE_ACCESS_TOKEN_TYPE:
                 return actionsBasePath + PRE_ISSUE_ACCESS_TOKEN_PATH;
+            case PRE_UPDATE_PASSWORD_TYPE:
+                return actionsBasePath + PRE_UPDATE_PASSWORD_PATH;
             default:
                 return StringUtils.EMPTY;
         }

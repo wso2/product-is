@@ -29,7 +29,7 @@ public class ScimSchemaExtensionSystem {
     private Boolean accountLocked;
     private String country;
     private String stateorprovince;
-
+    private Boolean askPassword;
     /**
      *
      **/
@@ -48,6 +48,23 @@ public class ScimSchemaExtensionSystem {
 
     public void setAccountLocked(Boolean accountLocked) {
         this.accountLocked = accountLocked;
+    }
+
+    public ScimSchemaExtensionSystem askPassword(Boolean askPassword) {
+
+        this.askPassword = askPassword;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false")
+    @JsonProperty("askPassword")
+    @Valid
+    public Boolean askPassword() {
+        return askPassword;
+    }
+
+    public void setAskPassword(Boolean askPassword) {
+        this.askPassword = askPassword;
     }
 
     /**

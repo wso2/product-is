@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -34,10 +34,14 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ClaimDialectReqDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimRes;
 
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.stream.Stream;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClaimManagementRestClient extends RestBaseClient {
 
@@ -102,6 +106,25 @@ public class ClaimManagementRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Local claim deletion failed");
+        }
+    }
+
+    /**
+     * Update a Local Claim.
+     *
+     * @param claimId      Claim ID to update.
+     * @param claimRequest Updated claim request.
+     * @throws IOException If an error occurs while updating the claim.
+     */
+    public void updateLocalClaim(String claimId, LocalClaimReq claimRequest) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + LOCAL_CLAIMS_ENDPOINT_URI +
+                CLAIMS_ENDPOINT_URI + PATH_SEPARATOR + claimId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, toJSONString(claimRequest),
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Local claim update failed");
         }
     }
 
@@ -352,5 +375,33 @@ public class ClaimManagementRestClient extends RestBaseClient {
             return serverUrl + ORGANIZATION_PATH + API_SERVER_BASE_PATH;
         }
         return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_BASE_PATH;
+    }
+
+    /**
+     * Get local claim by URI.
+     *
+     * @param claimUri Claim URI to retrieve.
+     * @return LocalClaimRes object containing claim details.
+     * @throws IOException If an error occurs while making the request.
+     * @throws AssertionError If the claim URI is not found.
+     */
+    public LocalClaimRes getLocalClaimByUri(String claimUri) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + LOCAL_CLAIMS_ENDPOINT_URI +
+                CLAIMS_ENDPOINT_URI;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Failed to get local claims");
+
+            ObjectMapper mapper = new ObjectMapper();
+            LocalClaimRes[] claims =
+                    mapper.readValue(EntityUtils.toString(response.getEntity()), LocalClaimRes[].class);
+
+            return Stream.of(claims)
+                    .filter(claim -> claimUri.equals(claim.getClaimURI()))
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Could not find claim with URI: " + claimUri));
+        }
     }
 }

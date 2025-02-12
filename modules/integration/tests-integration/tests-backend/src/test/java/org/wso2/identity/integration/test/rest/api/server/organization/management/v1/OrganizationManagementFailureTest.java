@@ -315,6 +315,14 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddDiscoveryAttributesWhenAlreadyAdded")
+    public void testAddDiscoveryWithEmptyPayload() {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
+        Response response = getResponseOfPostWithOAuth2(endpointURL, StringUtils.EMPTY, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "UE-10000");
+    }
+
+    @Test(dependsOnMethods = "testAddDiscoveryWithEmptyPayload")
     public void prepareForTestInvalidLoginHintParamInAuthRequest() throws Exception {
 
         switchedM2MToken = orgMgtRestClient.switchM2MToken(organizationIDs.get(0));

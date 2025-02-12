@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,12 +16,26 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.actions.model;
+package org.wso2.identity.integration.test.actions.dataprovider.model;
 
-/**
- * This class models the Action Type.
- */
-public enum ActionType {
-    PRE_ISSUE_ACCESS_TOKEN,
-    PRE_UPDATE_PASSWORD
+public class ExpectedPasswordUpdateResponse {
+
+    private final String statusCode;
+    private final String errorDetail;
+
+    public ExpectedPasswordUpdateResponse(String statusCode, String errorDetail) {
+
+        this.statusCode = statusCode;
+        this.errorDetail = errorDetail;
+    }
+
+    public String getStatusCode() {
+
+        return statusCode;
+    }
+
+    public String getErrorDetail() {
+
+        return errorDetail;
+    }
 }

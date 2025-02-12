@@ -79,17 +79,12 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
  */
 public class PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase extends ActionsBaseTestCase {
 
-    private static final String USERNAME_PROPERTY = "username";
-    private static final String PASSWORD_PROPERTY = "password";
     private static final String TEST_USER = "test_user";
     private static final String ADMIN_WSO2 = "Admin@wso2";
     private static final String TEST_USER_GIVEN = "test_user_given";
     private static final String TEST_USER_GMAIL_COM = "test.user@gmail.com";
-    private static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
     private static final String PRE_ISSUE_ACCESS_TOKEN_API_PATH = "preIssueAccessToken";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
-    private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
-    private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
     private SCIM2RestClient scim2RestClient;
     private CloseableHttpClient client;
     private List<String> requestedScopes;

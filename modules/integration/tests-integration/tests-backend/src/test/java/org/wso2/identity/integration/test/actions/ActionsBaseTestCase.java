@@ -34,6 +34,11 @@ import java.io.IOException;
 public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     protected ActionsRestClient actionsRestClient;
+    protected static final String USERNAME_PROPERTY = "username";
+    protected static final String PASSWORD_PROPERTY = "password";
+    protected static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
+    protected static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
+    protected static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
 
     /**
      * Initialize the test case.

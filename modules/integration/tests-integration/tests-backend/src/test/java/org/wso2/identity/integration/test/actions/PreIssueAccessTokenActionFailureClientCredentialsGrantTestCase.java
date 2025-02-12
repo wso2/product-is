@@ -61,13 +61,8 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZAT
  */
 public class PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase extends ActionsBaseTestCase {
 
-    private static final String USERNAME_PROPERTY = "username";
-    private static final String PASSWORD_PROPERTY = "password";
-    private static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
     private static final String PRE_ISSUE_ACCESS_TOKEN_API_PATH = "preIssueAccessToken";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
-    private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
-    private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
     private static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
     private CloseableHttpClient client;
     private List<String> requestedScopes;
