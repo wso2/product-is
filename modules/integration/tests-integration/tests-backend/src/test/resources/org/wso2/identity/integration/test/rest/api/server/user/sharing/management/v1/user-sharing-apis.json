@@ -1,0 +1,41 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_delete"
+  ],
+  "/o/scim2/Users": [
+    "internal_org_user_mgt_create",
+    "internal_org_user_mgt_view",
+    "internal_org_user_mgt_list",
+    "internal_org_user_mgt_update",
+    "internal_org_user_mgt_delete"
+  ],
+  "/o/api/server/v1/organizations": [
+    "internal_org_organization_view",
+    "internal_org_organization_create",
+    "internal_org_organization_delete"
+  ],
+  "/scim2/Roles": [
+    "internal_role_mgt_create",
+    "internal_role_mgt_view",
+    "internal_role_mgt_update",
+    "internal_role_mgt_delete"
+  ],
+  "/o/scim2/Roles": [
+    "internal_org_role_mgt_create",
+    "internal_org_role_mgt_view",
+    "internal_org_role_mgt_update",
+    "internal_org_role_mgt_delete"
+  ],
+  "/api/server/v1/users": [
+    "internal_user_share",
+    "internal_user_unshare",
+    "internal_user_shared_access_view"
+  ],
+  "/o/api/server/v1/users": [
+    "internal_org_user_share",
+    "internal_org_user_unshare",
+    "internal_org_user_shared_access_view"
+  ]
+}
