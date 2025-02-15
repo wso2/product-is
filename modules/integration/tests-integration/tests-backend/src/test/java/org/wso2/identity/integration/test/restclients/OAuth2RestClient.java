@@ -21,18 +21,32 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.http.ContentType;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -52,7 +66,6 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedDomainAPIResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
@@ -62,17 +75,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthzRuntimeEnabled;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_CODE_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.FIDP_PARAM;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_CLIENT_ID;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_CLIENT_SECRET;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_CODE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_RESPONSE_TYPE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.REDIRECT_URI_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 public class OAuth2RestClient extends RestBaseClient {
 
@@ -85,14 +106,24 @@ public class OAuth2RestClient extends RestBaseClient {
     private static final String SCIM_BASE_PATH = "scim2";
     private static final String ROLE_V2_BASE_PATH = "/v2/Roles";
     private static final String AUTHORIZATION_DETAILS_TYPES_PATH = "/authorization-details-types";
+    private static final String USERNAME = "username";
+    private static final String PASSWORD = "password";
+    private static final String ORG_ID_PLACEHOLDER = "{orgId}";
+    private final CookieStore cookieStore = new BasicCookieStore();
     private final String applicationManagementApiBasePath;
     private final String subOrgApplicationManagementApiBasePath;
     private final String apiResourceManagementApiBasePath;
     private final String roleV2ApiBasePath;
     private final String username;
     private final String password;
+    private final String authorizeEndpoint;
+    private final String commonAuthURL;
+    private final String subOrgCommonAuthURL;
+    private final String tokenEndpoint;
 
-    public OAuth2RestClient(String backendUrl, Tenant tenantInfo) {
+    public OAuth2RestClient(String backendUrl, Tenant tenantInfo) throws IOException {
+
+        initializeClient();
 
         this.username = tenantInfo.getContextUser().getUserName();
         this.password = tenantInfo.getContextUser().getPassword();
@@ -102,7 +133,10 @@ public class OAuth2RestClient extends RestBaseClient {
         subOrgApplicationManagementApiBasePath = getSubOrgApplicationsPath(backendUrl, tenantDomain);
         apiResourceManagementApiBasePath = getAPIResourcesPath(backendUrl, tenantDomain);
         roleV2ApiBasePath = getSCIM2RoleV2Path(backendUrl, tenantDomain);
-
+        authorizeEndpoint = getAuthorizeEndpoint(backendUrl, tenantDomain);
+        commonAuthURL = getCommonAuthURL(backendUrl, tenantDomain);
+        subOrgCommonAuthURL = getSubOrgCommonAuthURL(backendUrl);
+        tokenEndpoint = getTokenEndpoint(backendUrl, tenantDomain);
     }
 
     /**
@@ -448,23 +482,269 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
-    public String initiateAuthRequest(String clientId, String scopes, boolean isOrganizationSSO) throws Exception {
+    /**
+     * Get the access token using the authorization code grant type for a root org user.
+     *
+     * @param appId       Application id.
+     * @param username    Username.
+     * @param password    Password.
+     * @param scopes      Scopes.
+     * @param redirectUrl Redirect URL.
+     * @return Access token.
+     * @throws Exception If an error occurred while getting the access token.
+     */
+    public String getAccessTokenUsingCodeGrantForRootUser(String appId, String username, String password, String scopes,
+                                                          String redirectUrl) throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair(OAUTH2_RESPONSE_TYPE, OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-        urlParameters.add(new BasicNameValuePair(OAUTH2_CLIENT_ID, clientId));
-        urlParameters.add(new BasicNameValuePair(REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, scopes));
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetails(appId);
+        String sessionDataKey = initiateAuthRequest(oidcConfig.getClientId(), scopes, redirectUrl, false);
+        String authorizationCode = getAuthorizationCode(sessionDataKey, username, password, false, null);
+        return getAccessToken(authorizationCode, oidcConfig.getClientId(), oidcConfig.getClientSecret(), redirectUrl);
+    }
+
+    /**
+     * Get the access token using the authorization code grant type for a sub org user.
+     *
+     * @param rootAppId        Root Application id.
+     * @param organizationName Organization name.
+     * @param username         Username.
+     * @param password         Password.
+     * @param scopes           Scopes.
+     * @param redirectUrl      Redirect URL.
+     * @return Access token.
+     * @throws Exception If an error occurred while getting the access token.
+     */
+    public String getAccessTokenUsingCodeGrantForSubOrgUser(String rootAppId, String organizationName, String ordId,
+                                                            String username, String password, String scopes,
+                                                            String redirectUrl) throws Exception {
+
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetails(rootAppId);
+        String sessionDataKey = initiateAuthRequest(oidcConfig.getClientId(), scopes, redirectUrl, true);
+        String subOrgSessionDataKey = getSubOrgSessionDataKey(sessionDataKey, organizationName);
+        String authorizationCode = getAuthorizationCode(subOrgSessionDataKey, username, password, true, ordId);
+        return getAccessToken(authorizationCode, oidcConfig.getClientId(), oidcConfig.getClientSecret(), redirectUrl);
+    }
+
+    /**
+     * Initiate the authentication request.
+     *
+     * @param clientId          Client id.
+     * @param scopes            Scopes.
+     * @param redirectUrl       Redirect URL.
+     * @param isOrganizationSSO Is organization login request.
+     * @return Session data key.
+     * @throws Exception If an error occurred while initiating the authentication request.
+     */
+    private String initiateAuthRequest(String clientId, String scopes, String redirectUrl, boolean isOrganizationSSO) throws Exception {
+
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put(OAUTH2_RESPONSE_TYPE, OAUTH2_GRANT_TYPE_CODE);
+        queryParams.put(OAUTH2_CLIENT_ID, clientId);
+        queryParams.put(SCOPE_PLAYGROUND_NAME, scopes);
+        queryParams.put(REDIRECT_URI_NAME, redirectUrl);
         if (isOrganizationSSO) {
-            urlParameters.add(new BasicNameValuePair("fidp", "OrganizationSSO"));
+            queryParams.put(FIDP_PARAM, "OrganizationSSO");
         }
 
-        HttpResponse response = getResponseOfHttpPost(client, urlParameters,
-                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
-        Assert.assertNotNull(response, "Authorized response is null");
+        HttpResponse response = getResponseOfHttpPostWithParameters(authorizeEndpoint,
+                new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT)}, queryParams);
+        if (response == null) {
+            throw new Error("Authorized response is null");
+        }
         Header locationHeader = getLocationHeader(response);
+        Map<String, String> redirectURLQueryParams = extractQueryParams(locationHeader.getValue());
+        return redirectURLQueryParams.get(SESSION_DATA_KEY);
+    }
+
+    /**
+     * Get the authorization code.
+     *
+     * @param sessionDataKey    Session data key.
+     * @param username          Username.
+     * @param password          Password.
+     * @param isOrganizationSSO Is organization SSO.
+     * @param orgId             Organization id.
+     * @return Authorization code.
+     * @throws Exception If an error occurred while getting the authorization code.
+     */
+    private String getAuthorizationCode(String sessionDataKey, String username, String password,
+                                        boolean isOrganizationSSO, String orgId) throws Exception {
+
+        Map<String, String> params = new HashMap<>();
+        params.put(SESSION_DATA_KEY, sessionDataKey);
+        params.put(USERNAME, username);
+        params.put(PASSWORD, password);
+
+        String commonAuthEndpoint =
+                isOrganizationSSO ? subOrgCommonAuthURL.replace(ORG_ID_PLACEHOLDER, orgId) : commonAuthURL;
+
+        HttpResponse response = getResponseOfHttpPostWithParameters(commonAuthEndpoint,
+                new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT)}, params);
+        if (response == null) {
+            if (isOrganizationSSO) {
+                throw new Error("Sub organization commonauth response is null");
+            }
+            throw new Error("Commonauth response is null");
+        }
+        Header locationHeader = getLocationHeader(response);
+
+        if (isOrganizationSSO) {
+            response = getResponseOfHttpGet(locationHeader.getValue(),
+                    new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT)});
+            if (response == null) {
+                throw new Error("Sub organization authorized response is null");
+            }
+            locationHeader = getLocationHeader(response);
+
+            response = getResponseOfHttpGet(locationHeader.getValue(),
+                    new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT)});
+            if (response == null) {
+                throw new Error("Commonauth response is null");
+            }
+            locationHeader = getLocationHeader(response);
+        }
+
+        response = getResponseOfHttpGet(locationHeader.getValue(),
+                new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT)});
+        if (response == null) {
+            throw new Error("Authorized response is null");
+        }
+        locationHeader = getLocationHeader(response);
         Map<String, String> queryParams = extractQueryParams(locationHeader.getValue());
-        return queryParams.get(SESSION_DATA_KEY);
+        return queryParams.get("code");
+    }
+
+    /**
+     * Get session data key for a sub organization login.
+     *
+     * @param parentSessionDataKey Parent session data key.
+     * @param subOrgName           Sub organization name.
+     * @return Session data key for the sub organization.
+     * @throws Exception If an error occurred while getting the session data key.
+     */
+    private String getSubOrgSessionDataKey(String parentSessionDataKey, String subOrgName) throws Exception {
+
+        Map<String, String> urlParameters = new HashMap<>();
+        urlParameters.put(SESSION_DATA_KEY, parentSessionDataKey);
+        urlParameters.put("org", subOrgName);
+        urlParameters.put("idp", "SSO");
+        urlParameters.put("authenticator", "OrganizationAuthenticator");
+
+        HttpResponse response = getResponseOfHttpPostWithParameters(commonAuthURL,
+                new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT)}, urlParameters);
+        if (response == null) {
+            throw new Error("Commonauth response is null");
+        }
+        Header locationHeader = getLocationHeader(response);
+
+        response = getResponseOfHttpGet(locationHeader.getValue(), new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE,
+                USER_AGENT)});
+        if (response == null) {
+            throw new Error("Authorized user response is null.");
+        }
+        locationHeader = getLocationHeader(response);
+        Map<String, String> redirectURLQueryParams = extractQueryParams(locationHeader.getValue());
+        return redirectURLQueryParams.get(SESSION_DATA_KEY);
+    }
+
+    /**
+     * Get the access token using the authorization code.
+     *
+     * @param authCode     Authorization code.
+     * @param clientId     Client id.
+     * @param clientSecret Client secret.
+     * @param redirectUrl  Redirect URL.
+     * @return Access token.
+     * @throws Exception If an error occurred while getting the access token.
+     */
+    private String getAccessToken(String authCode, String clientId, String clientSecret, String redirectUrl)
+            throws Exception {
+
+        Map<String, String> params = new HashMap<>();
+        params.put(OAuth2Constant.GRANT_TYPE_NAME, OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
+        params.put(AUTHORIZATION_CODE_NAME, authCode);
+        params.put(REDIRECT_URI_NAME, redirectUrl);
+        params.put(OAUTH2_CLIENT_ID, clientId);
+        params.put(OAUTH2_CLIENT_SECRET, clientSecret);
+
+        HttpResponse response = getResponseOfHttpPostWithParameters(tokenEndpoint,
+                new Header[] {new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT)}, params);
+        if (response == null) {
+            throw new Error("Access token response is null");
+        }
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new Error("Unexpected response status code.");
+        }
+
+        JSONObject responseData = new JSONObject(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+        initializeClient();
+        return responseData.getString(ACCESS_TOKEN);
+    }
+
+    /**
+     * Initialize the client.
+     *
+     * @throws IOException If an error occurred while initializing the client.
+     */
+    private void initializeClient() throws IOException {
+        if (client != null) {
+            client.close();
+        }
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        cookieStore.clear();
+        client = HttpClientBuilder.create().disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
+    }
+
+    /**
+     * Get the location header from the response.
+     *
+     * @param response HttpResponse object.
+     * @return Location header.
+     * @throws IOException If an error occurred while getting the location header.
+     */
+    private static Header getLocationHeader(HttpResponse response) throws IOException {
+
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_MOVED_TEMPORARILY) {
+            throw new Error("Unexpected status code: " + response.getStatusLine().getStatusCode());
+        }
+        Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        if (locationHeader == null) {
+            throw new Error("Location header not found in the response");
+        }
+        EntityUtils.consume(response.getEntity());
+        return locationHeader;
+    }
+
+    /**
+     * Extract query parameters from the URL.
+     *
+     * @param url URL with query parameters.
+     * @return Map of query parameters.
+     * @throws Exception If an error occurred while extracting query parameters.
+     */
+    private Map<String, String> extractQueryParams(String url) throws Exception {
+
+        Map<String, String> queryParams = new HashMap<>();
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(url), StandardCharsets.UTF_8);
+        if (params.isEmpty()) {
+            return queryParams;
+        }
+
+        for (NameValuePair param : params) {
+            queryParams.put(param.getName(), param.getValue());
+        }
+
+        return queryParams;
     }
 
     private String getApplicationsPath(String serverUrl, String tenantDomain) {
@@ -502,6 +782,65 @@ public class OAuth2RestClient extends RestBaseClient {
             return serverUrl + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
+        }
+    }
+
+    /**
+     * Get the authorize endpoint.
+     *
+     * @param serverUrl    Server URL.
+     * @param tenantDomain Tenant domain.
+     * @return Authorize endpoint.
+     */
+    private String getAuthorizeEndpoint(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return AUTHORIZE_ENDPOINT_URL;
+        } else {
+            return AUTHORIZE_ENDPOINT_URL.replace(serverUrl, serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR);
+        }
+    }
+
+    /**
+     * Get the common auth URL.
+     *
+     * @param serverUrl    Server URL.
+     * @param tenantDomain Tenant domain.
+     * @return Common auth URL.
+     */
+    private String getCommonAuthURL(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return COMMON_AUTH_URL;
+        } else {
+            return COMMON_AUTH_URL.replace(serverUrl, serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR);
+        }
+    }
+
+    /**
+     * Get the sub organization common auth URL.
+     *
+     * @param serverUrl    Server URL.
+     * @return Sub organization common auth URL.
+     */
+    private String getSubOrgCommonAuthURL(String serverUrl) {
+
+        return COMMON_AUTH_URL.replace(serverUrl, serverUrl + ORGANIZATION_PATH + ORG_ID_PLACEHOLDER + PATH_SEPARATOR);
+    }
+
+    /**
+     * Get the token endpoint.
+     *
+     * @param serverUrl    Server URL.
+     * @param tenantDomain Tenant domain.
+     * @return Token endpoint.
+     */
+    private String getTokenEndpoint(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return ACCESS_TOKEN_ENDPOINT;
+        } else {
+            return ACCESS_TOKEN_ENDPOINT.replace(serverUrl, serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR);
         }
     }
 

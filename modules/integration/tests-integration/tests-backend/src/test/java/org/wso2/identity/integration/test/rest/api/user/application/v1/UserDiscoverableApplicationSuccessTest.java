@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.user.application.v1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -27,6 +28,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 
 import java.util.HashMap;
@@ -37,6 +39,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -88,23 +91,43 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 
     }
 
-//    @Test(description = "Test listing all applications.")
-//    public void testListAllApplications() {
-//
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI);
-//        response.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
-//
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
-//                (TOTAL_DISCOVERABLE_APP_COUNT));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(TOTAL_DISCOVERABLE_APP_COUNT));
-//        response.then().log().ifValidationFails().body("links", hasSize(0));
-//        response.then().log().ifValidationFails()
-//                .body("applications", hasSize(TOTAL_DISCOVERABLE_APP_COUNT));
-//
-//        assertForAllApplications(response);
-//
-//    }
+    @DataProvider(name = "testListAllApplications")
+    public Object[][] testListAllApplications() {
+        return new Object[][]{
+                {1, false},
+                {2, false},
+                {3, false},
+                {1, true},
+                {2, true},
+                {3, true}
+        };
+    }
+
+    @Test(description = "Test listing all applications.", dataProvider = "testListAllApplications")
+    public void testListAllApplications(int userNum, boolean isSubOrg) {
+
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1]);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1]);
+        }
+        response.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
+
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
+                (USER_DISCOVERABLE_APPS[userNum - 1].length));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat()
+                .body("count", equalTo(USER_DISCOVERABLE_APPS[userNum - 1].length));
+        response.then().log().ifValidationFails().body("links", hasSize(0));
+        response.then().log().ifValidationFails()
+                .body("applications", hasSize(USER_DISCOVERABLE_APPS[userNum - 1].length));
+
+        assertForAllApplications(response, userNum, isSubOrg);
+    }
 //
 //    @Test(description = "Test listing applications with offset and limit.", dataProvider = "offsetLimitProvider")
 //    public void testListApplicationsWithOffsetLimit(int offset, int limit) throws Exception {
@@ -305,21 +328,24 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 //        });
 //    }
 //
-//    private void assertForAllApplications(Response response) {
-//
-//        serviceProviders.forEach(serviceProvider -> {
-//            response.then().log().ifValidationFails()
-//                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.name",
-//                            equalTo(serviceProvider.getApplicationName()))
-//                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.image",
-//                            equalTo(serviceProvider.getImageUrl()))
-//                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
-//                            ".accessUrl", equalTo(serviceProvider.getAccessUrl()))
-//                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
-//                                    ".description",
-//                            equalTo(serviceProvider.getDescription()));
-//        });
-//    }
+
+    /**
+     * Assert for all applications.
+     *
+     * @param response Response.
+     * @param isSubOrg Whether the user is from a sub organization.
+     */
+    private void assertForAllApplications(Response response, int userNum, boolean isSubOrg) {
+
+        String[] discoverableApps = USER_DISCOVERABLE_APPS[userNum - 1];
+        for (int i = 0; i < discoverableApps.length; i++) {
+            response.then().log().ifValidationFails()
+                    .body("applications[" + i + "].name", equalTo(APP_NAME_PREFIX + discoverableApps[i]))
+                    .body("applications[" + i + "].image", isSubOrg ? nullValue() : equalTo(APP_IMAGE_URL))
+                    .body("applications[" + i + "].accessUrl", equalTo(APP_ACCESS_URL))
+                    .body("applications[" + i + "].description", equalTo(APP_DESC_PREFIX + discoverableApps[i]));
+        }
+    }
 //
 //    private void assertNextLink(int offset, int limit, Response response) throws XPathExpressionException {
 //
@@ -371,4 +397,19 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 //
 //        return calculateOffsetForPreviousLink(newOffset, limit, total);
 //    }
+
+    /**
+     * Get the organization base path.
+     *
+     * @param basePath Tenant base path.
+     * @return Organization base path.
+     */
+    private String convertToOrgBasePath(String basePath) {
+
+        if (StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
+            return ORGANIZATION_PATH_SPECIFIER + basePath;
+        } else {
+            return basePath.replace(tenant, tenant + ORGANIZATION_PATH_SPECIFIER);
+        }
+    }
 }

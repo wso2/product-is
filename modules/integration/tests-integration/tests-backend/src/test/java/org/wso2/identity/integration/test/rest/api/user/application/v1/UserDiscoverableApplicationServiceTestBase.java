@@ -27,12 +27,15 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DiscoverableGroup;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.GroupBasicInfo;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OAuth2PKCEConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
@@ -50,28 +53,39 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     public static final String USER_APPLICATION_ENDPOINT_URI = "/me/applications";
     protected static String swaggerDefinition;
     protected static String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.application.v1";
-    protected static final int TOTAL_DISCOVERABLE_APP_COUNT = 19;
-    protected static final int TOTAL_NON_DISCOVERABLE_APP_COUNT = 2;
-    protected static final int TOTAL_GROUP_COUNT = 3;
+    private static final int TOTAL_DISCOVERABLE_APP_COUNT = 19;
+    private static final int TOTAL_NON_DISCOVERABLE_APP_COUNT = 2;
+    private static final int TOTAL_GROUP_COUNT = 3;
     private static final String[] GROUP_IDS = new String[TOTAL_GROUP_COUNT];
-    protected static final int TOTAL_USER_COUNT  = 3;
+    private static final int TOTAL_USER_COUNT  = 3;
     private static final String[] USER_IDS = new String[TOTAL_USER_COUNT];
-    protected static final int TOTAL_SUB_ORG_GROUP_COUNT = 3;
-    protected static final int TOTAL_SUB_ORG_USER_COUNT  = 3;
+    protected static final String[] USER_TOKENS = new String[TOTAL_USER_COUNT];
+    private static final int TOTAL_SUB_ORG_GROUP_COUNT = 3;
+    private static final int TOTAL_SUB_ORG_USER_COUNT  = 3;
     private static final String[] SUB_ORG_USER_IDS = new String[TOTAL_SUB_ORG_USER_COUNT];
     private static final String[] SUB_ORG_GROUP_IDS = new String[TOTAL_SUB_ORG_GROUP_COUNT];
-    protected static final String USER_NAME_PREFIX = "user-";
-    protected static final String USER_PASSWORD = "Wso2@test";
-    protected static final String GROUP_NAME_PREFIX = "GROUP_";
+    protected static final String[] SUB_ORG_USER_TOKENS = new String[TOTAL_SUB_ORG_USER_COUNT];
+    private static final String USER_NAME_PREFIX = "user-";
+    private static final String USER_PASSWORD = "Wso2@test";
+    private static final String GROUP_NAME_PREFIX = "GROUP_";
     protected static final String APP_NAME_PREFIX = "APP_";
-    private static final String APP_DESC_PREFIX = "This is APP_";
-    private static final String APP_IMAGE_URL = "https://dummy-image-url.com";
-    private static final String APP_ACCESS_URL = "https://dummy-access-url.com";
+    protected static final String APP_DESC_PREFIX = "This is APP_";
+    protected static final String APP_IMAGE_URL = "https://dummy-image-url.com";
+    protected static final String APP_ACCESS_URL = "https://dummy-access-url.com";
     private static final String SUB_ORG_NAME = "sub-org";
     private static final String PRIMARY_USER_STORE = "PRIMARY";
     private static final String MY_ACCOUNT_APP_NAME = "My Account";
+    private static final String MY_ACCOUNT_APP_PATH = "myaccount";
+    protected static final String[][] USER_DISCOVERABLE_APPS = new String[][]{
+            { "19", "18", "17", "16", "15", "14", "13", "8", "7", "6", "5", "4", "3", "2", "1" },
+            { "19", "18", "17", "16", "15", "14", "13", "12", "11", "10", "9", "8", "7", "6", "5", "4", "3"},
+            { "19", "18", "17", "16", "15", "14", "13" }
+    };
+    protected static final String[] USER_NON_DISCOVERABLE_APPS = new String[]{ "21", "20" };
 
-    private static String subOrgToken;
+    private String subOrgID;
+    private String subOrgToken;
+    private String rootMyAccountAppId;
 
     static {
         try {
@@ -93,7 +107,7 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         scim2RestClient = new SCIM2RestClient(serverURL, context.getContextTenant());
         orgMgtRestClient =
                 new OrgMgtRestClient(context, context.getContextTenant(), serverURL, getAuthorizedAPIList());
-        String subOrgID = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
+        subOrgID = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
         subOrgToken = orgMgtRestClient.switchM2MToken(subOrgID);
 
         createUsers();
@@ -101,7 +115,8 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         createSubOrgUsers();
         createSubOrgGroups();
         createApplications();
-        enablePasswordGrantForMyAccount();
+        makeMyAccountConfidentialClient();
+        getTokenForUsers();
     }
 
     @AfterClass(alwaysRun = true)
@@ -306,18 +321,57 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     }
 
     /**
-     * Enable password grant for the My Account application.
+     * Make My Account application a confidential client.
      *
-     * @throws Exception If an error occurred while enabling password grant.
+     * @throws Exception If an error occurred while making the application a confidential client.
      */
-    private void enablePasswordGrantForMyAccount() throws Exception {
+    private void makeMyAccountConfidentialClient() throws Exception {
 
-        String rootMyAccountAppId = oAuth2RestClient.getAppIdUsingAppName(MY_ACCOUNT_APP_NAME);
+        rootMyAccountAppId = oAuth2RestClient.getAppIdUsingAppName(MY_ACCOUNT_APP_NAME);
         OpenIDConnectConfiguration rootMyAccountAppOIDC = oAuth2RestClient.getOIDCInboundDetails(rootMyAccountAppId);
-        rootMyAccountAppOIDC.addGrantTypesItem("password");
+        OAuth2PKCEConfiguration oAuth2PKCEConfiguration = rootMyAccountAppOIDC.getPkce();
+        oAuth2PKCEConfiguration.setMandatory(false);
+        rootMyAccountAppOIDC.setPublicClient(false);
+        AccessTokenConfiguration accessTokenConfiguration = rootMyAccountAppOIDC.getAccessToken();
+        accessTokenConfiguration.setBindingType(null);
+        accessTokenConfiguration.setValidateTokenBinding(false);
         oAuth2RestClient.updateInboundDetailsOfApplication(rootMyAccountAppId, rootMyAccountAppOIDC, "oidc");
         oAuth2RestClient.shareApplication(
                 rootMyAccountAppId, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
+    }
+
+    /**
+     * Get the access tokens for the users.
+     *
+     * @throws Exception If an error occurred while getting the access tokens.
+     */
+    private void getTokenForUsers() throws Exception {
+
+        for (int i = 1; i <= TOTAL_USER_COUNT; i++) {
+            USER_TOKENS[i - 1] =
+                    oAuth2RestClient.getAccessTokenUsingCodeGrantForRootUser(rootMyAccountAppId, USER_NAME_PREFIX + i,
+                            USER_PASSWORD, "SYSTEM", getMyAccountRedirectUrl());
+        }
+        for (int i = 1; i <= TOTAL_SUB_ORG_USER_COUNT; i++) {
+            SUB_ORG_USER_TOKENS[i - 1] =
+                    oAuth2RestClient.getAccessTokenUsingCodeGrantForSubOrgUser(rootMyAccountAppId, SUB_ORG_NAME,
+                            subOrgID, USER_NAME_PREFIX + i, USER_PASSWORD, "SYSTEM", getMyAccountRedirectUrl());
+        }
+    }
+
+    /**
+     * Get my account redirect URL.
+     *
+     * @return My account redirect URL.
+     */
+    private String getMyAccountRedirectUrl() {
+
+        if (StringUtils.equals(tenantInfo.getDomain(), MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverURL + MY_ACCOUNT_APP_PATH;
+        } else {
+            return serverURL + TENANTED_URL_PATH_SPECIFIER.replace(URL_SEPARATOR, StringUtils.EMPTY) + URL_SEPARATOR +
+                    tenantInfo.getDomain() + URL_SEPARATOR + MY_ACCOUNT_APP_PATH;
+        }
     }
 
 //    private void deleteServiceProviders() throws Exception {
