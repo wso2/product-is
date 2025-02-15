@@ -168,19 +168,19 @@ public class SCIM2RestClient extends RestBaseClient {
      * Get the details of a user of a sub organization.
      *
      * @param userId           ID of the user.
-     * @param attribute Requested user attributes.
+     * @param attributes Requested user attributes.
      * @param switchedM2MToken Switched M2M token for the given organization.
      * @return JSONObject of the HTTP response.
      * @throws Exception If an error occurred while getting a user.
      */
-    public JSONObject getSubOrgUser(String userId, String attribute, String switchedM2MToken) throws Exception {
+    public JSONObject getSubOrgUser(String userId, String attributes, String switchedM2MToken) throws Exception {
 
         String endPointUrl;
 
-        if (StringUtils.isEmpty(attribute)) {
+        if (StringUtils.isEmpty(attributes)) {
             endPointUrl = getSubOrgUsersPath() + PATH_SEPARATOR + userId;
         } else {
-            endPointUrl = getSubOrgUsersPath() + PATH_SEPARATOR + userId + ATTRIBUTES_PART + attribute;
+            endPointUrl = getSubOrgUsersPath() + PATH_SEPARATOR + userId + ATTRIBUTES_PART + attributes;
         }
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,

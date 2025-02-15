@@ -896,12 +896,12 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
                                                           String clientSecret) throws Exception {
 
         List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+        parameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
         parameters.add(new BasicNameValuePair("username", username));
         parameters.add(new BasicNameValuePair("password", password));
 
         String scopes = String.join(" ", requestedScopes);
-        parameters.add(new BasicNameValuePair("scope", scopes));
+        parameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, scopes));
 
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader(AUTHORIZATION_HEADER,
@@ -919,9 +919,9 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch"));
-        parameters.add(new BasicNameValuePair("token", currentToken));
+        parameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE_TOKEN, currentToken));
         String scopes = String.join(" ", requestedScopes);
-        parameters.add(new BasicNameValuePair("scope", scopes));
+        parameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, scopes));
         parameters.add(new BasicNameValuePair("switching_organization", switchingOrganizationId));
 
         List<Header> headers = new ArrayList<>();
