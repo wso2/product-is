@@ -18,10 +18,21 @@
 
 package org.wso2.identity.integration.test.user.profile.mgt;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -29,25 +40,33 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
-import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.AttributeMappingDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ClaimDialectReqDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Audience;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
@@ -55,11 +74,18 @@ import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.restclients.UserSharingRestClient;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 
 /**
  * Test class to verify shared user profile claim management.
@@ -84,6 +110,27 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
             "dXJuOnNjaW06c2NoZW1hczpleHRlbnNpb246Y3VzdG9tOlVzZXI";
     private static final String CUSTOM_CLAIM_URI = "http://wso2.org/claims/customAttribute1";
     private static final String CUSTOM_CLAIM_NAME = "customAttribute1";
+    private static final String ROLES_CLAIM_URI = "http://wso2.org/claims/roles";
+    private static final String GROUPS_CLAIM_URI = "http://wso2.org/claims/groups";
+    private static final String APPLICATION_AUDIENCE = "APPLICATION";
+    private static final String ORGANIZATION_AUDIENCE = "ORGANIZATION";
+    private static final String APP_1_NAME = "APP_1";
+    private static final String APP_2_NAME = "APP_2";
+    private static final String APP_ROLE_1 = "App-Role-1";
+    private static final String APP_ROLE_2 = "App-Role-2";
+    private static final String APP_ROLE_3 = "App-Role-3";
+    private static final String ORG_ROLE_1 = "Org-Role-1";
+    private static final String ORG_ROLE_2 = "Org-Role-2";
+    private static final String ORG_ROLE_3 = "Org-Role-3";
+    private static final String GROUP_1 = "Group1";
+    private static final String GROUP_2 = "Group2";
+    private static final String SUB_GROUP_1 = "SubGroup1";
+    private static final String SUB_GROUP_2 = "SubGroup2";
+    private static final String SUPER_ORG_NAME = "Super";
+    private static final String SUB_CLAIM = "sub";
+    private static final String ISS_CLAIM = "iss";
+    private static final String ORG_ID_CLAIM = "org_id";
+    private static final String ORG_NAME_CLAIM = "org_name";
     private final TestUserMode userMode;
     private ClaimManagementRestClient claimManagementRestClient;
     private SCIM2RestClient scim2RestClient;
@@ -91,6 +138,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private OrgMgtRestClient orgMgtRestClient;
     private OAuth2RestClient oAuth2RestClient;
     private IdentityProviderMgtServiceClient idpMgtServiceClient;
+    private CloseableHttpClient httpClient;
     private String level1OrgId;
     private String level2OrgId;
     private String switchedM2MTokenForLevel1Org;
@@ -98,11 +146,26 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private String rootOrgUserId;
     private String sharedUserIdInLevel1Org;
     private String sharedUserIdInLevel2Org;
-    private ApplicationResponseModel application;
-    private String clientId;
-    private String clientSecret;
+    private ApplicationResponseModel application1WithAppAudienceRoles;
+    private String sharedApp1IdInLevel1Org;
+    private ApplicationResponseModel application2WithOrgAudienceRoles;
+    private String sharedApp2IdInLevel1Org;
+    private String clientIdApp1;
+    private String clientSecretApp1;
+    private String clientIdApp2;
+    private String clientSecretApp2;
     private String customClaimId;
     private String scimClaimIdOfCustomClaim;
+    private String appRole1Id;
+    private String appRole2Id;
+    private String appRole3Id;
+    private String orgRole1Id;
+    private String orgRole2Id;
+    private String orgRole3Id;
+    private String group1Id;
+    private String group2Id;
+    private String subGroup1Id;
+    private String subGroup2Id;
 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
@@ -123,6 +186,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     public void init() throws Exception {
 
         super.init(userMode);
+        httpClient = HttpClientBuilder.create().build();
         claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         userSharingRestClient = new UserSharingRestClient(serverURL, tenantInfo);
@@ -159,31 +223,57 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         scimClaimIdOfCustomClaim =
                 claimManagementRestClient.addExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI, externalClaimReq);
 
-        // Create a new application and share with all children.
-        application = addApplication();
-        String applicationId = application.getId();
-        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
-        clientId = oidcConfig.getClientId();
-        clientSecret = oidcConfig.getClientSecret();
-        shareApplication();
-    }
+        // Create a new application which consume application audience roles and share with all children.
+        application1WithAppAudienceRoles = addApplication(APP_1_NAME);
+        String app1Id = application1WithAppAudienceRoles.getId();
+        OpenIDConnectConfiguration oidcConfigOfApp1 = getOIDCInboundDetailsOfApplication(app1Id);
+        clientIdApp1 = oidcConfigOfApp1.getClientId();
+        clientSecretApp1 = oidcConfigOfApp1.getClientSecret();
+        createApp1RolesWithAppAudience(app1Id);
+        // Mark roles and groups as requested claims for the app 1.
+        updateRequestedClaimsOfApp(app1Id, getClaimConfigurationsWithRolesAndGroups());
+        shareApplication(app1Id);
+        sharedApp1IdInLevel1Org =
+                oAuth2RestClient.getAppIdUsingAppNameInOrganization(APP_1_NAME, switchedM2MTokenForLevel1Org);
 
-    private boolean isExistingDialect(org.json.simple.JSONObject externalDialectGetResponse) {
-
-        if (externalDialectGetResponse.get("code") != null &&
-                externalDialectGetResponse.get("code").equals("CMT-50016")) {
-            return false;
-        }
-        return externalDialectGetResponse.get("id") != null;
+        // Create a new application which consume organization audience roles and share with all children.
+        application2WithOrgAudienceRoles = addApplication(APP_2_NAME);
+        String app2Id = application2WithOrgAudienceRoles.getId();
+        OpenIDConnectConfiguration oidcConfigOfApp2 = getOIDCInboundDetailsOfApplication(app2Id);
+        clientIdApp2 = oidcConfigOfApp2.getClientId();
+        clientSecretApp2 = oidcConfigOfApp2.getClientSecret();
+        createOrganizationRoles();
+        switchApplicationAudience(app2Id, AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+        // Mark roles and groups as requested claims for the app 2.
+        updateRequestedClaimsOfApp(app2Id, getClaimConfigurationsWithRolesAndGroups());
+        shareApplication(app2Id);
+        sharedApp2IdInLevel1Org =
+                oAuth2RestClient.getAppIdUsingAppNameInOrganization(APP_2_NAME, switchedM2MTokenForLevel1Org);
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        // Clean up roles.
+        scim2RestClient.deleteV2Role(appRole1Id);
+        scim2RestClient.deleteV2Role(appRole2Id);
+        scim2RestClient.deleteV2Role(appRole3Id);
+        scim2RestClient.deleteV2Role(orgRole1Id);
+        scim2RestClient.deleteV2Role(orgRole2Id);
+        scim2RestClient.deleteV2Role(orgRole3Id);
+        // Delete user.
         scim2RestClient.deleteUser(rootOrgUserId);
+        // Delete groups.
+        scim2RestClient.deleteGroup(group1Id);
+        scim2RestClient.deleteGroup(group2Id);
+        scim2RestClient.deleteSubOrgGroup(subGroup1Id, switchedM2MTokenForLevel1Org);
+        scim2RestClient.deleteSubOrgGroup(subGroup2Id, switchedM2MTokenForLevel1Org);
+        // Delete applications.
+        oAuth2RestClient.deleteApplication(application1WithAppAudienceRoles.getId());
+        oAuth2RestClient.deleteApplication(application2WithOrgAudienceRoles.getId());
+        // Delete sub organizations.
         orgMgtRestClient.deleteSubOrganization(level2OrgId, level1OrgId);
         orgMgtRestClient.deleteOrganization(level1OrgId);
-        oAuth2RestClient.deleteApplication(application.getId());
         orgMgtRestClient.closeHttpClient();
         idpMgtServiceClient.deleteIdP("SSO");
         scim2RestClient.closeHttpClient();
@@ -194,6 +284,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         claimManagementRestClient.deleteLocalClaim(customClaimId);
         claimManagementRestClient.closeHttpClient();
         oAuth2RestClient.closeHttpClient();
+        httpClient.close();
     }
 
     @Test(description = "Add a user in root organization and share with level 1 org and level 2 org.")
@@ -244,6 +335,252 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     }
 
     @Test(dependsOnMethods = {"testAddUserInRootOrgAndShareWithLevel1AndLevel2Org"},
+            description = "Verify roles can be added to root users and shared users.")
+    public void testAddRolesToRootUserAndSharedUsers() throws Exception {
+
+        // Add appRole1, appRole2, orgRole1 and orgRole2 roles to root org user.
+        RoleItemAddGroupobj patchOperationToAddRootOrgUser = new RoleItemAddGroupobj();
+        patchOperationToAddRootOrgUser.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchOperationToAddRootOrgUser.setPath("users");
+        patchOperationToAddRootOrgUser.addValue(new ListObject().value(rootOrgUserId));
+
+        scim2RestClient.updateUsersOfRoleV2(appRole1Id,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddRootOrgUser));
+        scim2RestClient.updateUsersOfRoleV2(appRole2Id,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddRootOrgUser));
+        scim2RestClient.updateUsersOfRoleV2(orgRole1Id,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddRootOrgUser));
+        scim2RestClient.updateUsersOfRoleV2(orgRole2Id,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddRootOrgUser));
+
+        org.json.simple.JSONObject assignedRolesOfRootUser = scim2RestClient.getUser(rootOrgUserId, "roles");
+        Assert.assertNotNull(assignedRolesOfRootUser, "Failed to get the root organization user.");
+        // Get the manually assigned 4 roles and everyone role.
+        Assert.assertEquals(((org.json.simple.JSONArray) assignedRolesOfRootUser.get("roles")).size(), 5,
+                "Unexpected number of roles.");
+
+        // Add shared appRole2, appRole3, orgRole2 and orgRole3 roles to shared user in level 1 org.
+        RoleItemAddGroupobj patchOperationToAddSharedUserInLevel1Org = new RoleItemAddGroupobj();
+        patchOperationToAddSharedUserInLevel1Org.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        patchOperationToAddSharedUserInLevel1Org.setPath("users");
+        patchOperationToAddSharedUserInLevel1Org.addValue(new ListObject().value(sharedUserIdInLevel1Org));
+
+        String sharedAppRole2InLevel1Org =
+                scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(APP_ROLE_2, sharedApp1IdInLevel1Org,
+                        switchedM2MTokenForLevel1Org);
+        String sharedAppRole3InLevel1Org =
+                scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(APP_ROLE_3, sharedApp1IdInLevel1Org,
+                        switchedM2MTokenForLevel1Org);
+        String sharedOrgRole2InLevel1Org = scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(ORG_ROLE_2, level1OrgId,
+                switchedM2MTokenForLevel1Org);
+        String sharedOrgRole3InLevel1Org = scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(ORG_ROLE_3, level1OrgId,
+                switchedM2MTokenForLevel1Org);
+
+        scim2RestClient.updateUsersOfRoleV2InSubOrg(sharedAppRole2InLevel1Org,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddSharedUserInLevel1Org),
+                switchedM2MTokenForLevel1Org);
+        scim2RestClient.updateUsersOfRoleV2InSubOrg(sharedAppRole3InLevel1Org,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddSharedUserInLevel1Org),
+                switchedM2MTokenForLevel1Org);
+        scim2RestClient.updateUsersOfRoleV2InSubOrg(sharedOrgRole2InLevel1Org,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddSharedUserInLevel1Org),
+                switchedM2MTokenForLevel1Org);
+        scim2RestClient.updateUsersOfRoleV2InSubOrg(sharedOrgRole3InLevel1Org,
+                new PatchOperationRequestObject().addOperations(patchOperationToAddSharedUserInLevel1Org),
+                switchedM2MTokenForLevel1Org);
+
+        org.json.simple.JSONObject assignedRolesOfSharedUserInLevel1Org =
+                scim2RestClient.getSubOrgUser(sharedUserIdInLevel1Org, "roles", switchedM2MTokenForLevel1Org);
+        Assert.assertNotNull(assignedRolesOfSharedUserInLevel1Org, "Failed to get the shared user in level 1 org.");
+        Assert.assertEquals(((org.json.simple.JSONArray) assignedRolesOfSharedUserInLevel1Org.get("roles")).size(), 4,
+                "Unexpected number of roles.");
+    }
+
+    @Test(dependsOnMethods = {"testAddRolesToRootUserAndSharedUsers"},
+            description = "Verify groups can be added to root users and shared users.")
+    public void testAddGroupsToRootUserAndSharedUsers() throws Exception {
+
+        // Create group 1 and group 2 in root org, and assign to root user.
+        group1Id = scim2RestClient.createGroup(new GroupRequestObject().displayName(GROUP_1)
+                .addMember(new GroupRequestObject.MemberItem().value(rootOrgUserId)));
+        group2Id = scim2RestClient.createGroup(new GroupRequestObject().displayName(GROUP_2)
+                .addMember(new GroupRequestObject.MemberItem().value(rootOrgUserId)));
+
+        Assert.assertNotNull(group1Id, "Failed to create group 1 in root org.");
+        Assert.assertNotNull(group2Id, "Failed to create group 2 in root org.");
+        org.json.simple.JSONObject rootOrgUserGroups = scim2RestClient.getUser(rootOrgUserId, "groups");
+        Assert.assertNotNull(rootOrgUserGroups, "Failed to get the root organization user with groups.");
+        Assert.assertEquals(((org.json.simple.JSONArray) rootOrgUserGroups.get("groups")).size(), 2,
+                "Unexpected number of groups.");
+
+        // Add subgroup 1 and subgroup 2 to shared user in level1 org.
+        subGroup1Id = scim2RestClient.createSubOrgGroup(new GroupRequestObject().displayName(SUB_GROUP_1)
+                        .addMember(new GroupRequestObject.MemberItem().value(sharedUserIdInLevel1Org)),
+                switchedM2MTokenForLevel1Org);
+        subGroup2Id = scim2RestClient.createSubOrgGroup(new GroupRequestObject().displayName(SUB_GROUP_2)
+                        .addMember(new GroupRequestObject.MemberItem().value(sharedUserIdInLevel1Org)),
+                switchedM2MTokenForLevel1Org);
+
+        Assert.assertNotNull(subGroup1Id, "Failed to create sub group 1 in level 1 org.");
+        Assert.assertNotNull(subGroup2Id, "Failed to create sub group 2 in level 1 org.");
+        org.json.simple.JSONObject sharedUserInLevel1OrgGroups =
+                scim2RestClient.getSubOrgUser(sharedUserIdInLevel1Org, "groups", switchedM2MTokenForLevel1Org);
+        Assert.assertNotNull(sharedUserInLevel1OrgGroups, "Failed to get the shared user in level 1 org with groups.");
+        Assert.assertEquals(((org.json.simple.JSONArray) sharedUserInLevel1OrgGroups.get("groups")).size(), 2,
+                "Unexpected number of groups.");
+    }
+
+    @Test(dependsOnMethods = {"testAddGroupsToRootUserAndSharedUsers"},
+            description = "Verify the groups and roles in organization switched token in app role consuming app.")
+    public void testGroupsAndRolesInOrganizationSwitchedTokenFromAppRoleUsingApp() throws Exception {
+
+        String[] requestedScopes = {"openid", "roles", "groups"};
+        HttpResponse httpResponseOfPasswordGrantRequest =
+                sendTokenRequestForPasswordGrant(ROOT_ORG_USERNAME, ROOT_ORG_USER_PASSWORD,
+                        Arrays.asList(requestedScopes), clientIdApp1, clientSecretApp1);
+        String passwordGrantResponseBody =
+                EntityUtils.toString(httpResponseOfPasswordGrantRequest.getEntity(), "UTF-8");
+        EntityUtils.consume(httpResponseOfPasswordGrantRequest.getEntity());
+        Assert.assertNotNull(httpResponseOfPasswordGrantRequest, "Failed password grant request.");
+        String accessTokenFromPasswordGrant = extractAccessToken(passwordGrantResponseBody);
+        String idTokenFromPasswordGrant = extractIdToken(passwordGrantResponseBody);
+        Assert.assertNotNull(accessTokenFromPasswordGrant, "Failed to get the access token from password grant.");
+        Assert.assertNotNull(idTokenFromPasswordGrant, "Failed to get the id token from password grant.");
+        JWTClaimsSet jwtClaimsSet = parseJWTToken(idTokenFromPasswordGrant);
+        Assert.assertNotNull(jwtClaimsSet, "Failed to parse the id token from password grant.");
+        Assert.assertEquals((String) jwtClaimsSet.getClaims().get(SUB_CLAIM), rootOrgUserId, "Incorrect sub in token.");
+        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantInfo.getDomain())) {
+            Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ORG_NAME_CLAIM), SUPER_ORG_NAME,
+                    "Incorrect org_name in token.");
+        } else {
+            Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ORG_NAME_CLAIM), tenantInfo.getDomain(),
+                    "Incorrect org_name in token.");
+        }
+        Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ISS_CLAIM),
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()), "Incorrect iss in token.");
+        assertRolesInToken(jwtClaimsSet, 2, new String[]{APP_ROLE_1, APP_ROLE_2});
+        assertGroupsInToken(jwtClaimsSet, 2, new String[]{GROUP_1, GROUP_2});
+
+        // Switch the token.
+        HttpResponse httpResponseOfOrgSwitchGrantRequest =
+                getOrganizationSwitchToken(clientIdApp1, clientSecretApp1, accessTokenFromPasswordGrant, level1OrgId,
+                        Arrays.asList(requestedScopes));
+        String organizationSwitchTokenResponseBody =
+                EntityUtils.toString(httpResponseOfOrgSwitchGrantRequest.getEntity(), "UTF-8");
+        EntityUtils.consume(httpResponseOfOrgSwitchGrantRequest.getEntity());
+        Assert.assertNotNull(httpResponseOfOrgSwitchGrantRequest, "Failed organization switch grant request.");
+        String accessTokenFromOrgSwitchGrant = extractAccessToken(organizationSwitchTokenResponseBody);
+        String idTokenFromOrgSwitchGrant = extractIdToken(organizationSwitchTokenResponseBody);
+        Assert.assertNotNull(accessTokenFromOrgSwitchGrant,
+                "Failed to get the access token from organization switch grant.");
+        Assert.assertNotNull(idTokenFromOrgSwitchGrant, "Failed to get the id token from organization switch grant.");
+        JWTClaimsSet jwtClaimsSetOfSwitchedToken = parseJWTToken(idTokenFromOrgSwitchGrant);
+        Assert.assertNotNull(jwtClaimsSetOfSwitchedToken, "Failed to parse the id token got from org switch grant.");
+        Assert.assertEquals((String) jwtClaimsSetOfSwitchedToken.getClaims().get(SUB_CLAIM), rootOrgUserId,
+                "Incorrect sub in token.");
+        Assert.assertEquals((String) jwtClaimsSetOfSwitchedToken.getClaims().get(ORG_NAME_CLAIM), L1_SUB_ORG_NAME,
+                "Incorrect org_name in token.");
+        Assert.assertEquals((String) jwtClaimsSetOfSwitchedToken.getClaims().get(ORG_ID_CLAIM), level1OrgId,
+                "Incorrect org_id in token.");
+        Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ISS_CLAIM),
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()), "Incorrect iss in token.");
+        assertRolesInToken(jwtClaimsSetOfSwitchedToken, 2, new String[]{APP_ROLE_2, APP_ROLE_3});
+        assertGroupsInToken(jwtClaimsSetOfSwitchedToken, 2, new String[]{SUB_GROUP_1, SUB_GROUP_2});
+    }
+
+    @Test(dependsOnMethods = {"testGroupsAndRolesInOrganizationSwitchedTokenFromAppRoleUsingApp"},
+            description = "Verify the groups and roles in organization switched token in org role consuming app.")
+    public void testGroupsAndRolesInOrganizationSwitchedTokenFromOrgRoleUsingApp() throws Exception {
+
+        String[] requestedScopes = {"openid", "roles", "groups"};
+        HttpResponse httpResponseOfPasswordGrantRequest =
+                sendTokenRequestForPasswordGrant(ROOT_ORG_USERNAME, ROOT_ORG_USER_PASSWORD,
+                        Arrays.asList(requestedScopes), clientIdApp2, clientSecretApp2);
+        String passwordGrantResponseBody =
+                EntityUtils.toString(httpResponseOfPasswordGrantRequest.getEntity(), "UTF-8");
+        EntityUtils.consume(httpResponseOfPasswordGrantRequest.getEntity());
+        Assert.assertNotNull(httpResponseOfPasswordGrantRequest, "Failed password grant request.");
+        String accessTokenFromPasswordGrant = extractAccessToken(passwordGrantResponseBody);
+        String idTokenFromPasswordGrant = extractIdToken(passwordGrantResponseBody);
+        Assert.assertNotNull(accessTokenFromPasswordGrant, "Failed to get the access token from password grant.");
+        Assert.assertNotNull(idTokenFromPasswordGrant, "Failed to get the id token from password grant.");
+        JWTClaimsSet jwtClaimsSet = parseJWTToken(idTokenFromPasswordGrant);
+        Assert.assertNotNull(jwtClaimsSet, "Failed to parse the id token from password grant.");
+        Assert.assertEquals((String) jwtClaimsSet.getClaims().get(SUB_CLAIM), rootOrgUserId, "Incorrect sub in token.");
+        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantInfo.getDomain())) {
+            Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ORG_NAME_CLAIM), SUPER_ORG_NAME,
+                    "Incorrect org_name in token.");
+        } else {
+            Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ORG_NAME_CLAIM), tenantInfo.getDomain(),
+                    "Incorrect org_name in token.");
+        }
+        Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ISS_CLAIM),
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()), "Incorrect iss in token.");
+        assertRolesInToken(jwtClaimsSet, 3, new String[]{ORG_ROLE_1, ORG_ROLE_2, "everyone"});
+        assertGroupsInToken(jwtClaimsSet, 2, new String[]{GROUP_1, GROUP_2});
+
+        // Switch the token.
+        HttpResponse httpResponseOfOrgSwitchGrantRequest =
+                getOrganizationSwitchToken(clientIdApp2, clientSecretApp2, accessTokenFromPasswordGrant, level1OrgId,
+                        Arrays.asList(requestedScopes));
+        String organizationSwitchTokenResponseBody =
+                EntityUtils.toString(httpResponseOfOrgSwitchGrantRequest.getEntity(), "UTF-8");
+        EntityUtils.consume(httpResponseOfOrgSwitchGrantRequest.getEntity());
+        Assert.assertNotNull(httpResponseOfOrgSwitchGrantRequest, "Failed organization switch grant request.");
+        String accessTokenFromOrgSwitchGrant = extractAccessToken(organizationSwitchTokenResponseBody);
+        String idTokenFromOrgSwitchGrant = extractIdToken(organizationSwitchTokenResponseBody);
+        Assert.assertNotNull(accessTokenFromOrgSwitchGrant,
+                "Failed to get the access token from organization switch grant.");
+        Assert.assertNotNull(idTokenFromOrgSwitchGrant, "Failed to get the id token from organization switch grant.");
+        JWTClaimsSet jwtClaimsSetOfSwitchedToken = parseJWTToken(idTokenFromOrgSwitchGrant);
+        Assert.assertNotNull(jwtClaimsSetOfSwitchedToken, "Failed to parse the id token got from org switch grant.");
+        Assert.assertEquals((String) jwtClaimsSetOfSwitchedToken.getClaims().get(SUB_CLAIM), rootOrgUserId,
+                "Incorrect sub in token.");
+        Assert.assertEquals((String) jwtClaimsSetOfSwitchedToken.getClaims().get(ORG_NAME_CLAIM), L1_SUB_ORG_NAME,
+                "Incorrect org_name in token.");
+        Assert.assertEquals((String) jwtClaimsSetOfSwitchedToken.getClaims().get(ORG_ID_CLAIM), level1OrgId,
+                "Incorrect org_id in token.");
+        Assert.assertEquals((String) jwtClaimsSet.getClaims().get(ISS_CLAIM),
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()), "Incorrect iss in token.");
+        assertRolesInToken(jwtClaimsSetOfSwitchedToken, 2, new String[]{ORG_ROLE_2, ORG_ROLE_3});
+        assertGroupsInToken(jwtClaimsSetOfSwitchedToken, 2, new String[]{SUB_GROUP_1, SUB_GROUP_2});
+    }
+
+    private void assertRolesInToken(JWTClaimsSet jwtClaimsSet, int expectedRoleCount, String[] expectedRoles) {
+
+        net.minidev.json.JSONArray rolesInToken = (net.minidev.json.JSONArray) jwtClaimsSet.getClaims().get("roles");
+        Assert.assertEquals(rolesInToken.size(), expectedRoleCount, "Incorrect roles count in token.");
+
+        for (String expectedRole : expectedRoles) {
+            boolean roleFound = false;
+            for (int i = 0; i < rolesInToken.size(); i++) {
+                if (expectedRole.equals(rolesInToken.get(i))) {
+                    roleFound = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(roleFound, expectedRole + " is not found in token.");
+        }
+    }
+
+    private void assertGroupsInToken(JWTClaimsSet jwtClaimsSet, int expectedGroupCount, String[] expectedGroups) {
+
+        net.minidev.json.JSONArray groupsInToken = (net.minidev.json.JSONArray) jwtClaimsSet.getClaims().get("groups");
+        Assert.assertEquals(groupsInToken.size(), expectedGroupCount, "Incorrect groups count in token.");
+
+        for (String expectedGroup : expectedGroups) {
+            boolean groupFound = false;
+            for (int i = 0; i < groupsInToken.size(); i++) {
+                if (expectedGroup.equals(groupsInToken.get(i))) {
+                    groupFound = true;
+                    break;
+                }
+            }
+            Assert.assertTrue(groupFound, expectedGroup + " is not found in token.");
+        }
+    }
+
+    @Test(dependsOnMethods = {"testGroupsAndRolesInOrganizationSwitchedTokenFromOrgRoleUsingApp"},
             description = "Verify the shared users profiles have resolved given name and email from origin.")
     public void testGivenNameAndEmailResolvedFromOrigin() throws Exception {
 
@@ -256,7 +593,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private void validateClaimsResolvedFromOriginInSharedUser(String sharedUserId,
                                                               String switchedM2MToken) throws Exception {
 
-        org.json.simple.JSONObject sharedUser = scim2RestClient.getSubOrgUser(sharedUserId, switchedM2MToken);
+        org.json.simple.JSONObject sharedUser = scim2RestClient.getSubOrgUser(sharedUserId, null, switchedM2MToken);
         String givenNameOfSharedUser = (String) ((org.json.simple.JSONObject) sharedUser.get("name")).get("givenName");
         String emailOfSharedUser = (String) ((org.json.simple.JSONArray) sharedUser.get("emails")).get(0);
         Assert.assertEquals(givenNameOfSharedUser, ROOT_ORG_USER_GIVEN_NAME, "Unexpected given name.");
@@ -288,9 +625,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel1Org);
         verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel2Org);
 
-        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
-        applicationPatch.setClaimConfiguration(getClaimConfigurations());
-        oAuth2RestClient.updateApplication(application.getId(), applicationPatch);
+        updateRequestedClaimsOfApp(application1WithAppAudienceRoles.getId(), getClaimConfigurationsWithCustomClaim());
 
         // Sub orgs should have custom claim after marking that claim as requested claim in shared app.
         verifyCustomClaimIsShared(customClaimId, switchedM2MTokenForLevel1Org);
@@ -329,7 +664,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private void validateCustomClaimValueOfSharedUser(String sharedUserId, String switchedM2MToken,
                                                       String expectedValue) throws Exception {
 
-        org.json.simple.JSONObject sharedUser = scim2RestClient.getSubOrgUser(sharedUserId, switchedM2MToken);
+        org.json.simple.JSONObject sharedUser = scim2RestClient.getSubOrgUser(sharedUserId, null, switchedM2MToken);
         String customClaimValueOfSharedUser =
                 (String) ((org.json.simple.JSONObject) sharedUser.get(SCIM2_CUSTOM_SCHEMA_DIALECT_URI)).get(
                         CUSTOM_CLAIM_NAME);
@@ -388,7 +723,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         Therefore, custom schema should not be returned.
          */
         org.json.simple.JSONObject sharedUser =
-                scim2RestClient.getSubOrgUser(sharedUserIdInLevel2Org, switchedM2MTokenForLevel2Org);
+                scim2RestClient.getSubOrgUser(sharedUserIdInLevel2Org, null, switchedM2MTokenForLevel2Org);
         Assert.assertNull(sharedUser.get(SCIM2_CUSTOM_SCHEMA_DIALECT_URI),
                 "Unexpected custom schema in shared user in level 2 org.");
     }
@@ -420,12 +755,20 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         Assert.assertEquals(userUpdateResponse.get("detail"), errorDetail);
     }
 
-    private ClaimConfiguration getClaimConfigurations() {
+    private ClaimConfiguration getClaimConfigurationsWithCustomClaim() {
 
         ClaimConfiguration claimConfiguration = new ClaimConfiguration();
         claimConfiguration.addClaimMappingsItem(getClaimMapping(CUSTOM_CLAIM_URI));
         claimConfiguration.addRequestedClaimsItem(getRequestedClaim(CUSTOM_CLAIM_URI));
 
+        return claimConfiguration;
+    }
+
+    private ClaimConfiguration getClaimConfigurationsWithRolesAndGroups() {
+
+        ClaimConfiguration claimConfiguration = new ClaimConfiguration();
+        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(ROLES_CLAIM_URI));
+        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(GROUPS_CLAIM_URI));
         return claimConfiguration;
     }
 
@@ -462,13 +805,156 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         return localClaimReq;
     }
 
-    private void shareApplication() throws Exception {
+    private void shareApplication(String applicationId) throws Exception {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(true);
-        oAuth2RestClient.shareApplication(application.getId(), applicationSharePOSTRequest);
+        oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
 
         // Since application sharing is an async operation, wait for some time for it to finish.
         Thread.sleep(5000);
+    }
+
+    private boolean isExistingDialect(org.json.simple.JSONObject externalDialectGetResponse) {
+
+        if (externalDialectGetResponse.get("code") != null &&
+                externalDialectGetResponse.get("code").equals("CMT-50016")) {
+            return false;
+        }
+        return externalDialectGetResponse.get("id") != null;
+    }
+
+    private void switchApplicationAudience(String appId, AssociatedRolesConfig.AllowedAudienceEnum newAudience)
+            throws Exception {
+
+        AssociatedRolesConfig associatedRolesConfigApp = new AssociatedRolesConfig();
+        associatedRolesConfigApp.setAllowedAudience(newAudience);
+        ApplicationPatchModel applicationPatchModel = new ApplicationPatchModel();
+        applicationPatchModel.setAssociatedRoles(associatedRolesConfigApp);
+        oAuth2RestClient.updateApplication(appId, applicationPatchModel);
+    }
+
+    private void createOrganizationRoles() throws IOException {
+
+        RoleV2 orgRole1 = new RoleV2(null, ORG_ROLE_1, Collections.emptyList(), Collections.emptyList());
+        orgRole1Id = scim2RestClient.addV2Role(orgRole1);
+        RoleV2 orgRole2 = new RoleV2(null, ORG_ROLE_2, Collections.emptyList(), Collections.emptyList());
+        orgRole2Id = scim2RestClient.addV2Role(orgRole2);
+        RoleV2 orgRole3 = new RoleV2(null, ORG_ROLE_3, Collections.emptyList(), Collections.emptyList());
+        orgRole3Id = scim2RestClient.addV2Role(orgRole3);
+    }
+
+    private void createApp1RolesWithAppAudience(String app1Id) throws IOException {
+
+        Audience app1RoleAudience = new Audience(APPLICATION_AUDIENCE, app1Id);
+        RoleV2 appRole1 = new RoleV2(app1RoleAudience, APP_ROLE_1, Collections.emptyList(), Collections.emptyList());
+        appRole1Id = scim2RestClient.addV2Role(appRole1);
+        RoleV2 appRole2 = new RoleV2(app1RoleAudience, APP_ROLE_2, Collections.emptyList(), Collections.emptyList());
+        appRole2Id = scim2RestClient.addV2Role(appRole2);
+        RoleV2 appRole3 = new RoleV2(app1RoleAudience, APP_ROLE_3, Collections.emptyList(), Collections.emptyList());
+        appRole3Id = scim2RestClient.addV2Role(appRole3);
+    }
+
+    private void updateRequestedClaimsOfApp(String applicationId, ClaimConfiguration claimConfigurationsForApp)
+            throws IOException {
+
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.setClaimConfiguration(claimConfigurationsForApp);
+        oAuth2RestClient.updateApplication(applicationId, applicationPatch);
+    }
+
+    private ApplicationResponseModel addApplication(String appName) throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "organization_switch");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+        application.setName(appName);
+        application.setIsManagementApp(true);
+
+        application.setClaimConfiguration(setApplicationClaimConfig());
+        String appId = addApplication(application);
+
+        return getApplication(appId);
+    }
+
+    private HttpResponse sendTokenRequestForPasswordGrant(String username, String password,
+                                                          List<String> requestedScopes, String clientId,
+                                                          String clientSecret) throws Exception {
+
+        List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+        parameters.add(new BasicNameValuePair("username", username));
+        parameters.add(new BasicNameValuePair("password", password));
+
+        String scopes = String.join(" ", requestedScopes);
+        parameters.add(new BasicNameValuePair("scope", scopes));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER,
+                OAuth2Constant.BASIC_HEADER + " " + getBase64EncodedString(clientId, clientSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        return sendPostRequest(httpClient, headers, parameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+    }
+
+    private HttpResponse getOrganizationSwitchToken(String clientId, String clientSecret, String currentToken,
+                                                   String switchingOrganizationId, List<String> requestedScopes)
+            throws Exception {
+
+        List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair(OAuth2Constant.GRANT_TYPE_NAME, "organization_switch"));
+        parameters.add(new BasicNameValuePair("token", currentToken));
+        String scopes = String.join(" ", requestedScopes);
+        parameters.add(new BasicNameValuePair("scope", scopes));
+        parameters.add(new BasicNameValuePair("switching_organization", switchingOrganizationId));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER,
+                OAuth2Constant.BASIC_HEADER + " " + getBase64EncodedString(clientId, clientSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        return sendPostRequest(httpClient, headers, parameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+    }
+
+    private String extractAccessToken(String tokenResponseBody) throws Exception {
+
+        JSONParser parser = new JSONParser();
+        org.json.simple.JSONObject responseJSONBody = (org.json.simple.JSONObject) parser.parse(tokenResponseBody);
+        Assert.assertNotNull(responseJSONBody, "Access token response is null.");
+        Assert.assertNotNull(responseJSONBody.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
+        return (String) responseJSONBody.get(OAuth2Constant.ACCESS_TOKEN);
+    }
+
+    private String extractIdToken(String tokenResponseBody) throws Exception {
+
+        JSONParser parser = new JSONParser();
+        org.json.simple.JSONObject responseJSONBody = (org.json.simple.JSONObject) parser.parse(tokenResponseBody);
+        Assert.assertNotNull(responseJSONBody, "ID token response is null.");
+        Assert.assertNotNull(responseJSONBody.get(OAuth2Constant.ID_TOKEN), "ID token is null.");
+        return (String) responseJSONBody.get(OAuth2Constant.ID_TOKEN);
+    }
+
+    private JWTClaimsSet parseJWTToken(String token) throws Exception {
+
+        SignedJWT jwt = SignedJWT.parse(token);
+        return jwt.getJWTClaimsSet();
     }
 }
