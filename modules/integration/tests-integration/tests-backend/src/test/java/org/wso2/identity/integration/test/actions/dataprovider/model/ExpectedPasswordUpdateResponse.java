@@ -18,18 +18,20 @@
 
 package org.wso2.identity.integration.test.actions.dataprovider.model;
 
+import javax.servlet.http.HttpServletResponse;
+
 public class ExpectedPasswordUpdateResponse {
 
-    private final String statusCode;
+    private final Integer statusCode;
     private final String errorDetail;
 
-    public ExpectedPasswordUpdateResponse(String statusCode, String errorDetail) {
+    public ExpectedPasswordUpdateResponse(Integer statusCode, String errorDetail) {
 
         this.statusCode = statusCode;
         this.errorDetail = errorDetail;
     }
 
-    public String getStatusCode() {
+    public Integer getStatusCode() {
 
         return statusCode;
     }

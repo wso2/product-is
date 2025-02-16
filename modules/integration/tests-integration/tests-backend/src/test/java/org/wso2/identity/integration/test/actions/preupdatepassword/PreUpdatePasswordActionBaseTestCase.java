@@ -68,7 +68,24 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
     private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
-    private static final String PRE_UPDATE_PASSWORD_API_PATH = "preUpdatePassword";
+
+    protected static final String TEST_USER1_USERNAME = "testUsername";
+    protected static final String TEST_USER2_USERNAME = "testUsername2";
+    protected static final String TEST_USER_PASSWORD = "TestPassword@123";
+    protected static final String TEST_USER_UPDATED_PASSWORD = "UpdatedTestPassword@123";
+    protected static final String RESET_PASSWORD = "ResetTestPassword@123";
+    protected static final String TEST_USER_GIVEN_NAME = "test_user_given_name";
+    protected static final String TEST_USER_LASTNAME = "test_user_last_name";
+    protected static final String TEST_USER_EMAIL = "test.user@gmail.com";
+    protected static final String PRIMARY_USER_STORE_ID = "UFJJTUFSWQ==";
+    protected static final String PRIMARY_USER_STORE_NAME = "PRIMARY";
+    protected static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
+    protected static final String FORCE_PASSWORD_RESET_ATTRIBUTE = "forcePasswordReset";
+    protected static final String PRE_UPDATE_PASSWORD_API_PATH = "preUpdatePassword";
+    protected static final String ACTION_NAME = "Pre Update Password Action";
+    protected static final String ACTION_DESCRIPTION = "This is a test for pre update password action type";
+    protected static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
+    protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -98,7 +115,6 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 .build();
 
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
-
     }
 
     protected void updatePasswordRecoveryFeatureStatus(boolean enable) throws IOException {
