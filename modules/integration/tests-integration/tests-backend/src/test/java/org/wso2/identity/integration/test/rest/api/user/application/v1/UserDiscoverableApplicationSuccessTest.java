@@ -18,25 +18,20 @@
 
 package org.wso2.identity.integration.test.rest.api.user.application.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import javax.xml.xpath.XPathExpressionException;
-import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -46,7 +41,6 @@ import static org.hamcrest.Matchers.hasSize;
 public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableApplicationServiceTestBase {
 
     private static final String PAGINATION_LINK_QUERY_PARAM_STRING = "?offset=%d&limit=%d";
-    private static final String APP_NAME_WITH_SPACES = "APP_SPACES IN NAME";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserDiscoverableApplicationSuccessTest(TestUserMode userMode) throws Exception {
@@ -66,18 +60,6 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
                 {TestUserMode.TENANT_ADMIN}
         };
     }
-
-//    @DataProvider(name = "offsetLimitProvider")
-//    public static Object[][] paginationLimitOffsetProvider() {
-//
-//        return new Object[][]{
-//                {0, 5},
-//                {4, 5},
-//                {5, 5},
-//                {10, 5},
-//                {15, 5},
-//        };
-//    }
 
     @BeforeClass(alwaysRun = true)
     public void testStart() throws Exception {
@@ -128,206 +110,411 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 
         assertForAllApplications(response, userNum, isSubOrg);
     }
-//
-//    @Test(description = "Test listing applications with offset and limit.", dataProvider = "offsetLimitProvider")
-//    public void testListApplicationsWithOffsetLimit(int offset, int limit) throws Exception {
-//
-//        Map<String, Object> params = new HashMap<String, Object>() {{
-//            put("offset", offset);
-//            put("limit", limit);
-//
-//        }};
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-//
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
-//                (TOTAL_DISCOVERABLE_APP_COUNT));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(offset + 1));
-//
-//        // Assert for applications and application count.
-//        assertApplicationsAndApplicationCountInPaginatedResponse(offset, limit, response);
-//        assertNextLink(offset, limit, response);
-//        assertPreviousLink(offset, limit, response);
-//
-//    }
-//
-//    @Test(description = "Test filtering applications by name with eq operator.")
-//    public void testFilterApplicationsByNameForEQ() {
-//
-//        Map<String, Object> params = new HashMap<String, Object>() {{
-//            put("filter", "name eq " + serviceProviders.get(0).getApplicationName());
-//
-//        }};
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
-//
-//        assertForApplication(serviceProviders.get(0), response);
-//    }
-//
-//    @Test(description = "Test filtering applications by name with co operator.")
-//    public void testFilterApplicationsByNameForCO() {
-//
-//        Map<String, Object> params = new HashMap<String, Object>() {{
-//            put("filter", "name co APP");
-//
-//        }};
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
-//                (TOTAL_DISCOVERABLE_APP_COUNT));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(serviceProviders.size()));
-//        response.then().log().ifValidationFails().body("applications", hasSize(serviceProviders.size()));
-//
-//        //All application created matches the given filter
-//        assertForAllApplications(response);
-//
-//    }
-//
-//    @Test(description = "Test filtering applications by name with sw operator.")
-//    public void testFilterApplicationsByNameForSW() {
-//
-//        Map<String, Object> params = new HashMap<String, Object>() {{
-//            put("filter", "name sw APP");
-//
-//        }};
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
-//                (TOTAL_DISCOVERABLE_APP_COUNT));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(serviceProviders.size()));
-//        response.then().log().ifValidationFails().body("applications", hasSize(serviceProviders.size()));
-//
-//        //All application created matches the given filter
-//        assertForAllApplications(response);
-//    }
-//
-//    @Test(description = "Test filtering applications by name with ew operator.")
-//    public void testFilteringApplicationsByNameForEW() {
-//
-//        Map<String, Object> params = new HashMap<String, Object>() {{
-//            put("filter", "name ew 13");
-//
-//        }};
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
-//
-//        // Only 0th index application matches the given filter
-//        assertForApplication(serviceProviders.get(0), response);
-//    }
-//
-//    @Test(description = "Test filtering applications by name with eq operator when name contains spaces.")
-//    public void testFilterApplicationsByNameWithSpacesForEQ() throws Exception {
-//
-//        // Create a discoverable SP with spaces in the name.
-//        ServiceProvider serviceProvider = createServiceProvider(
-//                APP_NAME_WITH_SPACES, "This is " + APP_NAME_WITH_SPACES);
-//        Assert.assertNotNull(serviceProvider, "Failed to create service provider with spaces in name.");
-//
-//        Map<String, Object> params = new HashMap<String, Object>() {{
-//            put("filter", "name eq " + APP_NAME_WITH_SPACES);
-//        }};
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
-//
-//        assertForApplication(serviceProvider, response);
-//
-//        // Remove the discoverable SP with spaces in the name.
-//        ServiceProvider serviceProviderCreated = appMgtclient.getApplication(APP_NAME_WITH_SPACES);
-//        if (serviceProviderCreated != null) {
-//            appMgtclient.deleteApplication(serviceProviderCreated.getApplicationName());
-//            log.info("############## " + "Deleted app: " + serviceProviderCreated.getApplicationName());
-//        }
-//    }
-//
-//    @Test(description = "Test filtering applications by name with co operator when name contains spaces.")
-//    public void testFilterApplicationsByNameWithSpacesForCO() throws Exception {
-//
-//        // Create a discoverable SP with spaces in the name.
-//        ServiceProvider serviceProvider = createServiceProvider(
-//                APP_NAME_WITH_SPACES, "This is " + APP_NAME_WITH_SPACES);
-//        Assert.assertNotNull(serviceProvider, "Failed to create service provider with spaces in name.");
-//
-//        Map<String, Object> params = new HashMap<String, Object>() {{
-//            put("filter", "name co " + APP_NAME_WITH_SPACES);
-//
-//        }};
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
-//        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
-//
-//        assertForApplication(serviceProvider, response);
-//
-//        // Remove the discoverable SP with spaces in the name.
-//        ServiceProvider serviceProviderCreated = appMgtclient.getApplication(APP_NAME_WITH_SPACES);
-//        if (serviceProviderCreated != null) {
-//            appMgtclient.deleteApplication(serviceProviderCreated.getApplicationName());
-//            log.info("############## " + "Deleted app: " + serviceProviderCreated.getApplicationName());
-//        }
-//    }
-//
-//    @Test(description = "Test get application.")
-//    public void testGetApplication() {
-//
-//        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI + "/" + serviceProviders.get(0)
-//                .getApplicationResourceId());
-//
-//        response.then().log().ifValidationFails().assertThat().body("id", equalTo(serviceProviders.get(0)
-//                .getApplicationResourceId()));
-//        response.then().log().ifValidationFails().assertThat().body("name", equalTo(serviceProviders.get(0)
-//                .getApplicationName()));
-//        response.then().log().ifValidationFails().assertThat().body("description", equalTo(serviceProviders.get(0)
-//                .getDescription()));
-//    }
-//
-//    private void assertApplicationsAndApplicationCountInPaginatedResponse(int offset, int limit, Response response) {
-//
-//        int applicationCount;
-//        if ((offset + limit) < TOTAL_DISCOVERABLE_APP_COUNT) {
-//            assertForApplicationsInRange(offset, (offset + limit), response);
-//            applicationCount = limit;
-//        } else if (offset < TOTAL_DISCOVERABLE_APP_COUNT && (offset + limit) > TOTAL_DISCOVERABLE_APP_COUNT) {
-//            assertForApplicationsInRange(offset, TOTAL_DISCOVERABLE_APP_COUNT, response);
-//            applicationCount = TOTAL_DISCOVERABLE_APP_COUNT - offset;
-//        } else if (offset > TOTAL_DISCOVERABLE_APP_COUNT) {
-//            applicationCount = 0;
-//        } else {
-//            throw new RuntimeException("Offset: " + offset + " and limit: " + limit + " is not acceptable for this " +
-//                    "test case.");
-//        }
-//
-//        response.then().log().ifValidationFails().assertThat().body("count", equalTo(applicationCount));
-//        response.then().log().ifValidationFails().body("applications", hasSize(applicationCount));
-//    }
-//
-//    private void assertForApplication(ServiceProvider serviceProvider, Response response) {
-//
-//        response.then().log().ifValidationFails().assertThat().body("applications.id", hasItem(serviceProvider
-//                .getApplicationResourceId()));
-//        response.then().log().ifValidationFails().assertThat().body("applications.name", hasItem(serviceProvider
-//                .getApplicationName()));
-//        response.then().log().ifValidationFails().assertThat().body("applications.description", hasItem(serviceProvider
-//                .getDescription()));
-//    }
-//
-//    private void assertForApplicationsInRange(int startIndex, int endIndex, Response response) {
-//
-//        IntStream.range(startIndex, endIndex).forEach(i -> {
-//            response.then().log().ifValidationFails()
-//                    .body("applications.find{ it.id == '" + serviceProviders.get(i).getApplicationResourceId() +
-//                                    "'}.name",
-//                            equalTo(serviceProviders.get(i).getApplicationName()))
-//                    .body("applications.find{ it.id == '" + serviceProviders.get(i).getApplicationResourceId() +
-//                                    "'}.description",
-//                            equalTo(serviceProviders.get(i).getDescription()));
-//        });
-//    }
-//
+
+    @DataProvider(name = "offsetLimitProvider")
+    public static Object[][] paginationLimitOffsetProvider() {
+
+        return new Object[][]{
+                {1, false, 0, 5},
+                {1, false, 4, 5},
+                {1, false, 5, 5},
+                {1, false, 10, 5},
+                {1, false, 15, 5},
+                {1, false, 17, 4},
+                {2, false, 0, 5},
+                {2, false, 4, 10},
+                {2, false, 5, 5},
+                {2, false, 10, 7},
+                {2, false, 15, 4},
+                {2, false, 17, 5},
+                {2, false, 25, 3},
+                {3, false, 0, 5},
+                {3, false, 4, 5},
+                {3, false, 5, 4},
+                {3, false, 8, 2},
+                {1, true, 0, 5},
+                {1, true, 4, 5},
+                {1, true, 5, 5},
+                {1, true, 10, 5},
+                {1, true, 15, 5},
+                {1, true, 17, 4},
+                {2, true, 0, 5},
+                {2, true, 4, 10},
+                {2, true, 5, 5},
+                {2, true, 10, 7},
+                {2, true, 15, 4},
+                {2, true, 17, 5},
+                {2, true, 25, 3},
+                {3, true, 0, 5},
+                {3, true, 4, 5},
+                {3, true, 5, 4},
+                {3, true, 8, 2}
+        };
+    }
+
+    @Test(description = "Test listing applications with offset and limit.", dataProvider = "offsetLimitProvider",
+            dependsOnMethods = "testListAllApplications")
+    public void testListApplicationsWithOffsetLimit(int userNum, boolean isSubOrg, int offset, int limit) {
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("offset", offset);
+            put("limit", limit);
+
+        }};
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1],
+                    params);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1], params);
+        }
+
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
+                (USER_DISCOVERABLE_APPS[userNum - 1].length));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(offset + 1));
+
+        // Assert for applications and application count.
+        assertApplicationsAndApplicationCountInPaginatedResponse(offset, limit, response, userNum, isSubOrg);
+        assertNextLink(offset, limit, response, userNum, isSubOrg);
+        assertPreviousLink(offset, limit, response, userNum, isSubOrg);
+    }
+
+    @DataProvider(name = "testFilterApplicationsByNameWithAppNum")
+    public Object[][] filterApplicationsByNameWithAppNum() {
+
+        return new Object[][]{
+                {1, false, 19},
+                {1, false, 1},
+                {2, false, 16},
+                {2, false, 10},
+                {3, false, 17},
+                {1, true, 19},
+                {1, true, 1},
+                {2, true, 16},
+                {2, true, 10},
+                {3, true, 17}
+        };
+    }
+
+    @Test(description = "Test filtering applications by name with eq operator.",
+            dataProvider = "testFilterApplicationsByNameWithAppNum",
+            dependsOnMethods = "testListApplicationsWithOffsetLimit")
+    public void testFilterApplicationsByNameForEQ(int userNum, boolean isSubOrg, int appNum) {
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name eq " + APP_NAME_PREFIX + appNum);
+
+        }};
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1],
+                    params);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1], params);
+        }
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
+
+        assertForApplication(appNum, isSubOrg, response);
+    }
+
+    @DataProvider(name = "testFilterApplicationsByNameWithoutAppNum")
+    public Object[][] filterApplicationsByNameWithoutAppNum() {
+
+        return new Object[][]{
+                {1, false},
+                {2, false},
+                {3, false},
+                {1, true},
+                {2, true},
+                {3, true}
+        };
+    }
+
+    @Test(description = "Test filtering applications by name with co operator.",
+            dataProvider = "testFilterApplicationsByNameWithoutAppNum",
+            dependsOnMethods = "testFilterApplicationsByNameForEQ")
+    public void testFilterApplicationsByNameForCO(int userNum, boolean isSubOrg) {
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name co APP");
+
+        }};
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1],
+                    params);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1], params);
+        }
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
+                (USER_DISCOVERABLE_APPS[userNum - 1].length));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(
+                USER_DISCOVERABLE_APPS[userNum - 1].length));
+        response.then().log().ifValidationFails()
+                .body("applications", hasSize(USER_DISCOVERABLE_APPS[userNum - 1].length));
+
+        //All application created matches the given filter
+        assertForAllApplications(response, userNum, isSubOrg);
+    }
+
+    @Test(description = "Test filtering applications by name with sw operator.",
+            dependsOnMethods = "testFilterApplicationsByNameForCO",
+            dataProvider = "testFilterApplicationsByNameWithoutAppNum")
+    public void testFilterApplicationsByNameForSW(int userNum, boolean isSubOrg) {
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name sw APP");
+        }};
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1],
+                    params);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1], params);
+        }
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
+                (USER_DISCOVERABLE_APPS[userNum - 1].length));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(
+                USER_DISCOVERABLE_APPS[userNum - 1].length));
+        response.then().log().ifValidationFails()
+                .body("applications", hasSize(USER_DISCOVERABLE_APPS[userNum - 1].length));
+
+        //All application created matches the given filter
+        assertForAllApplications(response, userNum, isSubOrg);
+    }
+
+    @Test(description = "Test filtering applications by name with ew operator.",
+            dependsOnMethods = "testFilterApplicationsByNameForSW",
+            dataProvider = "testFilterApplicationsByNameWithAppNum")
+    public void testFilteringApplicationsByNameForEW(int userNum, boolean isSubOrg, int appNum) {
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name ew " + appNum);
+
+        }};
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1],
+                    params);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1], params);
+        }
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
+
+        // Only 0th index application matches the given filter
+        assertForApplication(appNum, isSubOrg, response);
+    }
+
+    @DataProvider(name = "testFilterApplicationsByNameWithSpacesWithAppNum")
+    public Object[][] filterApplicationsByNameWithSpacesWithAppNum() {
+
+        return new Object[][]{
+                {1, false, APP_NAME_WITH_SPACES_APP_NUM},
+                {1, false, APP_NAME_WITH_SPACES_APP_NUM_WITHOUT_GROUPS},
+                {1, true, APP_NAME_WITH_SPACES_APP_NUM},
+                {1, true, APP_NAME_WITH_SPACES_APP_NUM_WITHOUT_GROUPS}
+        };
+    }
+
+    @Test(description = "Test filtering applications by name with eq operator when name contains spaces.",
+            dataProvider = "testFilterApplicationsByNameWithSpacesWithAppNum",
+            dependsOnMethods = "testFilteringApplicationsByNameForEW")
+    public void testFilterApplicationsByNameWithSpacesForEQ(int userNum, boolean isSubOrg, int appNum) {
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name eq " + APP_NAME_WITH_SPACES + appNum);
+        }};
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1],
+                    params);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1], params);
+        }
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
+
+        assertForApplication(appNum, isSubOrg, response);
+    }
+
+    @DataProvider(name = "testFilterApplicationsByNameWithSpaces")
+    public Object[][] filterApplicationsByNameWithSpaces() {
+
+        return new Object[][]{
+                {1, false},
+                {1, true},
+        };
+    }
+
+    @Test(description = "Test filtering applications by name with co operator when name contains spaces.",
+            dataProvider = "testFilterApplicationsByNameWithSpaces",
+            dependsOnMethods = "testFilterApplicationsByNameWithSpacesForEQ")
+    public void testFilterApplicationsByNameWithSpacesForCO(int userNum, boolean isSubOrg) {
+
+        Map<String, Object> params = new HashMap<String, Object>() {{
+            put("filter", "name co " + APP_NAME_WITH_SPACES);
+
+        }};
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, SUB_ORG_USER_TOKENS[userNum - 1],
+                    params);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(USER_APPLICATION_ENDPOINT_URI, USER_TOKENS[userNum - 1], params);
+        }
+        response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo(2));
+        response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(2));
+
+        assertForApplication(APP_NAME_WITH_SPACES_APP_NUM_WITHOUT_GROUPS, isSubOrg, response, 0);
+        assertForApplication(APP_NAME_WITH_SPACES_APP_NUM, isSubOrg, response, 1);
+    }
+
+    @DataProvider(name = "testGetApplicationByResourceId")
+    public Object[][] testGetApplicationByResourceId() {
+
+        return new Object[][] {
+                {1, false, 19},
+                {2, false, 11},
+                {3, false, 15},
+                {1, true, 3},
+                {2, true, 9},
+                {3, true, 13}
+        };
+    }
+
+    @Test(description = "Test get application.", dataProvider = "testGetApplicationByResourceId",
+            dependsOnMethods = "testFilterApplicationsByNameWithSpacesForCO")
+    public void testGetApplication(int userNum, boolean isSubOrg, int appNum) {
+
+        Response response;
+        if (isSubOrg) {
+            String oldBasePath = this.basePath;
+            this.basePath = convertToOrgBasePath(oldBasePath);
+            response = getResponseOfGetWithOAuth2(
+                    USER_APPLICATION_ENDPOINT_URI + URL_SEPARATOR + SUB_ORG_DISCOVERABLE_APP_IDS[appNum - 1],
+                    SUB_ORG_USER_TOKENS[userNum - 1]);
+            this.basePath = oldBasePath;
+        } else {
+            response = getResponseOfGetWithOAuth2(
+                    USER_APPLICATION_ENDPOINT_URI + URL_SEPARATOR + DISCOVERABLE_APP_IDS[appNum - 1],
+                    USER_TOKENS[userNum - 1]);
+        }
+
+        response.then().log().ifValidationFails().assertThat()
+            .body("id", equalTo(isSubOrg ?
+                    SUB_ORG_DISCOVERABLE_APP_IDS[appNum - 1] : DISCOVERABLE_APP_IDS[appNum - 1]))
+            .body("name", equalTo(getApplicationName(String.valueOf(appNum))))
+            .body("image", isSubOrg ? nullValue() : equalTo(APP_IMAGE_URL))
+            .body("accessUrl", equalTo(APP_ACCESS_URL))
+            .body("description", equalTo(APP_DESC_PREFIX + appNum));
+    }
+
+    /**
+     * Assert for applications and application count in paginated response.
+     *
+     * @param offset   Offset.
+     * @param limit    Limit.
+     * @param response Response.
+     */
+    private void assertApplicationsAndApplicationCountInPaginatedResponse(int offset, int limit, Response response,
+                                                                          int userNum, boolean isSubOrg) {
+
+        int applicationCount;
+        int appCount = USER_DISCOVERABLE_APPS[userNum - 1].length;
+        if ((offset + limit) <= appCount) {
+            assertForApplicationsInRange(offset, (offset + limit), response, userNum, isSubOrg);
+            applicationCount = limit;
+        } else if (offset < appCount && (offset + limit) > appCount) {
+            assertForApplicationsInRange(offset, appCount, response, userNum, isSubOrg);
+            applicationCount = appCount - offset;
+        } else if (offset >= appCount) {
+            applicationCount = 0;
+        } else {
+            throw new RuntimeException("Offset: " + offset + " and limit: " + limit + " is not acceptable for this " +
+                    "test case.");
+        }
+
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(applicationCount));
+        response.then().log().ifValidationFails().body("applications", hasSize(applicationCount));
+    }
+
+    /**
+     * Assert for application.
+     *
+     * @param appNum   Application number.
+     * @param response Response.
+     */
+    private void assertForApplication(int appNum, boolean isSubOrg, Response response) {
+
+        assertForApplication(appNum, isSubOrg, response, 0);
+    }
+
+    /**
+     * Assert for application in the given index.
+     *
+     * @param appNum   Application number.
+     * @param response Response.
+     */
+    private void assertForApplication(int appNum, boolean isSubOrg, Response response, int appIndex) {
+
+        response.then().log().ifValidationFails()
+                .body("applications[" + appIndex + "].name", equalTo(getApplicationName(String.valueOf(appNum))))
+                .body("applications[" + appIndex + "].image", isSubOrg ? nullValue() : equalTo(APP_IMAGE_URL))
+                .body("applications[" + appIndex + "].accessUrl", equalTo(APP_ACCESS_URL))
+                .body("applications[" + appIndex + "].description", equalTo(APP_DESC_PREFIX + appNum));
+    }
+
+    /**
+     * Assert for applications in the given range.
+     *
+     * @param startIndex Start index.
+     * @param endIndex   End index.
+     * @param response   Response.
+     */
+    private void assertForApplicationsInRange(int startIndex, int endIndex, Response response, int userNum,
+                                              boolean isSubOrg) {
+
+        String[] discoverableApps = USER_DISCOVERABLE_APPS[userNum - 1];
+        IntStream.range(startIndex, endIndex).forEach(i -> {
+            response.then().log().ifValidationFails()
+                    .body("applications[" + (i - startIndex) + "].name",
+                            equalTo(getApplicationName(discoverableApps[i])))
+                    .body("applications[" + (i - startIndex) + "].image",
+                            isSubOrg ? nullValue() : equalTo(APP_IMAGE_URL))
+                    .body("applications[" + (i - startIndex) + "].accessUrl", equalTo(APP_ACCESS_URL))
+                    .body("applications[" + (i - startIndex) + "].description",
+                            equalTo(APP_DESC_PREFIX + discoverableApps[i]));
+        });
+    }
 
     /**
      * Assert for all applications.
@@ -340,63 +527,84 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         String[] discoverableApps = USER_DISCOVERABLE_APPS[userNum - 1];
         for (int i = 0; i < discoverableApps.length; i++) {
             response.then().log().ifValidationFails()
-                    .body("applications[" + i + "].name", equalTo(APP_NAME_PREFIX + discoverableApps[i]))
+                    .body("applications[" + i + "].name", equalTo(getApplicationName(discoverableApps[i])))
                     .body("applications[" + i + "].image", isSubOrg ? nullValue() : equalTo(APP_IMAGE_URL))
                     .body("applications[" + i + "].accessUrl", equalTo(APP_ACCESS_URL))
                     .body("applications[" + i + "].description", equalTo(APP_DESC_PREFIX + discoverableApps[i]));
         }
     }
-//
-//    private void assertNextLink(int offset, int limit, Response response) throws XPathExpressionException {
-//
-//        if ((offset + limit) < TOTAL_DISCOVERABLE_APP_COUNT) {
-//
-//            response.then().log().ifValidationFails().body("links.rel", hasItem("next"));
-//            response.then().log().ifValidationFails().body("links.find { it.rel == 'next'}.href", equalTo
-//                    (String.format(getTenantedRelativePath("/api/users/v1" +
-//                            USER_APPLICATION_ENDPOINT_URI, context.getContextTenant().getDomain()) +
-//                            PAGINATION_LINK_QUERY_PARAM_STRING, (offset + limit), limit)));
-//        } else {
-//            response.then().log().ifValidationFails().body("links", not(hasItem("next")));
-//        }
-//    }
-//
-//    private void assertPreviousLink(int offset, int limit, Response response) throws XPathExpressionException {
-//
-//        if (offset > 0) { // Previous link exists only if offset is greater than 0.
-//            int expectedOffsetQueryParam;
-//            int expectedLimitQueryParam;
-//            response.then().log().ifValidationFails().body("links.rel", hasItem("previous"));
-//            if ((offset - limit) >= 0) { // A previous page of size 'limit' exists
-//                expectedOffsetQueryParam = calculateOffsetForPreviousLink(offset, limit, TOTAL_DISCOVERABLE_APP_COUNT);
-//                expectedLimitQueryParam = limit;
-//            } else { // A previous page exists but it's size is less than the specified limit
-//                expectedOffsetQueryParam = 0;
-//                expectedLimitQueryParam = offset;
-//            }
-//
-//            response.then().log().ifValidationFails().body("links.find { it.rel == 'previous'}.href", equalTo
-//                    (String.format(getTenantedRelativePath("/api/users/v1" +
-//                            USER_APPLICATION_ENDPOINT_URI, context.getContextTenant().getDomain()) +
-//                            PAGINATION_LINK_QUERY_PARAM_STRING, expectedOffsetQueryParam, expectedLimitQueryParam)));
-//
-//        } else if (offset == 0) {
-//            response.then().log().ifValidationFails().body("links", not(hasItem("previous")));
-//        } else {
-//            throw new RuntimeException("Offset: " + offset + " is not acceptable for this " +
-//                    "test case.");
-//        }
-//    }
-//
-//    private int calculateOffsetForPreviousLink(int offset, int limit, int total) {
-//
-//        int newOffset = (offset - limit);
-//        if (newOffset < total) {
-//            return newOffset;
-//        }
-//
-//        return calculateOffsetForPreviousLink(newOffset, limit, total);
-//    }
+
+    /**
+     * Assert for next link.
+     *
+     * @param offset   Offset.
+     * @param limit    Limit.
+     * @param response Response.
+     */
+    private void assertNextLink(int offset, int limit, Response response, int userNum, boolean isSubOrg) {
+
+        if ((offset + limit) < USER_DISCOVERABLE_APPS[userNum - 1].length) {
+            response.then().log().ifValidationFails().body("links.rel", hasItem("next"));
+            response.then().log().ifValidationFails().body("links.find { it.rel == 'next'}.href", equalTo(
+                    String.format((isSubOrg ? convertToOrgBasePath(this.basePath) : this.basePath) +
+                            USER_APPLICATION_ENDPOINT_URI + PAGINATION_LINK_QUERY_PARAM_STRING, (offset + limit),
+                            limit)));
+        } else {
+            response.then().log().ifValidationFails().body("links", not(hasItem("next")));
+        }
+    }
+
+    /**
+     * Assert for previous link.
+     *
+     * @param offset   Offset.
+     * @param limit    Limit.
+     * @param response Response.
+     */
+    private void assertPreviousLink(int offset, int limit, Response response, int userNum, boolean isSubOrg) {
+
+        if (offset > 0) { // Previous link exists only if offset is greater than 0.
+            int expectedOffsetQueryParam;
+            int expectedLimitQueryParam;
+            response.then().log().ifValidationFails().body("links.rel", hasItem("previous"));
+            if ((offset - limit) >= 0) { // A previous page of size 'limit' exists
+                expectedOffsetQueryParam =
+                        calculateOffsetForPreviousLink(offset, limit, USER_DISCOVERABLE_APPS[userNum - 1].length);
+                expectedLimitQueryParam = limit;
+            } else { // A previous page exists but it's size is less than the specified limit
+                expectedOffsetQueryParam = 0;
+                expectedLimitQueryParam = offset;
+            }
+
+            response.then().log().ifValidationFails().body("links.find { it.rel == 'previous'}.href", equalTo
+                    (String.format((isSubOrg ? convertToOrgBasePath(this.basePath) : this.basePath) +
+                            USER_APPLICATION_ENDPOINT_URI +
+                            PAGINATION_LINK_QUERY_PARAM_STRING, expectedOffsetQueryParam, expectedLimitQueryParam)));
+        } else if (offset == 0) {
+            response.then().log().ifValidationFails().body("links", not(hasItem("previous")));
+        } else {
+            throw new RuntimeException("Offset: " + offset + " is not acceptable for this " +
+                    "test case.");
+        }
+    }
+
+    /**
+     * Calculate the offset for the previous link.
+     *
+     * @param offset Offset.
+     * @param limit  Limit.
+     * @param total  Total.
+     * @return Offset for the previous link.
+     */
+    private int calculateOffsetForPreviousLink(int offset, int limit, int total) {
+
+        int newOffset = (offset - limit);
+        if (newOffset < total) {
+            return newOffset;
+        }
+
+        return calculateOffsetForPreviousLink(newOffset, limit, total);
+    }
 
     /**
      * Get the organization base path.

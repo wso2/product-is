@@ -82,6 +82,11 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             { "19", "18", "17", "16", "15", "14", "13" }
     };
     protected static final String[] USER_NON_DISCOVERABLE_APPS = new String[]{ "21", "20" };
+    protected static final String APP_NAME_WITH_SPACES = "APP_SPACES IN NAME ";
+    protected static final int APP_NAME_WITH_SPACES_APP_NUM = 2;
+    protected static final int APP_NAME_WITH_SPACES_APP_NUM_WITHOUT_GROUPS = 18;
+    protected static final String[] DISCOVERABLE_APP_IDS = new String[TOTAL_DISCOVERABLE_APP_COUNT];
+    protected static final String[] SUB_ORG_DISCOVERABLE_APP_IDS = new String[TOTAL_DISCOVERABLE_APP_COUNT];
 
     private String subOrgID;
     private String subOrgToken;
@@ -115,7 +120,7 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         createSubOrgUsers();
         createSubOrgGroups();
         createApplications();
-        makeMyAccountConfidentialClient();
+        changeMyAccountConfiguration();
         getTokenForUsers();
     }
 
@@ -123,7 +128,6 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     public void testEnd() throws Exception {
 
         super.conclude();
-        //deleteServiceProviders();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -256,7 +260,7 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
 
         for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
             ApplicationModel application = new ApplicationModel();
-            application.setName(APP_NAME_PREFIX + i);
+            application.setName(getApplicationName(String.valueOf(i)));
             application.setDescription(APP_DESC_PREFIX + i);
             application.setImageUrl(APP_IMAGE_URL);
             AdvancedApplicationConfiguration advancedApplicationConfiguration = new AdvancedApplicationConfiguration();
@@ -265,14 +269,17 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             application.setAdvancedConfigurations(advancedApplicationConfiguration);
             application.setAccessUrl(APP_ACCESS_URL);
             String appId = oAuth2RestClient.createApplication(application);
+            DISCOVERABLE_APP_IDS[i - 1] = appId;
             oAuth2RestClient.shareApplication(appId, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
             String sharedAppId = null;
             do {
                 if (sharedAppId != null) {
                     Thread.sleep(1000);
                 }
-                sharedAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(APP_NAME_PREFIX + i, subOrgToken);
+                sharedAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(getApplicationName(
+                        String.valueOf(i)), subOrgToken);
             } while (StringUtils.isEmpty(sharedAppId));
+            SUB_ORG_DISCOVERABLE_APP_IDS[i - 1] = sharedAppId;
             ApplicationPatchModel sharedAppPatch = new ApplicationPatchModel();
             AdvancedApplicationConfiguration sharedAppAdvancedConfig = new AdvancedApplicationConfiguration();
             assignDiscoverableGroups(sharedAppAdvancedConfig, i, SUB_ORG_GROUP_IDS);
@@ -281,7 +288,7 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         }
         for (int i = 1; i <= TOTAL_NON_DISCOVERABLE_APP_COUNT; i++) {
             ApplicationModel application = new ApplicationModel();
-            application.setName(APP_NAME_PREFIX + (i + TOTAL_DISCOVERABLE_APP_COUNT));
+            application.setName(getApplicationName(String.valueOf(i + TOTAL_DISCOVERABLE_APP_COUNT)));
             application.setDescription(APP_DESC_PREFIX + (i + TOTAL_DISCOVERABLE_APP_COUNT));
             application.setImageUrl(APP_IMAGE_URL);
             oAuth2RestClient.createApplication(application);
@@ -325,7 +332,7 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
      *
      * @throws Exception If an error occurred while making the application a confidential client.
      */
-    private void makeMyAccountConfidentialClient() throws Exception {
+    private void changeMyAccountConfiguration() throws Exception {
 
         rootMyAccountAppId = oAuth2RestClient.getAppIdUsingAppName(MY_ACCOUNT_APP_NAME);
         OpenIDConnectConfiguration rootMyAccountAppOIDC = oAuth2RestClient.getOIDCInboundDetails(rootMyAccountAppId);
@@ -374,17 +381,19 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         }
     }
 
-//    private void deleteServiceProviders() throws Exception {
-//
-//        for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
-//
-//            ServiceProvider serviceProvider = appMgtclient.getApplication(APP_NAME_PREFIX + i);
-//            if (serviceProvider != null) {
-//                appMgtclient.deleteApplication(serviceProvider.getApplicationName());
-//                log.info("############## " + "Deleted app: " + serviceProvider.getApplicationName());
-//            }
-//        }
-//
-//        serviceProviders.clear();
-//    }
+    /**
+     * Get the expected application name based on name prefix and application number.
+     *
+     * @param applicationNum Application number.
+     * @return Expected application name.
+     */
+    protected String getApplicationName(String applicationNum) {
+
+        if (Integer.parseInt(applicationNum) == APP_NAME_WITH_SPACES_APP_NUM ||
+                Integer.parseInt(applicationNum) == APP_NAME_WITH_SPACES_APP_NUM_WITHOUT_GROUPS) {
+            return APP_NAME_WITH_SPACES + applicationNum;
+        } else {
+            return APP_NAME_PREFIX + applicationNum;
+        }
+    }
 }
