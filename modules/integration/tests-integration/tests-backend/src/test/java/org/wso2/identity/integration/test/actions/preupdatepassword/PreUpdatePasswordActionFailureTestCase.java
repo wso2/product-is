@@ -180,7 +180,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
 
         assertNotNull(response);
-        assertEquals(response.get("status"), expectedPasswordUpdateResponse.getStatusCode().toString());
+        assertEquals(response.get("status"), String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_UPDATED_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.UPDATE);
@@ -199,7 +199,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         org.json.simple.JSONObject response = scim2RestClient.updateUserAndReturnResponse(patchUserInfo, userId);
 
         assertNotNull(response);
-        assertEquals(response.get("status"), expectedPasswordUpdateResponse.getStatusCode().toString());
+        assertEquals(response.get("status"), String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.UPDATE);
@@ -275,7 +275,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         org.json.simple.JSONObject response = scim2RestClient.updateUserWithBearerToken(patchUserInfo, userId, token);
 
         assertNotNull(response);
-        assertEquals(response.get("status"), expectedPasswordUpdateResponse.getStatusCode().toString());
+        assertEquals(response.get("status"), String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.UPDATE);

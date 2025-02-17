@@ -22,16 +22,16 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ExpectedPasswordUpdateResponse {
 
-    private final Integer statusCode;
+    private final int statusCode;
     private final String errorDetail;
 
-    public ExpectedPasswordUpdateResponse(Integer statusCode, String errorDetail) {
+    public ExpectedPasswordUpdateResponse(int statusCode, String errorDetail) {
 
         this.statusCode = statusCode;
         this.errorDetail = errorDetail;
     }
 
-    public Integer getStatusCode() {
+    public int getStatusCode() {
 
         return statusCode;
     }
