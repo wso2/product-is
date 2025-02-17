@@ -32,7 +32,7 @@ public class ApplicationModel  {
     private String name;
     private String description;
     private String imageUrl;
-    private String loginUrl;
+    private String accessUrl;
     private Boolean isManagementApp;
     private ClaimConfiguration claimConfiguration;
     private InboundProtocols inboundProtocolConfiguration;
@@ -116,20 +116,20 @@ public class ApplicationModel  {
 
     /**
     **/
-    public ApplicationModel loginUrl(String loginUrl) {
+    public ApplicationModel accessUrl(String accessUrl) {
 
-        this.loginUrl = loginUrl;
+        this.accessUrl = accessUrl;
         return this;
     }
     
-    @ApiModelProperty(example = "https://example.com/login", value = "")
-    @JsonProperty("loginUrl")
+    @ApiModelProperty(example = "https://example.com/access", value = "")
+    @JsonProperty("accessUrl")
     @Valid
-    public String getLoginUrl() {
-        return loginUrl;
+    public String getAccessUrl() {
+        return accessUrl;
     }
-    public void setLoginUrl(String loginUrl) {
-        this.loginUrl = loginUrl;
+    public void setAccessUrl(String accessUrl) {
+        this.accessUrl = accessUrl;
     }
 
     /**
@@ -256,7 +256,7 @@ public class ApplicationModel  {
             Objects.equals(this.name, applicationModel.name) &&
             Objects.equals(this.description, applicationModel.description) &&
             Objects.equals(this.imageUrl, applicationModel.imageUrl) &&
-            Objects.equals(this.loginUrl, applicationModel.loginUrl) &&
+            Objects.equals(this.accessUrl, applicationModel.accessUrl) &&
             Objects.equals(this.isManagementApp, applicationModel.isManagementApp) &&
             Objects.equals(this.claimConfiguration, applicationModel.claimConfiguration) &&
             Objects.equals(this.inboundProtocolConfiguration, applicationModel.inboundProtocolConfiguration) &&
@@ -267,7 +267,7 @@ public class ApplicationModel  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, loginUrl, isManagementApp, claimConfiguration,
+        return Objects.hash(id, name, description, imageUrl, accessUrl, isManagementApp, claimConfiguration,
                 inboundProtocolConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
     }
 
@@ -281,7 +281,7 @@ public class ApplicationModel  {
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
-        sb.append("    loginUrl: ").append(toIndentedString(loginUrl)).append("\n");
+        sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
         sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
         sb.append("    inboundProtocolConfiguration: ").append(toIndentedString(inboundProtocolConfiguration)).append("\n");

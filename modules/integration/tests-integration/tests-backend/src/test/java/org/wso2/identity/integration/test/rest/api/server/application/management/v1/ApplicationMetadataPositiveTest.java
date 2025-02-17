@@ -206,35 +206,33 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
 //        }
 //    }
 
-     /* Temporarily disabling the test due to a upcoming change to the templates which will break the tests.
-     the test will be updated and re-enabled once the component is released. */
-//    @Test
-//    public void testGetAdaptiveAuthTemplates() throws IOException, JSONException {
-//
-//        Response response = getResponseOfGet(METADATA_API_BASE_PATH + PATH_SEPARATOR + ADAPTIVE_AUTH_PATH);
-//        response.then()
-//                .log()
-//                .ifValidationFails()
-//                .assertThat()
-//                .statusCode(HttpStatus.SC_OK);
-//
-//        JSONObject expected = new JSONObject(new JSONObject(readResource("adaptive-metadata.json")).get(
-//                JSON_KEY_TEMPLATES_JSON).toString());
-//        JSONObject received = new JSONObject(new JSONObject(response.asString()).get(
-//                JSON_KEY_TEMPLATES_JSON).toString());
-//        Iterator<String> iterator = expected.keys();
-//
-//        while (iterator.hasNext()) {
-//            String result = iterator.next();
-//            if (!"uncategorized".equals(result)) {
-//                JSONArray expectedTemplates = expected.getJSONObject(result).getJSONArray(JSON_KEY_TEMPLATES);
-//                JSONArray receivedTemplates = received.getJSONObject(result).getJSONArray(JSON_KEY_TEMPLATES);
-//
-//                Assert.assertTrue(equalSets(expectedTemplates, receivedTemplates),
-//                        "Adaptive auth templates returned from the API doesn't match.");
-//            }
-//        }
-//    }
+    @Test
+    public void testGetAdaptiveAuthTemplates() throws IOException, JSONException {
+
+        Response response = getResponseOfGet(METADATA_API_BASE_PATH + PATH_SEPARATOR + ADAPTIVE_AUTH_PATH);
+        response.then()
+                .log()
+                .ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        JSONObject expected = new JSONObject(new JSONObject(readResource("adaptive-metadata.json")).get(
+                JSON_KEY_TEMPLATES_JSON).toString());
+        JSONObject received = new JSONObject(new JSONObject(response.asString()).get(
+                JSON_KEY_TEMPLATES_JSON).toString());
+        Iterator<String> iterator = expected.keys();
+
+        while (iterator.hasNext()) {
+            String result = iterator.next();
+            if (!"uncategorized".equals(result)) {
+                JSONArray expectedTemplates = expected.getJSONObject(result).getJSONArray(JSON_KEY_TEMPLATES);
+                JSONArray receivedTemplates = received.getJSONObject(result).getJSONArray(JSON_KEY_TEMPLATES);
+
+                Assert.assertTrue(equalSets(expectedTemplates, receivedTemplates),
+                        "Adaptive auth templates returned from the API doesn't match.");
+            }
+        }
+    }
 
     private boolean equalSets(JSONArray ja1, JSONArray ja2) throws JSONException {
 

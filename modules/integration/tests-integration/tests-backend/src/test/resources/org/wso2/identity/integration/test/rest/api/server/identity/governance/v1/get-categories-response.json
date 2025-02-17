@@ -79,10 +79,6 @@
       {
         "id": "cGFzc3dvcmRIaXN0b3J5",
         "self": "/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM/connectors/cGFzc3dvcmRIaXN0b3J5"
-      },
-      {
-        "id": "cGFzc3dvcmRQb2xpY3k",
-        "self": "/api/server/v1/identity-governance/UGFzc3dvcmQgUG9saWNpZXM/connectors/cGFzc3dvcmRQb2xpY3k"
       }
     ]
   }

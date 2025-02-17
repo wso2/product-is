@@ -25,14 +25,16 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 
 public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestBase {
 
@@ -56,13 +58,13 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         }
     }
 
-    protected List<ServiceProvider> serviceProviders = new ArrayList<>();
-    protected ApplicationManagementServiceClient appMgtclient;
+    protected List<ApplicationResponseModel> applications = new ArrayList<>();
+    protected OAuth2RestClient oAuth2RestClient;
 
     @BeforeClass(alwaysRun = true)
     public void testStart() throws Exception {
 
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
+        oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         createServiceProviders();
     }
 
@@ -88,47 +90,37 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     private void createServiceProviders() throws Exception {
 
         for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
-            ServiceProvider serviceProvider = createServiceProvider(APP_NAME_PREFIX + i, APP_DESC_PREFIX + i);
-            if (serviceProvider != null) {
-                serviceProviders.add(serviceProvider);
+            ApplicationResponseModel application = createServiceProvider(APP_NAME_PREFIX + i, APP_DESC_PREFIX + i);
+            if (application != null) {
+                applications.add(application);
             }
         }
 
         // Reverse the SP list as they are ordered by created timestamp.
-        Collections.reverse(serviceProviders);
+        Collections.reverse(applications);
     }
 
     private void deleteServiceProviders() throws Exception {
 
         for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
-
-            ServiceProvider serviceProvider = appMgtclient.getApplication(APP_NAME_PREFIX + i);
-            if (serviceProvider != null) {
-                appMgtclient.deleteApplication(serviceProvider.getApplicationName());
-                log.info("############## " + "Deleted app: " + serviceProvider.getApplicationName());
-            }
+            oAuth2RestClient.deleteApplication(applications.get(i - 1).getId());
+            log.info("############## " + "Deleted app: " + applications.get(i - 1).getName());
         }
 
-        serviceProviders.clear();
+        applications.clear();
     }
 
-    protected ServiceProvider createServiceProvider(String appName, String appDescription) throws Exception {
+    protected ApplicationResponseModel createServiceProvider(String appName, String appDescription) throws Exception {
 
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(appName);
-        serviceProvider.setDescription(appDescription);
-        appMgtclient.createApplication(serviceProvider);
-
-        serviceProvider = appMgtclient.getApplication(appName);
-        if (serviceProvider != null) {
-            serviceProvider.setDiscoverable(true);
-            serviceProvider.setImageUrl(APP_IMAGE_URL);
-            serviceProvider.setAccessUrl(APP_ACCESS_URL);
-            appMgtclient.updateApplicationData(serviceProvider);
-
-            return serviceProvider;
-        }
-
-        return null;
+        ApplicationModel application = new ApplicationModel();
+        application.setName(appName);
+        application.setDescription(appDescription);
+        application.setImageUrl(APP_IMAGE_URL);
+        AdvancedApplicationConfiguration advancedApplicationConfiguration = new AdvancedApplicationConfiguration();
+        advancedApplicationConfiguration.setDiscoverableByEndUsers(true);
+        application.setAdvancedConfigurations(advancedApplicationConfiguration);
+        application.setAccessUrl(APP_ACCESS_URL);
+        String appId = oAuth2RestClient.createApplication(application);
+        return oAuth2RestClient.getApplication(appId);
     }
 }
