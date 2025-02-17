@@ -26,13 +26,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
 import javax.xml.xpath.XPathExpressionException;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.hasItem;
@@ -43,7 +43,7 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
     private static final String PAGINATION_LINK_QUERY_PARAM_STRING = "?offset=%d&limit=%d";
     private static final String APP_NAME_WITH_SPACES = "APP_SPACES IN NAME";
     // Store application with spaces in the name.
-    ApplicationResponseModel application;
+    private ApplicationResponseModel application;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserDiscoverableApplicationSuccessTest(TestUserMode userMode) throws Exception {
