@@ -2444,7 +2444,7 @@
         <carbon.consent.mgt.version>2.6.6</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.39</identity.governance.version>
+        <identity.governance.version>1.11.40</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.8</identity.carbon.auth.saml2.version>
@@ -2459,7 +2459,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.0</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.128</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.129</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2483,7 +2483,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.17</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.18</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.1</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.7</identity.outbound.auth.samlsso.version>
@@ -2522,11 +2522,11 @@
         <identity.metadata.saml.version>1.8.4</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.34</authenticator.totp.version>
+        <authenticator.totp.version>3.3.35</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.3</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.33</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.30</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.31</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.30</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.29</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.18</authenticator.local.auth.smsotp.version>
@@ -2559,10 +2559,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.41.30</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.26</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.41.31</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.17.31</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.13.5</identity.apps.core.version>
+        <identity.apps.core.version>2.13.6</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
 
