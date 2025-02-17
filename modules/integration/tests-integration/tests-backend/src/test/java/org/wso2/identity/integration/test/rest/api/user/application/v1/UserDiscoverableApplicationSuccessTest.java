@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.user.application.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
@@ -27,7 +26,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +42,8 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 
     private static final String PAGINATION_LINK_QUERY_PARAM_STRING = "?offset=%d&limit=%d";
     private static final String APP_NAME_WITH_SPACES = "APP_SPACES IN NAME";
+    // Store application with spaces in the name.
+    private ApplicationResponseModel application;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserDiscoverableApplicationSuccessTest(TestUserMode userMode) throws Exception {
@@ -125,7 +126,7 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
     public void testFilterApplicationsByNameForEQ() {
 
         Map<String, Object> params = new HashMap<String, Object>() {{
-            put("filter", "name eq " + serviceProviders.get(0).getApplicationName());
+            put("filter", "name eq " + applications.get(0).getName());
 
         }};
         Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI, params);
@@ -133,7 +134,7 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
         response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
 
-        assertForApplication(serviceProviders.get(0), response);
+        assertForApplication(applications.get(0), response);
     }
 
     @Test(description = "Test filtering applications by name with co operator.")
@@ -147,8 +148,8 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
                 (TOTAL_DISCOVERABLE_APP_COUNT));
         response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-        response.then().log().ifValidationFails().assertThat().body("count", equalTo(serviceProviders.size()));
-        response.then().log().ifValidationFails().body("applications", hasSize(serviceProviders.size()));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(applications.size()));
+        response.then().log().ifValidationFails().body("applications", hasSize(applications.size()));
 
         //All application created matches the given filter
         assertForAllApplications(response);
@@ -166,8 +167,8 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         response.then().log().ifValidationFails().assertThat().body("totalResults", equalTo
                 (TOTAL_DISCOVERABLE_APP_COUNT));
         response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
-        response.then().log().ifValidationFails().assertThat().body("count", equalTo(serviceProviders.size()));
-        response.then().log().ifValidationFails().body("applications", hasSize(serviceProviders.size()));
+        response.then().log().ifValidationFails().assertThat().body("count", equalTo(applications.size()));
+        response.then().log().ifValidationFails().body("applications", hasSize(applications.size()));
 
         //All application created matches the given filter
         assertForAllApplications(response);
@@ -186,16 +187,15 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
 
         // Only 0th index application matches the given filter
-        assertForApplication(serviceProviders.get(0), response);
+        assertForApplication(applications.get(0), response);
     }
 
     @Test(description = "Test filtering applications by name with eq operator when name contains spaces.")
     public void testFilterApplicationsByNameWithSpacesForEQ() throws Exception {
 
         // Create a discoverable SP with spaces in the name.
-        ServiceProvider serviceProvider = createServiceProvider(
-                APP_NAME_WITH_SPACES, "This is " + APP_NAME_WITH_SPACES);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider with spaces in name.");
+        application = createServiceProvider(APP_NAME_WITH_SPACES, "This is " + APP_NAME_WITH_SPACES);
+        Assert.assertNotNull(application, "Failed to create service provider with spaces in name.");
 
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("filter", "name eq " + APP_NAME_WITH_SPACES);
@@ -205,23 +205,12 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
         response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
 
-        assertForApplication(serviceProvider, response);
-
-        // Remove the discoverable SP with spaces in the name.
-        ServiceProvider serviceProviderCreated = appMgtclient.getApplication(APP_NAME_WITH_SPACES);
-        if (serviceProviderCreated != null) {
-            appMgtclient.deleteApplication(serviceProviderCreated.getApplicationName());
-            log.info("############## " + "Deleted app: " + serviceProviderCreated.getApplicationName());
-        }
+        assertForApplication(application, response);
     }
 
-    @Test(description = "Test filtering applications by name with co operator when name contains spaces.")
+    @Test(description = "Test filtering applications by name with co operator when name contains spaces.",
+            dependsOnMethods = "testFilterApplicationsByNameWithSpacesForEQ")
     public void testFilterApplicationsByNameWithSpacesForCO() throws Exception {
-
-        // Create a discoverable SP with spaces in the name.
-        ServiceProvider serviceProvider = createServiceProvider(
-                APP_NAME_WITH_SPACES, "This is " + APP_NAME_WITH_SPACES);
-        Assert.assertNotNull(serviceProvider, "Failed to create service provider with spaces in name.");
 
         Map<String, Object> params = new HashMap<String, Object>() {{
             put("filter", "name co " + APP_NAME_WITH_SPACES);
@@ -232,27 +221,21 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         response.then().log().ifValidationFails().assertThat().body("startIndex", equalTo(1));
         response.then().log().ifValidationFails().assertThat().body("count", equalTo(1));
 
-        assertForApplication(serviceProvider, response);
+        assertForApplication(application, response);
 
         // Remove the discoverable SP with spaces in the name.
-        ServiceProvider serviceProviderCreated = appMgtclient.getApplication(APP_NAME_WITH_SPACES);
-        if (serviceProviderCreated != null) {
-            appMgtclient.deleteApplication(serviceProviderCreated.getApplicationName());
-            log.info("############## " + "Deleted app: " + serviceProviderCreated.getApplicationName());
-        }
+        oAuth2RestClient.deleteApplication(application.getId());
+        log.info("############## " + "Deleted app: " + application.getName());
     }
 
     @Test(description = "Test get application.")
     public void testGetApplication() {
 
-        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI + "/" + serviceProviders.get(0)
-                .getApplicationResourceId());
+        Response response = getResponseOfGet(USER_APPLICATION_ENDPOINT_URI + "/" + applications.get(0).getId());
 
-        response.then().log().ifValidationFails().assertThat().body("id", equalTo(serviceProviders.get(0)
-                .getApplicationResourceId()));
-        response.then().log().ifValidationFails().assertThat().body("name", equalTo(serviceProviders.get(0)
-                .getApplicationName()));
-        response.then().log().ifValidationFails().assertThat().body("description", equalTo(serviceProviders.get(0)
+        response.then().log().ifValidationFails().assertThat().body("id", equalTo(applications.get(0).getId()));
+        response.then().log().ifValidationFails().assertThat().body("name", equalTo(applications.get(0).getName()));
+        response.then().log().ifValidationFails().assertThat().body("description", equalTo(applications.get(0)
                 .getDescription()));
     }
 
@@ -276,12 +259,12 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         response.then().log().ifValidationFails().body("applications", hasSize(applicationCount));
     }
 
-    private void assertForApplication(ServiceProvider serviceProvider, Response response) {
+    private void assertForApplication(ApplicationResponseModel serviceProvider, Response response) {
 
         response.then().log().ifValidationFails().assertThat().body("applications.id", hasItem(serviceProvider
-                .getApplicationResourceId()));
+                .getId()));
         response.then().log().ifValidationFails().assertThat().body("applications.name", hasItem(serviceProvider
-                .getApplicationName()));
+                .getName()));
         response.then().log().ifValidationFails().assertThat().body("applications.description", hasItem(serviceProvider
                 .getDescription()));
     }
@@ -290,26 +273,26 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
 
         IntStream.range(startIndex, endIndex).forEach(i -> {
             response.then().log().ifValidationFails()
-                    .body("applications.find{ it.id == '" + serviceProviders.get(i).getApplicationResourceId() +
+                    .body("applications.find{ it.id == '" + applications.get(i).getId() +
                                     "'}.name",
-                            equalTo(serviceProviders.get(i).getApplicationName()))
-                    .body("applications.find{ it.id == '" + serviceProviders.get(i).getApplicationResourceId() +
+                            equalTo(applications.get(i).getName()))
+                    .body("applications.find{ it.id == '" + applications.get(i).getId() +
                                     "'}.description",
-                            equalTo(serviceProviders.get(i).getDescription()));
+                            equalTo(applications.get(i).getDescription()));
         });
     }
 
     private void assertForAllApplications(Response response) {
 
-        serviceProviders.forEach(serviceProvider -> {
+        applications.forEach(serviceProvider -> {
             response.then().log().ifValidationFails()
-                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.name",
-                            equalTo(serviceProvider.getApplicationName()))
-                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}.image",
+                    .body("applications.find{ it.id == '" + serviceProvider.getId() + "'}.name",
+                            equalTo(serviceProvider.getName()))
+                    .body("applications.find{ it.id == '" + serviceProvider.getId() + "'}.image",
                             equalTo(serviceProvider.getImageUrl()))
-                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
+                    .body("applications.find{ it.id == '" + serviceProvider.getId() + "'}" +
                             ".accessUrl", equalTo(serviceProvider.getAccessUrl()))
-                    .body("applications.find{ it.id == '" + serviceProvider.getApplicationResourceId() + "'}" +
+                    .body("applications.find{ it.id == '" + serviceProvider.getId() + "'}" +
                                     ".description",
                             equalTo(serviceProvider.getDescription()));
         });
