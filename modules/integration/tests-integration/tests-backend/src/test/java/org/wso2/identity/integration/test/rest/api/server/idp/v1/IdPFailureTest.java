@@ -396,7 +396,7 @@ public class IdPFailureTest extends IdPTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body("message", equalTo("Multiple authenticators found."));
+                .body("message", equalTo("Invalid federated authenticators combination."));
     }
 
     @Test
