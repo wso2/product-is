@@ -53,7 +53,8 @@
         "server-roles-mgt_menu",
         "logging_config_menu",
         "multitenancy_menu",
-        "resource_browser_menu"
+        "resource_browser_menu",
+        "identity_entitlement_menu"
       ]
     }
   }
