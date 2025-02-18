@@ -2427,7 +2427,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.266</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.268</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.5</identity.notification.push.version>
@@ -2441,10 +2441,10 @@
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.6.6</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.6.7</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.43</identity.governance.version>
+        <identity.governance.version>1.11.45</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.8</identity.carbon.auth.saml2.version>
@@ -2504,7 +2504,7 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.18</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.19</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2512,7 +2512,7 @@
         <identity.outbound.auth.adapter.version>1.0.8</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
-        <identity.local.auth.api.version>3.0.4</identity.local.auth.api.version>
+        <identity.local.auth.api.version>3.0.5</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.4</identity.oauth2.jwt.bearer.grant.version>
@@ -2529,7 +2529,7 @@
         <authenticator.magiclink.version>1.1.31</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.30</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.29</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.18</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.19</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.31</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
