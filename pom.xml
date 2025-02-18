@@ -2427,7 +2427,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.7.262</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.7.263</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.5</identity.notification.push.version>
@@ -2444,7 +2444,7 @@
         <carbon.consent.mgt.version>2.6.6</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.41</identity.governance.version>
+        <identity.governance.version>1.11.43</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.8</identity.carbon.auth.saml2.version>
@@ -2454,7 +2454,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.245</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.247</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.52</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.0</identity.inbound.auth.sts.version>
@@ -2509,13 +2509,13 @@
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.6</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.7</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.4</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>2.3.3</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>2.3.4</identity.oauth2.jwt.bearer.grant.version>
         <identity.oauth2.token.exchange.grant.version>1.1.12</identity.oauth2.token.exchange.grant.version>
 
         <!--SAML Metadata-->
@@ -2535,7 +2535,7 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.114</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.117</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.23</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.42</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
@@ -2559,8 +2559,8 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.41.31</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.31</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.41.32</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.17.32</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.13.6</identity.apps.core.version>
 
