@@ -36,7 +36,8 @@
     "server-roles-mgt_menu",
     "logging_config_menu",
     "multitenancy_menu",
-    "resource_browser_menu"
+    "resource_browser_menu",
+    "identity_entitlement_menu"
   ],
   "http_access_log.directory": "${carbon.home}/repository/logs",
   "http_access_log.prefix": "http_access_",
