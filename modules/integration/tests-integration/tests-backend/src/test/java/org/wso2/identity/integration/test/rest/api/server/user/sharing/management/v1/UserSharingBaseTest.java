@@ -31,18 +31,25 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicNameValuePair;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -94,8 +101,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String L2_ORG_3_NAME = "L2 - Organization 3";
     protected static final String L3_ORG_1_NAME = "L3 - Organization 1";
 
-    protected static final String APP_1 = "App 1";
-    protected static final String APP_2 = "App 2";
+    protected static final String APP_1_NAME = "App 1";
+    protected static final String APP_2_NAME = "App 2";
 
     protected static final String SUPER_ORG = "Super";
 
@@ -103,7 +110,11 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String ORGANIZATION_AUDIENCE = "ORGANIZATION";
 
     protected static final String APP_ROLE_1 = "app-role-1";
+    protected static final String APP_ROLE_2 = "app-role-2";
+    protected static final String APP_ROLE_3 = "app-role-3";
     protected static final String ORG_ROLE_1 = "org-role-1";
+    protected static final String ORG_ROLE_2 = "org-role-2";
+    protected static final String ORG_ROLE_3 = "org-role-3";
 
     protected static final String ROOT_ORG_USERNAME = "rootUser";
     protected static final String L1_ORG_1_USERNAME = "l1Org1User";
@@ -114,6 +125,11 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String INTERNAL_ORG_USER_SHARE = "internal_org_user_share";
     protected static final String INTERNAL_ORG_USER_UNSHARE = "internal_org_user_unshare";
     protected static final String INTERNAL_ORG_USER_SHARED_ACCESS_VIEW = "internal_org_user_shared_access_view";
+
+    protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+    protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
+    protected static final String ROLES_CLAIM_URI = "http://wso2.org/claims/roles";
+    protected static final String GROUPS_CLAIM_URI = "http://wso2.org/claims/groups";
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
@@ -208,11 +224,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return userPermissions;
     }
 
-    /**
-     * Get the schema for the roles v2.
-     *
-     * @return A list of schemas
-     */
     protected List<String> getRoleV2Schema() {
 
         List<String> schemas = new ArrayList<>();
@@ -220,57 +231,130 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return schemas;
     }
 
-    /**
-     * Create an application with the given name and predefined OAuth2 configurations.
-     *
-     * @param appName The name of the application.
-     * @return The unique identifier of the created application.
-     * @throws Exception If an error occurs while creating the application.
-     */
-    protected String addApplication(String appName) throws Exception {
+    protected ApplicationResponseModel addApplication(String appName) throws Exception {
 
         ApplicationModel application = new ApplicationModel();
+
         List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes, OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
+                "refresh_token", "organization_switch");
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
         oidcConfig.setGrantTypes(grantTypes);
-        oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+        oidcConfig.setCallbackURLs(callBackUrls);
+
         InboundProtocols inboundProtocolsConfig = new InboundProtocols();
         inboundProtocolsConfig.setOidc(oidcConfig);
+
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setName(appName);
+        application.setIsManagementApp(true);
 
-        AdvancedApplicationConfiguration advancedApplicationConfiguration = new AdvancedApplicationConfiguration();
-        advancedApplicationConfiguration.setSkipLoginConsent(true);
-        application.setAdvancedConfigurations(advancedApplicationConfiguration);
+        application.setClaimConfiguration(setApplicationClaimConfig());
+        String appId = oAuth2RestClient.createApplication(application);
 
-        String applicationID = oAuth2RestClient.createApplication(application);
-        Assert.assertNotNull(applicationID, "Application id cannot be empty.");
-        return applicationID;
+        return oAuth2RestClient.getApplication(appId);
     }
 
-    /**
-     * Share the specified application with all organizations.
-     *
-     * @param appId The unique identifier of the application to be shared.
-     * @throws Exception If an error occurs while sharing the application.
-     */
-    protected void shareApplicationWithAllOrgs(String appId) throws Exception {
+    private ClaimConfiguration setApplicationClaimConfig() {
+
+        ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
+        emailClaim.setLocalClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+                        EMAIL_CLAIM_URI));
+        ClaimMappings countryClaim = new ClaimMappings().applicationClaim(COUNTRY_CLAIM_URI);
+        countryClaim.setLocalClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+                        COUNTRY_CLAIM_URI));
+
+        RequestedClaimConfiguration emailRequestedClaim = new RequestedClaimConfiguration();
+        emailRequestedClaim.setClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+                        EMAIL_CLAIM_URI));
+        RequestedClaimConfiguration countryRequestedClaim = new RequestedClaimConfiguration();
+        countryRequestedClaim.setClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+                        COUNTRY_CLAIM_URI));
+
+        ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(ClaimConfiguration.DialectEnum.CUSTOM);
+        claimConfiguration.addClaimMappingsItem(emailClaim);
+        claimConfiguration.addClaimMappingsItem(countryClaim);
+        claimConfiguration.addRequestedClaimsItem(emailRequestedClaim);
+        claimConfiguration.addRequestedClaimsItem(countryRequestedClaim);
+
+        return claimConfiguration;
+    }
+
+    protected void shareApplication(String applicationId) throws Exception {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(true);
-        oAuth2RestClient.shareApplication(appId, applicationSharePOSTRequest);
+        oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
 
         // Since application sharing is an async operation, wait for some time for it to finish.
         Thread.sleep(5000);
     }
 
-    /**
-     * To convert object to a json string.
-     *
-     * @param object Respective java object.
-     * @return Relevant json string.
-     */
+    protected void switchApplicationAudience(String appId, AssociatedRolesConfig.AllowedAudienceEnum newAudience)
+            throws Exception {
+
+        AssociatedRolesConfig associatedRolesConfigApp2 = new AssociatedRolesConfig();
+        associatedRolesConfigApp2.setAllowedAudience(newAudience);
+
+        ApplicationPatchModel patchModelApp2 = new ApplicationPatchModel();
+        patchModelApp2.setAssociatedRoles(associatedRolesConfigApp2);
+
+        oAuth2RestClient.updateApplication(appId, patchModelApp2);
+    }
+
+    protected void updateRequestedClaimsOfApp(String applicationId, ClaimConfiguration claimConfigurationsForApp)
+            throws IOException {
+
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.setClaimConfiguration(claimConfigurationsForApp);
+        oAuth2RestClient.updateApplication(applicationId, applicationPatch);
+    }
+
+    protected ClaimConfiguration getClaimConfigurationsWithRolesAndGroups() {
+
+        ClaimConfiguration claimConfiguration = new ClaimConfiguration();
+        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(ROLES_CLAIM_URI));
+        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(GROUPS_CLAIM_URI));
+        return claimConfiguration;
+    }
+
+    protected RequestedClaimConfiguration getRequestedClaim(String claimUri) {
+
+        RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
+        requestedClaim.setClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
+                        claimUri));
+        return requestedClaim;
+    }
+
+    protected static UserObject createUserObject(String userName, String orgName) {
+
+        UserObject user = new UserObject()
+                .userName("PRIMARY/" + userName)
+                .password("Admin123")
+                .name(new Name().givenName(userName).familyName(orgName))
+                .emails(new ArrayList<>());
+
+        Email email = new Email();
+        email.setValue(userName + "@gmail.com");
+        email.setPrimary(true);
+        user.getEmails().add(email);
+
+        List<String> schemas = new ArrayList<>();
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        user.setSchemas(schemas);
+
+        return user;
+    }
+
     public String toJSONString(java.lang.Object object) {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();

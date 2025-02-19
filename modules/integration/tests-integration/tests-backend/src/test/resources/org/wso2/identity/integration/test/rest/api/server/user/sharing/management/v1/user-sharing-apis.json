@@ -37,5 +37,8 @@
     "internal_org_user_share",
     "internal_org_user_unshare",
     "internal_org_user_shared_access_view"
+  ],
+  "/o/api/server/v1/applications": [
+    "internal_org_application_mgt_view"
   ]
 }
