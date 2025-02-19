@@ -263,6 +263,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.rules.metadata.v1.RulesMetadataSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.rules.metadata.v1.RulesMetadataFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.UserSharingSuccessTest"/>
         </classes>
     </test>
 
