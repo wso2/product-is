@@ -22,7 +22,7 @@ package org.wso2.identity.integration.test.rest.api.server.authenticator.managem
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.wso2.carbon.identity.action.management.model.AuthProperty;
+import org.wso2.carbon.identity.action.management.api.model.AuthProperty;
 import org.wso2.carbon.identity.api.server.authenticators.v1.model.AuthenticationType;
 import org.wso2.carbon.identity.api.server.authenticators.v1.model.UserDefinedLocalAuthenticatorCreation;
 import org.wso2.carbon.identity.api.server.authenticators.v1.model.Endpoint;
