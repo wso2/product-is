@@ -23,11 +23,12 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.AttributeMappingDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.AttributeProfileDTO;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ClaimDialectReqDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
 import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
@@ -42,8 +43,9 @@ import java.util.HashMap;
 public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
 
     private static final String LOCAL_CLAIM_URI_PREFIX = "http://wso2.org/claims/";
-    private static final String SCIM2_SYSTEM_SCHEMA_DIALECT_URI = "urn:scim:wso2:schema";
-    private static final String ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI = "dXJuOnNjaW06d3NvMjpzY2hlbWE";
+    private static final String SCIM2_CUSTOM_SCHEMA_DIALECT_URI = "urn:scim:schemas:extension:custom:User";
+    private static final String ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI =
+            "dXJuOnNjaW06c2NoZW1hczpleHRlbnNpb246Y3VzdG9tOlVzZXI";
     private static final String USERSTORE_DOMAIN = "PRIMARY";
 
     private static final String ID_PROPERTY = "id";
@@ -65,27 +67,38 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
     private String endUserLocalClaimId;
     private String endUserExternalClaimId;
 
-    @BeforeMethod
-    public void setUp() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
+
+        // Add custom scim2 claim dialect.
+        ClaimDialectReqDTO claimDialectReqDTO = new ClaimDialectReqDTO();
+        claimDialectReqDTO.setDialectURI(SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
+        org.json.simple.JSONObject externalDialect =
+                claimManagementRestClient.getExternalDialect(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
+        boolean isExistingDialect = isExistingDialect(externalDialect);
+        if (!isExistingDialect) {
+            claimManagementRestClient.addExternalDialect(claimDialectReqDTO);
+        }
     }
 
     @AfterClass(alwaysRun = true)
     public void cleanUpClass() throws Exception {
 
         if (StringUtils.isNotBlank(consoleExternalClaimId)) {
-            claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI,
+            claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI,
                     consoleExternalClaimId);
         }
+        if (StringUtils.isNotBlank(endUserExternalClaimId)) {
+            claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI,
+                    endUserExternalClaimId);
+        }
+        claimManagementRestClient.deleteExternalDialect(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI);
         if (StringUtils.isNotBlank(consoleLocalClaimId)) {
             claimManagementRestClient.deleteLocalClaim(consoleLocalClaimId);
-        }
-        if (StringUtils.isNotBlank(endUserExternalClaimId)) {
-            claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI,
-                    endUserExternalClaimId);
         }
         if (StringUtils.isNotBlank(endUserLocalClaimId)) {
             claimManagementRestClient.deleteLocalClaim(endUserLocalClaimId);
@@ -97,7 +110,7 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
 
         String claimName = "consoletest1";
         String localClaimURI = LOCAL_CLAIM_URI_PREFIX + claimName;
-        String externalClaimURI = SCIM2_SYSTEM_SCHEMA_DIALECT_URI + ":" + claimName;
+        String externalClaimURI = SCIM2_CUSTOM_SCHEMA_DIALECT_URI + ":" + claimName;
         String profileName = "console";
 
         HashMap<String, AttributeProfileDTO> attributeProfiles = new HashMap<>();
@@ -128,7 +141,7 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
         externalClaimReq.setMappedLocalClaimURI(localClaimURI);
 
         consoleExternalClaimId =
-                claimManagementRestClient.addExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI, externalClaimReq);
+                claimManagementRestClient.addExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI, externalClaimReq);
         Assert.assertNotNull(consoleExternalClaimId, "External claim addition failed");
 
         // Assert SCIM2/Schemas response.
@@ -153,7 +166,7 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
 
         String claimName = "endusertest1";
         String localClaimURI = LOCAL_CLAIM_URI_PREFIX + claimName;
-        String externalClaimURI = SCIM2_SYSTEM_SCHEMA_DIALECT_URI + ":" + claimName;
+        String externalClaimURI = SCIM2_CUSTOM_SCHEMA_DIALECT_URI + ":" + claimName;
         String profileName = "endUser";
 
         HashMap<String, AttributeProfileDTO> attributeProfiles = new HashMap<>();
@@ -185,7 +198,7 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
         externalClaimReq.setMappedLocalClaimURI(localClaimURI);
 
         endUserExternalClaimId =
-                claimManagementRestClient.addExternalClaim(ENCODED_SCIM2_SYSTEM_SCHEMA_DIALECT_URI, externalClaimReq);
+                claimManagementRestClient.addExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI, externalClaimReq);
         Assert.assertNotNull(endUserExternalClaimId, "External claim addition failed");
 
         // Assert SCIM2/Schemas response.
@@ -210,13 +223,13 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
         JSONObject targetSchema = null;
         for (Object schemaObject : scim2Schemas) {
             JSONObject schema = (JSONObject) schemaObject;
-            if (SCIM2_SYSTEM_SCHEMA_DIALECT_URI.equals(schema.get(ID_PROPERTY))) {
+            if (SCIM2_CUSTOM_SCHEMA_DIALECT_URI.equals(schema.get(ID_PROPERTY))) {
                 targetSchema = schema;
                 break;
             }
         }
         Assert.assertNotNull(targetSchema,
-                String.format("Schema with SCIM URI '%s' not found", SCIM2_SYSTEM_SCHEMA_DIALECT_URI));
+                String.format("Schema with SCIM URI '%s' not found", SCIM2_CUSTOM_SCHEMA_DIALECT_URI));
 
         JSONArray attributes = (JSONArray) targetSchema.get(ATTRIBUTES_PROPERTY);
         Assert.assertNotNull(attributes, "Attributes array not found in the schema");
@@ -260,5 +273,14 @@ public class ClaimProfilesWithSCIM2SchemaTest extends ISIntegrationTest {
         localClaimReq.setAttributeMapping(Collections.singletonList(attributeMappingDTO));
         localClaimReq.setProfiles(attributeProfiles);
         return localClaimReq;
+    }
+
+    private boolean isExistingDialect(org.json.simple.JSONObject externalDialectGetResponse) {
+
+        if (externalDialectGetResponse.get("code") != null &&
+                externalDialectGetResponse.get("code").equals("CMT-50016")) {
+            return false;
+        }
+        return externalDialectGetResponse.get("id") != null;
     }
 }
