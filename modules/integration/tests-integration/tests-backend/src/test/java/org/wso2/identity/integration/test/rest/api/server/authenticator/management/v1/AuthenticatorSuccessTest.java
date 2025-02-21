@@ -156,15 +156,17 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", equalTo(customIdPId))
+                .body("id", equalTo(customAuthenticatorId))
                 .body("name", equalTo(AUTHENTICATOR_NAME))
                 .body("displayName", equalTo(AUTHENTICATOR_DISPLAY_NAME))
+                .body("image", equalTo(AUTHENTICATOR_IMAGE))
+                .body("description", equalTo(AUTHENTICATOR_DESCRIPTION))
                 .body("type", equalTo("LOCAL"))
                 .body("definedBy", equalTo("USER"))
                 .body("isEnabled", equalTo(true))
                 .body("tags", hasItem(CUSTOM_TAG))
                 .body("self", equalTo(getTenantedRelativePath(
-                        AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant)));
+                        BASE_PATH + AUTHENTICATOR_CONFIG_API_BASE_PATH + customAuthenticatorId, tenant)));
     }
 
     @Test(dependsOnMethods = {"testCreateUserDefinedLocalAuthenticator"})
@@ -182,14 +184,16 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
             JSONObject authenticator = jsonArray.getJSONObject(i);
             if ("USER".equals(authenticator.getString("definedBy"))) {
                 isUserDefinedAuthenticatorFound = true;
-                Assert.assertEquals(authenticator.getString("id"), customIdPId);
+                Assert.assertEquals(authenticator.getString("id"), customAuthenticatorId);
                 Assert.assertEquals(authenticator.getString("name"), AUTHENTICATOR_NAME);
                 Assert.assertEquals(authenticator.getString("displayName"), AUTHENTICATOR_DISPLAY_NAME);
+                Assert.assertEquals(authenticator.getString("image"), AUTHENTICATOR_IMAGE);
+                Assert.assertEquals(authenticator.getString("description"), AUTHENTICATOR_DESCRIPTION);
                 Assert.assertEquals(authenticator.getString("type"), "LOCAL");
                 Assert.assertTrue(authenticator.getBoolean("isEnabled"));
                 Assert.assertTrue(authenticator.getString("tags").contains(CUSTOM_TAG));
-                Assert.assertEquals(authenticator.getString("self"),
-                        getTenantedRelativePath(AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant));
+                Assert.assertEquals(authenticator.getString("self"), getTenantedRelativePath(
+                        BASE_PATH + AUTHENTICATOR_CONFIG_API_BASE_PATH + customAuthenticatorId, tenant));
             }
         }
         Assert.assertTrue(isUserDefinedAuthenticatorFound);
@@ -211,34 +215,56 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     }
 
     @Test(dependsOnMethods = {"testCreateUserDefinedLocalAuthenticator"})
-    public void testUpdateUserDefinedLocalAuthenticator() throws JsonProcessingException {
+    public void testGetUserDefinedLocalAuthenticator() {
 
-        updatePayload.displayName(AUTHENTICATOR_DISPLAY_NAME + UPDATE_VALUE_POSTFIX);
-        updatePayload.isEnabled(false);
-        updatePayload.getEndpoint().uri(AUTHENTICATOR_ENDPOINT_URI + UPDATE_VALUE_POSTFIX);
-        String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
-        Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
-                customIdPId, body);
+        Response response = getResponseOfGetNoFilter(AUTHENTICATOR_CONFIG_API_BASE_PATH + customAuthenticatorId);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(customIdPId))
+                .body("id", equalTo(customAuthenticatorId))
+                .body("name", equalTo(AUTHENTICATOR_NAME))
+                .body("displayName", equalTo(AUTHENTICATOR_DISPLAY_NAME))
+                .body("image", equalTo(AUTHENTICATOR_IMAGE))
+                .body("description", equalTo(AUTHENTICATOR_DESCRIPTION))
+                .body("type", equalTo("LOCAL"))
+                .body("definedBy", equalTo("USER"))
+                .body("isEnabled", equalTo(true));
+    }
+
+    @Test(dependsOnMethods = {"testGetUserDefinedLocalAuthenticator"})
+    public void testUpdateUserDefinedLocalAuthenticator() throws JsonProcessingException {
+
+        updatePayload.displayName(AUTHENTICATOR_DISPLAY_NAME + UPDATE_VALUE_POSTFIX);
+        updatePayload.image(AUTHENTICATOR_IMAGE + UPDATE_VALUE_POSTFIX);
+        updatePayload.description(AUTHENTICATOR_DESCRIPTION + UPDATE_VALUE_POSTFIX);
+        updatePayload.isEnabled(false);
+        updatePayload.getEndpoint().uri(AUTHENTICATOR_ENDPOINT_URI + UPDATE_VALUE_POSTFIX);
+        String body = UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(updatePayload);
+        Response response = getResponseOfPutWithNoFilter(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR +
+                customAuthenticatorId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(customAuthenticatorId))
                 .body("name", equalTo(AUTHENTICATOR_NAME))
                 .body("displayName", equalTo(AUTHENTICATOR_DISPLAY_NAME + UPDATE_VALUE_POSTFIX))
+                .body("image", equalTo(AUTHENTICATOR_IMAGE + UPDATE_VALUE_POSTFIX))
+                .body("description", equalTo(AUTHENTICATOR_DESCRIPTION + UPDATE_VALUE_POSTFIX))
                 .body("type", equalTo("LOCAL"))
                 .body("definedBy", equalTo("USER"))
                 .body("isEnabled", equalTo(false))
                 .body("tags", hasItem(CUSTOM_TAG))
                 .body("self", equalTo(getTenantedRelativePath(
-                        AUTHENTICATOR_CONFIG_API_BASE_PATH + customIdPId, tenant)));
+                        BASE_PATH + AUTHENTICATOR_CONFIG_API_BASE_PATH + customAuthenticatorId, tenant)));
     }
 
     @Test(dependsOnMethods = {"testValidateCustomTagInGetMetaTags", "testUpdateUserDefinedLocalAuthenticator"})
     public void testDeleteUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         Response response = getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR
-                + customIdPId);
+                + customAuthenticatorId);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -249,7 +275,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     public void testDeleteNonExistingUserDefinedLocalAuthenticator() throws JsonProcessingException {
 
         Response response = getResponseOfDelete(AUTHENTICATOR_CUSTOM_API_BASE_PATH + PATH_SEPARATOR
-                + customIdPId);
+                + customAuthenticatorId);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
