@@ -240,6 +240,7 @@
                     <parameter name="-DportOffset" value="410" />
                     <parameter name="-Dsetup" value="true"/>
                     <parameter name="-DenableRemoteShutdownAndRestart" value="true"/>
+                    <parameter name="-Doptimize" value="false"/>
                     <!--<parameter name="backup-test-pack" value="true"/>-->
                     <!--<parameter name="backup-location" value="<Absolute path for backup location with trailing foreword slash>"/>-->
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
