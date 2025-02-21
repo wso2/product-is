@@ -29,6 +29,7 @@ import javax.validation.Valid;
 public class AccessTokenConfiguration  {
   
     private String type;
+    private String bindingType;
     private Long userAccessTokenExpiryInSeconds;
     private Long applicationAccessTokenExpiryInSeconds;
     private Boolean revokeTokensWhenIDPSessionTerminated;
@@ -51,6 +52,24 @@ public class AccessTokenConfiguration  {
     }
     public void setType(String type) {
         this.type = type;
+    }
+
+    /**
+     **/
+    public AccessTokenConfiguration bindingType(String bindingType) {
+
+        this.bindingType = bindingType;
+        return this;
+    }
+
+    @ApiModelProperty(example = "DPoP", value = "")
+    @JsonProperty("bindingType")
+    @Valid
+    public String getBindingType() {
+        return bindingType;
+    }
+    public void setBindingType(String bindingType) {
+        this.bindingType = bindingType;
     }
 
     /**
@@ -162,6 +181,7 @@ public class AccessTokenConfiguration  {
         }
         AccessTokenConfiguration accessTokenConfiguration = (AccessTokenConfiguration) o;
         return Objects.equals(this.type, accessTokenConfiguration.type) &&
+            Objects.equals(this.bindingType, accessTokenConfiguration.bindingType) &&
             Objects.equals(this.userAccessTokenExpiryInSeconds, accessTokenConfiguration.userAccessTokenExpiryInSeconds) &&
             Objects.equals(this.applicationAccessTokenExpiryInSeconds, accessTokenConfiguration.applicationAccessTokenExpiryInSeconds) &&
                 Objects.equals(this.accessTokenAttributes, accessTokenConfiguration.accessTokenAttributes);
@@ -169,7 +189,7 @@ public class AccessTokenConfiguration  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, userAccessTokenExpiryInSeconds, applicationAccessTokenExpiryInSeconds,
+        return Objects.hash(type, bindingType, userAccessTokenExpiryInSeconds, applicationAccessTokenExpiryInSeconds,
                 accessTokenAttributes);
     }
 
@@ -180,6 +200,7 @@ public class AccessTokenConfiguration  {
         sb.append("class AccessTokenConfiguration {\n");
 
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
+        sb.append("    bindingType: ").append(toIndentedString(bindingType)).append("\n");
         sb.append("    userAccessTokenExpiryInSeconds: ").append(toIndentedString(userAccessTokenExpiryInSeconds)).append("\n");
         sb.append("    applicationAccessTokenExpiryInSeconds: ").append(toIndentedString(applicationAccessTokenExpiryInSeconds)).append("\n");
         sb.append("    accessTokenAttributes: ").append(toIndentedString(accessTokenAttributes)).append("\n");

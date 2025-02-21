@@ -146,6 +146,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2ImpersonationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2DPopTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAccessTokenAttributesTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationCodeGrantJWTTokenTestCase"/>
             <class name="org.wso2.identity.integration.test.recovery.PasswordRecoveryTestCase"/>
