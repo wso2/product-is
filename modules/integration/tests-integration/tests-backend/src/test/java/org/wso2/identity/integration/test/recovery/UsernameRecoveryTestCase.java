@@ -548,6 +548,10 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         Thread.sleep(5000);
         String body = mockSMSProvider.getSmsContent();
 
+        if (body != null) {
+            body = body.trim();
+        }
+
         // Regex to match "domain/user1" format.
         String regex = "([a-zA-Z0-9.-]+/[^@]+)";
 
@@ -555,7 +559,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         java.util.regex.Matcher matcher = pattern.matcher(body);
 
         if (matcher.find()) {
-            return matcher.group(1);
+            return matcher.group(1).trim();
         }
 
         return null;

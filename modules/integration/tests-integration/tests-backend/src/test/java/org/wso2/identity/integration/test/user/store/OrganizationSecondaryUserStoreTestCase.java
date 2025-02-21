@@ -239,7 +239,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
             description = "Get a sub organization user in the secondary JDBC user store.")
     public void testGetUserSecondaryJDBCUserStore() throws Exception {
 
-        org.json.simple.JSONObject userResponse = scim2RestClient.getSubOrgUser(userId, switchedM2MToken);
+        org.json.simple.JSONObject userResponse = scim2RestClient.getSubOrgUser(userId, null, switchedM2MToken);
 
         // Assert username.
         Assert.assertNotNull(userResponse.get(USER_NAME), "User name is null.");

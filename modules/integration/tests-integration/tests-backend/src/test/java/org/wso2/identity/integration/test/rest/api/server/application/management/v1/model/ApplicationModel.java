@@ -281,7 +281,7 @@ public class ApplicationModel  {
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
-        sb.append("    loginUrl: ").append(toIndentedString(accessUrl)).append("\n");
+        sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
         sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
         sb.append("    inboundProtocolConfiguration: ").append(toIndentedString(inboundProtocolConfiguration)).append("\n");

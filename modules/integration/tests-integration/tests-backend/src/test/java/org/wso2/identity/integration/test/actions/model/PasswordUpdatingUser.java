@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.actions.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-import org.wso2.carbon.identity.action.execution.exception.ActionExecutionRequestBuilderException;
+import org.wso2.carbon.identity.action.execution.api.exception.ActionExecutionRequestBuilderException;
 
 import java.util.Objects;
 
