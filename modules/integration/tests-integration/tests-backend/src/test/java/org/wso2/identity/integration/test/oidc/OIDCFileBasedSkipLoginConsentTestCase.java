@@ -33,6 +33,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -49,6 +50,8 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
     protected Log log = LogFactory.getLog(getClass());
     protected HttpClient client;
     private CookieStore cookieStore = new BasicCookieStore();
+    private Map<String, OIDCApplication> applications;
+    private UserObject user;
     protected String sessionDataKey;
     protected String sessionDataKeyConsent;
 
@@ -59,10 +62,10 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
         changeISConfiguration(SKIP_CONSENT_ENABLED_TOML);
         // Re-initiating after the restart.
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        OIDCUtilTest.initUser();
-        createUser(OIDCUtilTest.user);
-        OIDCUtilTest.initApplications();
-        createApplications();
+        user = OIDCUtilTest.initUser();
+        createUser(user);
+        applications = OIDCUtilTest.initApplications();
+        createApplications(applications);
         client = HttpClientBuilder.create().setDefaultCookieStore(cookieStore).build();
     }
 
@@ -88,22 +91,22 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
 
     private void deleteObjects() throws Exception {
 
-        deleteUser(OIDCUtilTest.user);
-        deleteApplications();
+        deleteUser(user);
+        deleteApplications(applications);
     }
 
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
     public void testCreateUserSession() throws Exception {
 
-        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppOneAppName), true, client,
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME), true, client,
                 cookieStore);
-        testAuthentication(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppOneAppName));
+        testAuthentication(applications.get(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME));
     }
 
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.apptwo")
     public void testIntiateLoginRequestForAlreadyLoggedUser() throws Exception {
 
-        testSendAuthenticationRequest(OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName), false, client,
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.PLAYGROUND_APP_TWO_APP_NAME), false, client,
                 cookieStore);
     }
 
@@ -113,16 +116,16 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
         EntityUtils.consume(response.getEntity());
     }
 
-    private void createApplications() throws Exception {
+    private void createApplications(Map<String, OIDCApplication> applications) throws Exception {
 
-        for (Map.Entry<String, OIDCApplication> entry : OIDCUtilTest.applications.entrySet()) {
+        for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
             createApplication(entry.getValue());
         }
     }
 
-    private void deleteApplications() throws Exception {
+    private void deleteApplications(Map<String, OIDCApplication> applications) throws Exception {
 
-        for (Map.Entry<String, OIDCApplication> entry : OIDCUtilTest.applications.entrySet()) {
+        for (Map.Entry<String, OIDCApplication> entry : applications.entrySet()) {
             deleteApplication(entry.getValue());
         }
     }
