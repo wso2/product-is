@@ -2427,7 +2427,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.12</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.13</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2454,7 +2454,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.255</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.256</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.53</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.1</identity.inbound.auth.sts.version>
