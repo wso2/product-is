@@ -122,7 +122,7 @@ public class ApplicationModel  {
         return this;
     }
     
-    @ApiModelProperty(example = "https://example.com/access", value = "")
+    @ApiModelProperty(example = "https://example.com/home", value = "")
     @JsonProperty("accessUrl")
     @Valid
     public String getAccessUrl() {

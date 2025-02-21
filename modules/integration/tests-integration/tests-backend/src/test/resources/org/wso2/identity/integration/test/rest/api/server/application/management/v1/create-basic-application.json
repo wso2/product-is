@@ -4,5 +4,14 @@
   "imageUrl": "https://localhost/image",
   "accessUrl": "https://localhost/accessUrl",
   "templateId": "Test_template_1",
-  "templateVersion": "v1.0.0"
+  "templateVersion": "v1.0.0",
+  "advancedConfigurations": {
+    "discoverableByEndUsers": true,
+    "discoverableGroups": [
+      {
+        "userStore": "PRIMARY",
+        "groups": []
+      }
+    ]
+  }
 }

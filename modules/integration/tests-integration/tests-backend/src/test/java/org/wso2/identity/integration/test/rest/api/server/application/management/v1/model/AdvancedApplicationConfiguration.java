@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
@@ -31,6 +32,7 @@ public class AdvancedApplicationConfiguration  {
     private Boolean saas;
 
     private Boolean discoverableByEndUsers;
+    private List<DiscoverableGroup> discoverableGroups = null;
     private Certificate certificate;
     private Boolean skipLoginConsent;
     private Boolean skipLogoutConsent;
@@ -81,6 +83,37 @@ public class AdvancedApplicationConfiguration  {
     }
     public void setDiscoverableByEndUsers(Boolean discoverableByEndUsers) {
         this.discoverableByEndUsers = discoverableByEndUsers;
+    }
+
+    /**
+     * List of groups from user stores where users in those groups can discover the application.
+     **/
+    public AdvancedApplicationConfiguration discoverableGroups(List<DiscoverableGroup> discoverableGroups) {
+
+        this.discoverableGroups = discoverableGroups;
+        return this;
+    }
+
+    @ApiModelProperty(value = "List of groups from user stores where users in those groups can discover the application.")
+    @JsonProperty("discoverableGroups")
+    @Valid
+    public List<DiscoverableGroup> getDiscoverableGroups() {
+
+        return discoverableGroups;
+    }
+
+    public void setDiscoverableGroups(List<DiscoverableGroup> discoverableGroups) {
+
+        this.discoverableGroups = discoverableGroups;
+    }
+
+    public AdvancedApplicationConfiguration addDiscoverableGroupsItem(DiscoverableGroup discoverableGroupsItem) {
+
+        if (this.discoverableGroups == null) {
+            this.discoverableGroups = new ArrayList<>();
+        }
+        this.discoverableGroups.add(discoverableGroupsItem);
+        return this;
     }
 
     /**
