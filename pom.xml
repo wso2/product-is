@@ -2427,7 +2427,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.20</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.21</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2454,7 +2454,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.257</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.258</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.53</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.1</identity.inbound.auth.sts.version>
@@ -2560,7 +2560,7 @@
         <!-- Identity Portal Versions -->
 
         <identity.apps.console.version>2.41.50</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.49</identity.apps.myaccount.version>
+        <identity.apps.myaccount.version>2.17.50</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.14.2</identity.apps.core.version>
 
