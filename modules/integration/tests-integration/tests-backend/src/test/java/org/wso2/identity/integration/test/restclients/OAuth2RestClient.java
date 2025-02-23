@@ -1028,6 +1028,20 @@ public class OAuth2RestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Unshare the application with all organizations.
+     *
+     * @param appId The application ID.
+     * @throws IOException Error when unsharing the application.
+     */
+    public void unshareApplication(String appId) throws IOException {
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(applicationManagementApiBasePath +
+                PATH_SEPARATOR + appId + PATH_SEPARATOR + "shared-apps", getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Application unsharing failed");
+        }
+    }
 
     /**
      * To create API Resources.

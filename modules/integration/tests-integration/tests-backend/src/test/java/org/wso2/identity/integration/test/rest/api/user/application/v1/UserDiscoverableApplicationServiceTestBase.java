@@ -128,6 +128,14 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     public void testEnd() throws Exception {
 
         super.conclude();
+        deleteUsers();
+        deleteGroups();
+        deleteSubOrgUsers();
+        deleteSubOrgGroups();
+        deleteApplications();
+        revertMyAccountConfiguration();
+        orgMgtRestClient.deleteOrganization(subOrgID);
+        oAuth2RestClient.deleteApplication(oAuth2RestClient.getAppIdUsingAppName("b2b-app"));
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -158,6 +166,18 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     }
 
     /**
+     * Delete root tenant users created for the test.
+     *
+     * @throws Exception If an error occurred while deleting users.
+     */
+    private void deleteUsers() throws Exception {
+
+        for (int i = 1; i <= TOTAL_USER_COUNT; i++) {
+            scim2RestClient.deleteUser(USER_IDS[i - 1]);
+        }
+    }
+
+    /**
      * Create root tenant groups for the test.
      *
      * @throws Exception If an error occurred while creating groups.
@@ -169,6 +189,18 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             groupRequestObject.displayName(GROUP_NAME_PREFIX + i);
             assignMembersToGroup(groupRequestObject, i, USER_IDS);
             GROUP_IDS[i - 1] = scim2RestClient.createGroup(groupRequestObject);
+        }
+    }
+
+    /**
+     * Delete root tenant groups created for the test.
+     *
+     * @throws Exception If an error occurred while deleting groups.
+     */
+    private void deleteGroups() throws Exception {
+
+        for (int i = 1; i <= TOTAL_GROUP_COUNT; i++) {
+            scim2RestClient.deleteGroup(GROUP_IDS[i - 1]);
         }
     }
 
@@ -188,6 +220,18 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     }
 
     /**
+     * Delete sub organization users created for the test.
+     *
+     * @throws Exception If an error occurred while deleting users.
+     */
+    private void deleteSubOrgUsers() throws Exception {
+
+        for (int i = 1; i <= TOTAL_SUB_ORG_USER_COUNT; i++) {
+            scim2RestClient.deleteSubOrgUser(SUB_ORG_USER_IDS[i - 1], subOrgToken);
+        }
+    }
+
+    /**
      * Create sub organization groups for the test.
      *
      * @throws Exception If an error occurred while creating groups.
@@ -199,6 +243,18 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             groupRequestObject.displayName(GROUP_NAME_PREFIX + i);
             assignMembersToGroup(groupRequestObject, i, SUB_ORG_USER_IDS);
             SUB_ORG_GROUP_IDS[i - 1] = scim2RestClient.createSubOrgGroup(groupRequestObject, subOrgToken);
+        }
+    }
+
+    /**
+     * Delete sub organization groups created for the test.
+     *
+     * @throws Exception If an error occurred while deleting groups.
+     */
+    private void deleteSubOrgGroups() throws Exception {
+
+        for (int i = 1; i <= TOTAL_SUB_ORG_GROUP_COUNT; i++) {
+            scim2RestClient.deleteSubOrgGroup(SUB_ORG_GROUP_IDS[i - 1], subOrgToken);
         }
     }
 
@@ -237,16 +293,20 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
 
         JSONObject jsonObject = new JSONObject();
         // SCIM2 Users.
-        jsonObject.put("/o/scim2/Users", new String[] {"internal_org_user_mgt_create"});
+        jsonObject.put("/o/scim2/Users",
+                new String[] {"internal_org_user_mgt_create", "internal_org_user_mgt_delete"});
         // SCIM2 Groups.
-        jsonObject.put("/o/scim2/Groups", new String[] {"internal_org_group_mgt_create"});
+        jsonObject.put("/o/scim2/Groups",
+                new String[] {"internal_org_group_mgt_create", "internal_org_group_mgt_delete"});
         // Application management.
         jsonObject.put("/o/api/server/v1/applications",
                 new String[] {"internal_org_application_mgt_view", "internal_org_application_mgt_create",
                         "internal_org_application_mgt_update"});
-        jsonObject.put("/api/server/v1/applications", new String[] {"internal_application_mgt_view"});
+        jsonObject.put("/api/server/v1/applications",
+                new String[] {"internal_application_mgt_view", "internal_application_mgt_delete"});
         // Organization management.
-        jsonObject.put("/api/server/v1/organizations", new String[] {"internal_organization_create"});
+        jsonObject.put("/api/server/v1/organizations",
+                new String[] {"internal_organization_create", "internal_organization_delete"});
 
         return jsonObject;
     }
@@ -292,6 +352,22 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             application.setDescription(APP_DESC_PREFIX + (i + TOTAL_DISCOVERABLE_APP_COUNT));
             application.setImageUrl(APP_IMAGE_URL);
             oAuth2RestClient.createApplication(application);
+        }
+    }
+
+    /**
+     * Delete applications created for the test.
+     *
+     * @throws Exception If an error occurred while deleting applications.
+     */
+    private void deleteApplications() throws Exception {
+
+        for (int i = 1; i <= TOTAL_DISCOVERABLE_APP_COUNT; i++) {
+            oAuth2RestClient.deleteApplication(DISCOVERABLE_APP_IDS[i - 1]);
+        }
+        for (int i = 1; i <= TOTAL_NON_DISCOVERABLE_APP_COUNT; i++) {
+            oAuth2RestClient.deleteApplication(oAuth2RestClient.getAppIdUsingAppName(getApplicationName(
+                    String.valueOf(i + TOTAL_DISCOVERABLE_APP_COUNT))));
         }
     }
 
@@ -345,6 +421,24 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         oAuth2RestClient.updateInboundDetailsOfApplication(rootMyAccountAppId, rootMyAccountAppOIDC, "oidc");
         oAuth2RestClient.shareApplication(
                 rootMyAccountAppId, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
+    }
+
+    /**
+     * Revert the configuration of My Account application.
+     *
+     * @throws Exception If an error occurred while reverting the configuration.
+     */
+    private void revertMyAccountConfiguration() throws Exception {
+
+        OpenIDConnectConfiguration rootMyAccountAppOIDC = oAuth2RestClient.getOIDCInboundDetails(rootMyAccountAppId);
+        OAuth2PKCEConfiguration oAuth2PKCEConfiguration = rootMyAccountAppOIDC.getPkce();
+        oAuth2PKCEConfiguration.setMandatory(true);
+        rootMyAccountAppOIDC.setPublicClient(true);
+        AccessTokenConfiguration accessTokenConfiguration = rootMyAccountAppOIDC.getAccessToken();
+        accessTokenConfiguration.setBindingType("cookie");
+        accessTokenConfiguration.setValidateTokenBinding(true);
+        oAuth2RestClient.updateInboundDetailsOfApplication(rootMyAccountAppId, rootMyAccountAppOIDC, "oidc");
+        oAuth2RestClient.unshareApplication(rootMyAccountAppId);
     }
 
     /**

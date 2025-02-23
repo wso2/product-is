@@ -68,11 +68,6 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
         super.testStart();
     }
 
-    @Test
-    public void testTest() {
-
-    }
-
     @DataProvider(name = "testListAllApplications")
     public Object[][] testListAllApplications() {
         return new Object[][]{

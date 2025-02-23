@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.user.application.v1;
 
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -55,7 +56,12 @@ public class UserDiscoverableApplicationFailureTest extends UserDiscoverableAppl
     public void testStart() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        super.testStart();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testEnd() {
+
+        super.conclude();
     }
 
     @Test
