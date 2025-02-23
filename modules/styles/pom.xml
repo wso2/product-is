@@ -20,7 +20,7 @@
     <parent>
     	<groupId>org.wso2.is</groupId>
     	<artifactId>identity-server-parent</artifactId>
-    	<version>7.1.1-SNAPSHOT</version>
+    	<version>7.1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
