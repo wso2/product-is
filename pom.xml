@@ -2537,7 +2537,7 @@
 
         <identity.org.mgt.version>1.4.118</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.23</identity.org.mgt.core.version>
-        <identity.organization.login.version>1.1.42</identity.organization.login.version>
+        <identity.organization.login.version>1.1.43</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
@@ -2560,7 +2560,7 @@
         <!-- Identity Portal Versions -->
 
         <identity.apps.console.version>2.41.51</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.50</identity.apps.myaccount.version>
+        <identity.apps.myaccount.version>2.17.51</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.14.2</identity.apps.core.version>
 
