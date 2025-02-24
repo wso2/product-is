@@ -31,6 +31,7 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq.Property;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.UserStoreMgtRestClient;
 
 import java.io.File;
@@ -52,6 +53,7 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
     private static final String SERVICES = "/services";
     private UserStoreMgtRestClient userStoreMgtRestClient;
     private OIDCApplication application;
+    private UserObject user;
     protected String accessToken;
     protected String sessionDataKey;
     private String userStoreId;
@@ -68,20 +70,19 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         RestAssured.baseURI = backendURL.replace(SERVICES, "");
 
         // Create a user in secondary user-store
-        OIDCUtilTest.initUser();
-        OIDCUtilTest.user.setUserName(USER_STORE_DOMAIN + "/" + OIDCUtilTest.user.getUserName());
-        createUser(OIDCUtilTest.user);
+        user = OIDCUtilTest.initUser();
+        user.setUserName(USER_STORE_DOMAIN + "/" + user.getUserName());
+        createUser(user);
 
         // Create application
-        OIDCUtilTest.initApplications();
-        application = OIDCUtilTest.applications.get(OIDCUtilTest.playgroundAppTwoAppName);
+        application = OIDCUtilTest.initApplicationOne();
         createApplication(application);
     }
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
-        deleteUser(OIDCUtilTest.user);
+        deleteUser(user);
         deleteApplication(application);
         clear();
         userStoreMgtRestClient.deleteUserStore(userStoreId);
@@ -94,8 +95,8 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         Map<String, String> params = new HashMap<>();
         params.put("grant_type", "password");
         params.put("scope", "openid email profile");
-        params.put("username", OIDCUtilTest.user.getUserName());
-        params.put("password", OIDCUtilTest.user.getPassword());
+        params.put("username", user.getUserName());
+        params.put("password", user.getPassword());
 
         Response response = getResponseOfFormPostWithAuth(OAUTH2_TOKEN_ENDPOINT_URI, params, new HashMap<>(),
                 application.getClientId(), application.getClientSecret());
@@ -125,9 +126,9 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("email", is(OIDCUtilTest.email))
-                .body("given_name", is(OIDCUtilTest.firstName))
-                .body("family_name", is(OIDCUtilTest.lastName));
+                .body("email", is(OIDCUtilTest.EMAIL))
+                .body("given_name", is(OIDCUtilTest.FIRST_NAME))
+                .body("family_name", is(OIDCUtilTest.LAST_NAME));
     }
 
     /**
@@ -148,9 +149,9 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("email", is(OIDCUtilTest.email))
-                .body("given_name", is(OIDCUtilTest.firstName))
-                .body("family_name", is(OIDCUtilTest.lastName));
+                .body("email", is(OIDCUtilTest.EMAIL))
+                .body("given_name", is(OIDCUtilTest.FIRST_NAME))
+                .body("family_name", is(OIDCUtilTest.LAST_NAME));
     }
 
     @Test(groups = "wso2.is", description = "Get access token with a JSON request", dependsOnMethods =
@@ -160,8 +161,8 @@ public class OIDCPasswordGrantTest extends OIDCAbstractIntegrationTest {
         Map<String, String> params = new HashMap<>();
         params.put("grant_type", "password");
         params.put("scope", "openid");
-        params.put("username", OIDCUtilTest.user.getUserName());
-        params.put("password", OIDCUtilTest.user.getPassword());
+        params.put("username", user.getUserName());
+        params.put("password", user.getPassword());
 
         JSONObject jsonObject = new JSONObject(params);
         String payload = jsonObject.toJSONString();

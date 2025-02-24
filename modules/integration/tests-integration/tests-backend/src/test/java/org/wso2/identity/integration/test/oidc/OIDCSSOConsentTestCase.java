@@ -272,30 +272,30 @@ public class OIDCSSOConsentTestCase extends OIDCAbstractIntegrationTest {
     protected void initUser() throws Exception {
 
         user = new UserObject();
-        user.setUserName(OIDCUtilTest.username);
-        user.setPassword(OIDCUtilTest.password);
-        user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
-        user.addEmail(new Email().value(OIDCUtilTest.email));
+        user.setUserName(OIDCUtilTest.USERNAME);
+        user.setPassword(OIDCUtilTest.PASSWORD);
+        user.setName(new Name().givenName(OIDCUtilTest.FIRST_NAME).familyName(OIDCUtilTest.LAST_NAME));
+        user.addEmail(new Email().value(OIDCUtilTest.EMAIL));
     }
 
     protected OIDCApplication initApplication() {
 
-        playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppCallBackUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
+        playgroundApp = new OIDCApplication(OIDCUtilTest.PLAYGROUND_APP_ONE_APP_NAME,
+                OIDCUtilTest.PLAYGROUND_APP_ONE_APP_CALL_BACK_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.EMAIL_CLAIM_URI);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.FIRST_NAME_CLAIM_URI);
         return playgroundApp;
     }
 
     private void updateApplication(OIDCApplication playgroundApp) throws Exception {
 
-        playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.LAST_NAME_CLAIM_URI);
         ClaimConfiguration claimConfig = getApplication(playgroundApp.getApplicationId()).getClaimConfiguration();
 
-        ClaimMappings claimMapping = new ClaimMappings().applicationClaim(OIDCUtilTest.lastNameClaimUri);
-        claimMapping.setLocalClaim(new Claim().uri(OIDCUtilTest.lastNameClaimUri));
+        ClaimMappings claimMapping = new ClaimMappings().applicationClaim(OIDCUtilTest.LAST_NAME_CLAIM_URI);
+        claimMapping.setLocalClaim(new Claim().uri(OIDCUtilTest.LAST_NAME_CLAIM_URI));
         RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
-        requestedClaim.setClaim(new Claim().uri(OIDCUtilTest.lastNameClaimUri));
+        requestedClaim.setClaim(new Claim().uri(OIDCUtilTest.LAST_NAME_CLAIM_URI));
 
         claimConfig.addClaimMappingsItem(claimMapping);
         claimConfig.addRequestedClaimsItem(requestedClaim);
