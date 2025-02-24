@@ -104,7 +104,7 @@
         <identity.user.ws.version>5.8.1</identity.user.ws.version>
         <identity.inbound.auth.oauth.version>7.0.18</identity.inbound.auth.oauth.version>
         <opensaml.version>2.6.6</opensaml.version>
-        <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
+        <nimbusds.version>9.37.3.wso2v1</nimbusds.version>
         <nimbus.oidc.sdk.version>6.13</nimbus.oidc.sdk.version>
     </properties>
 
