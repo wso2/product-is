@@ -2427,7 +2427,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.22</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.23</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2559,8 +2559,8 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.41.51</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.52</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.41.52</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.17.53</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.14.2</identity.apps.core.version>
 
