@@ -1,0 +1,31 @@
+{
+  "name": "Test Invalid App",
+  "accessUrl": "https://example.com/access",
+  "advancedConfigurations": {
+    "discoverableByEndUsers": true,
+    "discoverableGroups": [
+      {
+        "userStore": "PRIMARY",
+        "groups": [
+          {
+            "id": "invalid-id-1"
+          },
+          {
+            "id": "invalid-id-2"
+          }
+        ]
+      },
+      {
+        "userStore": "INVALID_USER_STORE_1",
+        "groups": [
+          {
+            "id": "invalid-id-1"
+          },
+          {
+            "id": "invalid-id-2"
+          }
+        ]
+      }
+    ]
+  }
+}
