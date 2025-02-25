@@ -6,12 +6,6 @@
   "templateId": "Test_template_1",
   "templateVersion": "v1.0.0",
   "advancedConfigurations": {
-    "discoverableByEndUsers": true,
-    "discoverableGroups": [
-      {
-        "userStore": "PRIMARY",
-        "groups": []
-      }
-    ]
+    "discoverableByEndUsers": true
   }
 }

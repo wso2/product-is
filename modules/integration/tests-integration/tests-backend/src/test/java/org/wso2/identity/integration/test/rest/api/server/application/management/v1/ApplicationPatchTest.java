@@ -16,15 +16,24 @@
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
 import io.restassured.response.Response;
+import java.io.IOException;
+import javax.xml.xpath.XPathExpressionException;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
@@ -40,12 +49,29 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
     private static final String APP_TEMPLATE_ID = "Test_template_1";
     private static final String APP_TEMPLATE_VERSION = "v1.0.0";
     public static final String SUBJECT_CLAIM_URI = "http://wso2.org/claims/username";
+    private static final int GROUPS_COUNT = 2;
+    private static final String GROUP_NAME_PREFIX = "Group_2_";
     private String appId;
+    private String[] groupIDs;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationPatchTest(TestUserMode userMode) throws Exception {
 
         super(userMode);
+    }
+
+    @BeforeClass(alwaysRun = true)
+    public void testStart() throws Exception {
+
+        super.init();
+        groupIDs = super.createGroups(GROUPS_COUNT, GROUP_NAME_PREFIX);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testEnd() throws Exception {
+
+        super.testConclude();
+        super.deleteGroups(groupIDs);
     }
 
     @Test
@@ -137,6 +163,9 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
 
         // Do the PATCH update request.
         String patchRequest = readResource("patch-application-advanced-configuration.json");
+        patchRequest =
+                super.addDiscoverableGroupsToApplicationPayload(new JSONObject(patchRequest), "PRIMARY", groupIDs)
+                        .toString();
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId;
         getResponseOfPatch(path, patchRequest.toString()).then()
                 .assertThat()
@@ -159,7 +188,11 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'androidThumbprints' }.value",
                         Matchers.hasItem("sampleThumbprint"))
                 .body("advancedConfigurations.trustedAppConfiguration.find{ it.key == 'appleAppId' }.value",
-                        equalTo("sample.app.id"));
+                        equalTo("sample.app.id"))
+                .body("advancedConfigurations.discoverableGroups", hasSize(1))
+                .body("advancedConfigurations.discoverableGroups[0].userStore", equalTo("PRIMARY"))
+                .body("advancedConfigurations.discoverableGroups[0].groups[0].id", Matchers.oneOf(groupIDs))
+                .body("advancedConfigurations.discoverableGroups[0].groups[1].id", Matchers.oneOf(groupIDs));
     }
 
     @Test(description = "Test updating the claim configuration of an application",

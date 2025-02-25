@@ -25,7 +25,11 @@ import java.util.Optional;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
+import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -38,8 +42,10 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.GroupBasicInfo;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertEquals;
@@ -56,12 +62,29 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     private static final String CREATED_APP_NAME = "My SAMPLE APP";
     private static final String CREATED_APP_TEMPLATE_ID = "Test_template_1";
     private static final String CREATED_APP_TEMPLATE_VERSION = "v1.0.0";
+    private static final int GROUPS_COUNT = 2;
+    private static final String GROUP_NAME_PREFIX = "Group_1_";
     private String createdAppId;
+    private String[] groupIDs;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationManagementSuccessTest(TestUserMode userMode) throws Exception {
 
         super(userMode);
+    }
+
+    @BeforeClass(alwaysRun = true)
+    public void testStart() throws Exception {
+
+        super.init();
+        groupIDs = super.createGroups(GROUPS_COUNT, GROUP_NAME_PREFIX);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testEnd() throws Exception {
+
+        super.testConclude();
+        super.deleteGroups(groupIDs);
     }
 
     @Test
@@ -128,6 +151,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     public void createApplication() throws Exception {
 
         String body = readResource("create-basic-application.json");
+        body = super.addDiscoverableGroupsToApplicationPayload(new JSONObject(body), "PRIMARY", groupIDs).toString();
         Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
         responseOfPost.then()
                 .log().ifValidationFails()
@@ -144,7 +168,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     public void testGetAllApplicationsWithParams() throws IOException {
 
         Map<String, Object> params = new HashMap<>();
-        params.put("attributes", "templateId,templateVersion");
+        params.put("attributes", "templateId,templateVersion,advancedConfigurations");
         Response response = getResponseOfGet(APPLICATION_MANAGEMENT_API_BASE_PATH, params);
         response.then()
                 .log().ifValidationFails()
@@ -162,6 +186,19 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 "Newly Created application '" + CREATED_APP_NAME + "' is not listed by the API.");
         Assert.assertEquals(newlyCreatedAppData.get().getTemplateId(), CREATED_APP_TEMPLATE_ID);
         Assert.assertEquals(newlyCreatedAppData.get().getTemplateVersion(), CREATED_APP_TEMPLATE_VERSION);
+        Assert.assertEquals(newlyCreatedAppData.get().getAdvancedConfigurations().getDiscoverableGroups().size(), 1);
+        Assert.assertEquals(
+                newlyCreatedAppData.get().getAdvancedConfigurations().getDiscoverableGroups().get(0).getUserStore(),
+                "PRIMARY");
+        Assert.assertEquals(
+                newlyCreatedAppData.get().getAdvancedConfigurations().getDiscoverableGroups().get(0).getGroups()
+                        .size(),
+                GROUPS_COUNT);
+        Assert.assertEqualsNoOrder(
+                newlyCreatedAppData.get().getAdvancedConfigurations().getDiscoverableGroups().get(0).getGroups()
+                        .stream()
+                        .map(GroupBasicInfo::getId).toArray(),
+                groupIDs);
     }
 
     @Test(dependsOnMethods = {"createApplication"})
@@ -174,7 +211,11 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .statusCode(HttpStatus.SC_OK)
                 .body("name", equalTo(CREATED_APP_NAME))
                 .body("templateId", equalTo(CREATED_APP_TEMPLATE_ID))
-                .body("templateVersion", equalTo(CREATED_APP_TEMPLATE_VERSION));
+                .body("templateVersion", equalTo(CREATED_APP_TEMPLATE_VERSION))
+                .body("advancedConfigurations.discoverableGroups", hasSize(1))
+                .body("advancedConfigurations.discoverableGroups[0].userStore", Matchers.equalTo("PRIMARY"))
+                .body("advancedConfigurations.discoverableGroups[0].groups[0].id", Matchers.oneOf(groupIDs))
+                .body("advancedConfigurations.discoverableGroups[0].groups[1].id", Matchers.oneOf(groupIDs));
     }
 
     @Test(dependsOnMethods = {"createApplication"})

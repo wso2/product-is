@@ -18,6 +18,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.annotations.AfterMethod;
@@ -201,6 +202,32 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
 
         Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+    }
+
+    @Test(description = "Test configuring invalid discoverable groups for an application.")
+    public void testAddInvalidDiscoverableGroups() throws Exception {
+
+        String payload = readResource("invalid-discoverable-groups.json");
+        Response response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+        response.then()
+                .body("description", Matchers.equalTo(String.format(
+                        "Invalid application configuration for application: 'Test Invalid App' of tenantDomain: %s." +
+                                " No group found for the given group ID: 'invalid-id-1'. No group found for the" +
+                                " given group ID: 'invalid-id-2'. The provided user store: 'INVALID_USER_STORE_1'" +
+                                " is not found.",
+                        tenant)));
+        JSONObject applicationPayload = new JSONObject(payload);
+        JSONObject advancedConfigs = applicationPayload.getJSONObject("advancedConfigurations");
+        advancedConfigs.put("discoverableByEndUsers", false);
+        payload = applicationPayload.toString();
+        response = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+        response.then()
+                .body("description", Matchers.equalTo(String.format(
+                        "Invalid application configuration for application: 'Test Invalid App' of tenantDomain: %s." +
+                                " Discoverable groups are defined for a non-discoverable application.",
+                        tenant)));
     }
 
     @Test(description = "Tests whether inbound unique key is validated during application creation.")
