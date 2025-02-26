@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.rest.api.server.user.sharing.managemen
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBody;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
@@ -45,7 +46,10 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.everyItem;
@@ -157,14 +161,37 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         };
     }
 
-    @Test
-    public void testShareUsersWithOrganizations() {
+    @DataProvider(name = "generalSharingPolicies")
+    public Object[][] generalSharingPolicies() {
 
-        UserShareRequestBody requestBody = new UserShareRequestBody()
+        String[] allOrgIds = {l1Org1Id, l1Org2Id, l2Org1Id, l2Org2Id, l2Org3Id, l3Org1Id};
+        String[] allOrgNames =
+                {L1_ORG_1_NAME, L1_ORG_2_NAME, L2_ORG_1_NAME, L2_ORG_2_NAME, L2_ORG_3_NAME, L3_ORG_1_NAME};
+        String[] immediateOrgIds = {l1Org1Id, l1Org2Id};
+        String[] immediateOrgNames = {L1_ORG_1_NAME, L1_ORG_2_NAME};
+
+        return new Object[][]{
+                {UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY, 6, allOrgIds, allOrgNames},
+                {UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_AND_FUTURE_ORGS, 6, allOrgIds, allOrgNames},
+                {UserShareWithAllRequestBody.PolicyEnum.IMMEDIATE_EXISTING_ORGS_ONLY, 2, immediateOrgIds,
+                        immediateOrgNames},
+                {UserShareWithAllRequestBody.PolicyEnum.IMMEDIATE_EXISTING_AND_FUTURE_ORGS, 2, immediateOrgIds,
+                        immediateOrgNames}
+        };
+    }
+
+    @Test(dataProvider = "generalSharingPolicies")
+    public void testShareUsersWithAllOrganizations(UserShareWithAllRequestBody.PolicyEnum policy, int expectedOrgCount, String[] expectedOrgIds, String[] expectedOrgNames)
+            throws Exception {
+
+        UserShareWithAllRequestBody requestBody = new UserShareWithAllRequestBody()
                 .userCriteria(getUserCriteria())
-                .organizations(getOrganizations());
+                .policy(policy)
+                .roles(Arrays.asList(
+                        createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE),
+                        createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE)));
 
-        Response response = getResponseOfPost(USER_SHARING_API_BASE_PATH + SHARE_PATH, toJSONString(requestBody));
+        Response response = getResponseOfPost(USER_SHARING_API_BASE_PATH + SHARE_WITH_ALL_PATH, toJSONString(requestBody));
 
         response.then()
                 .log().ifValidationFails()
@@ -172,10 +199,19 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .statusCode(HttpStatus.SC_ACCEPTED)
                 .body("status", equalTo("Processing"))
                 .body("details", equalTo("User sharing process triggered successfully."));
+
+        Thread.sleep(5000); // Wait for the sharing process to complete.
+
+        // Validate shared organizations
+        testGetSharedOrganizationsWithAllWithoutPagination(expectedOrgCount, expectedOrgIds, expectedOrgNames);
+
+        // Validate shared roles for each shared organization
+        for (int i = 0; i < expectedOrgCount; i++) {
+            testGetSharedRolesForOrgWithRolesWithoutPagination(expectedOrgIds[i], expectedOrgNames[i]);
+        }
     }
 
-    @Test(dependsOnMethods = "testShareUsersWithOrganizations")
-    public void testGetSharedOrganizationsWithoutPagination() throws Exception {
+    public void testGetSharedOrganizationsWithAllWithoutPagination(int expectedOrgCount, String[] expectedOrgIds, String[] expectedOrgNames) throws Exception {
 
         Response response =
                 getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + rootOrgUserId + SHARED_ORGANIZATIONS_PATH);
@@ -187,16 +223,32 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .body("links.size()", equalTo(1))
                 .body("links[0].isEmpty()", equalTo(true))
                 .body("sharedOrganizations", notNullValue())
-                .body("sharedOrganizations.size()", equalTo(4))
-                .body("sharedOrganizations.orgId", hasItems(l1Org1Id, l1Org2Id, l2Org1Id, l2Org2Id))
-                .body("sharedOrganizations.orgName",
-                        hasItems(L1_ORG_1_NAME, L1_ORG_2_NAME, L2_ORG_1_NAME, L1_ORG_2_NAME))
+                .body("sharedOrganizations.size()", equalTo(expectedOrgCount))
+                .body("sharedOrganizations.orgId", hasItems(expectedOrgIds))
+                .body("sharedOrganizations.orgName", hasItems(expectedOrgNames))
                 .body("sharedOrganizations.sharedType", everyItem(equalTo("SHARED")))
                 .body("sharedOrganizations.rolesRef", hasItems(
-                        getSharedOrgsRolesRef(rootOrgUserId, l1Org1Id),
-                        getSharedOrgsRolesRef(rootOrgUserId, l1Org2Id),
-                        getSharedOrgsRolesRef(rootOrgUserId, l2Org1Id),
-                        getSharedOrgsRolesRef(rootOrgUserId, l2Org2Id)));
+                        Arrays.stream(expectedOrgIds)
+                                .map(orgId -> getSharedOrgsRolesRef(rootOrgUserId, orgId))
+                                .toArray(String[]::new)));
+    }
+
+    public void testGetSharedRolesForOrgWithRolesWithoutPagination(String orgId, String orgName) {
+
+        Response response = getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + rootOrgUserId + SHARED_ROLES_PATH,
+                Collections.singletonMap("orgId", orgId));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("links.size()", equalTo(1))  // Ensure one empty object inside the array
+                .body("links[0].isEmpty()", equalTo(true))  // Ensure the object inside is empty
+                .body("roles", notNullValue())
+                .body("roles.size()", equalTo(2))  // Expecting 2 roles per shared organization
+                .body("roles.displayName", hasItems(APP_ROLE_1, ORG_ROLE_1))  // Ensure both roles exist
+                .body("roles.audience.display", hasItems(APP_1_NAME, orgName))  // Ensure correct audience
+                .body("roles.audience.type", hasItems(APPLICATION_AUDIENCE, ORGANIZATION_AUDIENCE));  // Ensure correct types
     }
 
     private UserShareRequestBodyUserCriteria getUserCriteria() {
@@ -204,23 +256,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         UserShareRequestBodyUserCriteria criteria = new UserShareRequestBodyUserCriteria();
         criteria.setUserIds(Collections.singletonList(rootOrgUserId));
         return criteria;
-    }
-
-    private List<UserShareRequestBodyOrganizations> getOrganizations() {
-
-        UserShareRequestBodyOrganizations organizationWithRoles = new UserShareRequestBodyOrganizations();
-        organizationWithRoles.setOrgId(l1Org1Id);
-        organizationWithRoles.setPolicy(
-                UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
-        organizationWithRoles.setRoles(
-                Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE),
-                        createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE)));
-
-        UserShareRequestBodyOrganizations organizationWithoutRoles = new UserShareRequestBodyOrganizations();
-        organizationWithoutRoles.setOrgId(l1Org2Id);
-        organizationWithoutRoles.setPolicy(UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_ONLY);
-
-        return Arrays.asList(organizationWithRoles, organizationWithoutRoles);
     }
 
     private RoleWithAudience createRoleWithAudience(String roleName, String display, String type) {
@@ -275,6 +310,11 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         clientSecretApp2 = oidcConfigOfApp2.getClientSecret();
         createOrganizationRoles();
         switchApplicationAudience(app2Id, AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+        // Mark roles and groups as requested claims for the app 2.
+        updateRequestedClaimsOfApp(app2Id, getClaimConfigurationsWithRolesAndGroups());
+        shareApplication(app2Id);
+        sharedApp2IdInLevel1Org =
+                oAuth2RestClient.getAppIdUsingAppNameInOrganization(APP_2_NAME, l1Org1SwitchToken);
     }
 
     private void createOrganizationRoles() throws IOException {
@@ -360,4 +400,239 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         scim2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
     }
+
+
+
+    @DataProvider(name = "selectiveSharingPoliciesWithRoles")
+    public Object[][] selectiveSharingPoliciesWithRoles() {
+        return new Object[][]{
+                createTestCase(UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_ONLY,
+                        new String[]{l1Org1Id},
+                        new String[]{L1_ORG_1_NAME},
+                        new RoleWithAudience[]{createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)},
+                        createExpectedRoles(
+                                L1_ORG_1_NAME, createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)
+                                           ),
+                        new String[]{l1Org2Id},
+                        new String[]{L1_ORG_2_NAME},
+                        new RoleWithAudience[]{createRoleWithAudience(ORG_ROLE_2, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)},
+                        createExpectedRoles(
+                                L1_ORG_2_NAME, createRoleWithAudience(ORG_ROLE_2, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)
+                                           )
+                              ),
+                createTestCase(UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_CHILDREN_ONLY,
+                        new String[]{l1Org1Id, l2Org1Id, l2Org2Id, l3Org1Id},
+                        new String[]{L1_ORG_1_NAME, L2_ORG_1_NAME, L2_ORG_2_NAME, L3_ORG_1_NAME},
+                        new RoleWithAudience[]{
+                                createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE),
+                                createRoleWithAudience(ORG_ROLE_1, L1_ORG_1_NAME, ORGANIZATION_AUDIENCE)
+                        },
+                        createExpectedRoles(
+                                L1_ORG_1_NAME, createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE),
+                                L2_ORG_1_NAME, createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE),
+                                L2_ORG_2_NAME, createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE),
+                                L3_ORG_1_NAME, createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)
+                                           ),
+                        new String[]{l1Org2Id, l2Org3Id},
+                        new String[]{L1_ORG_2_NAME, L2_ORG_3_NAME},
+                        new RoleWithAudience[]{
+                                createRoleWithAudience(ORG_ROLE_2, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE),
+                                createRoleWithAudience(ORG_ROLE_3, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)
+                        },
+                        createExpectedRoles(
+                                L1_ORG_2_NAME, createRoleWithAudience(ORG_ROLE_2, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE),
+                                L2_ORG_3_NAME, createRoleWithAudience(ORG_ROLE_2, L2_ORG_3_NAME, ORGANIZATION_AUDIENCE)
+                                           )
+                              ),
+                createTestCase(UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN,
+                        new String[]{l1Org1Id, l2Org1Id, l2Org2Id},
+                        new String[]{L1_ORG_1_NAME, L2_ORG_1_NAME, L2_ORG_2_NAME},
+                        new RoleWithAudience[]{createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE)},
+                        createExpectedRoles(
+                                L1_ORG_1_NAME, createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE),
+                                L2_ORG_1_NAME, createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE),
+                                L2_ORG_2_NAME, createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE)
+                                           ),
+                        new String[]{l1Org2Id, l2Org3Id},
+                        new String[]{L1_ORG_2_NAME, L2_ORG_3_NAME},
+                        new RoleWithAudience[]{},
+                        createExpectedRoles(
+                                L1_ORG_2_NAME, new RoleWithAudience[]{},
+                                L2_ORG_3_NAME, new RoleWithAudience[]{}
+                                           )
+                              )
+        };
+    }
+
+
+    @Test(dataProvider = "selectiveSharingPoliciesWithRoles")
+    public void testSelectiveUserSharingWithRoles(
+            UserShareRequestBodyOrganizations.PolicyEnum policy,
+            String[] expectedOrgIdsForL1Org1, String[] expectedOrgNamesForL1Org1, RoleWithAudience[] rolesForL1Org1,
+            Map<String, RoleWithAudience[]> expectedRolesForL1Org1,
+            String[] expectedOrgIdsForL1Org2, String[] expectedOrgNamesForL1Org2, RoleWithAudience[] rolesForL1Org2,
+            Map<String, RoleWithAudience[]> expectedRolesForL1Org2) throws Exception {
+
+        UserShareRequestBody requestBody = new UserShareRequestBody()
+                .userCriteria(getUserCriteria())
+                .organizations(Arrays.asList(
+                        new UserShareRequestBodyOrganizations()
+                                .orgId(l1Org1Id)
+                                .policy(policy)
+                                .roles(Arrays.asList(rolesForL1Org1)),
+                        new UserShareRequestBodyOrganizations()
+                                .orgId(l1Org2Id)
+                                .policy(policy)
+                                .roles(Arrays.asList(rolesForL1Org2))
+                                            ));
+
+        Response response = getResponseOfPost(USER_SHARING_API_BASE_PATH + SHARE_PATH, toJSONString(requestBody));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_ACCEPTED)
+                .body("status", equalTo("Processing"))
+                .body("details", equalTo("User sharing process triggered successfully."));
+
+        // Validate shared organizations
+        validateSharedOrganizations(expectedOrgIdsForL1Org1, expectedOrgNamesForL1Org1, expectedOrgIdsForL1Org2, expectedOrgNamesForL1Org2);
+
+        // Validate roles in shared organizations
+        validateSharedRoles(expectedOrgIdsForL1Org1, expectedRolesForL1Org1);
+        validateSharedRoles(expectedOrgIdsForL1Org2, expectedRolesForL1Org2);
+    }
+
+    private void validateSharedOrganizations(String[] expectedOrgIds1, String[] expectedOrgNames1, String[] expectedOrgIds2, String[] expectedOrgNames2)
+            throws Exception {
+        testGetSharedOrganizationsWithAllWithoutPagination(expectedOrgIds1.length + expectedOrgIds2.length,
+                Stream.concat(Arrays.stream(expectedOrgIds1), Arrays.stream(expectedOrgIds2)).toArray(String[]::new),
+                Stream.concat(Arrays.stream(expectedOrgNames1), Arrays.stream(expectedOrgNames2)).toArray(String[]::new));
+    }
+
+    private void validateSharedRoles(String[] expectedOrgIds, Map<String, RoleWithAudience[]> expectedRoles) {
+        for (String orgId : expectedOrgIds) {
+            String orgName = getOrgNameById(orgId);
+            testGetSharedRolesForOrgWithRolesWithoutPagination(orgId, orgName, expectedRoles.get(orgName));
+        }
+    }
+
+    private Object[] createTestCase(UserShareRequestBodyOrganizations.PolicyEnum policy,
+                                    String[] orgIds1, String[] orgNames1, RoleWithAudience[] roles1, Map<String, RoleWithAudience[]> expectedRoles1,
+                                    String[] orgIds2, String[] orgNames2, RoleWithAudience[] roles2, Map<String, RoleWithAudience[]> expectedRoles2) {
+        return new Object[]{policy, orgIds1, orgNames1, roles1, expectedRoles1, orgIds2, orgNames2, roles2, expectedRoles2};
+    }
+
+    private Map<String, RoleWithAudience[]> createExpectedRoles(Object... data) {
+        Map<String, RoleWithAudience[]> roleMap = new HashMap<>();
+        for (int i = 0; i < data.length; i += 2) {
+            roleMap.put((String) data[i], new RoleWithAudience[]{(RoleWithAudience) data[i + 1]});
+        }
+        return roleMap;
+    }
+
+//    @Test(dataProvider = "selectiveSharingPoliciesWithRoles")
+//    public void testSelectiveUserSharingWithRoles(
+//            UserShareRequestBodyOrganizations.PolicyEnum policy,
+//            String[] expectedOrgIdsForL1Org1, String[] expectedOrgNamesForL1Org1, RoleWithAudience[] rolesForL1Org1,
+//            Map<String, RoleWithAudience[]> expectedRolesForL1Org1,
+//            String[] expectedOrgIdsForL1Org2, String[] expectedOrgNamesForL1Org2, RoleWithAudience[] rolesForL1Org2,
+//            Map<String, RoleWithAudience[]> expectedRolesForL1Org2)
+//            throws Exception {
+//
+//        UserShareRequestBody requestBody = new UserShareRequestBody()
+//                .userCriteria(getUserCriteria())
+//                .organizations(Arrays.asList(
+//                        new UserShareRequestBodyOrganizations()
+//                                .orgId(l1Org1Id)
+//                                .policy(policy)
+//                                .roles(Arrays.asList(rolesForL1Org1)),
+//                        new UserShareRequestBodyOrganizations()
+//                                .orgId(l1Org2Id)
+//                                .policy(policy)
+//                                .roles(Arrays.asList(rolesForL1Org2))
+//                                            ));
+//
+//        Response response = getResponseOfPost(USER_SHARING_API_BASE_PATH + SHARE_PATH, toJSONString(requestBody));
+//
+//        response.then()
+//                .log().ifValidationFails()
+//                .assertThat()
+//                .statusCode(HttpStatus.SC_ACCEPTED)
+//                .body("status", equalTo("Processing"))
+//                .body("details", equalTo("User sharing process triggered successfully."));
+//
+//        Thread.sleep(5000); // Wait for sharing process to complete.
+//
+//        // Validate shared organizations
+//        testGetSharedOrganizationsWithAllWithoutPagination(expectedOrgIdsForL1Org1.length+expectedOrgIdsForL1Org2.length,
+//                Stream.concat(Arrays.stream(expectedOrgIdsForL1Org1),
+//                                Arrays.stream(expectedOrgIdsForL1Org2))
+//                        .toArray(String[]::new),
+//                Stream.concat(Arrays.stream(expectedOrgNamesForL1Org1),
+//                                Arrays.stream(expectedOrgNamesForL1Org2))
+//                        .toArray(String[]::new));
+//
+//        // Validate roles in shared organizations
+//        for (String orgId : expectedOrgIdsForL1Org1) {
+//            String orgName = getOrgNameById(orgId);
+//            testGetSharedRolesForOrgWithRolesWithoutPagination(orgId, orgName,
+//                    expectedRolesForL1Org1.get(orgName));
+//        }
+//        for (String orgId : expectedOrgIdsForL1Org2) {
+//            String orgName = getOrgNameById(orgId);
+//            testGetSharedRolesForOrgWithRolesWithoutPagination(orgId, orgName,
+//                    expectedRolesForL1Org2.get(orgName));
+//        }
+//    }
+
+    public void testGetSharedRolesForOrgWithRolesWithoutPagination(String orgId, String orgName, RoleWithAudience[] expectedRoles) {
+
+        Response response = getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + rootOrgUserId + SHARED_ROLES_PATH,
+                Collections.singletonMap("orgId", orgId));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("links.size()", equalTo(1))
+                .body("links[0].isEmpty()", equalTo(true))
+                .body("roles", notNullValue())
+                .body("roles.size()", equalTo(expectedRoles.length));
+
+        if (expectedRoles.length > 0) {
+            response.then()
+                    .body("roles.displayName", hasItems(
+                            Arrays.stream(expectedRoles)
+                                    .map(RoleWithAudience::getDisplayName)
+                                    .toArray(String[]::new)))
+                    .body("roles.audience.display", hasItems(
+                            Arrays.stream(expectedRoles)
+                                    .map(role -> role.getAudience().getDisplay())
+                                    .toArray(String[]::new)))// Now directly matching expected audiences
+                    .body("roles.audience.type", hasItems(
+                            Arrays.stream(expectedRoles)
+                                    .map(role -> role.getAudience().getType())
+                                    .toArray(String[]::new)));
+        }
+    }
+
+    private String getOrgNameById(String orgId) {
+        if (orgId.equals(l1Org1Id)) {
+            return L1_ORG_1_NAME;
+        } else if (orgId.equals(l1Org2Id)) {
+            return L1_ORG_2_NAME;
+        } else if (orgId.equals(l2Org1Id)) {
+            return L2_ORG_1_NAME;
+        } else if (orgId.equals(l2Org2Id)) {
+            return L2_ORG_2_NAME;
+        } else if (orgId.equals(l2Org3Id)) {
+            return L2_ORG_3_NAME;
+        } else if (orgId.equals(l3Org1Id)) {
+            return L3_ORG_1_NAME;
+        }
+        return null;
+    }
+
+
 }

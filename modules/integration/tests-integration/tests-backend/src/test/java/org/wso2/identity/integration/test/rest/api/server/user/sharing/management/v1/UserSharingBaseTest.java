@@ -106,8 +106,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected static final String SUPER_ORG = "Super";
 
-    protected static final String APPLICATION_AUDIENCE = "APPLICATION";
-    protected static final String ORGANIZATION_AUDIENCE = "ORGANIZATION";
+    protected static final String APPLICATION_AUDIENCE = "application";
+    protected static final String ORGANIZATION_AUDIENCE = "organization";
 
     protected static final String APP_ROLE_1 = "app-role-1";
     protected static final String APP_ROLE_2 = "app-role-2";
