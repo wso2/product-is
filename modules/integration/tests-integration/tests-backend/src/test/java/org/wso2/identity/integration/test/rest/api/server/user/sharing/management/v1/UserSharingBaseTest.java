@@ -81,13 +81,13 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     static final String SHARED_ORGANIZATIONS_PATH = "/shared-organizations";
     static final String SHARED_ROLES_PATH = "/shared-roles";
 
-    protected static final String USER_ID = "userId";
-    protected static final String ORG_ID = "orgId";
-    protected static final String LIMIT_QUERY_PARAM = "limit";
-    protected static final String AFTER_QUERY_PARAM = "after";
-    protected static final String BEFORE_QUERY_PARAM = "before";
-    protected static final String FILTER_QUERY_PARAM = "filter";
-    protected static final String RECURSIVE_QUERY_PARAM = "recursive";
+    protected static final String PATH_PARAM_USER_ID = "userId";
+    protected static final String QUERY_PARAM_ORG_ID = "orgId";
+    protected static final String QUERY_PARAM_LIMIT = "limit";
+    protected static final String QUERY_PARAM_AFTER = "after";
+    protected static final String QUERY_PARAM_BEFORE = "before";
+    protected static final String QUERY_PARAM_FILTER = "filter";
+    protected static final String QUERY_PARAM_RECURSIVE = "recursive";
 
     protected static final String ERROR_CODE_BAD_REQUEST = "UE-10000";
     protected static final String ERROR_CODE_INVALID_PAGINATION_CURSOR = "ORG-60026";
@@ -96,6 +96,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String ROOT_ORG_NAME = "Root - Organization";
     protected static final String L1_ORG_1_NAME = "L1 - Organization 1";
     protected static final String L1_ORG_2_NAME = "L1 - Organization 2";
+    protected static final String L1_ORG_3_NAME = "L1 - Organization 3";
     protected static final String L2_ORG_1_NAME = "L2 - Organization 1";
     protected static final String L2_ORG_2_NAME = "L2 - Organization 2";
     protected static final String L2_ORG_3_NAME = "L2 - Organization 3";
@@ -116,8 +117,12 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String ORG_ROLE_2 = "org-role-2";
     protected static final String ORG_ROLE_3 = "org-role-3";
 
-    protected static final String ROOT_ORG_USERNAME = "rootUser";
-    protected static final String L1_ORG_1_USERNAME = "l1Org1User";
+    protected static final String ROOT_ORG_USER_1_USERNAME = "rootUser1";
+    protected static final String ROOT_ORG_USER_2_USERNAME = "rootUser2";
+    protected static final String ROOT_ORG_USER_3_USERNAME = "rootUser3";
+    protected static final String L1_ORG_1_USER_1_USERNAME = "l1Org1User1";
+    protected static final String L1_ORG_1_USER_2_USERNAME = "l1Org1User2";
+    protected static final String L1_ORG_1_USER_3_USERNAME = "l1Org1User3";
 
     protected static final String INTERNAL_USER_SHARE = "internal_user_share";
     protected static final String INTERNAL_USER_UNSHARE = "internal_user_unshare";
@@ -130,6 +135,15 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
     protected static final String ROLES_CLAIM_URI = "http://wso2.org/claims/roles";
     protected static final String GROUPS_CLAIM_URI = "http://wso2.org/claims/groups";
+
+    protected static final String MAP_KEY_ORG_DETAILS_ORG_ID = "orgId";
+    protected static final String MAP_KEY_ORG_DETAILS_ORG_NAME = "orgName";
+    protected static final String MAP_KEY_ORG_DETAILS_POLICY = "policy";
+    protected static final String MAP_KEY_ORG_DETAILS_ROLES = "roles";
+    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ORG_COUNT = "expectedOrgCount";
+    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ORG_IDS = "expectedOrgIds";
+    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ORG_NAMES = "expectedOrgNames";
+    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ROLES_PER_EXPECTED_ORG = "expectedRolesPerExpectedOrg";
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
