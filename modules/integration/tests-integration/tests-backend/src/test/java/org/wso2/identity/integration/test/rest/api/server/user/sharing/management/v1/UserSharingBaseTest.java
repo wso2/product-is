@@ -136,14 +136,18 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String ROLES_CLAIM_URI = "http://wso2.org/claims/roles";
     protected static final String GROUPS_CLAIM_URI = "http://wso2.org/claims/groups";
 
-    protected static final String MAP_KEY_ORG_DETAILS_ORG_ID = "orgId";
-    protected static final String MAP_KEY_ORG_DETAILS_ORG_NAME = "orgName";
-    protected static final String MAP_KEY_ORG_DETAILS_POLICY = "policy";
-    protected static final String MAP_KEY_ORG_DETAILS_ROLES = "roles";
-    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ORG_COUNT = "expectedOrgCount";
-    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ORG_IDS = "expectedOrgIds";
-    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ORG_NAMES = "expectedOrgNames";
-    protected static final String MAP_KEY_ORG_DETAILS_EXPECTED_ROLES_PER_EXPECTED_ORG = "expectedRolesPerExpectedOrg";
+    protected static final String MAP_KEY_SELECTIVE_ORG_ID = "orgId";
+    protected static final String MAP_KEY_SELECTIVE_ORG_NAME = "orgName";
+    protected static final String MAP_KEY_SELECTIVE_POLICY = "selectivePolicy";
+    protected static final String MAP_KEY_SELECTIVE_ROLES = "selectiveRoles";
+
+    protected static final String MAP_KEY_GENERAL_POLICY = "generalPolicy";
+    protected static final String MAP_KEY_GENERAL_ROLES = "generalRoles";
+
+    protected static final String MAP_KEY_EXPECTED_ORG_COUNT = "expectedOrgCount";
+    protected static final String MAP_KEY_EXPECTED_ORG_IDS = "expectedOrgIds";
+    protected static final String MAP_KEY_EXPECTED_ORG_NAMES = "expectedOrgNames";
+    protected static final String MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG = "expectedRolesPerExpectedOrg";
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;

@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.rest.api.server.user.sharing.managemen
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBody;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
@@ -55,8 +56,14 @@ import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_ONLY;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_AND_FUTURE_CHILDREN;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_CHILDREN_ONLY;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_CHILDREN_ONLY;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_AND_FUTURE_ORGS;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.IMMEDIATE_EXISTING_AND_FUTURE_ORGS;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.IMMEDIATE_EXISTING_ORGS_ONLY;
 
 /**
  * Tests for successful cases of the User Sharing REST APIs.
@@ -157,15 +164,20 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         Map<String, Map<String, Object>> organizationsForTestCase1 = setOrganizationsForSelectiveUserSharingTestCase1();
         Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForSelectiveUserSharingTestCase1();
 
+        List<String> userIdsForTestCase2 = Arrays.asList(rootOrgUser1Id, rootOrgUser2Id, rootOrgUser3Id);
+        Map<String, Map<String, Object>> organizationsForTestCase2 = setOrganizationsForSelectiveUserSharingTestCase2();
+        Map<String, Object> expectedResultsForTestCase2 = setExpectedResultsForSelectiveUserSharingTestCase2();
+
         return new Object[][] {
-                { userIdsForTestCase1, organizationsForTestCase1, expectedResultsForTestCase1 }
+                { userIdsForTestCase1, organizationsForTestCase1, expectedResultsForTestCase1 },
+                { userIdsForTestCase2, organizationsForTestCase2, expectedResultsForTestCase2 }
         };
     }
 
     @Test(dataProvider = "selectiveSharingPoliciesWithRoles")
     public void testSelectiveUserSharingWithRoles(List<String> userIds,
                                                   Map<String, Map<String, Object>> organizations,
-                                                  Map<String, Object> expectedResults) {
+                                                  Map<String, Object> expectedResults) throws InterruptedException {
 
         UserShareRequestBody requestBody = new UserShareRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
@@ -180,6 +192,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .body("status", equalTo("Processing"))
                 .body("details", equalTo("User sharing process triggered successfully."));
 
+        Thread.sleep(5000);
         for (String userId : userIds) {
             validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
         }
@@ -187,16 +200,68 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     // General User Sharing.
 
+    @DataProvider(name = "generalSharingPoliciesWithRoles")
+    public Object[][] generalSharingPoliciesWithRoles() {
+
+        List<String> userIdsForTestCase1 = Collections.singletonList(rootOrgUser1Id);
+        Map<String, Object> policyWithRolesForTestCase1 = setPolicyWithRolesForGeneralUserSharingTestCase1();
+        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForGeneralUserSharingTestCase1();
+
+        List<String> userIdsForTestCase2 = Arrays.asList(rootOrgUser1Id, rootOrgUser2Id, rootOrgUser3Id);
+        Map<String, Object> policyWithRolesForTestCase2 = setPolicyWithRolesForGeneralUserSharingTestCase2();
+        Map<String, Object> expectedResultsForTestCase2 = setExpectedResultsForGeneralUserSharingTestCase2();
+
+        List<String> userIdsForTestCase3 = Collections.singletonList(rootOrgUser2Id);
+        Map<String, Object> policyWithRolesForTestCase3 = setPolicyWithRolesForGeneralUserSharingTestCase3();
+        Map<String, Object> expectedResultsForTestCase3 = setExpectedResultsForGeneralUserSharingTestCase3();
+
+        List<String> userIdsForTestCase4 = Arrays.asList(rootOrgUser3Id, rootOrgUser2Id);
+        Map<String, Object> policyWithRolesForTestCase4 = setPolicyWithRolesForGeneralUserSharingTestCase4();
+        Map<String, Object> expectedResultsForTestCase4 = setExpectedResultsForGeneralUserSharingTestCase4();
+
+        return new Object[][] {
+                { userIdsForTestCase1, policyWithRolesForTestCase1, expectedResultsForTestCase1 },
+                { userIdsForTestCase2, policyWithRolesForTestCase2, expectedResultsForTestCase2 },
+                { userIdsForTestCase3, policyWithRolesForTestCase3, expectedResultsForTestCase3 },
+                { userIdsForTestCase4, policyWithRolesForTestCase4, expectedResultsForTestCase4 }
+        };
+    }
+
+    @Test(dataProvider = "generalSharingPoliciesWithRoles")
+    public void testGeneralUserSharingWithRoles(List<String> userIds,
+                                                  Map<String, Object> policyWithRoles,
+                                                  Map<String, Object> expectedResults) throws InterruptedException {
+
+        UserShareWithAllRequestBody requestBody = new UserShareWithAllRequestBody()
+                .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
+                .policy(getPolicyEnumForGeneralUserSharing(policyWithRoles))
+                .roles(getRolesForGeneralUserSharing(policyWithRoles));
+
+        Response response = getResponseOfPost(USER_SHARING_API_BASE_PATH + SHARE_WITH_ALL_PATH, toJSONString(requestBody));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_ACCEPTED)
+                .body("status", equalTo("Processing"))
+                .body("details", equalTo("User sharing process triggered successfully."));
+
+        Thread.sleep(5000);
+        for (String userId : userIds) {
+            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
+        }
+    }
 
     /**
      * Validate that the user has been shared to the expected organizations with the expected roles.
      *
      * @param userId          The ID of the user to validate.
      * @param expectedResults A map containing the expected results, including the expected organization count,
-     *                        expected organization IDs, expected organization names, and expected roles per organization.
+     *                        expected organization IDs, expected organization names, and expected roles per
+     *                        organization.
      * <p>
-     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are predefined
-     * in the test data providers.
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
      * </p>
      */
     @SuppressWarnings("unchecked")
@@ -204,12 +269,12 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
         testGetSharedOrganizations(
                 userId,
-                (int) expectedResults.get(MAP_KEY_ORG_DETAILS_EXPECTED_ORG_COUNT),
-                (List<String>) expectedResults.get(MAP_KEY_ORG_DETAILS_EXPECTED_ORG_IDS),
-                (List<String>) expectedResults.get(MAP_KEY_ORG_DETAILS_EXPECTED_ORG_NAMES)
+                (int) expectedResults.get(MAP_KEY_EXPECTED_ORG_COUNT),
+                (List<String>) expectedResults.get(MAP_KEY_EXPECTED_ORG_IDS),
+                (List<String>) expectedResults.get(MAP_KEY_EXPECTED_ORG_NAMES)
                                   );
 
-        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = (Map<String, List<RoleWithAudience>>) expectedResults.get(MAP_KEY_ORG_DETAILS_EXPECTED_ROLES_PER_EXPECTED_ORG);
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = (Map<String, List<RoleWithAudience>>) expectedResults.get(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG);
         for (Map.Entry<String, List<RoleWithAudience>> entry : expectedRolesPerExpectedOrg.entrySet()) {
             testGetSharedRolesForOrg(userId, entry.getKey(), entry.getValue());
         }
@@ -302,8 +367,8 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
      * @param organizations A map where the key is the organization name and the value is a map of organization details.
      * @return A list of `UserShareRequestBodyOrganizations` objects.
      * <p>
-     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are predefined
-     * in the test data providers.
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
      * </p>
      */
     @SuppressWarnings("unchecked")
@@ -316,13 +381,40 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
             Map<String, Object> orgDetails = entry.getValue();
 
             UserShareRequestBodyOrganizations org = new UserShareRequestBodyOrganizations();
-            org.setOrgId((String) orgDetails.get(MAP_KEY_ORG_DETAILS_ORG_ID));
-            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetails.get(MAP_KEY_ORG_DETAILS_POLICY));
-            org.setRoles((List<RoleWithAudience>) orgDetails.get(MAP_KEY_ORG_DETAILS_ROLES));
+            org.setOrgId((String) orgDetails.get(MAP_KEY_SELECTIVE_ORG_ID));
+            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetails.get(MAP_KEY_SELECTIVE_POLICY));
+            org.setRoles((List<RoleWithAudience>) orgDetails.get(MAP_KEY_SELECTIVE_ROLES));
 
             orgs.add(org);
         }
         return orgs;
+    }
+
+    /**
+     * Retrieves the policy enum for general user sharing from the provided map.
+     *
+     * @param policyWithRoles A map containing the policy and roles for general user sharing.
+     * @return The policy enum for general user sharing.
+     */
+    private UserShareWithAllRequestBody.PolicyEnum getPolicyEnumForGeneralUserSharing(Map<String, Object> policyWithRoles) {
+
+        return (UserShareWithAllRequestBody.PolicyEnum)policyWithRoles.get(MAP_KEY_GENERAL_POLICY) ;
+    }
+
+    /**
+     * Retrieves the roles for general user sharing from the provided map.
+     *
+     * @param policyWithRoles A map containing the policy and roles for general user sharing.
+     * @return A list of `RoleWithAudience` objects representing the roles for general user sharing.
+     * <p>
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
+     * </p>
+     */
+    @SuppressWarnings("unchecked")
+    private List<RoleWithAudience> getRolesForGeneralUserSharing(Map<String, Object> policyWithRoles) {
+
+        return (List<RoleWithAudience>) policyWithRoles.get(MAP_KEY_GENERAL_ROLES);
     }
 
     // Test cases builders for selective user sharing.
@@ -333,28 +425,31 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
         // Organization 1
         Map<String, Object> org1 = new HashMap<>();
-        org1.put(MAP_KEY_ORG_DETAILS_ORG_ID, l1Org1Id);
-        org1.put(MAP_KEY_ORG_DETAILS_ORG_NAME, L1_ORG_1_NAME);
-        org1.put(MAP_KEY_ORG_DETAILS_POLICY, SELECTED_ORG_WITH_ALL_EXISTING_CHILDREN_ONLY);
-        org1.put(MAP_KEY_ORG_DETAILS_ROLES, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+        org1.put(MAP_KEY_SELECTIVE_ORG_ID, l1Org1Id);
+        org1.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_1_NAME);
+        org1.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_ALL_EXISTING_CHILDREN_ONLY);
+        org1.put(MAP_KEY_SELECTIVE_ROLES, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME,
+                APPLICATION_AUDIENCE)));
 
         organizations.put(L1_ORG_1_NAME, org1);
 
         // Organization 2
         Map<String, Object> org2 = new HashMap<>();
-        org2.put(MAP_KEY_ORG_DETAILS_ORG_ID, l1Org2Id);
-        org2.put(MAP_KEY_ORG_DETAILS_ORG_NAME, L1_ORG_2_NAME);
-        org2.put(MAP_KEY_ORG_DETAILS_POLICY, SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
-        org2.put(MAP_KEY_ORG_DETAILS_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+        org2.put(MAP_KEY_SELECTIVE_ORG_ID, l1Org2Id);
+        org2.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_2_NAME);
+        org2.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
+        org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME,
+                        APPLICATION_AUDIENCE),
+                createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE)));
 
         organizations.put(L1_ORG_2_NAME, org2);
 
         // Organization 3
         Map<String, Object> org3 = new HashMap<>();
-        org3.put(MAP_KEY_ORG_DETAILS_ORG_ID, l1Org3Id);
-        org3.put(MAP_KEY_ORG_DETAILS_ORG_NAME, L1_ORG_3_NAME);
-        org3.put(MAP_KEY_ORG_DETAILS_POLICY, SELECTED_ORG_ONLY);
-        org3.put(MAP_KEY_ORG_DETAILS_ROLES, Collections.emptyList());
+        org3.put(MAP_KEY_SELECTIVE_ORG_ID, l1Org3Id);
+        org3.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_3_NAME);
+        org3.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_ONLY);
+        org3.put(MAP_KEY_SELECTIVE_ROLES, Collections.emptyList());
 
         organizations.put(L1_ORG_3_NAME, org3);
 
@@ -365,9 +460,9 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
         Map<String, Object> expectedResults = new HashMap<>();
 
-        expectedResults.put(MAP_KEY_ORG_DETAILS_EXPECTED_ORG_COUNT, 7);
-        expectedResults.put(MAP_KEY_ORG_DETAILS_EXPECTED_ORG_IDS, Arrays.asList(l1Org1Id, l2Org1Id, l2Org2Id, l3Org1Id, l1Org2Id, l2Org3Id, l1Org3Id));
-        expectedResults.put(MAP_KEY_ORG_DETAILS_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_1_NAME, L2_ORG_1_NAME, L2_ORG_2_NAME, L3_ORG_1_NAME, L1_ORG_2_NAME, L2_ORG_3_NAME, L1_ORG_3_NAME));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 7);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Arrays.asList(l1Org1Id, l2Org1Id, l2Org2Id, l3Org1Id, l1Org2Id, l2Org3Id, l1Org3Id));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_1_NAME, L2_ORG_1_NAME, L2_ORG_2_NAME, L3_ORG_1_NAME, L1_ORG_2_NAME, L2_ORG_3_NAME, L1_ORG_3_NAME));
 
         Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
         expectedRolesPerExpectedOrg.put(l1Org1Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
@@ -378,7 +473,170 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         expectedRolesPerExpectedOrg.put(l2Org3Id, Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_1, L2_ORG_3_NAME, ORGANIZATION_AUDIENCE)));
         expectedRolesPerExpectedOrg.put(l1Org3Id, Collections.emptyList());
 
-        expectedResults.put(MAP_KEY_ORG_DETAILS_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+
+        return expectedResults;
+    }
+
+    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingTestCase2() {
+
+        Map<String, Map<String, Object>> organizations = new HashMap<>();
+
+        // Organization 2
+        Map<String, Object> org2 = new HashMap<>();
+        org2.put(MAP_KEY_SELECTIVE_ORG_ID, l1Org2Id);
+        org2.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_2_NAME);
+        org2.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
+        org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_2, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+
+        organizations.put(L1_ORG_2_NAME, org2);
+
+        // Organization 3
+        Map<String, Object> org3 = new HashMap<>();
+        org3.put(MAP_KEY_SELECTIVE_ORG_ID, l1Org3Id);
+        org3.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_3_NAME);
+        org3.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_ALL_EXISTING_AND_FUTURE_CHILDREN);
+        org3.put(MAP_KEY_SELECTIVE_ROLES, Collections.singletonList(createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE)));
+
+        organizations.put(L1_ORG_3_NAME, org3);
+
+        return organizations;
+    }
+
+    private Map<String, Object> setExpectedResultsForSelectiveUserSharingTestCase2() {
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 3);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Arrays.asList(l1Org2Id, l2Org3Id, l1Org3Id));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_2_NAME, L2_ORG_3_NAME, L1_ORG_3_NAME));
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
+        expectedRolesPerExpectedOrg.put(l1Org2Id, Arrays.asList(createRoleWithAudience(ORG_ROLE_1, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_2, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l2Org3Id, Arrays.asList(createRoleWithAudience(ORG_ROLE_1, L2_ORG_3_NAME, ORGANIZATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_2, L2_ORG_3_NAME, ORGANIZATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l1Org3Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE)));
+
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+
+        return expectedResults;
+    }
+
+    private Map<String, Object> setPolicyWithRolesForGeneralUserSharingTestCase1() {
+
+        Map<String, Object> policyWithRoles = new HashMap<>();
+
+        policyWithRoles.put(MAP_KEY_GENERAL_POLICY, ALL_EXISTING_ORGS_ONLY);
+        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+
+        return policyWithRoles;
+    }
+
+    private Map<String, Object> setExpectedResultsForGeneralUserSharingTestCase1() {
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 7);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Arrays.asList(l1Org1Id, l2Org1Id, l2Org2Id, l3Org1Id, l1Org2Id, l2Org3Id, l1Org3Id));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_1_NAME, L2_ORG_1_NAME, L2_ORG_2_NAME, L3_ORG_1_NAME, L1_ORG_2_NAME, L2_ORG_3_NAME, L1_ORG_3_NAME));
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
+        expectedRolesPerExpectedOrg.put(l1Org1Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l2Org1Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l2Org2Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l3Org1Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l1Org2Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l2Org3Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l1Org3Id, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+
+        return expectedResults;
+    }
+
+    private Map<String, Object> setPolicyWithRolesForGeneralUserSharingTestCase2() {
+
+        Map<String, Object> policyWithRoles = new HashMap<>();
+
+        policyWithRoles.put(MAP_KEY_GENERAL_POLICY, ALL_EXISTING_AND_FUTURE_ORGS);
+        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Collections.emptyList());
+
+        return policyWithRoles;
+    }
+
+    private Map<String, Object> setExpectedResultsForGeneralUserSharingTestCase2() {
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 7);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Arrays.asList(l1Org1Id, l2Org1Id, l2Org2Id, l3Org1Id, l1Org2Id, l2Org3Id, l1Org3Id));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_1_NAME, L2_ORG_1_NAME, L2_ORG_2_NAME, L3_ORG_1_NAME, L1_ORG_2_NAME, L2_ORG_3_NAME, L1_ORG_3_NAME));
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
+        expectedRolesPerExpectedOrg.put(l1Org1Id, Collections.emptyList());
+        expectedRolesPerExpectedOrg.put(l2Org1Id, Collections.emptyList());
+        expectedRolesPerExpectedOrg.put(l2Org2Id, Collections.emptyList());
+        expectedRolesPerExpectedOrg.put(l3Org1Id, Collections.emptyList());
+        expectedRolesPerExpectedOrg.put(l1Org2Id, Collections.emptyList());
+        expectedRolesPerExpectedOrg.put(l2Org3Id, Collections.emptyList());
+        expectedRolesPerExpectedOrg.put(l1Org3Id, Collections.emptyList());
+
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+
+        return expectedResults;
+    }
+
+    private Map<String, Object> setPolicyWithRolesForGeneralUserSharingTestCase3() {
+
+        Map<String, Object> policyWithRoles = new HashMap<>();
+
+        policyWithRoles.put(MAP_KEY_GENERAL_POLICY, IMMEDIATE_EXISTING_ORGS_ONLY);
+        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Collections.singletonList(createRoleWithAudience(ORG_ROLE_3, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+
+        return policyWithRoles;
+    }
+
+    private Map<String, Object> setExpectedResultsForGeneralUserSharingTestCase3() {
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 3);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Arrays.asList(l1Org1Id, l1Org2Id, l1Org3Id));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_1_NAME, L1_ORG_2_NAME, L1_ORG_3_NAME));
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
+        expectedRolesPerExpectedOrg.put(l1Org1Id, Collections.singletonList(createRoleWithAudience(ORG_ROLE_3, L1_ORG_1_NAME, ORGANIZATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l1Org2Id, Collections.singletonList(createRoleWithAudience(ORG_ROLE_3, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l1Org3Id, Collections.singletonList(createRoleWithAudience(ORG_ROLE_3, L1_ORG_3_NAME, ORGANIZATION_AUDIENCE)));
+
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+
+        return expectedResults;
+    }
+
+    private Map<String, Object> setPolicyWithRolesForGeneralUserSharingTestCase4() {
+
+        Map<String, Object> policyWithRoles = new HashMap<>();
+
+        policyWithRoles.put(MAP_KEY_GENERAL_POLICY, IMMEDIATE_EXISTING_AND_FUTURE_ORGS);
+        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+
+        return policyWithRoles;
+    }
+
+    private Map<String, Object> setExpectedResultsForGeneralUserSharingTestCase4() {
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 3);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Arrays.asList(l1Org1Id, l1Org2Id, l1Org3Id));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_1_NAME, L1_ORG_2_NAME, L1_ORG_3_NAME));
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
+        expectedRolesPerExpectedOrg.put(l1Org1Id, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, L1_ORG_1_NAME, ORGANIZATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l1Org2Id, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(l1Org3Id, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, L1_ORG_3_NAME, ORGANIZATION_AUDIENCE)));
+
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
 
         return expectedResults;
     }
