@@ -70,7 +70,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         Assert.assertNotNull(newUserName, "Please set a value to userName");
         Assert.assertNotNull(newUserRole, "Please set a value to userRole");
 
-        updateExcludedUserStoresClaimProperty("PRIMARY", false, claimManagementRestClient);
+        updateExcludedUserStoresClaimProperty(claimManagementRestClient,false);
     }
 
     public void clean() throws Exception {
@@ -87,17 +87,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         if (userMgtClient.roleNameExists(newUserRole + "tmp")) {
             userMgtClient.deleteRole(newUserRole + "tmp");
         }
-        updateExcludedUserStoresClaimProperty("PRIMARY", true, claimManagementRestClient);
-    }
-
-    /**
-     * Retrieves a set of skipped claim URIs.
-     *
-     * @return Set of skipped claim URIs.
-     */
-    protected Set<String> getExcludedClaims() {
-
-        return Collections.emptySet();
+        updateExcludedUserStoresClaimProperty(claimManagementRestClient,true);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
@@ -325,11 +315,9 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         UserProfileDTO profile
                 = userProfileMgtServiceClient.getUserProfile(newUserName, "default");
         String profileConfigs = profile.getProfileName();
-        Set<String> excludedClaims = getExcludedClaims();
 
         UserFieldDTO[] fields = Arrays.stream(
                 userProfileMgtServiceClient.getProfileFieldsForInternalStore().getFieldValues())
-            .filter(field -> !excludedClaims.contains(field.getClaimUri()))
             .map(field -> {
                 if ("Last Name".equalsIgnoreCase(field.getDisplayName())) {
                     field.setFieldValue(newUserName + "LastName");
@@ -455,10 +443,14 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
 
     protected abstract void setUserRole();
 
-    protected void updateExcludedUserStoresClaimProperty(String userStoreName, Boolean reset,
-                                                         ClaimManagementRestClient claimManagementRestClient)
-            throws Exception {
-
-    }
+    /**
+     * Update the excluded user stores claim property.
+     *
+     * @param claimManagementRestClient ClaimManagementRestClient.
+     * @param reset Boolean value to reset the excluded user stores claim property.
+     * @throws Exception Exception on updating the excluded user stores claim property.
+     */
+    protected void updateExcludedUserStoresClaimProperty(ClaimManagementRestClient claimManagementRestClient,
+                                                         Boolean reset) throws Exception {}
 
 }

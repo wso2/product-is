@@ -70,9 +70,8 @@ public class ReadWriteLDAPUserStoreManagerTestCase extends UserManagementService
     }
 
     @Override
-    protected void updateExcludedUserStoresClaimProperty(String userStoreName, Boolean reset,
-                                                         ClaimManagementRestClient claimManagementRestClient)
-            throws Exception {
+    protected void updateExcludedUserStoresClaimProperty(ClaimManagementRestClient claimManagementRestClient,
+                                                         Boolean reset) throws Exception {
 
         String emailAddressesClaimUpdateRequest;
         String mobileNumbersClaimUpdateRequest;
