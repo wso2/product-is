@@ -20,13 +20,12 @@ package org.wso2.identity.integration.test.identity.mgt;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -118,7 +117,6 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     private OIDCApplication oidcApplication;
     private CloseableHttpClient oidcClient;
     private final CookieStore cookieStore = new BasicCookieStore();
-    private MockApplicationServer mockApplicationServer;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -138,31 +136,11 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         initUsers();
         initRoles();
         initGroups();
-
-        // Initialize OIDC HTTP Client.
-        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
-                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
-                .build();
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setCookieSpec(CookieSpecs.DEFAULT)
-                .build();
-        oidcClient = HttpClientBuilder.create()
-                .setDefaultRequestConfig(requestConfig)
-                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
-                .setRedirectStrategy(new DefaultRedirectStrategy() {
-                    @Override
-                    protected boolean isRedirectable(String method) {
-
-                        return false;
-                    }
-                }).build();
+        initOIDCClient();
         
         // Initialize OIDC application
         oidcApplication = initApplication();
         createApplication(oidcApplication);
-
-        mockApplicationServer = new MockApplicationServer();
-        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -187,23 +165,41 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         if (oidcClient != null) {
             oidcClient.close();
         }
-        mockApplicationServer.stop();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void clear() {
+
+        cookieStore.clear();
     }
 
     @Test(description = "Test login with password expiry disabled.")
     public void testLoginPasswordExpiryDisabled() throws Exception {
 
-        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false);
+        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
-    private void performLogin(String userName, String password, boolean expectedExpired) throws Exception {
+    @Test(description = "Test login with password expiry disabled.")
+    public void testLoginPasswordExpiryEnabledWithNoRules() throws Exception {
+
+        setPasswordExpirationPolicy(true, false, true);
+        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
+    }
+
+    @Test(description = "Test login with password expiry disabled.")
+    public void testLoginPasswordExpiryEnabledWithNoRulesDefaultSkip() throws Exception {
+
+        setPasswordExpirationPolicy(true, true, true);
+        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
+    }
+
+    private void performLogin(String userName, String password, boolean expectedExpired, boolean resetPassword)
+            throws Exception {
 
         String loginPageURL = getLoginPageURL();
         HttpResponse response = sendGetRequest(oidcClient, loginPageURL);
+        System.out.println("DEBUG BODY login get: " + response);
         String sessionDataKey = extractSessionDataKey(response);
-
-        System.out.println("DEBUG BODY: " + response);
-        System.out.println("DEBUG STATUS: " + response.getStatusLine());
 
         response = sendLoginPostForCustomUsers(oidcClient, sessionDataKey, userName, password);
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
@@ -211,13 +207,25 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         if (expectedExpired) {
-            // TODO: Improve logic here.
-            Assert.assertTrue(EntityUtils.toString(response.getEntity()).contains(PASSWORD_EXPIRED_ERROR_TEXT),
-                    "Expected password expired message not found for user: " + userName);
+            System.out.println("DEBUG BODY after expired login attempt: " + response);
+            EntityUtils.consume(response.getEntity());
+            String expiredRedirect = locationHeader.getValue();
+            Assert.assertTrue(expiredRedirect.contains("passwordExpired=true"),
+                    "Password not flagged as expired in redirect?");
+            if (!resetPassword) {
+                return;
+            }
+
+            // Reset password.
+            HttpResponse resetPage = sendGetRequest(oidcClient, expiredRedirect);
+            System.out.println("DEBUG BODY after expired login attempt reset password: " + resetPage);
             return;
         }
 
         response = sendGetRequest(oidcClient, locationHeader.getValue());
+        System.out.println("Second GET body: " + EntityUtils.toString(response.getEntity())); // Debug
+        System.out.println("Second GET status: " + response.getStatusLine());
+
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader,
                 "Redirection URL to the application with authorization code is null.");
@@ -330,6 +338,22 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     //             "Password reset confirmation message not found");
     // }
 
+    private void initOIDCClient() {
+
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        oidcClient = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultCookieStore(cookieStore)
+                .disableRedirectHandling()
+                .build();
+    }
+
     private OIDCApplication initApplication() {
 
         OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
@@ -417,10 +441,10 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      *
      * @param enabled Whether password expiration is enabled.
      * @param skipIfNoApplicableRules Whether to skip expiration if no rules apply.
-     * @param noRules Whether to skip adding rules.
+     * @param resetRules Whether to skip adding rules.
      * @throws Exception If an error occurs.
      */
-    private void setPasswordExpirationPolicy(boolean enabled, boolean skipIfNoApplicableRules, boolean noRules)
+    private void setPasswordExpirationPolicy(boolean enabled, boolean skipIfNoApplicableRules, boolean resetRules)
             throws Exception {
 
         ConnectorsPatchReq patchReq = new ConnectorsPatchReq();
@@ -441,31 +465,31 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         // Set skip if no applicable rules.
         PropertyReq skipProperty = new PropertyReq();
         skipProperty.setName(PASSWORD_EXPIRY_SKIP_IF_NO_APPLICABLE_RULES);
-        skipProperty.setValue(noRules ? StringUtils.EMPTY : String.valueOf(skipIfNoApplicableRules));
+        skipProperty.setValue(String.valueOf(skipIfNoApplicableRules));
         patchReq.addProperties(skipProperty);
         
         // Rule 1: Skip password expiration for users in role1 and role2.
         PropertyReq rule1Property = new PropertyReq();
         rule1Property.setName(PASSWORD_EXPIRY_RULE1);
-        rule1Property.setValue(noRules ? StringUtils.EMPTY : String.format("1,0,roles,ne,%s,%s", role1Id, role2Id));
+        rule1Property.setValue(resetRules ? StringUtils.EMPTY : String.format("1,0,roles,ne,%s,%s", role1Id, role2Id));
         patchReq.addProperties(rule1Property);
         
         // Rule 2: Apply password expiration for 20 days for users in role1.
         PropertyReq rule2Property = new PropertyReq();
         rule2Property.setName(PASSWORD_EXPIRY_RULE2);
-        rule2Property.setValue(noRules ? StringUtils.EMPTY : String.format("2,20,roles,eq,%s", role1Id));
+        rule2Property.setValue(resetRules ? StringUtils.EMPTY : String.format("2,20,roles,eq,%s", role1Id));
         patchReq.addProperties(rule2Property);
         
         // Rule 3: Skip password expiration for users in group1 and group2.
         PropertyReq rule3Property = new PropertyReq();
         rule3Property.setName(PASSWORD_EXPIRY_RULE3);
-        rule3Property.setValue(noRules ? StringUtils.EMPTY : String.format("3,0,groups,ne,%s,%s", group1Id, group2Id));
+        rule3Property.setValue(resetRules ? StringUtils.EMPTY : String.format("3,0,groups,ne,%s,%s", group1Id, group2Id));
         patchReq.addProperties(rule3Property);
         
         // Rule 4: Apply password expiration for 10 days for users in group1.
         PropertyReq rule4Property = new PropertyReq();
         rule4Property.setName(PASSWORD_EXPIRY_RULE4);
-        rule4Property.setValue(noRules ? StringUtils.EMPTY : String.format("4,10,groups,eq,%s", group1Id));
+        rule4Property.setValue(resetRules ? StringUtils.EMPTY : String.format("4,10,groups,eq,%s", group1Id));
         patchReq.addProperties(rule4Property);
 
         identityGovernanceRestClient.updateConnectors(PASSWORD_EXPIRY_CATEGORY_ID, PASSWORD_EXPIRY_CONNECTOR_ID,
