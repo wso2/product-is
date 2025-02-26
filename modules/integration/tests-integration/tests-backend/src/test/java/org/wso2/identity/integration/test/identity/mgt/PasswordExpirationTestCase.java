@@ -19,17 +19,15 @@
 package org.wso2.identity.integration.test.identity.mgt;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.governance.stub.bean.Property;
-import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
-import org.wso2.identity.integration.common.clients.mgt.IdentityGovernanceServiceClient;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.base.MockApplicationServer;
+import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
@@ -46,11 +44,40 @@ import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1
 
 import java.io.IOException;
 
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
-public class PasswordExpirationTestCase extends ISIntegrationTest {
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.config.Lookup;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
+import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
+import org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
-    private static final Log log = LogFactory.getLog(PasswordExpirationTestCase.class);
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+
+public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
+
     private static final String TEST_USER1_USERNAME = "pwdExpiryTestUser1";
     private static final String TEST_USER2_USERNAME = "pwdExpiryTestUser2";
     private static final String TEST_USER3_USERNAME = "pwdExpiryTestUser3";
@@ -69,13 +96,9 @@ public class PasswordExpirationTestCase extends ISIntegrationTest {
     private static final String PASSWORD_EXPIRY_TIME = "passwordExpiry.passwordExpiryInDays";
     private static final String PASSWORD_EXPIRY_SKIP_IF_NO_APPLICABLE_RULES = "passwordExpiry.skipIfNoApplicableRules";
     private static final String PASSWORD_EXPIRY_RULE1 = "passwordExpiry.rule1";
-    private static final String PASSWORD_EXPIRY_RULE2 = "passwordExpiry.rule1";
-    private static final String PASSWORD_EXPIRY_RULE3 = "passwordExpiry.rule1";
-    private static final String PASSWORD_EXPIRY_RULE4 = "passwordExpiry.rule1";
-
-    private AuthenticatorClient loginClient;
-    private SCIM2RestClient scim2RestClient;
-    private IdentityGovernanceRestClient identityGovernanceRestClient;
+    private static final String PASSWORD_EXPIRY_RULE2 = "passwordExpiry.rule2";
+    private static final String PASSWORD_EXPIRY_RULE3 = "passwordExpiry.rule3";
+    private static final String PASSWORD_EXPIRY_RULE4 = "passwordExpiry.rule4";
     
     private String user1Id;
     private String user2Id;
@@ -86,26 +109,60 @@ public class PasswordExpirationTestCase extends ISIntegrationTest {
     private String group1Id;
     private String group2Id;
 
+    private static final String PASSWORD_EXPIRED_ERROR_TEXT = "Your current password has expired";
+    private static final String PASSWORD_RESET_CONFIRMATION_TEXT = "Password Reset Successfully";
+
+    private SCIM2RestClient scim2RestClient;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
+
+    private OIDCApplication oidcApplication;
+    private CloseableHttpClient oidcClient;
+    private final CookieStore cookieStore = new BasicCookieStore();
+    private MockApplicationServer mockApplicationServer;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
 
-        loginClient = new AuthenticatorClient(backendURL);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         /*
-        * The following steps are performed in this method:
         * 1. Add users - user1, user2, user3, user4.
         * 2. Create roles - role1, role2.
         * 3. Assign users to roles - user1 -> role1, user2 -> role1, role2.
         * 4. Create groups - group1, group2.
         * 5. Assign users to groups - user3 -> group1, user4 -> group1, group2.
          */
-        addUsers();
-        configureRoles();
-        configureGroups();
+        initUsers();
+        initRoles();
+        initGroups();
+
+        // Initialize OIDC HTTP Client.
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        oidcClient = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setRedirectStrategy(new DefaultRedirectStrategy() {
+                    @Override
+                    protected boolean isRedirectable(String method) {
+
+                        return false;
+                    }
+                }).build();
+        
+        // Initialize OIDC application
+        oidcApplication = initApplication();
+        createApplication(oidcApplication);
+
+        mockApplicationServer = new MockApplicationServer();
+        mockApplicationServer.start();
     }
 
     @AfterClass(alwaysRun = true)
@@ -114,42 +171,174 @@ public class PasswordExpirationTestCase extends ISIntegrationTest {
         // Reset password expiration policy.
         setPasswordExpirationPolicy(false, false, true);
 
-        // Delete users
         if (user1Id != null) scim2RestClient.deleteUser(user1Id);
         if (user2Id != null) scim2RestClient.deleteUser(user2Id);
         if (user3Id != null) scim2RestClient.deleteUser(user3Id);
         if (user4Id != null) scim2RestClient.deleteUser(user4Id);
-
-        // Delete roles.
         if (role1Id != null) scim2RestClient.deleteV2Role(role1Id);
         if (role2Id != null) scim2RestClient.deleteV2Role(role2Id);
-
-        // Delete groups.
         if (group1Id != null) scim2RestClient.deleteGroup(group1Id);
         if (group2Id != null) scim2RestClient.deleteGroup(group2Id);
 
-        // Close the clients.
         if (scim2RestClient != null) scim2RestClient.closeHttpClient();
         if (identityGovernanceRestClient != null) identityGovernanceRestClient.closeHttpClient();
+
+        deleteApplication(oidcApplication);
+        if (oidcClient != null) {
+            oidcClient.close();
+        }
+        mockApplicationServer.stop();
+    }
+
+    @Test(description = "Test login with password expiry disabled.")
+    public void testLoginPasswordExpiryDisabled() throws Exception {
+
+        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false);
+    }
+
+    private void performLogin(String userName, String password, boolean expectedExpired) throws Exception {
+
+        String loginPageURL = getLoginPageURL();
+        HttpResponse response = sendGetRequest(oidcClient, loginPageURL);
+        String sessionDataKey = extractSessionDataKey(response);
+
+        System.out.println("DEBUG BODY: " + response);
+        System.out.println("DEBUG STATUS: " + response.getStatusLine());
+
+        response = sendLoginPostForCustomUsers(oidcClient, sessionDataKey, userName, password);
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader, "Location header expected post login is not available.");
+        EntityUtils.consume(response.getEntity());
+
+        if (expectedExpired) {
+            // TODO: Improve logic here.
+            Assert.assertTrue(EntityUtils.toString(response.getEntity()).contains(PASSWORD_EXPIRED_ERROR_TEXT),
+                    "Expected password expired message not found for user: " + userName);
+            return;
+        }
+
+        response = sendGetRequest(oidcClient, locationHeader.getValue());
+        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader,
+                "Redirection URL to the application with authorization code is null.");
+        EntityUtils.consume(response.getEntity());
+
+        String authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
+        Assert.assertNotNull(authorizationCode, "Authorization code not found in the response.");
+    }
+
+    /**
+     * Get the OIDC login page URL by sending a request to the authorize endpoint.
+     *
+     * @return The URL of the login page
+     * @throws Exception If an error occurs during the request
+     */
+    private String getLoginPageURL() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("client_id", oidcApplication.getClientId()));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", oidcApplication.getCallBackURL()));
+        urlParameters.add(new BasicNameValuePair("scope", "openid"));
+
+        HttpResponse response = sendPostRequestWithParameters(oidcClient, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(locationHeader,
+                "Location header expected for authorize request is not available.");
+        EntityUtils.consume(response.getEntity());
+
+        return locationHeader.getValue();
+    }
+
+    /**
+     * Extract the session data key from the login page response.
+     *
+     * @param response The HTTP response containing the login page.
+     * @return The extracted session data key.
+     * @throws Exception If an error occurs during extraction
+     */
+    private String extractSessionDataKey(HttpResponse response) throws Exception {
+
+        Map<String, Integer> keyPositionMap = new HashMap<>(1);
+        keyPositionMap.put("name=\"sessionDataKey\"", 1);
+        List<KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
+        Assert.assertNotNull(keyValues, "SessionDataKey key value is null.");
+
+        String sessionDataKey = keyValues.get(0).getValue();
+        Assert.assertNotNull(sessionDataKey, "Session data key is null.");
+        EntityUtils.consume(response.getEntity());
+        return sessionDataKey;
+    }
+
+    /**
+     * Get the authorization code from the URL.
+     *
+     * @param location The URL containing the authorization code.
+     * @return The extracted authorization code.
+     */
+    private String getAuthorizationCodeFromURL(String location) {
+
+        URI uri = URI.create(location);
+        return URLEncodedUtils.parse(uri, StandardCharsets.UTF_8).stream()
+                .filter(param -> "code".equals(param.getName()))
+                .map(NameValuePair::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Reset an expired password through the password reset form.
+     *
+     * @param loginResponse The HTTP response containing the password reset form
+     * @param newPassword The new password to set
+     * @throws Exception If an error occurs during password reset
+     */
+    // private void resetExpiredPassword(HttpResponse loginResponse, String newPassword) throws Exception {
+
+    //     String responseContent = EntityUtils.toString(loginResponse.getEntity());
+    //     Document doc = Jsoup.parse(responseContent);
+    //     Element passwordResetForm = doc.selectFirst("form");
+    //     Assert.assertNotNull(passwordResetForm, "Password reset form not found");
+
+    //     // Extract form action URL
+    //     String formAction = passwordResetForm.attr("action");
+    //     String actionUrl;
+    //     if (formAction.startsWith("http")) {
+    //         actionUrl = formAction;
+    //     } else {
+    //         actionUrl = serverURL + formAction;
+    //     }
+
+    //     // Extract hidden form fields
+    //     List<NameValuePair> resetParams = new ArrayList<>();
+    //     for (Element input : passwordResetForm.select("input[type=hidden]")) {
+    //         resetParams.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
+    //     }
+
+    //     // Add new password parameters
+    //     resetParams.add(new BasicNameValuePair("reset-password", newPassword));
+    //     resetParams.add(new BasicNameValuePair("reset-password2", newPassword));
+
+    //     // Submit password reset form
+    //     HttpResponse resetResponse = sendPostRequestWithParameters(oidcClient, resetParams, actionUrl);
+    //     String resetResponseContent = EntityUtils.toString(resetResponse.getEntity());
+
+    //     // Verify successful password reset
+    //     Assert.assertTrue(resetResponseContent.contains(PASSWORD_RESET_CONFIRMATION_TEXT),
+    //             "Password reset confirmation message not found");
+    // }
+
+    private OIDCApplication initApplication() {
+
+        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
+                OIDCUtilTest.playgroundAppOneAppCallBackUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
+        return playgroundApp;
     }
     
-    @Test(groups = "wso2.is", description = "Test enabling password expiration")
-    public void testEnablePasswordExpiration() throws Exception {
-        // Configure password expiration (1 day)
-        setPasswordExpirationPolicy(true, false, true);
-
-        
-    }
-    
-//    @Test(groups = "wso2.is", description = "Test authentication with non-expired password for user with role",
-//            dependsOnMethods = "testEnablePasswordExpiration")
-//    public void testAuthenticationWithNonExpiredPasswordForRoleUser() throws Exception {
-//        // Login with valid credentials for user1 (assigned to role1)
-//        String sessionCookie = loginClient.login(TEST_USER1_USERNAME, TEST_USER_PASSWORD, isServer.getContextUrls().getBackEndUrl());
-//        Assert.assertNotNull(sessionCookie, "Authentication with non-expired password should succeed for role user");
-//    }
-
-    private void addUsers() throws Exception {
+    private void initUsers() throws Exception {
 
         user1Id = addUser(TEST_USER1_USERNAME);
         Assert.assertNotNull(user1Id, "Failed to create user1");
@@ -174,7 +363,7 @@ public class PasswordExpirationTestCase extends ISIntegrationTest {
         return scim2RestClient.createUser(user);
     }
 
-    private void configureRoles() throws IOException {
+    private void initRoles() throws IOException {
 
         // Create roles.
         RoleV2 role1 = new RoleV2(null, TEST_ROLE1, Collections.emptyList(), Collections.emptyList());
@@ -201,11 +390,11 @@ public class PasswordExpirationTestCase extends ISIntegrationTest {
         role2PatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
         role2PatchReqObject.setPath(USERS_PATH);
         role2PatchReqObject.addValue(new ListObject().value(user2Id));
-        scim2RestClient.updateUsersOfRoleV2(role1Id,
+        scim2RestClient.updateUsersOfRoleV2(role2Id,
                 new PatchOperationRequestObject().addOperations(role2PatchReqObject));
     }
 
-    private void configureGroups() throws Exception {
+    private void initGroups() throws Exception {
 
         // Create group1.
         group1Id = scim2RestClient.createGroup(
@@ -223,12 +412,12 @@ public class PasswordExpirationTestCase extends ISIntegrationTest {
         Assert.assertNotNull(group2Id, "Failed to create group2");
     }
 
-
     /**
      * Update password expiration policy with rules.
      *
      * @param enabled Whether password expiration is enabled.
      * @param skipIfNoApplicableRules Whether to skip expiration if no rules apply.
+     * @param noRules Whether to skip adding rules.
      * @throws Exception If an error occurs.
      */
     private void setPasswordExpirationPolicy(boolean enabled, boolean skipIfNoApplicableRules, boolean noRules)
@@ -283,5 +472,4 @@ public class PasswordExpirationTestCase extends ISIntegrationTest {
                 patchReq);
         Thread.sleep(5000);
     }
-
 }
