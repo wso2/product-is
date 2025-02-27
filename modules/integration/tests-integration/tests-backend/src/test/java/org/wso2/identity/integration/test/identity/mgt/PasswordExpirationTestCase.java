@@ -81,7 +81,24 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 
+/**
+ * Test cases for password expiration.
+ */
 public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
+
+    private static final String USERS_PATH = "users";
+    private static final String LAST_PASSWORD_UPDATE_CLAIM = "http://wso2.org/claims/identity/lastPasswordUpdateTime";
+
+    private static final String PASSWORD_EXPIRY_CATEGORY_ID = "UGFzc3dvcmQgUG9saWNpZXM";
+    private static final String PASSWORD_EXPIRY_CONNECTOR_ID = "cGFzc3dvcmRFeHBpcnk";
+    private static final String PASSWORD_EXPIRY_ENABLED = "passwordExpiry.enablePasswordExpiry";
+    private static final String PASSWORD_EXPIRY_TIME = "passwordExpiry.passwordExpiryInDays";
+    private static final String PASSWORD_EXPIRY_SKIP_IF_NO_APPLICABLE_RULES = "passwordExpiry.skipIfNoApplicableRules";
+    private static final String PASSWORD_EXPIRY_RULE1 = "passwordExpiry.rule1";
+    private static final String PASSWORD_EXPIRY_RULE2 = "passwordExpiry.rule2";
+    private static final String PASSWORD_EXPIRY_RULE3 = "passwordExpiry.rule3";
+    private static final String PASSWORD_EXPIRY_RULE4 = "passwordExpiry.rule4";
+    private static final int DEFAULT_EXPIRY_TIME = 30;
 
     private static final String TEST_USER1_USERNAME = "pwdExpiryTestUser1";
     private static final String TEST_USER2_USERNAME = "pwdExpiryTestUser2";
@@ -94,27 +111,8 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     private static final String TEST_GROUP1 = "pwdExpiryTestGroup1";
     private static final String TEST_GROUP2 = "pwdExpiryTestGroup2";
 
-    private static final String USERS_PATH = "users";
-    private static final String LAST_PASSWORD_UPDATE_CLAIM = "http://wso2.org/claims/identity/lastPasswordUpdateTime";
-    private static final String PASSWORD_EXPIRY_CATEGORY_ID = "UGFzc3dvcmQgUG9saWNpZXM";
-    private static final String PASSWORD_EXPIRY_CONNECTOR_ID = "cGFzc3dvcmRFeHBpcnk";
-    private static final String PASSWORD_EXPIRY_ENABLED = "passwordExpiry.enablePasswordExpiry";
-    private static final String PASSWORD_EXPIRY_TIME = "passwordExpiry.passwordExpiryInDays";
-    private static final String PASSWORD_EXPIRY_SKIP_IF_NO_APPLICABLE_RULES = "passwordExpiry.skipIfNoApplicableRules";
-    private static final String PASSWORD_EXPIRY_RULE1 = "passwordExpiry.rule1";
-    private static final String PASSWORD_EXPIRY_RULE2 = "passwordExpiry.rule2";
-    private static final String PASSWORD_EXPIRY_RULE3 = "passwordExpiry.rule3";
-    private static final String PASSWORD_EXPIRY_RULE4 = "passwordExpiry.rule4";
-    private static final int DEFAULT_EXPIRY_TIME = 30;
-    
-    private String user1Id;
-    private String user2Id;
-    private String user3Id;
-    private String user4Id;
-    private String role1Id;
-    private String role2Id;
-    private String group1Id;
-    private String group2Id;
+    private String user1Id, user2Id, user3Id, user4Id;
+    private String role1Id, role2Id, group1Id, group2Id;
 
     private SCIM2RestClient scim2RestClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -147,10 +145,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         initRoles();
         initGroups();
         initOIDCClient();
-        
-        // Initialize OIDC application
-        oidcApplication = initApplication();
-        createApplication(oidcApplication);
+        initOIDCApplication();
     }
 
     @AfterClass(alwaysRun = true)
@@ -185,8 +180,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Test scenario: Ensure user1 can log in when password expiry is disabled.
-     * Even though the password was last updated 100 days ago.
+     * Test scenario: user1 can log in with an old password when password expiry is disabled.
      */
     @Test(description = "Test user1 login with password expiry disabled.")
     public void testUser1LoginWithExpiryDisabled() throws Exception {
@@ -195,12 +189,11 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
         setPasswordExpirationPolicy(false, false, false);
 
-        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
+        performOIDCLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
     /**
-     * Test scenario: If password expiry is enabled but no rules are set, the default behavior is "apply".
-     * user1's password is expired since last update > default expiry.
+     * Test scenario: user1 is forced to reset the password when expiry is enabled and no rules exist (default=apply).
      */
     @Test(description = "Test user1 login with password expiry enabled, no rules, default = apply.")
     public void testUser1LoginWithNoRulesDefaultApply() throws Exception {
@@ -209,12 +202,11 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
         setPasswordExpirationPolicy(true, false, true);
 
-        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
+        performOIDCLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
     }
 
     /**
-     * Test scenario: If password expiry is enabled but no rules are set, the default behavior is "skip".
-     * user1 can still login if last password update is old.
+     * Test scenario: user1 can still log in with an old password when expiry is enabled, default=skip and no rules.
      */
     @Test(description = "Test user1 login with password expiry enabled, no rules, default = skip.")
     public void testUser1LoginWithNoRulesDefaultSkip() throws Exception {
@@ -223,12 +215,12 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
         setPasswordExpirationPolicy(true, true, true);
 
-        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
+        performOIDCLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
     /**
-     * Test scenario: user1 is subject to rule2 => password expiry after 20 days, default = skip.
-     * user1 with 25 days old password => expired.
+     * Test scenario: user1 is subject to rule2 => password expiry after 20 days (with skip if no applicable rules).
+     * user1 with a 25-day-old password => expired. Then reset and log in again with new password.
      */
     @Test(priority = 99, description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
     public void testUser1LoginWithRules() throws Exception {
@@ -238,16 +230,16 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setPasswordExpirationPolicy(true, true, false);
 
         // Expect expired and reset password.
-        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, true);
+        performOIDCLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, true);
 
         // Try to log in with the new password.
         cookieStore.clear();
-        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
+        performOIDCLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
     }
 
     /**
-     * Test scenario: user2 is subject to default rule as no rules exist => apply password expiry.
-     * user2's password is expired since last update > default expiry.
+     * Test scenario: user2 is subject to the default (no rules => apply) password expiry logic.
+     * user2's password is older than the default expiry days, so password is expired.
      */
     @Test(description = "Test user2 login with password expiry enabled, no rules, default = apply.")
     public void testUser2LoginWithNoRulesDefaultApply() throws Exception {
@@ -256,12 +248,11 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setLastPasswordUpdateTime(TEST_USER2_USERNAME, 100);
         setPasswordExpirationPolicy(true, false, true);
 
-        performLoginAndAssert(TEST_USER2_USERNAME, TEST_USER_PASSWORD, true, false);
+        performOIDCLoginAndAssert(TEST_USER2_USERNAME, TEST_USER_PASSWORD, true, false);
     }
 
     /**
-     * Test scenario: user2 is subject to rule1 => skip password expiry for users in role1 and role2.
-     * user2 can still login even though password is old.
+     * Test scenario: user2 is subject to rule1 => skip password expiry for users in role1 or role2.
      */
     @Test(description = "Test user2 login with password expiry enabled, with rules, default = apply.")
     public void testUser2LoginWithRules() throws Exception {
@@ -270,31 +261,33 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setLastPasswordUpdateTime(TEST_USER2_USERNAME, 100);
         setPasswordExpirationPolicy(true, false, false);
 
-        performLoginAndAssert(TEST_USER2_USERNAME, TEST_USER_PASSWORD, false, false);
+        performOIDCLoginAndAssert(TEST_USER2_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
     /**
-     * Test scenario: user3 is subject to rule4 => password expiry after 10 days for users in group1.
+     * Test scenario: user3 belongs to group1 => subject to rule4 (password expires after 10 days).
+     * First set the password to 5 days old (not expired), then 15 days old (expired). In the expired case,
+     * user3 must reset the password. Finally, verify that logging in with the new password is successful.
      */
     @Test(description = "Test user3 login with password expiry enabled, with rules, default = apply.")
     public void testUser3LoginWithRules() throws Exception {
 
-        // Set last password update time to 5 days ago.
+        // Set last password update time to 5 days ago => not expired.
         setLastPasswordUpdateTime(TEST_USER3_USERNAME, 5);
         setPasswordExpirationPolicy(true, false, false);
 
-        performLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, false, false);
+        performOIDCLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, false, false);
         cookieStore.clear();
 
-        // Set last password update time to 15 days ago.
+        // Now set it to 15 days => should be expired under rule4 (10 days).
         setLastPasswordUpdateTime(TEST_USER3_USERNAME, 15);
         setPasswordExpirationPolicy(true, false, false);
 
-        performLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, true, true);
+        performOIDCLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, true, true);
         cookieStore.clear();
 
-        // Try to log in with the new password.
-        performLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
+        // Verify the new password works.
+        performOIDCLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
     }
 
     /**
@@ -306,7 +299,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setLastPasswordUpdateTime(TEST_USER4_USERNAME, 100);
         setPasswordExpirationPolicy(true, false, false);
 
-        performLoginAndAssert(TEST_USER4_USERNAME, TEST_USER_PASSWORD, false, false);
+        performOIDCLoginAndAssert(TEST_USER4_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
     /**
@@ -318,12 +311,11 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      * @param resetPassword   Whether to reset the password.
      * @throws Exception If an error occurs.
      */
-    private void performLoginAndAssert(String userName, String password, boolean expectedExpired,
-                                       boolean resetPassword) throws Exception {
+    private void performOIDCLoginAndAssert(String userName, String password, boolean expectedExpired,
+                                           boolean resetPassword) throws Exception {
 
         String loginPageURL = getLoginPageURL();
         HttpResponse response = sendGetRequest(oidcClient, loginPageURL);
-        System.out.println("DEBUG BODY login get: " + response);
         String sessionDataKey = extractSessionDataKey(response);
 
         response = sendLoginPostForCustomUsers(oidcClient, sessionDataKey, userName, password);
@@ -332,7 +324,6 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(response.getEntity());
 
         if (expectedExpired) {
-            System.out.println("DEBUG BODY after expired login attempt: " + response);
             EntityUtils.consume(response.getEntity());
             String expiredRedirect = locationHeader.getValue();
             Assert.assertTrue(expiredRedirect.contains("passwordExpired=true"),
@@ -351,8 +342,6 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         }
 
         response = sendGetRequest(oidcClient, locationHeader.getValue());
-        System.out.println("Second GET body: " + EntityUtils.toString(response.getEntity())); // Debug
-        System.out.println("Second GET status: " + response.getStatusLine());
 
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader,
@@ -456,8 +445,9 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Resolve a relative form action against the base URL from the original response.
-     * If the form action is already absolute, just return it as is.
+     * Resolve a relative form action. If the form action is already absolute, just return it as is.
+     *
+     * @param formAction The form action to resolve.
      */
     private String resolveURL(String formAction) {
 
@@ -467,105 +457,6 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         }
         // Otherwise, parse the original response's request URL.
         return serverURL + "/accountrecoveryendpoint/" + formAction;
-    }
-
-    private void initOIDCClient() {
-
-        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
-                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
-                .build();
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setCookieSpec(CookieSpecs.DEFAULT)
-                .build();
-        oidcClient = HttpClientBuilder.create()
-                .setDefaultRequestConfig(requestConfig)
-                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
-                .setDefaultCookieStore(cookieStore)
-                .disableRedirectHandling()
-                .build();
-    }
-
-    private OIDCApplication initApplication() {
-
-        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
-                OIDCUtilTest.playgroundAppOneAppCallBackUri);
-        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
-        return playgroundApp;
-    }
-    
-    private void initUsers() throws Exception {
-
-        user1Id = addUser(TEST_USER1_USERNAME);
-        Assert.assertNotNull(user1Id, "Failed to create user1");
-
-        user2Id = addUser(TEST_USER2_USERNAME);
-        Assert.assertNotNull(user2Id, "Failed to create user2");
-
-        user3Id = addUser(TEST_USER3_USERNAME);
-        Assert.assertNotNull(user3Id, "Failed to create user3");
-
-        user4Id = addUser(TEST_USER4_USERNAME);
-        Assert.assertNotNull(user4Id, "Failed to create user4");
-    }
-
-    private String addUser(String userName) throws Exception {
-
-        UserObject user = new UserObject();
-        user.setUserName(userName);
-        user.setPassword(TEST_USER_PASSWORD);
-        user.setName(new Name().givenName(userName));
-        user.addEmail(new Email().value(userName + "@example.com"));
-        return scim2RestClient.createUser(user);
-    }
-
-    private void initRoles() throws IOException {
-
-        // Create roles.
-        RoleV2 role1 = new RoleV2(null, TEST_ROLE1, Collections.emptyList(), Collections.emptyList());
-        role1Id = scim2RestClient.addV2Role(role1);
-        Assert.assertNotNull(role1Id, "Failed to create role1");
-
-        RoleV2 role2 = new RoleV2(null, TEST_ROLE2, Collections.emptyList(), Collections.emptyList());
-        role2Id = scim2RestClient.addV2Role(role2);
-        Assert.assertNotNull(role2Id, "Failed to create role2");
-
-        // Assign user1 & user2 -> role1.
-        RoleItemAddGroupobj role1PatchReqObject = new RoleItemAddGroupobj();
-        role1PatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
-        role1PatchReqObject.setPath(USERS_PATH);
-        role1PatchReqObject.addValue(new ListObject().value(user1Id));
-        scim2RestClient.updateUsersOfRoleV2(role1Id,
-                new PatchOperationRequestObject().addOperations(role1PatchReqObject));
-
-        role1PatchReqObject.addValue(new ListObject().value(user2Id));
-        scim2RestClient.updateUsersOfRoleV2(role1Id,
-                new PatchOperationRequestObject().addOperations(role1PatchReqObject));
-
-        // Assign user2 -> role2.
-        RoleItemAddGroupobj role2PatchReqObject = new RoleItemAddGroupobj();
-        role2PatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
-        role2PatchReqObject.setPath(USERS_PATH);
-        role2PatchReqObject.addValue(new ListObject().value(user2Id));
-        scim2RestClient.updateUsersOfRoleV2(role2Id,
-                new PatchOperationRequestObject().addOperations(role2PatchReqObject));
-    }
-
-    private void initGroups() throws Exception {
-
-        // Create group1.
-        group1Id = scim2RestClient.createGroup(
-                new GroupRequestObject()
-                        .displayName(TEST_GROUP1)
-                        .addMember(new MemberItem().value(user3Id))
-                        .addMember(new MemberItem().value(user4Id)));
-        Assert.assertNotNull(group1Id, "Failed to create group1");
-
-        // Create group2.
-        group2Id = scim2RestClient.createGroup(
-                new GroupRequestObject()
-                        .displayName(TEST_GROUP2)
-                        .addMember(new MemberItem().value(user4Id)));
-        Assert.assertNotNull(group2Id, "Failed to create group2");
     }
 
     /**
@@ -648,5 +539,105 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
 
         // Update claim value through userStoreClient since last password update is read-only in SCIM2.
         userStoreClient.setUserClaimValues(username, claimValues, UserCoreConstants.DEFAULT_PROFILE);
+    }
+
+    private void initOIDCClient() {
+
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
+        oidcClient = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultCookieStore(cookieStore)
+                .disableRedirectHandling()
+                .build();
+    }
+
+    private void initOIDCApplication() throws Exception {
+
+        OIDCApplication playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppOneAppName,
+                OIDCUtilTest.playgroundAppOneAppCallBackUri);
+        playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
+        oidcApplication = playgroundApp;
+        createApplication(oidcApplication);
+    }
+
+    private void initUsers() throws Exception {
+
+        user1Id = addUser(TEST_USER1_USERNAME);
+        Assert.assertNotNull(user1Id, "Failed to create user1");
+
+        user2Id = addUser(TEST_USER2_USERNAME);
+        Assert.assertNotNull(user2Id, "Failed to create user2");
+
+        user3Id = addUser(TEST_USER3_USERNAME);
+        Assert.assertNotNull(user3Id, "Failed to create user3");
+
+        user4Id = addUser(TEST_USER4_USERNAME);
+        Assert.assertNotNull(user4Id, "Failed to create user4");
+    }
+
+    private String addUser(String userName) throws Exception {
+
+        UserObject user = new UserObject();
+        user.setUserName(userName);
+        user.setPassword(TEST_USER_PASSWORD);
+        user.setName(new Name().givenName(userName));
+        user.addEmail(new Email().value(userName + "@example.com"));
+        return scim2RestClient.createUser(user);
+    }
+
+    private void initRoles() throws IOException {
+
+        // Create roles.
+        RoleV2 role1 = new RoleV2(null, TEST_ROLE1, Collections.emptyList(), Collections.emptyList());
+        role1Id = scim2RestClient.addV2Role(role1);
+        Assert.assertNotNull(role1Id, "Failed to create role1");
+
+        RoleV2 role2 = new RoleV2(null, TEST_ROLE2, Collections.emptyList(), Collections.emptyList());
+        role2Id = scim2RestClient.addV2Role(role2);
+        Assert.assertNotNull(role2Id, "Failed to create role2");
+
+        // Assign user1 & user2 -> role1.
+        RoleItemAddGroupobj role1PatchReqObject = new RoleItemAddGroupobj();
+        role1PatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        role1PatchReqObject.setPath(USERS_PATH);
+        role1PatchReqObject.addValue(new ListObject().value(user1Id));
+        scim2RestClient.updateUsersOfRoleV2(role1Id,
+                new PatchOperationRequestObject().addOperations(role1PatchReqObject));
+
+        role1PatchReqObject.addValue(new ListObject().value(user2Id));
+        scim2RestClient.updateUsersOfRoleV2(role1Id,
+                new PatchOperationRequestObject().addOperations(role1PatchReqObject));
+
+        // Assign user2 -> role2.
+        RoleItemAddGroupobj role2PatchReqObject = new RoleItemAddGroupobj();
+        role2PatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        role2PatchReqObject.setPath(USERS_PATH);
+        role2PatchReqObject.addValue(new ListObject().value(user2Id));
+        scim2RestClient.updateUsersOfRoleV2(role2Id,
+                new PatchOperationRequestObject().addOperations(role2PatchReqObject));
+    }
+
+    private void initGroups() throws Exception {
+
+        // Create group1.
+        group1Id = scim2RestClient.createGroup(
+                new GroupRequestObject()
+                        .displayName(TEST_GROUP1)
+                        .addMember(new MemberItem().value(user3Id))
+                        .addMember(new MemberItem().value(user4Id)));
+        Assert.assertNotNull(group1Id, "Failed to create group1");
+
+        // Create group2.
+        group2Id = scim2RestClient.createGroup(
+                new GroupRequestObject()
+                        .displayName(TEST_GROUP2)
+                        .addMember(new MemberItem().value(user4Id)));
+        Assert.assertNotNull(group2Id, "Failed to create group2");
     }
 }
