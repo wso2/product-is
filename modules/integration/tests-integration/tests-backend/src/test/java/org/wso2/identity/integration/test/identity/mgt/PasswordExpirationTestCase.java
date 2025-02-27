@@ -202,7 +202,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     @Test(description = "Test user1 login with password expiry enabled, no rules, default = apply.")
     public void testUser1LoginWithNoRulesDefaultApply() throws Exception {
 
-        // Set last password update time to 10 days ago.
+        // Set last password update time to 100 days ago.
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
 
         setPasswordExpirationPolicy(true, false, true);
@@ -227,7 +227,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     @Test(description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
     public void testUser1LoginExpiredPasswordRule2() throws Exception {
 
-        // Set last password update time to 10 days ago.
+        // Set last password update time to 25 days ago.
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 25);
 
         setPasswordExpirationPolicy(true, true, false);
@@ -457,10 +457,11 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         RoleItemAddGroupobj role1PatchReqObject = new RoleItemAddGroupobj();
         role1PatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);
         role1PatchReqObject.setPath(USERS_PATH);
-        ListObject role1Users = new ListObject();
-        role1Users.setValue(user1Id);
-        role1Users.setValue(user2Id);
-        role1PatchReqObject.addValue(role1Users);
+        role1PatchReqObject.addValue(new ListObject().value(user1Id));
+        scim2RestClient.updateUsersOfRoleV2(role1Id,
+                new PatchOperationRequestObject().addOperations(role1PatchReqObject));
+
+        role1PatchReqObject.addValue(new ListObject().value(user2Id));
         scim2RestClient.updateUsersOfRoleV2(role1Id,
                 new PatchOperationRequestObject().addOperations(role1PatchReqObject));
 
@@ -568,6 +569,8 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         claimValue.setClaimURI(LAST_PASSWORD_UPDATE_CLAIM);
         claimValue.setValue(String.valueOf(pastTimestamp));
         ClaimValue[] claimValues = new ClaimValue[]{claimValue};
+
+        // Update claim value through userStoreClient since last password update is read-only in SCIM2.
         userStoreClient.setUserClaimValues(username, claimValues, UserCoreConstants.DEFAULT_PROFILE);
     }
 }
