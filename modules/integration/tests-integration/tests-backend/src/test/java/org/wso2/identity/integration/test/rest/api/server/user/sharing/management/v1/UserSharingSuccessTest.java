@@ -38,6 +38,8 @@ import org.wso2.identity.integration.test.rest.api.server.user.sharing.managemen
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareRequestBodyUserCriteria;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
@@ -157,8 +159,8 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     // Selective User Sharing.
 
-    @DataProvider(name = "selectiveSharingPoliciesWithRoles")
-    public Object[][] selectiveSharingPoliciesWithRoles() {
+    @DataProvider(name = "selectiveUserSharingDataProvider")
+    public Object[][] selectiveUserSharingDataProvider() {
 
         List<String> userIdsForTestCase1 = Collections.singletonList(rootOrgUser1Id);
         Map<String, Map<String, Object>> organizationsForTestCase1 = setOrganizationsForSelectiveUserSharingTestCase1();
@@ -174,8 +176,8 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         };
     }
 
-    @Test(dataProvider = "selectiveSharingPoliciesWithRoles")
-    public void testSelectiveUserSharingWithRoles(List<String> userIds,
+    @Test(dataProvider = "selectiveUserSharingDataProvider")
+    public void testSelectiveUserSharing(List<String> userIds,
                                                   Map<String, Map<String, Object>> organizations,
                                                   Map<String, Object> expectedResults) throws InterruptedException {
 
@@ -200,8 +202,8 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     // General User Sharing.
 
-    @DataProvider(name = "generalSharingPoliciesWithRoles")
-    public Object[][] generalSharingPoliciesWithRoles() {
+    @DataProvider(name = "generalUserSharingDataProvider")
+    public Object[][] generalUserSharingDataProvider() {
 
         List<String> userIdsForTestCase1 = Collections.singletonList(rootOrgUser1Id);
         Map<String, Object> policyWithRolesForTestCase1 = setPolicyWithRolesForGeneralUserSharingTestCase1();
@@ -227,8 +229,8 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         };
     }
 
-    @Test(dataProvider = "generalSharingPoliciesWithRoles")
-    public void testGeneralUserSharingWithRoles(List<String> userIds,
+    @Test(dataProvider = "generalUserSharingDataProvider")
+    public void testGeneralUserSharing(List<String> userIds,
                                                   Map<String, Object> policyWithRoles,
                                                   Map<String, Object> expectedResults) throws InterruptedException {
 
@@ -245,6 +247,45 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .statusCode(HttpStatus.SC_ACCEPTED)
                 .body("status", equalTo("Processing"))
                 .body("details", equalTo("User sharing process triggered successfully."));
+
+        Thread.sleep(5000);
+        for (String userId : userIds) {
+            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
+        }
+    }
+
+    // General User Unsharing.
+
+    @DataProvider(name = "generalUserUnsharingDataProvider")
+    public Object[][] generalUserUnsharingDataProvider() {
+
+        List<String> userIdsForTestCase1 = Collections.singletonList(rootOrgUser1Id);
+        List<String> userIdsForTestCase2 = Arrays.asList(rootOrgUser1Id, rootOrgUser2Id);
+        List<String> userIdsForTestCase3 = Collections.emptyList();
+        Map<String, Object> expectedResultsForTestCase = setExpectedResultsForGeneralUserUnsharingTestCase1();
+
+        return new Object[][] {
+                { userIdsForTestCase1, expectedResultsForTestCase},
+                { userIdsForTestCase2, expectedResultsForTestCase},
+                { userIdsForTestCase3, expectedResultsForTestCase}
+        };
+    }
+
+    @Test(dataProvider = "generalUserUnsharingDataProvider")
+    public void testGeneralUserUnsharing(List<String> userIds,
+                                       Map<String, Object> expectedResults) throws InterruptedException {
+
+        UserUnshareWithAllRequestBody requestBody = new UserUnshareWithAllRequestBody()
+                .userCriteria(getUserCriteriaForBaseUserUnsharing(userIds));
+
+        Response response = getResponseOfPost(USER_SHARING_API_BASE_PATH + UNSHARE_WITH_ALL_PATH, toJSONString(requestBody));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_ACCEPTED)
+                .body("status", equalTo("Processing"))
+                .body("details", equalTo("User unsharing process triggered successfully."));
 
         Thread.sleep(5000);
         for (String userId : userIds) {
@@ -357,6 +398,19 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     private UserShareRequestBodyUserCriteria getUserCriteriaForBaseUserSharing(List<String> userIds) {
 
         UserShareRequestBodyUserCriteria criteria = new UserShareRequestBodyUserCriteria();
+        criteria.setUserIds(userIds);
+        return criteria;
+    }
+
+    /**
+     * Creates a `UserUnshareRequestBodyUserCriteria` object with the given user IDs.
+     *
+     * @param userIds The list of user IDs to be included in the criteria.
+     * @return A `UserUnshareRequestBodyUserCriteria` object containing the specified user IDs.
+     */
+    private UserUnshareRequestBodyUserCriteria getUserCriteriaForBaseUserUnsharing(List<String> userIds) {
+
+        UserUnshareRequestBodyUserCriteria criteria = new UserUnshareRequestBodyUserCriteria();
         criteria.setUserIds(userIds);
         return criteria;
     }
@@ -636,6 +690,20 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         expectedRolesPerExpectedOrg.put(l1Org2Id, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)));
         expectedRolesPerExpectedOrg.put(l1Org3Id, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, L1_ORG_3_NAME, ORGANIZATION_AUDIENCE)));
 
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+
+        return expectedResults;
+    }
+
+    private Map<String, Object> setExpectedResultsForGeneralUserUnsharingTestCase1() {
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 0);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Collections.emptyList());
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Collections.emptyList());
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
         expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
 
         return expectedResults;
