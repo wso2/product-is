@@ -189,7 +189,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      * Even though the password was last updated 100 days ago.
      */
     @Test(description = "Test user1 login with password expiry disabled.")
-    public void testUser1LoginWhenExpiryDisabled() throws Exception {
+    public void testUser1LoginWithExpiryDisabled() throws Exception {
 
         // Set last password update time to 100 days ago.
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
@@ -231,7 +231,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      * user1 with 25 days old password => expired.
      */
     @Test(priority = 99, description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
-    public void testUser1LoginExpiredPasswordRule2() throws Exception {
+    public void testUser1LoginWithRules() throws Exception {
 
         // Set last password update time to 25 days ago.
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 25);
@@ -243,6 +243,70 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         // Try to log in with the new password.
         cookieStore.clear();
         performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
+    }
+
+    /**
+     * Test scenario: user2 is subject to default rule as no rules exist => apply password expiry.
+     * user2's password is expired since last update > default expiry.
+     */
+    @Test(description = "Test user2 login with password expiry enabled, no rules, default = apply.")
+    public void testUser2LoginWithNoRulesDefaultApply() throws Exception {
+
+        // Set last password update time to 100 days ago.
+        setLastPasswordUpdateTime(TEST_USER2_USERNAME, 100);
+        setPasswordExpirationPolicy(true, false, true);
+
+        performLoginAndAssert(TEST_USER2_USERNAME, TEST_USER_PASSWORD, true, false);
+    }
+
+    /**
+     * Test scenario: user2 is subject to rule1 => skip password expiry for users in role1 and role2.
+     * user2 can still login even though password is old.
+     */
+    @Test(description = "Test user2 login with password expiry enabled, with rules, default = apply.")
+    public void testUser2LoginWithRules() throws Exception {
+
+        // Set last password update time to 100 days ago.
+        setLastPasswordUpdateTime(TEST_USER2_USERNAME, 100);
+        setPasswordExpirationPolicy(true, false, false);
+
+        performLoginAndAssert(TEST_USER2_USERNAME, TEST_USER_PASSWORD, false, false);
+    }
+
+    /**
+     * Test scenario: user3 is subject to rule4 => password expiry after 10 days for users in group1.
+     */
+    @Test(description = "Test user3 login with password expiry enabled, with rules, default = apply.")
+    public void testUser3LoginWithRules() throws Exception {
+
+        // Set last password update time to 5 days ago.
+        setLastPasswordUpdateTime(TEST_USER3_USERNAME, 5);
+        setPasswordExpirationPolicy(true, false, false);
+
+        performLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, false, false);
+        cookieStore.clear();
+
+        // Set last password update time to 15 days ago.
+        setLastPasswordUpdateTime(TEST_USER3_USERNAME, 15);
+        setPasswordExpirationPolicy(true, false, false);
+
+        performLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, true, true);
+        cookieStore.clear();
+
+        // Try to log in with the new password.
+        performLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
+    }
+
+    /**
+     * Test scenario: user4 is subject to rule3 => skip password expiry for users in group1 and group2.
+     */
+    @Test(description = "Test user4 login with password expiry enabled, with rules, default = apply.")
+    public void testUser4LoginWithRules() throws Exception {
+
+        setLastPasswordUpdateTime(TEST_USER4_USERNAME, 100);
+        setPasswordExpirationPolicy(true, false, false);
+
+        performLoginAndAssert(TEST_USER4_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
     /**
