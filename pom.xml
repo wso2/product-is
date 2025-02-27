@@ -2427,7 +2427,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.24</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.25</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2454,7 +2454,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.259</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.260</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.53</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.1</identity.inbound.auth.sts.version>
@@ -2475,7 +2475,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.14</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.43</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.44</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2535,8 +2535,8 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.118</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.23</identity.org.mgt.core.version>
+        <identity.org.mgt.version>1.4.120</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.1.24</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.43</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
 
