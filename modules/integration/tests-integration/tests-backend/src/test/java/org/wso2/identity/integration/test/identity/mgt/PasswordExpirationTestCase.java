@@ -26,6 +26,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.um.ws.api.stub.ClaimValue;
+import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -40,6 +42,7 @@ import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 
 import java.io.IOException;
 
@@ -89,6 +92,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     private static final String TEST_GROUP2 = "pwdExpiryTestGroup2";
 
     private static final String USERS_PATH = "users";
+    private static final String LAST_PASSWORD_UPDATE_CLAIM = "http://wso2.org/claims/identity/lastPasswordUpdateTime";
     private static final String PASSWORD_EXPIRY_CATEGORY_ID = "UGFzc3dvcmQgUG9saWNpZXM";
     private static final String PASSWORD_EXPIRY_CONNECTOR_ID = "cGFzc3dvcmRFeHBpcnk";
     private static final String PASSWORD_EXPIRY_ENABLED = "passwordExpiry.enablePasswordExpiry";
@@ -98,6 +102,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     private static final String PASSWORD_EXPIRY_RULE2 = "passwordExpiry.rule2";
     private static final String PASSWORD_EXPIRY_RULE3 = "passwordExpiry.rule3";
     private static final String PASSWORD_EXPIRY_RULE4 = "passwordExpiry.rule4";
+    private static final int DEFAULT_EXPIRY_TIME = 30;
     
     private String user1Id;
     private String user2Id;
@@ -108,11 +113,9 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     private String group1Id;
     private String group2Id;
 
-    private static final String PASSWORD_EXPIRED_ERROR_TEXT = "Your current password has expired";
-    private static final String PASSWORD_RESET_CONFIRMATION_TEXT = "Password Reset Successfully";
-
     private SCIM2RestClient scim2RestClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
+    private RemoteUserStoreManagerServiceClient userStoreClient;
 
     private OIDCApplication oidcApplication;
     private CloseableHttpClient oidcClient;
@@ -125,6 +128,10 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        userStoreClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
+
+        // Update the admin's last password update time to current time to prevent lockout.
+        setLastPasswordUpdateTime(userInfo.getUserName(), 0);
 
         /*
         * 1. Add users - user1, user2, user3, user4.
@@ -165,6 +172,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         if (oidcClient != null) {
             oidcClient.close();
         }
+        userStoreClient = null;
     }
 
     @AfterMethod(alwaysRun = true)
@@ -173,28 +181,75 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         cookieStore.clear();
     }
 
-    @Test(description = "Test login with password expiry disabled.")
-    public void testLoginPasswordExpiryDisabled() throws Exception {
+    /**
+     * Test scenario: Ensure user1 can log in when password expiry is disabled.
+     * Even though the password was last updated 100 days ago.
+     */
+    @Test(description = "Test user1 login with password expiry disabled and older password.")
+    public void testUser1LoginWhenExpiryDisabled() throws Exception {
 
-        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
+        // Set last password update time to 100 days ago.
+        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
+
+        setPasswordExpirationPolicy(false, false, false);
+        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
-    @Test(description = "Test login with password expiry disabled.")
-    public void testLoginPasswordExpiryEnabledWithNoRules() throws Exception {
+    /**
+     * Test scenario: If password expiry is enabled but no rules are set, the default behavior is "apply".
+     * user1's password is expired since last update > default expiry.
+     */
+    @Test(description = "Test user1 login with password expiry enabled, no rules, default = apply.")
+    public void testUser1LoginWithNoRulesDefaultApply() throws Exception {
+
+        // Set last password update time to 10 days ago.
+        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
 
         setPasswordExpirationPolicy(true, false, true);
-        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
+        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
     }
 
-    @Test(description = "Test login with password expiry disabled.")
-    public void testLoginPasswordExpiryEnabledWithNoRulesDefaultSkip() throws Exception {
+    /**
+     * Test scenario: If password expiry is enabled but no rules are set, the default behavior is "skip".
+     * user1 can still login if last password update is old.
+     */
+    @Test(description = "Test user1 login with password expiry enabled, no rules, default = skip.")
+    public void testUser1LoginWithNoRulesDefaultSkip() throws Exception {
 
         setPasswordExpirationPolicy(true, true, true);
-        performLogin(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
+        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
-    private void performLogin(String userName, String password, boolean expectedExpired, boolean resetPassword)
-            throws Exception {
+    /**
+     * Test scenario: user1 is subject to rule2 => password expiry after 20 days, default = skip.
+     * user1 with 100 days old password => expired.
+     */
+    @Test(description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
+    public void testUser1LoginExpiredPasswordRule2() throws Exception {
+
+        // Set last password update time to 10 days ago.
+        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 25);
+
+        setPasswordExpirationPolicy(true, true, false);
+        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
+    }
+
+    /**
+     * Test scenario: user1 is subject to rule2 => password expiry after 20 days., default = apply.
+     * user1 with 10 days old password => not expired.
+     */
+    @Test(description = "Test user1 login with password updated 10 days ago, rule2 => not expired.")
+    public void testUser1LoginNonExpiredPasswordRule2() throws Exception {
+
+        // Set last password update time to 10 days ago.
+        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 10);
+
+        setPasswordExpirationPolicy(true, false, false);
+        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
+    }
+
+    private void performLoginAndAssert(String userName, String password, boolean expectedExpired,
+                                       boolean resetPassword) throws Exception {
 
         String loginPageURL = getLoginPageURL();
         HttpResponse response = sendGetRequest(oidcClient, loginPageURL);
@@ -459,7 +514,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         // Set default expiry time in days.
         PropertyReq expiryDaysProperty = new PropertyReq();
         expiryDaysProperty.setName(PASSWORD_EXPIRY_TIME);
-        expiryDaysProperty.setValue("30");
+        expiryDaysProperty.setValue(String.valueOf(DEFAULT_EXPIRY_TIME));
         patchReq.addProperties(expiryDaysProperty);
         
         // Set skip if no applicable rules.
@@ -495,5 +550,24 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         identityGovernanceRestClient.updateConnectors(PASSWORD_EXPIRY_CATEGORY_ID, PASSWORD_EXPIRY_CONNECTOR_ID,
                 patchReq);
         Thread.sleep(5000);
+    }
+    
+    /**
+     * Set the last password update time for a user to test password expiry.
+     * 
+     * @param username Username of the user.
+     * @param daysInPast Number of days in the past to set the last password update time.
+     * @throws Exception If an error occurs during the update.
+     */
+    private void setLastPasswordUpdateTime(String username, int daysInPast) throws Exception {
+        
+        // Calculate timestamp in milliseconds.
+        long pastTimestamp = System.currentTimeMillis() - (daysInPast * 24L * 60L * 60L * 1000L);
+
+        ClaimValue claimValue = new ClaimValue();
+        claimValue.setClaimURI(LAST_PASSWORD_UPDATE_CLAIM);
+        claimValue.setValue(String.valueOf(pastTimestamp));
+        ClaimValue[] claimValues = new ClaimValue[]{claimValue};
+        userStoreClient.setUserClaimValues(username, claimValues, UserCoreConstants.DEFAULT_PROFILE);
     }
 }
