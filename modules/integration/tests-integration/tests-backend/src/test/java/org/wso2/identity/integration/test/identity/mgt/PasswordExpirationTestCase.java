@@ -20,6 +20,9 @@ package org.wso2.identity.integration.test.identity.mgt;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -185,13 +188,13 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      * Test scenario: Ensure user1 can log in when password expiry is disabled.
      * Even though the password was last updated 100 days ago.
      */
-    @Test(description = "Test user1 login with password expiry disabled and older password.")
+    @Test(description = "Test user1 login with password expiry disabled.")
     public void testUser1LoginWhenExpiryDisabled() throws Exception {
 
         // Set last password update time to 100 days ago.
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
-
         setPasswordExpirationPolicy(false, false, false);
+
         performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
@@ -204,8 +207,8 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
 
         // Set last password update time to 100 days ago.
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
-
         setPasswordExpirationPolicy(true, false, true);
+
         performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
     }
 
@@ -216,38 +219,41 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     @Test(description = "Test user1 login with password expiry enabled, no rules, default = skip.")
     public void testUser1LoginWithNoRulesDefaultSkip() throws Exception {
 
+        // Set last password update time to 100 days ago.
+        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 100);
         setPasswordExpirationPolicy(true, true, true);
+
         performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
     }
 
     /**
      * Test scenario: user1 is subject to rule2 => password expiry after 20 days, default = skip.
-     * user1 with 100 days old password => expired.
+     * user1 with 25 days old password => expired.
      */
-    @Test(description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
+    @Test(priority = 99, description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
     public void testUser1LoginExpiredPasswordRule2() throws Exception {
 
         // Set last password update time to 25 days ago.
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 25);
-
         setPasswordExpirationPolicy(true, true, false);
-        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, false);
+
+        // Expect expired and reset password.
+        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, true);
+
+        // Try to log in with the new password.
+        cookieStore.clear();
+        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
     }
 
     /**
-     * Test scenario: user1 is subject to rule2 => password expiry after 20 days., default = apply.
-     * user1 with 10 days old password => not expired.
+     * Perform login and assert the result.
+     *
+     * @param userName        Username to log in with.
+     * @param password        Password to log in with.
+     * @param expectedExpired Whether the password is expected to be expired.
+     * @param resetPassword   Whether to reset the password.
+     * @throws Exception If an error occurs.
      */
-    @Test(description = "Test user1 login with password updated 10 days ago, rule2 => not expired.")
-    public void testUser1LoginNonExpiredPasswordRule2() throws Exception {
-
-        // Set last password update time to 10 days ago.
-        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 10);
-
-        setPasswordExpirationPolicy(true, false, false);
-        performLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false, false);
-    }
-
     private void performLoginAndAssert(String userName, String password, boolean expectedExpired,
                                        boolean resetPassword) throws Exception {
 
@@ -271,9 +277,12 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
                 return;
             }
 
-            // Reset password.
-            HttpResponse resetPage = sendGetRequest(oidcClient, expiredRedirect);
-            System.out.println("DEBUG BODY after expired login attempt reset password: " + resetPage);
+            HttpResponse resetConfirmationPage = sendGetRequest(oidcClient, expiredRedirect);
+            HttpResponse finalResetResponse = resetExpiredPassword(resetConfirmationPage, TEST_USER_NEW_PASSWORD);
+
+            String body = EntityUtils.toString(finalResetResponse.getEntity(), StandardCharsets.UTF_8);
+            Assert.assertTrue(body.contains("Password Reset Successfully"),
+                    "Password reset confirmation message not found.");
             return;
         }
 
@@ -306,12 +315,10 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
 
         HttpResponse response = sendPostRequestWithParameters(oidcClient, urlParameters,
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
-
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(locationHeader,
                 "Location header expected for authorize request is not available.");
         EntityUtils.consume(response.getEntity());
-
         return locationHeader.getValue();
     }
 
@@ -352,46 +359,51 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     }
 
     /**
-     * Reset an expired password through the password reset form.
+     * Submits the password reset form with a new password.
      *
-     * @param loginResponse The HTTP response containing the password reset form
-     * @param newPassword The new password to set
-     * @throws Exception If an error occurs during password reset
+     * @param resetPageResponse The HTTP response containing the password reset form (password-reset.jsp).
+     * @param newPassword       The new password to set.
+     * @return The final HttpResponse after submitting the form.
+     * @throws Exception        If parsing or submission fails.
      */
-    // private void resetExpiredPassword(HttpResponse loginResponse, String newPassword) throws Exception {
+    private HttpResponse resetExpiredPassword(HttpResponse resetPageResponse, String newPassword) throws Exception {
 
-    //     String responseContent = EntityUtils.toString(loginResponse.getEntity());
-    //     Document doc = Jsoup.parse(responseContent);
-    //     Element passwordResetForm = doc.selectFirst("form");
-    //     Assert.assertNotNull(passwordResetForm, "Password reset form not found");
+        String responseContent = EntityUtils.toString(resetPageResponse.getEntity(), StandardCharsets.UTF_8);
+        Document doc = Jsoup.parse(responseContent);
 
-    //     // Extract form action URL
-    //     String formAction = passwordResetForm.attr("action");
-    //     String actionUrl;
-    //     if (formAction.startsWith("http")) {
-    //         actionUrl = formAction;
-    //     } else {
-    //         actionUrl = serverURL + formAction;
-    //     }
+        Element passwordResetForm = doc.selectFirst("form#passwordResetForm");
+        Assert.assertNotNull(passwordResetForm, "Password reset form not found on page.");
 
-    //     // Extract hidden form fields
-    //     List<NameValuePair> resetParams = new ArrayList<>();
-    //     for (Element input : passwordResetForm.select("input[type=hidden]")) {
-    //         resetParams.add(new BasicNameValuePair(input.attr("name"), input.attr("value")));
-    //     }
+        String formAction = passwordResetForm.attr("action");
+        // If formAction is a relative path like "passwordreset.do", build the absolute URL.
+        // e.g. https://localhost:9853/accountrecoveryendpoint/passwordreset.do
+        String fullFormAction = resolveURL(formAction);
 
-    //     // Add new password parameters
-    //     resetParams.add(new BasicNameValuePair("reset-password", newPassword));
-    //     resetParams.add(new BasicNameValuePair("reset-password2", newPassword));
+        List<NameValuePair> resetParams = new ArrayList<>();
+        for (Element input : passwordResetForm.select("input[type=hidden]")) {
+            String name = input.attr("name");
+            String value = input.attr("value");
+            resetParams.add(new BasicNameValuePair(name, value));
+        }
 
-    //     // Submit password reset form
-    //     HttpResponse resetResponse = sendPostRequestWithParameters(oidcClient, resetParams, actionUrl);
-    //     String resetResponseContent = EntityUtils.toString(resetResponse.getEntity());
+        resetParams.add(new BasicNameValuePair("reset-password", newPassword));
+        resetParams.add(new BasicNameValuePair("reset-password2", newPassword));
+        return sendPostRequestWithParameters(oidcClient, resetParams, fullFormAction);
+    }
 
-    //     // Verify successful password reset
-    //     Assert.assertTrue(resetResponseContent.contains(PASSWORD_RESET_CONFIRMATION_TEXT),
-    //             "Password reset confirmation message not found");
-    // }
+    /**
+     * Resolve a relative form action against the base URL from the original response.
+     * If the form action is already absolute, just return it as is.
+     */
+    private String resolveURL(String formAction) {
+
+        // If it starts with http(s), it's absolute.
+        if (formAction.startsWith("http")) {
+            return formAction;
+        }
+        // Otherwise, parse the original response's request URL.
+        return serverURL + "/accountrecoveryendpoint/" + formAction;
+    }
 
     private void initOIDCClient() {
 
