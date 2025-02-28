@@ -193,7 +193,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user1 can log in with an old password when password expiry is disabled.
      */
-    @Test(description = "Test user1 login with password expiry disabled.")
+    @Test(description = "Validate user1 login with password expiry disabled.")
     public void testUser1LoginWithExpiryDisabled() throws Exception {
 
         // Set last password update time to 100 days ago.
@@ -206,7 +206,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user1 is forced to reset the password when expiry is enabled and no rules exist (default=apply).
      */
-    @Test(description = "Test user1 login with password expiry enabled, no rules, default = apply.")
+    @Test(description = "Validate user1 login with password expiry enabled, no rules applied, default = apply.")
     public void testUser1LoginWithNoRulesDefaultApply() throws Exception {
 
         // Set last password update time to 100 days ago.
@@ -219,7 +219,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user1 can still log in with an old password when expiry is enabled, default=skip and no rules.
      */
-    @Test(description = "Test user1 login with password expiry enabled, no rules, default = skip.")
+    @Test(description = "Validate user1 login with password expiry enabled, no rules applied, default = skip.")
     public void testUser1LoginWithNoRulesDefaultSkip() throws Exception {
 
         // Set last password update time to 100 days ago.
@@ -233,7 +233,8 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      * Test scenario: user1 is subject to rule2 => password expiry after 20 days (with skip if no applicable rules).
      * user1 with a 25-day-old password => expired. Then reset and log in again with new password.
      */
-    @Test(priority = 98, description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
+    @Test(priority = 98, description = "Validate user1 login with expired password, single role check under rule2, " +
+            "password reset, and authentication with new password.")
     public void testUser1LoginWithRules() throws Exception {
 
         // Set last password update time to 25 days ago.
@@ -256,7 +257,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      * Test scenario: user2 is subject to the default (no rules => apply) password expiry logic.
      * user2's password is older than the default expiry days, so password is expired.
      */
-    @Test(description = "Test user2 login with password expiry enabled, no rules, default = apply.")
+    @Test(description = "Validate user2 login with password expiry enabled, no rules applied, default = apply.")
     public void testUser2LoginWithNoRulesDefaultApply() throws Exception {
 
         // Set last password update time to 100 days ago.
@@ -269,7 +270,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user2 is subject to rule1 => skip password expiry for users in role1 or role2.
      */
-    @Test(description = "Test user2 login with password expiry enabled, with rules, default = apply.")
+    @Test(description = "Validate user2 login with password expiry enabled, role AND condition under rule1.")
     public void testUser2LoginWithRules() throws Exception {
 
         // Set last password update time to 100 days ago.
@@ -285,7 +286,8 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      *   2) 15 days old => expired => forced reset
      *   3) Verify the new password works
      */
-    @Test(priority = 99, description = "Test user3 login with password expiry enabled, with rules, default = apply.")
+    @Test(priority = 99, description = "Validate user3 login with password expiry enabled, " +
+            "single group check under rule4, password reset, and new password verification.")
     public void testUser3LoginWithRules() throws Exception {
 
         // 1) Set last password update time to 5 days ago => not expired.
@@ -313,7 +315,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user4 is subject to rule3 => skip password expiry for users in group1 and group2.
      */
-    @Test(description = "Test user4 login with password expiry enabled, with rules, default = apply.")
+    @Test(description = "Validate user4 login with password expiry enabled, group AND condition under rule3.")
     public void testUser4LoginWithRules() throws Exception {
 
         setLastPasswordUpdateTime(TEST_USER4_USERNAME, 100);
@@ -325,7 +327,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user1's password is NOT expired (15 days old) => Password grant should succeed.
      */
-    @Test(description = "Test user1 password grant with non-expired password")
+    @Test(description = "Validate user1 password grant with a non-expired password.")
     public void testUser1PasswordGrantNonExpired() throws Exception {
 
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 15);
@@ -337,7 +339,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user1's password is expired (25 days old) => Password grant should fail with expiration error.
      */
-    @Test(description = "Test user1 password grant with expired password")
+    @Test(description = "Validate user1 password grant with an expired password.")
     public void testUser1PasswordGrantExpired() throws Exception {
 
         setLastPasswordUpdateTime(TEST_USER1_USERNAME, 25);
@@ -349,7 +351,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user3's password is NOT expired (5 days old) => Password grant should succeed.
      */
-    @Test(description = "Test user3 password grant with non-expired password")
+    @Test(description = "Validate user3 password grant with a non-expired password.")
     public void testUser3PasswordGrantNonExpired() throws Exception {
 
         setLastPasswordUpdateTime(TEST_USER3_USERNAME, 5);
@@ -361,7 +363,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     /**
      * Test scenario: user3's password is expired (15 days old, rule4 = 10 days) => Password grant fails.
      */
-    @Test(description = "Test user3 password grant with expired password")
+    @Test(description = "Validate user3 password grant with an expired password under rule4.")
     public void testUser3PasswordGrantExpired() throws Exception {
 
         setLastPasswordUpdateTime(TEST_USER3_USERNAME, 15);
