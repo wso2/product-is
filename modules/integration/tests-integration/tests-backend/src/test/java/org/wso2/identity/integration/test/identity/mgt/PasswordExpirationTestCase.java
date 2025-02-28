@@ -59,15 +59,21 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -75,6 +81,7 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +117,10 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
     private static final String TEST_ROLE2 = "pwdExpiryTestRole2";
     private static final String TEST_GROUP1 = "pwdExpiryTestGroup1";
     private static final String TEST_GROUP2 = "pwdExpiryTestGroup2";
+
+    private static final String PASSWORD_GRANT_TYPE = "password";
+    private static final String TOKEN_ENDPOINT = "/oauth2/token";
+    private static final String PASSWORD_EXPIRED_ERROR_CODE = "17002";
 
     private String user1Id, user2Id, user3Id, user4Id;
     private String role1Id, role2Id, group1Id, group2Id;
@@ -222,7 +233,7 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
      * Test scenario: user1 is subject to rule2 => password expiry after 20 days (with skip if no applicable rules).
      * user1 with a 25-day-old password => expired. Then reset and log in again with new password.
      */
-    @Test(priority = 99, description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
+    @Test(priority = 98, description = "Test user1 login with password expiry enabled, older than 20 days => expired.")
     public void testUser1LoginWithRules() throws Exception {
 
         // Set last password update time to 25 days ago.
@@ -231,10 +242,14 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
 
         // Expect expired and reset password.
         performOIDCLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true, true);
-
-        // Try to log in with the new password.
         cookieStore.clear();
+
+        // Verify login flow works with new password.
         performOIDCLoginAndAssert(TEST_USER1_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
+        cookieStore.clear();
+
+        // Verify password grant works with new password.
+        performPasswordGrantRequest(TEST_USER1_USERNAME, TEST_USER_NEW_PASSWORD, false);
     }
 
     /**
@@ -266,28 +281,33 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
 
     /**
      * Test scenario: user3 belongs to group1 => subject to rule4 (password expires after 10 days).
-     * First set the password to 5 days old (not expired), then 15 days old (expired). In the expired case,
-     * user3 must reset the password. Finally, verify that logging in with the new password is successful.
+     *   1) 5 days old => not expired => successful login
+     *   2) 15 days old => expired => forced reset
+     *   3) Verify the new password works
      */
-    @Test(description = "Test user3 login with password expiry enabled, with rules, default = apply.")
+    @Test(priority = 99, description = "Test user3 login with password expiry enabled, with rules, default = apply.")
     public void testUser3LoginWithRules() throws Exception {
 
-        // Set last password update time to 5 days ago => not expired.
+        // 1) Set last password update time to 5 days ago => not expired.
         setLastPasswordUpdateTime(TEST_USER3_USERNAME, 5);
         setPasswordExpirationPolicy(true, false, false);
 
         performOIDCLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, false, false);
         cookieStore.clear();
 
-        // Now set it to 15 days => should be expired under rule4 (10 days).
+        // 2) Set last password update time to 15 days => should be expired under rule4 (10 days).
         setLastPasswordUpdateTime(TEST_USER3_USERNAME, 15);
         setPasswordExpirationPolicy(true, false, false);
 
         performOIDCLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_PASSWORD, true, true);
         cookieStore.clear();
 
-        // Verify the new password works.
+        // 3) Verify the new password works.
         performOIDCLoginAndAssert(TEST_USER3_USERNAME, TEST_USER_NEW_PASSWORD, false, false);
+        cookieStore.clear();
+
+        // Verify password grant works with new password.
+        performPasswordGrantRequest(TEST_USER3_USERNAME, TEST_USER_NEW_PASSWORD, false);
     }
 
     /**
@@ -300,6 +320,133 @@ public class PasswordExpirationTestCase extends OIDCAbstractIntegrationTest {
         setPasswordExpirationPolicy(true, false, false);
 
         performOIDCLoginAndAssert(TEST_USER4_USERNAME, TEST_USER_PASSWORD, false, false);
+    }
+
+    /**
+     * Test scenario: user1's password is NOT expired (15 days old) => Password grant should succeed.
+     */
+    @Test(description = "Test user1 password grant with non-expired password")
+    public void testUser1PasswordGrantNonExpired() throws Exception {
+
+        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 15);
+        setPasswordExpirationPolicy(true, false, false);
+
+        performPasswordGrantRequest(TEST_USER1_USERNAME, TEST_USER_PASSWORD, false);
+    }
+
+    /**
+     * Test scenario: user1's password is expired (25 days old) => Password grant should fail with expiration error.
+     */
+    @Test(description = "Test user1 password grant with expired password")
+    public void testUser1PasswordGrantExpired() throws Exception {
+
+        setLastPasswordUpdateTime(TEST_USER1_USERNAME, 25);
+        setPasswordExpirationPolicy(true, true, false);
+
+        performPasswordGrantRequest(TEST_USER1_USERNAME, TEST_USER_PASSWORD, true);
+    }
+
+    /**
+     * Test scenario: user3's password is NOT expired (5 days old) => Password grant should succeed.
+     */
+    @Test(description = "Test user3 password grant with non-expired password")
+    public void testUser3PasswordGrantNonExpired() throws Exception {
+
+        setLastPasswordUpdateTime(TEST_USER3_USERNAME, 5);
+        setPasswordExpirationPolicy(true, false, false);
+
+        performPasswordGrantRequest(TEST_USER3_USERNAME, TEST_USER_PASSWORD, false);
+    }
+
+    /**
+     * Test scenario: user3's password is expired (15 days old, rule4 = 10 days) => Password grant fails.
+     */
+    @Test(description = "Test user3 password grant with expired password")
+    public void testUser3PasswordGrantExpired() throws Exception {
+
+        setLastPasswordUpdateTime(TEST_USER3_USERNAME, 15);
+        setPasswordExpirationPolicy(true, false, false);
+
+        performPasswordGrantRequest(TEST_USER3_USERNAME, TEST_USER_PASSWORD, true);
+    }
+
+    /**
+     * Perform a password grant token request, asserting success or expiration error based on expectExpired.
+     *
+     * @param username The username.
+     * @param password The password.
+     * @param expectExpired If true, expect a "password expired" error. Otherwise, expect a successful token.
+     */
+    private void performPasswordGrantRequest(String username, String password, boolean expectExpired)
+            throws IOException, ParseException {
+
+        try (CloseableHttpClient client = HttpClients.createDefault()) {
+            HttpPost request = new HttpPost(serverURL + TOKEN_ENDPOINT);
+
+            // Set required headers
+            request.setHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            // Create basic auth header for client authentication
+            String auth = oidcApplication.getClientId() + ":" + oidcApplication.getClientSecret();
+            byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
+            String authHeader = "Basic " + new String(encodedAuth, StandardCharsets.UTF_8);
+            request.setHeader("Authorization", authHeader);
+
+            // Set request parameters
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("grant_type", PASSWORD_GRANT_TYPE));
+            params.add(new BasicNameValuePair("username", username));
+            params.add(new BasicNameValuePair("password", password));
+            params.add(new BasicNameValuePair("scope", "openid"));
+
+            request.setEntity(new UrlEncodedFormEntity(params, StandardCharsets.UTF_8));
+
+            // Execute request
+            HttpResponse response = client.execute(request);
+            String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+
+            int statusCode = response.getStatusLine().getStatusCode();
+
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject) parser.parse(responseBody);
+
+            if (statusCode == 200) {
+                // If we expected expiry, but got success => fail
+                if (expectExpired) {
+                    Assert.fail("Expected password to be expired for user: " + username
+                            + ", but the token request succeeded. Response: " + responseBody);
+                }
+                // Otherwise success => return the JSON
+            } else {
+                // Non-200 => check if password expired error
+                String error = (String) json.get("error");
+                String errorDescription = (String) json.get("error_description");
+
+                // If we see "password has expired" in the error_description => that indicates password expiry
+                boolean isExpiredError = (errorDescription != null && errorDescription.toLowerCase().contains("expired"));
+
+                // If we expected expiry, but don't see it => fail
+                if (expectExpired && !isExpiredError) {
+                    Assert.fail("Expected password to be expired for user: " + username
+                            + ", but got a different error. Status: " + statusCode + ", error: " + error
+                            + ", description: " + errorDescription);
+                }
+                // If we didn't expect expiry => fail
+                if (!expectExpired && isExpiredError) {
+                    Assert.fail("Did not expect password to be expired for user: " + username
+                            + ", but got 'password expired' error. Status: " + statusCode);
+                }
+                // Otherwise, for an expected expiry, it's correct => do nothing, i.e. test passes
+                // or it might be some other error => we fail as below
+
+                if (!expectExpired) {
+                    // If it's some other error => fail
+                    Assert.fail("Password grant request failed unexpectedly. status=" + statusCode
+                            + ", error=" + error + ", description=" + errorDescription);
+                }
+                // Return null in the scenario we expected expiry and we got it
+            }
+        }
     }
 
     /**
