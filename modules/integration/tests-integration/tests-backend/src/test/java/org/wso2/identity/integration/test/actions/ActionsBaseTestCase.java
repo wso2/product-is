@@ -65,7 +65,9 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
      */
     public String createAction(String actionType, ActionModel actionModel) throws IOException {
 
-        return actionsRestClient.createActionType(actionModel, actionType);
+        String actionId = actionsRestClient.createActionType(actionModel, actionType);
+        actionsRestClient.activateAction(actionType, actionId);
+        return actionId;
     }
 
     /**

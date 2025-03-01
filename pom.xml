@@ -31,7 +31,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>7.1.0-beta2-SNAPSHOT</version>
+    <version>7.2.0-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -1390,6 +1390,11 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.user.registration.mgt</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.saml.common</groupId>
                 <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
                 <version>${saml.common.util.version}</version>
@@ -1894,6 +1899,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.api.resource.mgt.server.feature</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.registration.framework.feature</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
@@ -2436,7 +2446,7 @@
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
         <identity.notification.push.version.range>[1.0.0,2.0.0)</identity.notification.push.version.range>
 
-        <identity.local.auth.push.version>1.0.7</identity.local.auth.push.version>
+        <identity.local.auth.push.version>1.0.8</identity.local.auth.push.version>
         <identity.local.auth.push.version.range>[1.0.0,2.0.0)</identity.local.auth.push.version.range>
 
         <!--SAML Common Utils Version-->
@@ -2447,17 +2457,17 @@
         <carbon.consent.mgt.version>2.6.7</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.47</identity.governance.version>
+        <identity.governance.version>1.11.48</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.9.8</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.9.18</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.255</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.260</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.53</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.1</identity.inbound.auth.sts.version>
@@ -2478,7 +2488,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.14</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.43</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.44</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2512,13 +2522,13 @@
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.13</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.16</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.5</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>2.3.4</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>2.3.5</identity.oauth2.jwt.bearer.grant.version>
         <identity.oauth2.token.exchange.grant.version>1.1.12</identity.oauth2.token.exchange.grant.version>
 
         <!--SAML Metadata-->
@@ -2534,13 +2544,13 @@
         <authenticator.local.auth.emailotp.version>1.0.30</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.19</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
-        <authenticator.x509.version>3.1.31</authenticator.x509.version>
+        <authenticator.x509.version>3.1.32</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>1.4.122</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.23</identity.org.mgt.core.version>
-        <identity.organization.login.version>1.1.42</identity.organization.login.version>
+        <identity.org.mgt.core.version>1.1.24</identity.org.mgt.core.version>
+        <identity.organization.login.version>1.1.43</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
@@ -2557,13 +2567,13 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.22</identity.oauth.addons.version>
-        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.26</org.wso2.carbon.extension.identity.x509certificate.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.27</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.76</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
 
         <identity.apps.console.version>2.42.0</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.44</identity.apps.myaccount.version>
+        <identity.apps.myaccount.version>2.17.53</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.14.2</identity.apps.core.version>
 
@@ -2573,7 +2583,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.40</carbon.kernel.version>
+        <carbon.kernel.version>4.10.42</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>
