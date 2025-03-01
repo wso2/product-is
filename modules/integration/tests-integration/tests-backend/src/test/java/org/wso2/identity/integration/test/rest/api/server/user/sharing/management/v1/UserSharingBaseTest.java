@@ -93,7 +93,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String ERROR_CODE_INVALID_PAGINATION_CURSOR = "ORG-60026";
     protected static final String ERROR_CODE_SERVER_ERROR = "SE-50000";
 
-    protected static final String ROOT_ORG_NAME = "Root - Organization";
+    protected static final String ROOT_ORG_NAME = "Super";
     protected static final String L1_ORG_1_NAME = "L1 - Organization 1";
     protected static final String L1_ORG_2_NAME = "L1 - Organization 2";
     protected static final String L1_ORG_3_NAME = "L1 - Organization 3";
@@ -102,10 +102,10 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String L2_ORG_3_NAME = "L2 - Organization 3";
     protected static final String L3_ORG_1_NAME = "L3 - Organization 1";
 
+    protected static final String ROOT_ORG_ID = "10084a8d-113f-4211-a0d5-efe36b082211";
+
     protected static final String APP_1_NAME = "App 1";
     protected static final String APP_2_NAME = "App 2";
-
-    protected static final String SUPER_ORG = "Super";
 
     protected static final String APPLICATION_AUDIENCE = "application";
     protected static final String ORGANIZATION_AUDIENCE = "organization";

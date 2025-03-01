@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1;
 
 import io.restassured.response.Response;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -53,16 +54,18 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_ONLY;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_AND_FUTURE_CHILDREN;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_CHILDREN_ONLY;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN;
-import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_EXISTING_IMMEDIATE_CHILDREN_ONLY;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_AND_FUTURE_ORGS;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.IMMEDIATE_EXISTING_AND_FUTURE_ORGS;
@@ -80,7 +83,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     private String l1Org1User2Id;
     private String l1Org1User3Id;
 
-
+    private Map<String, Map<String, Object>> orgDetails = new HashMap<>();
     private String l1Org1Id;
     private String l1Org2Id;
     private String l1Org3Id;
@@ -89,21 +92,9 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     private String l2Org3Id;
     private String l3Org1Id;
 
-    private String l1Org1SwitchToken;
-    private String l2Org1SwitchToken;
-
-    private String appId1;
-    private String appId2;
-    private String sharedApp1IdInLevel1Org;
-    private String sharedApp2IdInLevel1Org;
-
-    private ApplicationResponseModel application1WithAppAudienceRoles;
-    private ApplicationResponseModel application2WithOrgAudienceRoles;
-    private String clientIdApp1;
-    private String clientSecretApp1;
-    private String clientIdApp2;
-    private String clientSecretApp2;
-
+    Map<String, Object> app1Details;
+    Map<String, Object> app2Details;
+    
     private String appRole1Id;
     private String appRole2Id;
     private String appRole3Id;
@@ -133,7 +124,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 new JSONObject(readResource(AUTHORIZED_APIS_JSON)));
 
         setupOrganizations();
-        setupTokens();
         setupApplicationsAndRoles();
         setupUsers();
     }
@@ -553,7 +543,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         org2.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
         org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME,
                         APPLICATION_AUDIENCE),
-                createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+                createRoleWithAudience(ORG_ROLE_1, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE)));
 
         organizations.put(L1_ORG_2_NAME, org2);
 
@@ -600,7 +590,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         org2.put(MAP_KEY_SELECTIVE_ORG_ID, l1Org2Id);
         org2.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_2_NAME);
         org2.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
-        org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(createRoleWithAudience(ORG_ROLE_1, SUPER_ORG, ORGANIZATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_2, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+        org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(createRoleWithAudience(ORG_ROLE_1, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_2, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE)));
 
         organizations.put(L1_ORG_2_NAME, org2);
 
@@ -671,7 +661,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         Map<String, Object> policyWithRoles = new HashMap<>();
 
         policyWithRoles.put(MAP_KEY_GENERAL_POLICY, IMMEDIATE_EXISTING_AND_FUTURE_ORGS);
-        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_3, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_3, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE)));
 
         return policyWithRoles;
     }
@@ -699,7 +689,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         Map<String, Object> policyWithRoles = new HashMap<>();
 
         policyWithRoles.put(MAP_KEY_GENERAL_POLICY, IMMEDIATE_EXISTING_ORGS_ONLY);
-        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Collections.singletonList(createRoleWithAudience(ORG_ROLE_3, SUPER_ORG, ORGANIZATION_AUDIENCE)));
+        policyWithRoles.put(MAP_KEY_GENERAL_ROLES, Collections.singletonList(createRoleWithAudience(ORG_ROLE_3, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE)));
 
         return policyWithRoles;
     }
@@ -829,52 +819,153 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     private void setupOrganizations() throws Exception {
 
-        l1Org1Id = orgMgtRestClient.addOrganization(L1_ORG_1_NAME);
-        l1Org2Id = orgMgtRestClient.addOrganization(L1_ORG_2_NAME);
-        l1Org3Id = orgMgtRestClient.addOrganization(L1_ORG_3_NAME);
-        l2Org1Id = orgMgtRestClient.addSubOrganization(L2_ORG_1_NAME, l1Org1Id);
-        l2Org2Id = orgMgtRestClient.addSubOrganization(L2_ORG_2_NAME, l1Org1Id);
-        l2Org3Id = orgMgtRestClient.addSubOrganization(L2_ORG_3_NAME, l1Org2Id);
-        l3Org1Id = orgMgtRestClient.addSubOrganization(L3_ORG_1_NAME, l2Org1Id);
+        // Create Level 1 Organizations
+        l1Org1Id = addOrganization(L1_ORG_1_NAME);
+        l1Org2Id = addOrganization(L1_ORG_2_NAME);
+        l1Org3Id = addOrganization(L1_ORG_3_NAME);
+
+        // Create Level 2 Organizations
+        l2Org1Id = addSubOrganization(L2_ORG_1_NAME, l1Org1Id, 2);
+        l2Org2Id = addSubOrganization(L2_ORG_2_NAME, l1Org1Id, 2);
+        l2Org3Id = addSubOrganization(L2_ORG_3_NAME, l1Org2Id, 2);
+
+        // Create Level 3 Organization
+        l3Org1Id = addSubOrganization(L3_ORG_1_NAME, l2Org1Id, 3);
     }
 
-    private void setupTokens() throws Exception {
+    private String addOrganization(String orgName) throws Exception {
+        String orgId = orgMgtRestClient.addOrganization(orgName);
+        setOrgDetails(orgName, orgId, ROOT_ORG_ID, 1);
+        return orgId;
+    }
 
-        l1Org1SwitchToken = orgMgtRestClient.switchM2MToken(l1Org1Id);
-        l2Org1SwitchToken = orgMgtRestClient.switchM2MToken(l2Org1Id);
+    private String addSubOrganization(String orgName, String parentId, int orgLevel) throws Exception {
+        String orgId = orgMgtRestClient.addSubOrganization(orgName, parentId);
+        setOrgDetails(orgName, orgId, parentId, orgLevel);
+        return orgId;
+    }
+
+    private void setOrgDetails(String orgName, String orgId, String parentId, int orgLevel) throws Exception {
+
+        Map<String, Object> orgDetail = new HashMap<>();
+        orgDetail.put("orgName", orgName);
+        orgDetail.put("orgId", orgId);
+        orgDetail.put("parentOrgId", parentId);
+        orgDetail.put("orgSwitchToken", orgMgtRestClient.switchM2MToken(orgId));
+        orgDetail.put("orgLevel", orgLevel);
+        orgDetails.put(orgName, orgDetail);
+
     }
 
     protected void setupApplicationsAndRoles() throws Exception {
 
-        // Create a new application which consume application audience roles and share with all children.
-        application1WithAppAudienceRoles = addApplication(APP_1_NAME);
-        String app1Id = application1WithAppAudienceRoles.getId();
-        OpenIDConnectConfiguration oidcConfigOfApp1 = oAuth2RestClient.getOIDCInboundDetails(app1Id);
-        clientIdApp1 = oidcConfigOfApp1.getClientId();
-        clientSecretApp1 = oidcConfigOfApp1.getClientSecret();
-        createApp1RolesWithAppAudience(app1Id);
-        // Mark roles and groups as requested claims for the app 1.
-        updateRequestedClaimsOfApp(app1Id, getClaimConfigurationsWithRolesAndGroups());
-        shareApplication(app1Id);
-        sharedApp1IdInLevel1Org =
-                oAuth2RestClient.getAppIdUsingAppNameInOrganization(APP_1_NAME, l1Org1SwitchToken);
-
-        // Create a new application which consume organization audience roles and share with all children.
-        application2WithOrgAudienceRoles = addApplication(APP_2_NAME);
-        String app2Id = application2WithOrgAudienceRoles.getId();
-        OpenIDConnectConfiguration oidcConfigOfApp2 = oAuth2RestClient.getOIDCInboundDetails(app2Id);
-        clientIdApp2 = oidcConfigOfApp2.getClientId();
-        clientSecretApp2 = oidcConfigOfApp2.getClientSecret();
-        createOrganizationRoles();
-        switchApplicationAudience(app2Id, AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
-        // Mark roles and groups as requested claims for the app 2.
-        updateRequestedClaimsOfApp(app2Id, getClaimConfigurationsWithRolesAndGroups());
-        shareApplication(app2Id);
-        sharedApp2IdInLevel1Org =
-                oAuth2RestClient.getAppIdUsingAppNameInOrganization(APP_2_NAME, l1Org1SwitchToken);
+        Map<String, String> organizationRoles = createOrganizationRoles();
+        app1Details = createApplication(APP_1_NAME, APPLICATION_AUDIENCE, Arrays.asList(APP_ROLE_1, APP_ROLE_2, APP_ROLE_3));
+        app2Details = createApplication(APP_2_NAME, ORGANIZATION_AUDIENCE, organizationRoles.keySet().stream().collect(Collectors.toList()));
     }
 
-    private void createOrganizationRoles() throws IOException {
+    private Map<String, Object> createApplication(String appName, String audience, List<String> roleNames) throws Exception{
+
+        Map<String, Object> createdAppDetails = new HashMap<>();
+
+        ApplicationResponseModel application = addApplication(appName);
+        String appId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = oAuth2RestClient.getOIDCInboundDetails(appId);
+        String clientId = oidcConfig.getClientId();
+        String clientSecret = oidcConfig.getClientSecret();
+        Map<String, String> roleIdsByName = new HashMap<>();
+
+        if (StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audience)){
+
+            Audience appRoleAudience = new Audience(APPLICATION_AUDIENCE, appId);
+            for (String roleName : roleNames) {
+                RoleV2 appRole = new RoleV2(appRoleAudience, roleName, Collections.emptyList(), Collections.emptyList());
+                String roleId = scim2RestClient.addV2Role(appRole);
+                roleIdsByName.put(roleName, roleId);
+            }
+            createdAppDetails.put("appAudience", APPLICATION_AUDIENCE);
+
+        } else {
+
+            switchApplicationAudience(appId, AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+
+            for (String roleName: roleNames){
+                String roleId = scim2RestClient.getRoleIdByName(roleName);
+                roleIdsByName.put(roleName, roleId);
+            }
+            createdAppDetails.put("appAudience", ORGANIZATION_AUDIENCE);
+        }
+
+        // Mark roles and groups as requested claims for the app 2.
+        updateRequestedClaimsOfApp(appId, getClaimConfigurationsWithRolesAndGroups());
+        shareApplication(appId);
+
+        Map<String, Object> appDetailsOfSubOrgs = new HashMap<>();
+        for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
+            String orgName = entry.getKey();
+            Map<String, Object> orgDetail = entry.getValue();
+
+            Map<String, Object> appDetailsOfSubOrg = getAppDetailsOfSubOrg(appName, audience, roleNames, orgDetail);
+            appDetailsOfSubOrgs.put(orgName, appDetailsOfSubOrg);
+        }
+
+        createdAppDetails.put("appName", appName);
+        createdAppDetails.put("appId", appId);
+        createdAppDetails.put("clientId", clientId);
+        createdAppDetails.put("clientSecret", clientSecret);
+        createdAppDetails.put("roleNames", roleNames);
+        createdAppDetails.put("roleIdsByName", roleIdsByName);
+        createdAppDetails.put("appDetailsOfSubOrgs", appDetailsOfSubOrgs);
+
+        return createdAppDetails;
+
+    }
+
+
+    private Map<String, Object> getAppDetailsOfSubOrg(String appName, String audience, List<String> roleNames,
+                                                      Map<String, Object> orgDetail) throws Exception {
+
+        Map<String, Object> subOrgAppDetails = new HashMap<>();
+
+        String subOrgName = (String) orgDetail.get("orgName");
+        String subOrgId = (String) orgDetail.get("orgId");
+        String subOrgSwitchToken = (String) orgDetail.get("orgSwitchToken");
+
+        String subOrgAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken);
+
+        Map<String, String> subOrgRoleIdsByName = StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audience) ?
+                getSubOrgRoleIdsByName(roleNames, subOrgAppId, subOrgSwitchToken) :
+                getSubOrgRoleIdsByName(roleNames, subOrgId, subOrgSwitchToken);
+
+        subOrgAppDetails.put("subOrgName", subOrgName);
+        subOrgAppDetails.put("appName", appName);
+        subOrgAppDetails.put("appId", subOrgAppId);
+        subOrgAppDetails.put("roleNames", roleNames);
+        subOrgAppDetails.put("roleIdsByName", subOrgRoleIdsByName);
+
+        return subOrgAppDetails;
+    }
+
+    private Map<String, String> getSubOrgRoleIdsByName (List<String> roleNames, String audienceValue, String subOrgSwitchToken) throws Exception {
+
+        Map<String, String> roleIdsByName = new HashMap<>();
+        for (String roleName : roleNames) {
+            String sharedAppRoleId =
+                    scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(roleName, audienceValue, subOrgSwitchToken);
+            roleIdsByName.put(roleName, sharedAppRoleId);
+        }
+        return roleIdsByName;
+    }
+
+    private void validateAPPIdsNotNull(String... appIds) {
+        for (String appId : appIds) {
+            assertNotNull("Application ID is null", appId);
+        }
+    }
+
+    private Map<String, String> createOrganizationRoles() throws IOException {
+
+        Map<String, String> orgRoleIdsByName = new HashMap<>();
 
         RoleV2 orgRole1 = new RoleV2(null, ORG_ROLE_1, Collections.emptyList(), Collections.emptyList());
         orgRole1Id = scim2RestClient.addV2Role(orgRole1);
@@ -882,6 +973,12 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         orgRole2Id = scim2RestClient.addV2Role(orgRole2);
         RoleV2 orgRole3 = new RoleV2(null, ORG_ROLE_3, Collections.emptyList(), Collections.emptyList());
         orgRole3Id = scim2RestClient.addV2Role(orgRole3);
+
+        orgRoleIdsByName.put(ORG_ROLE_1, orgRole1Id);
+        orgRoleIdsByName.put(ORG_ROLE_2, orgRole2Id);
+        orgRoleIdsByName.put(ORG_ROLE_3, orgRole3Id);
+
+        return orgRoleIdsByName;
     }
 
     private void createApp1RolesWithAppAudience(String app1Id) throws IOException {
@@ -905,11 +1002,11 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         rootOrgUser3Id = scim2RestClient.createUser(rootOrgUser3);
 
         UserObject l1Org1User1 = createUserObject(L1_ORG_1_USER_1_USERNAME, L1_ORG_1_NAME);
-        l1Org1User1Id = scim2RestClient.createSubOrgUser(l1Org1User1, l1Org1SwitchToken);
+        l1Org1User1Id = scim2RestClient.createSubOrgUser(l1Org1User1, (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
         UserObject l1Org1User2 = createUserObject(L1_ORG_1_USER_2_USERNAME, L1_ORG_1_NAME);
-        l1Org1User2Id = scim2RestClient.createSubOrgUser(l1Org1User2, l1Org1SwitchToken);
+        l1Org1User2Id = scim2RestClient.createSubOrgUser(l1Org1User2, (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
         UserObject l1Org1User3 = createUserObject(L1_ORG_1_USER_3_USERNAME, L1_ORG_1_NAME);
-        l1Org1User3Id = scim2RestClient.createSubOrgUser(l1Org1User3, l1Org1SwitchToken);
+        l1Org1User3Id = scim2RestClient.createSubOrgUser(l1Org1User3, (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
     }
 
     private void deleteUserIfExists(String userId) throws Exception {
@@ -959,9 +1056,9 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         deleteUserIfExists(rootOrgUser1Id);
         deleteUserIfExists(rootOrgUser2Id);
         deleteUserIfExists(rootOrgUser3Id);
-        deleteSubOrgUserIfExists(l1Org1User1Id, l1Org1SwitchToken);
-        deleteSubOrgUserIfExists(l1Org1User2Id, l1Org1SwitchToken);
-        deleteSubOrgUserIfExists(l1Org1User3Id, l1Org1SwitchToken);
+        deleteSubOrgUserIfExists(l1Org1User1Id, (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
+        deleteSubOrgUserIfExists(l1Org1User2Id, (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
+        deleteSubOrgUserIfExists(l1Org1User3Id, (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
     }
 
     private void cleanUpRoles() throws Exception {
@@ -976,8 +1073,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     private void cleanUpApplications() throws Exception {
 
-        deleteApplicationIfExists(application1WithAppAudienceRoles.getId());
-        deleteApplicationIfExists(application2WithOrgAudienceRoles.getId());
+        //deleteApplicationIfExists(application1WithAppAudienceRoles.getId());
+        //deleteApplicationIfExists(application2WithOrgAudienceRoles.getId());
+        deleteApplicationIfExists(app1Details.get("appId").toString());
+        deleteApplicationIfExists(app2Details.get("appId").toString());
     }
 
     private void cleanUpOrganizations() throws Exception {
