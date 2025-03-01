@@ -17,11 +17,14 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.oauth2.sdk.util.URLUtils;
+
 import io.restassured.response.Response;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.HashMap;
+import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -30,6 +33,7 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -37,18 +41,12 @@ import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListResponse;
-
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.GroupBasicInfo;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
@@ -382,5 +380,37 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @DataProvider(name = "testGetGroupsMetadataFromApplicationEndpoint")
+    public Object[][] testGetGroupsMetadataFromApplicationEndpoint() {
+
+        return new Object[][]{
+                { null, null, GROUPS_COUNT + 1 },
+                { null, "name co Gro", GROUPS_COUNT },
+                { null,"name co rou", GROUPS_COUNT },
+                { null, "name co adm", 1 },
+                { null, "name co Group_1_1", 1 },
+                { "PRIMARY", "name co Gro", GROUPS_COUNT }
+        };
+    }
+
+    @Test(description = "Test to get groups metadata from application endpoint.",
+            dataProvider = "testGetGroupsMetadataFromApplicationEndpoint")
+    public void testGetGroupsMetadataFromApplicationEndpoint(String domain, String filter, int expectedGroupCount) {
+
+        Map<String, Object> queryParams = new HashMap<>();
+        if (filter != null) {
+            queryParams.put("filter", filter);
+        }
+        if (domain != null) {
+            queryParams.put("domain", domain);
+        }
+        Response response = getResponseOfGetWithQueryParams(GROUPS_METADATA_PATH, queryParams);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", is(expectedGroupCount));
     }
 }

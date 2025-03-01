@@ -17,7 +17,10 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import javax.xml.xpath.XPathExpressionException;
+
+import java.io.IOException;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
@@ -31,9 +34,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
-
-import java.io.IOException;
-import java.util.Set;
 import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
@@ -50,6 +50,7 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
     static final String RESIDENT_APP_API_BASE_PATH = APPLICATION_MANAGEMENT_API_BASE_PATH + "/resident";
     static final String APPLICATION_TEMPLATE_MANAGEMENT_API_BASE_PATH = APPLICATION_MANAGEMENT_API_BASE_PATH +
             "/templates";
+    static final String GROUPS_METADATA_PATH = METADATA_API_BASE_PATH + "/groups";
     static final String PATH_SEPARATOR = "/";
 
     protected static String swaggerDefinition;

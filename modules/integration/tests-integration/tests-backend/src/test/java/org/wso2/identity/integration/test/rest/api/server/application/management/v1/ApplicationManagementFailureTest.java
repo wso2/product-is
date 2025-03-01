@@ -16,19 +16,23 @@
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
 import io.restassured.response.Response;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
@@ -258,6 +262,36 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
         Response createAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
 
         validateErrorResponse(createAppResponse, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+    }
+
+    @Test(description = "Test groups metadata endpoint with an invalid domain.")
+    public void testGetGroupsMetadataWithInvalidDomain() {
+
+        Map<String, Object> queryParam = new HashMap<>();
+        queryParam.put("domain", "invalid");
+        Response response = getResponseOfGetWithQueryParams(GROUPS_METADATA_PATH, queryParam);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60001");
+    }
+
+    @DataProvider(name = "testGetGroupsMetadataWithInvalidFilters")
+    public Object[][] testGetGroupsMetadataWithInvalidFilters() {
+
+        return new Object[][]{
+                { "name eq Group_1_1" },
+                { "name sw Gro" },
+                { "name ew _1" },
+                { "id co 12" }
+        };
+    }
+
+    @Test(description = "Test groups metadata endpoint with invalid filters.",
+            dataProvider = "testGetGroupsMetadataWithInvalidFilters")
+    public void testGetGroupsMetadataWithInvalidFilters(String filter) {
+
+        Map<String, Object> queryParam = new HashMap<>();
+        queryParam.put("filter", filter);
+        Response response = getResponseOfGetWithQueryParams(GROUPS_METADATA_PATH, queryParam);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
     }
 
     private String getApplicationId(Response createFirstAppResponse) {
