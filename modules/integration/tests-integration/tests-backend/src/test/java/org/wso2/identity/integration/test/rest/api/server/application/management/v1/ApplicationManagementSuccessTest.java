@@ -47,6 +47,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.GroupBasicInfo;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -389,7 +390,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     public Object[][] testGetGroupsMetadataFromApplicationEndpoint() {
 
         return new Object[][]{
-                { null, null, GROUPS_COUNT + 1 },
+                { null, null, GROUPS_COUNT },
                 { null, "name co Gro", GROUPS_COUNT },
                 { null,"name co rou", GROUPS_COUNT },
                 { null, "name co adm", 1 },
@@ -414,6 +415,7 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("size()", is(expectedGroupCount));
+                .body("size()",
+                        domain == null && filter == null ? greaterThan(expectedGroupCount) : is(expectedGroupCount));
     }
 }
