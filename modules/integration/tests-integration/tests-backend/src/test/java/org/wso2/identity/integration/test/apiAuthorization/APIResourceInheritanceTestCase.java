@@ -210,6 +210,14 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
             description = "Added scopes to business API reflect in sub organization inherited API.")
     public void testAddedScopesInheritedBySubOrg() throws Exception {
 
+        // Get the scopes count in sub orgs before adding new scopes.
+        List<ScopeGetModel> scopesFromSubOrgLevel1 =
+                apiResourceManagementClient.getAllScopesInSubOrg(switchedM2MTokenForLevel1Org);
+        List<ScopeGetModel> scopesFromSubOrgLevel2 =
+                apiResourceManagementClient.getAllScopesInSubOrg(switchedM2MTokenForLevel1Org);
+        int orgL1ScopesCount = scopesFromSubOrgLevel1.size();
+        int orgL2ScopesCount = scopesFromSubOrgLevel2.size();
+
         // Add a scope to the business API.
         ScopeGetModel deleteScope = new ScopeGetModel();
         deleteScope.setName(DELETE_SCOPE_NAME);
@@ -227,6 +235,16 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
         // Check whether the new scope is inherited by the sub organizations.
         verifyInheritedAPIScopeCount(3, switchedM2MTokenForLevel1Org);
         verifyInheritedAPIScopeCount(3, switchedM2MTokenForLevel2Org);
+
+        // Check whether the new scope inherited by the sub organizations are properly returned in org level /scopes endpoint.
+        List<ScopeGetModel> scopesFromSubOrgLevel1AfterNewScopeAddition =
+                apiResourceManagementClient.getAllScopesInSubOrg(switchedM2MTokenForLevel1Org);
+        Assert.assertEquals(scopesFromSubOrgLevel1AfterNewScopeAddition.size(), orgL1ScopesCount + 1,
+                "New scope is not inherited properly.");
+        List<ScopeGetModel> scopesFromSubOrgLevel2AfterNewScopeAddition =
+                apiResourceManagementClient.getAllScopesInSubOrg(switchedM2MTokenForLevel2Org);
+        Assert.assertEquals(scopesFromSubOrgLevel2AfterNewScopeAddition.size(), orgL2ScopesCount + 1,
+                "New scope is not inherited properly.");
     }
 
     private void verifyInheritedAPIScopeCount(int expectedScopeCount, String switchedM2MToken) throws Exception {
@@ -241,20 +259,37 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
             description = "Deleted scopes from business API reflect in sub organization inherited API.")
     public void testDeletedScopesInheritedBySubOrg() throws Exception {
 
-        // Delete a scope from the business API.
-        List<String> deletedScopes = new ArrayList<>();
-        deletedScopes.add(DELETE_SCOPE_NAME);
-        deletedScopes.add(READ_SCOPE_NAME);
-        APIResourcePatchModel apiResourcePatchModel = new APIResourcePatchModel();
-        apiResourcePatchModel.setRemovedScopes(deletedScopes);
+        // Get the scopes count in sub orgs before adding new scopes.
+        List<ScopeGetModel> scopesFromSubOrgLevel1 = apiResourceManagementClient.getAllScopesInSubOrg(
+                switchedM2MTokenForLevel1Org);
+        List<ScopeGetModel> scopesFromSubOrgLevel2 = apiResourceManagementClient.getAllScopesInSubOrg(
+                switchedM2MTokenForLevel1Org);
+        int orgL1ScopesCount = scopesFromSubOrgLevel1.size();
+        int orgL2ScopesCount = scopesFromSubOrgLevel2.size();
 
-        apiResourceManagementClient.updateAPIResource(businessApiResourceId, apiResourcePatchModel);
-        List<ScopeGetModel> scopesOfRootAPI = apiResourceManagementClient.getAPIResourceScopes(businessApiResourceId);
-        Assert.assertEquals(scopesOfRootAPI.size(), 1, "Scopes are not deleted properly.");
+        // Delete "read" and "delete" scopes from the business API.
+        apiResourceManagementClient.deleteScopeOfAPIResource(businessApiResourceId, READ_SCOPE_NAME);
+        apiResourceManagementClient.deleteScopeOfAPIResource(businessApiResourceId, DELETE_SCOPE_NAME);
+        List<ScopeGetModel> updatedScopesOfRootAPI =
+                apiResourceManagementClient.getAPIResourceScopes(businessApiResourceId);
+        Assert.assertEquals(updatedScopesOfRootAPI.size(), 1, "Scopes are not deleted properly.");
 
-        // Check whether the deleted scope is inherited by the sub organizations.
+        // Check whether the deleted scopes are properly reflected in the sub organizations.
         verifyInheritedAPIScopeCount(1, switchedM2MTokenForLevel1Org);
         verifyInheritedAPIScopeCount(1, switchedM2MTokenForLevel2Org);
+
+        /*
+        Check whether the deleted scopes reflected in the sub organizations properly and properly returned through
+        org level /scopes endpoint.
+         */
+        List<ScopeGetModel> scopesFromSubOrgLevel1AfterScopeDeletion = apiResourceManagementClient.getAllScopesInSubOrg(
+                switchedM2MTokenForLevel1Org);
+        Assert.assertEquals(scopesFromSubOrgLevel1AfterScopeDeletion.size(), orgL1ScopesCount - 2,
+                "Deleted scopes are not reflected properly.");
+        List<ScopeGetModel> scopesFromSubOrgLevel2AfterScopeDeletion = apiResourceManagementClient.getAllScopesInSubOrg(
+                switchedM2MTokenForLevel2Org);
+        Assert.assertEquals(scopesFromSubOrgLevel2AfterScopeDeletion.size(), orgL2ScopesCount - 2,
+                "Deleted scopes are not reflected properly.");
     }
 
     @Test(dependsOnMethods = {"testDeletedScopesInheritedBySubOrg"},

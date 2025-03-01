@@ -46,6 +46,7 @@ import java.util.List;
 public class APIResourceManagementClient extends RestBaseClient {
 
     private static final String API_RESOURCE_MANAGEMENT_PATH = "api-resources";
+    private static final String SCOPES_PATH = "scopes";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -210,6 +211,40 @@ public class APIResourceManagementClient extends RestBaseClient {
     }
 
     /**
+     * Delete a scope of an API resource.
+     *
+     * @param apiId API Id.
+     * @param scopeName Scope name.
+     * @return Status code of the response.
+     * @throws IOException Error when deleting the scope of an API resource.
+     */
+    public int deleteScopeOfAPIResource(String apiId, String scopeName) throws IOException {
+
+        String endPointUrl = apiResourceManagementBasePath + PATH_SEPARATOR + apiId + PATH_SEPARATOR + SCOPES_PATH +
+                PATH_SEPARATOR + scopeName;
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeadersWithBasicAuth())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Get all scopes of a sub organization.
+     *
+     * @return List of scopes.
+     * @throws IOException Error when getting the scopes.
+     */
+    public List<ScopeGetModel> getAllScopesInSubOrg(String switchedM2MToken) throws IOException {
+
+        String endPointUrl = getSubOrgScopesAPIPath();
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(switchedM2MToken))) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, List.class);
+        }
+    }
+
+    /**
      * Close the HTTP client.
      *
      * @throws IOException If an error occurred while closing the Http Client.
@@ -226,6 +261,15 @@ public class APIResourceManagementClient extends RestBaseClient {
         }
         return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_PATH +
                 PATH_SEPARATOR + API_RESOURCE_MANAGEMENT_PATH;
+    }
+
+    private String getSubOrgScopesAPIPath() {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + API_SERVER_PATH + PATH_SEPARATOR + SCOPES_PATH;
+        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + API_SERVER_PATH +
+                PATH_SEPARATOR + SCOPES_PATH;
     }
 
     private Header[] getHeadersWithBasicAuth() {
