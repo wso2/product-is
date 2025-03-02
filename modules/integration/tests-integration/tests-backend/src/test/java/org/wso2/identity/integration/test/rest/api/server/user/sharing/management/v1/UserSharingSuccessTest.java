@@ -1111,20 +1111,65 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     }
 
     /**
-     * Cleans up organizations by deleting them if they exist.
+     * Cleans up organizations by deleting them from the deepest level to the root level.
      *
      * @throws Exception If an error occurs while deleting the organizations.
      */
     private void cleanUpOrganizations() throws Exception {
+        // Determine the deepest organization level in the hierarchy
+        int maxDepth = orgDetails.values().stream()
+                .mapToInt(details -> (int) details.get("orgLevel"))
+                .max()
+                .orElse(1);
 
-        deleteSubOrganizationIfExists(getOrgId(L3_ORG_1_NAME), getOrgId(L2_ORG_1_NAME));
-        deleteSubOrganizationIfExists(getOrgId(L2_ORG_3_NAME), getOrgId(L1_ORG_2_NAME));
-        deleteSubOrganizationIfExists(getOrgId(L2_ORG_2_NAME), getOrgId(L1_ORG_1_NAME));
-        deleteSubOrganizationIfExists(getOrgId(L2_ORG_1_NAME), getOrgId(L1_ORG_1_NAME));
-        deleteOrganizationIfExists(getOrgId(L1_ORG_3_NAME));
-        deleteOrganizationIfExists(getOrgId(L1_ORG_2_NAME));
-        deleteOrganizationIfExists(getOrgId(L1_ORG_1_NAME));
+        // Delete organizations starting from the deepest level down to the root level
+        for (int level = maxDepth; level >= 1; level--) {
+            for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
+                if ((int) entry.getValue().get("orgLevel") == level) {
+                    deleteOrganization(entry.getKey(), entry.getValue());
+                }
+            }
+        }
     }
+
+    private void deleteOrganization(String orgName, Map<String, Object> details) throws Exception {
+        String orgId = getOrgId(orgName);
+        String parentOrgId = (String) details.get("parentOrgId");
+
+        if ((int) details.get("orgLevel") > 1) {
+            deleteSubOrganizationIfExists(orgId, parentOrgId);
+        } else {
+            deleteOrganizationIfExists(orgId);
+        }
+    }
+
+
+
+//    private void cleanUpOrganizations() throws Exception {
+//
+//        //cleanup sub organizations
+//        for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
+//            String orgName = entry.getKey();
+//            String orgId = getOrgId(orgName);
+//            int orgLevel = (int) orgDetails.get(orgName).get("orgLevel");
+//            String parentOrgId = (String) orgDetails.get(orgName).get("parentOrgId");
+//
+//            if (orgLevel!=1) {
+//                deleteSubOrganizationIfExists(orgId, parentOrgId);
+//            }
+//        }
+//
+//        //cleanup organizations
+//        for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
+//            String orgName = entry.getKey();
+//            String orgId = getOrgId(orgName);
+//            int orgLevel = (int) orgDetails.get(orgName).get("orgLevel");
+//
+//            if (orgLevel==1) {
+//                deleteOrganizationIfExists(orgId);
+//            }
+//        }
+//    }
 
     /**
      * Close the HTTP clients for OAuth2, SCIM2, and Organization Management.
