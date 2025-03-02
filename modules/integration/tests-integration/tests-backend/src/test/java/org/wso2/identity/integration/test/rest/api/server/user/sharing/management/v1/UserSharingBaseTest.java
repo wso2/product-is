@@ -117,6 +117,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String ORG_ROLE_2 = "org-role-2";
     protected static final String ORG_ROLE_3 = "org-role-3";
 
+    protected static final String USER_DOMAIN_PRIMARY = "PRIMARY";
+
     protected static final String ROOT_ORG_USER_1_USERNAME = "rootUser1";
     protected static final String ROOT_ORG_USER_2_USERNAME = "rootUser2";
     protected static final String ROOT_ORG_USER_3_USERNAME = "rootUser3";
@@ -355,8 +357,9 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected static UserObject createUserObject(String userName, String orgName) {
 
+        String domainQualifiedUserName = USER_DOMAIN_PRIMARY + "/" + userName;
         UserObject user = new UserObject()
-                .userName("PRIMARY/" + userName)
+                .userName(domainQualifiedUserName)
                 .password("Admin123")
                 .name(new Name().givenName(userName).familyName(orgName))
                 .emails(new ArrayList<>());
