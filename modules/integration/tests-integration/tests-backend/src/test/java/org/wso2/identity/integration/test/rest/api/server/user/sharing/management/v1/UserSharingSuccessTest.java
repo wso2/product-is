@@ -94,7 +94,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     Map<String, Object> app1Details;
     Map<String, Object> app2Details;
-    
+
     private String appRole1Id;
     private String appRole2Id;
     private String appRole3Id;
@@ -861,7 +861,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
         Map<String, String> organizationRoles = createOrganizationRoles();
         app1Details = createApplication(APP_1_NAME, APPLICATION_AUDIENCE, Arrays.asList(APP_ROLE_1, APP_ROLE_2, APP_ROLE_3));
-        app2Details = createApplication(APP_2_NAME, ORGANIZATION_AUDIENCE, organizationRoles.keySet().stream().collect(Collectors.toList()));
+        app2Details = createApplication(APP_2_NAME, ORGANIZATION_AUDIENCE, new ArrayList<>(organizationRoles.keySet()));
     }
 
     private Map<String, Object> createApplication(String appName, String audience, List<String> roleNames) throws Exception{
@@ -918,7 +918,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         createdAppDetails.put("appDetailsOfSubOrgs", appDetailsOfSubOrgs);
 
         return createdAppDetails;
-
     }
 
 
@@ -957,12 +956,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         return roleIdsByName;
     }
 
-    private void validateAPPIdsNotNull(String... appIds) {
-        for (String appId : appIds) {
-            assertNotNull("Application ID is null", appId);
-        }
-    }
-
     private Map<String, String> createOrganizationRoles() throws IOException {
 
         Map<String, String> orgRoleIdsByName = new HashMap<>();
@@ -979,17 +972,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         orgRoleIdsByName.put(ORG_ROLE_3, orgRole3Id);
 
         return orgRoleIdsByName;
-    }
-
-    private void createApp1RolesWithAppAudience(String app1Id) throws IOException {
-
-        Audience app1RoleAudience = new Audience(APPLICATION_AUDIENCE, app1Id);
-        RoleV2 appRole1 = new RoleV2(app1RoleAudience, APP_ROLE_1, Collections.emptyList(), Collections.emptyList());
-        appRole1Id = scim2RestClient.addV2Role(appRole1);
-        RoleV2 appRole2 = new RoleV2(app1RoleAudience, APP_ROLE_2, Collections.emptyList(), Collections.emptyList());
-        appRole2Id = scim2RestClient.addV2Role(appRole2);
-        RoleV2 appRole3 = new RoleV2(app1RoleAudience, APP_ROLE_3, Collections.emptyList(), Collections.emptyList());
-        appRole3Id = scim2RestClient.addV2Role(appRole3);
     }
 
     private void setupUsers() throws Exception {
@@ -1073,8 +1055,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     private void cleanUpApplications() throws Exception {
 
-        //deleteApplicationIfExists(application1WithAppAudienceRoles.getId());
-        //deleteApplicationIfExists(application2WithOrgAudienceRoles.getId());
         deleteApplicationIfExists(app1Details.get("appId").toString());
         deleteApplicationIfExists(app2Details.get("appId").toString());
     }
@@ -1095,5 +1075,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         oAuth2RestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
+    }
+    
+    private String getOrgId(String orgName) {
+        
+        return orgDetails.get(orgName).get("orgId").toString();
     }
 }
