@@ -989,7 +989,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         userDetail.put("isRootOrgUser", true);
         userDetail.put("orgName", ROOT_ORG_NAME);
         userDetail.put("orgId", ROOT_ORG_ID);
-        userDetail.put("orgLevel", 1);
+        userDetail.put("orgLevel", 0);
 
         userDetails.put(user.getUserName(), userDetail);
         return  userId;
@@ -1060,12 +1060,17 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
      */
     private void cleanUpUsers() throws Exception {
 
-        deleteUserIfExists(getUserId(ROOT_ORG_USER_1_USERNAME, USER_DOMAIN_PRIMARY));
-        deleteUserIfExists(getUserId(ROOT_ORG_USER_2_USERNAME, USER_DOMAIN_PRIMARY));
-        deleteUserIfExists(getUserId(ROOT_ORG_USER_3_USERNAME, USER_DOMAIN_PRIMARY));
-        deleteSubOrgUserIfExists(getUserId(L1_ORG_1_USER_1_USERNAME, USER_DOMAIN_PRIMARY), (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
-        deleteSubOrgUserIfExists(getUserId(L1_ORG_1_USER_2_USERNAME, USER_DOMAIN_PRIMARY), (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
-        deleteSubOrgUserIfExists(getUserId(L1_ORG_1_USER_3_USERNAME, USER_DOMAIN_PRIMARY), (String) orgDetails.get(L1_ORG_1_NAME).get("orgSwitchToken"));
+        for (Map.Entry<String, Map<String, Object>> entry : userDetails.entrySet()) {
+            String userId = (String) entry.getValue().get("userId");
+            String orgName = (String) entry.getValue().get("orgName");
+            int orgLevel = (int) entry.getValue().get("orgLevel");
+
+            if(orgLevel==0) {
+                deleteUserIfExists(userId);
+            } else {
+                deleteSubOrgUserIfExists(userId, (String) orgDetails.get(orgName).get("orgSwitchToken"));
+            }
+        }
     }
 
     /**
@@ -1142,34 +1147,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
             deleteOrganizationIfExists(orgId);
         }
     }
-
-
-
-//    private void cleanUpOrganizations() throws Exception {
-//
-//        //cleanup sub organizations
-//        for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
-//            String orgName = entry.getKey();
-//            String orgId = getOrgId(orgName);
-//            int orgLevel = (int) orgDetails.get(orgName).get("orgLevel");
-//            String parentOrgId = (String) orgDetails.get(orgName).get("parentOrgId");
-//
-//            if (orgLevel!=1) {
-//                deleteSubOrganizationIfExists(orgId, parentOrgId);
-//            }
-//        }
-//
-//        //cleanup organizations
-//        for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
-//            String orgName = entry.getKey();
-//            String orgId = getOrgId(orgName);
-//            int orgLevel = (int) orgDetails.get(orgName).get("orgLevel");
-//
-//            if (orgLevel==1) {
-//                deleteOrganizationIfExists(orgId);
-//            }
-//        }
-//    }
 
     /**
      * Close the HTTP clients for OAuth2, SCIM2, and Organization Management.
