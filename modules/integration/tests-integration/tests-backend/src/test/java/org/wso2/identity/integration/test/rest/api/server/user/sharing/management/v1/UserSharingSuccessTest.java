@@ -93,12 +93,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     public void init() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-
-        oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
-        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
-                new JSONObject(readResource(AUTHORIZED_APIS_JSON)));
-
+        setupRestClients();
         setupOrganizations();
         setupApplicationsAndRoles();
         setupUsers();
@@ -507,8 +502,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         org1.put(MAP_KEY_SELECTIVE_ORG_ID, getOrgId(L1_ORG_1_NAME));
         org1.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_1_NAME);
         org1.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_ALL_EXISTING_CHILDREN_ONLY);
-        org1.put(MAP_KEY_SELECTIVE_ROLES, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME,
-                APPLICATION_AUDIENCE)));
+        org1.put(MAP_KEY_SELECTIVE_ROLES, Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
 
         organizations.put(L1_ORG_1_NAME, org1);
 
@@ -517,9 +511,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         org2.put(MAP_KEY_SELECTIVE_ORG_ID, getOrgId(L1_ORG_2_NAME));
         org2.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_2_NAME);
         org2.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
-        org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME,
-                        APPLICATION_AUDIENCE),
-                createRoleWithAudience(ORG_ROLE_1, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE)));
+        org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_1, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE)));
 
         organizations.put(L1_ORG_2_NAME, org2);
 
@@ -791,7 +783,25 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         return "/api/server/v1" + USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ROLES_PATH + "?orgId=" + orgId;
     }
 
+    private String getOrgId(String orgName) {
+
+        return orgDetails.get(orgName).get("orgId").toString();
+    }
+
+    private String getUserId(String userName, String userDomain) {
+
+        String domainQualifiedUserName = userDomain + "/" + userName;
+        return userDetails.get(domainQualifiedUserName).get("userId").toString();
+    }
+
     // Setup and cleanup methods.
+
+    private void setupRestClients() throws Exception {
+
+        oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL, new JSONObject(readResource(AUTHORIZED_APIS_JSON)));
+    }
 
     private void setupOrganizations() throws Exception {
 
@@ -810,12 +820,14 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     }
 
     private String addOrganization(String orgName) throws Exception {
+
         String orgId = orgMgtRestClient.addOrganization(orgName);
         setOrgDetails(orgName, orgId, ROOT_ORG_ID, 1);
         return orgId;
     }
 
     private String addSubOrganization(String orgName, String parentId, int orgLevel) throws Exception {
+
         String orgId = orgMgtRestClient.addSubOrganization(orgName, parentId);
         setOrgDetails(orgName, orgId, parentId, orgLevel);
         return orgId;
@@ -1158,16 +1170,5 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         oAuth2RestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
-    }
-    
-    private String getOrgId(String orgName) {
-        
-        return orgDetails.get(orgName).get("orgId").toString();
-    }
-    
-    private String getUserId(String userName, String userDomain) {
-        
-        String domainQualifiedUserName = userDomain + "/" + userName;
-        return userDetails.get(domainQualifiedUserName).get("userId").toString();
     }
 }
