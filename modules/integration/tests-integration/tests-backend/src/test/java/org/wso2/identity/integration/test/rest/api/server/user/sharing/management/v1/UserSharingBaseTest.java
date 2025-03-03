@@ -630,6 +630,17 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     }
 
     /**
+     * Cleans up the detail maps by clearing all entries.
+     */
+    protected void cleanUpDetailMaps() {
+
+        userDetails.clear();
+        orgDetails.clear();
+        appDetails.clear();
+        roleDetails.clear();
+    }
+
+    /**
      * Close the HTTP clients for OAuth2, SCIM2, and Organization Management.
      *
      * @throws IOException If an error occurred while closing the HTTP clients.

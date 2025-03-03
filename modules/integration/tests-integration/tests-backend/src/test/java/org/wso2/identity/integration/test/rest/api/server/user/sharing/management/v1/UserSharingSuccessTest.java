@@ -73,11 +73,6 @@ import static org.wso2.identity.integration.test.rest.api.server.user.sharing.ma
  */
 public class UserSharingSuccessTest extends UserSharingBaseTest {
 
-//    private final Map<String, Map<String, Object>> userDetails = new HashMap<>();
-//    private final Map<String, Map<String, Object>> orgDetails = new HashMap<>();
-//    private final Map<String, Map<String, Object>> appDetails = new HashMap<>();
-//    private final Map<String, Map<String, Object>> roleDetails = new HashMap<>();
-
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserSharingSuccessTest(TestUserMode userMode) throws Exception {
 
@@ -108,6 +103,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         cleanUpRoles(APPLICATION_AUDIENCE, ORGANIZATION_AUDIENCE);
         cleanUpApplications();
         cleanUpOrganizations();
+        cleanUpDetailMaps();
         closeRestClients();
     }
 
