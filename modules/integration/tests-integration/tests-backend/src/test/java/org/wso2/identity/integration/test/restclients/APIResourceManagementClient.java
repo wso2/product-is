@@ -116,7 +116,7 @@ public class APIResourceManagementClient extends RestBaseClient {
      * Get API resources by filtering from a sub organization.
      *
      * @param apiResourceFilter API resource filter.
-     * @param switchedM2MToken Switched M2M token.
+     * @param switchedM2MToken  Switched M2M token.
      * @return List of API resources.
      * @throws Exception Error when getting the filtered API resources.
      */
@@ -158,7 +158,7 @@ public class APIResourceManagementClient extends RestBaseClient {
     /**
      * Get API resource scopes from a sub organization.
      *
-     * @param apiId API Id.
+     * @param apiId            API Id.
      * @param switchedM2MToken Switched M2M token.
      * @return List of API resource scopes.
      * @throws Exception Error when getting the scopes.
@@ -176,9 +176,10 @@ public class APIResourceManagementClient extends RestBaseClient {
         }
     }
 
-    /** Update an API resource.
+    /**
+     * Update an API resource.
      *
-     * @param apiIdentifier API identifier.
+     * @param apiIdentifier         API identifier.
      * @param apiResourcePatchModel API resource patch model.
      * @return Status code of the response.
      * @throws IOException Error when updating the API resource.
@@ -213,7 +214,7 @@ public class APIResourceManagementClient extends RestBaseClient {
     /**
      * Delete a scope of an API resource.
      *
-     * @param apiId API Id.
+     * @param apiId     API Id.
      * @param scopeName Scope name.
      * @return Status code of the response.
      * @throws IOException Error when deleting the scope of an API resource.

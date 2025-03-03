@@ -80,7 +80,7 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][] {
+        return new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
         };
