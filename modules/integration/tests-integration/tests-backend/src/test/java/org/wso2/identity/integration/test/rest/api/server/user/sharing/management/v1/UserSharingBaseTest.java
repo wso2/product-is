@@ -46,7 +46,9 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Audience;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
+import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudience;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudienceAudience;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -60,6 +62,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,11 +73,21 @@ import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER
  */
 public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
+    protected static String swaggerDefinition;
+
+    protected OAuth2RestClient oAuth2RestClient;
+    protected SCIM2RestClient scim2RestClient;
+    protected OrgMgtRestClient orgMgtRestClient;
+
+    protected Map<String, Map<String, Object>> userDetails;
+    protected Map<String, Map<String, Object>> orgDetails;
+    protected Map<String, Map<String, Object>> appDetails;
+    protected Map<String, Map<String, Object>> roleDetails;
+
     private static final String API_DEFINITION_NAME = "organization-user-share.yaml";
     protected static final String AUTHORIZED_APIS_JSON = "user-sharing-apis.json";
     static final String API_VERSION = "v1";
-    private static final String API_PACKAGE_NAME =
-            "org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1";
+    private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1";
 
     static final String USER_SHARING_API_BASE_PATH = "/users";
     static final String SHARE_PATH = "/share";
@@ -129,12 +142,12 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String L1_ORG_1_USER_2_USERNAME = "l1Org1User2";
     protected static final String L1_ORG_1_USER_3_USERNAME = "l1Org1User3";
 
-    protected static final String INTERNAL_USER_SHARE = "internal_user_share";
-    protected static final String INTERNAL_USER_UNSHARE = "internal_user_unshare";
-    protected static final String INTERNAL_USER_SHARED_ACCESS_VIEW = "internal_user_shared_access_view";
-    protected static final String INTERNAL_ORG_USER_SHARE = "internal_org_user_share";
-    protected static final String INTERNAL_ORG_USER_UNSHARE = "internal_org_user_unshare";
-    protected static final String INTERNAL_ORG_USER_SHARED_ACCESS_VIEW = "internal_org_user_shared_access_view";
+    protected static final String API_SCOPE_INTERNAL_USER_SHARE = "internal_user_share";
+    protected static final String API_SCOPE_INTERNAL_USER_UNSHARE = "internal_user_unshare";
+    protected static final String API_SCOPE_INTERNAL_USER_SHARED_ACCESS_VIEW = "internal_user_shared_access_view";
+    protected static final String API_SCOPE_INTERNAL_ORG_USER_SHARE = "internal_org_user_share";
+    protected static final String API_SCOPE_INTERNAL_ORG_USER_UNSHARE = "internal_org_user_unshare";
+    protected static final String API_SCOPE_INTERNAL_ORG_USER_SHARED_ACCESS_VIEW = "internal_org_user_shared_access_view";
 
     protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
@@ -153,11 +166,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String MAP_KEY_EXPECTED_ORG_IDS = "expectedOrgIds";
     protected static final String MAP_KEY_EXPECTED_ORG_NAMES = "expectedOrgNames";
     protected static final String MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG = "expectedRolesPerExpectedOrg";
-
-    protected static String swaggerDefinition;
-    protected OAuth2RestClient oAuth2RestClient;
-    protected SCIM2RestClient scim2RestClient;
-    protected OrgMgtRestClient orgMgtRestClient;
 
     static {
         try {
@@ -202,9 +210,188 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return client.execute(request);
     }
 
-    // Helper methods.
+    // Methods to add organizations and sub organizations for testing purposes.
 
-    protected ApplicationResponseModel addApplication(String appName) throws Exception {
+    protected String addOrganization(String orgName) throws Exception {
+
+        String orgId = orgMgtRestClient.addOrganization(orgName);
+        setOrgDetails(orgName, orgId, ROOT_ORG_ID, 1);
+        return orgId;
+    }
+
+    protected String addSubOrganization(String orgName, String parentId, int orgLevel) throws Exception {
+
+        String orgId = orgMgtRestClient.addSubOrganization(orgName, parentId);
+        setOrgDetails(orgName, orgId, parentId, orgLevel);
+        return orgId;
+    }
+
+    protected String getOrgId(String orgName) {
+
+        return orgDetails.get(orgName).get("orgId").toString();
+    }
+
+    protected void setOrgDetails(String orgName, String orgId, String parentId, int orgLevel) throws Exception {
+
+        Map<String, Object> orgDetail = new HashMap<>();
+        orgDetail.put("orgName", orgName);
+        orgDetail.put("orgId", orgId);
+        orgDetail.put("parentOrgId", parentId);
+        orgDetail.put("orgSwitchToken", orgMgtRestClient.switchM2MToken(orgId));
+        orgDetail.put("orgLevel", orgLevel);
+        orgDetails.put(orgName, orgDetail);
+    }
+
+    // Methods to add applications and roles for testing purposes.
+
+    protected Map<String, Object> createApplication(String appName, String audience, List<String> roleNames) throws Exception{
+
+        Map<String, Object> createdAppDetails = new HashMap<>();
+        String rootOrgAppName = appName + "/" + ROOT_ORG_NAME;
+
+        ApplicationResponseModel application = addApplication(appName);
+        String appId = application.getId();
+        OpenIDConnectConfiguration oidcConfig = oAuth2RestClient.getOIDCInboundDetails(appId);
+        String clientId = oidcConfig.getClientId();
+        String clientSecret = oidcConfig.getClientSecret();
+        Map<String, String> roleIdsByName = new HashMap<>();
+
+        if (StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audience)){
+
+            Audience appRoleAudience = new Audience(APPLICATION_AUDIENCE, appId);
+            for (String roleName : roleNames) {
+                RoleV2 appRole = new RoleV2(appRoleAudience, roleName, Collections.emptyList(), Collections.emptyList());
+                String roleId = scim2RestClient.addV2Role(appRole);
+                roleIdsByName.put(roleName, roleId);
+            }
+            storeRoleDetails(APPLICATION_AUDIENCE, rootOrgAppName, roleIdsByName);
+            createdAppDetails.put("appAudience", APPLICATION_AUDIENCE);
+
+        } else {
+
+            switchApplicationAudience(appId, AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
+
+            for (String roleName: roleNames){
+                String roleId = scim2RestClient.getRoleIdByName(roleName);
+                roleIdsByName.put(roleName, roleId);
+            }
+            createdAppDetails.put("appAudience", ORGANIZATION_AUDIENCE);
+        }
+
+        // Mark roles and groups as requested claims for the app 2.
+        updateRequestedClaimsOfApp(appId, getClaimConfigurationsWithRolesAndGroups());
+        shareApplication(appId);
+
+        // Get sub org details of Applications.
+        Map<String, Object> appDetailsOfSubOrgs = new HashMap<>();
+        for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
+            String orgName = entry.getKey();
+            Map<String, Object> orgDetail = entry.getValue();
+
+            Map<String, Object> appDetailsOfSubOrg = getAppDetailsOfSubOrg(appName, audience, roleNames, orgDetail);
+            appDetailsOfSubOrgs.put(orgName, appDetailsOfSubOrg);
+        }
+
+        createdAppDetails.put("appName", appName);
+        createdAppDetails.put("appId", appId);
+        createdAppDetails.put("clientId", clientId);
+        createdAppDetails.put("clientSecret", clientSecret);
+        createdAppDetails.put("roleNames", roleNames);
+        createdAppDetails.put("roleIdsByName", roleIdsByName);
+        createdAppDetails.put("appDetailsOfSubOrgs", appDetailsOfSubOrgs);
+
+        appDetails.put(appName, createdAppDetails);
+        return createdAppDetails;
+    }
+
+    protected Map<String, Object> getAppDetailsOfSubOrg(String appName, String audience, List<String> roleNames, Map<String, Object> orgDetail) throws Exception {
+
+        Map<String, Object> subOrgAppDetails = new HashMap<>();
+
+        String subOrgName = (String) orgDetail.get("orgName");
+        String subOrgId = (String) orgDetail.get("orgId");
+        String subOrgSwitchToken = (String) orgDetail.get("orgSwitchToken");
+        String subOrgAppName = appName + "/" + subOrgName;
+
+        String subOrgAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken);
+
+        Map<String, String> subOrgRoleIdsByName = StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audience) ?
+                getSubOrgRoleIdsByName(roleNames, APPLICATION_AUDIENCE, subOrgAppName, subOrgAppId, subOrgSwitchToken) :
+                getSubOrgRoleIdsByName(roleNames,ORGANIZATION_AUDIENCE, subOrgName, subOrgId, subOrgSwitchToken);
+
+        subOrgAppDetails.put("subOrgName", subOrgName);
+        subOrgAppDetails.put("appName", appName);
+        subOrgAppDetails.put("appId", subOrgAppId);
+        subOrgAppDetails.put("roleNames", roleNames);
+        subOrgAppDetails.put("roleIdsByName", subOrgRoleIdsByName);
+        subOrgAppDetails.put("appAudience", audience);
+
+        return subOrgAppDetails;
+    }
+
+    protected Map<String, String> getSubOrgRoleIdsByName(List<String> roleNames, String audienceType, String audienceName, String audienceValue, String subOrgSwitchToken) throws Exception {
+
+        Map<String, String> roleIdsByName = new HashMap<>();
+        for (String roleName : roleNames) {
+            String sharedAppRoleId =
+                    scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(roleName, audienceValue, subOrgSwitchToken);
+            roleIdsByName.put(roleName, sharedAppRoleId);
+        }
+
+        if (StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audienceType)) {
+            storeRoleDetails(APPLICATION_AUDIENCE, audienceName, roleIdsByName);
+        } else {
+            storeRoleDetails(ORGANIZATION_AUDIENCE, audienceName, roleIdsByName);
+        }
+
+        return roleIdsByName;
+    }
+
+    protected Map<String, String> createOrganizationRoles(String orgName, List<String> orgRoleNames) throws IOException {
+
+        Map<String, String> orgRoleIdsByName = new HashMap<>();
+        for (String orgRoleName : orgRoleNames) {
+            RoleV2 orgRole = new RoleV2(null, orgRoleName, Collections.emptyList(), Collections.emptyList());
+            String orgRoleId = scim2RestClient.addV2Role(orgRole);
+            orgRoleIdsByName.put(orgRoleName, orgRoleId);
+        }
+
+        storeRoleDetails(ORGANIZATION_AUDIENCE, orgName, orgRoleIdsByName);
+
+        return orgRoleIdsByName;
+    }
+
+    protected RoleWithAudience createRoleWithAudience(String roleName, String display, String type) {
+
+        RoleWithAudienceAudience audience = new RoleWithAudienceAudience();
+        audience.setDisplay(display);
+        audience.setType(type);
+
+        RoleWithAudience roleWithAudience = new RoleWithAudience();
+        roleWithAudience.setDisplayName(roleName);
+        roleWithAudience.setAudience(audience);
+
+        return roleWithAudience;
+    }
+
+    protected String getSharedOrgsRolesRef(String userId, String orgId) {
+
+        return "/api/server/v1" + USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ROLES_PATH + "?orgId=" + orgId;
+    }
+
+    protected void storeRoleDetails(String audienceType, String audienceName, Map<String, String> rolesOfAudience) {
+
+        String key = StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audienceType)
+                ? APPLICATION_AUDIENCE
+                : ORGANIZATION_AUDIENCE;
+
+        Map<String, Object> rolesMapOfAudienceType = new HashMap<>();
+        rolesMapOfAudienceType.put(audienceName, rolesOfAudience);
+
+        roleDetails.computeIfAbsent(key, k -> new HashMap<>()).putAll(rolesMapOfAudienceType);
+    }
+
+    private ApplicationResponseModel addApplication(String appName) throws Exception {
 
         ApplicationModel application = new ApplicationModel();
 
@@ -231,27 +418,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return oAuth2RestClient.getApplication(appId);
     }
 
-    protected void switchApplicationAudience(String appId, AssociatedRolesConfig.AllowedAudienceEnum newAudience) throws Exception {
-
-        AssociatedRolesConfig associatedRolesConfigApp2 = new AssociatedRolesConfig();
-        associatedRolesConfigApp2.setAllowedAudience(newAudience);
-
-        ApplicationPatchModel patchModelApp2 = new ApplicationPatchModel();
-        patchModelApp2.setAssociatedRoles(associatedRolesConfigApp2);
-
-        oAuth2RestClient.updateApplication(appId, patchModelApp2);
-    }
-
-    protected void shareApplication(String applicationId) throws Exception {
-
-        ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
-        applicationSharePOSTRequest.setShareWithAllChildren(true);
-        oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
-
-        // Since application sharing is an async operation, wait for some time for it to finish.
-        Thread.sleep(5000);
-    }
-
     private ClaimConfiguration setApplicationClaimConfig() {
 
         ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
@@ -273,7 +439,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return claimConfiguration;
     }
 
-    protected ClaimConfiguration getClaimConfigurationsWithRolesAndGroups() {
+    private ClaimConfiguration getClaimConfigurationsWithRolesAndGroups() {
 
         ClaimConfiguration claimConfiguration = new ClaimConfiguration();
         claimConfiguration.addRequestedClaimsItem(getRequestedClaim(ROLES_CLAIM_URI));
@@ -281,23 +447,46 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return claimConfiguration;
     }
 
-    protected RequestedClaimConfiguration getRequestedClaim(String claimUri) {
+    private RequestedClaimConfiguration getRequestedClaim(String claimUri) {
 
         RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
         requestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
         return requestedClaim;
     }
 
-    protected void updateRequestedClaimsOfApp(String applicationId, ClaimConfiguration claimConfigurationsForApp) throws IOException {
+    private void updateRequestedClaimsOfApp(String applicationId, ClaimConfiguration claimConfigurationsForApp) throws IOException {
 
         ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
         applicationPatch.setClaimConfiguration(claimConfigurationsForApp);
         oAuth2RestClient.updateApplication(applicationId, applicationPatch);
     }
 
-    protected static UserObject createUserObject(String userName, String orgName) {
+    private void switchApplicationAudience(String appId, AssociatedRolesConfig.AllowedAudienceEnum newAudience) throws Exception {
 
-        String domainQualifiedUserName = USER_DOMAIN_PRIMARY + "/" + userName;
+        AssociatedRolesConfig associatedRolesConfigApp2 = new AssociatedRolesConfig();
+        associatedRolesConfigApp2.setAllowedAudience(newAudience);
+
+        ApplicationPatchModel patchModelApp2 = new ApplicationPatchModel();
+        patchModelApp2.setAssociatedRoles(associatedRolesConfigApp2);
+
+        oAuth2RestClient.updateApplication(appId, patchModelApp2);
+    }
+
+    private void shareApplication(String applicationId) throws Exception {
+
+        ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
+        applicationSharePOSTRequest.setShareWithAllChildren(true);
+        oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
+
+        // Since application sharing is an async operation, wait for some time for it to finish.
+        Thread.sleep(5000);
+    }
+
+    // Methods to add users in organizations and sub organizations for testing purposes.
+
+    protected UserObject createUserObject(String userDomain, String userName, String orgName) {
+
+        String domainQualifiedUserName = userDomain + "/" + userName;
         UserObject user = new UserObject()
                 .userName(domainQualifiedUserName)
                 .password("Admin123")
@@ -316,36 +505,198 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return user;
     }
 
-    protected static RoleWithAudience createRoleWithAudience(String roleName, String display, String type) {
+    protected String createUser(UserObject user) throws Exception{
 
-        RoleWithAudienceAudience audience = new RoleWithAudienceAudience();
-        audience.setDisplay(display);
-        audience.setType(type);
+        String userId = scim2RestClient.createUser(user);
 
-        RoleWithAudience roleWithAudience = new RoleWithAudience();
-        roleWithAudience.setDisplayName(roleName);
-        roleWithAudience.setAudience(audience);
+        Map<String, Object> userDetail = new HashMap<>();
+        userDetail.put("username", user.getUserName());
+        userDetail.put("userId", userId);
+        userDetail.put("isRootOrgUser", true);
+        userDetail.put("orgName", ROOT_ORG_NAME);
+        userDetail.put("orgId", ROOT_ORG_ID);
+        userDetail.put("orgLevel", 0);
 
-        return roleWithAudience;
+        userDetails.put(user.getUserName(), userDetail);
+        return  userId;
     }
 
-    protected static String getSharedOrgsRolesRef(String userId, String orgId) {
+    protected String createSuborgUser(UserObject user, String suborg) throws Exception{
 
-        return "/api/server/v1" + USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ROLES_PATH + "?orgId=" + orgId;
+        String userId = scim2RestClient.createSubOrgUser(user, (String) orgDetails.get(suborg).get("orgSwitchToken"));
+
+        Map<String, Object> userDetail = new HashMap<>();
+        userDetail.put("username", user.getUserName());
+        userDetail.put("userId", userId);
+        userDetail.put("isRootOrgUser", false);
+        userDetail.put("orgName", suborg);
+        userDetail.put("orgId", orgDetails.get(suborg).get("orgId"));
+        userDetail.put("orgLevel", orgDetails.get(suborg).get("orgLevel"));
+
+        userDetails.put(user.getUserName(), userDetail);
+        return  userId;
     }
 
-    protected String getOrgId(Map<String, Map<String, Object>> orgDetails, String orgName) {
-
-        return orgDetails.get(orgName).get("orgId").toString();
-    }
-
-    protected String getUserId(Map<String, Map<String, Object>> userDetails, String userName, String userDomain) {
+    protected String getUserId(String userName, String userDomain) {
 
         String domainQualifiedUserName = userDomain + "/" + userName;
         return userDetails.get(domainQualifiedUserName).get("userId").toString();
     }
 
-    public String toJSONString(java.lang.Object object) {
+    // Methods to clean up the resources created for testing purposes.
+
+    /**
+     * Clean up users by deleting them if they exist.
+     *
+     * @throws Exception If an error occurs while deleting the users.
+     */
+    protected void cleanUpUsers() throws Exception {
+
+        for (Map.Entry<String, Map<String, Object>> entry : userDetails.entrySet()) {
+            String userId = (String) entry.getValue().get("userId");
+            String orgName = (String) entry.getValue().get("orgName");
+            int orgLevel = (int) entry.getValue().get("orgLevel");
+
+            if(orgLevel==0) {
+                deleteUserIfExists(userId);
+            } else {
+                deleteSubOrgUserIfExists(userId, (String) orgDetails.get(orgName).get("orgSwitchToken"));
+            }
+        }
+    }
+
+    /**
+     * Cleans up roles for the specified audiences if exists.
+     * Audiences will always be either ORGANIZATION_AUDIENCE or APPLICATION_AUDIENCE or both.
+     *
+     * <p>
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
+     * </p>
+     * @param audiences The audiences for which roles need to be cleaned up.
+     * @throws Exception If an error occurs during the cleanup process.
+     */
+    @SuppressWarnings("unchecked")
+    protected void cleanUpRoles(String... audiences) throws Exception {
+
+        for(String audience : audiences) {
+            Map<String, Object> orgWiseRolesOfAudience = roleDetails.get(audience);
+            for (Map.Entry<String, Object> entry : orgWiseRolesOfAudience.entrySet()) {
+                String audienceName = entry.getKey();
+                Map<String, String> roles = (Map<String, String>) entry.getValue();
+                for (Map.Entry<String, String> role : roles.entrySet()) {
+                    String roleId = role.getValue();
+                    if(audienceName.contains(ROOT_ORG_NAME)) {
+                        deleteRoleIfExists(roleId);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Cleans up applications by deleting them if they exist.
+     *
+     * @throws Exception If an error occurs while deleting the applications.
+     */
+    protected void cleanUpApplications() throws Exception {
+
+        for (Map.Entry<String, Map<String, Object>> entry : appDetails.entrySet()) {
+            Map<String, Object> details = entry.getValue();
+            deleteApplicationIfExists(details.get("appId").toString());
+        }
+    }
+
+    /**
+     * Cleans up organizations by deleting them from the deepest level to the root level.
+     *
+     * @throws Exception If an error occurs while deleting the organizations.
+     */
+    protected void cleanUpOrganizations() throws Exception {
+        // Determine the deepest organization level in the hierarchy
+        int maxDepth = orgDetails.values().stream()
+                .mapToInt(details -> (int) details.get("orgLevel"))
+                .max()
+                .orElse(1);
+
+        // Delete organizations starting from the deepest level down to the root level
+        for (int level = maxDepth; level >= 1; level--) {
+            for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
+                if ((int) entry.getValue().get("orgLevel") == level) {
+                    deleteOrganization(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+    }
+
+    /**
+     * Close the HTTP clients for OAuth2, SCIM2, and Organization Management.
+     *
+     * @throws IOException If an error occurred while closing the HTTP clients.
+     */
+    protected void closeRestClients() throws IOException {
+
+        oAuth2RestClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        orgMgtRestClient.closeHttpClient();
+    }
+
+    private void deleteOrganization(String orgName, Map<String, Object> details) throws Exception {
+        String orgId = getOrgId(orgName);
+        String parentOrgId = (String) details.get("parentOrgId");
+
+        if ((int) details.get("orgLevel") > 1) {
+            deleteSubOrganizationIfExists(orgId, parentOrgId);
+        } else {
+            deleteOrganizationIfExists(orgId);
+        }
+    }
+
+    private void deleteUserIfExists(String userId) throws Exception {
+
+        if (userId != null) {
+            scim2RestClient.deleteUser(userId);
+        }
+    }
+
+    private void deleteSubOrgUserIfExists(String userId, String organizationSwitchToken) throws Exception {
+
+        if (userId != null) {
+            scim2RestClient.deleteSubOrgUser(userId, organizationSwitchToken);
+        }
+    }
+
+    private void deleteRoleIfExists(String roleId) throws Exception {
+
+        if (roleId != null) {
+            scim2RestClient.deleteV2Role(roleId);
+        }
+    }
+
+    private void deleteApplicationIfExists(String appId) throws Exception {
+
+        if (appId != null) {
+            oAuth2RestClient.deleteApplication(appId);
+        }
+    }
+
+    private void deleteSubOrganizationIfExists(String orgId, String parentId) throws Exception {
+
+        if (orgId != null) {
+            orgMgtRestClient.deleteSubOrganization(orgId, parentId);
+        }
+    }
+
+    private void deleteOrganizationIfExists(String orgId) throws Exception {
+
+        if (orgId != null) {
+            orgMgtRestClient.deleteOrganization(orgId);
+        }
+    }
+
+    // Helper methods.
+
+    protected String toJSONString(java.lang.Object object) {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(object);
