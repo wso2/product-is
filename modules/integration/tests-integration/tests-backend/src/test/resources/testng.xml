@@ -158,6 +158,7 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.SharedUserProfileClaimMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.notification.template.mgt.OrganizationNotificationOrgTemplatesTestCase"/>
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimUniquenessValidationTestCase"/>
+            <class name="org.wso2.identity.integration.test.apiAuthorization.APIResourceInheritanceTestCase"/>
         </classes>
     </test>
 
