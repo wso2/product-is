@@ -18,10 +18,10 @@ import java.util.Map;
 /**
  * Tests for failure cases of the User Sharing REST APIs.
  */
-public class UserSharingFaliureTest extends UserSharingBaseTest {
+public class UserSharingFailureTest extends UserSharingBaseTest {
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public UserSharingFaliureTest(TestUserMode userMode) throws Exception {
+    public UserSharingFailureTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
