@@ -73,10 +73,10 @@ import static org.wso2.identity.integration.test.rest.api.server.user.sharing.ma
  */
 public class UserSharingSuccessTest extends UserSharingBaseTest {
 
-    private Map<String, Map<String, Object>> userDetails = new HashMap<>();
-    private Map<String, Map<String, Object>> orgDetails = new HashMap<>();
-    private Map<String, Map<String, Object>> appDetails = new HashMap<>();
-    private Map<String, Map<String, Object>> roleDetails = new HashMap<>();
+    private final Map<String, Map<String, Object>> userDetails = new HashMap<>();
+    private final Map<String, Map<String, Object>> orgDetails = new HashMap<>();
+    private final Map<String, Map<String, Object>> appDetails = new HashMap<>();
+    private final Map<String, Map<String, Object>> roleDetails = new HashMap<>();
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserSharingSuccessTest(TestUserMode userMode) throws Exception {
@@ -765,33 +765,14 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     // Helper Methods.
 
-    private RoleWithAudience createRoleWithAudience(String roleName, String display, String type) {
-
-        RoleWithAudienceAudience audience = new RoleWithAudienceAudience();
-        audience.setDisplay(display);
-        audience.setType(type);
-
-        RoleWithAudience roleWithAudience = new RoleWithAudience();
-        roleWithAudience.setDisplayName(roleName);
-        roleWithAudience.setAudience(audience);
-
-        return roleWithAudience;
-    }
-
-    private String getSharedOrgsRolesRef(String userId, String orgId) {
-
-        return "/api/server/v1" + USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ROLES_PATH + "?orgId=" + orgId;
-    }
-
     private String getOrgId(String orgName) {
 
-        return orgDetails.get(orgName).get("orgId").toString();
+        return getOrgId(orgDetails, orgName);
     }
 
     private String getUserId(String userName, String userDomain) {
 
-        String domainQualifiedUserName = userDomain + "/" + userName;
-        return userDetails.get(domainQualifiedUserName).get("userId").toString();
+        return getUserId(userDetails, userName, userDomain);
     }
 
     // Setup and cleanup methods.
@@ -890,6 +871,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         updateRequestedClaimsOfApp(appId, getClaimConfigurationsWithRolesAndGroups());
         shareApplication(appId);
 
+        // Get sub org details of Applications.
         Map<String, Object> appDetailsOfSubOrgs = new HashMap<>();
         for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
             String orgName = entry.getKey();
@@ -911,7 +893,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         return createdAppDetails;
     }
 
-
     private Map<String, Object> getAppDetailsOfSubOrg(String appName, String audience, List<String> roleNames, Map<String, Object> orgDetail) throws Exception {
 
         Map<String, Object> subOrgAppDetails = new HashMap<>();
@@ -932,6 +913,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         subOrgAppDetails.put("appId", subOrgAppId);
         subOrgAppDetails.put("roleNames", roleNames);
         subOrgAppDetails.put("roleIdsByName", subOrgRoleIdsByName);
+        subOrgAppDetails.put("appAudience", audience);
 
         return subOrgAppDetails;
     }

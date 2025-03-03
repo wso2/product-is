@@ -47,6 +47,8 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudience;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudienceAudience;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
@@ -59,6 +61,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 
@@ -160,8 +163,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         try {
             swaggerDefinition = getAPISwaggerDefinition(API_PACKAGE_NAME, API_DEFINITION_NAME);
         } catch (IOException e) {
-            Assert.fail(String.format("Unable to read the swagger definition %s from %s", API_DEFINITION_NAME,
-                    API_PACKAGE_NAME), e);
+            Assert.fail(String.format("Unable to read the swagger definition %s from %s", API_DEFINITION_NAME, API_PACKAGE_NAME), e);
         }
     }
 
@@ -183,17 +185,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    protected String getAppClientId(String applicationId) throws Exception {
-
-        OpenIDConnectConfiguration oidcConfig = oAuth2RestClient.getOIDCInboundDetails(applicationId);
-        return oidcConfig.getClientId();
-    }
-
-    protected String getAppClientSecret(String applicationId) throws Exception {
-
-        OpenIDConnectConfiguration oidcConfig = oAuth2RestClient.getOIDCInboundDetails(applicationId);
-        return oidcConfig.getClientSecret();
-    }
+    // Request Sending Methods.
 
     protected HttpResponse sendGetRequest(String endpointURL, HttpClient client) throws IOException {
 
@@ -202,8 +194,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return client.execute(request);
     }
 
-    protected HttpResponse sendPostRequest(String endpointURL, List<NameValuePair> urlParameters, HttpClient client)
-            throws IOException {
+    protected HttpResponse sendPostRequest(String endpointURL, List<NameValuePair> urlParameters, HttpClient client) throws IOException {
 
         HttpPost request = new HttpPost(endpointURL);
         request.setHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
@@ -211,53 +202,14 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return client.execute(request);
     }
 
-    protected HttpResponse sendPutRequest(String endpointURL, String body, HttpClient client) throws IOException {
-
-        HttpPut request = new HttpPut(endpointURL);
-        request.setHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
-        request.setHeader("Content-Type", "application/json");
-        request.setEntity(new StringEntity(body));
-        return client.execute(request);
-    }
-
-    protected HttpResponse sendDeleteRequest(String endpointURL, HttpClient client) throws IOException {
-
-        HttpDelete request = new HttpDelete(endpointURL);
-        request.setHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
-        return client.execute(request);
-    }
-
-    /**
-     * Ged permissions based on the provided custom scopes.
-     *
-     * @return A list of permissions including predefined permissions
-     */
-    protected List<Permission> getPermissions() {
-
-        List<Permission> userPermissions = new ArrayList<>();
-
-        Collections.addAll(userPermissions,
-                new Permission(INTERNAL_USER_SHARE),
-                new Permission(INTERNAL_USER_UNSHARE),
-                new Permission(INTERNAL_USER_SHARED_ACCESS_VIEW));
-
-        return userPermissions;
-    }
-
-    protected List<String> getRoleV2Schema() {
-
-        List<String> schemas = new ArrayList<>();
-        schemas.add("urn:ietf:params:scim:schemas:extension:2.0:Role");
-        return schemas;
-    }
+    // Helper methods.
 
     protected ApplicationResponseModel addApplication(String appName) throws Exception {
 
         ApplicationModel application = new ApplicationModel();
 
         List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials",
-                "refresh_token", "organization_switch");
+        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "organization_switch");
 
         List<String> callBackUrls = new ArrayList<>();
         Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
@@ -279,33 +231,15 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return oAuth2RestClient.getApplication(appId);
     }
 
-    private ClaimConfiguration setApplicationClaimConfig() {
+    protected void switchApplicationAudience(String appId, AssociatedRolesConfig.AllowedAudienceEnum newAudience) throws Exception {
 
-        ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
-        emailClaim.setLocalClaim(
-                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
-                        EMAIL_CLAIM_URI));
-        ClaimMappings countryClaim = new ClaimMappings().applicationClaim(COUNTRY_CLAIM_URI);
-        countryClaim.setLocalClaim(
-                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
-                        COUNTRY_CLAIM_URI));
+        AssociatedRolesConfig associatedRolesConfigApp2 = new AssociatedRolesConfig();
+        associatedRolesConfigApp2.setAllowedAudience(newAudience);
 
-        RequestedClaimConfiguration emailRequestedClaim = new RequestedClaimConfiguration();
-        emailRequestedClaim.setClaim(
-                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
-                        EMAIL_CLAIM_URI));
-        RequestedClaimConfiguration countryRequestedClaim = new RequestedClaimConfiguration();
-        countryRequestedClaim.setClaim(
-                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
-                        COUNTRY_CLAIM_URI));
+        ApplicationPatchModel patchModelApp2 = new ApplicationPatchModel();
+        patchModelApp2.setAssociatedRoles(associatedRolesConfigApp2);
 
-        ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(ClaimConfiguration.DialectEnum.CUSTOM);
-        claimConfiguration.addClaimMappingsItem(emailClaim);
-        claimConfiguration.addClaimMappingsItem(countryClaim);
-        claimConfiguration.addRequestedClaimsItem(emailRequestedClaim);
-        claimConfiguration.addRequestedClaimsItem(countryRequestedClaim);
-
-        return claimConfiguration;
+        oAuth2RestClient.updateApplication(appId, patchModelApp2);
     }
 
     protected void shareApplication(String applicationId) throws Exception {
@@ -318,24 +252,25 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         Thread.sleep(5000);
     }
 
-    protected void switchApplicationAudience(String appId, AssociatedRolesConfig.AllowedAudienceEnum newAudience)
-            throws Exception {
+    private ClaimConfiguration setApplicationClaimConfig() {
 
-        AssociatedRolesConfig associatedRolesConfigApp2 = new AssociatedRolesConfig();
-        associatedRolesConfigApp2.setAllowedAudience(newAudience);
+        ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
+        emailClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
+        ClaimMappings countryClaim = new ClaimMappings().applicationClaim(COUNTRY_CLAIM_URI);
+        countryClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
 
-        ApplicationPatchModel patchModelApp2 = new ApplicationPatchModel();
-        patchModelApp2.setAssociatedRoles(associatedRolesConfigApp2);
+        RequestedClaimConfiguration emailRequestedClaim = new RequestedClaimConfiguration();
+        emailRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
+        RequestedClaimConfiguration countryRequestedClaim = new RequestedClaimConfiguration();
+        countryRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
 
-        oAuth2RestClient.updateApplication(appId, patchModelApp2);
-    }
+        ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(ClaimConfiguration.DialectEnum.CUSTOM);
+        claimConfiguration.addClaimMappingsItem(emailClaim);
+        claimConfiguration.addClaimMappingsItem(countryClaim);
+        claimConfiguration.addRequestedClaimsItem(emailRequestedClaim);
+        claimConfiguration.addRequestedClaimsItem(countryRequestedClaim);
 
-    protected void updateRequestedClaimsOfApp(String applicationId, ClaimConfiguration claimConfigurationsForApp)
-            throws IOException {
-
-        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
-        applicationPatch.setClaimConfiguration(claimConfigurationsForApp);
-        oAuth2RestClient.updateApplication(applicationId, applicationPatch);
+        return claimConfiguration;
     }
 
     protected ClaimConfiguration getClaimConfigurationsWithRolesAndGroups() {
@@ -349,10 +284,15 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected RequestedClaimConfiguration getRequestedClaim(String claimUri) {
 
         RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
-        requestedClaim.setClaim(
-                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(
-                        claimUri));
+        requestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(claimUri));
         return requestedClaim;
+    }
+
+    protected void updateRequestedClaimsOfApp(String applicationId, ClaimConfiguration claimConfigurationsForApp) throws IOException {
+
+        ApplicationPatchModel applicationPatch = new ApplicationPatchModel();
+        applicationPatch.setClaimConfiguration(claimConfigurationsForApp);
+        oAuth2RestClient.updateApplication(applicationId, applicationPatch);
     }
 
     protected static UserObject createUserObject(String userName, String orgName) {
@@ -374,6 +314,35 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         user.setSchemas(schemas);
 
         return user;
+    }
+
+    protected static RoleWithAudience createRoleWithAudience(String roleName, String display, String type) {
+
+        RoleWithAudienceAudience audience = new RoleWithAudienceAudience();
+        audience.setDisplay(display);
+        audience.setType(type);
+
+        RoleWithAudience roleWithAudience = new RoleWithAudience();
+        roleWithAudience.setDisplayName(roleName);
+        roleWithAudience.setAudience(audience);
+
+        return roleWithAudience;
+    }
+
+    protected static String getSharedOrgsRolesRef(String userId, String orgId) {
+
+        return "/api/server/v1" + USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ROLES_PATH + "?orgId=" + orgId;
+    }
+
+    protected String getOrgId(Map<String, Map<String, Object>> orgDetails, String orgName) {
+
+        return orgDetails.get(orgName).get("orgId").toString();
+    }
+
+    protected String getUserId(Map<String, Map<String, Object>> userDetails, String userName, String userDomain) {
+
+        String domainQualifiedUserName = userDomain + "/" + userName;
+        return userDetails.get(domainQualifiedUserName).get("userId").toString();
     }
 
     public String toJSONString(java.lang.Object object) {
