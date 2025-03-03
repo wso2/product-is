@@ -27,10 +27,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.entity.StringEntity;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -47,10 +44,13 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Audience;
-import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudience;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudienceAudience;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareRequestBodyUserCriteria;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
@@ -703,6 +703,101 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         if (orgId != null) {
             orgMgtRestClient.deleteOrganization(orgId);
         }
+    }
+
+    // Methods to create request bodies for user sharing and unsharing.
+
+    /**
+     * Creates a `UserShareRequestBodyUserCriteria` object with the given user IDs.
+     *
+     * @param userIds The list of user IDs to be included in the criteria.
+     * @return A `UserShareRequestBodyUserCriteria` object containing the specified user IDs.
+     */
+    protected UserShareRequestBodyUserCriteria getUserCriteriaForBaseUserSharing(List<String> userIds) {
+
+        UserShareRequestBodyUserCriteria criteria = new UserShareRequestBodyUserCriteria();
+        criteria.setUserIds(userIds);
+        return criteria;
+    }
+
+    /**
+     * Creates a `UserUnshareRequestBodyUserCriteria` object with the given user IDs.
+     *
+     * @param userIds The list of user IDs to be included in the criteria.
+     * @return A `UserUnshareRequestBodyUserCriteria` object containing the specified user IDs.
+     */
+    protected UserUnshareRequestBodyUserCriteria getUserCriteriaForBaseUserUnsharing(List<String> userIds) {
+
+        UserUnshareRequestBodyUserCriteria criteria = new UserUnshareRequestBodyUserCriteria();
+        criteria.setUserIds(userIds);
+        return criteria;
+    }
+
+    /**
+     * Converts a map of organization details into a list of `UserShareRequestBodyOrganizations` objects.
+     *
+     * @param organizations A map where the key is the organization name and the value is a map of organization details.
+     * @return A list of `UserShareRequestBodyOrganizations` objects.
+     * <p>
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
+     * </p>
+     */
+    @SuppressWarnings("unchecked")
+    protected List<UserShareRequestBodyOrganizations> getOrganizationsForSelectiveUserSharing(Map<String, Map<String, Object>> organizations) {
+
+        List<UserShareRequestBodyOrganizations> orgs = new ArrayList<>();
+
+        for (Map.Entry<String, Map<String, Object>> entry : organizations.entrySet()) {
+
+            Map<String, Object> orgDetails = entry.getValue();
+
+            UserShareRequestBodyOrganizations org = new UserShareRequestBodyOrganizations();
+            org.setOrgId((String) orgDetails.get(MAP_KEY_SELECTIVE_ORG_ID));
+            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetails.get(MAP_KEY_SELECTIVE_POLICY));
+            org.setRoles((List<RoleWithAudience>) orgDetails.get(MAP_KEY_SELECTIVE_ROLES));
+
+            orgs.add(org);
+        }
+        return orgs;
+    }
+
+    /**
+     * Retrieves the policy enum for general user sharing from the provided map.
+     *
+     * @param policyWithRoles A map containing the policy and roles for general user sharing.
+     * @return The policy enum for general user sharing.
+     */
+    protected UserShareWithAllRequestBody.PolicyEnum getPolicyEnumForGeneralUserSharing(Map<String, Object> policyWithRoles) {
+
+        return (UserShareWithAllRequestBody.PolicyEnum)policyWithRoles.get(MAP_KEY_GENERAL_POLICY) ;
+    }
+
+    /**
+     * Retrieves the roles for general user sharing from the provided map.
+     *
+     * @param policyWithRoles A map containing the policy and roles for general user sharing.
+     * @return A list of `RoleWithAudience` objects representing the roles for general user sharing.
+     * <p>
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
+     * </p>
+     */
+    @SuppressWarnings("unchecked")
+    protected List<RoleWithAudience> getRolesForGeneralUserSharing(Map<String, Object> policyWithRoles) {
+
+        return (List<RoleWithAudience>) policyWithRoles.get(MAP_KEY_GENERAL_ROLES);
+    }
+
+    /**
+     * Retrieves the list of organization IDs from which the users are being selectively unshared.
+     *
+     * @param removingOrgIds The list of organization IDs to be removed.
+     * @return A list of organization IDs as strings.
+     */
+    protected List<String> getOrganizationsForSelectiveUserUnsharing(List<String> removingOrgIds) {
+
+        return removingOrgIds;
     }
 
     // Helper methods.

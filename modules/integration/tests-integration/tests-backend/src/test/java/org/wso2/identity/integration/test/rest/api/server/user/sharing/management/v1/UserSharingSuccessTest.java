@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1;
 
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
@@ -28,26 +27,15 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Audience;
-import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudience;
-import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudienceAudience;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBody;
-import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations;
-import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyUserCriteria;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareRequestBody;
-import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareRequestBodyUserCriteria;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareWithAllRequestBody;
-import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -292,7 +280,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
         UserUnshareRequestBody requestBody = new UserUnshareRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserUnsharing(userIds))
-                .organizations(removingOrgIds);
+                .organizations(getOrganizationsForSelectiveUserUnsharing(removingOrgIds));
 
         Response response = getResponseOfPost(USER_SHARING_API_BASE_PATH + UNSHARE_PATH, toJSONString(requestBody));
 
@@ -404,88 +392,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                                     .map(role -> role.getAudience().getType())
                                     .toArray(String[]::new)));
         }
-    }
-
-    /**
-     * Creates a `UserShareRequestBodyUserCriteria` object with the given user IDs.
-     *
-     * @param userIds The list of user IDs to be included in the criteria.
-     * @return A `UserShareRequestBodyUserCriteria` object containing the specified user IDs.
-     */
-    private UserShareRequestBodyUserCriteria getUserCriteriaForBaseUserSharing(List<String> userIds) {
-
-        UserShareRequestBodyUserCriteria criteria = new UserShareRequestBodyUserCriteria();
-        criteria.setUserIds(userIds);
-        return criteria;
-    }
-
-    /**
-     * Creates a `UserUnshareRequestBodyUserCriteria` object with the given user IDs.
-     *
-     * @param userIds The list of user IDs to be included in the criteria.
-     * @return A `UserUnshareRequestBodyUserCriteria` object containing the specified user IDs.
-     */
-    private UserUnshareRequestBodyUserCriteria getUserCriteriaForBaseUserUnsharing(List<String> userIds) {
-
-        UserUnshareRequestBodyUserCriteria criteria = new UserUnshareRequestBodyUserCriteria();
-        criteria.setUserIds(userIds);
-        return criteria;
-    }
-
-    /**
-     * Converts a map of organization details into a list of `UserShareRequestBodyOrganizations` objects.
-     *
-     * @param organizations A map where the key is the organization name and the value is a map of organization details.
-     * @return A list of `UserShareRequestBodyOrganizations` objects.
-     * <p>
-     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
-     * predefined in the test data providers.
-     * </p>
-     */
-    @SuppressWarnings("unchecked")
-    private List<UserShareRequestBodyOrganizations> getOrganizationsForSelectiveUserSharing(Map<String, Map<String, Object>> organizations) {
-
-        List<UserShareRequestBodyOrganizations> orgs = new ArrayList<>();
-
-        for (Map.Entry<String, Map<String, Object>> entry : organizations.entrySet()) {
-
-            Map<String, Object> orgDetails = entry.getValue();
-
-            UserShareRequestBodyOrganizations org = new UserShareRequestBodyOrganizations();
-            org.setOrgId((String) orgDetails.get(MAP_KEY_SELECTIVE_ORG_ID));
-            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetails.get(MAP_KEY_SELECTIVE_POLICY));
-            org.setRoles((List<RoleWithAudience>) orgDetails.get(MAP_KEY_SELECTIVE_ROLES));
-
-            orgs.add(org);
-        }
-        return orgs;
-    }
-
-    /**
-     * Retrieves the policy enum for general user sharing from the provided map.
-     *
-     * @param policyWithRoles A map containing the policy and roles for general user sharing.
-     * @return The policy enum for general user sharing.
-     */
-    private UserShareWithAllRequestBody.PolicyEnum getPolicyEnumForGeneralUserSharing(Map<String, Object> policyWithRoles) {
-
-        return (UserShareWithAllRequestBody.PolicyEnum)policyWithRoles.get(MAP_KEY_GENERAL_POLICY) ;
-    }
-
-    /**
-     * Retrieves the roles for general user sharing from the provided map.
-     *
-     * @param policyWithRoles A map containing the policy and roles for general user sharing.
-     * @return A list of `RoleWithAudience` objects representing the roles for general user sharing.
-     * <p>
-     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
-     * predefined in the test data providers.
-     * </p>
-     */
-    @SuppressWarnings("unchecked")
-    private List<RoleWithAudience> getRolesForGeneralUserSharing(Map<String, Object> policyWithRoles) {
-
-        return (List<RoleWithAudience>) policyWithRoles.get(MAP_KEY_GENERAL_ROLES);
     }
 
     // Test cases builders for selective user sharing.
