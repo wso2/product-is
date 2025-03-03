@@ -2440,7 +2440,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.31</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.33</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2472,7 +2472,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.1</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.132</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.133</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2522,7 +2522,7 @@
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.16</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.17</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.5</identity.local.auth.api.version>
@@ -2572,10 +2572,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.42.0</identity.apps.console.version>
+        <identity.apps.console.version>2.42.1</identity.apps.console.version>
         <identity.apps.myaccount.version>2.17.53</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.14.2</identity.apps.core.version>
+        <identity.apps.core.version>2.14.4</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
 
