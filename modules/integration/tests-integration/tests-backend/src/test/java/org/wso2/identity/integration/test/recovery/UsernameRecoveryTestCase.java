@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.recovery;
 
+import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
 import org.apache.http.Header;
@@ -42,6 +43,7 @@ import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
@@ -117,9 +119,9 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
 
     @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
+    public void init() throws Exception {
 
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
+
         super.init();
         changeISConfiguration(false);
         super.init();
@@ -158,12 +160,20 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         mockApplicationServer.start();
     }
 
+    @BeforeMethod(alwaysRun = true)
+    public void testInit() throws FolderException {
+
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
+        mockSMSProvider.clearSmsContent();
+    }
+
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
 
         updateUsernameRecoveryFeature(ChannelType.SMS, false);
         updateUsernameRecoveryFeature(ChannelType.EMAIL, false);
         deleteApplication(oidcApplication);
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
         mockSMSProvider.stop();
         mockApplicationServer.stop();
         userStoreMgtRestClient.deleteUserStore(userStoreId);
@@ -191,9 +201,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         Assert.assertEquals(recoveredUsername, user.getUserName(), "Received username does not match.");
 
-        // Clearing the user and emails.
+        // Clearing the user.
         deleteUser(user);
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 
     @Test(dataProvider = "userProvider")
@@ -213,9 +222,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         Assert.assertEquals(user.getUserName(), recoveredUsername, "Received username does not match.");
 
-        // Clearing the user and sms.
+        // Clearing the user.
         deleteUser(user);
-        mockSMSProvider.clearSmsContent();
     }
 
     @Test(dataProvider = "userProviderWithChannel")
@@ -243,11 +251,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         }
         Assert.assertEquals(user.getUserName(), recoveredUsername, "Received username does not match.");
 
-
-        // Delete the user and clear the email, sms.
+        // Delete the user.
         deleteUser(user);
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
-        mockSMSProvider.clearSmsContent();
     }
 
     @Test
