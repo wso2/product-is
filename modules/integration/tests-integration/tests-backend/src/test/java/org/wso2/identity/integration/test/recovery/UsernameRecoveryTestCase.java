@@ -121,7 +121,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
+
         super.init();
         changeISConfiguration(false);
         super.init();
@@ -201,9 +201,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         Assert.assertEquals(recoveredUsername, user.getUserName(), "Received username does not match.");
 
-        // Clearing the user and emails.
+        // Clearing the user.
         deleteUser(user);
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 
     @Test(dataProvider = "userProvider")
@@ -223,9 +222,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         Assert.assertEquals(user.getUserName(), recoveredUsername, "Received username does not match.");
 
-        // Clearing the user and sms.
+        // Clearing the user.
         deleteUser(user);
-        mockSMSProvider.clearSmsContent();
     }
 
     @Test(dataProvider = "userProviderWithChannel")
@@ -253,11 +251,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         }
         Assert.assertEquals(user.getUserName(), recoveredUsername, "Received username does not match.");
 
-
-        // Delete the user and clear the email, sms.
+        // Delete the user.
         deleteUser(user);
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
-        mockSMSProvider.clearSmsContent();
     }
 
     @Test
