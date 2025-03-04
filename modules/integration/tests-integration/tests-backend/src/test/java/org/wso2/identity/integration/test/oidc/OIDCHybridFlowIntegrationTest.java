@@ -57,6 +57,7 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
     private static final String RESPONSE_TYPE_CODE_ID_TOKEN = "code id_token";
     private static final String HYBRID_RESPONSE_TYPE = "code id_token,code id_token token";
     private static final String RESPONSE_TYPE_CODE_TOKEN = "code token";
+    private static final String RESPONSE_TYPE_CODE_ID_TOKEN_TOKEN = "code id_token token";
     private static final String OAUTH_ERROR_CODE = "oauthErrorCode";
     CookieStore cookieStore = new BasicCookieStore();
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
@@ -165,7 +166,7 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
 
         refreshHTTPClient();
         final String sessionDataKeyConsent =
-                this.sendHybridAuthRequestPost(this.getConfiguredHybridFlowRequestParams("code id_token token"));
+                this.sendHybridAuthRequestPost(this.getConfiguredHybridFlowRequestParams(RESPONSE_TYPE_CODE_ID_TOKEN_TOKEN));
         final HttpResponse response = sendApprovalPost(this.client, sessionDataKeyConsent);
         final Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         final String authorizationCode = DataExtractUtil
