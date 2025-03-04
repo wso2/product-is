@@ -138,10 +138,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_ACCEPTED)
-                .body("status", equalTo("Processing"))
-                .body("details", equalTo("User sharing process triggered successfully."));
+                .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
+                .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000);
+        Thread.sleep(5000); // Waiting until user sharing is completed.
         for (String userId : userIds) {
             validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
         }
@@ -158,7 +158,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForGeneralUserSharingTestCase1();
 
         // IMMEDIATE EXISTING AND FUTURE
-        List<String> userIdsForTestCase2 = Arrays.asList(getUserId(ROOT_ORG_USER_3_USERNAME, USER_DOMAIN_PRIMARY), getUserId(ROOT_ORG_USER_2_USERNAME, USER_DOMAIN_PRIMARY));
+        List<String> userIdsForTestCase2 = Arrays.asList(getUserId(ROOT_ORG_USER_2_USERNAME, USER_DOMAIN_PRIMARY), getUserId(ROOT_ORG_USER_3_USERNAME, USER_DOMAIN_PRIMARY));
         Map<String, Object> policyWithRolesForTestCase2 = setPolicyWithRolesForGeneralUserSharingTestCase2();
         Map<String, Object> expectedResultsForTestCase2 = setExpectedResultsForGeneralUserSharingTestCase2();
 
@@ -196,10 +196,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_ACCEPTED)
-                .body("status", equalTo("Processing"))
-                .body("details", equalTo("User sharing process triggered successfully."));
+                .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
+                .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000);
+        Thread.sleep(5000); // Waiting until user sharing is completed.
         for (String userId : userIds) {
             validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
         }
@@ -235,10 +235,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_ACCEPTED)
-                .body("status", equalTo("Processing"))
-                .body("details", equalTo("User unsharing process triggered successfully."));
+                .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
+                .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_UNSHARING));
 
-        Thread.sleep(5000);
+        Thread.sleep(5000); // Waiting until user sharing is completed.
         for (String userId : userIds) {
             validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
         }
@@ -288,10 +288,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_ACCEPTED)
-                .body("status", equalTo("Processing"))
-                .body("details", equalTo("User unsharing process triggered successfully."));
+                .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
+                .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_UNSHARING));
 
-        Thread.sleep(5000);
+        Thread.sleep(5000); // Waiting until user sharing is completed.
         for (String userId : userIds) {
             validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedUnsharedResults);
         }
@@ -343,14 +343,14 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("links.size()", equalTo(1))
-                .body("links[0].isEmpty()", equalTo(true))
-                .body("sharedOrganizations", notNullValue())
-                .body("sharedOrganizations.size()", equalTo(expectedOrgCount))
-                .body("sharedOrganizations.orgId", hasItems(expectedOrgIds.toArray(new String[0])))
-                .body("sharedOrganizations.orgName", hasItems(expectedOrgNames.toArray(new String[0])))
-                .body("sharedOrganizations.sharedType", everyItem(equalTo("SHARED")))
-                .body("sharedOrganizations.rolesRef", hasItems(
+                .body(RESPONSE_LINKS_SIZE, equalTo(1))
+                .body(RESPONSE_LINKS_EMPTY, equalTo(true))
+                .body(RESPONSE_LINKS_SHARED_ORGS, notNullValue())
+                .body(RESPONSE_LINKS_SHARED_ORGS_SIZE, equalTo(expectedOrgCount))
+                .body(RESPONSE_LINKS_SHARED_ORGS_ID, hasItems(expectedOrgIds.toArray(new String[0])))
+                .body(RESPONSE_LINKS_SHARED_ORGS_NAME, hasItems(expectedOrgNames.toArray(new String[0])))
+                .body(RESPONSE_LINKS_SHARED_ORGS_SHARED_TYPE, everyItem(equalTo(SHARED_TYPE_SHARED)))
+                .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_REF, hasItems(
                         expectedOrgIds.stream()
                                 .map(orgId -> getSharedOrgsRolesRef(userId, orgId))
                                 .toArray(String[]::new)));
@@ -372,22 +372,22 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("links.size()", equalTo(1))
-                .body("links[0].isEmpty()", equalTo(true))
-                .body("roles", notNullValue())
-                .body("roles.size()", equalTo(expectedRoles.size()));
+                .body(RESPONSE_LINKS_SIZE, equalTo(1))
+                .body(RESPONSE_LINKS_EMPTY, equalTo(true))
+                .body(RESPONSE_LINKS_SHARED_ORGS_ROLES, notNullValue())
+                .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_SIZE, equalTo(expectedRoles.size()));
 
         if (!expectedRoles.isEmpty()) {
             response.then()
-                    .body("roles.displayName", hasItems(
+                    .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_NAME, hasItems(
                             expectedRoles.stream()
                                     .map(RoleWithAudience::getDisplayName)
                                     .toArray(String[]::new)))
-                    .body("roles.audience.display", hasItems(
+                    .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_NAME, hasItems(
                             expectedRoles.stream()
                                     .map(role -> role.getAudience().getDisplay())
                                     .toArray(String[]::new)))
-                    .body("roles.audience.type", hasItems(
+                    .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_TYPE, hasItems(
                             expectedRoles.stream()
                                     .map(role -> role.getAudience().getType())
                                     .toArray(String[]::new)));

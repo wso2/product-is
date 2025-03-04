@@ -89,6 +89,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     static final String API_VERSION = "v1";
     private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1";
 
+    static final String SERVER_URL_VERSION = "/api/server/v1";
     static final String USER_SHARING_API_BASE_PATH = "/users";
     static final String SHARE_PATH = "/share";
     static final String SHARE_WITH_ALL_PATH = "/share-with-all";
@@ -96,6 +97,14 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     static final String UNSHARE_WITH_ALL_PATH = "/unshare-with-all";
     static final String SHARED_ORGANIZATIONS_PATH = "/shared-organizations";
     static final String SHARED_ROLES_PATH = "/shared-roles";
+
+    static final String PATH_SEPARATOR = "/";
+    static final String QUERY_PARAM_SEPARATOR = "?";
+    static final String QUERY_PARAM_VALUE_SEPARATOR = "=";
+
+    protected static final String SHARED_TYPE_SHARED = "SHARED";
+    protected static final String SHARED_TYPE_OWNER = "OWNER";
+    protected static final String SHARED_TYPE_INVITED = "INVITED";
 
     protected static final String PATH_PARAM_USER_ID = "userId";
     protected static final String QUERY_PARAM_ORG_ID = "orgId";
@@ -141,19 +150,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String L1_ORG_1_USER_1_USERNAME = "l1Org1User1";
     protected static final String L1_ORG_1_USER_2_USERNAME = "l1Org1User2";
     protected static final String L1_ORG_1_USER_3_USERNAME = "l1Org1User3";
-
-    protected static final String API_SCOPE_INTERNAL_USER_SHARE = "internal_user_share";
-    protected static final String API_SCOPE_INTERNAL_USER_UNSHARE = "internal_user_unshare";
-    protected static final String API_SCOPE_INTERNAL_USER_SHARED_ACCESS_VIEW = "internal_user_shared_access_view";
-    protected static final String API_SCOPE_INTERNAL_ORG_USER_SHARE = "internal_org_user_share";
-    protected static final String API_SCOPE_INTERNAL_ORG_USER_UNSHARE = "internal_org_user_unshare";
-    protected static final String API_SCOPE_INTERNAL_ORG_USER_SHARED_ACCESS_VIEW = "internal_org_user_shared_access_view";
-
-    protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
-    protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
-    protected static final String ROLES_CLAIM_URI = "http://wso2.org/claims/roles";
-    protected static final String GROUPS_CLAIM_URI = "http://wso2.org/claims/groups";
-
+    
     protected static final String MAP_KEY_SELECTIVE_ORG_ID = "orgId";
     protected static final String MAP_KEY_SELECTIVE_ORG_NAME = "orgName";
     protected static final String MAP_KEY_SELECTIVE_POLICY = "selectivePolicy";
@@ -166,12 +163,86 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String MAP_KEY_EXPECTED_ORG_IDS = "expectedOrgIds";
     protected static final String MAP_KEY_EXPECTED_ORG_NAMES = "expectedOrgNames";
     protected static final String MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG = "expectedRolesPerExpectedOrg";
+    
+    protected static final String MAP_ORG_DETAILS_KEY_ORG_NAME = "orgName";
+    protected static final String MAP_ORG_DETAILS_KEY_ORG_ID = "orgId";
+    protected static final String MAP_ORG_DETAILS_KEY_PARENT_ORG_ID = "parentOrgId";
+    protected static final String MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN = "orgSwitchToken";
+    protected static final String MAP_ORG_DETAILS_KEY_ORG_LEVEL = "orgLevel";
+    
+    protected static final String MAP_APP_DETAILS_KEY_APP_NAME = "appName";
+    protected static final String MAP_APP_DETAILS_KEY_APP_ID = "appId";
+    protected static final String MAP_APP_DETAILS_KEY_APP_AUDIENCE = "appAudience";
+    protected static final String MAP_APP_DETAILS_KEY_CLIENT_ID = "clientId";
+    protected static final String MAP_APP_DETAILS_KEY_CLIENT_SECRET = "clientSecret";
+    protected static final String MAP_APP_DETAILS_KEY_ROLE_NAMES = "roleNames";
+    protected static final String MAP_APP_DETAILS_KEY_ROLE_IDS_BY_NAME = "roleIdsByName";
+    protected static final String MAP_APP_DETAILS_KEY_APP_DETAILS_OF_SUB_ORGS = "appDetailsOfSubOrgs";
+    protected static final String MAP_APP_DETAILS_KEY_APP_SUB_ORG_NAME = "subOrgName";
+
+    protected static final String MAP_USER_DETAILS_KEY_DOMAIN_QUALIFIED_USER_NAME = "domainQualifiedUserName";
+    protected static final String MAP_USER_DETAILS_KEY_USER_NAME = "userName";
+    protected static final String MAP_USER_DETAILS_KEY_USER_ID = "userId";
+    protected static final String MAP_USER_DETAILS_KEY_USER_DOMAIN = "userDomain";
+    protected static final String MAP_USER_DETAILS_KEY_USER_ORG_NAME = "userOrgName";
+    protected static final String MAP_USER_DETAILS_KEY_USER_ORG_ID = "userOrgId";
+    protected static final String MAP_USER_DETAILS_KEY_USER_ORG_LEVEL = "userOrgLevel";
+    protected static final String MAP_USER_DETAILS_KEY_IS_ROOT_ORG_USER = "isRootOrgUser";
+
+    protected static final String MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_NAME = "userName";
+    protected static final String MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_DOMAIN = "userDomain";
+
+    protected static final String SCOPE_INTERNAL_USER_SHARE = "internal_user_share";
+    protected static final String SCOPE_INTERNAL_USER_UNSHARE = "internal_user_unshare";
+    protected static final String SCOPE_INTERNAL_USER_SHARED_ACCESS_VIEW = "internal_user_shared_access_view";
+    protected static final String SCOPE_INTERNAL_ORG_USER_SHARE = "internal_org_user_share";
+    protected static final String SCOPE_INTERNAL_ORG_USER_UNSHARE = "internal_org_user_unshare";
+    protected static final String SCOPE_INTERNAL_ORG_USER_SHARED_ACCESS_VIEW = "internal_org_user_shared_access_view";
+
+    protected static final String GRANT_AUTHORIZATION_CODE = "authorization_code";
+    protected static final String GRANT_IMPLICIT = "implicit";
+    protected static final String GRANT_PASSWORD = "password";
+    protected static final String GRANT_CLIENT_CREDENTIALS = "client_credentials";
+    protected static final String GRANT_REFRESH_TOKEN = "refresh_token";
+    protected static final String GRANT_ORGANIZATION_SWITCH = "organization_switch";
+
+    protected static final String CLAIM_EMAIL_URI = "http://wso2.org/claims/emailaddress";
+    protected static final String CLAIM_COUNTRY_URI = "http://wso2.org/claims/country";
+    protected static final String CLAIM_ROLES_URI = "http://wso2.org/claims/roles";
+    protected static final String CLAIM_GROUPS_URI = "http://wso2.org/claims/groups";
+
+    protected static final String ATTRIBUTE_USER_PASSWORD = "Admin123";
+    protected static final String ATTRIBUTE_USER_EMAIL_DOMAIN = "@gmail.com";
+    protected static final String ATTRIBUTE_USER_SCHEMA_SCIM2_USER = "urn:ietf:params:scim:schemas:core:2.0:User";
+
+    protected static final String RESPONSE_STATUS = "status";
+    protected static final String RESPONSE_DETAILS = "details";
+    protected static final String RESPONSE_STATUS_VALUE = "Processing";
+    protected static final String RESPONSE_DETAIL_VALUE_SHARING = "User sharing process triggered successfully.";
+    protected static final String RESPONSE_DETAIL_VALUE_UNSHARING = "User unsharing process triggered successfully.";
+
+    protected static final String RESPONSE_LINKS_SIZE = "links.size()";
+    protected static final String RESPONSE_LINKS_EMPTY = "links[0].isEmpty()";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS = "sharedOrganizations";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_SIZE = "sharedOrganizations.size()";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_ID = "sharedOrganizations.orgId";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_NAME = "sharedOrganizations.orgName";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_SHARED_USER_ID = "sharedOrganizations.sharedUserId";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_SHARED_TYPE = "sharedOrganizations.sharedType";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_REF = "sharedOrganizations.rolesRef";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES = "roles";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_SIZE = "roles.size()";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_NAME = "roles.displayName";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_NAME = "roles.audience.display";
+    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_TYPE = "roles.audience.type";
+
+    protected static final String ERROR_SETUP_SWAGGER_DEFINITION = "Unable to read the swagger definition %s from %s";
 
     static {
         try {
             swaggerDefinition = getAPISwaggerDefinition(API_PACKAGE_NAME, API_DEFINITION_NAME);
         } catch (IOException e) {
-            Assert.fail(String.format("Unable to read the swagger definition %s from %s", API_DEFINITION_NAME, API_PACKAGE_NAME), e);
+            Assert.fail(String.format(ERROR_SETUP_SWAGGER_DEFINITION, API_DEFINITION_NAME, API_PACKAGE_NAME), e);
         }
     }
 
@@ -228,17 +299,17 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected String getOrgId(String orgName) {
 
-        return orgDetails.get(orgName).get("orgId").toString();
+        return orgDetails.get(orgName).get(MAP_ORG_DETAILS_KEY_ORG_ID).toString();
     }
 
     protected void setOrgDetails(String orgName, String orgId, String parentId, int orgLevel) throws Exception {
 
         Map<String, Object> orgDetail = new HashMap<>();
-        orgDetail.put("orgName", orgName);
-        orgDetail.put("orgId", orgId);
-        orgDetail.put("parentOrgId", parentId);
-        orgDetail.put("orgSwitchToken", orgMgtRestClient.switchM2MToken(orgId));
-        orgDetail.put("orgLevel", orgLevel);
+        orgDetail.put(MAP_ORG_DETAILS_KEY_ORG_NAME, orgName);
+        orgDetail.put(MAP_ORG_DETAILS_KEY_ORG_ID, orgId);
+        orgDetail.put(MAP_ORG_DETAILS_KEY_PARENT_ORG_ID, parentId);
+        orgDetail.put(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN, orgMgtRestClient.switchM2MToken(orgId));
+        orgDetail.put(MAP_ORG_DETAILS_KEY_ORG_LEVEL, orgLevel);
         orgDetails.put(orgName, orgDetail);
     }
 
@@ -247,7 +318,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected Map<String, Object> createApplication(String appName, String audience, List<String> roleNames) throws Exception{
 
         Map<String, Object> createdAppDetails = new HashMap<>();
-        String rootOrgAppName = appName + "/" + ROOT_ORG_NAME;
+        String rootOrgAppName = appName + PATH_SEPARATOR + ROOT_ORG_NAME;
 
         ApplicationResponseModel application = addApplication(appName);
         String appId = application.getId();
@@ -265,7 +336,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                 roleIdsByName.put(roleName, roleId);
             }
             storeRoleDetails(APPLICATION_AUDIENCE, rootOrgAppName, roleIdsByName);
-            createdAppDetails.put("appAudience", APPLICATION_AUDIENCE);
+            createdAppDetails.put(MAP_APP_DETAILS_KEY_APP_AUDIENCE, APPLICATION_AUDIENCE);
 
         } else {
 
@@ -275,7 +346,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                 String roleId = scim2RestClient.getRoleIdByName(roleName);
                 roleIdsByName.put(roleName, roleId);
             }
-            createdAppDetails.put("appAudience", ORGANIZATION_AUDIENCE);
+            createdAppDetails.put(MAP_APP_DETAILS_KEY_APP_AUDIENCE, ORGANIZATION_AUDIENCE);
         }
 
         // Mark roles and groups as requested claims for the app 2.
@@ -292,13 +363,13 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
             appDetailsOfSubOrgs.put(orgName, appDetailsOfSubOrg);
         }
 
-        createdAppDetails.put("appName", appName);
-        createdAppDetails.put("appId", appId);
-        createdAppDetails.put("clientId", clientId);
-        createdAppDetails.put("clientSecret", clientSecret);
-        createdAppDetails.put("roleNames", roleNames);
-        createdAppDetails.put("roleIdsByName", roleIdsByName);
-        createdAppDetails.put("appDetailsOfSubOrgs", appDetailsOfSubOrgs);
+        createdAppDetails.put(MAP_APP_DETAILS_KEY_APP_NAME, appName);
+        createdAppDetails.put(MAP_APP_DETAILS_KEY_APP_ID, appId);
+        createdAppDetails.put(MAP_APP_DETAILS_KEY_CLIENT_ID, clientId);
+        createdAppDetails.put(MAP_APP_DETAILS_KEY_CLIENT_SECRET, clientSecret);
+        createdAppDetails.put(MAP_APP_DETAILS_KEY_ROLE_NAMES, roleNames);
+        createdAppDetails.put(MAP_APP_DETAILS_KEY_ROLE_IDS_BY_NAME, roleIdsByName);
+        createdAppDetails.put(MAP_APP_DETAILS_KEY_APP_DETAILS_OF_SUB_ORGS, appDetailsOfSubOrgs);
 
         appDetails.put(appName, createdAppDetails);
         return createdAppDetails;
@@ -308,10 +379,10 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         Map<String, Object> subOrgAppDetails = new HashMap<>();
 
-        String subOrgName = (String) orgDetail.get("orgName");
-        String subOrgId = (String) orgDetail.get("orgId");
-        String subOrgSwitchToken = (String) orgDetail.get("orgSwitchToken");
-        String subOrgAppName = appName + "/" + subOrgName;
+        String subOrgName = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_NAME);
+        String subOrgId = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_ID);
+        String subOrgSwitchToken = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN);
+        String subOrgAppName = appName + PATH_SEPARATOR + subOrgName;
 
         String subOrgAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken);
 
@@ -319,12 +390,12 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                 getSubOrgRoleIdsByName(roleNames, APPLICATION_AUDIENCE, subOrgAppName, subOrgAppId, subOrgSwitchToken) :
                 getSubOrgRoleIdsByName(roleNames,ORGANIZATION_AUDIENCE, subOrgName, subOrgId, subOrgSwitchToken);
 
-        subOrgAppDetails.put("subOrgName", subOrgName);
-        subOrgAppDetails.put("appName", appName);
-        subOrgAppDetails.put("appId", subOrgAppId);
-        subOrgAppDetails.put("roleNames", roleNames);
-        subOrgAppDetails.put("roleIdsByName", subOrgRoleIdsByName);
-        subOrgAppDetails.put("appAudience", audience);
+        subOrgAppDetails.put(MAP_APP_DETAILS_KEY_APP_SUB_ORG_NAME, subOrgName);
+        subOrgAppDetails.put(MAP_APP_DETAILS_KEY_APP_NAME, appName);
+        subOrgAppDetails.put(MAP_APP_DETAILS_KEY_APP_ID, subOrgAppId);
+        subOrgAppDetails.put(MAP_APP_DETAILS_KEY_ROLE_NAMES, roleNames);
+        subOrgAppDetails.put(MAP_APP_DETAILS_KEY_ROLE_IDS_BY_NAME, subOrgRoleIdsByName);
+        subOrgAppDetails.put(MAP_APP_DETAILS_KEY_APP_AUDIENCE, audience);
 
         return subOrgAppDetails;
     }
@@ -376,7 +447,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected String getSharedOrgsRolesRef(String userId, String orgId) {
 
-        return "/api/server/v1" + USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ROLES_PATH + "?orgId=" + orgId;
+        return SERVER_URL_VERSION + USER_SHARING_API_BASE_PATH + PATH_SEPARATOR + userId + SHARED_ROLES_PATH + QUERY_PARAM_SEPARATOR + QUERY_PARAM_ORG_ID + QUERY_PARAM_VALUE_SEPARATOR + orgId;
     }
 
     protected void storeRoleDetails(String audienceType, String audienceName, Map<String, String> rolesOfAudience) {
@@ -396,7 +467,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         ApplicationModel application = new ApplicationModel();
 
         List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes, "authorization_code", "implicit", "password", "client_credentials", "refresh_token", "organization_switch");
+        Collections.addAll(grantTypes, GRANT_AUTHORIZATION_CODE, GRANT_IMPLICIT, GRANT_PASSWORD, GRANT_CLIENT_CREDENTIALS, GRANT_REFRESH_TOKEN, GRANT_ORGANIZATION_SWITCH);
 
         List<String> callBackUrls = new ArrayList<>();
         Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
@@ -420,15 +491,15 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     private ClaimConfiguration setApplicationClaimConfig() {
 
-        ClaimMappings emailClaim = new ClaimMappings().applicationClaim(EMAIL_CLAIM_URI);
-        emailClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
-        ClaimMappings countryClaim = new ClaimMappings().applicationClaim(COUNTRY_CLAIM_URI);
-        countryClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
+        ClaimMappings emailClaim = new ClaimMappings().applicationClaim(CLAIM_EMAIL_URI);
+        emailClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(CLAIM_EMAIL_URI));
+        ClaimMappings countryClaim = new ClaimMappings().applicationClaim(CLAIM_COUNTRY_URI);
+        countryClaim.setLocalClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(CLAIM_COUNTRY_URI));
 
         RequestedClaimConfiguration emailRequestedClaim = new RequestedClaimConfiguration();
-        emailRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(EMAIL_CLAIM_URI));
+        emailRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(CLAIM_EMAIL_URI));
         RequestedClaimConfiguration countryRequestedClaim = new RequestedClaimConfiguration();
-        countryRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(COUNTRY_CLAIM_URI));
+        countryRequestedClaim.setClaim(new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim().uri(CLAIM_COUNTRY_URI));
 
         ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(ClaimConfiguration.DialectEnum.CUSTOM);
         claimConfiguration.addClaimMappingsItem(emailClaim);
@@ -442,8 +513,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     private ClaimConfiguration getClaimConfigurationsWithRolesAndGroups() {
 
         ClaimConfiguration claimConfiguration = new ClaimConfiguration();
-        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(ROLES_CLAIM_URI));
-        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(GROUPS_CLAIM_URI));
+        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(CLAIM_ROLES_URI));
+        claimConfiguration.addRequestedClaimsItem(getRequestedClaim(CLAIM_GROUPS_URI));
         return claimConfiguration;
     }
 
@@ -486,20 +557,20 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected UserObject createUserObject(String userDomain, String userName, String orgName) {
 
-        String domainQualifiedUserName = userDomain + "/" + userName;
+        String domainQualifiedUserName = userDomain + PATH_SEPARATOR + userName;
         UserObject user = new UserObject()
                 .userName(domainQualifiedUserName)
-                .password("Admin123")
+                .password(ATTRIBUTE_USER_PASSWORD)
                 .name(new Name().givenName(userName).familyName(orgName))
                 .emails(new ArrayList<>());
 
         Email email = new Email();
-        email.setValue(userName + "@gmail.com");
+        email.setValue(userName + ATTRIBUTE_USER_EMAIL_DOMAIN);
         email.setPrimary(true);
         user.getEmails().add(email);
 
         List<String> schemas = new ArrayList<>();
-        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        schemas.add(ATTRIBUTE_USER_SCHEMA_SCIM2_USER);
         user.setSchemas(schemas);
 
         return user;
@@ -508,39 +579,54 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected String createUser(UserObject user) throws Exception{
 
         String userId = scim2RestClient.createUser(user);
+        String domainQualifiedUserName = user.getUserName();
 
         Map<String, Object> userDetail = new HashMap<>();
-        userDetail.put("username", user.getUserName());
-        userDetail.put("userId", userId);
-        userDetail.put("isRootOrgUser", true);
-        userDetail.put("orgName", ROOT_ORG_NAME);
-        userDetail.put("orgId", ROOT_ORG_ID);
-        userDetail.put("orgLevel", 0);
+        userDetail.put(MAP_USER_DETAILS_KEY_DOMAIN_QUALIFIED_USER_NAME, domainQualifiedUserName);
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_NAME, getUserNameAndUserDomain(domainQualifiedUserName).get(MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_NAME));
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_DOMAIN, getUserNameAndUserDomain(domainQualifiedUserName).get(MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_DOMAIN));
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ID, userId);
+        userDetail.put(MAP_USER_DETAILS_KEY_IS_ROOT_ORG_USER, true);
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_NAME, ROOT_ORG_NAME);
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_ID, ROOT_ORG_ID);
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_LEVEL, 0);
 
-        userDetails.put(user.getUserName(), userDetail);
+        userDetails.put(domainQualifiedUserName, userDetail);
         return  userId;
     }
 
     protected String createSuborgUser(UserObject user, String suborg) throws Exception{
 
-        String userId = scim2RestClient.createSubOrgUser(user, (String) orgDetails.get(suborg).get("orgSwitchToken"));
+        String userId = scim2RestClient.createSubOrgUser(user, (String) orgDetails.get(suborg).get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN));
+        String domainQualifiedUserName = user.getUserName();
 
         Map<String, Object> userDetail = new HashMap<>();
-        userDetail.put("username", user.getUserName());
-        userDetail.put("userId", userId);
-        userDetail.put("isRootOrgUser", false);
-        userDetail.put("orgName", suborg);
-        userDetail.put("orgId", orgDetails.get(suborg).get("orgId"));
-        userDetail.put("orgLevel", orgDetails.get(suborg).get("orgLevel"));
+        userDetail.put(MAP_USER_DETAILS_KEY_DOMAIN_QUALIFIED_USER_NAME, domainQualifiedUserName);
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_NAME, getUserNameAndUserDomain(domainQualifiedUserName).get(MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_NAME));
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_DOMAIN, getUserNameAndUserDomain(domainQualifiedUserName).get(MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_DOMAIN));
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ID, userId);
+        userDetail.put(MAP_USER_DETAILS_KEY_IS_ROOT_ORG_USER, false);
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_NAME, suborg);
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_ID, orgDetails.get(suborg).get(MAP_ORG_DETAILS_KEY_ORG_ID));
+        userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_LEVEL, orgDetails.get(suborg).get(MAP_ORG_DETAILS_KEY_ORG_LEVEL));
 
-        userDetails.put(user.getUserName(), userDetail);
+        userDetails.put(domainQualifiedUserName, userDetail);
         return  userId;
     }
 
     protected String getUserId(String userName, String userDomain) {
 
-        String domainQualifiedUserName = userDomain + "/" + userName;
-        return userDetails.get(domainQualifiedUserName).get("userId").toString();
+        String domainQualifiedUserName = userDomain + PATH_SEPARATOR + userName;
+        return userDetails.get(domainQualifiedUserName).get(MAP_USER_DETAILS_KEY_USER_ID).toString();
+    }
+
+    private Map<String, String> getUserNameAndUserDomain(String domainQualifiedUserName) {
+
+        String[] parts = domainQualifiedUserName.split(PATH_SEPARATOR);
+        Map<String, String> userNameAndUserDomain = new HashMap<>();
+        userNameAndUserDomain.put(MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_NAME, parts[1]);
+        userNameAndUserDomain.put(MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_DOMAIN, parts[0]);
+        return userNameAndUserDomain;
     }
 
     // Methods to clean up the resources created for testing purposes.
@@ -553,14 +639,14 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected void cleanUpUsers() throws Exception {
 
         for (Map.Entry<String, Map<String, Object>> entry : userDetails.entrySet()) {
-            String userId = (String) entry.getValue().get("userId");
-            String orgName = (String) entry.getValue().get("orgName");
-            int orgLevel = (int) entry.getValue().get("orgLevel");
+            String userId = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ID);
+            String orgName = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ORG_NAME);
+            int orgLevel = (int) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ORG_LEVEL);
 
             if(orgLevel==0) {
                 deleteUserIfExists(userId);
             } else {
-                deleteSubOrgUserIfExists(userId, (String) orgDetails.get(orgName).get("orgSwitchToken"));
+                deleteSubOrgUserIfExists(userId, (String) orgDetails.get(orgName).get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN));
             }
         }
     }
@@ -603,7 +689,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         for (Map.Entry<String, Map<String, Object>> entry : appDetails.entrySet()) {
             Map<String, Object> details = entry.getValue();
-            deleteApplicationIfExists(details.get("appId").toString());
+            deleteApplicationIfExists(details.get(MAP_APP_DETAILS_KEY_APP_ID).toString());
         }
     }
 
@@ -615,14 +701,14 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected void cleanUpOrganizations() throws Exception {
         // Determine the deepest organization level in the hierarchy
         int maxDepth = orgDetails.values().stream()
-                .mapToInt(details -> (int) details.get("orgLevel"))
+                .mapToInt(details -> (int) details.get(MAP_ORG_DETAILS_KEY_ORG_LEVEL))
                 .max()
                 .orElse(1);
 
         // Delete organizations starting from the deepest level down to the root level
         for (int level = maxDepth; level >= 1; level--) {
             for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
-                if ((int) entry.getValue().get("orgLevel") == level) {
+                if ((int) entry.getValue().get(MAP_ORG_DETAILS_KEY_ORG_LEVEL) == level) {
                     deleteOrganization(entry.getKey(), entry.getValue());
                 }
             }
@@ -652,11 +738,11 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         orgMgtRestClient.closeHttpClient();
     }
 
-    private void deleteOrganization(String orgName, Map<String, Object> details) throws Exception {
+    private void deleteOrganization(String orgName, Map<String, Object> orgDetail) throws Exception {
         String orgId = getOrgId(orgName);
-        String parentOrgId = (String) details.get("parentOrgId");
+        String parentOrgId = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_PARENT_ORG_ID);
 
-        if ((int) details.get("orgLevel") > 1) {
+        if ((int) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_LEVEL) > 1) {
             deleteSubOrganizationIfExists(orgId, parentOrgId);
         } else {
             deleteOrganizationIfExists(orgId);
@@ -750,12 +836,12 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         for (Map.Entry<String, Map<String, Object>> entry : organizations.entrySet()) {
 
-            Map<String, Object> orgDetails = entry.getValue();
+            Map<String, Object> orgDetail = entry.getValue();
 
             UserShareRequestBodyOrganizations org = new UserShareRequestBodyOrganizations();
-            org.setOrgId((String) orgDetails.get(MAP_KEY_SELECTIVE_ORG_ID));
-            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetails.get(MAP_KEY_SELECTIVE_POLICY));
-            org.setRoles((List<RoleWithAudience>) orgDetails.get(MAP_KEY_SELECTIVE_ROLES));
+            org.setOrgId((String) orgDetail.get(MAP_KEY_SELECTIVE_ORG_ID));
+            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetail.get(MAP_KEY_SELECTIVE_POLICY));
+            org.setRoles((List<RoleWithAudience>) orgDetail.get(MAP_KEY_SELECTIVE_ROLES));
 
             orgs.add(org);
         }
