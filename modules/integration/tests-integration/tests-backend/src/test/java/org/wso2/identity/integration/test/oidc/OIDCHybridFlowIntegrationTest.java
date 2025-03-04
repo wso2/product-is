@@ -22,12 +22,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
@@ -54,13 +55,16 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCO
 public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String RESPONSE_TYPE_CODE_ID_TOKEN = "code id_token";
+    private static final String HYBRID_RESPONSE_TYPE = "code id_token,code id_token token";
     private static final String RESPONSE_TYPE_CODE_TOKEN = "code token";
     private static final String OAUTH_ERROR_CODE = "oauthErrorCode";
+    CookieStore cookieStore = new BasicCookieStore();
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
 
     private OpenIDConnectConfiguration opaqueOidcConfig;
     private CloseableHttpClient client;
 
-    private String applicationId;
     private String opaqueAppId;
     private String clientID;
 
@@ -69,14 +73,17 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
 
         super.init(TestUserMode.SUPER_TENANT_USER);
         super.setSystemproperties();
+        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
+                .build();
+        requestConfig = RequestConfig.custom()
+                .setCookieSpec(CookieSpecs.DEFAULT)
+                .build();
         this.client = HttpClientBuilder.create()
                 .disableRedirectHandling()
-                .setDefaultRequestConfig(RequestConfig.custom()
-                        .setCookieSpec(CookieSpecs.DEFAULT)
-                        .build())
-                .setDefaultCookieSpecRegistry(RegistryBuilder.<CookieSpecProvider>create()
-                        .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
-                        .build())
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
 
         this.opaqueAppId = super.addApplication(this.getApplicationWithOpaqueTokens());
@@ -103,7 +110,7 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
 
         HybridFlowConfiguration hybridFlow = new HybridFlowConfiguration();
         hybridFlow.setEnable(true);
-        hybridFlow.setResponseType(RESPONSE_TYPE_CODE_ID_TOKEN);
+        hybridFlow.setResponseType(HYBRID_RESPONSE_TYPE);
 
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
         oidcConfig.setHybridFlow(hybridFlow);
@@ -124,10 +131,10 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
 
     @Test(groups = "wso2.is",
             description = "Test hybrid flow with configured response type")
-    public void testHybridFlowWithConfiguredResponseType() throws Exception {
+    public void testHybridFlowWithCodeIdTokenResponseType() throws Exception {
 
         final String sessionDataKeyConsent =
-                this.sendHybridAuthRequestPost(this.getConfiguredHybridFlowRequestParams());
+                this.sendHybridAuthRequestPost(this.getConfiguredHybridFlowRequestParams(RESPONSE_TYPE_CODE_ID_TOKEN));
         final HttpResponse response = sendApprovalPost(this.client, sessionDataKeyConsent);
         final Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         final String authorizationCode = DataExtractUtil
@@ -151,6 +158,27 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
         assertNotNull(oauthErrorCode, "OAuth error code is null");
     }
 
+    @Test(groups = "wso2.is",
+            description = "Test hybrid flow with code id_token token response type",
+            dependsOnMethods = "testHybridFlowWithCodeIdTokenResponseType")
+    public void testHybridFlowWithCodeIdTokenTokenResponseType() throws Exception {
+
+        refreshHTTPClient();
+        final String sessionDataKeyConsent =
+                this.sendHybridAuthRequestPost(this.getConfiguredHybridFlowRequestParams("code id_token token"));
+        final HttpResponse response = sendApprovalPost(this.client, sessionDataKeyConsent);
+        final Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        final String authorizationCode = DataExtractUtil
+                .extractParamFromURIFragment(locationHeader.getValue(), OAuth2Constant.AUTHORIZATION_CODE_NAME);
+        final String id_token = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+                OAuth2Constant.ID_TOKEN);
+        final String token = DataExtractUtil.extractParamFromURIFragment(locationHeader.getValue(),
+                OAuth2Constant.ACCESS_TOKEN);
+        assertNotNull(authorizationCode, "Authorization code is null");
+        assertNotNull(id_token, "ID token is null");
+        assertNotNull(token, "Access token is null");
+    }
+
     /**
      * Initiate the hybrid flow by sending an authorization request to IS and obtain session data key.
      */
@@ -171,12 +199,12 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
         }
     }
 
-    private List<NameValuePair> getConfiguredHybridFlowRequestParams() {
+    private List<NameValuePair> getConfiguredHybridFlowRequestParams(String responseType) {
 
         final List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, OAUTH2_SCOPE_OPENID_WITH_INTERNAL_LOGIN));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
-                RESPONSE_TYPE_CODE_ID_TOKEN));
+                responseType));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, this.clientID));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE, UUID.randomUUID().toString()));
@@ -212,5 +240,19 @@ public class OIDCHybridFlowIntegrationTest extends OAuth2ServiceAbstractIntegrat
 
         return DataExtractUtil.getParamFromURIString(locationHeader.getValue(),
                 OAuth2Constant.SESSION_DATA_KEY_CONSENT);
+    }
+
+    /**
+     * Refresh the cookie store and http client.
+     */
+    private void refreshHTTPClient() {
+
+        cookieStore.clear();
+        this.client = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore)
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build();
     }
 }
