@@ -109,23 +109,23 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
 
     // Selective User Sharing.
 
-    @DataProvider(name = "selectiveUserSharingWithInvalidRolesDataProvider")
-    public Object[][] selectiveUserSharingWithInvalidRolesDataProvider() {
+    @DataProvider(name = "selectiveUserSharingWithInvalidDetailsDataProvider")
+    public Object[][] selectiveUserSharingWithInvalidDetailsDataProvider() {
 
         // Test case 1: User sharing with invalid roles.
         List<String> userIdsForTestCase1 = Arrays.asList(getUserId(ROOT_ORG_USER_1_USERNAME, USER_DOMAIN_PRIMARY), getUserId(ROOT_ORG_USER_2_USERNAME, USER_DOMAIN_PRIMARY), getUserId(ROOT_ORG_USER_3_USERNAME, USER_DOMAIN_PRIMARY));
-        Map<String, Map<String, Object>> organizationsForTestCase1 = setOrganizationsForSelectiveUserSharingTestCase1();
-        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForSelectiveUserSharingTestCase1();
+        Map<String, Map<String, Object>> organizationsForTestCase1 = setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase1();
+        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase1();
 
         // Test case 2: User sharing with invalid organizations.
         List<String> userIdsForTestCase2 = Arrays.asList(getUserId(ROOT_ORG_USER_1_USERNAME, USER_DOMAIN_PRIMARY), getUserId(ROOT_ORG_USER_2_USERNAME, USER_DOMAIN_PRIMARY), getUserId(ROOT_ORG_USER_3_USERNAME, USER_DOMAIN_PRIMARY));
-        Map<String, Map<String, Object>> organizationsForTestCase2 = setOrganizationsForSelectiveUserSharingTestCase2();
-        Map<String, Object> expectedResultsForTestCase2 = setExpectedResultsForSelectiveUserSharingTestCase2();
+        Map<String, Map<String, Object>> organizationsForTestCase2 = setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase2();
+        Map<String, Object> expectedResultsForTestCase2 = setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase2();
 
         // Test case 3: User sharing with invalid users.
         List<String> userIdsForTestCase3 = Arrays.asList(INVALID_USER_1_ID, INVALID_USER_2_ID);
-        Map<String, Map<String, Object>> organizationsForTestCase3 = setOrganizationsForSelectiveUserSharingTestCase3();
-        Map<String, Object> expectedResultsForTestCase3 = setExpectedResultsForSelectiveUserSharingTestCase3();
+        Map<String, Map<String, Object>> organizationsForTestCase3 = setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase3();
+        Map<String, Object> expectedResultsForTestCase3 = setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase3();
 
 
 
@@ -136,8 +136,8 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         };
     }
 
-    @Test(dataProvider = "selectiveUserSharingWithInvalidRolesDataProvider")
-    public void testSelectiveUserSharingWithInvalidRoles(List<String> userIds,
+    @Test(dataProvider = "selectiveUserSharingWithInvalidDetailsDataProvider")
+    public void testSelectiveUserSharingWithInvalidDetails(List<String> userIds,
                                          Map<String, Map<String, Object>> organizations,
                                          Map<String, Object> expectedResults) throws InterruptedException {
 
@@ -162,7 +162,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
 
     // Test cases builders for selective user sharing.
 
-    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingTestCase1() {
+    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase1() {
 
         Map<String, Map<String, Object>> organizations = new HashMap<>();
 
@@ -205,7 +205,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         return organizations;
     }
 
-    private Map<String, Object> setExpectedResultsForSelectiveUserSharingTestCase1() {
+    private Map<String, Object> setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase1() {
 
         Map<String, Object> expectedResults = new HashMap<>();
 
@@ -227,7 +227,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         return expectedResults;
     }
 
-    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingTestCase2() {
+    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase2() {
 
         Map<String, Map<String, Object>> organizations = new HashMap<>();
 
@@ -255,7 +255,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         return organizations;
     }
 
-    private Map<String, Object> setExpectedResultsForSelectiveUserSharingTestCase2() {
+    private Map<String, Object> setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase2() {
 
         Map<String, Object> expectedResults = new HashMap<>();
 
@@ -272,7 +272,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         return expectedResults;
     }
 
-    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingTestCase3() {
+    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase3() {
 
         Map<String, Map<String, Object>> organizations = new HashMap<>();
 
@@ -309,7 +309,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         return organizations;
     }
 
-    private Map<String, Object> setExpectedResultsForSelectiveUserSharingTestCase3() {
+    private Map<String, Object> setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase3() {
 
         Map<String, Object> expectedResults = new HashMap<>();
 
