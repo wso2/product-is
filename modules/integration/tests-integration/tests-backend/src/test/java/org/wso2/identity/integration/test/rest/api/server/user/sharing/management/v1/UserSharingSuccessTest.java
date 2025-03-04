@@ -297,7 +297,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         }
     }
 
-    // Test cases builders for selective user sharing.
+    // Test cases builders.
 
     private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingTestCase1() {
 
