@@ -21,8 +21,10 @@ package org.wso2.identity.integration.test.rest.api.server.user.sharing.manageme
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -66,6 +68,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.everyItem;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 
 /**
@@ -629,6 +635,200 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return userNameAndUserDomain;
     }
 
+    // Method to validate user shared organizations and assigned roles.
+
+    /**
+     * Validate that the user has been shared to the expected organizations with the expected roles.
+     *
+     * @param userId          The ID of the user to validate.
+     * @param expectedResults A map containing the expected results, including the expected organization count,
+     *                        expected organization IDs, expected organization names, and expected roles per
+     *                        organization.
+     * <p>
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
+     * </p>
+     */
+    @SuppressWarnings("unchecked")
+    protected void validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(String userId,
+                                                                            Map<String, Object> expectedResults) {
+
+        testGetSharedOrganizations(
+                userId,
+                (int) expectedResults.get(MAP_KEY_EXPECTED_ORG_COUNT),
+                (List<String>) expectedResults.get(MAP_KEY_EXPECTED_ORG_IDS),
+                (List<String>) expectedResults.get(MAP_KEY_EXPECTED_ORG_NAMES)
+                                  );
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = (Map<String, List<RoleWithAudience>>) expectedResults.get(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG);
+        for (Map.Entry<String, List<RoleWithAudience>> entry : expectedRolesPerExpectedOrg.entrySet()) {
+            testGetSharedRolesForOrg(userId, entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * Test method for GET /user-sharing/{userId}/shared-organizations.
+     *
+     * @param userId           The ID of the user to get shared organizations for.
+     * @param expectedOrgCount The expected number of shared organizations.
+     * @param expectedOrgIds   The expected IDs of the shared organizations.
+     * @param expectedOrgNames The expected names of the shared organizations.
+     */
+    protected void testGetSharedOrganizations(String userId, int expectedOrgCount, List<String> expectedOrgIds, List<String> expectedOrgNames) {
+
+        Response response =
+                getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ORGANIZATIONS_PATH);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(RESPONSE_LINKS_SIZE, equalTo(1))
+                .body(RESPONSE_LINKS_EMPTY, equalTo(true))
+                .body(RESPONSE_LINKS_SHARED_ORGS, notNullValue())
+                .body(RESPONSE_LINKS_SHARED_ORGS_SIZE, equalTo(expectedOrgCount))
+                .body(RESPONSE_LINKS_SHARED_ORGS_ID, hasItems(expectedOrgIds.toArray(new String[0])))
+                .body(RESPONSE_LINKS_SHARED_ORGS_NAME, hasItems(expectedOrgNames.toArray(new String[0])))
+                .body(RESPONSE_LINKS_SHARED_ORGS_SHARED_TYPE, everyItem(equalTo(SHARED_TYPE_SHARED)))
+                .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_REF, hasItems(
+                        expectedOrgIds.stream()
+                                .map(orgId -> getSharedOrgsRolesRef(userId, orgId))
+                                .toArray(String[]::new)));
+    }
+
+    /**
+     * Test method for GET /user-sharing/{userId}/shared-roles?orgId={orgId}.
+     *
+     * @param userId        The ID of the user to get shared roles for.
+     * @param orgId         The ID of the organization to get shared roles for.
+     * @param expectedRoles The expected roles for the user in the specified organization.
+     */
+    protected void testGetSharedRolesForOrg(String userId, String orgId, List<RoleWithAudience> expectedRoles) {
+
+        Response response = getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ROLES_PATH,
+                Collections.singletonMap(QUERY_PARAM_ORG_ID, orgId));
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(RESPONSE_LINKS_SIZE, equalTo(1))
+                .body(RESPONSE_LINKS_EMPTY, equalTo(true))
+                .body(RESPONSE_LINKS_SHARED_ORGS_ROLES, notNullValue())
+                .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_SIZE, equalTo(expectedRoles.size()));
+
+        if (!expectedRoles.isEmpty()) {
+            response.then()
+                    .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_NAME, hasItems(
+                            expectedRoles.stream()
+                                    .map(RoleWithAudience::getDisplayName)
+                                    .toArray(String[]::new)))
+                    .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_NAME, hasItems(
+                            expectedRoles.stream()
+                                    .map(role -> role.getAudience().getDisplay())
+                                    .toArray(String[]::new)))
+                    .body(RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_TYPE, hasItems(
+                            expectedRoles.stream()
+                                    .map(role -> role.getAudience().getType())
+                                    .toArray(String[]::new)));
+        }
+    }
+
+    // Methods to create request bodies for user sharing and unsharing.
+
+    /**
+     * Creates a `UserShareRequestBodyUserCriteria` object with the given user IDs.
+     *
+     * @param userIds The list of user IDs to be included in the criteria.
+     * @return A `UserShareRequestBodyUserCriteria` object containing the specified user IDs.
+     */
+    protected UserShareRequestBodyUserCriteria getUserCriteriaForBaseUserSharing(List<String> userIds) {
+
+        UserShareRequestBodyUserCriteria criteria = new UserShareRequestBodyUserCriteria();
+        criteria.setUserIds(userIds);
+        return criteria;
+    }
+
+    /**
+     * Creates a `UserUnshareRequestBodyUserCriteria` object with the given user IDs.
+     *
+     * @param userIds The list of user IDs to be included in the criteria.
+     * @return A `UserUnshareRequestBodyUserCriteria` object containing the specified user IDs.
+     */
+    protected UserUnshareRequestBodyUserCriteria getUserCriteriaForBaseUserUnsharing(List<String> userIds) {
+
+        UserUnshareRequestBodyUserCriteria criteria = new UserUnshareRequestBodyUserCriteria();
+        criteria.setUserIds(userIds);
+        return criteria;
+    }
+
+    /**
+     * Converts a map of organization details into a list of `UserShareRequestBodyOrganizations` objects.
+     *
+     * @param organizations A map where the key is the organization name and the value is a map of organization details.
+     * @return A list of `UserShareRequestBodyOrganizations` objects.
+     * <p>
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
+     * </p>
+     */
+    @SuppressWarnings("unchecked")
+    protected List<UserShareRequestBodyOrganizations> getOrganizationsForSelectiveUserSharing(Map<String, Map<String, Object>> organizations) {
+
+        List<UserShareRequestBodyOrganizations> orgs = new ArrayList<>();
+
+        for (Map.Entry<String, Map<String, Object>> entry : organizations.entrySet()) {
+
+            Map<String, Object> orgDetail = entry.getValue();
+
+            UserShareRequestBodyOrganizations org = new UserShareRequestBodyOrganizations();
+            org.setOrgId((String) orgDetail.get(MAP_KEY_SELECTIVE_ORG_ID));
+            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetail.get(MAP_KEY_SELECTIVE_POLICY));
+            org.setRoles((List<RoleWithAudience>) orgDetail.get(MAP_KEY_SELECTIVE_ROLES));
+
+            orgs.add(org);
+        }
+        return orgs;
+    }
+
+    /**
+     * Retrieves the policy enum for general user sharing from the provided map.
+     *
+     * @param policyWithRoles A map containing the policy and roles for general user sharing.
+     * @return The policy enum for general user sharing.
+     */
+    protected UserShareWithAllRequestBody.PolicyEnum getPolicyEnumForGeneralUserSharing(Map<String, Object> policyWithRoles) {
+
+        return (UserShareWithAllRequestBody.PolicyEnum)policyWithRoles.get(MAP_KEY_GENERAL_POLICY) ;
+    }
+
+    /**
+     * Retrieves the roles for general user sharing from the provided map.
+     *
+     * @param policyWithRoles A map containing the policy and roles for general user sharing.
+     * @return A list of `RoleWithAudience` objects representing the roles for general user sharing.
+     * <p>
+     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
+     * predefined in the test data providers.
+     * </p>
+     */
+    @SuppressWarnings("unchecked")
+    protected List<RoleWithAudience> getRolesForGeneralUserSharing(Map<String, Object> policyWithRoles) {
+
+        return (List<RoleWithAudience>) policyWithRoles.get(MAP_KEY_GENERAL_ROLES);
+    }
+
+    /**
+     * Retrieves the list of organization IDs from which the users are being selectively unshared.
+     *
+     * @param removingOrgIds The list of organization IDs to be removed.
+     * @return A list of organization IDs as strings.
+     */
+    protected List<String> getOrganizationsForSelectiveUserUnsharing(List<String> removingOrgIds) {
+
+        return removingOrgIds;
+    }
+
     // Methods to clean up the resources created for testing purposes.
 
     /**
@@ -789,101 +989,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         if (orgId != null) {
             orgMgtRestClient.deleteOrganization(orgId);
         }
-    }
-
-    // Methods to create request bodies for user sharing and unsharing.
-
-    /**
-     * Creates a `UserShareRequestBodyUserCriteria` object with the given user IDs.
-     *
-     * @param userIds The list of user IDs to be included in the criteria.
-     * @return A `UserShareRequestBodyUserCriteria` object containing the specified user IDs.
-     */
-    protected UserShareRequestBodyUserCriteria getUserCriteriaForBaseUserSharing(List<String> userIds) {
-
-        UserShareRequestBodyUserCriteria criteria = new UserShareRequestBodyUserCriteria();
-        criteria.setUserIds(userIds);
-        return criteria;
-    }
-
-    /**
-     * Creates a `UserUnshareRequestBodyUserCriteria` object with the given user IDs.
-     *
-     * @param userIds The list of user IDs to be included in the criteria.
-     * @return A `UserUnshareRequestBodyUserCriteria` object containing the specified user IDs.
-     */
-    protected UserUnshareRequestBodyUserCriteria getUserCriteriaForBaseUserUnsharing(List<String> userIds) {
-
-        UserUnshareRequestBodyUserCriteria criteria = new UserUnshareRequestBodyUserCriteria();
-        criteria.setUserIds(userIds);
-        return criteria;
-    }
-
-    /**
-     * Converts a map of organization details into a list of `UserShareRequestBodyOrganizations` objects.
-     *
-     * @param organizations A map where the key is the organization name and the value is a map of organization details.
-     * @return A list of `UserShareRequestBodyOrganizations` objects.
-     * <p>
-     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
-     * predefined in the test data providers.
-     * </p>
-     */
-    @SuppressWarnings("unchecked")
-    protected List<UserShareRequestBodyOrganizations> getOrganizationsForSelectiveUserSharing(Map<String, Map<String, Object>> organizations) {
-
-        List<UserShareRequestBodyOrganizations> orgs = new ArrayList<>();
-
-        for (Map.Entry<String, Map<String, Object>> entry : organizations.entrySet()) {
-
-            Map<String, Object> orgDetail = entry.getValue();
-
-            UserShareRequestBodyOrganizations org = new UserShareRequestBodyOrganizations();
-            org.setOrgId((String) orgDetail.get(MAP_KEY_SELECTIVE_ORG_ID));
-            org.setPolicy((UserShareRequestBodyOrganizations.PolicyEnum) orgDetail.get(MAP_KEY_SELECTIVE_POLICY));
-            org.setRoles((List<RoleWithAudience>) orgDetail.get(MAP_KEY_SELECTIVE_ROLES));
-
-            orgs.add(org);
-        }
-        return orgs;
-    }
-
-    /**
-     * Retrieves the policy enum for general user sharing from the provided map.
-     *
-     * @param policyWithRoles A map containing the policy and roles for general user sharing.
-     * @return The policy enum for general user sharing.
-     */
-    protected UserShareWithAllRequestBody.PolicyEnum getPolicyEnumForGeneralUserSharing(Map<String, Object> policyWithRoles) {
-
-        return (UserShareWithAllRequestBody.PolicyEnum)policyWithRoles.get(MAP_KEY_GENERAL_POLICY) ;
-    }
-
-    /**
-     * Retrieves the roles for general user sharing from the provided map.
-     *
-     * @param policyWithRoles A map containing the policy and roles for general user sharing.
-     * @return A list of `RoleWithAudience` objects representing the roles for general user sharing.
-     * <p>
-     * The `@SuppressWarnings("unchecked")` annotation is used in this method because the values being cast are
-     * predefined in the test data providers.
-     * </p>
-     */
-    @SuppressWarnings("unchecked")
-    protected List<RoleWithAudience> getRolesForGeneralUserSharing(Map<String, Object> policyWithRoles) {
-
-        return (List<RoleWithAudience>) policyWithRoles.get(MAP_KEY_GENERAL_ROLES);
-    }
-
-    /**
-     * Retrieves the list of organization IDs from which the users are being selectively unshared.
-     *
-     * @param removingOrgIds The list of organization IDs to be removed.
-     * @return A list of organization IDs as strings.
-     */
-    protected List<String> getOrganizationsForSelectiveUserUnsharing(List<String> removingOrgIds) {
-
-        return removingOrgIds;
     }
 
     // Helper methods.
