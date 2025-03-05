@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.1.0-SNAPSHOT</version>
+        <version>7.2.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -353,6 +353,11 @@
                                 <!-- API Resource Management Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.resource.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- Registration Framework Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.registration.framework.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
                                 <!-- Action Management Feature -->
@@ -882,6 +887,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.api.resource.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.registration.framework.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
