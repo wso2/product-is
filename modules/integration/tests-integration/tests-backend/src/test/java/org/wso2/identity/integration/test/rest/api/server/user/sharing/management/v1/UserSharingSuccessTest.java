@@ -44,9 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.everyItem;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_ONLY;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_AND_FUTURE_CHILDREN;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBodyOrganizations.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_CHILDREN_ONLY;
@@ -254,18 +251,18 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         Map<String, Object> policyWithRolesForTestCase1 = setPolicyWithRolesForGeneralUserSharingTestCase1();
         Map<String, Object> expectedSharedResultsForTestCase1 = setExpectedResultsForGeneralUserSharingTestCase1();
         List<String> removingOrgIdsForTestCase1 = Arrays.asList(getOrgId(L1_ORG_1_NAME), getOrgId(L1_ORG_2_NAME));
-        Map<String, Object> expectedUnsharedResultsForTestCase1 = setExpectedUnsharedResultsForGeneralUserSharingTestCase1();
+        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForSelectiveUserUnsharingTestCase1();
 
         // IMMEDIATE EXISTING AND FUTURE
         List<String> userIdsForTestCase2 = Arrays.asList(getUserId(ROOT_ORG_USER_3_USERNAME, USER_DOMAIN_PRIMARY), getUserId(ROOT_ORG_USER_2_USERNAME, USER_DOMAIN_PRIMARY));
         Map<String, Object> policyWithRolesForTestCase2 = setPolicyWithRolesForGeneralUserSharingTestCase2();
         Map<String, Object> expectedSharedResultsForTestCase2 = setExpectedResultsForGeneralUserSharingTestCase2();
         List<String> removingOrgIdsForTestCase2 = Collections.singletonList(getOrgId(L1_ORG_1_NAME));
-        Map<String, Object> expectedUnsharedResultsForTestCase2 = setExpectedUnsharedResultsForGeneralUserSharingTestCase2();
+        Map<String, Object> expectedResultsForTestCase2 = setExpectedResultsForSelectiveUserUnsharingTestCase2();
 
         return new Object[][] {
-                { userIdsForTestCase1, policyWithRolesForTestCase1, expectedSharedResultsForTestCase1, removingOrgIdsForTestCase1, expectedUnsharedResultsForTestCase1},
-                { userIdsForTestCase2, policyWithRolesForTestCase2, expectedSharedResultsForTestCase2, removingOrgIdsForTestCase2, expectedUnsharedResultsForTestCase2}
+                { userIdsForTestCase1, policyWithRolesForTestCase1, expectedSharedResultsForTestCase1, removingOrgIdsForTestCase1, expectedResultsForTestCase1},
+                { userIdsForTestCase2, policyWithRolesForTestCase2, expectedSharedResultsForTestCase2, removingOrgIdsForTestCase2, expectedResultsForTestCase2}
         };
     }
 
@@ -532,7 +529,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         return expectedResults;
     }
 
-    private Map<String, Object> setExpectedUnsharedResultsForGeneralUserSharingTestCase1() {
+    private Map<String, Object> setExpectedResultsForSelectiveUserUnsharingTestCase1() {
 
         Map<String, Object> expectedResults = new HashMap<>();
 
@@ -552,7 +549,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         return expectedResults;
     }
 
-    private Map<String, Object> setExpectedUnsharedResultsForGeneralUserSharingTestCase2() {
+    private Map<String, Object> setExpectedResultsForSelectiveUserUnsharingTestCase2() {
 
         Map<String, Object> expectedResults = new HashMap<>();
 

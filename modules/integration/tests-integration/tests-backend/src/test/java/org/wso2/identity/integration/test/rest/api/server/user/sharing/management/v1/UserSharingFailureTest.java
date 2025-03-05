@@ -30,6 +30,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudience;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBody;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareWithAllRequestBody;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -427,8 +428,8 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Collections.emptyList());
         expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Collections.emptyList());
 
-        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
-        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrganization = new HashMap<>();
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrganization);
 
         return expectedResults;
     }
