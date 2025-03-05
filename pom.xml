@@ -2437,7 +2437,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.39</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.42</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2519,7 +2519,7 @@
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.17</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.18</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.5</identity.local.auth.api.version>
@@ -2532,16 +2532,16 @@
         <identity.metadata.saml.version>1.8.5</identity.metadata.saml.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.35</authenticator.totp.version>
+        <authenticator.totp.version>3.3.36</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.3</authenticator.office365.version>
-        <authenticator.smsotp.version>3.3.35</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.3.36</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.31</authenticator.magiclink.version>
-        <authenticator.emailotp.version>4.1.32</authenticator.emailotp.version>
+        <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.30</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.19</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
-        <authenticator.x509.version>3.1.32</authenticator.x509.version>
+        <authenticator.x509.version>3.1.33</authenticator.x509.version>
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
@@ -2569,8 +2569,8 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.42.4</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.60</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.42.5</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.17.61</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.14.4</identity.apps.core.version>
 
