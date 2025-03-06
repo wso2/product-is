@@ -142,6 +142,10 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         Map<String, Map<String, Object>> organizationsForTestCase4 = setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase4();
         Map<String, Object> expectedResultsForTestCase4 = setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase4();
 
+        // Test case 5: User sharing with non-immediate child organizations.
+        List<String> userIdsForTestCase5 = Arrays.asList(getUserId(ROOT_ORG_USER_1_USERNAME, USER_DOMAIN_PRIMARY, ROOT_ORG_NAME), getUserId(ROOT_ORG_USER_2_USERNAME, USER_DOMAIN_PRIMARY, ROOT_ORG_NAME));
+        Map<String, Map<String, Object>> organizationsForTestCase5 = setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase5();
+        Map<String, Object> expectedResultsForTestCase5 = setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase5();
 
         return new Object[][] {
                 { userIdsForTestCase1, organizationsForTestCase1, expectedResultsForTestCase1 },
@@ -539,6 +543,51 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_2_NAME), Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_1, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)));
         expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
         expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Collections.singletonList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+
+        expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
+
+        return expectedResults;
+    }
+
+    private Map<String, Map<String, Object>> setOrganizationsForSelectiveUserSharingWithInvalidDetailsTestCase5() {
+
+        Map<String, Map<String, Object>> organizations = new HashMap<>();
+
+        // Organization 1
+        Map<String, Object> org1 = new HashMap<>();
+        org1.put(MAP_KEY_SELECTIVE_ORG_ID, getOrgId(L3_ORG_1_NAME));
+        org1.put(MAP_KEY_SELECTIVE_ORG_NAME, L3_ORG_1_NAME);
+        org1.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_ONLY);
+        org1.put(MAP_KEY_SELECTIVE_ROLES, Collections.singletonList(
+                createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE)));
+
+        organizations.put(INVALID_ORG_1_NAME, org1);
+
+        // Organization 2
+        Map<String, Object> org2 = new HashMap<>();
+        org2.put(MAP_KEY_SELECTIVE_ORG_ID, getOrgId(L1_ORG_2_NAME));
+        org2.put(MAP_KEY_SELECTIVE_ORG_NAME, L1_ORG_2_NAME);
+        org2.put(MAP_KEY_SELECTIVE_POLICY, SELECTED_ORG_WITH_EXISTING_IMMEDIATE_AND_FUTURE_CHILDREN);
+        org2.put(MAP_KEY_SELECTIVE_ROLES, Arrays.asList(
+                createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE),
+                createRoleWithAudience(ORG_ROLE_1, ROOT_ORG_NAME, ORGANIZATION_AUDIENCE)));
+
+        organizations.put(L1_ORG_2_NAME, org2);
+
+        return organizations;
+    }
+
+    private Map<String, Object> setExpectedResultsForSelectiveUserSharingWithInvalidDetailsTestCase5() {
+
+        Map<String, Object> expectedResults = new HashMap<>();
+
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_COUNT, 2);
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_IDS, Arrays.asList(getOrgId(L1_ORG_2_NAME), getOrgId(L2_ORG_3_NAME)));
+        expectedResults.put(MAP_KEY_EXPECTED_ORG_NAMES, Arrays.asList(L1_ORG_2_NAME, L2_ORG_3_NAME));
+
+        Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
+        expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_2_NAME), Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_1, L1_ORG_2_NAME, ORGANIZATION_AUDIENCE)));
+        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_3_NAME), Arrays.asList(createRoleWithAudience(APP_ROLE_1, APP_1_NAME, APPLICATION_AUDIENCE), createRoleWithAudience(ORG_ROLE_1, L2_ORG_3_NAME, ORGANIZATION_AUDIENCE)));
 
         expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
 
