@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_ENDPOINT;
@@ -49,6 +51,7 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
 
     private static final Log log = LogFactory.getLog(SCIMUserUpdateTest.class);
     private static final String DEFAULT_CORRELATION_HEADER = "X-WSO2-traceId";
+    private static final String SYSTEM_SCHEMA_URI_WITH_ESCAPE_CHARS = "\"urn:scim:wso2:schema\"";
 
     private String endpointURL;
     private String userId = null;
@@ -183,9 +186,26 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertTrue(emailsAttribute instanceof ArrayList, "'emails' attribute is not a list of objects");
         Assert.assertEquals(((ArrayList) emailsAttribute).size(), 2);
 
+        Object wso2SystemSchema = extractableResponse.path(SYSTEM_SCHEMA_URI_WITH_ESCAPE_CHARS);
+        Assert.assertNotNull(wso2SystemSchema, "'urn:scim:wso2:schema' schema is missing");
+        Assert.assertTrue(wso2SystemSchema instanceof Map, "'urn:scim:wso2:schema' schema is not a Map");
+        Map<String, Object> wso2SystemSchemaObj = (Map<String, Object>) wso2SystemSchema;
+
+        List<Object> emailAddresses = (List<Object>) wso2SystemSchemaObj.get("emailAddresses");
+        Assert.assertNotNull(emailAddresses, "'emailAddresses' attribute is missing in the custom schema");
+        Assert.assertEquals(emailAddresses.size(), 2,
+                "Expected two email addresses in the custom schema");
+
+        List<Object> mobileNumbers = (List<Object>) wso2SystemSchemaObj.get("mobileNumbers");
+        Assert.assertNotNull(mobileNumbers, "'mobileNumbers' attribute is missing in the custom schema");
+        Assert.assertEquals(mobileNumbers.size(), 2,
+                "Expected two mobile numbers in the custom schema");
+
+        Assert.assertNull(wso2SystemSchemaObj.get("verifiedEmailAddresses"));
+        Assert.assertNull(wso2SystemSchemaObj.get("verifiedMobileNumbers"));
+
         SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
         SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
-
     }
 
     @Test(dependsOnMethods = "testPatchUserAddOperation")
@@ -217,6 +237,21 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
         Assert.assertEquals(((LinkedHashMap) ((ArrayList) emailsAttribute).get(0)).get("value"),
                 "desmond@mail.net");
 
+        Object wso2SystemSchema = extractableResponse.path(SYSTEM_SCHEMA_URI_WITH_ESCAPE_CHARS);
+        Assert.assertNotNull(wso2SystemSchema, "'urn:scim:wso2:schema' schema is missing");
+        Assert.assertTrue(wso2SystemSchema instanceof Map, "'urn:scim:wso2:schema' schema is not a Map");
+        Map<String, Object> wso2SystemSchemaObj = (Map<String, Object>) wso2SystemSchema;
+
+        List<Object> emailAddresses = (List<Object>) wso2SystemSchemaObj.get("emailAddresses");
+        Assert.assertNotNull(emailAddresses, "'emailAddresses' attribute is missing in the custom schema");
+        Assert.assertEquals(emailAddresses.size(), 2,
+                "Expected two email addresses in the custom schema");
+
+        List<Object> mobileNumbers = (List<Object>) wso2SystemSchemaObj.get("mobileNumbers");
+        Assert.assertNotNull(mobileNumbers, "'mobileNumbers' attribute is missing in the custom schema");
+        Assert.assertEquals(mobileNumbers.size(), 2,
+                "Expected two mobile numbers in the custom schema");
+
         SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
         SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
     }
@@ -243,6 +278,24 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
                 "key-value pairs");
         Assert.assertEquals(((LinkedHashMap) nameAttribute).get("familyName"), "jackson");
         Assert.assertEquals(((LinkedHashMap) nameAttribute).get("givenName"), "kim");
+
+        Object wso2SystemSchema = extractableResponse.path(SYSTEM_SCHEMA_URI_WITH_ESCAPE_CHARS);
+        Assert.assertNotNull(wso2SystemSchema, "'urn:scim:wso2:schema' schema is missing");
+        Assert.assertTrue(wso2SystemSchema instanceof Map, "'urn:scim:wso2:schema' schema is not a Map");
+        Map<String, Object> wso2SystemSchemaObj = (Map<String, Object>) wso2SystemSchema;
+
+        List<Object> emailAddresses = (List<Object>) wso2SystemSchemaObj.get("emailAddresses");
+        Assert.assertNotNull(emailAddresses, "'emailAddresses' attribute is missing in the custom schema");
+        Assert.assertEquals(emailAddresses.size(), 2,
+                "Expected two email addresses in the custom schema");
+
+        List<Object> mobileNumbers = (List<Object>) wso2SystemSchemaObj.get("mobileNumbers");
+        Assert.assertNotNull(mobileNumbers, "'mobileNumbers' attribute is missing in the custom schema");
+        Assert.assertEquals(mobileNumbers.size(), 2,
+                "Expected two mobile numbers in the custom schema");
+
+        Assert.assertNull(wso2SystemSchemaObj.get("verifiedEmailAddresses"));
+        Assert.assertNull(wso2SystemSchemaObj.get("verifiedMobileNumbers"));
 
         SCIMUtils.validateSchemasAttributeOfUsersEndpoint(extractableResponse.path("schemas"));
         SCIMUtils.validateMetaAttributeOfUsersEndpoint(extractableResponse.path("meta"), response, endpointURL);
