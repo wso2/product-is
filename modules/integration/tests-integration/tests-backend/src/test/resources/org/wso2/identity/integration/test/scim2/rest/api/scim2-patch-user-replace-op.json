@@ -17,6 +17,17 @@
                     }
                 ]
             }
+        },
+        {
+            "op": "replace",
+            "value": {
+                "urn:scim:wso2:schema": {
+                    "emailAddresses": ["kim@abc.com", "kim@xyz.com"],
+                    "verifiedEmailAddresses": ["kim@abc.com"],
+                    "mobileNumbers": ["0771234567", "0771234568"],
+                    "verifiedMobileNumbers": ["0771234567"]
+                }
+            }
         }
     ]
 }

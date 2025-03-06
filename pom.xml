@@ -2460,11 +2460,11 @@
         <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.9.18</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.9.19</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.262</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.263</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.53</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.5</identity.inbound.auth.sts.version>
@@ -2514,12 +2514,12 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.20</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.21</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.18</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.19</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.5</identity.local.auth.api.version>
@@ -2545,7 +2545,7 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.122</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.123</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.24</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.43</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
@@ -2558,7 +2558,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.87</identity.server.api.version>
+        <identity.server.api.version>1.3.88</identity.server.api.version>
         <identity.user.api.version>1.3.59</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2569,12 +2569,12 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.42.5</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.17.61</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.42.6</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.17.62</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.14.4</identity.apps.core.version>
 
-        <identity.apps.tests.version>1.6.379</identity.apps.tests.version>
+        <identity.apps.tests.version>1.6.380</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
