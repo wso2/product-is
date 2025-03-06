@@ -587,6 +587,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         String userId = scim2RestClient.createUser(user);
         String domainQualifiedUserName = user.getUserName();
+        String domainQualifiedUserNameWithOrg = domainQualifiedUserName + PATH_SEPARATOR + ROOT_ORG_NAME;
 
         Map<String, Object> userDetail = new HashMap<>();
         userDetail.put(MAP_USER_DETAILS_KEY_DOMAIN_QUALIFIED_USER_NAME, domainQualifiedUserName);
@@ -598,7 +599,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_ID, ROOT_ORG_ID);
         userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_LEVEL, 0);
 
-        userDetails.put(domainQualifiedUserName, userDetail);
+        userDetails.put(domainQualifiedUserNameWithOrg, userDetail);
         return  userId;
     }
 
@@ -606,6 +607,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         String userId = scim2RestClient.createSubOrgUser(user, (String) orgDetails.get(suborg).get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN));
         String domainQualifiedUserName = user.getUserName();
+        String domainQualifiedUserNameWithOrg = domainQualifiedUserName + PATH_SEPARATOR + suborg;
 
         Map<String, Object> userDetail = new HashMap<>();
         userDetail.put(MAP_USER_DETAILS_KEY_DOMAIN_QUALIFIED_USER_NAME, domainQualifiedUserName);
@@ -617,14 +619,14 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_ID, orgDetails.get(suborg).get(MAP_ORG_DETAILS_KEY_ORG_ID));
         userDetail.put(MAP_USER_DETAILS_KEY_USER_ORG_LEVEL, orgDetails.get(suborg).get(MAP_ORG_DETAILS_KEY_ORG_LEVEL));
 
-        userDetails.put(domainQualifiedUserName, userDetail);
+        userDetails.put(domainQualifiedUserNameWithOrg, userDetail);
         return  userId;
     }
 
-    protected String getUserId(String userName, String userDomain) {
+    protected String getUserId(String userName, String userDomain, String orgName) {
 
-        String domainQualifiedUserName = userDomain + PATH_SEPARATOR + userName;
-        return userDetails.get(domainQualifiedUserName).get(MAP_USER_DETAILS_KEY_USER_ID).toString();
+        String domainQualifiedUserNameWithOrg = userDomain + PATH_SEPARATOR + userName + PATH_SEPARATOR + orgName;
+        return userDetails.get(domainQualifiedUserNameWithOrg).get(MAP_USER_DETAILS_KEY_USER_ID).toString();
     }
 
     private Map<String, String> getUserNameAndUserDomain(String domainQualifiedUserName) {
