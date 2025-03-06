@@ -1,0 +1,30 @@
+{
+  "claimURI": "http://wso2.org/claims/mobileNumbers",
+  "description": "mobileNumbers",
+  "displayOrder": 0,
+  "displayName": "mobileNumbers",
+  "readOnly": false,
+  "required": false,
+  "supportedByDefault": true,
+  "sharedProfileValueResolvingMethod": "FromOrigin",
+  "attributeMapping": [
+    {
+      "mappedAttribute": "mobileNumbers",
+      "userstore": "PRIMARY"
+    }
+  ],
+  "properties": [
+    {
+      "key": "isSystemClaim",
+      "value": "true"
+    },
+    {
+      "key": "multiValued",
+      "value": "true"
+    },
+    {
+      "key": "ExcludedUserStores",
+      "value": "PRIMARY"
+    }
+  ]
+}

@@ -35,6 +35,7 @@ import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 
 import java.util.Arrays;
 import java.io.File;
@@ -50,6 +51,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     protected static final String EVERYONE_ROLE = "Internal/everyone";
     protected UserManagementClient userMgtClient;
     protected AuthenticatorClient authenticatorClient;
+    protected ClaimManagementRestClient claimManagementRestClient;
     protected String newUserName;
     protected String newUserRole;
     protected String newUserPassword;
@@ -60,12 +62,15 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
+        claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
+
         setUserName();
         setUserPassword();
         setUserRole();
         Assert.assertNotNull(newUserName, "Please set a value to userName");
         Assert.assertNotNull(newUserRole, "Please set a value to userRole");
 
+        updateExcludedUserStoresClaimProperty(claimManagementRestClient,false);
     }
 
     public void clean() throws Exception {
@@ -82,16 +87,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         if (userMgtClient.roleNameExists(newUserRole + "tmp")) {
             userMgtClient.deleteRole(newUserRole + "tmp");
         }
-    }
-
-    /**
-     * Retrieves a set of skipped claim URIs.
-     *
-     * @return Set of skipped claim URIs.
-     */
-    protected Set<String> getExcludedClaims() {
-
-        return Collections.emptySet();
+        updateExcludedUserStoresClaimProperty(claimManagementRestClient,true);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
@@ -319,11 +315,9 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         UserProfileDTO profile
                 = userProfileMgtServiceClient.getUserProfile(newUserName, "default");
         String profileConfigs = profile.getProfileName();
-        Set<String> excludedClaims = getExcludedClaims();
 
         UserFieldDTO[] fields = Arrays.stream(
                 userProfileMgtServiceClient.getProfileFieldsForInternalStore().getFieldValues())
-            .filter(field -> !excludedClaims.contains(field.getClaimUri()))
             .map(field -> {
                 if ("Last Name".equalsIgnoreCase(field.getDisplayName())) {
                     field.setFieldValue(newUserName + "LastName");
@@ -448,5 +442,15 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     protected abstract void setUserPassword();
 
     protected abstract void setUserRole();
+
+    /**
+     * Update the excluded user stores claim property.
+     *
+     * @param claimManagementRestClient ClaimManagementRestClient.
+     * @param reset Boolean value to reset the excluded user stores claim property.
+     * @throws Exception Exception on updating the excluded user stores claim property.
+     */
+    protected void updateExcludedUserStoresClaimProperty(ClaimManagementRestClient claimManagementRestClient,
+                                                         Boolean reset) throws Exception {}
 
 }
