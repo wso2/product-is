@@ -156,6 +156,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String L1_ORG_1_USER_1_USERNAME = "l1Org1User1";
     protected static final String L1_ORG_1_USER_2_USERNAME = "l1Org1User2";
     protected static final String L1_ORG_1_USER_3_USERNAME = "l1Org1User3";
+    protected static final String ROOT_ORG_USER_DUPLICATED_USERNAME = "rootUserDuplicated";
     
     protected static final String MAP_KEY_SELECTIVE_ORG_ID = "orgId";
     protected static final String MAP_KEY_SELECTIVE_ORG_NAME = "orgName";
