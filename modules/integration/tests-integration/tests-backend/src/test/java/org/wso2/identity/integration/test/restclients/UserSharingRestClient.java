@@ -24,10 +24,12 @@ import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.testng.Assert;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBody;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareRequestBody;
+import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserUnshareWithAllRequestBody;
 
 import java.io.IOException;
 
@@ -39,13 +41,25 @@ import javax.servlet.http.HttpServletResponse;
 public class UserSharingRestClient extends RestBaseClient {
 
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
-    public static final String USER_SHARE_WITH_ALL_ENDPOINT_URI = "/users/share-with-all";
+    static final String USER_SHARING_API_BASE_PATH = "/users";
+    static final String SHARE_PATH = "/share";
+    static final String SHARE_WITH_ALL_PATH = "/share-with-all";
+    static final String UNSHARE_PATH = "/unshare";
+    static final String UNSHARE_WITH_ALL_PATH = "/unshare-with-all";
+    static final String SHARED_ORGANIZATIONS_PATH = "/shared-organizations";
+    static final String SHARED_ROLES_PATH = "/shared-roles";
+
     public static final String PATH_SEPARATOR = "/";
+
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
     private final String password;
-    private final String userShareWithAllBasePath;
+
+    private final String selectiveUserShareEndpoint;
+    private final String generalUserShareEndpoint;
+    private final String selectiveUserUnshareEndpoint;
+    private final String generalUserUnshareEndpoint;
 
     public UserSharingRestClient(String serverUrl, Tenant tenantInfo) {
 
@@ -54,24 +68,78 @@ public class UserSharingRestClient extends RestBaseClient {
         this.username = tenantInfo.getContextUser().getUserName();
         this.password = tenantInfo.getContextUser().getPassword();
 
-        userShareWithAllBasePath = serverUrl +
-                ISIntegrationTest.getTenantedRelativePath(API_SERVER_BASE_PATH + USER_SHARE_WITH_ALL_ENDPOINT_URI,
-                        tenantDomain);
+        selectiveUserShareEndpoint = serverUrl + ISIntegrationTest.getTenantedRelativePath(
+                API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + SHARE_PATH, tenantDomain);
+        generalUserShareEndpoint = serverUrl + ISIntegrationTest.getTenantedRelativePath(
+                API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + SHARE_WITH_ALL_PATH, tenantDomain);
+        selectiveUserUnshareEndpoint = serverUrl + ISIntegrationTest.getTenantedRelativePath(
+                API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + UNSHARE_PATH, tenantDomain);
+        generalUserUnshareEndpoint = serverUrl + ISIntegrationTest.getTenantedRelativePath(
+                API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + UNSHARE_WITH_ALL_PATH, tenantDomain);
+
     }
 
     /**
      * Share users with all.
      *
-     * @param userShareWithAllRequestBody User share with all request body.
+     * @param userShareRequestBody Selective User Share request body.
+     * @throws Exception If an error occurs while sharing users with all.
+     */
+    public void shareUsers(UserShareRequestBody userShareRequestBody) throws Exception {
+
+        String jsonRequest = toJSONString(userShareRequestBody);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(selectiveUserShareEndpoint, jsonRequest,
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_ACCEPTED,
+                    "Selective User Sharing request accepted.");
+        }
+    }
+
+    /**
+     * Share users with all.
+     *
+     * @param userShareWithAllRequestBody General User Share request body.
      * @throws Exception If an error occurs while sharing users with all.
      */
     public void shareUsersWithAll(UserShareWithAllRequestBody userShareWithAllRequestBody) throws Exception {
 
         String jsonRequest = toJSONString(userShareWithAllRequestBody);
-        try (CloseableHttpResponse response = getResponseOfHttpPost(userShareWithAllBasePath, jsonRequest,
+        try (CloseableHttpResponse response = getResponseOfHttpPost(generalUserShareEndpoint, jsonRequest,
                 getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_ACCEPTED,
-                    "User sharing request accepted.");
+                    "General User Sharing request accepted.");
+        }
+    }
+
+    /**
+     * Unshare users with all.
+     *
+     * @param userUnshareRequestBody Selective User Unshare request body.
+     * @throws Exception If an error occurs while unsharing users with all.
+     */
+    public void unshareUsers(UserUnshareRequestBody userUnshareRequestBody) throws Exception {
+
+        String jsonRequest = toJSONString(userUnshareRequestBody);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(selectiveUserUnshareEndpoint, jsonRequest,
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_ACCEPTED,
+                    "Selective User Unsharing request accepted.");
+        }
+    }
+
+    /**
+     * Unshare users with all.
+     *
+     * @param userUnshareWithAllRequestBody General User Unshare request body.
+     * @throws Exception If an error occurs while unsharing users with all.
+     */
+    public void unshareUsersWithAll(UserUnshareWithAllRequestBody userUnshareWithAllRequestBody) throws Exception {
+
+        String jsonRequest = toJSONString(userUnshareWithAllRequestBody);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(generalUserUnshareEndpoint, jsonRequest,
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_ACCEPTED,
+                    "General User Unsharing request accepted.");
         }
     }
 
