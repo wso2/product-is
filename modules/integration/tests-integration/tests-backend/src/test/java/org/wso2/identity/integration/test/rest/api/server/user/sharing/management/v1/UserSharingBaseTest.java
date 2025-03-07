@@ -663,6 +663,31 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     // Method to validate user shared organizations and assigned roles.
 
+    protected void validateUserSharingResults(List<String> userIds, Map<String, Object> expectedResults)
+            throws Exception {
+
+        Thread.sleep(5000); // Waiting until user sharing is completed.
+        for (String userId : userIds) {
+            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
+        }
+    }
+
+    protected List<String> validateUserSharingResultsAndGetSharedUsersList(List<String> userIds,
+                                                                           Map<String, Object> reSharingSubOrgDetails,
+                                                                           Map<String, Object> expectedSharedResults) throws Exception{
+
+        List<String> sharedUserIds = new ArrayList<>();
+        Thread.sleep(5000); // Waiting until user sharing is completed.
+        for (String userId : userIds) {
+            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedSharedResults);
+
+            Response sharedOrgsResponseOfUserId = getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ORGANIZATIONS_PATH);
+            String sharedUserId = extractSharedUserId(sharedOrgsResponseOfUserId, reSharingSubOrgDetails.get(MAP_ORG_DETAILS_KEY_ORG_NAME).toString());
+            sharedUserIds.add(sharedUserId);
+        }
+        return sharedUserIds;
+    }
+
     /**
      * Validate that the user has been shared to the expected organizations with the expected roles.
      *

@@ -82,8 +82,6 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
 
     private static final String INVALID_ORG_1_NAME = "invalid-org-1-name";
     private static final String INVALID_ORG_1_ID = "invalid-org-1-id";
-    private static final String INVALID_ORG_2_NAME = "invalid-org-2-name";
-    private static final String INVALID_ORG_2_ID = "invalid-org-2-id";
 
     private static final String INVALID_APP_1_NAME = "invalid-app-1";
     private static final String INVALID_APP_2_NAME = "invalid-app-2";
@@ -180,7 +178,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
     @Test(dataProvider = "selectiveUserSharingWithInvalidDetailsDataProvider")
     public void testSelectiveUserSharing(List<String> userIds,
                                          Map<String, Map<String, Object>> organizations,
-                                         Map<String, Object> expectedResults) throws InterruptedException {
+                                         Map<String, Object> expectedResults) throws Exception {
 
         UserShareRequestBody requestBody = new UserShareRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
@@ -195,10 +193,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // Invalid General User Sharing.
@@ -231,7 +226,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
     @Test(dataProvider = "generalUserSharingWithInvalidDetailsDataProvider")
     public void testGeneralUserSharing(List<String> userIds,
                                                          Map<String, Object> policyWithRoles,
-                                                         Map<String, Object> expectedResults) throws InterruptedException {
+                                                         Map<String, Object> expectedResults) throws Exception {
 
         UserShareWithAllRequestBody requestBody = new UserShareWithAllRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
@@ -247,10 +242,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // Invalid General User Unsharing.
@@ -281,7 +273,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                                          Map<String, Object> policyWithRoles,
                                          Map<String, Object> expectedSharedResults,
                                          List<String> removingUserIds,
-                                         Map<String, Object> expectedResults) throws InterruptedException {
+                                         Map<String, Object> expectedResults) throws Exception {
 
         // Sharing valid users.
         testGeneralUserSharing(userIds, policyWithRoles, expectedSharedResults);
@@ -299,10 +291,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_UNSHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // Invalid Selective User Unsharing.
@@ -338,7 +327,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                                            Map<String, Object> expectedSharedResults,
                                            List<String> removingUserIds,
                                            List<String> removingOrgIds,
-                                           Map<String, Object> expectedUnsharedResults) throws InterruptedException {
+                                           Map<String, Object> expectedResults) throws Exception {
 
         testGeneralUserSharing(userIds, policyWithRoles, expectedSharedResults);
 
@@ -355,10 +344,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_UNSHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedUnsharedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // Invalid Selective User Sharing for re-sharing.
@@ -369,25 +355,24 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         // Test case 1: User re-sharing.
         List<String> userIdsForTestCase1 = Collections.singletonList(getUserId(ROOT_ORG_USER_1_USERNAME, USER_DOMAIN_PRIMARY, ROOT_ORG_NAME));
         Map<String, Map<String, Object>> organizationsForTestCase1 = setOrganizationsForSelectiveUserSharingWithValidDetailsTestCase1();
-        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForSelectiveUserSharingWithValidDetailsTestCase1();
+        Map<String, Object> expectedSharedResultsForTestCase1 = setExpectedResultsForSelectiveUserSharingWithValidDetailsTestCase1();
         Map<String, Map<String, Object>> organizationsForReSharingTestCase1 = setOrganizationsForSelectiveUserSharingWithReSharingTestCase1();
-        Map<String, Object> expectedResultsForReSharingTestCase1 = setExpectedResultsForSelectiveUserSharingWithReSharingTestCase1();
         Map<String, Object> reSharingSubOrgDetailsForTestCase1 = orgDetails.get(L1_ORG_1_NAME);
+        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForSelectiveUserSharingWithReSharingTestCase1();
 
         return new Object[][] {
-                { userIdsForTestCase1, organizationsForTestCase1, expectedResultsForTestCase1, organizationsForReSharingTestCase1, expectedResultsForReSharingTestCase1, reSharingSubOrgDetailsForTestCase1 }
+                { userIdsForTestCase1, organizationsForTestCase1, expectedSharedResultsForTestCase1, organizationsForReSharingTestCase1, reSharingSubOrgDetailsForTestCase1, expectedResultsForTestCase1 }
         };
     }
 
     @Test(dataProvider = "selectiveUserSharingWithReSharingDataProvider")
     public void testSelectiveUserSharingWithReSharing(List<String> userIds,
                                                       Map<String, Map<String, Object>> organizations,
-                                                      Map<String, Object> expectedResults,
+                                                      Map<String, Object> expectedSharedResults,
                                                       Map<String, Map<String, Object>> organizationsForReSharing,
-                                                      Map<String, Object> expectedResultsForReSharing,
-                                                      Map<String, Object> reSharingSubOrgDetails) throws Exception {
+                                                      Map<String, Object> reSharingSubOrgDetails,
+                                                      Map<String, Object> expectedResults) throws Exception {
 
-        List<String> sharedUserIds = new ArrayList<>();
         UserShareRequestBody requestBody = new UserShareRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
                 .organizations(getOrganizationsForSelectiveUserSharing(organizations));
@@ -401,14 +386,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-
-            Response sharedOrgsResponseOfUserId = getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ORGANIZATIONS_PATH);
-            String sharedUserId = extractSharedUserId(sharedOrgsResponseOfUserId, reSharingSubOrgDetails.get(MAP_ORG_DETAILS_KEY_ORG_NAME).toString());
-            sharedUserIds.add(sharedUserId);
-        }
+        List<String> sharedUserIds = validateUserSharingResultsAndGetSharedUsersList(userIds, reSharingSubOrgDetails, expectedSharedResults);
 
         UserShareRequestBody requestBodyForReSharing = new UserShareRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(sharedUserIds))
@@ -418,10 +396,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
 
         Assert.assertEquals(responseOfReSharing.getStatusLine().getStatusCode(), HttpStatus.SC_ACCEPTED);
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : sharedUserIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResultsForReSharing);
-        }
+        validateUserSharingResults(sharedUserIds, expectedResults);
     }
 
     // Invalid General User Sharing for re-sharing.
@@ -432,22 +407,21 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         // Test case 1: User re-sharing.
         List<String> userIdsForTestCase1 = Collections.singletonList(getUserId(ROOT_ORG_USER_1_USERNAME, USER_DOMAIN_PRIMARY, ROOT_ORG_NAME));
         Map<String, Object> policyWithRolesForTestCase1 = setPolicyWithRolesForGeneralUserSharingWithValidDetailsTestCase1();
-        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForGeneralUserSharingWithValidDetailsTestCase1();
-        Map<String, Object> expectedResultsForReSharingTestCase1 = setExpectedResultsForGenealUserSharingWithReSharingTestCase1();
+        Map<String, Object> expectedSharedResultsForTestCase1 = setExpectedResultsForGeneralUserSharingWithValidDetailsTestCase1();
         Map<String, Object> reSharingSubOrgDetailsForTestCase1 = orgDetails.get(L1_ORG_1_NAME);
+        Map<String, Object> expectedResultsForTestCase1 = setExpectedResultsForGenealUserSharingWithReSharingTestCase1();
 
         return new Object[][] {
-                { userIdsForTestCase1, policyWithRolesForTestCase1, expectedResultsForTestCase1, expectedResultsForReSharingTestCase1, reSharingSubOrgDetailsForTestCase1 }
+                { userIdsForTestCase1, policyWithRolesForTestCase1, expectedSharedResultsForTestCase1, reSharingSubOrgDetailsForTestCase1, expectedResultsForTestCase1 }
         };
     }
 
     @Test(dataProvider = "generalUserSharingWithReSharingDataProvider")
     public void testGeneralUserSharingWithReSharing(List<String> userIds, Map<String, Object> policyWithRoles,
-                                                    Map<String, Object> expectedResults,
-                                                    Map<String, Object> expectedResultsForReSharing,
-                                                    Map<String, Object> reSharingSubOrgDetails) throws Exception {
+                                                    Map<String, Object> expectedSharedResults,
+                                                    Map<String, Object> reSharingSubOrgDetails,
+                                                    Map<String, Object> expectedResults) throws Exception {
 
-        List<String> sharedUserIds = new ArrayList<>();
         UserShareWithAllRequestBody requestBody = new UserShareWithAllRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
                 .policy(getPolicyEnumForGeneralUserSharing(policyWithRoles))
@@ -463,14 +437,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-
-            Response sharedOrgsResponseOfUserId = getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ORGANIZATIONS_PATH);
-            String sharedUserId = extractSharedUserId(sharedOrgsResponseOfUserId, reSharingSubOrgDetails.get(MAP_ORG_DETAILS_KEY_ORG_NAME).toString());
-            sharedUserIds.add(sharedUserId);
-        }
+        List<String> sharedUserIds = validateUserSharingResultsAndGetSharedUsersList(userIds, reSharingSubOrgDetails, expectedSharedResults);
 
         UserShareWithAllRequestBody requestBodyForReSharing = new UserShareWithAllRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
@@ -482,13 +449,8 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
 
         Assert.assertEquals(responseOfReSharing.getStatusLine().getStatusCode(), HttpStatus.SC_ACCEPTED);
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : sharedUserIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResultsForReSharing);
-        }
+        validateUserSharingResults(sharedUserIds, expectedResults);
     }
-
-    //todo next remove thread sleep.
 
     // Test cases builders.
 

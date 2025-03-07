@@ -124,7 +124,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     @Test(dataProvider = "selectiveUserSharingDataProvider")
     public void testSelectiveUserSharing(List<String> userIds,
                                                   Map<String, Map<String, Object>> organizations,
-                                                  Map<String, Object> expectedResults) throws InterruptedException {
+                                                  Map<String, Object> expectedResults) throws Exception {
 
         UserShareRequestBody requestBody = new UserShareRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
@@ -139,10 +139,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // General User Sharing.
@@ -181,7 +178,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     @Test(dataProvider = "generalUserSharingDataProvider")
     public void testGeneralUserSharing(List<String> userIds,
                                                   Map<String, Object> policyWithRoles,
-                                                  Map<String, Object> expectedResults) throws InterruptedException {
+                                                  Map<String, Object> expectedResults) throws Exception {
 
         UserShareWithAllRequestBody requestBody = new UserShareWithAllRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserSharing(userIds))
@@ -197,10 +194,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_SHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // General User Unsharing.
@@ -222,7 +216,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
 
     @Test(dataProvider = "generalUserUnsharingDataProvider")
     public void testGeneralUserUnsharing(List<String> userIds,
-                                       Map<String, Object> expectedResults) throws InterruptedException {
+                                       Map<String, Object> expectedResults) throws Exception {
 
         UserUnshareWithAllRequestBody requestBody = new UserUnshareWithAllRequestBody()
                 .userCriteria(getUserCriteriaForBaseUserUnsharing(userIds));
@@ -236,10 +230,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_UNSHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // Selective User Unsharing.
@@ -272,7 +263,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                                        Map<String, Object> policyWithRoles,
                                        Map<String, Object> expectedSharedResults,
                                        List<String> removingOrgIds,
-                                       Map<String, Object> expectedUnsharedResults) throws InterruptedException {
+                                       Map<String, Object> expectedResults) throws Exception {
 
         testGeneralUserSharing(userIds, policyWithRoles, expectedSharedResults);
 
@@ -289,10 +280,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                 .body(RESPONSE_STATUS, equalTo(RESPONSE_STATUS_VALUE))
                 .body(RESPONSE_DETAILS, equalTo(RESPONSE_DETAIL_VALUE_UNSHARING));
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedUnsharedResults);
-        }
+        validateUserSharingResults(userIds, expectedResults);
     }
 
     // Test cases builders.
