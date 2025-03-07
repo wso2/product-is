@@ -76,14 +76,13 @@ public class UserSharingRestClient extends RestBaseClient {
                 API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + UNSHARE_PATH, tenantDomain);
         generalUserUnshareEndpoint = serverUrl + ISIntegrationTest.getTenantedRelativePath(
                 API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + UNSHARE_WITH_ALL_PATH, tenantDomain);
-
     }
 
     /**
-     * Share users with all.
+     * Share users selectively.
      *
      * @param userShareRequestBody Selective User Share request body.
-     * @throws Exception If an error occurs while sharing users with all.
+     * @throws Exception If an error occurs while sharing users selectively.
      */
     public void shareUsers(UserShareRequestBody userShareRequestBody) throws Exception {
 
@@ -112,10 +111,10 @@ public class UserSharingRestClient extends RestBaseClient {
     }
 
     /**
-     * Unshare users with all.
+     * Unshare users selectively.
      *
      * @param userUnshareRequestBody Selective User Unshare request body.
-     * @throws Exception If an error occurs while unsharing users with all.
+     * @throws Exception If an error occurs while unsharing users selectively.
      */
     public void unshareUsers(UserUnshareRequestBody userUnshareRequestBody) throws Exception {
 
