@@ -73,6 +73,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.everyItem;
@@ -81,6 +82,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
+import static org.awaitility.Awaitility.await;
 
 /**
  * Base test class for the User Sharing REST APIs.
@@ -580,7 +582,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
 
         // Since application sharing is an async operation, wait for some time for it to finish.
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
+        await().atMost(5, TimeUnit.SECONDS).until(() -> true);
     }
 
     // Methods to add users in organizations and sub organizations for testing purposes.
@@ -663,24 +666,85 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     // Method to validate user shared organizations and assigned roles.
 
+    /**
+     * Validates the user sharing results by checking if the users have been shared to the expected organizations
+     * with the expected roles.
+     * This method uses the Awaitility library to wait for up to 20 seconds, polling every 2 seconds, to ensure that
+     * the user sharing results are as expected. If the validation fails within this period, an exception is thrown.
+     *
+     * @param userIds        The list of user IDs to validate.
+     * @param expectedResults A map containing the expected results, including the expected organization count,
+     *                        expected organization IDs, expected organization names, and expected roles per organization.
+     * @throws Exception If an error occurs during validation.
+     */
     protected void validateUserSharingResults(List<String> userIds, Map<String, Object> expectedResults)
             throws Exception {
 
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
+        final Object[] lastException = {null};
+
+        await().atMost(20, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .ignoreExceptions()
+                .until(() -> {
+                    try {
+                        for (String userId : userIds) {
+                            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
+                        }
+                        lastException[0] = null;
+                        return true;
+                    } catch (AssertionError | Exception e) {
+                        lastException[0] = e;
+                        return false;
+                    }
+                });
+
+        if (lastException[0] != null) {
+            throw (Exception) lastException[0];
         }
     }
 
+    /**
+     * Validates user sharing results and retrieves the list of shared user IDs.
+     * This method uses the Awaitility library to wait for up to 20 seconds, polling every 2 seconds,
+     * to ensure that the user sharing results are as expected. If the validation fails within this period,
+     * an exception is thrown.
+     *
+     * @param userIds              The list of user IDs to validate.
+     * @param reSharingSubOrgDetails The details of the sub-organization for re-sharing.
+     * @param expectedSharedResults A map containing the expected results, including the expected organization count,
+     *                              expected organization IDs, expected organization names, and expected roles per organization.
+     * @return A list of shared user IDs.
+     * @throws Exception If an error occurs during validation.
+     */
     protected List<String> validateUserSharingResultsAndGetSharedUsersList(List<String> userIds,
                                                                            Map<String, Object> reSharingSubOrgDetails,
                                                                            Map<String, Object> expectedSharedResults) throws Exception{
 
-        List<String> sharedUserIds = new ArrayList<>();
-        Thread.sleep(5000); // Waiting until user sharing is completed.
-        for (String userId : userIds) {
-            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedSharedResults);
+        final Object[] lastException = {null};
 
+        List<String> sharedUserIds = new ArrayList<>();
+        await().atMost(20, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .ignoreExceptions()
+                .until(() -> {
+                    try {
+                        for (String userId : userIds) {
+                            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedSharedResults);
+                        }
+                        lastException[0] = null;
+                        return true;
+                    } catch (AssertionError | Exception e) {
+                        lastException[0] = e;
+                        return false;
+                    }
+                });
+
+        if (lastException[0] != null) {
+            throw (Exception) lastException[0];
+        }
+
+        // Once assertions pass, extract shared user IDs
+        for (String userId : userIds) {
             Response sharedOrgsResponseOfUserId = getResponseOfGet(USER_SHARING_API_BASE_PATH + "/" + userId + SHARED_ORGANIZATIONS_PATH);
             String sharedUserId = extractSharedUserId(sharedOrgsResponseOfUserId, reSharingSubOrgDetails.get(MAP_ORG_DETAILS_KEY_ORG_NAME).toString());
             sharedUserIds.add(sharedUserId);
