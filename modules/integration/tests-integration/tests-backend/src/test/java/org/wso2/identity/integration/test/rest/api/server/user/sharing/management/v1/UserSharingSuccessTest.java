@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.user.sharing.manageme
 
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -581,6 +582,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL, new JSONObject(readResource(AUTHORIZED_APIS_JSON)));
+        httpClient = HttpClientBuilder.create().build();
     }
 
     private void setupOrganizations() throws Exception {

@@ -21,8 +21,12 @@ package org.wso2.identity.integration.test.rest.api.server.user.sharing.manageme
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -30,6 +34,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.message.BasicHeader;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -72,6 +78,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 
 /**
@@ -84,29 +92,35 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected OAuth2RestClient oAuth2RestClient;
     protected SCIM2RestClient scim2RestClient;
     protected OrgMgtRestClient orgMgtRestClient;
+    protected HttpClient httpClient;
 
     protected Map<String, Map<String, Object>> userDetails;
     protected Map<String, Map<String, Object>> orgDetails;
     protected Map<String, Map<String, Object>> appDetails;
     protected Map<String, Map<String, Object>> roleDetails;
 
-    private static final String API_DEFINITION_NAME = "organization-user-share.yaml";
+    protected static final String API_DEFINITION_NAME = "organization-user-share.yaml";
     protected static final String AUTHORIZED_APIS_JSON = "user-sharing-apis.json";
-    static final String API_VERSION = "v1";
+    protected static final String API_VERSION = "v1";
     private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1";
 
-    static final String SERVER_URL_VERSION = "/api/server/v1";
-    static final String USER_SHARING_API_BASE_PATH = "/users";
-    static final String SHARE_PATH = "/share";
-    static final String SHARE_WITH_ALL_PATH = "/share-with-all";
-    static final String UNSHARE_PATH = "/unshare";
-    static final String UNSHARE_WITH_ALL_PATH = "/unshare-with-all";
-    static final String SHARED_ORGANIZATIONS_PATH = "/shared-organizations";
-    static final String SHARED_ROLES_PATH = "/shared-roles";
+    protected static final String API_SERVER_BASE_PATH = "/api/server/v1";
+    protected static final String ORGANIZATION_API_PATH = "/o";
+    protected static final String USER_SHARING_API_BASE_PATH = "/users";
+    protected static final String SHARE_PATH = "/share";
+    protected static final String SHARE_WITH_ALL_PATH = "/share-with-all";
+    protected static final String UNSHARE_PATH = "/unshare";
+    protected static final String UNSHARE_WITH_ALL_PATH = "/unshare-with-all";
+    protected static final String SHARED_ORGANIZATIONS_PATH = "/shared-organizations";
+    protected static final String SHARED_ROLES_PATH = "/shared-roles";
 
-    static final String PATH_SEPARATOR = "/";
-    static final String QUERY_PARAM_SEPARATOR = "?";
-    static final String QUERY_PARAM_VALUE_SEPARATOR = "=";
+    protected static final String PATH_SEPARATOR = "/";
+    protected static final String QUERY_PARAM_SEPARATOR = "?";
+    protected static final String QUERY_PARAM_VALUE_SEPARATOR = "=";
+
+    protected static final String HEADER_AUTHORIZATION = "Authorization";
+    protected static final String HEADER_AUTHORIZATION_VALUE_BEARER = "Bearer ";
+    protected static final String HEADER_CONTENT_TYPE = "Content-Type";
 
     protected static final String SHARED_TYPE_SHARED = "SHARED";
     protected static final String SHARED_TYPE_OWNER = "OWNER";
@@ -244,6 +258,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_TYPE = "roles.audience.type";
 
     protected static final String ERROR_SETUP_SWAGGER_DEFINITION = "Unable to read the swagger definition %s from %s";
+    protected static final String SHARED_USER_ID_JSON_PATH = "sharedOrganizations.find { it.orgName == '%s' }.sharedUserId";
 
     static {
         try {
@@ -272,6 +287,14 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     }
 
     // Request Sending Methods.
+
+    protected HttpResponse getResponseOfPostToSubOrg(String path, String body, String token) throws Exception {
+
+        HttpPost request = new HttpPost(serverURL + TENANT_PATH + tenant + ORGANIZATION_API_PATH + API_SERVER_BASE_PATH + path);
+        request.setHeaders(getHeaders(token));
+        request.setEntity(new StringEntity(body));
+        return httpClient.execute(request);
+    }
 
     protected HttpResponse sendGetRequest(String endpointURL, HttpClient client) throws IOException {
 
@@ -454,7 +477,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected String getSharedOrgsRolesRef(String userId, String orgId) {
 
-        return SERVER_URL_VERSION + USER_SHARING_API_BASE_PATH + PATH_SEPARATOR + userId + SHARED_ROLES_PATH + QUERY_PARAM_SEPARATOR + QUERY_PARAM_ORG_ID + QUERY_PARAM_VALUE_SEPARATOR + orgId;
+        return API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + PATH_SEPARATOR + userId + SHARED_ROLES_PATH + QUERY_PARAM_SEPARATOR + QUERY_PARAM_ORG_ID + QUERY_PARAM_VALUE_SEPARATOR + orgId;
     }
 
     protected void storeRoleDetails(String audienceType, String audienceName, Map<String, String> rolesOfAudience) {
@@ -996,9 +1019,22 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     // Helper methods.
 
+    protected String extractSharedUserId(Response response, String orgName) {
+        JsonPath jsonPath = response.jsonPath();
+        return jsonPath.getString(String.format(SHARED_USER_ID_JSON_PATH, orgName));
+    }
+
     protected String toJSONString(java.lang.Object object) {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(object);
     }
+
+    private Header[] getHeaders(String token) {
+        return new Header[]{
+                new BasicHeader(HEADER_AUTHORIZATION, HEADER_AUTHORIZATION_VALUE_BEARER + token),
+                new BasicHeader(HEADER_CONTENT_TYPE, String.valueOf(ContentType.JSON))
+        };
+    }
+
 }
