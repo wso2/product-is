@@ -52,6 +52,7 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -125,8 +126,6 @@ public class OAuth2RestClient extends RestBaseClient {
     private final String tokenEndpoint;
 
     public OAuth2RestClient(String backendUrl, Tenant tenantInfo) throws IOException {
-
-        initializeClient();
 
         this.username = tenantInfo.getContextUser().getUserName();
         this.password = tenantInfo.getContextUser().getPassword();
@@ -499,10 +498,14 @@ public class OAuth2RestClient extends RestBaseClient {
     public String getAccessTokenUsingCodeGrantForRootUser(String appId, String username, String password, String scopes,
                                                           String redirectUrl) throws Exception {
 
+        initializeClientWithCookieStore();
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetails(appId);
         String sessionDataKey = initiateAuthRequest(oidcConfig.getClientId(), scopes, redirectUrl, false);
         String authorizationCode = getAuthorizationCode(sessionDataKey, username, password, false, null);
-        return getAccessToken(authorizationCode, oidcConfig.getClientId(), oidcConfig.getClientSecret(), redirectUrl);
+        String accessToken =
+                getAccessToken(authorizationCode, oidcConfig.getClientId(), oidcConfig.getClientSecret(), redirectUrl);
+        client = HttpClients.createDefault();
+        return accessToken;
     }
 
     /**
@@ -521,11 +524,15 @@ public class OAuth2RestClient extends RestBaseClient {
                                                             String username, String password, String scopes,
                                                             String redirectUrl) throws Exception {
 
+        initializeClientWithCookieStore();
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetails(rootAppId);
         String sessionDataKey = initiateAuthRequest(oidcConfig.getClientId(), scopes, redirectUrl, true);
         String subOrgSessionDataKey = getSubOrgSessionDataKey(sessionDataKey, organizationName);
         String authorizationCode = getAuthorizationCode(subOrgSessionDataKey, username, password, true, ordId);
-        return getAccessToken(authorizationCode, oidcConfig.getClientId(), oidcConfig.getClientSecret(), redirectUrl);
+        String accessToken =
+                getAccessToken(authorizationCode, oidcConfig.getClientId(), oidcConfig.getClientSecret(), redirectUrl);
+        client = HttpClients.createDefault();
+        return accessToken;
     }
 
     /**
@@ -681,16 +688,15 @@ public class OAuth2RestClient extends RestBaseClient {
 
         JSONObject responseData = new JSONObject(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
-        initializeClient();
         return responseData.getString(ACCESS_TOKEN);
     }
 
     /**
-     * Initialize the client.
+     * Initialize the client with the cookie store.
      *
      * @throws IOException If an error occurred while initializing the client.
      */
-    private void initializeClient() throws IOException {
+    private void initializeClientWithCookieStore() throws IOException {
         if (client != null) {
             client.close();
         }
