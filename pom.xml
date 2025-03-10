@@ -2572,7 +2572,7 @@
         <identity.apps.console.version>2.43.0</identity.apps.console.version>
         <identity.apps.myaccount.version>2.18.0</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.18.0</identity.apps.core.version>
+        <identity.apps.core.version>2.18.1</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.380</identity.apps.tests.version>
 
