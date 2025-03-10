@@ -339,6 +339,24 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke given endpointURL with params for GET with OAuth2 authentication, using the provided token.
+     *
+     * @param endpointURL Endpoint to be invoked.
+     * @param accessToken OAuth2 access token.
+     * @param queryParams request query parameters
+     * @return Response.
+     */
+    protected Response getResponseOfGetWithOAuth2(String endpointURL, String accessToken,
+                                                  Map<String, Object> queryParams) {
+
+        return given().auth().preemptive().oauth2(accessToken)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .queryParams(queryParams)
+                .when()
+                .get(endpointURL);
+    }
+
+    /**
      * Invoke given endpointUri for GET without authentication.
      *
      * @param endpointUri endpoint to be invoked
