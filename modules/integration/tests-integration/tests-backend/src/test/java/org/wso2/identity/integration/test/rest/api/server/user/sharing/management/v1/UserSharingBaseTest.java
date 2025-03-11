@@ -78,6 +78,87 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.everyItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.API_DEFINITION_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.API_PACKAGE_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.API_SERVER_V1_BASE_PATH;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.APPLICATION_AUDIENCE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ATTRIBUTE_USER_EMAIL_DOMAIN;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ATTRIBUTE_USER_PASSWORD;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ATTRIBUTE_USER_SCHEMA_SCIM2_USER;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.CLAIM_COUNTRY_URI;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.CLAIM_EMAIL_URI;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.CLAIM_GROUPS_URI;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.CLAIM_ROLES_URI;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ERROR_SETUP_SWAGGER_DEFINITION;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.GRANT_AUTHORIZATION_CODE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.GRANT_CLIENT_CREDENTIALS;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.GRANT_IMPLICIT;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.GRANT_ORGANIZATION_SWITCH;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.GRANT_PASSWORD;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.GRANT_REFRESH_TOKEN;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.HEADER_AUTHORIZATION;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.HEADER_AUTHORIZATION_VALUE_BEARER;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.HEADER_CONTENT_TYPE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_APP_AUDIENCE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_APP_DETAILS_OF_SUB_ORGS;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_APP_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_APP_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_APP_SUB_ORG_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_CLIENT_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_CLIENT_SECRET;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_ROLE_IDS_BY_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_APP_DETAILS_KEY_ROLE_NAMES;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_EXPECTED_ORG_COUNT;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_EXPECTED_ORG_IDS;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_EXPECTED_ORG_NAMES;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_GENERAL_POLICY;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_GENERAL_ROLES;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_SELECTIVE_ORG_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_SELECTIVE_POLICY;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_KEY_SELECTIVE_ROLES;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_ORG_DETAILS_KEY_ORG_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_ORG_DETAILS_KEY_ORG_LEVEL;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_ORG_DETAILS_KEY_ORG_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_ORG_DETAILS_KEY_PARENT_ORG_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_DOMAIN_QUALIFIED_USER_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_IS_ROOT_ORG_USER;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_USER_DOMAIN;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_USER_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_USER_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_USER_ORG_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_USER_ORG_LEVEL;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DETAILS_KEY_USER_ORG_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_DOMAIN;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ORGANIZATION_API_PATH;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ORGANIZATION_AUDIENCE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.PATH_SEPARATOR;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.QUERY_PARAM_ORG_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.QUERY_PARAM_SEPARATOR;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.QUERY_PARAM_VALUE_SEPARATOR;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_EMPTY;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_ROLES;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_TYPE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_ROLES_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_ROLES_REF;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_ROLES_SIZE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_SHARED_TYPE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SHARED_ORGS_SIZE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.RESPONSE_LINKS_SIZE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ROOT_ORG_ID;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.ROOT_ORG_NAME;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.SHARED_ORGANIZATIONS_PATH;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.SHARED_ROLES_PATH;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.SHARED_TYPE_SHARED;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.SHARED_USER_ID_JSON_PATH;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.UNDERSCORE;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.USER_SHARING_API_BASE_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 import static org.awaitility.Awaitility.await;
@@ -98,169 +179,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected Map<String, Map<String, Object>> orgDetails;
     protected Map<String, Map<String, Object>> appDetails;
     protected Map<String, Map<String, Object>> roleDetails;
-
-    protected static final String API_DEFINITION_NAME = "organization-user-share.yaml";
-    protected static final String AUTHORIZED_APIS_JSON = "user-sharing-apis.json";
-    protected static final String API_VERSION = "v1";
-    private static final String API_PACKAGE_NAME =
-            "org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1";
-
-    protected static final String API_SERVER_BASE_PATH = "/api/server/v1";
-    protected static final String ORGANIZATION_API_PATH = "/o";
-    protected static final String USER_SHARING_API_BASE_PATH = "/users";
-    protected static final String SHARE_PATH = "/share";
-    protected static final String SHARE_WITH_ALL_PATH = "/share-with-all";
-    protected static final String UNSHARE_PATH = "/unshare";
-    protected static final String UNSHARE_WITH_ALL_PATH = "/unshare-with-all";
-    protected static final String SHARED_ORGANIZATIONS_PATH = "/shared-organizations";
-    protected static final String SHARED_ROLES_PATH = "/shared-roles";
-
-    protected static final String PATH_SEPARATOR = "/";
-    protected static final String QUERY_PARAM_SEPARATOR = "?";
-    protected static final String QUERY_PARAM_VALUE_SEPARATOR = "=";
-
-    protected static final String HEADER_AUTHORIZATION = "Authorization";
-    protected static final String HEADER_AUTHORIZATION_VALUE_BEARER = "Bearer ";
-    protected static final String HEADER_CONTENT_TYPE = "Content-Type";
-
-    protected static final String SHARED_TYPE_SHARED = "SHARED";
-    protected static final String SHARED_TYPE_OWNER = "OWNER";
-    protected static final String SHARED_TYPE_INVITED = "INVITED";
-
-    protected static final String PATH_PARAM_USER_ID = "userId";
-    protected static final String QUERY_PARAM_ORG_ID = "orgId";
-    protected static final String QUERY_PARAM_LIMIT = "limit";
-    protected static final String QUERY_PARAM_AFTER = "after";
-    protected static final String QUERY_PARAM_BEFORE = "before";
-    protected static final String QUERY_PARAM_FILTER = "filter";
-    protected static final String QUERY_PARAM_RECURSIVE = "recursive";
-
-    protected static final String ERROR_CODE_BAD_REQUEST = "UE-10000";
-    protected static final String ERROR_CODE_INVALID_PAGINATION_CURSOR = "ORG-60026";
-    protected static final String ERROR_CODE_SERVER_ERROR = "SE-50000";
-
-    protected static final String ROOT_ORG_NAME = "Super";
-    protected static final String L1_ORG_1_NAME = "L1 - Organization 1";
-    protected static final String L1_ORG_2_NAME = "L1 - Organization 2";
-    protected static final String L1_ORG_3_NAME = "L1 - Organization 3";
-    protected static final String L2_ORG_1_NAME = "L2 - Organization 1";
-    protected static final String L2_ORG_2_NAME = "L2 - Organization 2";
-    protected static final String L2_ORG_3_NAME = "L2 - Organization 3";
-    protected static final String L3_ORG_1_NAME = "L3 - Organization 1";
-
-    protected static final String ROOT_ORG_ID = "10084a8d-113f-4211-a0d5-efe36b082211";
-
-    protected static final String APP_1_NAME = "App 1";
-    protected static final String APP_2_NAME = "App 2";
-
-    protected static final String APPLICATION_AUDIENCE = "application";
-    protected static final String ORGANIZATION_AUDIENCE = "organization";
-
-    protected static final String APP_ROLE_1 = "app-role-1";
-    protected static final String APP_ROLE_2 = "app-role-2";
-    protected static final String APP_ROLE_3 = "app-role-3";
-    protected static final String ORG_ROLE_1 = "org-role-1";
-    protected static final String ORG_ROLE_2 = "org-role-2";
-    protected static final String ORG_ROLE_3 = "org-role-3";
-
-    protected static final String USER_DOMAIN_PRIMARY = "PRIMARY";
-
-    protected static final String ROOT_ORG_USER_1_USERNAME = "rootUser1";
-    protected static final String ROOT_ORG_USER_2_USERNAME = "rootUser2";
-    protected static final String ROOT_ORG_USER_3_USERNAME = "rootUser3";
-    protected static final String L1_ORG_1_USER_1_USERNAME = "l1Org1User1";
-    protected static final String L1_ORG_1_USER_2_USERNAME = "l1Org1User2";
-    protected static final String L1_ORG_1_USER_3_USERNAME = "l1Org1User3";
-    protected static final String ROOT_ORG_USER_DUPLICATED_USERNAME = "rootUserDuplicated";
-
-    protected static final String MAP_KEY_SELECTIVE_ORG_ID = "orgId";
-    protected static final String MAP_KEY_SELECTIVE_ORG_NAME = "orgName";
-    protected static final String MAP_KEY_SELECTIVE_POLICY = "selectivePolicy";
-    protected static final String MAP_KEY_SELECTIVE_ROLES = "selectiveRoles";
-
-    protected static final String MAP_KEY_GENERAL_POLICY = "generalPolicy";
-    protected static final String MAP_KEY_GENERAL_ROLES = "generalRoles";
-
-    protected static final String MAP_KEY_EXPECTED_ORG_COUNT = "expectedOrgCount";
-    protected static final String MAP_KEY_EXPECTED_ORG_IDS = "expectedOrgIds";
-    protected static final String MAP_KEY_EXPECTED_ORG_NAMES = "expectedOrgNames";
-    protected static final String MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG = "expectedRolesPerExpectedOrg";
-
-    protected static final String MAP_ORG_DETAILS_KEY_ORG_NAME = "orgName";
-    protected static final String MAP_ORG_DETAILS_KEY_ORG_ID = "orgId";
-    protected static final String MAP_ORG_DETAILS_KEY_PARENT_ORG_ID = "parentOrgId";
-    protected static final String MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN = "orgSwitchToken";
-    protected static final String MAP_ORG_DETAILS_KEY_ORG_LEVEL = "orgLevel";
-
-    protected static final String MAP_APP_DETAILS_KEY_APP_NAME = "appName";
-    protected static final String MAP_APP_DETAILS_KEY_APP_ID = "appId";
-    protected static final String MAP_APP_DETAILS_KEY_APP_AUDIENCE = "appAudience";
-    protected static final String MAP_APP_DETAILS_KEY_CLIENT_ID = "clientId";
-    protected static final String MAP_APP_DETAILS_KEY_CLIENT_SECRET = "clientSecret";
-    protected static final String MAP_APP_DETAILS_KEY_ROLE_NAMES = "roleNames";
-    protected static final String MAP_APP_DETAILS_KEY_ROLE_IDS_BY_NAME = "roleIdsByName";
-    protected static final String MAP_APP_DETAILS_KEY_APP_DETAILS_OF_SUB_ORGS = "appDetailsOfSubOrgs";
-    protected static final String MAP_APP_DETAILS_KEY_APP_SUB_ORG_NAME = "subOrgName";
-
-    protected static final String MAP_USER_DETAILS_KEY_DOMAIN_QUALIFIED_USER_NAME = "domainQualifiedUserName";
-    protected static final String MAP_USER_DETAILS_KEY_USER_NAME = "userName";
-    protected static final String MAP_USER_DETAILS_KEY_USER_ID = "userId";
-    protected static final String MAP_USER_DETAILS_KEY_USER_DOMAIN = "userDomain";
-    protected static final String MAP_USER_DETAILS_KEY_USER_ORG_NAME = "userOrgName";
-    protected static final String MAP_USER_DETAILS_KEY_USER_ORG_ID = "userOrgId";
-    protected static final String MAP_USER_DETAILS_KEY_USER_ORG_LEVEL = "userOrgLevel";
-    protected static final String MAP_USER_DETAILS_KEY_IS_ROOT_ORG_USER = "isRootOrgUser";
-
-    protected static final String MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_NAME = "userName";
-    protected static final String MAP_USER_DOMAIN_QUALIFIED_USER_NAME_USER_DOMAIN = "userDomain";
-
-    protected static final String SCOPE_INTERNAL_USER_SHARE = "internal_user_share";
-    protected static final String SCOPE_INTERNAL_USER_UNSHARE = "internal_user_unshare";
-    protected static final String SCOPE_INTERNAL_USER_SHARED_ACCESS_VIEW = "internal_user_shared_access_view";
-    protected static final String SCOPE_INTERNAL_ORG_USER_SHARE = "internal_org_user_share";
-    protected static final String SCOPE_INTERNAL_ORG_USER_UNSHARE = "internal_org_user_unshare";
-    protected static final String SCOPE_INTERNAL_ORG_USER_SHARED_ACCESS_VIEW = "internal_org_user_shared_access_view";
-
-    protected static final String GRANT_AUTHORIZATION_CODE = "authorization_code";
-    protected static final String GRANT_IMPLICIT = "implicit";
-    protected static final String GRANT_PASSWORD = "password";
-    protected static final String GRANT_CLIENT_CREDENTIALS = "client_credentials";
-    protected static final String GRANT_REFRESH_TOKEN = "refresh_token";
-    protected static final String GRANT_ORGANIZATION_SWITCH = "organization_switch";
-
-    protected static final String CLAIM_EMAIL_URI = "http://wso2.org/claims/emailaddress";
-    protected static final String CLAIM_COUNTRY_URI = "http://wso2.org/claims/country";
-    protected static final String CLAIM_ROLES_URI = "http://wso2.org/claims/roles";
-    protected static final String CLAIM_GROUPS_URI = "http://wso2.org/claims/groups";
-
-    protected static final String ATTRIBUTE_USER_PASSWORD = "Admin123";
-    protected static final String ATTRIBUTE_USER_EMAIL_DOMAIN = "@gmail.com";
-    protected static final String ATTRIBUTE_USER_SCHEMA_SCIM2_USER = "urn:ietf:params:scim:schemas:core:2.0:User";
-
-    protected static final String RESPONSE_STATUS = "status";
-    protected static final String RESPONSE_DETAILS = "details";
-    protected static final String RESPONSE_STATUS_VALUE = "Processing";
-    protected static final String RESPONSE_DETAIL_VALUE_SHARING = "User sharing process triggered successfully.";
-    protected static final String RESPONSE_DETAIL_VALUE_UNSHARING = "User unsharing process triggered successfully.";
-
-    protected static final String RESPONSE_LINKS_SIZE = "links.size()";
-    protected static final String RESPONSE_LINKS_EMPTY = "links[0].isEmpty()";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS = "sharedOrganizations";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_SIZE = "sharedOrganizations.size()";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_ID = "sharedOrganizations.orgId";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_NAME = "sharedOrganizations.orgName";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_SHARED_USER_ID = "sharedOrganizations.sharedUserId";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_SHARED_TYPE = "sharedOrganizations.sharedType";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_REF = "sharedOrganizations.rolesRef";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES = "roles";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_SIZE = "roles.size()";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_NAME = "roles.displayName";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_NAME = "roles.audience.display";
-    protected static final String RESPONSE_LINKS_SHARED_ORGS_ROLES_AUDIENCE_TYPE = "roles.audience.type";
-
-    protected static final String ERROR_SETUP_SWAGGER_DEFINITION = "Unable to read the swagger definition %s from %s";
-    protected static final String SHARED_USER_ID_JSON_PATH =
-            "sharedOrganizations.find { it.orgName == '%s' }.sharedUserId";
 
     static {
         try {
@@ -292,8 +210,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected HttpResponse getResponseOfPostToSubOrg(String path, String body, String token) throws Exception {
 
-        HttpPost request =
-                new HttpPost(serverURL + TENANT_PATH + tenant + ORGANIZATION_API_PATH + API_SERVER_BASE_PATH + path);
+        HttpPost request = new HttpPost(
+                serverURL + TENANT_PATH + tenant + ORGANIZATION_API_PATH + API_SERVER_V1_BASE_PATH + path);
         request.setHeaders(getHeaders(token));
         request.setEntity(new StringEntity(body));
         return httpClient.execute(request);
@@ -353,7 +271,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
             throws Exception {
 
         Map<String, Object> createdAppDetails = new HashMap<>();
-        String rootOrgAppName = appName + PATH_SEPARATOR + ROOT_ORG_NAME;
+        String rootOrgAppName = appName + UNDERSCORE + ROOT_ORG_NAME;
 
         ApplicationResponseModel application = addApplication(appName);
         String appId = application.getId();
@@ -363,7 +281,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         Map<String, String> roleIdsByName = new HashMap<>();
 
         if (StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audience)) {
-
             Audience appRoleAudience = new Audience(APPLICATION_AUDIENCE, appId);
             for (String roleName : roleNames) {
                 RoleV2 appRole =
@@ -373,11 +290,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
             }
             storeRoleDetails(APPLICATION_AUDIENCE, rootOrgAppName, roleIdsByName);
             createdAppDetails.put(MAP_APP_DETAILS_KEY_APP_AUDIENCE, APPLICATION_AUDIENCE);
-
         } else {
-
             switchApplicationAudience(appId, AssociatedRolesConfig.AllowedAudienceEnum.ORGANIZATION);
-
             for (String roleName : roleNames) {
                 String roleId = scim2RestClient.getRoleIdByName(roleName);
                 roleIdsByName.put(roleName, roleId);
@@ -457,7 +371,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         return roleIdsByName;
     }
 
-    protected Map<String, String> createOrganizationRoles(String orgName, List<String> orgRoleNames)
+    protected Map<String, String> setUpOrganizationRoles(String orgName, List<String> orgRoleNames)
             throws Exception {
 
         Map<String, String> orgRoleIdsByName = new HashMap<>();
@@ -487,7 +401,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
     protected String getSharedOrgsRolesRef(String userId, String orgId) {
 
-        return API_SERVER_BASE_PATH + USER_SHARING_API_BASE_PATH + PATH_SEPARATOR + userId + SHARED_ROLES_PATH +
+        return API_SERVER_V1_BASE_PATH + USER_SHARING_API_BASE_PATH + PATH_SEPARATOR + userId + SHARED_ROLES_PATH +
                 QUERY_PARAM_SEPARATOR + QUERY_PARAM_ORG_ID + QUERY_PARAM_VALUE_SEPARATOR + orgId;
     }
 
@@ -798,12 +712,9 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected void validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(String userId,
                                                                             Map<String, Object> expectedResults) {
 
-        testGetSharedOrganizations(
-                userId,
-                (int) expectedResults.get(MAP_KEY_EXPECTED_ORG_COUNT),
+        testGetSharedOrganizations(userId, (int) expectedResults.get(MAP_KEY_EXPECTED_ORG_COUNT),
                 (List<String>) expectedResults.get(MAP_KEY_EXPECTED_ORG_IDS),
-                (List<String>) expectedResults.get(MAP_KEY_EXPECTED_ORG_NAMES)
-                                  );
+                (List<String>) expectedResults.get(MAP_KEY_EXPECTED_ORG_NAMES));
 
         Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg =
                 (Map<String, List<RoleWithAudience>>) expectedResults.get(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG);
