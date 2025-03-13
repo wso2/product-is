@@ -2514,7 +2514,7 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.22</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.23</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2569,10 +2569,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.44.0</identity.apps.console.version>
+        <identity.apps.console.version>2.47.1</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.0</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.19.2</identity.apps.core.version>
+        <identity.apps.core.version>2.19.3</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.380</identity.apps.tests.version>
 
