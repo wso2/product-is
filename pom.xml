@@ -2437,6 +2437,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
+
         <carbon.identity.framework.version>7.8.66</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2454,7 +2455,7 @@
         <carbon.consent.mgt.version>2.6.7</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.49</identity.governance.version>
+        <identity.governance.version>1.11.50</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
@@ -2464,7 +2465,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.264</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.266</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.53</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.5</identity.inbound.auth.sts.version>
@@ -2514,12 +2515,12 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.22</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.24</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.19</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.20</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.5</identity.local.auth.api.version>
@@ -2545,7 +2546,7 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.123</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.124</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.24</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.43</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
@@ -2569,10 +2570,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.44.0</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.19.0</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.48.1</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.19.1</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.19.2</identity.apps.core.version>
+        <identity.apps.core.version>2.19.7</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.380</identity.apps.tests.version>
 
@@ -2580,7 +2581,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.42</carbon.kernel.version>
+        <carbon.kernel.version>4.10.43</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>
