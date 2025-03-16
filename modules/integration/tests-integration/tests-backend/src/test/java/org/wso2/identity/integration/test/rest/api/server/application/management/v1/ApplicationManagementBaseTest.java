@@ -89,6 +89,7 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
     public void testConclude() throws Exception {
 
         super.conclude();
+        scim2RestClient.closeHttpClient();
     }
 
     @BeforeMethod(alwaysRun = true)
