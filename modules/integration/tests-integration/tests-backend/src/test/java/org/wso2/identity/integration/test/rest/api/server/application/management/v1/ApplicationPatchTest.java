@@ -68,8 +68,8 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
     @AfterClass(alwaysRun = true)
     public void testEnd() throws Exception {
 
-        super.testConclude();
         super.deleteGroups(groupIDs);
+        super.testConclude();
     }
 
     @Test

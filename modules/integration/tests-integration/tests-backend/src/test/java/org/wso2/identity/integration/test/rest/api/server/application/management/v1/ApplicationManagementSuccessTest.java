@@ -85,8 +85,8 @@ public class ApplicationManagementSuccessTest extends ApplicationManagementBaseT
     @AfterClass(alwaysRun = true)
     public void testEnd() throws Exception {
 
-        super.testConclude();
         super.deleteGroups(groupIDs);
+        super.testConclude();
     }
 
     @Test
