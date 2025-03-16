@@ -75,7 +75,6 @@ public class ActionTestBase extends RESTAPIServerTestBase {
     protected static String swaggerDefinition;
 
     static {
-        NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preUpdateProfile");
         NOT_IMPLEMENTED_ACTION_TYPE_PATHS.add("/preRegistration");
 
         String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.action.management.v1";
