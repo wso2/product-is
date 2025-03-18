@@ -1,0 +1,34 @@
+name: '📚 Documentation Issue'
+description: Report an issue if something is missing or incorrect in existing official documents or suggest new content to enhance clarity and usability.
+labels: ["Type/Docs"]
+body:
+  - type: dropdown
+    id: issue-type
+    attributes:
+      multiple: false
+      label: Document issue type
+      description: Categorize the issue by selecting the type that best describes the nature of the documentation issue being created.
+      options:
+        - Type/Bug (Report inaccuracies, outdated information, or missing details in the existing content)
+        - Type/Improvement (Suggest changes to enhance the clarity, usability, or accuracy of existing content)
+        - Type/NewFeature (Propose new topics or content to improve usability or provide additional value)
+        - Type/Task (Operational or administrative tasks related to the documentation)
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please share a clear and concise description of the problem.
+      placeholder: Description
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Enter product version.
+      placeholder: ex. IS 6.1.0
+    validations:
+      required: true

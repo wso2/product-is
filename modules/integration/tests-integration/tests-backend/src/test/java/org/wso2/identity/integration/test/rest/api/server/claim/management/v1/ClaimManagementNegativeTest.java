@@ -18,7 +18,6 @@ package org.wso2.identity.integration.test.rest.api.server.claim.management.v1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -43,8 +42,8 @@ import static org.hamcrest.core.IsNull.notNullValue;
  */
 public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
 
-    private static String testDialectId = "aHR0cDovL3VwZGF0ZWRkdW1teS5vcmcvY6xhaW0";
-    private static String testClaimId = "aHR0cDovL2ludmFsaWRkdW1teS5vcmcvY2xhaW0vZW1haWxhZGRyZXNz";
+    private static final String testDialectId = "aHR0cDovL3VwZGF0ZWRkdW1teS5vcmcvY6xhaW0";
+    private static final String testClaimId = "aHR0cDovL2ludmFsaWRkdW1teS5vcmcvY2xhaW0vZW1haWxhZGRyZXNz";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ClaimManagementNegativeTest(TestUserMode userMode) throws Exception {
@@ -97,6 +96,147 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
     }
 
     @Test
+    public void testRemoveSystemDefaultDialect() {
+
+        String dialectId = "local";
+        removeDialect(dialectId);
+        getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(dialectId))
+                .body("dialectURI", equalTo("http://wso2.org/claims"));
+
+        dialectId = "dXJuOmlldGY6cGFyYW1zOnNjaW06c2NoZW1hczpjb3JlOjIuMA";
+        getResponseOfDelete(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("code", equalTo("CMT-60008"));
+    }
+
+    @Test
+    public void testAddExistingDialect() throws IOException {
+
+        String dialectId = createDialect();
+
+        String body = readResource("claim-management-add-dialect.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CONFLICT)
+                .body("code", equalTo("CMT-60002"));
+
+        removeDialect(dialectId);
+    }
+
+    @Test
+    public void testUpdateDefaultDialectURI() throws IOException {
+
+        String dialectId = "aHR0cDovL3dzbzIub3JnL29pZGMvY2xhaW0";
+        String body = readResource("claim-management-update-dialect.json");
+        Response response = getResponseOfPut(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("code", equalTo("CMT-60007"));
+    }
+
+    @Test
+    public void testGetLocalClaimsWithInvalidClaimId() {
+
+        Response response =
+                getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/" + testClaimId);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50019", testClaimId);
+    }
+
+    @Test
+    public void testUpdateExistingLocalClaimUri() throws IOException {
+
+        String localClaimUri = "http://wso2.org/claims/dummyemailaddress";
+        String claimId = createLocalClaim();
+
+        String body = readResource("claim-management-update-local-claim-conflict.json");
+        Response response = getResponseOfPut(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/" + claimId,
+                body);
+        validateErrorResponse(response, HttpStatus.SC_CONFLICT, "CMT-50021", localClaimUri);
+
+        removeLocalClaim(claimId);
+    }
+
+    @Test
+    public void testChangeSharedProfileValueResolvingMethodOfSystemClaim() throws IOException {
+
+        String firstNameClaimURI = "http://wso2.org/claims/givenname";
+        String firstNameClaimId = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9naXZlbm5hbWU";
+        String body = readResource("claim-management-update-sharedProfileValueResolvingMethod-of-system-claim.json");
+        Response response =
+                getResponseOfPut(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/" + firstNameClaimId,
+                        body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-60013", firstNameClaimURI);
+    }
+
+    @Test
+    public void testAddLocalClaimWithInvalidUsertore() throws IOException {
+
+        String userstore = "DUMMY";
+        String body = readResource("claim-management-add-local-claim-invalid-userstore.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50026", userstore);
+    }
+
+    @Test
+    public void testRemoveLocalClaimWithExternalClaimAssociation() throws IOException {
+
+        String localClaimId = createLocalClaim();
+        String dialectId = createDialect();
+        String claimId = createExternalClaimMappedToCustomLocalClaim(dialectId);
+
+        Response response = getResponseOfDelete(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/"
+                + localClaimId);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50031");
+
+        removeExternalClaim(dialectId, claimId);
+        removeDialect(dialectId);
+        removeLocalClaim(localClaimId);
+    }
+
+    @Test
+    public void testRemoveDefaultLocalClaim() throws IOException {
+
+        String dialectId = "dXJuOmlldGY6cGFyYW1zOnNjaW06c2NoZW1hczpjb3JlOjIuMA";
+        String claimId = "dXJuOmlldGY6cGFyYW1zOnNjaW06c2NoZW1hczpjb3JlOjIuMDptZXRhLnJlc291cmNlVHlwZQ==";
+
+        String body = readResource("claim-management-update-default-external-claim.json");
+        Response response = getResponseOfPut(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId + CLAIMS_ENDPOINT_URI +
+                "/" + claimId, body);
+        response.then()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        String defaultLocalClaimId = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9yZXNvdXJjZVR5cGU=";
+
+        response = getResponseOfDelete(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI +
+                "/" + defaultLocalClaimId);
+        validateErrorResponse(response, HttpStatus.SC_FORBIDDEN, "CMT-60006");
+    }
+
+    @Test
+    public void testAddLocalClaimWithExistingURI() throws IOException {
+
+        String body = readResource("claim-management-add-local-claim-with-existing-uri.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CONFLICT);
+    }
+
+    @Test
     public void testGetClaimsWithInvalidDialectId() {
 
         Response response = getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + "/" + testDialectId + CLAIMS_ENDPOINT_URI);
@@ -122,7 +262,7 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
     public void testGetExternalClaimsWithInvalidClaimId() throws IOException {
 
         String dialectId = createDialect();
-        String claimId = createExternalClaim(dialectId);
+        String claimId = createExternalClaimMappedToDefaultLocalClaim(dialectId);
 
         Response response = getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId + CLAIMS_ENDPOINT_URI +
                 "/" + testClaimId);
@@ -133,19 +273,11 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
     }
 
     @Test
-    public void testGetLocalClaimsWithInvalidClaimId() {
-
-        Response response =
-                getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/" + testClaimId);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50019", testClaimId);
-    }
-
-    @Test
     public void testUpdateExistingExternalClaimUri() throws IOException {
 
         String externalClaimUri = "http://updateddummy.org/claim/emailaddress";
         String dialectId = createDialect();
-        String claimId = createExternalClaim(dialectId);
+        String claimId = createExternalClaimMappedToDefaultLocalClaim(dialectId);
 
         String body = readResource("claim-management-update-external-claim-conflict.json");
         Response response = getResponseOfPut(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId + CLAIMS_ENDPOINT_URI +
@@ -157,17 +289,63 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
     }
 
     @Test
-    public void testUpdateExistingLocalClaimUri() throws IOException {
+    public void testAddExternalClaimWithInvalidDialect() throws IOException {
 
-        String localClaimUri = "http://wso2.org/claims/dummyemailaddress";
-        String claimId = createLocalClaim();
+        String body = readResource("claim-management-add-external-claim.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + testDialectId + CLAIMS_ENDPOINT_URI
+                , body);
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50027", testDialectId);
+    }
 
-        String body = readResource("claim-management-update-local-claim-conflict.json");
-        Response response = getResponseOfPut(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/" + claimId,
+    @Test
+    public void testAddExternalClaimWithInvalidMappedClaim() throws IOException {
+
+        String dialectId = createDialect();
+
+        String body = readResource("claim-management-add-external-claim-invalid-mapped-claim.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId + CLAIMS_ENDPOINT_URI,
                 body);
-        validateErrorResponse(response, HttpStatus.SC_CONFLICT, "CMT-50021", localClaimUri);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50036");
 
-        removeLocalClaim(claimId);
+        removeDialect(dialectId);
+    }
+
+    @Test
+    public void testAddExternalClaimWithExistingClaimURI() throws IOException {
+
+        String dialectId = createDialect();
+        String claimId = createExternalClaimMappedToDefaultLocalClaim(dialectId);
+
+        String body = readResource("claim-management-add-external-claim.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId +
+                CLAIMS_ENDPOINT_URI, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CONFLICT)
+                .body("code", equalTo("CMT-50038"));
+
+        removeExternalClaim(dialectId, claimId);
+        removeDialect(dialectId);
+    }
+
+    @Test
+    public void testAddExternalClaimWithAlreadyMappedLocalClaim() throws IOException {
+
+        String dialectId = createDialect();
+        String claimId = createExternalClaimMappedToDefaultLocalClaim(dialectId);
+
+        String body = readResource("claim-management-add-external-claim-already-mapped.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId +
+                CLAIMS_ENDPOINT_URI, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("code", equalTo("CMT-60004"));
+
+        removeExternalClaim(dialectId, claimId);
+        removeDialect(dialectId);
     }
 
     @Test
@@ -208,52 +386,6 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_IMPLEMENTED, "CMT-50025");
     }
 
-    @Test
-    public void testAddLocalClaimWithInvalidUsertore() throws IOException {
-
-        String userstore = "DUMMY";
-        String body = readResource("claim-management-add-local-claim-invalid-userstore.json");
-        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI, body);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50026", userstore);
-    }
-
-    @Test
-    public void testAddExternalClaimWithInvalidDialect() throws IOException {
-
-        String body = readResource("claim-management-add-external-claim.json");
-        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + testDialectId + CLAIMS_ENDPOINT_URI
-                , body);
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "CMT-50027", testDialectId);
-    }
-
-    @Test
-    public void testRemoveLocalClaimWithExternalClaimAssociation() throws IOException {
-
-        String mappedLocalClaimId = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9lbWFpbGFkZHJlc3M";
-        String dialectId = createDialect();
-        String claimId = createExternalClaim(dialectId);
-
-        Response response =
-                getResponseOfDelete(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI + "/" + mappedLocalClaimId);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50031");
-
-        removeExternalClaim(dialectId, claimId);
-        removeDialect(dialectId);
-    }
-
-    @Test
-    public void testAddExternalClaimWithInvalidMappedClaim() throws IOException {
-
-        String dialectId = createDialect();
-
-        String body = readResource("claim-management-add-external-claim-invalid-mapped-claim.json");
-        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId + CLAIMS_ENDPOINT_URI,
-                body);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "CMT-50036");
-
-        removeDialect(dialectId);
-    }
-
     private String createDialect() throws IOException {
 
         String body = readResource("claim-management-add-dialect.json");
@@ -277,9 +409,24 @@ public class ClaimManagementNegativeTest extends ClaimManagementTestBase {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    private String createExternalClaim(String dialectId) throws IOException {
+    private String createExternalClaimMappedToDefaultLocalClaim(String dialectId) throws IOException {
 
         String body = readResource("claim-management-add-external-claim.json");
+        Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId +
+                CLAIMS_ENDPOINT_URI, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        return location.substring(location.lastIndexOf("/") + 1);
+    }
+
+    private String createExternalClaimMappedToCustomLocalClaim(String dialectId) throws IOException {
+
+        String body = readResource("claim-management-add-external-claim-mapped-to-custom-local-claim.json");
         Response response = getResponseOfPost(CLAIM_DIALECTS_ENDPOINT_URI + "/" + dialectId +
                 CLAIMS_ENDPOINT_URI, body);
         response.then()

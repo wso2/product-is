@@ -71,8 +71,8 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
 
     // Custom schema related constants.
-    private static final String CUSTOM_SCHEMA_URI = "urn:scim:wso2:schema";
-    private static final String CUSTOM_SCHEMA_URI_WITH_ESCAPE_CHARS = "\"urn:scim:wso2:schema\"";
+    private static final String CUSTOM_SCHEMA_URI = "urn:scim:schemas:extension:custom:User";
+    private static final String CUSTOM_SCHEMA_URI_WITH_ESCAPE_CHARS = "\"urn:scim:schemas:extension:custom:User\"";
     // Country claim related constants.
     private static final String COUNTRY_CLAIM_ATTRIBUTE_NAME = "country";
     private static final String COUNTRY_CLAIM_ATTRIBUTE_URI = CUSTOM_SCHEMA_URI + ":" + COUNTRY_CLAIM_ATTRIBUTE_NAME;
@@ -82,12 +82,12 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     private static final String COUNTRY_LOCAL_CLAIM_VALUE_AFTER_PUT = "India";
     // Manager claim related constants.
     private static final String MANAGER_CLAIM_ATTRIBUTE_NAME = "manager";
-    private static final String MANAGER_CLAIM_ATTRIBUTE_URI = "urn:scim:wso2:schema:manager";
+    private static final String MANAGER_CLAIM_ATTRIBUTE_URI = "urn:scim:schemas:extension:custom:User:manager";
     private static final String MANAGER_EMAIL_CLAIM_ATTRIBUTE_NAME = "email";
     private static final String MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI =
             MANAGER_CLAIM_ATTRIBUTE_URI + "." + MANAGER_EMAIL_CLAIM_ATTRIBUTE_NAME;
     private static final String MANAGER_LOCAL_CLAIM_URI = "http://wso2.org/claims/manager";
-    private static final String MANAGER_EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
+    private static final String MANAGER_EMAIL_LOCAL_CLAIM_URI = "http://wso2.org/claims/emails.work";
     private static final String MANAGER_EMAIL_LOCAL_CLAIM_VALUE = "piraveena@gmail.com";
     private static final String MANAGER_EMAIL_LOCAL_CLAIM_VALUE_AFTER_REPLACE = "piraveenaReplace@gmail.com";
 
@@ -132,6 +132,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
                     MANAGER_EMAIL_CLAIM_ATTRIBUTE_URI);
             claimMetadataManagementServiceClient.removeExternalClaim(CUSTOM_SCHEMA_URI, MANAGER_CLAIM_ATTRIBUTE_URI);
             claimMetadataManagementServiceClient.removeLocalClaim(MANAGER_LOCAL_CLAIM_URI);
+            claimMetadataManagementServiceClient.removeClaimDialect(CUSTOM_SCHEMA_URI);
         } catch (RemoteException | ClaimMetadataManagementServiceClaimMetadataException e) {
            log.error(e);
         }
@@ -144,7 +145,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
         RestAssured.basePath = basePath;
     }
 
-    @Test(description = "Creates simple attribute and complex attributes in urn:scim:wso2:schema.")
+    @Test(description = "Creates simple attribute and complex attributes in urn:scim:schemas:extension:custom:User.")
     private void createClaims() throws Exception {
 
         AutomationContext context = new AutomationContext("IDENTITY", mode);
@@ -154,6 +155,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
         claimMetadataManagementServiceClient = new ClaimMetadataManagementServiceClient(backendURL, cookie);
 
         //Set claims.
+        setCustomDialect();
         setSimpleAttribute();
         setComplexAttribute();
 
@@ -352,6 +354,13 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
         getResponseOfGet(userIdEndpointURL, SCIM_CONTENT_TYPE).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    private void setCustomDialect() throws Exception {
+
+        ClaimDialectDTO claimDialectDTO = new ClaimDialectDTO();
+        claimDialectDTO.setClaimDialectURI(CUSTOM_SCHEMA_URI);
+        claimMetadataManagementServiceClient.addClaimDialect(claimDialectDTO);
     }
 
     private void setSimpleAttribute() throws Exception {

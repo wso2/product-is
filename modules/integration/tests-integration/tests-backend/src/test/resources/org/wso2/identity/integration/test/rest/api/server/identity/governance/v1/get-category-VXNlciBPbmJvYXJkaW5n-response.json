@@ -58,6 +58,12 @@
           "description": "Enable user account confirmation when the user account is not locked on creation"
         },
         {
+          "name": "SelfRegistration.ShowUsernameUnavailability",
+          "value": "true",
+          "displayName": "Show username unavailability",
+          "description": "Show a descriptive error message to the user if the username is already taken. However, this may lead to username enumeration"
+        },
+        {
           "name": "SelfRegistration.Notification.InternallyManage",
           "value": "true",
           "displayName": "Manage notifications sending internally",

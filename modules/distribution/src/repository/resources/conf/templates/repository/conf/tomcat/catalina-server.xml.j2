@@ -27,12 +27,14 @@
     <Service className="org.wso2.carbon.tomcat.ext.service.ExtendedStandardService" name="Catalina">
 
        {% for transport in custom_transport %}
+       {% if transport != custom_transport.x509 %}
         <Connector
             {% for property_name,property_value in transport.properties.items() %}
                 {{property_name}}="{{property_value}}"
             {% endfor %}
         >
         </Connector>
+       {% endif %}
        {% endfor %}
        <!--
             optional attributes:
@@ -75,6 +77,15 @@
        </Connector>
        {% endif %}
 
+       {% if custom_transport.x509 %}
+        <Connector
+        {% for property_name,property_value in custom_transport.x509.properties.items() %}
+                        {{property_name}}="{{property_value}}"
+        {% endfor %}
+        >
+        </Connector>
+        {% endif %}
+
         <Engine name="Catalina" defaultHost="localhost">
 
             <!--Realm className="org.apache.catalina.realm.MemoryRealm" pathname="${carbon.home}/repository/conf/tomcat/tomcat-users.xml"/-->
@@ -106,6 +117,7 @@
                        />
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.RequestEncodingValve" encoding="UTF-8"/>
                 <Valve className="org.wso2.carbon.identity.organization.management.tomcat.ext.tenant.resolver.CarbonContextCreatorValve"/>
+                <Valve className="org.wso2.carbon.identity.core.context.valve.IdentityContextCreatorValve"/>
                 {% if http_access_log.useLogger is sameas true %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.ConfigurableLoggerAccessLogValve"
                                     pattern="{{http_access_log.pattern}}"/>

@@ -1,0 +1,64 @@
+name: Label New Document Issues
+
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  label_issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Check if issue has Type/Docs label
+        id: check_label
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const docsLabel = "Type/Docs";
+            if (issue.labels.some(label => label.name === docsLabel)) {
+              core.setOutput("has_docs_label", "true");
+            } else {
+              core.setOutput("has_docs_label", "false");
+            }
+      
+      - name: Read issue content and determine label
+        id: determine_label
+        if: steps.check_label.outputs.has_docs_label == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || "";
+            const labels = ["Type/Bug", "Type/Improvement", "Type/NewFeature", "Type/Task"];
+            let assignedLabel = "Type/Bug"; // Default label
+            
+            for (const label of labels) {
+              if (body.includes(label)) {
+                assignedLabel = label;
+                break;
+              }
+            }
+            
+            core.setOutput("label", assignedLabel);
+      
+      - name: Assign labels
+        if: steps.check_label.outputs.has_docs_label == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issueNumber = context.payload.issue.number;
+            const newLabel = "${{ steps.determine_label.outputs.label }}";
+            const currentLabels = context.payload.issue.labels.map(label => label.name);
+            
+            const labelsToAdd = new Set([...currentLabels, newLabel]);
+            
+            await github.rest.issues.setLabels({
+              owner,
+              repo,
+              issue_number: issueNumber,
+              labels: Array.from(labelsToAdd)
+            });

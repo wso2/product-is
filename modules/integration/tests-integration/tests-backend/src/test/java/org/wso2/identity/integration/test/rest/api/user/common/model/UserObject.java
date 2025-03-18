@@ -33,8 +33,10 @@ public class UserObject {
     private String userName;
     private String password;
     private List<Email> emails = null;
+    private List<PhoneNumbers> phoneNumbers = null;
     private String locale;
     private ScimSchemaExtensionEnterprise scimSchemaExtensionEnterprise;
+    private ScimSchemaExtensionSystem scimSchemaExtensionSystem;
 
     /**
      *
@@ -144,6 +146,31 @@ public class UserObject {
         return this;
     }
 
+    public UserObject phoneNumbers(List<PhoneNumbers> phoneNumbers) {
+
+        this.phoneNumbers = phoneNumbers;
+        return this;
+    }
+
+    @ApiModelProperty()
+    @JsonProperty("phoneNumbers")
+    @Valid
+    public List<PhoneNumbers> getPhoneNumbers() {
+        return phoneNumbers;
+    }
+
+    public void setPhoneNumbers(List<PhoneNumbers> phoneNumbers) {
+        this.phoneNumbers = phoneNumbers;
+    }
+
+    public UserObject addPhoneNumbers(PhoneNumbers phoneNumbers) {
+        if (this.phoneNumbers == null) {
+            this.phoneNumbers = new ArrayList<>();
+        }
+        this.phoneNumbers.add(phoneNumbers);
+        return this;
+    }
+
     /**
      *
      **/
@@ -184,6 +211,26 @@ public class UserObject {
         this.scimSchemaExtensionEnterprise = scimSchemaExtensionEnterprise;
     }
 
+    /**
+     *
+     **/
+    public UserObject scimSchemaExtensionSystem(ScimSchemaExtensionSystem scimSchemaExtensionSystem) {
+
+        this.scimSchemaExtensionSystem = scimSchemaExtensionSystem;
+        return this;
+    }
+
+    @ApiModelProperty()
+    @JsonProperty("urn:scim:wso2:schema")
+    @Valid
+    public ScimSchemaExtensionSystem getScimSchemaExtensionSystem() {
+        return scimSchemaExtensionSystem;
+    }
+
+    public void setScimSchemaExtensionSystem(ScimSchemaExtensionSystem scimSchemaExtensionSystem) {
+        this.scimSchemaExtensionSystem = scimSchemaExtensionSystem;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -201,13 +248,15 @@ public class UserObject {
                 Objects.equals(this.password, user.password) &&
                 Objects.equals(this.emails, user.emails) &&
                 Objects.equals(this.locale, user.locale) &&
-                Objects.equals(this.scimSchemaExtensionEnterprise, user.scimSchemaExtensionEnterprise);
+                Objects.equals(this.scimSchemaExtensionEnterprise, user.scimSchemaExtensionEnterprise) &&
+                Objects.equals(this.scimSchemaExtensionSystem, user.scimSchemaExtensionSystem);
 
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(schemas, name, userName, password, emails, locale, scimSchemaExtensionEnterprise);
+        return Objects.hash(schemas, name, userName, password, emails, locale, scimSchemaExtensionEnterprise,
+                scimSchemaExtensionSystem);
     }
 
     @Override
@@ -221,6 +270,7 @@ public class UserObject {
                 "    emails: " + toIndentedString(emails) + "\n" +
                 "    locale: " + toIndentedString(locale) + "\n" +
                 "    urn:ietf:params:scim:schemas:extension:enterprise:2.0:User: " + toIndentedString(scimSchemaExtensionEnterprise) + "\n" +
+                "    urn:scim:wso2:schema: " + toIndentedString(scimSchemaExtensionSystem) + "\n" +
                 "}";
     }
 

@@ -35,8 +35,13 @@ import org.wso2.carbon.user.mgt.stub.types.carbon.UserRealmInfo;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 
+import java.util.Arrays;
 import java.io.File;
+import java.util.Collections;
+import java.util.Set;
+
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
@@ -46,6 +51,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     protected static final String EVERYONE_ROLE = "Internal/everyone";
     protected UserManagementClient userMgtClient;
     protected AuthenticatorClient authenticatorClient;
+    protected ClaimManagementRestClient claimManagementRestClient;
     protected String newUserName;
     protected String newUserRole;
     protected String newUserPassword;
@@ -56,12 +62,15 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
         authenticatorClient = new AuthenticatorClient(backendURL);
+        claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
+
         setUserName();
         setUserPassword();
         setUserRole();
         Assert.assertNotNull(newUserName, "Please set a value to userName");
         Assert.assertNotNull(newUserRole, "Please set a value to userRole");
 
+        updateExcludedUserStoresClaimProperty(claimManagementRestClient,false);
     }
 
     public void clean() throws Exception {
@@ -78,6 +87,7 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
         if (userMgtClient.roleNameExists(newUserRole + "tmp")) {
             userMgtClient.deleteRole(newUserRole + "tmp");
         }
+        updateExcludedUserStoresClaimProperty(claimManagementRestClient,true);
     }
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
@@ -304,27 +314,23 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
                 = new UserProfileMgtServiceClient(backendURL, getSessionCookie());
         UserProfileDTO profile
                 = userProfileMgtServiceClient.getUserProfile(newUserName, "default");
-        UserFieldDTO[] fields = userProfileMgtServiceClient.getProfileFieldsForInternalStore().getFieldValues();
         String profileConfigs = profile.getProfileName();
-        for (UserFieldDTO field : fields) {
-            if (field.getDisplayName().equalsIgnoreCase("Last Name")) {
-                field.setFieldValue(newUserName + "LastName");
-                continue;
-            }
 
-            if (field.getRequired()) {
-                if (field.getDisplayName().equalsIgnoreCase("Email")) {
-                    field.setFieldValue(newUserName + "@wso2.com");
-                } else {
-                    field.setFieldValue(newUserName);
+        UserFieldDTO[] fields = Arrays.stream(
+                userProfileMgtServiceClient.getProfileFieldsForInternalStore().getFieldValues())
+            .map(field -> {
+                if ("Last Name".equalsIgnoreCase(field.getDisplayName())) {
+                    field.setFieldValue(newUserName + "LastName");
+                } else if (field.getRequired()) {
+                    field.setFieldValue("Email".equalsIgnoreCase(field.getDisplayName())
+                            ? newUserName + "@wso2.com"
+                            : newUserName);
+                } else if (field.getFieldValue() == null) {
+                    field.setFieldValue("");
                 }
-                continue;
-            }
-            if (field.getFieldValue() == null) {
-                field.setFieldValue("");
-            }
+                return field;
+            }).toArray(UserFieldDTO[]::new);
 
-        }
         //creating a new profile with updated values
         UserProfileDTO newProfile = new UserProfileDTO();
         newProfile.setProfileName(profile.getProfileName());
@@ -436,5 +442,15 @@ public abstract class UserManagementServiceAbstractTest extends ISIntegrationTes
     protected abstract void setUserPassword();
 
     protected abstract void setUserRole();
+
+    /**
+     * Update the excluded user stores claim property.
+     *
+     * @param claimManagementRestClient ClaimManagementRestClient.
+     * @param reset Boolean value to reset the excluded user stores claim property.
+     * @throws Exception Exception on updating the excluded user stores claim property.
+     */
+    protected void updateExcludedUserStoresClaimProperty(ClaimManagementRestClient claimManagementRestClient,
+                                                         Boolean reset) throws Exception {}
 
 }

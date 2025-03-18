@@ -21,11 +21,27 @@ package org.wso2.identity.integration.test.user.mgt;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 
-import java.io.File;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.HashSet;
+
+import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
 
 public class ReadWriteLDAPUserStoreManagerTestCase extends UserManagementServiceAbstractTest {
+
+    private static final String EMAIL_ADDRESSES_CLAIM_UPDATE_TO_EXCLUDE_USER_STORE =
+            "email-addresses-claim-update-to-exclude-userstore.json";
+    private static final String EMAIL_ADDRESSES_CLAIM_UPDATE_TO_RESET_EXCLUDED_USER_STORES =
+            "email-addresses-claim-update-to-reset-excluded-userstores.json";
+    private static final String MOBILE_NUMBERS_CLAIM_UPDATE_TO_EXCLUDE_USER_STORE =
+            "mobile-numbers-claim-update-to-exclude-userstore.json";
+    private static final String MOBILE_NUMBERS_CLAIM_UPDATE_TO_RESET_EXCLUDED_USER_STORES =
+            "mobile-numbers-claim-update-to-reset-excluded-userstores.json";
+    private static final String LOCAL_CLAIM_DIALECT = "local";
+    private static final String EMAIL_ADDRESSES_CLAIM_ID = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9lbWFpbEFkZHJlc3Nlcw";
+    private static final String MOBILE_NUMBERS_CLAIM_ID = "aHR0cDovL3dzbzIub3JnL2NsYWltcy9tb2JpbGVOdW1iZXJz";
 
     @BeforeClass(alwaysRun = true)
     public void configureServer() throws Exception {
@@ -51,6 +67,30 @@ public class ReadWriteLDAPUserStoreManagerTestCase extends UserManagementService
     @Override
     protected void setUserRole() {
        newUserRole = "ReadWriteLDAPUserRole";
+    }
+
+    @Override
+    protected void updateExcludedUserStoresClaimProperty(ClaimManagementRestClient claimManagementRestClient,
+                                                         Boolean reset) throws Exception {
+
+        String emailAddressesClaimUpdateRequest;
+        String mobileNumbersClaimUpdateRequest;
+        if (reset) {
+            emailAddressesClaimUpdateRequest =
+                    readResource(EMAIL_ADDRESSES_CLAIM_UPDATE_TO_RESET_EXCLUDED_USER_STORES, this.getClass());
+            mobileNumbersClaimUpdateRequest =
+                    readResource(MOBILE_NUMBERS_CLAIM_UPDATE_TO_RESET_EXCLUDED_USER_STORES, this.getClass());
+        } else {
+            emailAddressesClaimUpdateRequest =
+                    readResource(EMAIL_ADDRESSES_CLAIM_UPDATE_TO_EXCLUDE_USER_STORE, this.getClass());
+            mobileNumbersClaimUpdateRequest =
+                    readResource(MOBILE_NUMBERS_CLAIM_UPDATE_TO_EXCLUDE_USER_STORE, this.getClass());
+        }
+
+        claimManagementRestClient.updateClaim(LOCAL_CLAIM_DIALECT, EMAIL_ADDRESSES_CLAIM_ID,
+                emailAddressesClaimUpdateRequest);
+        claimManagementRestClient.updateClaim(LOCAL_CLAIM_DIALECT, MOBILE_NUMBERS_CLAIM_ID,
+                mobileNumbersClaimUpdateRequest);
     }
 }
 

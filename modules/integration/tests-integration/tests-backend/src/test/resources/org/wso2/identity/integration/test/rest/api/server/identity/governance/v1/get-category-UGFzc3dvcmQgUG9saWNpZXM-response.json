@@ -22,46 +22,6 @@
           "description": "Restrict using this number of last used passwords during password update."
         }
       ]
-    },
-    {
-      "id": "cGFzc3dvcmRQb2xpY3k",
-      "name": "passwordPolicy",
-      "category": "Password Policies",
-      "friendlyName": "Password Patterns",
-      "order": 0,
-      "subCategory": "DEFAULT",
-      "properties": [
-        {
-          "name": "passwordPolicy.enable",
-          "value": "false",
-          "displayName": "Validate passwords based on a policy pattern",
-          "description": "Validate user passwords against a policy"
-        },
-        {
-          "name": "passwordPolicy.min.length",
-          "value": "6",
-          "displayName": "Minimum number of characters",
-          "description": "Minimum number of characters in the password."
-        },
-        {
-          "name": "passwordPolicy.max.length",
-          "value": "12",
-          "displayName": "Maximum number of characters",
-          "description": "Maximum number of characters in the password."
-        },
-        {
-          "name": "passwordPolicy.pattern",
-          "value": "^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&*])).{0,100}$",
-          "displayName": "Password pattern regex",
-          "description": "The regular expression pattern to validate the password."
-        },
-        {
-          "name": "passwordPolicy.errorMsg",
-          "value": "'Password pattern policy violated. Password should contain a digit[0-9], a lower case letter[a-z], an upper case letter[A-Z], one of !@#$%&* characters'",
-          "displayName": "Error message on pattern violation",
-          "description": "This error message will be displayed when a pattern violation is detected."
-        }
-      ]
     }
   ]
 }

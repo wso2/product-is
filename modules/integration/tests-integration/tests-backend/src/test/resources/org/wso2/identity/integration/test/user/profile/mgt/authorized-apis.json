@@ -1,0 +1,37 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_delete"
+  ],
+  "/o/scim2/Users": [
+    "internal_org_user_mgt_create",
+    "internal_org_user_mgt_view",
+    "internal_org_user_mgt_list",
+    "internal_org_user_mgt_update",
+    "internal_org_user_mgt_delete"
+  ],
+  "/o/api/server/v1/organizations": [
+    "internal_org_organization_view",
+    "internal_org_organization_create",
+    "internal_org_organization_delete"
+  ],
+  "/o/scim2/Roles": [
+    "internal_org_role_mgt_view",
+    "internal_org_role_mgt_update"
+  ],
+  "/o/scim2/Groups": [
+    "internal_org_group_mgt_create",
+    "internal_org_group_mgt_view",
+    "internal_org_group_mgt_update",
+    "internal_org_group_mgt_delete"
+  ],
+  "/o/api/server/v1/applications": [
+    "internal_org_application_mgt_view",
+    "internal_org_application_mgt_update"
+  ],
+  "/o/api/server/v1/claim-dialects": [
+    "internal_org_claim_meta_view",
+    "internal_org_claim_meta_update"
+  ]
+}

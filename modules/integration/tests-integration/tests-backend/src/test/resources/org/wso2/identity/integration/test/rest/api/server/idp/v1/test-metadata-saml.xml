@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EntityDescriptor entityID="https://test.idp.com" xmlns="urn:oasis:names:tc:SAML:2.0:metadata">
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+
+        <!-- Single Sign-On Service -->
+        <SingleSignOnService
+                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                Location="https://test.idp.com/sso"/>
+
+        <SingleSignOnService
+                Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+                Location="https://test.idp.com/sso"/>
+
+    </IDPSSODescriptor>
+
+    <!-- Organization Information -->
+    <Organization>
+        <OrganizationName xml:lang="en">Test Identity Provider</OrganizationName>
+        <OrganizationDisplayName xml:lang="en">Test IdP</OrganizationDisplayName>
+        <OrganizationURL xml:lang="en">https://test.idp.com</OrganizationURL>
+    </Organization>
+
+    <!-- Contact Information -->
+    <ContactPerson contactType="technical">
+        <GivenName>Support Team</GivenName>
+        <EmailAddress>support@test.com</EmailAddress>
+    </ContactPerson>
+</EntityDescriptor>

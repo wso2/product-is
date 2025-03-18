@@ -315,6 +315,14 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testAddDiscoveryAttributesWhenAlreadyAdded")
+    public void testAddDiscoveryWithEmptyPayload() {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
+        Response response = getResponseOfPostWithOAuth2(endpointURL, StringUtils.EMPTY, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "UE-10000");
+    }
+
+    @Test(dependsOnMethods = "testAddDiscoveryWithEmptyPayload")
     public void prepareForTestInvalidLoginHintParamInAuthRequest() throws Exception {
 
         switchedM2MToken = orgMgtRestClient.switchM2MToken(organizationIDs.get(0));
@@ -538,32 +546,6 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
         Response response = getResponseOfGetWithOAuth2(url, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
-    }
-
-    /*
-     * TODO: After the issue https://github.com/wso2/product-is/issues/21025 is fixed,
-     * remove the method testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero
-     * along with its data provider organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider.
-     */
-    @DataProvider(name = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
-    public Object[][] organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider() {
-
-        return new Object[][]{
-                {"20", "0"},
-                {"25", "0"}
-        };
-    }
-
-    @Test(dependsOnMethods = "testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset",
-            dataProvider = "organizationDiscoveryInvalidOffsetAtLimitAndLimitZeroDataProvider")
-    public void testGetPaginatedOrganizationsDiscoveryWithInvalidOffsetAndLimitZero(String offset,
-                                                                                    String limit) {
-
-        String url = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH + QUESTION_MARK +
-                OFFSET_QUERY_PARAM + EQUAL + offset + AMPERSAND + LIMIT_QUERY_PARAM + EQUAL + limit;
-
-        Response response = getResponseOfGetWithOAuth2(url, m2mToken);
-        validateErrorResponse(response, HttpStatus.SC_INTERNAL_SERVER_ERROR, ERROR_CODE_SERVER_ERROR);
     }
 
     @Test(dependsOnMethods = "testGetPaginatedOrganizationsDiscoveryWithInvalidLimitAndOffset")

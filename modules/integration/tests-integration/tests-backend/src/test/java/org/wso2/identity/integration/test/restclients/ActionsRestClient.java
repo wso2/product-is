@@ -22,11 +22,14 @@ import io.restassured.http.ContentType;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
+import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -38,8 +41,11 @@ import java.io.IOException;
 public class ActionsRestClient extends RestBaseClient {
 
     private static final String PRE_ISSUE_ACCESS_TOKEN_TYPE = "preIssueAccessToken";
+    private static final String PRE_UPDATE_PASSWORD_TYPE = "preUpdatePassword";
     private static final String ACTIONS_PATH = "/actions";
     private static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
+    private static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
+    private static final String ACTION_ACTIVATE_PATH = "/activate";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -78,6 +84,43 @@ public class ActionsRestClient extends RestBaseClient {
     }
 
     /**
+     * Activate a given action by id.
+     *
+     * @param actionType  Type of the action
+     * @param actionId    ID of the action
+     * @throws IOException If an error occurred while activating the action
+     */
+    public void activateAction(String actionType, String actionId) throws IOException {
+
+        String endPointUrl = getActionEndpointOfType(actionType) + "/" + actionId + ACTION_ACTIVATE_PATH;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, StringUtils.EMPTY, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
+        }
+    }
+
+    /**
+     * Update an action of the specified type by the provided ID.
+     *
+     * @param actionType  Type of action
+     * @param actionId    ID of the action
+     * @param actionModel Request object to update the action
+     * @return Status of the action update
+     * @throws IOException If an error occurred while updating the action
+     */
+    public boolean updateAction(String actionType, String actionId, ActionUpdateModel actionModel)
+            throws IOException {
+
+        String jsonRequestBody = toJSONString(actionModel);
+
+        String endPointUrl;
+        endPointUrl = getActionEndpointOfType(actionType) + "/" + actionId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequestBody, getHeaders())) {
+            return response.getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+        }
+    }
+
+    /**
      * Delete an action of the specified type by the provided ID.
      *
      * @param actionType Type of action
@@ -106,6 +149,8 @@ public class ActionsRestClient extends RestBaseClient {
         switch (actionType) {
             case PRE_ISSUE_ACCESS_TOKEN_TYPE:
                 return actionsBasePath + PRE_ISSUE_ACCESS_TOKEN_PATH;
+            case PRE_UPDATE_PASSWORD_TYPE:
+                return actionsBasePath + PRE_UPDATE_PASSWORD_PATH;
             default:
                 return StringUtils.EMPTY;
         }

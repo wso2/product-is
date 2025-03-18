@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2016-2025, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -64,7 +64,7 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
     private static final String CONNECTOR_ACCOUNT_LOCK_HANDLER = "YWNjb3VudC5sb2NrLmhhbmRsZXI";
     private static final String LOCALE_ATTRIBUTE = "locale";
     private static final String USERS_PATH = "users";
-    private static final String USER_SCHEMA = "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";
+    private static final String SCIM_SYSTEM_USER_SCHEMA = "urn:scim:wso2:schema";
 
 
     private SCIM2RestClient scim2RestClient;
@@ -106,7 +106,8 @@ public class AccountLockEnabledTestCase extends ISIntegrationTest {
             }
 
 
-            JSONObject userParameters = (JSONObject) scim2RestClient.getUser(testLockUserId, null).get(USER_SCHEMA);
+            JSONObject userParameters = (JSONObject) scim2RestClient.getUser(testLockUserId, null)
+                    .get(SCIM_SYSTEM_USER_SCHEMA);
             Assert.assertTrue((Boolean) userParameters.get(ACCOUNT_LOCK_ATTRIBUTE),
                     "Test Failure : User Account Didn't Locked Properly");
         } catch (Exception e) {

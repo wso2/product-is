@@ -77,7 +77,6 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
         registerApplication();
     }
 
-
     @Test(description = "This test case tests the JWT access token generation using password grant type.",
             dependsOnMethods = "testRegisterApplication")
     public void testPasswordGrantBasedAccessTokenGeneration() throws IOException, URISyntaxException, ParseException,
@@ -139,13 +138,14 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
         // Get the user info from the JWT access token.
         JSONObject jwtJsonObject = new JSONObject(new String(Base64.decodeBase64(accessToken.split(
                 "\\.")[1])));
-        String email = jwtJsonObject.get(EMAIL_OIDC_CLAIM).toString();
-        String country = ((JSONObject) jwtJsonObject.get(ADDRESS_OIDC_CLAIM)).get(COUNTRY_OIDC_CLAIM).toString();
 
-        // Check the user info of the JWT access token.
-        Assert.assertEquals(USER_EMAIL, email, "Requested user claim (email) is not present in the JWT access token.");
-        Assert.assertEquals(COUNTRY, country, "Requested user claim (country) is not present in the JWT "
-                + "access token.");
+        // Check if user claims are present in access token.
+        try {
+            Object emailClaim = jwtJsonObject.get(EMAIL_OIDC_CLAIM);
+            Assert.fail("Requested user claim (email) is present in the JWT access token.");
+        } catch (JSONException e) {
+            Assert.assertTrue(true, "Requested user claim (email) is present in the JWT access token.");
+        }
 
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), USER_EMAIL,
                 "Requested user claims is not returned back with the ID token.");

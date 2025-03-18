@@ -256,7 +256,7 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
 
         HttpResponse response = sendPostRequest(OAuth2Constant.PAR_ENDPOINT, urlParameters);
         assertResponse(response, Response.Status.UNAUTHORIZED.getStatusCode(),
-                "A valid OAuth client could not be found for client_id: invalid_consumerKey",
+                "Client credentials are invalid.",
                 "invalid_client");
     }
 

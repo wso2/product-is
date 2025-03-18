@@ -1,0 +1,30 @@
+{
+  "claimURI": "http://wso2.org/claims/emailAddresses",
+  "description": "emailAddresses",
+  "displayOrder": 0,
+  "displayName": "emailAddresses",
+  "readOnly": false,
+  "required": false,
+  "supportedByDefault": true,
+  "sharedProfileValueResolvingMethod": "FromOrigin",
+  "attributeMapping": [
+    {
+      "mappedAttribute": "emailAddresses",
+      "userstore": "PRIMARY"
+    }
+  ],
+  "properties": [
+    {
+      "key": "isSystemClaim",
+      "value": "true"
+    },
+    {
+      "key": "multiValued",
+      "value": "true"
+    },
+    {
+      "key": "ExcludedUserStores",
+      "value": ""
+    }
+  ]
+}

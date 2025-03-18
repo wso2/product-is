@@ -15,8 +15,8 @@
 #  limitations under the License.
 
 OPENSSL_VERSION=3.2.1
-LIBOQS_VERSION=0.10.0
-OQS_PROVIDER_VERSION=0.6.0
+LIBOQS_VERSION=0.12.0
+OQS_PROVIDER_VERSION=0.8.0
 TCNATIVE_VERSION=1.3.0
 APR_VERSION=1.7.4
 
@@ -110,10 +110,11 @@ install_oqs_provider() {
 install_apr() {
     # Download APR
     cd "$1" \
-        && wget https://dlcdn.apache.org//apr/apr-$APR_VERSION.tar.gz \
-        && tar -xf apr-$APR_VERSION.tar.gz
+        && git clone https://github.com/apache/apr.git
     echo "Installing APR"
-    cd "$1/apr-$APR_VERSION" \
+    cd "$1/apr" \
+        && git checkout $APR_VERSION \
+        && ./buildconf \
         && ./configure --prefix="$2" \
         && make \
         && make install

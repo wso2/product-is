@@ -1,0 +1,4 @@
+{
+  "claimURI": "urn:ietf:params:scim:schemas:core:2.0:meta.resourceType",
+  "mappedLocalClaimURI": "http://wso2.org/claims/userType"
+}
