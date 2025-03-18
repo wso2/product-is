@@ -2437,7 +2437,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.68</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.71</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2464,12 +2464,12 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.266</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.268</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.53</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.5</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.133</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.134</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2526,7 +2526,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.5</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.12</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.13</identity.oauth2.token.exchange.grant.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.8.5</identity.metadata.saml.version>
@@ -2538,7 +2538,7 @@
         <authenticator.smsotp.version>3.3.36</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.31</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.33</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.34</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.20</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.33</authenticator.x509.version>
@@ -2572,7 +2572,7 @@
         <identity.apps.console.version>2.49.2</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.1</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.19.7</identity.apps.core.version>
+        <identity.apps.core.version>2.19.8</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.380</identity.apps.tests.version>
 
