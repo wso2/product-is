@@ -2437,7 +2437,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.77</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.78</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2460,7 +2460,7 @@
         <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.9.19</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.9.20</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2522,7 +2522,7 @@
         <identity.outbound.auth.adapter.version>1.0.20</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
-        <identity.local.auth.api.version>3.0.5</identity.local.auth.api.version>
+        <identity.local.auth.api.version>3.0.6</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.5</identity.oauth2.jwt.bearer.grant.version>
