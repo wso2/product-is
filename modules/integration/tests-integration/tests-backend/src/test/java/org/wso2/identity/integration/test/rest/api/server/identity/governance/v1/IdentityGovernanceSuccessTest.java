@@ -95,7 +95,6 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     @AfterClass(alwaysRun = true)
     public void testConclude() throws IOException {
 
-        disablePasswordExpiry();
         super.conclude();
     }
 
@@ -291,6 +290,7 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("properties.find{it.name == 'passwordHistory.enable' }.value",
                         equalTo("true"));
+        disablePasswordExpiry();
     }
 
     @Test
