@@ -2437,7 +2437,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.79</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.80</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2538,7 +2538,7 @@
         <authenticator.smsotp.version>3.3.36</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.31</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.34</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.35</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.20</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.33</authenticator.x509.version>
@@ -2569,7 +2569,7 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.49.11</identity.apps.console.version>
+        <identity.apps.console.version>2.49.13</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.1</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.20.0</identity.apps.core.version>
