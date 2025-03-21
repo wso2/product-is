@@ -24,7 +24,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.*;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.model.PreUpdateProfileActionModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.model.PreUpdateProfileActionUpdateModel;
 
@@ -120,6 +123,40 @@ public class PreUpdateProfileActionFailureTest extends PreUpdateProfileTestBase 
     }
 
     @Test(dependsOnMethods = {"testCreateActionWithEmptyEndpointAuthPropertyValues"})
+    public void testCreateActionWithExceededMaximumAttributes() {
+
+        action1.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
+            put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+        }});
+        ((PreUpdateProfileActionModel) action1).setAttributes(INVALID_TEST_ATTRIBUTES_COUNT);
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The number of configured attributes: %d exceeds " +
+                        "the maximum allowed limit: %d", INVALID_TEST_ATTRIBUTES_COUNT.size(), MAX_ATTRIBUTES_COUNT)));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithExceededMaximumAttributes"})
+    public void testCreateActionWithInvalidAttributes() {
+
+        ((PreUpdateProfileActionModel) action1).setAttributes(INVALID_TEST_ATTRIBUTES);
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The provided %s attribute is not available " +
+                        "in the system.", INVALID_TEST_ATTRIBUTES.get(0))));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithInvalidAttributes"})
     public void testCreateActionAfterReachingMaxActionCount() {
 
         //Create an action.
@@ -185,6 +222,36 @@ public class PreUpdateProfileActionFailureTest extends PreUpdateProfileTestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
+    }
+
+    @Test(dependsOnMethods = {"testDeactivateActionWithInvalidID"})
+    public void testUpdateActionWithExceededMaximumAttributes() {
+
+        ((PreUpdateProfileActionModel) action2).setAttributes(INVALID_TEST_ATTRIBUTES_COUNT);
+
+        String body = toJSONString(action2);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH + "/" + testActionId2, body);
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The number of configured attributes: %d exceeds " +
+                        "the maximum allowed limit: %d", INVALID_TEST_ATTRIBUTES_COUNT.size(), MAX_ATTRIBUTES_COUNT)));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithExceededMaximumAttributes"})
+    public void testUpdateActionWithInvalidAttributes() {
+
+        ((PreUpdateProfileActionModel) action2).setAttributes(INVALID_TEST_ATTRIBUTES);
+
+        String body = toJSONString(action2);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH + "/" + testActionId2, body);
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The provided %s attribute is not available " +
+                        "in the system.", INVALID_TEST_ATTRIBUTES.get(0))));
 
         deleteAction(PRE_UPDATE_PROFILE_PATH , testActionId2);
     }

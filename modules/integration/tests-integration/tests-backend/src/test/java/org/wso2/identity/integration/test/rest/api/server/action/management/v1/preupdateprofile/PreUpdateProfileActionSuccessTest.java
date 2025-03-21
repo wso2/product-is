@@ -23,12 +23,16 @@ import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.EndpointUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.model.PreUpdateProfileActionModel;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.*;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.model.PreUpdateProfileActionUpdateModel;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -389,6 +393,30 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAttributes"})
+    public void testUpdateActionUpdatingWithDuplicatedAttributes() {
+
+        ActionUpdateModel actionUpdateModel = new PreUpdateProfileActionUpdateModel()
+                .attributes(TEST_DUPLICATED_ATTRIBUTES);
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("attributes", equalTo(Collections.singletonList(TEST_DUPLICATED_ATTRIBUTES.get(0))));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionUpdatingWithDuplicatedAttributes"})
     public void testActivateAction() {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_UPDATE_PROFILE_PATH +
@@ -506,7 +534,41 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()));
 
-        // Delete, created action.
+        deleteAction(PRE_UPDATE_PROFILE_PATH , responseOfPost.getBody().jsonPath().getString("id"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithExtraEndpointAuthProperties"})
+    public void testCreateActionWithDuplicatedAttributes() {
+
+        action = new PreUpdateProfileActionModel()
+                .attributes(TEST_DUPLICATED_ATTRIBUTES)
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(action);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("id", notNullValue())
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("attributes", equalTo(Collections.singletonList(TEST_DUPLICATED_ATTRIBUTES.get(0))));
+
         deleteAction(PRE_UPDATE_PROFILE_PATH , responseOfPost.getBody().jsonPath().getString("id"));
     }
 }

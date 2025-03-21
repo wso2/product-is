@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.rest.api.server.action.management.v1.
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.ActionTestBase;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class PreUpdateProfileTestBase extends ActionTestBase {
@@ -29,9 +30,21 @@ public class PreUpdateProfileTestBase extends ActionTestBase {
 
     protected static final String PRE_UPDATE_PROFILE_ACTION_TYPE = "PRE_UPDATE_PROFILE";
     protected static final String ATTRIBUTES = "attributes";
+    protected static final int MAX_ATTRIBUTES_COUNT = 10;
     protected static final List<String> TEST_ATTRIBUTES = Arrays.asList("http://wso2.org/claims/active",
             "http://wso2.org/claims/dob");
 
     protected static final List<String> TEST_UPDATED_ATTRIBUTES = Arrays.asList("http://wso2.org/claims/country",
             "http://wso2.org/claims/created");
+
+    protected static final List<String> INVALID_TEST_ATTRIBUTES_COUNT =  Collections.nCopies(11,
+            "http://wso2.org/claims/active");
+
+    protected static final List<String> TEST_DUPLICATED_ATTRIBUTES =  Collections.nCopies(2,
+            "http://wso2.org/claims/active");
+
+    protected static final List<String> ROLES_CLAIM_ATTRIBUTE =
+            Collections.singletonList("http://wso2.org/claims/roles");
+
+    public static final List<String> INVALID_TEST_ATTRIBUTES = Arrays.asList("invalidattribute");;
 }
