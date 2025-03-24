@@ -2068,6 +2068,16 @@
                 <artifactId>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt</artifactId>
                 <version>${identity.oauth.addons.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.authorization.framework</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.authorization.framework.server.feature</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
