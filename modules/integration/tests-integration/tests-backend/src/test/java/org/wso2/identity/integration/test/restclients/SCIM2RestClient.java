@@ -598,6 +598,20 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Get all groups of the tenant.
+     *
+     * @return Groups response.
+     */
+    public JSONObject getGroups() throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(getGroupsPath(), getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Group retrieval is failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
      * Delete an existing group.
      *
      * @param groupId Group id.
