@@ -34,3 +34,6 @@ type = "PKCS12"
 
 [authentication.authenticator.basic.parameters]
 showAuthFailureReason = true
+
+[oauth.grant_type.password]
+show_auth_failure_reason = true
