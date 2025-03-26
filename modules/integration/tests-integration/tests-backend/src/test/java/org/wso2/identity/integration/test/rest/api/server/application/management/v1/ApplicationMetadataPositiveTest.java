@@ -154,6 +154,9 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
                  .statusCode(HttpStatus.SC_OK);
          ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
          OIDCMetaData responseFound = jsonWriter.readValue(response.asString(), OIDCMetaData.class);
+         System.out.println("=======");
+         System.out.println(responseFound.toString());
+         System.out.println("=======");
          Assert.assertEquals(responseFound.toString(), oidcMetaData.toString(),
                  "OIDC Metadata returned from the API doesn't match.");
      }
