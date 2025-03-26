@@ -100,8 +100,7 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
     @Test(dependsOnMethods = "initiateRegistrationFlowWithoutEnable")
     public void testSubmitRegistrationFlowWithoutEnable() throws Exception {
 
-        Object responseObj = registrationExecutionClient.submitRegistration(getRegistrationSubmissionRequest(flowId
-        ));
+        Object responseObj = registrationExecutionClient.submitRegistration(getRegistrationSubmissionRequest(flowId));
         Assert.assertTrue(responseObj instanceof Error);
         Error error = (Error) responseObj;
         Assert.assertNotNull(error);
