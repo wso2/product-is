@@ -152,7 +152,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		serverConfigurationManager.restartForcefully();
 	}
 
-	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
+	@Test(description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
 
 		ApplicationResponseModel application = addApplication();
@@ -168,7 +168,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertNotNull(consumerSecret, "Application creation failed.");
 	}
 
-	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
+	@Test(description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
 
 		List<NameValuePair> urlParameters = new ArrayList<>();
@@ -203,7 +203,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertNotNull(accessToken, "Access token is null.");
 	}
 
-	@Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testSendAuthorozedPost")
+	@Test(description = "Validate access token", dependsOnMethods = "testSendAuthorozedPost")
 	public void testValidateAccessToken() throws Exception {
 
 		String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
@@ -214,7 +214,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
 	}
 
-    @Test(groups = "wso2.is", description = "Send authorize user request without having colan separated client it and" +
+    @Test(description = "Send authorize user request without having colan separated client it and" +
             " secret values", dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidAuthorizedPost() throws Exception {
 
@@ -243,7 +243,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_client", "Invalid error message");
     }
 
-	@Test(groups = "wso2.is", description = "Send token request with invalid credentials", dependsOnMethods =
+	@Test(description = "Send token request with invalid credentials", dependsOnMethods =
             "testRegisterApplication")
 	public void testSendInvalidAuthenticationPost() throws Exception {
 
@@ -273,7 +273,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertTrue(errormsg.contains("Authentication failed for admin"));
 	}
 
-    @Test(groups = "wso2.is", description = "Send token request with invalid consumer secret in Authorization header",
+    @Test(description = "Send token request with invalid consumer secret in Authorization header",
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidConsumerSecretPost() throws Exception {
 
@@ -302,7 +302,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_client", "Invalid error message");
     }
 
-    @Test(groups = "wso2.is", description = "Send token request with invalid consumer secret in Authorization header",
+    @Test(description = "Send token request with invalid consumer secret in Authorization header",
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidConsumerKeyPost() throws Exception {
 
@@ -331,7 +331,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_client", "Invalid error message");
     }
 
-    @Test(groups = "wso2.is", description = "Send token request with repeating parameter",
+    @Test(description = "Send token request with repeating parameter",
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidRequestPost() throws Exception {
 
@@ -361,7 +361,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_request", "Invalid error message");
     }
 
-	@Test(groups = "wso2.is", description = "Send authorize request for locked user", dependsOnMethods =
+	@Test(description = "Send authorize request for locked user", dependsOnMethods =
 			"testSendInvalidAuthenticationPost")
 	public void testSendLockedAuthenticationPost() throws Exception {
 
