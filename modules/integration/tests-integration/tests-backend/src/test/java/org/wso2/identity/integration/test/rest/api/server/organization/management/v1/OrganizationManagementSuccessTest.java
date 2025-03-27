@@ -34,6 +34,8 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
@@ -71,6 +73,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
@@ -164,6 +167,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .disableRedirectHandling()
                 .setDefaultCookieStore(cookieStore).build();
+
+        ConfigurationContext configContext =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
     }
 
     @AfterClass(alwaysRun = true)
@@ -172,6 +179,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         super.conclude();
         deleteApplication(selfServiceAppId);
         deleteApplication(b2bApplicationID);
+        idpMgtServiceClient.deleteIdP(ORGANIZATION_SSO);
         oAuth2RestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
     }

@@ -30,6 +30,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
@@ -137,6 +138,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
     protected SCIM2RestClient scim2RestClient;
+    protected IdentityProviderMgtServiceClient idpMgtServiceClient;
+
 
     static {
         String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.organization.management.v1";

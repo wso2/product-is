@@ -19,6 +19,8 @@
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
 import io.restassured.response.Response;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
@@ -45,6 +47,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -121,6 +124,10 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .disableRedirectHandling()
                 .setDefaultCookieStore(cookieStore).build();
+
+        ConfigurationContext configContext =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
     }
 
     @AfterClass(alwaysRun = true)
@@ -129,6 +136,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         super.conclude();
         OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
         OAuth2Util.deleteApplication(oAuth2RestClient, b2bApplicationID);
+        idpMgtServiceClient.deleteIdP(ORGANIZATION_SSO);
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
