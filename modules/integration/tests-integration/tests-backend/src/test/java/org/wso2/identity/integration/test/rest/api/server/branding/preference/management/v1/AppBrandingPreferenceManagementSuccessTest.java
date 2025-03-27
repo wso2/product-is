@@ -20,8 +20,6 @@ package org.wso2.identity.integration.test.rest.api.server.branding.preference.m
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -35,7 +33,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 
@@ -52,7 +49,6 @@ import static org.wso2.identity.integration.test.util.Utils.areJSONObjectsEqual;
 public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPreferenceManagementTestBase {
 
     private OrgMgtRestClient orgMgtRestClient;
-    protected IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     private String rootAppId;
     private String level1AppId;
     private String level2AppId;
@@ -98,10 +94,6 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
                 orgMgtRestClient.switchM2MToken(level1OrgId));
         level2AppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(TEST_APP_NAME,
                 orgMgtRestClient.switchM2MToken(level2OrgId));
-        ConfigurationContext configContext =
-                ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
-        identityProviderMgtServiceClient =
-                new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
     }
 
     @AfterClass(alwaysRun = true)
@@ -110,7 +102,6 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         super.conclude();
         deleteTestApp(rootAppId);
         deleteOrganizations();
-        identityProviderMgtServiceClient.deleteIdP("SSO");
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
     }
