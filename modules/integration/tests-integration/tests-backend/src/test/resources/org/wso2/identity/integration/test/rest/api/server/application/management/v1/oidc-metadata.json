@@ -123,6 +123,8 @@
     "options": [
       "PS256",
       "ES256",
+      "ES384",
+      "RS384",
       "SHA256withRSA"
     ]
   },

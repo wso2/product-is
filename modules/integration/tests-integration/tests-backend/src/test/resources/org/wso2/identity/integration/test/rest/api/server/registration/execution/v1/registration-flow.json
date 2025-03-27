@@ -1,0 +1,137 @@
+{
+  "steps": [
+    {
+      "id": "view_9jk7",
+      "type": "VIEW",
+      "data": {
+        "components": [
+          {
+            "id": "typography_jvg1",
+            "category": "DISPLAY",
+            "type": "TYPOGRAPHY",
+            "variant": "H3",
+            "config": {
+              "text": "Register Account"
+            }
+          },
+          {
+            "id": "form_y800",
+            "category": "BLOCK",
+            "type": "FORM",
+            "components": [
+              {
+                "id": "input_hfbf",
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "TEXT",
+                "config": {
+                  "type": "text",
+                  "hint": "",
+                  "label": "Username",
+                  "required": true,
+                  "placeholder": "Enter your username",
+                  "identifier": "http://wso2.org/claims/username"
+                }
+              },
+              {
+                "id": "input_aut3",
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "EMAIL",
+                "config": {
+                  "type": "email",
+                  "hint": "",
+                  "label": "Email",
+                  "required": true,
+                  "placeholder": "Enter your email",
+                  "identifier": "http://wso2.org/claims/emailaddress"
+                }
+              },
+              {
+                "id": "input_uo53",
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "TEXT",
+                "config": {
+                  "type": "text",
+                  "hint": "",
+                  "label": "First Name",
+                  "required": false,
+                  "placeholder": "Enter your first name",
+                  "identifier": "http://wso2.org/claims/givenname"
+                }
+              },
+              {
+                "id": "input_huq5",
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "TEXT",
+                "config": {
+                  "type": "text",
+                  "hint": "",
+                  "label": "Last Name",
+                  "required": false,
+                  "placeholder": "Enter your last name",
+                  "identifier": "http://wso2.org/claims/lastname"
+                }
+              },
+              {
+                "id": "input_a6uc",
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "PASSWORD",
+                "config": {
+                  "identifier": "password",
+                  "type": "password",
+                  "hint": "",
+                  "label": "Password",
+                  "required": true,
+                  "placeholder": "Enter your password"
+                }
+              },
+              {
+                "id": "button_5zqc",
+                "category": "ACTION",
+                "type": "BUTTON",
+                "variant": "PRIMARY",
+                "action": {
+                  "type": "EXECUTOR",
+                  "executor": {
+                    "name": "PasswordOnboardExecutor"
+                  },
+                  "next": "USER_ONBOARD"
+                },
+                "config": {
+                  "type": "submit",
+                  "text": "Continue"
+                }
+              }
+            ],
+            "config": {}
+          }
+        ]
+      },
+      "size": {
+        "height": 626.0,
+        "width": 350.0
+      },
+      "position": {
+        "x": 300.0,
+        "y": 200.0
+      }
+    },
+    {
+      "id": "USER_ONBOARD",
+      "type": "USER_ONBOARD",
+      "data": {},
+      "size": {
+        "height": 56.0,
+        "width": 56.0
+      },
+      "position": {
+        "x": 880.0,
+        "y": 408.0
+      }
+    }
+  ]
+}
