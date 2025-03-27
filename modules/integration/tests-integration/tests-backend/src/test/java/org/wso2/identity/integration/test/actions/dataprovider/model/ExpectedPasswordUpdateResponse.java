@@ -23,11 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 public class ExpectedPasswordUpdateResponse {
 
     private final int statusCode;
+    private final String errorMessage;
     private final String errorDetail;
 
-    public ExpectedPasswordUpdateResponse(int statusCode, String errorDetail) {
+    public ExpectedPasswordUpdateResponse(int statusCode, String errorMessage, String errorDetail) {
 
         this.statusCode = statusCode;
+        this.errorMessage = errorMessage;
         this.errorDetail = errorDetail;
     }
 
@@ -39,5 +41,10 @@ public class ExpectedPasswordUpdateResponse {
     public String getErrorDetail() {
 
         return errorDetail;
+    }
+
+    public String getErrorMessage() {
+
+        return errorMessage;
     }
 }
