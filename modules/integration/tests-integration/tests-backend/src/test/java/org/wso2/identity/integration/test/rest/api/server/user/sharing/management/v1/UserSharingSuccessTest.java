@@ -19,6 +19,8 @@
 package org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1;
 
 import io.restassured.response.Response;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.http.HttpStatus;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject;
@@ -28,6 +30,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudience;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBody;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
@@ -136,6 +139,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         cleanUpRoles(APPLICATION_AUDIENCE, ORGANIZATION_AUDIENCE);
         cleanUpApplications();
         cleanUpOrganizations();
+        cleanUpSSOIdP();
         cleanUpDetailMaps();
         closeRestClients();
     }
@@ -705,6 +709,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
                 new JSONObject(readResource(AUTHORIZED_APIS_JSON)));
         httpClient = HttpClientBuilder.create().build();
+
+        ConfigurationContext configContext =
+                ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
+        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
     }
 
     private void setupOrganizations() throws Exception {

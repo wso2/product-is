@@ -39,6 +39,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -173,6 +174,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected OAuth2RestClient oAuth2RestClient;
     protected SCIM2RestClient scim2RestClient;
     protected OrgMgtRestClient orgMgtRestClient;
+    protected IdentityProviderMgtServiceClient idpMgtServiceClient;
+
     protected HttpClient httpClient;
 
     protected Map<String, Map<String, Object>> userDetails;
@@ -989,6 +992,11 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         orgDetails.clear();
         appDetails.clear();
         roleDetails.clear();
+    }
+
+    protected void cleanUpSSOIdP() throws Exception {
+
+            idpMgtServiceClient.deleteIdP("SSO");
     }
 
     /**
