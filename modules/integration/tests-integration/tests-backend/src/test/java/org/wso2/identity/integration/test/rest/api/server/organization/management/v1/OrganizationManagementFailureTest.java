@@ -136,7 +136,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         super.conclude();
         OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
         OAuth2Util.deleteApplication(oAuth2RestClient, b2bApplicationID);
-        idpMgtServiceClient.deleteIdP(ORGANIZATION_SSO);
+//        idpMgtServiceClient.deleteIdP(ORGANIZATION_SSO);
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
