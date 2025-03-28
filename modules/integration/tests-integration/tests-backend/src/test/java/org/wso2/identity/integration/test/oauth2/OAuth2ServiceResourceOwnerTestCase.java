@@ -152,7 +152,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		serverConfigurationManager.restartForcefully();
 	}
 
-	@Test(description = "Check Oauth2 application registration")
+	@Test(dependsOnGroups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
 
 		ApplicationResponseModel application = addApplication();
@@ -203,7 +203,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertNotNull(accessToken, "Access token is null.");
 	}
 
-	@Test(description = "Validate access token", dependsOnMethods = "testSendAuthorozedPost")
+	@Test(dependsOnGroups = "wso2.is", description = "Validate access token", dependsOnMethods = "testSendAuthorozedPost")
 	public void testValidateAccessToken() throws Exception {
 
 		String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
