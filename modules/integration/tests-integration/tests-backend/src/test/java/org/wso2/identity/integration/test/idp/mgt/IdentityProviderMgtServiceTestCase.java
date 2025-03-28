@@ -495,6 +495,10 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
     public void testGetAllIdPsCount() throws Exception {
 
         int idpCount = idpMgtServiceClient.getAllIdpCount();
+        List<IdentityProvider> identityProviders = idpMgtServiceClient.getIdPs();
+        for (IdentityProvider identityProvider : identityProviders) {
+            log.info("Identity Provider Name : " + identityProvider.getIdentityProviderName());
+        }
         Assert.assertEquals(idpCount, 2, "Total idp count did not match with the expected.");
     }
 

@@ -38,45 +38,56 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
+import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.xpath.XPathExpressionException;
+
 import static org.wso2.identity.integration.test.utils.CommonConstants.USER_IS_LOCKED;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 
 public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
+	public static final String OAUTH_2_SERVICE_RESOURCE_OWNER_TOML = "oauth2_service_resource_owner.toml";
+
+	private ServerConfigurationManager serverConfigurationManager;
 	private String accessToken;
 	private String consumerKey;
 	private String consumerSecret;
 
 	private CloseableHttpClient client;
-	private final AutomationContext context;
+	private AutomationContext context;
 	private Tenant tenantInfo;
 	private SCIM2RestClient scim2RestClient;
 
 	private static final String lockedUser = "test_locked_user";
 	private static final String lockedUserPassword = "Test_locked_user_pass@123";
-	private final String username;
-	private final String tenantAwareUsername;
-	private final String userPassword;
-	private final String activeTenant;
+	private String username;
+	private String tenantAwareUsername;
+	private String userPassword;
+	private String activeTenant;
 	private static final String TENANT_DOMAIN = "wso2.com";
 	private String applicationId;
 	private String userId;
+	private TestUserMode userMode;
 
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
@@ -87,16 +98,20 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@Factory(dataProvider = "configProvider")
 	public OAuth2ServiceResourceOwnerTestCase(TestUserMode userMode) throws Exception {
 
+		this.userMode = userMode;
+	}
+
+	@BeforeClass(alwaysRun = true)
+	public void testInit() throws Exception {
+
+		super.init();
+		changeISConfiguration();
 		super.init(userMode);
 		context = new AutomationContext("IDENTITY", userMode);
 		this.username = context.getContextTenant().getTenantAdmin().getUserNameWithoutDomain();
 		this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
 		this.activeTenant = context.getContextTenant().getDomain();
 		this.tenantAwareUsername = context.getContextTenant().getTenantAdmin().getUserName();
-	}
-
-	@BeforeClass(alwaysRun = true)
-	public void testInit() throws Exception {
 
 		tenantInfo = context.getContextTenant();
 
@@ -120,9 +135,24 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		scim2RestClient.closeHttpClient();
 		consumerKey = null;
 		accessToken = null;
+		serverConfigurationManager.restoreToLastConfiguration(false);
 	}
 
-	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
+	private void changeISConfiguration() throws IOException,
+			XPathExpressionException, AutomationUtilException {
+
+		log.info("Replacing the deployment.toml file to enabling showing auth failure reason for password grant");
+		String carbonHome = Utils.getResidentCarbonHome();
+		File defaultTomlFile = getDeploymentTomlFile(carbonHome);
+		File configuredTomlFile = new File
+					(getISResourceLocation() + File.separator + "oauth" +
+							File.separator + OAUTH_2_SERVICE_RESOURCE_OWNER_TOML);
+		serverConfigurationManager = new ServerConfigurationManager(isServer);
+		serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
+		serverConfigurationManager.restartForcefully();
+	}
+
+	@Test(description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
 
 		ApplicationResponseModel application = addApplication();
@@ -138,7 +168,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertNotNull(consumerSecret, "Application creation failed.");
 	}
 
-	@Test(groups = "wso2.is", description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
+	@Test(description = "Send authorize user request", dependsOnMethods = "testRegisterApplication")
 	public void testSendAuthorozedPost() throws Exception {
 
 		List<NameValuePair> urlParameters = new ArrayList<>();
@@ -173,7 +203,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertNotNull(accessToken, "Access token is null.");
 	}
 
-	@Test(groups = "wso2.is", description = "Validate access token", dependsOnMethods = "testSendAuthorozedPost")
+	@Test(description = "Validate access token", dependsOnMethods = "testSendAuthorozedPost")
 	public void testValidateAccessToken() throws Exception {
 
 		String introspectionUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
@@ -184,7 +214,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 		Assert.assertEquals(responseObj.get("active"), true, "Token Validation failed");
 	}
 
-    @Test(groups = "wso2.is", description = "Send authorize user request without having colan separated client it and" +
+    @Test(description = "Send authorize user request without having colan separated client it and" +
             " secret values", dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidAuthorizedPost() throws Exception {
 
@@ -213,7 +243,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_client", "Invalid error message");
     }
 
-	@Test(groups = "wso2.is", description = "Send token request with invalid credentials", dependsOnMethods =
+	@Test(description = "Send token request with invalid credentials", dependsOnMethods =
             "testRegisterApplication")
 	public void testSendInvalidAuthenticationPost() throws Exception {
 
@@ -243,7 +273,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertTrue(errormsg.contains("Authentication failed for admin"));
 	}
 
-    @Test(groups = "wso2.is", description = "Send token request with invalid consumer secret in Authorization header",
+    @Test(description = "Send token request with invalid consumer secret in Authorization header",
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidConsumerSecretPost() throws Exception {
 
@@ -272,7 +302,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_client", "Invalid error message");
     }
 
-    @Test(groups = "wso2.is", description = "Send token request with invalid consumer secret in Authorization header",
+    @Test(description = "Send token request with invalid consumer secret in Authorization header",
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidConsumerKeyPost() throws Exception {
 
@@ -301,7 +331,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_client", "Invalid error message");
     }
 
-    @Test(groups = "wso2.is", description = "Send token request with repeating parameter",
+    @Test(description = "Send token request with repeating parameter",
             dependsOnMethods = "testRegisterApplication")
     public void testSendInvalidRequestPost() throws Exception {
 
@@ -331,7 +361,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_request", "Invalid error message");
     }
 
-	@Test(groups = "wso2.is", description = "Send authorize request for locked user", dependsOnMethods =
+	@Test(description = "Send authorize request for locked user", dependsOnMethods =
 			"testSendInvalidAuthenticationPost")
 	public void testSendLockedAuthenticationPost() throws Exception {
 
