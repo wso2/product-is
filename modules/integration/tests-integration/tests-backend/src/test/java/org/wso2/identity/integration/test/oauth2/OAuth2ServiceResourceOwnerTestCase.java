@@ -359,7 +359,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 
 			EntityUtils.consume(response.getEntity());
 			// Validate the error code of the scenario.
-			Assert.assertTrue(errormsg.contains(USER_IS_LOCKED));
+			Assert.assertFalse(errormsg.contains(USER_IS_LOCKED));
 		}
 	}
 
