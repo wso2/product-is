@@ -354,7 +354,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
                 .get("Resources")).get(0));
         JSONArray emailsArray = (JSONArray) ((JSONObject) userResources.get(USER_SYSTEM_SCHEMA)).get(attributeName);
 
-        for (Object email : emailsArray) {
+        for (Object email: emailsArray) {
             if (email.equals(attributeValue)) {
                 return;
             }
