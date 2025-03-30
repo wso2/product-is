@@ -218,6 +218,7 @@ public class LocalClaimRes {
     public Boolean getMultiValued() {
         return multiValued;
     }
+
     public void setMultiValued(Boolean multiValued) {
         this.multiValued = multiValued;
     }
