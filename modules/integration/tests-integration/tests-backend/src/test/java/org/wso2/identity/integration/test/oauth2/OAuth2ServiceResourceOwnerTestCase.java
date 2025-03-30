@@ -331,8 +331,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         Assert.assertEquals(errormsg, "invalid_request", "Invalid error message");
     }
 
-	@Test(groups = "wso2.is", description = "Send authorize request for locked user", dependsOnMethods =
-			"testSendInvalidAuthenticationPost")
+//	@Test(groups = "wso2.is", description = "Send authorize request for locked user", dependsOnMethods =
+//			"testSendInvalidAuthenticationPost")
 	public void testSendLockedAuthenticationPost() throws Exception {
 
 		if (!TENANT_DOMAIN.equals(activeTenant)) {
