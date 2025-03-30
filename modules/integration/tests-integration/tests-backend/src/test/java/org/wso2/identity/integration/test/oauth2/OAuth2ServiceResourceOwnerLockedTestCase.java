@@ -132,7 +132,7 @@ public class OAuth2ServiceResourceOwnerLockedTestCase extends OAuth2ServiceAbstr
 		serverConfigurationManager.restartForcefully();
 	}
 
-	@Test(dependsOnGroups = "wso2.is", description = "Send authorize request for locked user")
+	@Test(groups = "wso2.is", description = "Send authorize request for locked user")
 	public void testSendLockedAuthenticationPost() throws Exception {
 
 		if (!TENANT_DOMAIN.equals(activeTenant)) {
