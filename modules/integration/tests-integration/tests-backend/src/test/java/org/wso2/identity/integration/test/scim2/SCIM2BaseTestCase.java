@@ -60,7 +60,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String LIST_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:ListResponse";
     public static final String RESOURCE_TYPE_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:ResourceType";
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
-    public static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
+    public static final String USER_SYSTEM_SCHEMA = "urn:scim:wso2:schema";
 
     private ServerConfigurationManager serverConfigurationManager;
 
