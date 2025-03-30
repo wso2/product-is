@@ -25,7 +25,6 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -41,7 +40,6 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
@@ -71,7 +69,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM_RE
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PARAM;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_SYSTEM_SCHEMA_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_SYSTEM_SCHEMA;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
 
 public class SCIM2UserTestCase extends ISIntegrationTest {
@@ -168,7 +166,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         emailAddresses.add(EMAIL_TYPE_HOME_CLAIM_VALUE);
         JSONObject emailAddressesObject = new JSONObject();
         emailAddressesObject.put(EMAIL_ADDRESSES_ATTRIBUTE, emailAddresses);
-        rootObject.put(USER_SYSTEM_SCHEMA_ATTRIBUTE, emailAddressesObject);
+        rootObject.put(USER_SYSTEM_SCHEMA, emailAddressesObject);
 
         StringEntity entity = new StringEntity(rootObject.toString());
         request.setEntity(entity);
@@ -339,7 +337,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private void validateFilteredUserByEmailAddresses(String attributeName, String operator, String attributeValue)
             throws IOException {
 
-        String userResourcePath = getPath() + "?filter=" + USER_SYSTEM_SCHEMA_ATTRIBUTE + ":" + attributeName + operator
+        String userResourcePath = getPath() + "?filter=" + USER_SYSTEM_SCHEMA + ":" + attributeName + operator
                 + attributeValue;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
@@ -352,8 +350,9 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
 
-        JSONArray emailsArray = ((JSONArray)((JSONObject)((JSONObject) ((JSONArray) ((JSONObject) responseObj)
-                .get("Resources")).get(0)).get(USER_SYSTEM_SCHEMA_ATTRIBUTE)).get(attributeName));
+        JSONObject userResources = ((JSONObject) ((JSONArray) ((JSONObject) responseObj)
+                .get("Resources")).get(0));
+        JSONArray emailsArray = (JSONArray) ((JSONObject) userResources.get(USER_SYSTEM_SCHEMA)).get(attributeName);
 
         for (Object email : emailsArray) {
             if (email.equals(attributeValue)) {
