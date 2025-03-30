@@ -40,6 +40,7 @@ public class LocalClaimRes {
     private String regEx = null;
     private Boolean required = null;
     private Boolean supportedByDefault = null;
+    private Boolean multiValued = null;
 
     public enum UniquenessScopeEnum {
         NONE, WITHIN_USERSTORE, ACROSS_USERSTORES,
@@ -207,6 +208,18 @@ public class LocalClaimRes {
     public void setSupportedByDefault(Boolean supportedByDefault) {
 
         this.supportedByDefault = supportedByDefault;
+    }
+
+    /**
+     * Specifies if the claim can hold multiple values.
+     **/
+    @ApiModelProperty(value = "Specifies if the claim can hold multiple values.")
+    @JsonProperty("multiValued")
+    public Boolean getMultiValued() {
+        return multiValued;
+    }
+    public void setMultiValued(Boolean multiValued) {
+        this.multiValued = multiValued;
     }
 
     /**
