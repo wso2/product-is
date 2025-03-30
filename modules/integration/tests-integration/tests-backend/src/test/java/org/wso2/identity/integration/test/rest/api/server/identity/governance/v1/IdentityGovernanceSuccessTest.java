@@ -93,7 +93,7 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() throws IOException {
+    public void testConclude() {
 
         super.conclude();
     }
@@ -290,7 +290,6 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("properties.find{it.name == 'passwordHistory.enable' }.value",
                         equalTo("true"));
-        disablePasswordExpiry();
     }
 
     @Test
@@ -331,19 +330,5 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
                 i++;
             }
         }
-    }
-
-    private void disablePasswordExpiry() throws IOException {
-
-        String body = readResource("disable-password-expiry.json");
-        Response response =
-                getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI +
-                                "/" + CATEGORY_PASSWORD_POLICIES + "/connectors/" +
-                                CONNECTOR_PASSWORD_EXPIRY,
-                        body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
     }
 }

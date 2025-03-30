@@ -90,18 +90,22 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(HttpServletResponse.SC_OK,
                         FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_BAD_REQUEST,
-                                "Some failure reason. Some description")},
+                                "Some failure reason",
+                                "Some description")},
                 {TestUserMode.TENANT_USER, new ActionResponse(HttpServletResponse.SC_OK,
                         FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_BAD_REQUEST,
-                                "Some failure reason. Some description")},
+                                "Some failure reason",
+                                "Some description")},
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                         FileUtils.readFileInClassPathAsString("actions/response/error-response.json")),
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                "Compromised password",
                                 "Error while updating attributes of user")},
                 {TestUserMode.TENANT_USER, new ActionResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                         FileUtils.readFileInClassPathAsString("actions/response/error-response.json")),
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                                "Compromised password",
                                 "Error while updating attributes of user")},
         };
     }
@@ -180,7 +184,11 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
 
         assertNotNull(response);
-        assertEquals(response.get("status"), String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
+        String status = response.get("status").toString();
+        assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
+        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_UPDATED_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.UPDATE);
@@ -199,7 +207,11 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         org.json.simple.JSONObject response = scim2RestClient.updateUserAndReturnResponse(patchUserInfo, userId);
 
         assertNotNull(response);
-        assertEquals(response.get("status"), String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
+        String status = response.get("status").toString();
+        assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
+        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.UPDATE);
@@ -275,7 +287,11 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         org.json.simple.JSONObject response = scim2RestClient.updateUserWithBearerToken(patchUserInfo, userId, token);
 
         assertNotNull(response);
-        assertEquals(response.get("status"), String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
+        String status = response.get("status").toString();
+        assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
+        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.UPDATE);

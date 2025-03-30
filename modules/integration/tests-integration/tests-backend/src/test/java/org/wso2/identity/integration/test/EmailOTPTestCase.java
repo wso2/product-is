@@ -161,7 +161,6 @@ public class EmailOTPTestCase extends ISIntegrationTest {
 
         deleteUser();
         deleteApplication();
-        deleteIdP();
 
         applicationManagementServiceClient = null;
         ssoConfigServiceClient = null;
@@ -290,11 +289,6 @@ public class EmailOTPTestCase extends ISIntegrationTest {
     private void deleteApplication() throws Exception {
 
         applicationManagementServiceClient.deleteApplication(APPLICATION_NAME);
-    }
-
-    private void deleteIdP() throws Exception {
-
-        identityProviderMgtServiceClient.deleteIdP(IDENTITY_PROVIDER_NAME);
     }
 
     private SAMLSSOServiceProviderDTO getSsoServiceProviderDTO() {
