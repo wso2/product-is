@@ -42,6 +42,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String GIVEN_NAME_ATTRIBUTE = "givenName";
     public static final String EMAIL_TYPE_WORK_ATTRIBUTE = "work";
     public static final String EMAIL_TYPE_HOME_ATTRIBUTE = "home";
+    public static final String EMAIL_ADDRESSES_ATTRIBUTE = "emailAddresses";
     public static final String ID_ATTRIBUTE = "id";
     public static final String PASSWORD_ATTRIBUTE = "password";
     public static final String EMAILS_ATTRIBUTE = "emails";
@@ -59,6 +60,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String LIST_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:ListResponse";
     public static final String RESOURCE_TYPE_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:ResourceType";
     public static final String ERROR_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:Error";
+    public static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
 
     private ServerConfigurationManager serverConfigurationManager;
 

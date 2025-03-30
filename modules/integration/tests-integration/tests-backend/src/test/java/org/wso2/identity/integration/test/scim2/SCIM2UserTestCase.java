@@ -51,7 +51,9 @@ import java.io.IOException;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAILS_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_ADDRESSES_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_HOME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_WORK_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ERROR_SCHEMA;
@@ -69,6 +71,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM_RE
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PARAM;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_SYSTEM_SCHEMA_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
 
 public class SCIM2UserTestCase extends ISIntegrationTest {
@@ -159,6 +162,13 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         rootObject.put(EMAILS_ATTRIBUTE, emails);
 
         rootObject.put(PASSWORD_ATTRIBUTE, PASSWORD);
+
+        JSONArray emailAddresses = new JSONArray();
+        emailAddresses.add(EMAIL_TYPE_WORK_CLAIM_VALUE);
+        emailAddresses.add(EMAIL_TYPE_HOME_CLAIM_VALUE);
+        JSONObject emailAddressesObject = new JSONObject();
+        emailAddressesObject.put(EMAIL_ADDRESSES_ATTRIBUTE, emailAddresses);
+        rootObject.put(USER_SYSTEM_SCHEMA_ATTRIBUTE, emailAddressesObject);
 
         StringEntity entity = new StringEntity(rootObject.toString());
         request.setEntity(entity);
@@ -301,6 +311,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 4));
         validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 3));
         validateFilteredUser(USER_NAME_ATTRIBUTE, ENDWITH, USERNAME.substring(4, USERNAME.length()));
+        validateFilteredUserByEmailAddresses(EMAIL_ADDRESSES_ATTRIBUTE, CONTAINS, EMAIL_TYPE_WORK_CLAIM_VALUE);
     }
 
     private void validateFilteredUser(String attributeName, String operator, String attributeValue) throws IOException {
@@ -323,6 +334,33 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         String userId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
                 (ID_ATTRIBUTE).toString();
         assertEquals(userId, this.userId);
+    }
+
+    private void validateFilteredUserByEmailAddresses(String attributeName, String operator, String attributeValue)
+            throws IOException {
+
+        String userResourcePath = getPath() + "?filter=" + USER_SYSTEM_SCHEMA_ATTRIBUTE + ":" + attributeName + operator
+                + attributeValue;
+        HttpGet request = new HttpGet(userResourcePath);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        request.addHeader(HttpHeaders.ACCEPT, "application/scim+json");
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "User " +
+                "has not been retrieved successfully");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        JSONArray emailsArray = ((JSONArray)((JSONObject)((JSONObject) ((JSONArray) ((JSONObject) responseObj)
+                .get("Resources")).get(0)).get(USER_SYSTEM_SCHEMA_ATTRIBUTE)).get(attributeName));
+
+        for (Object email : emailsArray) {
+            if (email.equals(attributeValue)) {
+                return;
+            }
+        }
+        fail();
     }
 
     @Test(dependsOnMethods = "testFilterUser")
