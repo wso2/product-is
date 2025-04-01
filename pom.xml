@@ -2470,7 +2470,7 @@
         <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.9.22</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.9.23</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2495,7 +2495,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.14</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.47</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.48</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2555,7 +2555,7 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.10</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.130</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.131</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.24</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.44</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.27</identity.oauth2.grant.organizationswitch.version>
@@ -2579,10 +2579,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.51.0</identity.apps.console.version>
+        <identity.apps.console.version>2.51.4</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.3</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.22.4</identity.apps.core.version>
+        <identity.apps.core.version>2.22.6</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.381</identity.apps.tests.version>
 
