@@ -2335,6 +2335,12 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mcp-client-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
                 <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mobile-application</artifactId>
                 <version>${identity.integration.ui.templates.version}</version>
                 <type>zip</type>
@@ -2726,7 +2732,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.14</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.16</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
