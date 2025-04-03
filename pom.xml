@@ -2335,6 +2335,12 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+                <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mcp-client-application</artifactId>
+                <version>${identity.integration.ui.templates.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
                 <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mobile-application</artifactId>
                 <version>${identity.integration.ui.templates.version}</version>
                 <type>zip</type>
