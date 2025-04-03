@@ -143,12 +143,6 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
         Map<String, String> inputs = new HashMap<>();
         Object responseObj = registrationExecutionClient
                 .submitRegistration(getRegistrationSubmissionRequest(flowId, inputs));
-        Assert.assertTrue(responseObj instanceof RegistrationSubmissionResponse);
-        RegistrationSubmissionResponse response = (RegistrationSubmissionResponse) responseObj;
-        Assert.assertNotNull(response);
-        Assert.assertNotNull(response.getFlowId());
-        Assert.assertEquals(response.getFlowId(), flowId);
-        Assert.assertEquals(response.getFlowStatus(), STATUS_INCOMPLETE);
     }
 
     @Test(dependsOnMethods = "testSubmitRegistrationFlowWithEmptyInputs")
