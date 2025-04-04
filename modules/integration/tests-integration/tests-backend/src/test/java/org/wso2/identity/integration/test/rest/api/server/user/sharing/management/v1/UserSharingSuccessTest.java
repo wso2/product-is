@@ -28,6 +28,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.RoleWithAudience;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareRequestBody;
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
@@ -126,6 +127,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         setupOrganizations();
         setupApplicationsAndRoles();
         setupUsers();
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
     }
 
     @Override
@@ -137,6 +139,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         cleanUpApplications();
         cleanUpOrganizations();
         cleanUpDetailMaps();
+        identityProviderMgtServiceClient.deleteIdP("SSO");
         closeRestClients();
     }
 

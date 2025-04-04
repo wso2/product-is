@@ -51,8 +51,8 @@ import static org.hamcrest.core.Is.is;
 public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase {
 
     private static final Log log = LogFactory.getLog(UserMeSuccessTestBase.class);
-    private static final String TEST_USER_1 = "TestUser01";
-    private static final String TEST_USER_2 = "TestUser02";
+    private static final String TEST_USER_1 = "User1_UAASuccess";
+    private static final String TEST_USER_2 = "User2_UAASuccess";
     private static final String TEST_USER_PW = "Test@123";
     private static final String EXTERNAL_IDP_NAME = "ExternalIDP";
     private static final String EXTERNAL_USER_ID_1 = "ExternalUser1";

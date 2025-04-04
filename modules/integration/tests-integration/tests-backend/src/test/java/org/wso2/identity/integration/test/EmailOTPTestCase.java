@@ -161,6 +161,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
 
         deleteUser();
         deleteApplication();
+        deleteIdp();
 
         applicationManagementServiceClient = null;
         ssoConfigServiceClient = null;
@@ -369,6 +370,11 @@ public class EmailOTPTestCase extends ISIntegrationTest {
                 FederatedAuthenticatorConfig[]{federatedAuthenticatorConfig});
         identityProvider.setDefaultAuthenticatorConfig(federatedAuthenticatorConfig);
         identityProviderMgtServiceClient.addIdP(identityProvider);
+    }
+
+    private void deleteIdp() throws Exception {
+
+        identityProviderMgtServiceClient.deleteIdP(IDENTITY_PROVIDER_NAME);
     }
 
     private ClaimValue[] getUserClaims() {

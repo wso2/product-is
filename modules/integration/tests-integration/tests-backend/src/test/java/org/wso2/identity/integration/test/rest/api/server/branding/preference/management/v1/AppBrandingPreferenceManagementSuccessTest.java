@@ -33,6 +33,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 
@@ -81,6 +82,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
                 new JSONObject(readResource("organization-self-service-apis.json")));
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
 
         // Create a three level (including root organization) organization hierarchy.
         level1OrgId = orgMgtRestClient.addOrganization("l1-org");
@@ -104,6 +106,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         deleteOrganizations();
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
+        identityProviderMgtServiceClient.deleteIdP("SSO");
     }
 
     @Test

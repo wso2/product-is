@@ -27,6 +27,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -65,6 +66,7 @@ public class AppBrandingPreferenceManagementFailureTest extends AppBrandingPrefe
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         testAppId = createTestApp();
     }
 
@@ -73,6 +75,7 @@ public class AppBrandingPreferenceManagementFailureTest extends AppBrandingPrefe
 
         super.conclude();
         deleteTestApp(testAppId);
+        identityProviderMgtServiceClient.deleteIdP("SSO");
         oAuth2RestClient.closeHttpClient();
     }
 

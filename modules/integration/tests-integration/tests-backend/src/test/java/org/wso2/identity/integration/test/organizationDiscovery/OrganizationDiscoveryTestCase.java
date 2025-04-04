@@ -43,6 +43,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
@@ -106,6 +107,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
     private OrgDiscoveryConfigRestClient organizationDiscoveryConfigRestClient;
     private OAuth2RestClient oAuth2RestClient;
     private OrgMgtRestClient orgMgtRestClient;
+    private IdentityProviderMgtServiceClient idpMgtServiceClient;
 
     @BeforeClass(dependsOnGroups = "wso2.is", alwaysRun = true)
     public void testInit() throws Exception {
@@ -169,6 +171,8 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         // Map an email domain to the created sub-organization
         String mapEmailDomainRequestBody = RESTTestBase.readResource(EMAIL_DOMAIN_SUB_ORG_JSON, this.getClass());
         organizationDiscoveryConfigRestClient.mapDiscoveryAttributes(subOrgId, mapEmailDomainRequestBody);
+
+        idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
     }
 
     @Test(dependsOnGroups = "wso2.is", description = "Test email domain based organization discovery not initiated " +
@@ -280,6 +284,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         claimManagementRestClient.closeHttpClient();
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
+        idpMgtServiceClient.deleteIdP("SSO");
         client.close();
     }
 
