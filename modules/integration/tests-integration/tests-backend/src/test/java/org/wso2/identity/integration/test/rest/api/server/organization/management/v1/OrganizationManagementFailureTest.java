@@ -45,6 +45,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -108,6 +109,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
                 new JSONObject(readResource("organization-self-service-apis.json")));
+        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         client = HttpClientBuilder.create().build();
 
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
@@ -129,6 +131,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         super.conclude();
         OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
         OAuth2Util.deleteApplication(oAuth2RestClient, b2bApplicationID);
+        identityProviderMgtServiceClient.deleteIdP("SSO");
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();

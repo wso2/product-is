@@ -160,7 +160,7 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
         Error error = (Error) responseObj;
         Assert.assertNotNull(error);
         Assert.assertNotNull(error.getCode());
-        Assert.assertEquals(error.getCode(), "RFE-60002");
+        Assert.assertEquals(error.getCode(), "RFE-60001");
     }
 
     private static RegistrationSubmissionRequest getRegistrationSubmissionRequest(String flowId,

@@ -26,6 +26,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceCreationModel;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
@@ -71,6 +72,7 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
     private final TestUserMode userMode;
     private APIResourceManagementClient apiResourceManagementClient;
     private OrgMgtRestClient orgMgtRestClient;
+    private IdentityProviderMgtServiceClient idpMgtClient;
     private String level1OrgId;
     private String level2OrgId;
     private String switchedM2MTokenForLevel1Org;
@@ -99,6 +101,7 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
         apiResourceManagementClient = new APIResourceManagementClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(readResource(AUTHORIZED_APIS_JSON, this.getClass())));
+        idpMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
 
         level1OrgId = orgMgtRestClient.addOrganization(L1_SUB_ORG_NAME);
         level2OrgId = orgMgtRestClient.addSubOrganization(L2_SUB_ORG_NAME, level1OrgId);
@@ -113,6 +116,7 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
         orgMgtRestClient.deleteSubOrganization(level2OrgId, level1OrgId);
         orgMgtRestClient.deleteOrganization(level1OrgId);
         orgMgtRestClient.closeHttpClient();
+        idpMgtClient.deleteIdP("SSO");
         apiResourceManagementClient.closeHttpClient();
     }
 
