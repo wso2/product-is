@@ -2480,7 +2480,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.272</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.274</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.54</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.6</identity.inbound.auth.sts.version>
@@ -2585,7 +2585,7 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.51.4</identity.apps.console.version>
+        <identity.apps.console.version>2.52.0</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.3</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.22.6</identity.apps.core.version>
