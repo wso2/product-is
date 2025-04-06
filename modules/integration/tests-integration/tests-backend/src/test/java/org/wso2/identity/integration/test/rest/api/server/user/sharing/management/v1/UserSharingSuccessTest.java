@@ -135,6 +135,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     public void testConclude() throws Exception {
 
         identityProviderMgtServiceClient.deleteIdP("SSO");
+        identityProviderMgtServiceClient = null;
         cleanUpUsers();
         cleanUpRoles(APPLICATION_AUDIENCE, ORGANIZATION_AUDIENCE);
         cleanUpApplications();

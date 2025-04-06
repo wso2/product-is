@@ -73,10 +73,11 @@ public class AppBrandingPreferenceManagementFailureTest extends AppBrandingPrefe
     @AfterClass(alwaysRun = true)
     public void testConclude() throws Exception {
 
-        identityProviderMgtServiceClient.deleteIdP("SSO");
         super.conclude();
         deleteTestApp(testAppId);
         oAuth2RestClient.closeHttpClient();
+        identityProviderMgtServiceClient.deleteIdP("SSO");
+        identityProviderMgtServiceClient = null;
     }
 
     @Test

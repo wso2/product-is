@@ -107,6 +107,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
         identityProviderMgtServiceClient.deleteIdP("SSO");
+        identityProviderMgtServiceClient = null;
     }
 
     @Test

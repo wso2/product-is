@@ -285,6 +285,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
         idpMgtServiceClient.deleteIdP("SSO");
+        idpMgtServiceClient = null;
         client.close();
     }
 

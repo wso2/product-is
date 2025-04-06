@@ -177,6 +177,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         oAuth2RestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         identityProviderMgtServiceClient.deleteIdP("SSO");
+        identityProviderMgtServiceClient = null;
     }
 
     @BeforeMethod(alwaysRun = true)

@@ -130,6 +130,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
         super.conclude();
         identityProviderMgtServiceClient.deleteIdP("SSO");
+        identityProviderMgtServiceClient = null;
         OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
         OAuth2Util.deleteApplication(oAuth2RestClient, b2bApplicationID);
         oAuth2RestClient.closeHttpClient();

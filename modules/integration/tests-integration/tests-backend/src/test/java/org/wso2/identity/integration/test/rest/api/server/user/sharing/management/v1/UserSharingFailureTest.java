@@ -159,6 +159,7 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         cleanUpDetailMaps();
         closeRestClients();
         identityProviderMgtServiceClient.deleteIdP("SSO");
+        identityProviderMgtServiceClient = null;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

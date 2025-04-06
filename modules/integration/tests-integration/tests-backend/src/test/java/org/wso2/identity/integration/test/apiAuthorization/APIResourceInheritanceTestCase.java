@@ -117,6 +117,7 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
         orgMgtRestClient.deleteOrganization(level1OrgId);
         orgMgtRestClient.closeHttpClient();
         idpMgtClient.deleteIdP("SSO");
+        idpMgtClient = null;
         apiResourceManagementClient.closeHttpClient();
     }
 
