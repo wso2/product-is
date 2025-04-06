@@ -77,6 +77,7 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
 
         try {
             deleteUser(TEST_USER_1);
+            remoteUSMServiceClient = null;
         } catch (Exception e) {
             log.error("Error while deleting the user :" + TEST_USER_1, e);
         }
