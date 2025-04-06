@@ -134,12 +134,12 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     @AfterClass(alwaysRun = true)
     public void testConclude() throws Exception {
 
+        identityProviderMgtServiceClient.deleteIdP("SSO");
         cleanUpUsers();
         cleanUpRoles(APPLICATION_AUDIENCE, ORGANIZATION_AUDIENCE);
         cleanUpApplications();
         cleanUpOrganizations();
         cleanUpDetailMaps();
-        identityProviderMgtServiceClient.deleteIdP("SSO");
         closeRestClients();
     }
 

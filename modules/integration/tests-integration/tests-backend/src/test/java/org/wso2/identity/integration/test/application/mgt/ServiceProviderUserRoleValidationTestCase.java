@@ -29,6 +29,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.application.common.model.xsd.ApplicationBasicInfo;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
@@ -164,6 +165,10 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
     public void testApplicationCountForUserWithoutFilter() throws Exception {
 
         int count = applicationManagementServiceClient.getCountOfAllApplications();
+        for (ApplicationBasicInfo applicationBasicInfo :
+                applicationManagementServiceClient.getAllApplicationBasicInfo()) {
+            log.info("Application Name: " + applicationBasicInfo.getApplicationName());
+        }
         if (enableRoleValidation) {
             Assert.assertEquals(count, APPLICATION_COUNT_WITHOUT_FILTER,
                     String.format("The expected application count without a filter does not match the actual " +
