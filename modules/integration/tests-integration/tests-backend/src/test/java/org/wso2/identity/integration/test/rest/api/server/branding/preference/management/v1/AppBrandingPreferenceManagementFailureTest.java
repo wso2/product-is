@@ -66,7 +66,6 @@ public class AppBrandingPreferenceManagementFailureTest extends AppBrandingPrefe
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
         testAppId = createTestApp();
     }
 

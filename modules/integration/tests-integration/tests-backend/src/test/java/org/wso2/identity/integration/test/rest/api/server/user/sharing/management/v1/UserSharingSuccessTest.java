@@ -127,7 +127,6 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         setupOrganizations();
         setupApplicationsAndRoles();
         setupUsers();
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
     }
 
     @Override

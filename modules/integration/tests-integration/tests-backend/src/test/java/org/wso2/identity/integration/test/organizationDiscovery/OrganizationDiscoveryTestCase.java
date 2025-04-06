@@ -284,9 +284,9 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         claimManagementRestClient.closeHttpClient();
         oAuth2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
+        client.close();
         idpMgtServiceClient.deleteIdP("SSO");
         idpMgtServiceClient = null;
-        client.close();
     }
 
     private void applyEmailAsUsernameConfig() throws Exception {
