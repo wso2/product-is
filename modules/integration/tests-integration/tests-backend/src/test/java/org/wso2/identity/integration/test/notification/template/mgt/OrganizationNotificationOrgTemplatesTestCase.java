@@ -154,6 +154,7 @@ public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationT
         orgMgtRestClient.closeHttpClient();
 
         identityProviderMgtServiceClient.deleteIdP("SSO");
+        identityProviderMgtServiceClient = null;
     }
 
     @Test(description = "Add email org template in root organization.")

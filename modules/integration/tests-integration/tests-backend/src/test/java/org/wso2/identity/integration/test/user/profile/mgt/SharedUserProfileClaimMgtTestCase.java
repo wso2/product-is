@@ -276,6 +276,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         orgMgtRestClient.deleteOrganization(level1OrgId);
         orgMgtRestClient.closeHttpClient();
         idpMgtServiceClient.deleteIdP("SSO");
+        idpMgtServiceClient = null;
         scim2RestClient.closeHttpClient();
         userSharingRestClient.closeHttpClient();
         claimManagementRestClient.deleteExternalClaim(ENCODED_SCIM2_CUSTOM_SCHEMA_DIALECT_URI,

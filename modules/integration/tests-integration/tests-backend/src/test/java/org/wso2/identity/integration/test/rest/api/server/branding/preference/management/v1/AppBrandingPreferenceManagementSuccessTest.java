@@ -82,7 +82,6 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
                 new JSONObject(readResource("organization-self-service-apis.json")));
-        identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
 
         // Create a three level (including root organization) organization hierarchy.
         level1OrgId = orgMgtRestClient.addOrganization("l1-org");

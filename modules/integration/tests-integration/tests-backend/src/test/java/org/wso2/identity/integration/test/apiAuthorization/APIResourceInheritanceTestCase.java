@@ -116,9 +116,9 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
         orgMgtRestClient.deleteSubOrganization(level2OrgId, level1OrgId);
         orgMgtRestClient.deleteOrganization(level1OrgId);
         orgMgtRestClient.closeHttpClient();
+        apiResourceManagementClient.closeHttpClient();
         idpMgtClient.deleteIdP("SSO");
         idpMgtClient = null;
-        apiResourceManagementClient.closeHttpClient();
     }
 
     @Test(description = "Test organization API and org level console specific API are inherited from root organization.")

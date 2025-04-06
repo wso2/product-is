@@ -192,6 +192,7 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
         deleteApp(application.getId());
         orgMgtRestClient.deleteOrganization(subOrgId);
         idpMgtServiceClient.deleteIdP("SSO");
+        idpMgtServiceClient = null;
         orgMgtRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         oAuth2RestClient.closeHttpClient();
