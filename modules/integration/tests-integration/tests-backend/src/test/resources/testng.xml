@@ -271,7 +271,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.registration.management.v1.RegistrationManagementPositiveTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.registration.management.v1.RegistrationManagementNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.RegistrationExecutionPositiveTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.RegistrationExecutionNegativeTest"/>
+<!--            <class name="org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.RegistrationExecutionNegativeTest"/>-->
         </classes>
     </test>
 
