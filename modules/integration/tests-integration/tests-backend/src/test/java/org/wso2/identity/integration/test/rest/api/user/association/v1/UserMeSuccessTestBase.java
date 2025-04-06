@@ -245,10 +245,8 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
 
     private void createLocalAssociation(String body) {
 
-        Response response = getResponseOfPost(this.userAssociationEndpointURI, body);
-        log.info("Local association creation response: " + response.asString());
-        log.info("Local association creation response body: " + response.getBody().prettyPrint());
-        response.then()
+        getResponseOfPost(this.userAssociationEndpointURI, body)
+                .then()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .log().ifValidationFails();
