@@ -41,7 +41,6 @@ import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServi
 import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedInputStream;
@@ -94,7 +93,6 @@ public class RESTTestBase extends ISIntegrationTest {
     protected AutomationContext context;
 
     protected RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
-    protected SCIM2RestClient scim2RestClient;
     protected UserProfileMgtServiceClient userProfileMgtServiceClient;
     protected IdentityProviderMgtServiceClient identityProviderMgtServiceClient;
     protected String swaggerDefinition;
@@ -126,7 +124,6 @@ public class RESTTestBase extends ISIntegrationTest {
                 .build();
         validationFilter = new OpenApiValidationFilter(openAPIValidator);
         remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
-        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         userProfileMgtServiceClient = new UserProfileMgtServiceClient(backendURL, sessionCookie);
         identityProviderMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
     }

@@ -30,7 +30,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
-import org.wso2.identity.integration.test.utils.UserUtil;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -48,6 +48,8 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
     private static final String TEST_USER_1 = "TestUser01";
     private static final String TEST_USER_PW = "Test@123";
     private TestUserMode userMode;
+    private SCIM2RestClient scim2RestClient;
+    private String testUserId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserMeNegativeTestBase(TestUserMode userMode) throws Exception {
@@ -62,11 +64,12 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
     @BeforeClass(alwaysRun = true)
     public void init() throws XPathExpressionException, RemoteException {
 
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
 
         try {
-            createUser(TEST_USER_1, TEST_USER_PW);
+            testUserId = createUser(TEST_USER_1, TEST_USER_PW);
         } catch (Exception e) {
             log.error("Error while creating the user :" + TEST_USER_1, e);
         }
@@ -78,8 +81,9 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
         super.conclude();
 
         try {
-            deleteUser(TEST_USER_1);
+            deleteUser(TEST_USER_1, testUserId);
             remoteUSMServiceClient = null;
+            scim2RestClient.closeHttpClient();
         } catch (Exception e) {
             log.error("Error while deleting the user :" + TEST_USER_1, e);
         }
@@ -144,19 +148,18 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
                 .log().ifValidationFails();
     }
 
-    protected void createUser(String username, String password) throws Exception {
+    protected String createUser(String username, String password) throws Exception {
 
         log.info("Creating User " + username);
         UserObject userObject = new UserObject();
         userObject.setUserName(username);
         userObject.setPassword(password);
-        scim2RestClient.createUser(userObject);
+        return scim2RestClient.createUser(userObject);
     }
 
-    protected void deleteUser(String username) throws Exception {
+    protected void deleteUser(String username, String testUserId) throws Exception {
 
         log.info("Deleting User " + username);
-        String userId = UserUtil.getUserId(username, tenantInfo);
-        scim2RestClient.deleteUser(userId);
+        scim2RestClient.deleteUser(testUserId);
     }
 }
