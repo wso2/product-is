@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpStatus;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -32,7 +31,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -58,6 +60,11 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     private String federatedAssociationIdHolder;
     private String associatedUserIdHolder;
     private TestUserMode userMode;
+    private SCIM2RestClient scim2RestClient;
+    private IdpMgtRestClient idpMgtRestClient;
+    private String testUserId1;
+    private String testUserId2;
+    private String idpId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserMeSuccessTestBase(TestUserMode userMode) throws Exception {
@@ -72,14 +79,16 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     @BeforeClass(alwaysRun = true)
     public void init() throws XPathExpressionException, RemoteException {
 
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
 
         try {
-            createUser(TEST_USER_1, TEST_USER_PW, null);
-            createUser(TEST_USER_2, TEST_USER_PW, null);
+            testUserId1 = createUser(TEST_USER_1, TEST_USER_PW);
+            testUserId2 = createUser(TEST_USER_2, TEST_USER_PW);
 
-            createIdP(EXTERNAL_IDP_NAME);
+            idpId = createIdP(EXTERNAL_IDP_NAME);
             createMyFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
             createMyFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_2);
         } catch (Exception e) {
@@ -93,15 +102,17 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         super.conclude();
 
         try {
-            deleteUser(TEST_USER_1);
-            deleteUser(TEST_USER_2);
+            deleteUser(TEST_USER_1, testUserId1);
+            deleteUser(TEST_USER_2, testUserId2);
 
-            deleteIdP(EXTERNAL_IDP_NAME);
+            deleteIdP(idpId);
 
             // Clear up any possible associations that may have created while running tests. The following delete
             // operations are expected to silently ignore any non-existing federated associations.
             deleteFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
             deleteFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_2);
+            scim2RestClient.closeHttpClient();
+            idpMgtRestClient.closeHttpClient();
         } catch (Exception e) {
             log.error("Error while deleting the users :" + TEST_USER_1 + ", and " + TEST_USER_2, e);
         }
@@ -217,10 +228,13 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    protected void createUser(String username, String password, String[] roles) throws Exception {
+    protected String createUser(String username, String password) throws Exception {
 
         log.info("Creating User " + username);
-        remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
+        UserObject userObject = new UserObject();
+        userObject.setUserName(username);
+        userObject.setPassword(password);
+        return scim2RestClient.createUser(userObject);
     }
 
     protected void createMyFederatedAssociation(String idpName, String associatedUserId) throws Exception {
@@ -230,10 +244,10 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         userProfileMgtServiceClient.addFedIdpAccountAssociation(idpName, associatedUserId);
     }
 
-    protected void deleteUser(String username) throws Exception {
+    protected void deleteUser(String username, String testUserId) throws Exception {
 
         log.info("Deleting User " + username);
-        remoteUSMServiceClient.deleteUser(username);
+        scim2RestClient.deleteUser(testUserId);
     }
 
     protected void deleteFederatedAssociation(String idpName, String associatedUserId) throws Exception {
@@ -257,23 +271,15 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         return Base64.getUrlEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8));
     }
 
-    private void createIdP(String idpName) {
+    private String createIdP(String idpName) throws Exception {
 
-        try {
-            IdentityProvider identityProvider = new IdentityProvider();
-            identityProvider.setIdentityProviderName(idpName);
-            identityProviderMgtServiceClient.addIdP(identityProvider);
-        } catch (Exception e) {
-            Assert.fail("Error while trying to create Identity Provider", e);
-        }
+        IdentityProviderPOSTRequest idpPostRequest = new IdentityProviderPOSTRequest()
+                .name(idpName);
+        return idpMgtRestClient.createIdentityProvider(idpPostRequest);
     }
 
-    private void deleteIdP(String idpName) {
+    private void deleteIdP(String idpId) throws Exception {
 
-        try {
-            identityProviderMgtServiceClient.deleteIdP(idpName);
-        } catch (Exception e) {
-            Assert.fail("Error while trying to delete Identity Provider", e);
-        }
+        idpMgtRestClient.deleteIdp(idpId);
     }
 }
