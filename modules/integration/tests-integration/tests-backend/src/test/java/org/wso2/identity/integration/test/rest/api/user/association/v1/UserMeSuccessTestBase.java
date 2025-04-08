@@ -32,7 +32,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -76,8 +79,8 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         initUrls("me");
 
         try {
-            createUser(TEST_USER_1, TEST_USER_PW, null);
-            createUser(TEST_USER_2, TEST_USER_PW, null);
+            createUser(TEST_USER_1, TEST_USER_PW);
+            createUser(TEST_USER_2, TEST_USER_PW);
 
             createIdP(EXTERNAL_IDP_NAME);
             createMyFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
@@ -217,10 +220,13 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    protected void createUser(String username, String password, String[] roles) throws Exception {
+    protected void createUser(String username, String password) throws Exception {
 
         log.info("Creating User " + username);
-        remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
+        UserObject userObject = new UserObject();
+        userObject.setUserName(username);
+        userObject.setPassword(password);
+        scim2RestClient.createUser(userObject);
     }
 
     protected void createMyFederatedAssociation(String idpName, String associatedUserId) throws Exception {
@@ -233,7 +239,8 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     protected void deleteUser(String username) throws Exception {
 
         log.info("Deleting User " + username);
-        remoteUSMServiceClient.deleteUser(username);
+        String userId = UserUtil.getUserId(username, tenantInfo);
+        scim2RestClient.deleteUser(userId);
     }
 
     protected void deleteFederatedAssociation(String idpName, String associatedUserId) throws Exception {
@@ -260,9 +267,10 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     private void createIdP(String idpName) {
 
         try {
-            IdentityProvider identityProvider = new IdentityProvider();
-            identityProvider.setIdentityProviderName(idpName);
-            identityProviderMgtServiceClient.addIdP(identityProvider);
+            IdpMgtRestClient idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
+            IdentityProviderPOSTRequest idpPostRequest = new IdentityProviderPOSTRequest()
+                    .name(idpName);
+            idpMgtRestClient.createIdentityProvider(idpPostRequest);
         } catch (Exception e) {
             Assert.fail("Error while trying to create Identity Provider", e);
         }
@@ -271,7 +279,8 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     private void deleteIdP(String idpName) {
 
         try {
-            identityProviderMgtServiceClient.deleteIdP(idpName);
+            IdpMgtRestClient idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
+            idpMgtRestClient.deleteIdp(idpName);
         } catch (Exception e) {
             Assert.fail("Error while trying to delete Identity Provider", e);
         }

@@ -29,6 +29,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -64,7 +66,7 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
         initUrls("me");
 
         try {
-            createUser(TEST_USER_1, TEST_USER_PW, null);
+            createUser(TEST_USER_1, TEST_USER_PW);
         } catch (Exception e) {
             log.error("Error while creating the user :" + TEST_USER_1, e);
         }
@@ -142,15 +144,19 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
                 .log().ifValidationFails();
     }
 
-    protected void createUser(String username, String password, String[] roles) throws Exception {
+    protected void createUser(String username, String password) throws Exception {
 
         log.info("Creating User " + username);
-        remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
+        UserObject userObject = new UserObject();
+        userObject.setUserName(username);
+        userObject.setPassword(password);
+        scim2RestClient.createUser(userObject);
     }
 
     protected void deleteUser(String username) throws Exception {
 
         log.info("Deleting User " + username);
-        remoteUSMServiceClient.deleteUser(username);
+        String userId = UserUtil.getUserId(username, tenantInfo);
+        scim2RestClient.deleteUser(userId);
     }
 }
