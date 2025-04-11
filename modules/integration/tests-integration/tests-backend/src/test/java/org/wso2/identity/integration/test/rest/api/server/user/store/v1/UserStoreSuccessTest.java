@@ -111,9 +111,20 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue());
-        userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId);
         String location = response.getHeader(HttpHeaders.LOCATION);
+        waitTillUserStoreIsDeployed(location);
         domainId = location.substring(location.lastIndexOf("/") + 1);
+    }
+
+    private void waitTillUserStoreIsDeployed(String endpoint) throws InterruptedException {
+
+        Response response = getResponseOfGet(endpoint);
+        int count = 10;
+        while (response.getStatusCode() == HttpStatus.SC_NOT_FOUND && count > 0) {
+            Thread.sleep(5000);
+            response = getResponseOfGet(endpoint);
+            count--;
+        }
     }
 
     @Test(dependsOnMethods = {"testAddSecondaryUserStore"})
