@@ -2453,7 +2453,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.107</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.108</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2480,7 +2480,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.275</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.276</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.54</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.8</identity.inbound.auth.sts.version>
@@ -2509,7 +2509,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.23</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.24</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.7</identity.outbound.auth.samlsso.version>
@@ -2585,8 +2585,8 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.52.3</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.19.4</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.52.9</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.19.5</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.23.2</identity.apps.core.version>
 
