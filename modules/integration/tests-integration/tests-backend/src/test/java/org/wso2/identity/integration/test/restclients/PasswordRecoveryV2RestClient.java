@@ -89,8 +89,8 @@ public class PasswordRecoveryV2RestClient extends RestBaseClient {
                 throw new IllegalStateException("Recovery API returned an empty response.");
             }
 
-            JsonNode firstMode = root.get(0);
-            JsonNode channelInfo = firstMode.get(CHANNEL_INFO);
+            JsonNode firstNode = root.get(0);
+            JsonNode channelInfo = firstNode.get(CHANNEL_INFO);
             if (channelInfo == null || !channelInfo.has("recoveryCode") || !channelInfo.has("channels")) {
                 throw new IllegalStateException("Response missing expected channel information.");
             }
