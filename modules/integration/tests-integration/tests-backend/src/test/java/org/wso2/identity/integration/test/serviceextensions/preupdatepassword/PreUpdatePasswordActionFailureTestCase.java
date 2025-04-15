@@ -22,6 +22,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -351,7 +354,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         String htmlContent = EntityUtils.toString(postResponse.getEntity());
         switch (expectedPasswordUpdateResponse.getStatusCode()) {
             case HttpServletResponse.SC_BAD_REQUEST:
-                assertTrue(htmlContent.contains(expectedPasswordUpdateResponse.getErrorDetail()));
+                assertHtmlErrorDescription(htmlContent);
                 break;
             case HttpServletResponse.SC_INTERNAL_SERVER_ERROR:
                 assertTrue(htmlContent.contains(PASSWORD_RESET_ERROR));
@@ -359,5 +362,16 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             default:
                 Assert.fail("Unexpected response status code: " + postResponse.getStatusLine().getStatusCode());
         }
+        EntityUtils.consume(postResponse.getEntity());
+    }
+
+    private void assertHtmlErrorDescription(String htmlResponse) {
+
+        Document doc = Jsoup.parse(htmlResponse);
+        Elements header = doc.select("[data-testid=error-page-header]");
+        String actualText = header.text().trim();
+
+        assertEquals(actualText, expectedPasswordUpdateResponse.getErrorDetail(),
+                "Error description text does not match");
     }
 }
