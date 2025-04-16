@@ -309,7 +309,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 4));
         validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 3));
         validateFilteredUser(USER_NAME_ATTRIBUTE, ENDWITH, USERNAME.substring(4, USERNAME.length()));
-        validateFilteredUserByEmailAddresses(EMAIL_ADDRESSES_ATTRIBUTE, CONTAINS, EMAIL_TYPE_WORK_CLAIM_VALUE);
+        validateFilteredUserByEmailAddresses(EMAIL_ADDRESSES_ATTRIBUTE, CONTAINS, EMAIL_TYPE_HOME_CLAIM_VALUE);
     }
 
     private void validateFilteredUser(String attributeName, String operator, String attributeValue) throws IOException {
