@@ -283,8 +283,14 @@
         {
           "name": "Recovery.AdminPasswordReset.OTP",
           "value": "false",
-          "displayName": "Enable password reset via OTP",
-          "description": "User gets notified with a one time password to try with SSO login"
+          "displayName": "Enable password reset via Email OTP",
+          "description": "User gets notified with a one-time password to Email try with SSO login"
+        },
+        {
+          "name": "Recovery.AdminPasswordReset.SMSOTP",
+          "value": "false",
+          "displayName": "Enable password reset via SMS OTP",
+          "description": "User gets notified with a one-time password to Mobile try with SSO login"
         },
         {
           "name": "Recovery.AdminPasswordReset.Offline",
