@@ -2585,10 +2585,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.53.0</identity.apps.console.version>
+        <identity.apps.console.version>2.53.1</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.5</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.23.4</identity.apps.core.version>
+        <identity.apps.core.version>2.23.5</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.381</identity.apps.tests.version>
 
