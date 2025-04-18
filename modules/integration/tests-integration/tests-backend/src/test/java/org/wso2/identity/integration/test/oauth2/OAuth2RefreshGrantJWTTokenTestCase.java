@@ -211,7 +211,7 @@ public class OAuth2RefreshGrantJWTTokenTestCase extends OAuth2ServiceAbstractInt
         });
     }
 
-    @Test(groups = "wso2.is", description = "Call introspect endpoint", dependsOnMethods = "testGetAccessTokenFromRefreshToken")
+    @Test(groups = "wso2.is", description = "Call introspect endpoint for the refresh token", dependsOnMethods = "testGetAccessTokenFromRefreshToken")
     public void testIntrospectRefreshToken() throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
@@ -235,20 +235,28 @@ public class OAuth2RefreshGrantJWTTokenTestCase extends OAuth2ServiceAbstractInt
         EntityUtils.consume(response.getEntity());
         JSONObject jsonResponse = new JSONObject(responseString);
 
-        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the introspection response");
-        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the introspection response");
+        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the refresh token introspection response");
+        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the refresh token introspection response");
         long exp = jsonResponse.getLong("exp");
-        assertTrue(jsonResponse.has("iat"), "Issued at timestamp not found in the introspection response");
+        assertTrue(jsonResponse.has("iat"),
+                "Issued at timestamp not found in the refresh token introspection response");
         long iat = jsonResponse.getLong("iat");
 
         assertEquals((exp - iat), applicationConfig.getRefreshTokenExpiryTime(),
                 "Invalid expiry time for the refresh token.");
 
-        assertTrue(jsonResponse.has("scope"), "Scopes not found in the introspection response");
+        assertTrue(jsonResponse.has("scope"), "Scopes not found in the refresh token introspection response");
+        List<String> authorizedScopes = Arrays.asList(jsonResponse.getString("scope").split(" "));
+        List<String> expectedScopes = tokenScopes.getGrantedScopes();
+        for (String expectedScope : expectedScopes) {
+            assertTrue(authorizedScopes.contains(expectedScope),
+                    "Scope " + expectedScope + " not found in the refresh token introspection.");
+        }
+
         assertTrue((Boolean) jsonResponse.get("active"), "Refresh token is inactive");
         assertEquals(jsonResponse.get("token_type"), "Refresh", "Invalid token type");
         assertEquals(jsonResponse.get("client_id"), authorizedAccessTokenContext.getClientId(),
-                "Invalid client id in the introspection response");
+                "Invalid client id in the refresh token introspection response");
     }
 
     private JWTClaimsSet getJWTClaimSetFromToken(String jwtToken) throws ParseException {

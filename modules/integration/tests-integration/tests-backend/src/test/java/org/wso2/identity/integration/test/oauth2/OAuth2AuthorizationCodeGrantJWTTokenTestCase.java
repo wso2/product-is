@@ -358,19 +358,28 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
         EntityUtils.consume(response.getEntity());
         JSONObject jsonResponse = new JSONObject(responseString);
 
-        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the introspection response");
-        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the introspection response");
+        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the refresh token introspection response");
+        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the refresh token introspection response");
         long exp = jsonResponse.getLong("exp");
-        assertTrue(jsonResponse.has("iat"), "Issued at timestamp not found in the introspection response");
+        assertTrue(jsonResponse.has("iat"),
+                "Issued at timestamp not found in the refresh token introspection response");
         long iat = jsonResponse.getLong("iat");
 
         assertEquals((exp - iat), applicationConfig.getRefreshTokenExpiryTime(),
                 "Invalid expiry time for the refresh token.");
 
-        assertTrue(jsonResponse.has("scope"), "Scopes not found in the introspection response");
+        assertTrue(jsonResponse.has("scope"), "Scopes not found in the refresh token introspection response");
+        List<String> authorizedScopes = Arrays.asList(jsonResponse.getString("scope").split(" "));
+        List<String> expectedScopes = tokenScopes.getGrantedScopes();
+        for (String expectedScope : expectedScopes) {
+            assertTrue(authorizedScopes.contains(expectedScope),
+                    "Scope " + expectedScope + " not found in the refresh token introspection.");
+        }
+
         assertTrue((Boolean) jsonResponse.get("active"), "Refresh token is inactive");
         assertEquals(jsonResponse.get("token_type"), "Refresh", "Invalid token type");
-        assertEquals(jsonResponse.get("client_id"), clientId, "Invalid client id in the introspection response");
+        assertEquals(jsonResponse.get("client_id"), clientId,
+                "Invalid client id in the refresh token introspection response");
     }
 
     @Test(groups = "wso2.is", description = "Validate additional user claims", dependsOnMethods = "testExtractJWTAccessTokenClaims")
