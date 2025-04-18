@@ -41,6 +41,7 @@ import java.nio.file.Paths;
 
 public class UserProfileAdminTestCase extends ISIntegrationTest {
 
+    public static final String IDP_NAME = "idp1";
     private UserProfileMgtServiceClient userProfileMgtClient;
     private UserManagementClient userMgtClient;
     private AuthenticatorClient logManger;
@@ -78,6 +79,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
         userMgtClient.deleteUser(userId1);
+        idpMgtClient.deleteIdP(IDP_NAME);
         logManger = null;
         log.info("Replacing identity.xml with default configurations");
 
@@ -180,7 +182,6 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
 
         String username = "testUser2";
         String password = "passWord1@";
-        String idpName = "idp1";
 
         // create a user
         userMgtClient.addUser(username, password, new String[]{"admin"}, "default");
@@ -190,13 +191,14 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         userProfileMgtClient = new UserProfileMgtServiceClient(backendURL, username, password);
 
         IdentityProvider idp = new IdentityProvider();
-        idp.setIdentityProviderName(idpName);
+
+        idp.setIdentityProviderName(IDP_NAME);
         idpMgtClient.addIdP(idp);
-        Assert.assertNotNull(idpMgtClient.getIdPByName(idpName));
+        Assert.assertNotNull(idpMgtClient.getIdPByName(IDP_NAME));
 
         // create a federated user account association
-        userProfileMgtClient.addFedIdpAccountAssociation(idpName, "dummy_idp_account_1");
-        userProfileMgtClient.addFedIdpAccountAssociation(idpName, "dummy_idp_account_2");
+        userProfileMgtClient.addFedIdpAccountAssociation(IDP_NAME, "dummy_idp_account_1");
+        userProfileMgtClient.addFedIdpAccountAssociation(IDP_NAME, "dummy_idp_account_2");
 
         AssociatedAccountDTO[] associatedFedUserAccountIds = userProfileMgtClient.getAssociatedFedUserAccountIds();
         Assert.assertNotNull(associatedFedUserAccountIds);
