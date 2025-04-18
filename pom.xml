@@ -2470,7 +2470,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.63</identity.governance.version>
+        <identity.governance.version>1.11.64</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
@@ -2585,7 +2585,7 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.52.14</identity.apps.console.version>
+        <identity.apps.console.version>2.53.0</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.5</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.23.4</identity.apps.core.version>
