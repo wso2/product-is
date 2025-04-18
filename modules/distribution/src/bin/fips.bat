@@ -1,6 +1,6 @@
 @echo off
 rem ----------------------------------------------------------------------------
-rem Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+rem Copyright (c) 2023-2025, WSO2 LLC. (https://www.wso2.com).
 rem
 rem WSO2 LLC. licenses this file to you under the Apache License,
 rem Version 2.0 (the "License"); you may not use this file except
@@ -16,11 +16,11 @@ rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
 
-set BC_FIPS_VERSION=1.0.2.4
-set BCPKIX_FIPS_VERSION=1.0.7
+set BC_FIPS_VERSION=2.1.0
+set BCPKIX_FIPS_VERSION=2.1.9
 
-set EXPECTED_BC_FIPS_CHECKSUM=da62b32cb72591f5b4d322e6ab0ce7de3247b534
-set EXPECTED_BCPKIX_FIPS_CHECKSUM=fe07959721cfa2156be9722ba20fdfee2b5441b0
+set EXPECTED_BC_FIPS_CHECKSUM=c8df3d47f9854f3e9ca57e9fc862da18c9381fa9
+set EXPECTED_BCPKIX_FIPS_CHECKSUM=722eaefa83fd8c53e1fc019bde25e353258ed22b
 
 rem ----- Only set CARBON_HOME if not already set ----------------------------
 :checkServer
