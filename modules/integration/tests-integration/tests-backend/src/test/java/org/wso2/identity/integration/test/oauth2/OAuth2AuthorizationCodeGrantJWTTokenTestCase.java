@@ -21,6 +21,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -67,12 +68,12 @@ import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.INTRO_SPEC_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 
 public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceAbstractIntegrationTest {
@@ -119,6 +120,7 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
         return new Object[][]{
                 {new ApplicationConfig.Builder().tokenType(ApplicationConfig.TokenType.JWT)
                         .grantTypes(Arrays.asList("authorization_code", "refresh_token")).expiryTime(300)
+                        .refreshTokenExpiryTime(86400)
                         .audienceList(Arrays.asList("audience1", "audience2", "audience3"))
                         .claimsList(Arrays.asList(emailClaimConfig, givenNameClaimConfig, familyNameClaimConfig))
                         .skipConsent(true).build(),
@@ -332,6 +334,45 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
         });
     }
 
+    @Test(groups = "wso2.is", description = "Call introspect endpoint", dependsOnMethods = "testExtractJWTAccessTokenClaims")
+    public void testIntrospectRefreshToken() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("token", refreshToken));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(isServer.getContextTenant().getTenantAdmin().getUserName(),
+                        isServer.getContextTenant().getTenantAdmin().getPassword())));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, urlParameters,
+                getTenantQualifiedURL(INTRO_SPEC_ENDPOINT, tenantInfo.getDomain()));
+
+        assertNotNull(response, "Failed to receive a response for introspection request.");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                response.getStatusLine().getReasonPhrase());
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        JSONObject jsonResponse = new JSONObject(responseString);
+
+        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the introspection response");
+        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the introspection response");
+        long exp = jsonResponse.getLong("exp");
+        assertTrue(jsonResponse.has("iat"), "Issued at timestamp not found in the introspection response");
+        long iat = jsonResponse.getLong("iat");
+
+        assertEquals((exp - iat), applicationConfig.getRefreshTokenExpiryTime(),
+                "Invalid expiry time for the refresh token.");
+
+        assertTrue(jsonResponse.has("scope"), "Scopes not found in the introspection response");
+        assertTrue((Boolean) jsonResponse.get("active"), "Refresh token is inactive");
+        assertEquals(jsonResponse.get("token_type"), "Refresh", "Invalid token type");
+        assertEquals(jsonResponse.get("client_id"), clientId, "Invalid client id in the introspection response");
+    }
+
     @Test(groups = "wso2.is", description = "Validate additional user claims", dependsOnMethods = "testExtractJWTAccessTokenClaims")
     public void testRefreshTokenGrant() throws Exception {
 
@@ -351,6 +392,7 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
         refreshGrantJWTTokenTestCase.testValidateExpiryTime();
         refreshGrantJWTTokenTestCase.testValidateScopes();
         refreshGrantJWTTokenTestCase.testValidateAdditionalUserClaims();
+        refreshGrantJWTTokenTestCase.testIntrospectRefreshToken();
     }
 
     private String addUser(AuthorizingUser user) throws Exception {

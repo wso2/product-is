@@ -21,6 +21,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -53,6 +54,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.INTRO_SPEC_ENDPOINT;
 
 public class OAuth2RefreshGrantJWTTokenTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -207,6 +209,46 @@ public class OAuth2RefreshGrantJWTTokenTestCase extends OAuth2ServiceAbstractInt
                         "Value for claim " + claim.getOidcClaimUri() + " is incorrect in the access token.");
             }
         });
+    }
+
+    @Test(groups = "wso2.is", description = "Call introspect endpoint", dependsOnMethods = "testGetAccessTokenFromRefreshToken")
+    public void testIntrospectRefreshToken() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("token", authorizedAccessTokenContext.getRefreshToken()));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(isServer.getContextTenant().getTenantAdmin().getUserName(),
+                        isServer.getContextTenant().getTenantAdmin().getPassword())));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, urlParameters,
+                getTenantQualifiedURL(INTRO_SPEC_ENDPOINT, tenantInfo.getDomain()));
+
+        assertNotNull(response, "Failed to receive a response for introspection request.");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                response.getStatusLine().getReasonPhrase());
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        JSONObject jsonResponse = new JSONObject(responseString);
+
+        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the introspection response");
+        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the introspection response");
+        long exp = jsonResponse.getLong("exp");
+        assertTrue(jsonResponse.has("iat"), "Issued at timestamp not found in the introspection response");
+        long iat = jsonResponse.getLong("iat");
+
+        assertEquals((exp - iat), applicationConfig.getRefreshTokenExpiryTime(),
+                "Invalid expiry time for the refresh token.");
+
+        assertTrue(jsonResponse.has("scope"), "Scopes not found in the introspection response");
+        assertTrue((Boolean) jsonResponse.get("active"), "Refresh token is inactive");
+        assertEquals(jsonResponse.get("token_type"), "Refresh", "Invalid token type");
+        assertEquals(jsonResponse.get("client_id"), authorizedAccessTokenContext.getClientId(),
+                "Invalid client id in the introspection response");
     }
 
     private JWTClaimsSet getJWTClaimSetFromToken(String jwtToken) throws ParseException {
