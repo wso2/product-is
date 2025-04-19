@@ -2585,7 +2585,7 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.53.2</identity.apps.console.version>
+        <identity.apps.console.version>2.53.3</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.5</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.23.5</identity.apps.core.version>
