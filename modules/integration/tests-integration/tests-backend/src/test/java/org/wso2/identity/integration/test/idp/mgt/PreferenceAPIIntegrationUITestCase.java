@@ -164,8 +164,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
         updateResidentIDPProperties(superTenantResidentIDP, Map.of(
                 ENABLE_USERNAME_EMAIL_RECOVERY_PROP_KEY, "true",
-                ENABLE_USERNAME_RECOVERY_PROP_KEY, "true"
-               ));
+                ENABLE_USERNAME_RECOVERY_PROP_KEY, "true"));
         String content = sendAuthorizeRequest();
         Assert.assertTrue(content.contains(RECOVERY_USERNAME_CONTENT));
     }
@@ -175,8 +174,7 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
 
         updateResidentIDPProperties(superTenantResidentIDP, Map.of(
                 ENABLE_USERNAME_SMS_RECOVERY_PROP_KEY, "true",
-                ENABLE_USERNAME_RECOVERY_PROP_KEY, "true"
-                                                                  ));
+                ENABLE_USERNAME_RECOVERY_PROP_KEY, "true"));
         String content = sendAuthorizeRequest();
         Assert.assertTrue(content.contains(RECOVERY_USERNAME_CONTENT));
     }
