@@ -159,13 +159,24 @@ public class PreferenceAPIIntegrationUITestCase extends OAuth2ServiceAbstractInt
         Assert.assertTrue(content.contains(CREATE_ACCOUNT_CONTENT));
     }
 
-    @Test(groups = "wso2.is", description = "Check Username recovery Login Page")
-    public void testUsernameRecovery() throws Exception {
+    @Test(groups = "wso2.is", description = "Check Username recovery Login Page while Email Channel is enabled")
+    public void testUsernameRecoveryWithEmail() throws Exception {
 
         updateResidentIDPProperties(superTenantResidentIDP, Map.of(
                 ENABLE_USERNAME_EMAIL_RECOVERY_PROP_KEY, "true",
                 ENABLE_USERNAME_RECOVERY_PROP_KEY, "true"
                ));
+        String content = sendAuthorizeRequest();
+        Assert.assertTrue(content.contains(RECOVERY_USERNAME_CONTENT));
+    }
+
+    @Test(groups = "wso2.is", description = "Check Username recovery Login Page while SMS Channel is enabled")
+    public void testUsernameRecoveryWithSms() throws Exception {
+
+        updateResidentIDPProperties(superTenantResidentIDP, Map.of(
+                ENABLE_USERNAME_SMS_RECOVERY_PROP_KEY, "true",
+                ENABLE_USERNAME_RECOVERY_PROP_KEY, "true"
+                                                                  ));
         String content = sendAuthorizeRequest();
         Assert.assertTrue(content.contains(RECOVERY_USERNAME_CONTENT));
     }
