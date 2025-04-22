@@ -55,7 +55,6 @@ import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
-import org.wso2.identity.integration.test.oauth2.dataprovider.model.AuthorizingUser;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
@@ -73,6 +72,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RefreshTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
@@ -192,6 +192,13 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 				.map(UserClaimConfig::getOidcClaimUri).collect(Collectors.toList());
 		accessTokenConfiguration.accessTokenAttributes(accessTokenClaimList);
 		oidcConfig.accessToken(accessTokenConfiguration);
+
+		if (applicationConfig.getRefreshTokenExpiryTime() > 0) {
+			RefreshTokenConfiguration refreshTokenConfiguration = new RefreshTokenConfiguration();
+			refreshTokenConfiguration.expiryInSeconds(applicationConfig.getRefreshTokenExpiryTime())
+					.renewRefreshToken(false);
+			oidcConfig.refreshToken(refreshTokenConfiguration);
+		}
 
 		if (applicationConfig.getAudienceList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
 			oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
