@@ -28,6 +28,7 @@ import javax.validation.Valid;
 public class RegistrationInitiationRequest {
 
     private String applicationId;
+    private String callbackUrl;
 
     /**
      * Unique identifier for the application
@@ -49,6 +50,24 @@ public class RegistrationInitiationRequest {
         this.applicationId = applicationId;
     }
 
+    /**
+     * URL to redirect during registration if required
+     **/
+    public RegistrationInitiationRequest callbackUrl(String callbackUrl) {
+
+        this.callbackUrl = callbackUrl;
+        return this;
+    }
+
+    @ApiModelProperty(example = "https://localhost:3000/myRegistrationPortal", value = "URL to redirect during registration if required")
+    @JsonProperty("callbackUrl")
+    @Valid
+    public String getCallbackUrl() {
+        return callbackUrl;
+    }
+    public void setCallbackUrl(String callbackUrl) {
+        this.callbackUrl = callbackUrl;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -60,12 +79,13 @@ public class RegistrationInitiationRequest {
             return false;
         }
         RegistrationInitiationRequest registrationInitiationRequest = (RegistrationInitiationRequest) o;
-        return Objects.equals(this.applicationId, registrationInitiationRequest.applicationId);
+        return Objects.equals(this.applicationId, registrationInitiationRequest.applicationId) &&
+                Objects.equals(this.callbackUrl, registrationInitiationRequest.callbackUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(applicationId);
+        return Objects.hash(applicationId, callbackUrl);
     }
 
     @Override
@@ -75,6 +95,7 @@ public class RegistrationInitiationRequest {
         sb.append("class RegistrationInitiationRequest {\n");
 
         sb.append("    applicationId: ").append(toIndentedString(applicationId)).append("\n");
+        sb.append("    callbackUrl: ").append(toIndentedString(callbackUrl)).append("\n");
         sb.append("}");
         return sb.toString();
     }
