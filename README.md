@@ -109,10 +109,13 @@ Please do not report security issues via GitHub issues. Instead, follow the WSO2
 
 Join our community!
 ========================
-Read our documentation at [https://is.docs.wso2.com/en/latest/](https://is.docs.wso2.com/en/latest/)
-Get help on [Stack Overflow](https://stackoverflow.com/questions/tagged/wso2-is).
-Join the conversation on [Discord](https://discord.gg/wso2).
-Learn more by reading articles from our library.
+- Read our documentation at [https://is.docs.wso2.com/en/latest/](https://is.docs.wso2.com/en/latest/).
+- Get help on [Stack Overflow](https://stackoverflow.com/questions/tagged/wso2-is).
+- Join the conversation on [Discord](https://discord.gg/wso2).
+- Learn more by reading articles from our [library](https://wso2.com/library/).
+
+
+
 
 
 Commercial Support
