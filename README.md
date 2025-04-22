@@ -22,7 +22,7 @@ WSO2 Identity Server is a powerful, modern identity and access management soluti
 To learn more about WSO2 Identity Server please visit [WSO2 Identity Server website](https://wso2.com/identity-server/)
 
 
-> ### Looking for a Hosted Identity Solution?
+> ##### Looking for a Hosted Identity Solution?
 > Try **[Asgardeo](https://wso2.com/asgardeo/)** free of charge – a public identity cloud solution (iDaaS) offering, built on the same technology core as **WSO2 Identity Server**.
 
 
