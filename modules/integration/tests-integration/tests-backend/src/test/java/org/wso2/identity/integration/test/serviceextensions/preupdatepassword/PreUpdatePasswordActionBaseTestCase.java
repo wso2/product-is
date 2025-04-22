@@ -68,6 +68,12 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
     private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
+    private static final String ENABLE_ADMIN_PASSWORD_RESET_OFFLINE = "Recovery.AdminPasswordReset.Offline";
+    private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_OTP = "Recovery.AdminPasswordReset.OTP";
+    private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_LINK = "Recovery.AdminPasswordReset.RecoveryLink";
+    public static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_SMS_OTP = "Recovery.AdminPasswordReset.SMSOTP";
+    private static final String TRUE_STRING = "true";
+    private static final String FALSE_STRING = "false";
 
     protected static final String TEST_USER1_USERNAME = "testUsername";
     protected static final String TEST_USER2_USERNAME = "testUsername2";
@@ -86,6 +92,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String ACTION_DESCRIPTION = "This is a test for pre update password action type";
     protected static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
+
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -129,14 +136,31 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 "YWNjb3VudC1yZWNvdmVyeQ", connectorsPatchReq);
     }
 
-    protected void updateAdminPasswordResetRecoveryEmailFeatureStatus(boolean enable) throws IOException {
+    protected void enableAdminPasswordResetRecoveryEmailLink() throws IOException {
 
         ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
         connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
-        PropertyReq propertyReq = new PropertyReq();
-        propertyReq.setName("Recovery.AdminPasswordReset.RecoveryLink");
-        propertyReq.setValue(enable ? "true" : "false");
-        connectorsPatchReq.addProperties(propertyReq);
+
+        PropertyReq emailLinkProperty = new PropertyReq();
+        emailLinkProperty.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_LINK);
+        emailLinkProperty.setValue(TRUE_STRING);
+        connectorsPatchReq.addProperties(emailLinkProperty);
+
+        PropertyReq emailOtpProperty = new PropertyReq();
+        emailOtpProperty.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_OTP);
+        emailOtpProperty.setValue(FALSE_STRING);
+        connectorsPatchReq.addProperties(emailOtpProperty);
+
+        PropertyReq offlineProperty = new PropertyReq();
+        offlineProperty.setName(ENABLE_ADMIN_PASSWORD_RESET_OFFLINE);
+        offlineProperty.setValue(FALSE_STRING);
+        connectorsPatchReq.addProperties(offlineProperty);
+
+        PropertyReq smsOtpProperty = new PropertyReq();
+        smsOtpProperty.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_SMS_OTP);
+        smsOtpProperty.setValue(FALSE_STRING);
+        connectorsPatchReq.addProperties(smsOtpProperty);
+
         identityGovernanceRestClient.updateConnectors("QWNjb3VudCBNYW5hZ2VtZW50",
                 "YWRtaW4tZm9yY2VkLXBhc3N3b3JkLXJlc2V0", connectorsPatchReq);
     }

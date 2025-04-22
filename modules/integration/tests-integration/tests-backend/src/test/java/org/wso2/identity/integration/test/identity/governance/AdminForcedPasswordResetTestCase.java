@@ -75,16 +75,18 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     private RemoteUserStoreManagerServiceClient remoteUSMServiceClient;
     private static final String PROFILE_NAME = "default";
     private static final String TEST_USER_USERNAME = "testUser";
-    private static final String TEST_USER_PASSWORD = "Ab@123";
+    private static final String TEST_USER_PASSWORD = "Abcd@123";
     private static final String TEST_USER_NEW_PASSWORD = "AbNew@123";
     private static final String TEST_USER_EMAIL = "test@test.com";
     private static final String TEST_ROLE = "testRole";
 
     private static final String TRUE_STRING = "true";
+    private static final String FALSE_STRING = "false";
 
     private static final String ENABLE_ADMIN_PASSWORD_RESET_OFFLINE = "Recovery.AdminPasswordReset.Offline";
-    private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_OTP = "Recovery.AdminPasswordReset.OTP";
-    private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_RECOVERY_LINK = "Recovery.AdminPasswordReset.RecoveryLink";
+    private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_OTP = "Recovery.AdminPasswordReset.OTP";
+    private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_LINK = "Recovery.AdminPasswordReset.RecoveryLink";
+    public static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_SMS_OTP = "Recovery.AdminPasswordReset.SMSOTP";
     private static final String ENABLE_NOTIFICATION_BASED_PASSWORD_RECOVERY = "Recovery.Notification.Password.Enable";
     private static final String ADMIN_FORCED_PASSWORD_RESET_CLAIM = "http://wso2.org/claims/identity/adminForcedPasswordReset";
     private static final String OTP_CLAIM = "http://wso2.org/claims/oneTimePassword";
@@ -254,24 +256,27 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
                 isServer.getSuperTenant().getTenantAdmin().getPassword(),
                 isServer.getInstance().getHosts().get(DEFAULT));
 
-        Property[] newProperties = new Property[3];
-
-        Property prop = new Property();
-        prop.setName(option);
-        prop.setValue(TRUE_STRING);
-
         Property prop1 = new Property();
-        prop1.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_RECOVERY_LINK);
-        prop1.setValue("false");
+        prop1.setName(option);
+        prop1.setValue(TRUE_STRING);
 
         Property prop2 = new Property();
-        prop2.setName(ENABLE_NOTIFICATION_BASED_PASSWORD_RECOVERY);
-        prop2.setValue(TRUE_STRING);
+        prop2.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_LINK);
+        prop2.setValue(FALSE_STRING);
 
-        newProperties[0] = prop;
-        newProperties[1] = prop1;
-        newProperties[2] = prop2;
-        identityGovernanceServiceClient.updateConfigurations(newProperties);
+        Property prop3 = new Property();
+        prop3.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_OTP);
+        prop3.setValue(FALSE_STRING);
+
+        Property prop4 = new Property();
+        prop4.setName(ENABLE_ADMIN_PASSWORD_RESET_WITH_SMS_OTP);
+        prop4.setValue(FALSE_STRING);
+
+        Property prop5 = new Property();
+        prop5.setName(ENABLE_NOTIFICATION_BASED_PASSWORD_RECOVERY);
+        prop5.setValue(TRUE_STRING);
+
+        identityGovernanceServiceClient.updateConfigurations(new Property[]{prop1, prop2, prop3, prop4, prop5});
     }
 
     protected void setUpUser() throws UserStoreException, RemoteException, RemoteUserStoreManagerServiceUserStoreExceptionException, UserAdminUserAdminException, UserProfileMgtServiceUserProfileExceptionException, LogoutAuthenticationExceptionException {
