@@ -2504,7 +2504,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.14</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.49</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.50</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
