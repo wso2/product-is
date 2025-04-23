@@ -337,9 +337,6 @@ else
   fi
 
   cd product-is
-  git checkout update-integration-tests-for-admin-force-password-reset
-  current_branch=$(git branch --show-current)
-  echo "You are on branch: $current_branch"
 
   echo "Updating dependency version in product-is..."
   echo "=========================================================="
