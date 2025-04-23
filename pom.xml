@@ -2484,7 +2484,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.oauth.version>7.0.280</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.11.54</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.11.55</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.8</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
@@ -2515,7 +2515,7 @@
         <identity.outbound.auth.oidc.version>5.12.24</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.9.7</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.9.8</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.7</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.5.8</identity.outbound.auth.requestpath.oauth.version>
 
