@@ -132,7 +132,6 @@ If you are planning on contributing to the development efforts of WSO2 Identity 
 
 Please follow the details instructions available here: https://wso2.github.io  
 
-<If necessary, insert specific instructions for your product here>
 Can you fill this survey ?
 WSO2 wants to learn more about our open source software (OSS) community and your communication preferences to serve you better.
 
