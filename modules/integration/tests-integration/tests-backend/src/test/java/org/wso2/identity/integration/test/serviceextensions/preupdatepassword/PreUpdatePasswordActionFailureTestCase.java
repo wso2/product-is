@@ -134,7 +134,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         userId = scim2RestClient.createUser(userInfo);
 
         updatePasswordRecoveryFeatureStatus(true);
-        updateAdminPasswordResetRecoveryEmailFeatureStatus(true);
+        enableAdminPasswordResetRecoveryEmailLink();
         updateAdminInitiatedPasswordResetEmailFeatureStatus(true);
 
         actionId = createPreUpdatePasswordAction(ACTION_NAME, ACTION_DESCRIPTION);
@@ -158,7 +158,6 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     public void atEnd() throws Exception {
 
         updatePasswordRecoveryFeatureStatus(false);
-        updateAdminPasswordResetRecoveryEmailFeatureStatus(false);
         updateAdminInitiatedPasswordResetEmailFeatureStatus(false);
 
         deleteAction(PRE_UPDATE_PASSWORD_API_PATH, actionId);
