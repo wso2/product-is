@@ -82,7 +82,7 @@ Refer to this page to consult pre-requisites based on your target architecture a
 Installation
 ----------------------------------
 
-1. This product requires a JDK to run. We support JDK from v11 through v21. Check our [supported JDKs](https://is.docs.wso2.com/en/latest/deploy/get-started/install/#environment-compatibility) documentation  for a complete list.
+1. WSO2 Identity Server requires a JDK to run and supports versions from JDK 11 through JDK 21. For the full list of supported versions, please refer to the [environment compatibility](https://is.docs.wso2.com/en/latest/deploy/get-started/install/#environment-compatibility) section in the documentation.
 2. Make sure you have set the `JAVA_HOME` environment variable to point to your JDK. See [this documentation](https://is.docs.wso2.com/en/latest/deploy/get-started/install/#install-on-different-platforms) if you need help doing so. 
 3. Extract the downloaded distribution zip file and go to the 'bin' directory
 4. Run the wso2server.sh or wso2server.bat script based on your operating system.
