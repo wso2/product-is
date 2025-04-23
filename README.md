@@ -128,7 +128,7 @@ To learn more, check WSO2 Subscription.
 
 Contributing
 ===============
-If you are planning on contributing to the development efforts of WSO2 <Product Name>, you can do that by checking out the latest development version. The master branch holds the latest unreleased source code.
+If you are planning on contributing to the development efforts of WSO2 Identity Server, you can do that by checking out the latest development version. The master branch holds the latest unreleased source code.
 
 Please follow the details instructions available here: https://wso2.github.io  
 
