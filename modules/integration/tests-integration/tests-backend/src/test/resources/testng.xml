@@ -40,7 +40,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCMetadataTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2JWKSEndpointTestCase"/>
-            <!--<class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
