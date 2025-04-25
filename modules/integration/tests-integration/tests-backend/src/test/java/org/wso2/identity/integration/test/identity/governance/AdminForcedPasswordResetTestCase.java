@@ -118,6 +118,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
         userMgtClient.deleteUser(TEST_USER_USERNAME);
         mockSMSProvider.stop();
+        notificationSenderRestClient.deleteSMSProvider();
     }
 
     @Test(groups = "wso2.is.governance")
