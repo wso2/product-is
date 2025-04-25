@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.identity.integration.test.identity.governance;
 
 import com.icegreen.greenmail.util.GreenMailUtil;
@@ -82,8 +81,6 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     private IdentityGovernanceServiceClient identityGovernanceServiceClient;
     private MockSMSProvider mockSMSProvider;
     private NotificationSenderRestClient notificationSenderRestClient;
-
-
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -178,7 +175,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
                 "Account is not locked after admin forced password reset for user.");
         Thread.sleep(5000);
         String smsOTP = mockSMSProvider.getSmsContent();
-        assertTrue(StringUtils.isNotBlank(smsOTP));
+        assertTrue(StringUtils.isNotBlank(smsOTP), "SMS OTP is not received.");
     }
 
     private void enableAdminForcedPasswordResetOption(PasswordResetOption option) throws Exception {
