@@ -8,6 +8,11 @@
         "name": "custom_claim_string_0",
         "value": "testCustomClaim0"
       }
+    },
+    {
+      "op": "replace",
+      "path": "/refreshToken/claims/expires_in",
+      "value": 47400
     }
   ]
 }
