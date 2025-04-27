@@ -249,7 +249,7 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
     }
 
     @Test(groups = "wso2.is", description =
-            "Verify that the refresh token expiry time is correctly updated by the action in the authorization code grant flow.",
+            "Verify that the refresh token expiry time is not updated by the action in the refresh grant flow.",
             dependsOnMethods = "testGetAccessTokenWithCodeGrant")
     public void tesRefreshTokenExpiryTimeFailureInIntrospectForCodeGrant() throws Exception {
 

@@ -240,7 +240,8 @@ public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends 
     }
 
     @Test(groups = "wso2.is", description =
-            "Test obtaining a refresh token using authorization code grant when the pre-issue access token action completes successfully.",
+            "Test obtaining a refresh token using authorization code grant when the pre-issue access token " +
+                    "action completes successfully for re-login.",
             dependsOnMethods = "tesRefreshTokenExpiryTimeInIntrospectForRefreshGrant")
     public void testGetRefreshTokenWithCodeGrantForReLogin() throws Exception {
 
@@ -257,7 +258,8 @@ public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends 
     }
 
     @Test(groups = "wso2.is", description =
-            "Verify that the refresh token expiry time is correctly updated by the action in the authorization code grant flow.",
+            "Verify that the refresh token expiry time is correctly updated by the action in the " +
+                    "authorization code grant on re-login.",
             dependsOnMethods = "testGetRefreshTokenWithCodeGrantForReLogin")
     public void tesRefreshTokenExpiryTimeInIntrospectForCodeGrantForReLogin() throws Exception {
 
