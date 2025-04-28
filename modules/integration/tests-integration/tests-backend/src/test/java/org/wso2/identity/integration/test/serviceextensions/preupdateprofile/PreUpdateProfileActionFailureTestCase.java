@@ -38,8 +38,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
+/**
+ * Integration test class for testing the pre update profile action execution.
+ * This test case extends {@link ActionsBaseTestCase} and focuses on failure scenarios related
+ * to profile update flows.
+ */
 public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActionBaseTestCase {
 
     private final String tenantId;
@@ -244,3 +252,4 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
         assertEquals(request.getClaims()[0].getValue(), updateClaimValue);
     }
 }
+

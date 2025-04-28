@@ -129,7 +129,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     public void testUserUpdateProfileWithAddOperation() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.ADD);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         userPatchOp.setValue(TEST_USER_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
@@ -147,7 +147,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     public void testUserUpdateProfileWithReplaceOperation() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         userPatchOp.setValue(TEST_USER_UPDATED_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
@@ -165,7 +165,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     public void testUserUpdateProfileWithRemoveOperation() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REMOVE);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
         org.json.simple.JSONObject response = scim2RestClient.updateUserMe(patchUserInfo,
@@ -182,7 +182,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     public void testAdminUpdateProfileWithAddOperation() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.ADD);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         userPatchOp.setValue(TEST_USER_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
@@ -198,7 +198,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     public void testAdminUpdateProfileWithReplaceOperation() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         userPatchOp.setValue(TEST_USER_UPDATED_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
@@ -214,7 +214,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     public void testAdminUpdateProfileWithRemoveOperation() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REMOVE);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         //userPatchOp.setValue(TEST_USER_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
@@ -231,7 +231,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
 
         String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.ADD);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         userPatchOp.setValue(TEST_USER_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
@@ -249,7 +249,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
 
         String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.ADD);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         userPatchOp.setValue(TEST_USER_UPDATED_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
@@ -267,7 +267,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
 
         String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REMOVE);
-        userPatchOp.setPath("nickName");
+        userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
         org.json.simple.JSONObject response = scim2RestClient.updateUserWithBearerToken(patchUserInfo, userId, token);
@@ -313,5 +313,5 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         assertNull(request.getClaims()[0].getUpdatingValue());
         assertEquals(request.getClaims()[0].getValue(), updateClaimValue);
     }
-
 }
+

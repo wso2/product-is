@@ -24,6 +24,9 @@ import org.wso2.carbon.identity.action.execution.api.exception.ActionExecutionRe
 
 import java.util.Objects;
 
+/**
+ * Represents the model for user updating their profile.
+ */
 @JsonDeserialize(builder = ProfileUpdatingUser.Builder.class)
 public class ProfileUpdatingUser extends User {
 
@@ -84,3 +87,4 @@ public class ProfileUpdatingUser extends User {
         }
     }
 }
+
