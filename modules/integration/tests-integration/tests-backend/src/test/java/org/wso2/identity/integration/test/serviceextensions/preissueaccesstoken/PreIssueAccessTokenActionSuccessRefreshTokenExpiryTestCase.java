@@ -180,6 +180,11 @@ public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends 
                     FileUtils.readFileInClassPathAsString(
                             "actions/response/refresh-token-expiry-response-refresh-grant.json"),
                     200);
+        } else if (method.getName().equals("testGetRefreshTokenWithCodeGrantForReLogin")) {
+            serviceExtensionMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
+                    "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME, MOCK_SERVER_AUTH_BASIC_PASSWORD),
+                    FileUtils.readFileInClassPathAsString(
+                            "actions/response/refresh-token-expiry-response-code-grant.json"), 200);
         }
     }
 
@@ -211,7 +216,7 @@ public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends 
 
     @Test(groups = "wso2.is", description =
             "Test obtaining a refresh token using refresh token grant when the pre-issue access token action completes successfully.",
-            dependsOnMethods = "testGetRefreshTokenWithCodeGrant")
+            dependsOnMethods = "tesRefreshTokenExpiryTimeInIntrospectForCodeGrant")
     public void testGetRefreshTokenFromRefreshGrant() throws Exception {
 
         HttpResponse response = sendTokenRequestForRefreshGrant();
@@ -232,6 +237,34 @@ public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends 
 
         JSONObject jsonResponse = invokeIntrospectEndpoint(refreshToken);
         assertIntrospectResponse(jsonResponse, UPDATED_REFRESH_TOKEN_EXPIRY_TIME_BY_ACTION_AT_REFRESH_GRANT);
+    }
+
+    @Test(groups = "wso2.is", description =
+            "Test obtaining a refresh token using authorization code grant when the pre-issue access token " +
+                    "action completes successfully for re-login.",
+            dependsOnMethods = "tesRefreshTokenExpiryTimeInIntrospectForRefreshGrant")
+    public void testGetRefreshTokenWithCodeGrantForReLogin() throws Exception {
+
+        sendAuthorizeRequestForReLogin();
+        HttpResponse response = sendTokenRequestForCodeGrant();
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        JSONObject jsonResponse = new JSONObject(responseString);
+
+        assertTokenResponse(jsonResponse);
+
+        accessTokenClaims = getJWTClaimSetFromToken(accessToken);
+        assertNotNull(accessTokenClaims);
+    }
+
+    @Test(groups = "wso2.is", description =
+            "Verify that the refresh token expiry time is correctly updated by the action in the " +
+                    "authorization code grant on re-login.",
+            dependsOnMethods = "testGetRefreshTokenWithCodeGrantForReLogin")
+    public void tesRefreshTokenExpiryTimeInIntrospectForCodeGrantForReLogin() throws Exception {
+
+        JSONObject jsonResponse = invokeIntrospectEndpoint(refreshToken);
+        assertIntrospectResponse(jsonResponse, UPDATED_REFRESH_TOKEN_EXPIRY_TIME_BY_ACTION_AT_CODE_GRANT);
     }
 
     private void assertTokenResponse(JSONObject jsonResponse) throws JSONException {
@@ -352,6 +385,27 @@ public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends 
         sessionDataKey = keyValues.get(0).getValue();
         assertNotNull(sessionDataKey, "Session data key is null");
         EntityUtils.consume(response.getEntity());
+    }
+
+    private void sendAuthorizeRequestForReLogin() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("client_id", clientId));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+
+        String scopes = String.join(" ", requestedScopes);
+        urlParameters.add(new BasicNameValuePair("scope", scopes));
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        assertNotNull(locationHeader, "Redirection URL to the application with authorization code is null.");
+        EntityUtils.consume(response.getEntity());
+
+        authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
+        assertNotNull(authorizationCode);
     }
 
     private void performUserLogin() throws Exception {
