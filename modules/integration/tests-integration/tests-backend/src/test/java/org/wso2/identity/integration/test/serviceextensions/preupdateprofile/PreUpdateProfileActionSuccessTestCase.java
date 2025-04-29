@@ -20,22 +20,34 @@ package org.wso2.identity.integration.test.serviceextensions.preupdateprofile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.testng.annotations.*;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
-import org.wso2.identity.integration.test.serviceextensions.model.*;
+import org.wso2.identity.integration.test.serviceextensions.model.PreUpdateProfileActionRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.ActionType;
+import org.wso2.identity.integration.test.serviceextensions.model.PreUpdateProfileEvent;
+import org.wso2.identity.integration.test.serviceextensions.model.PreUpdateProfileRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.ProfileUpdatingUser;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
-import org.wso2.identity.integration.test.rest.api.user.common.model.*;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
-import org.wso2.identity.integration.test.restclients.UsersRestClient;
 import org.wso2.identity.integration.test.utils.FileUtils;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-
 
 /**
  * Integration test class for testing the pre update profile action execution.
@@ -48,7 +60,6 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     private final TestUserMode userMode;
 
     private SCIM2RestClient scim2RestClient;
-    private UsersRestClient usersRestClient;
 
     private String clientId;
     private String clientSecret;
@@ -80,7 +91,6 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         super.init(userMode);
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        usersRestClient = new UsersRestClient(serverURL, tenantInfo);
 
         application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -137,6 +147,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
                 TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
 
         assertNotNull(response);
+        assertUpdatingClaimValue(TEST_USER_CLAIM_VALUE);
         assertActionRequestPayload(UserItemAddGroupobj.OpEnum.ADD, userId, TEST_USER_CLAIM_VALUE, TEST_USER_CLAIM_VALUE,
                 PreUpdateProfileEvent.FlowInitiatorType.USER, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_CLAIM_VALUE;
@@ -155,6 +166,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
                 TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
 
         assertNotNull(response);
+        assertUpdatingClaimValue(TEST_USER_UPDATED_CLAIM_VALUE);
         assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REPLACE, userId, currentClaimValue, TEST_USER_UPDATED_CLAIM_VALUE,
                 PreUpdateProfileEvent.FlowInitiatorType.USER, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_UPDATED_CLAIM_VALUE;
@@ -172,7 +184,8 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
                 TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
 
         assertNotNull(response);
-        assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REMOVE, userId, currentClaimValue, "",
+        assertRemovingClaimValue();
+        assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REMOVE, userId, currentClaimValue, EMPTY_STRING,
                 PreUpdateProfileEvent.FlowInitiatorType.USER, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_CLAIM_VALUE;
     }
@@ -188,6 +201,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
                 .addOperations(userPatchOp);
         scim2RestClient.updateUser(patchUserInfo, userId);
 
+        assertUpdatingClaimValue(TEST_USER_CLAIM_VALUE);
         assertActionRequestPayload(UserItemAddGroupobj.OpEnum.ADD, userId, currentClaimValue, TEST_USER_CLAIM_VALUE,
                 PreUpdateProfileEvent.FlowInitiatorType.ADMIN, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_CLAIM_VALUE;
@@ -204,6 +218,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
                 .addOperations(userPatchOp);
         scim2RestClient.updateUser(patchUserInfo, userId);
 
+        assertUpdatingClaimValue(TEST_USER_UPDATED_CLAIM_VALUE);
         assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REPLACE, userId, currentClaimValue, TEST_USER_UPDATED_CLAIM_VALUE,
                 PreUpdateProfileEvent.FlowInitiatorType.ADMIN, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_UPDATED_CLAIM_VALUE;
@@ -215,12 +230,12 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REMOVE);
         userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
-        //userPatchOp.setValue(TEST_USER_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
         scim2RestClient.updateUser(patchUserInfo, userId);
 
-        assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REMOVE, userId, currentClaimValue, "",
+        assertRemovingClaimValue();
+        assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REMOVE, userId, currentClaimValue, EMPTY_STRING,
                 PreUpdateProfileEvent.FlowInitiatorType.ADMIN, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_CLAIM_VALUE;
     }
@@ -238,6 +253,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         org.json.simple.JSONObject response = scim2RestClient.updateUserWithBearerToken(patchUserInfo, userId, token);
 
         assertNotNull(response);
+        assertUpdatingClaimValue(TEST_USER_CLAIM_VALUE);
         assertActionRequestPayload(UserItemAddGroupobj.OpEnum.ADD, userId, currentClaimValue, TEST_USER_CLAIM_VALUE,
                 PreUpdateProfileEvent.FlowInitiatorType.APPLICATION, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_CLAIM_VALUE;
@@ -256,6 +272,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         org.json.simple.JSONObject response = scim2RestClient.updateUserWithBearerToken(patchUserInfo, userId, token);
 
         assertNotNull(response);
+        assertUpdatingClaimValue(TEST_USER_UPDATED_CLAIM_VALUE);
         assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REPLACE, userId, currentClaimValue, TEST_USER_UPDATED_CLAIM_VALUE,
                 PreUpdateProfileEvent.FlowInitiatorType.APPLICATION, PreUpdateProfileEvent.Action.UPDATE);
         currentClaimValue = TEST_USER_UPDATED_CLAIM_VALUE;
@@ -273,8 +290,22 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         org.json.simple.JSONObject response = scim2RestClient.updateUserWithBearerToken(patchUserInfo, userId, token);
 
         assertNotNull(response);
-        assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REMOVE, userId, currentClaimValue, "",
+        assertRemovingClaimValue();
+        assertActionRequestPayload(UserItemAddGroupobj.OpEnum.REMOVE, userId, currentClaimValue, EMPTY_STRING,
                 PreUpdateProfileEvent.FlowInitiatorType.APPLICATION, PreUpdateProfileEvent.Action.UPDATE);
+    }
+
+    private void assertUpdatingClaimValue(String claimValue) throws Exception {
+
+        org.json.simple.JSONObject userObj = scim2RestClient.getUser(userId, null);
+        String value = userObj.get(NICK_NAME_USER_SCHEMA_NAME).toString();
+        Assert.assertEquals(value, claimValue);
+    }
+
+    private void assertRemovingClaimValue() throws Exception {
+
+        org.json.simple.JSONObject userObj = scim2RestClient.getUser(userId, null);
+        Assert.assertNull(userObj.get(NICK_NAME_USER_SCHEMA_NAME));
     }
 
     private void assertActionRequestPayload(UserItemAddGroupobj.OpEnum operation,String userId, String currentClaimValue,

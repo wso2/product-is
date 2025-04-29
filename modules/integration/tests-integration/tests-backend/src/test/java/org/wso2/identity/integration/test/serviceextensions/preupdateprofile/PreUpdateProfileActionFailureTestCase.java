@@ -20,17 +20,30 @@ package org.wso2.identity.integration.test.serviceextensions.preupdateprofile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.testng.annotations.*;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
-import org.wso2.identity.integration.test.rest.api.user.common.model.*;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
-import org.wso2.identity.integration.test.restclients.UsersRestClient;
 import org.wso2.identity.integration.test.serviceextensions.dataprovider.model.ActionResponse;
 import org.wso2.identity.integration.test.serviceextensions.dataprovider.model.ExpectedProfileUpdateResponse;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
-import org.wso2.identity.integration.test.serviceextensions.model.*;
+import org.wso2.identity.integration.test.serviceextensions.model.PreUpdateProfileActionRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.ActionType;
+import org.wso2.identity.integration.test.serviceextensions.model.PreUpdateProfileEvent;
+import org.wso2.identity.integration.test.serviceextensions.model.PreUpdateProfileRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.ProfileUpdatingUser;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.FileUtils;
 
@@ -54,7 +67,6 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
     private final TestUserMode userMode;
 
     private SCIM2RestClient scim2RestClient;
-    private UsersRestClient usersRestClient;
 
     private String clientId;
     private String clientSecret;
@@ -108,7 +120,6 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
         super.init(userMode);
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        usersRestClient = new UsersRestClient(serverURL, tenantInfo);
 
         application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -136,7 +147,6 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
     public void setUp() throws Exception {
 
         serviceExtensionMockServer.resetRequests();
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 
     @AfterClass(alwaysRun = true)
@@ -155,7 +165,7 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
         serviceExtensionMockServer = null;
     }
 
-    @Test(description = "Verify the profile update in self service portal with pre update profile action")
+    @Test(description = "Verify the profile update failure in self service portal with replace operation for pre update profile action")
     public void testUserUpdateProfile() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
@@ -173,12 +183,13 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
             assertEquals(response.get("scimType"), String.valueOf(expectedProfileUpdateResponse.getErrorMessage()));
         }
         assertTrue(response.get("detail").toString().contains(expectedProfileUpdateResponse.getErrorDetail()));
-        assertActionRequestPayload(userId, TEST_USER_GIVEN_NAME, TEST_USER_UPDATED_CLAIM_VALUE, PreUpdateProfileEvent.FlowInitiatorType.USER,
+        assertClaimValue();
+        assertActionRequestPayload(userId, TEST_USER_UPDATED_CLAIM_VALUE, PreUpdateProfileEvent.FlowInitiatorType.USER,
                 PreUpdateProfileEvent.Action.UPDATE);
     }
 
     @Test(dependsOnMethods = "testUserUpdateProfile" ,
-            description = "Verify the admin update profile with pre update profile action")
+            description = "Verify the admin profile update failure with replace operation for pre update profile action")
     public void testAdminUpdateProfile() throws Exception {
 
         UserItemAddGroupobj userPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
@@ -195,12 +206,13 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
             assertEquals(response.get("scimType"), String.valueOf(expectedProfileUpdateResponse.getErrorMessage()));
         }
         assertTrue(response.get("detail").toString().contains(expectedProfileUpdateResponse.getErrorDetail()));
-        assertActionRequestPayload(userId, TEST_USER_GIVEN_NAME, TEST_USER_UPDATED_CLAIM_VALUE, PreUpdateProfileEvent.FlowInitiatorType.ADMIN,
+        assertClaimValue();
+        assertActionRequestPayload(userId, TEST_USER_UPDATED_CLAIM_VALUE, PreUpdateProfileEvent.FlowInitiatorType.ADMIN,
                 PreUpdateProfileEvent.Action.UPDATE);
     }
 
     @Test(dependsOnMethods = "testAdminUpdateProfile",
-            description = "Verify the application update profile with pre update profile action")
+            description = "Verify the application profile update failure with replace operation for pre update profile action")
     public void testApplicationUpdateProfile() throws Exception {
 
         String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
@@ -218,11 +230,19 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
             assertEquals(response.get("scimType"), String.valueOf(expectedProfileUpdateResponse.getErrorMessage()));
         }
         assertTrue(response.get("detail").toString().contains(expectedProfileUpdateResponse.getErrorDetail()));
-        assertActionRequestPayload(userId, TEST_USER_GIVEN_NAME, TEST_USER_UPDATED_CLAIM_VALUE, PreUpdateProfileEvent.FlowInitiatorType.APPLICATION,
+        assertClaimValue();
+        assertActionRequestPayload(userId, TEST_USER_UPDATED_CLAIM_VALUE, PreUpdateProfileEvent.FlowInitiatorType.APPLICATION,
                 PreUpdateProfileEvent.Action.UPDATE);
     }
 
-    private void assertActionRequestPayload(String userId, String currentClaimValue, String updateClaimValue,
+    private void assertClaimValue() throws Exception {
+
+        org.json.simple.JSONObject userObj = scim2RestClient.getUser(userId, null);
+        String value = ((org.json.simple.JSONObject) userObj.get("name")).get("givenName").toString();
+        Assert.assertEquals(value, TEST_USER_GIVEN_NAME);
+    }
+
+    private void assertActionRequestPayload(String userId, String updateClaimValue,
                                             PreUpdateProfileEvent.FlowInitiatorType initiatorType,
                                             PreUpdateProfileEvent.Action action) throws JsonProcessingException {
 
@@ -241,13 +261,10 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
         ProfileUpdatingUser user = actionRequest.getEvent().getProfileUpdatingUser();
 
         assertEquals(user.getId(), userId);
-        assertEquals(user.getClaims()[0].getUri(), NICK_NAME_CLAIM_URI);
-        assertEquals(user.getClaims()[0].getUpdatingValue(), updateClaimValue);
-        assertEquals(user.getClaims()[0].getValue(), currentClaimValue);
 
         PreUpdateProfileRequest request = actionRequest.getEvent().getRequest();
 
-        assertEquals(request.getClaims()[0].getUri(), NICK_NAME_CLAIM_URI);
+        assertEquals(request.getClaims()[0].getUri(), GIVEN_NAME_CLAIM_URI);
         assertNull(request.getClaims()[0].getUpdatingValue());
         assertEquals(request.getClaims()[0].getValue(), updateClaimValue);
     }

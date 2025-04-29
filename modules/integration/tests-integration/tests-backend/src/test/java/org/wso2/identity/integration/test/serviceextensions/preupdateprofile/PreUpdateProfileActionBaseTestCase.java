@@ -58,7 +58,6 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
 
     protected static final String TEST_USER1_USERNAME = "testUsername";
-    protected static final String TEST_USER2_USERNAME = "testUsername2";
     protected static final String TEST_USER_PASSWORD = "TestPassword@123";
     protected static final String TEST_USER_CLAIM_VALUE = "testNickName";
     protected static final String TEST_USER_UPDATED_CLAIM_VALUE = "updateTestNickName";
@@ -67,6 +66,7 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String TEST_USER_EMAIL = "test.user@gmail.com";
     protected static final String NICK_NAME_USER_SCHEMA_NAME = "nickName";
     protected static final String NICK_NAME_CLAIM_URI = "http://wso2.org/claims/nickname";
+    protected static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
     protected static final String PRIMARY_USER_STORE_ID = "UFJJTUFSWQ==";
     protected static final String PRIMARY_USER_STORE_NAME = "PRIMARY";
     protected static final String PRE_UPDATE_PROFILE_API_PATH = "preUpdateProfile";
@@ -74,6 +74,7 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String ACTION_DESCRIPTION = "This is a test for pre update profile action type";
     protected static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
+    protected static final String EMPTY_STRING = "";
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
