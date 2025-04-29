@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -65,6 +65,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
     static final String ORGANIZATION_META_ATTRIBUTES_API_PATH = "/meta-attributes";
+    static final String CHECK_DISCOVERY_API_PATH = "/check-discovery";
     static final String AUTHORIZE_ENDPOINT = "oauth2/authorize";
     static final String TOKEN_ENDPOINT = "oauth2/token";
     static final String INTROSPECT_ENDPOINT = "oauth2/introspect";
@@ -88,6 +89,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String LOGIN_HINT_QUERY_PARAM = "login_hint";
     protected static final String ORG_DISCOVERY_TYPE_QUERY_PARAM = "orgDiscoveryType";
     protected static final String AUTH_FAILURE_MSG_QUERY_PARAM = "authFailureMsg";
+    protected static final String LIMIT_10_QUERY_PARAM = "10";
+    protected static final String LIMIT_MINUS_1_QUERY_PARAM = "-1";
 
     protected static final String ORGANIZATIONS_PATH_PARAM = "organizations";
     protected static final String LINKS_PATH_PARAM = "links";
@@ -133,6 +136,22 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String B2B_USER_NAME = "John";
     protected static final String B2B_USER_PASSWORD = "Test@1234";
     protected static final String B2B_USER_EMAIL = "johndoe@abc.com";
+    protected static final String ORGANIZATION_ID_PLACEHOLDER = "${organizationID}";
+    protected static final String PARENT_ID_PLACEHOLDER = "${parentId}";
+
+    protected static final String ADD_DISCOVERY_ATTRIBUTES_REQUEST_BODY = "add-discovery-attributes-request-body.json";
+    protected static final String ORGANIZATION_SELF_SERVICE_APIS = "organization-self-service-apis.json";
+    protected static final String ADD_DISCOVERY_CONFIG_REQUEST_BODY = "add-discovery-config-request-body.json";
+    protected static final String UPDATE_DISCOVERY_ATTRIBUTES_REQUEST_BODY
+            = "update-discovery-attributes-request-body.json";
+    protected static final String ADD_SMALLER_HOSPITAL_ORGANIZATION_REQUEST_BODY
+            = "add-smaller-hospital-organization-request-body.json";
+    protected static final String ADD_GREATER_HOSPITAL_ORGANIZATION_REQUEST_BODY
+            = "add-greater-hospital-organization-request-body.json";
+    protected static final String CHECK_DISCOVERY_ATTRIBUTES_AVAILABLE_REQUEST_BODY
+            = "check-discovery-attributes-available-request-body.json";
+    protected static final String CHECK_DISCOVERY_ATTRIBUTES_UNAVAILABLE_REQUEST_BODY
+            = "check-discovery-attributes-unavailable-request-body.json";
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
