@@ -52,7 +52,7 @@ import static org.hamcrest.core.Is.is;
  */
 public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase {
 
-    private static final Log log = LogFactory.getLog(UserMeSuccessTestBase.class);
+    private static final Log log = LogFactory.getLog(UserAdminAssociationSuccessBaseTest.class);
     private static final String TEST_USER_1 = "TestUser01";
     private static final String TEST_USER_2 = "TestUser02";
     private static final String TEST_USER_PW = "Test@123";

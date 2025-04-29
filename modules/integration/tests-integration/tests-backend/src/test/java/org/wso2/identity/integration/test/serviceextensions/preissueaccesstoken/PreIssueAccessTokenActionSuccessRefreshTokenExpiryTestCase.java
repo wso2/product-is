@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -39,10 +41,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
-import org.wso2.identity.integration.test.serviceextensions.dataprovider.model.ActionResponse;
-import org.wso2.identity.integration.test.serviceextensions.dataprovider.model.ExpectedTokenResponse;
-import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
@@ -54,6 +52,8 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
+import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.FileUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -62,6 +62,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -82,14 +83,16 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 /**
  * Tests the pre-issue access token action success scenarios with refresh token grant type.
  */
-public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends ActionsBaseTestCase {
+public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends ActionsBaseTestCase {
 
     private static final String TEST_USER = "test_user";
     private static final String TEST_WSO2 = "Test@wso2";
     private static final String PRE_ISSUE_ACCESS_TOKEN_API_PATH = "preIssueAccessToken";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
-    private static final int APP_CONFIGURED_EXPIRY_TIME = 3600;
+    private static final int APP_CONFIGURED_ACCESS_TOKEN_EXPIRY_TIME = 3600;
+    private static final int APP_CONFIGURED_REFRESH_TOKEN_EXPIRY_TIME = 84600;
     private static final int UPDATED_REFRESH_TOKEN_EXPIRY_TIME_BY_ACTION_AT_CODE_GRANT = 47400;
+    private static final int UPDATED_REFRESH_TOKEN_EXPIRY_TIME_BY_ACTION_AT_REFRESH_GRANT = 48600;
     private CloseableHttpClient client;
     private SCIM2RestClient scim2RestClient;
     private List<String> requestedScopes;
@@ -100,40 +103,24 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
     private String actionId;
     private String applicationId;
     private String userId;
+    private String accessToken;
     private String refreshToken;
+    private JWTClaimsSet accessTokenClaims;
     private final TestUserMode userMode;
-    private final ActionResponse actionResponse;
-    private final ExpectedTokenResponse expectedResponse;
     private ServiceExtensionMockServer serviceExtensionMockServer;
 
     @Factory(dataProvider = "testExecutionContextProvider")
-    public PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase(TestUserMode testUserMode,
-                                                                     ActionResponse actionResponse,
-                                                                     ExpectedTokenResponse expectedResponse) {
+    public PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase(TestUserMode testUserMode) {
 
         this.userMode = testUserMode;
-        this.actionResponse = actionResponse;
-        this.expectedResponse = expectedResponse;
     }
 
     @DataProvider(name = "testExecutionContextProvider")
-    public static Object[][] getTestExecutionContext() throws Exception {
+    public static Object[][] getTestExecutionContext() {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER, new ActionResponse(200,
-                        FileUtils.readFileInClassPathAsString("actions/response/incomplete-response.json")),
-                        new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
-                {TestUserMode.SUPER_TENANT_USER, new ActionResponse(200,
-                        FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
-                        new ExpectedTokenResponse(400, "Some failure reason", "Some description")},
-                {TestUserMode.TENANT_USER, new ActionResponse(200,
-                        FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
-                        new ExpectedTokenResponse(400, "Some failure reason", "Some description")},
-                {TestUserMode.TENANT_USER, new ActionResponse(500,
-                        FileUtils.readFileInClassPathAsString("actions/response/error-response.json")),
-                        new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
-                {TestUserMode.TENANT_USER, new ActionResponse(401, "Unauthorized"),
-                        new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
+                {TestUserMode.SUPER_TENANT_USER},
+                {TestUserMode.TENANT_USER}
         };
     }
 
@@ -182,22 +169,28 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
     @BeforeMethod
     public void setupMockServerStub(Method method) throws Exception {
 
-        if (method.getName().equals("testGetAccessTokenWithCodeGrant")) {
+        if (method.getName().equals("testGetRefreshTokenWithCodeGrant")) {
             serviceExtensionMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
                     "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME, MOCK_SERVER_AUTH_BASIC_PASSWORD),
                     FileUtils.readFileInClassPathAsString(
-                            "actions/response/pre-issue-access-token-response-code-before-refresh-with-refresh-token-expiry.json"),
-                    200);
-        } else if (method.getName().equals("testPreIssueAccessTokenActionFailureForRefreshGrant")) {
+                            "actions/response/refresh-token-expiry-response-code-grant.json"), 200);
+        } else if (method.getName().equals("testGetRefreshTokenFromRefreshGrant")) {
             serviceExtensionMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
                     "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME, MOCK_SERVER_AUTH_BASIC_PASSWORD),
-                    actionResponse.getResponseBody(), actionResponse.getStatusCode());
+                    FileUtils.readFileInClassPathAsString(
+                            "actions/response/refresh-token-expiry-response-refresh-grant.json"),
+                    200);
+        } else if (method.getName().equals("testGetRefreshTokenWithCodeGrantForReLogin")) {
+            serviceExtensionMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
+                    "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME, MOCK_SERVER_AUTH_BASIC_PASSWORD),
+                    FileUtils.readFileInClassPathAsString(
+                            "actions/response/refresh-token-expiry-response-code-grant.json"), 200);
         }
     }
 
     @Test(groups = "wso2.is", description =
-            "Get access token with authorization code grant when pre-issue access token action is successful")
-    public void testGetAccessTokenWithCodeGrant() throws Exception {
+            "Test obtaining a refresh token using authorization code grant when the pre-issue access token action completes successfully.")
+    public void testGetRefreshTokenWithCodeGrant() throws Exception {
 
         sendAuthorizeRequest();
         performUserLogin();
@@ -206,27 +199,15 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
         JSONObject jsonResponse = new JSONObject(responseString);
 
-        assertTrue(jsonResponse.has("access_token"), "Access token not found in the token response.");
-        assertTrue(jsonResponse.has("refresh_token"), "Refresh token not found in the token response.");
-        assertTrue(jsonResponse.has("expires_in"), "Expiry time not found in the token response.");
-        assertTrue(jsonResponse.has("token_type"), "Token type not found in the token response.");
+        assertTokenResponse(jsonResponse);
 
-        String accessToken = jsonResponse.getString("access_token");
-        assertNotNull(accessToken, "Access token is null.");
-
-        refreshToken = jsonResponse.getString("refresh_token");
-        assertNotNull(refreshToken, "Refresh token is null.");
-
-        int expiresIn = jsonResponse.getInt("expires_in");
-        assertEquals(expiresIn, APP_CONFIGURED_EXPIRY_TIME, "Invalid expiry time for the access token.");
-
-        String tokenType = jsonResponse.getString("token_type");
-        assertEquals(tokenType, "Bearer", "Invalid token type for the access token.");
+        accessTokenClaims = getJWTClaimSetFromToken(accessToken);
+        assertNotNull(accessTokenClaims);
     }
 
     @Test(groups = "wso2.is", description =
             "Verify that the refresh token expiry time is correctly updated by the action in the authorization code grant flow.",
-            dependsOnMethods = "testGetAccessTokenWithCodeGrant")
+            dependsOnMethods = "testGetRefreshTokenWithCodeGrant")
     public void tesRefreshTokenExpiryTimeInIntrospectForCodeGrant() throws Exception {
 
         JSONObject jsonResponse = invokeIntrospectEndpoint(refreshToken);
@@ -234,27 +215,130 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
     }
 
     @Test(groups = "wso2.is", description =
-            "Get access token from refresh token when pre-issue access token action is successful",
-            dependsOnMethods = "testGetAccessTokenWithCodeGrant")
-    public void testPreIssueAccessTokenActionFailureForRefreshGrant() throws Exception {
+            "Test obtaining a refresh token using refresh token grant when the pre-issue access token action completes successfully.",
+            dependsOnMethods = "tesRefreshTokenExpiryTimeInIntrospectForCodeGrant")
+    public void testGetRefreshTokenFromRefreshGrant() throws Exception {
 
         HttpResponse response = sendTokenRequestForRefreshGrant();
-        assertNotNull(response);
-        assertEquals(response.getStatusLine().getStatusCode(), expectedResponse.getStatusCode());
 
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
         JSONObject jsonResponse = new JSONObject(responseString);
-        assertEquals(jsonResponse.getString("error"), expectedResponse.getErrorMessage());
-        assertEquals(jsonResponse.getString("error_description"), expectedResponse.getErrorDescription());
+
+        assertTokenResponse(jsonResponse);
+
+        accessTokenClaims = getJWTClaimSetFromToken(accessToken);
+        assertNotNull(accessTokenClaims);
     }
 
     @Test(groups = "wso2.is", description =
-            "Verify that the refresh token expiry time is not updated by the action in the refresh grant flow.",
-            dependsOnMethods = "testGetAccessTokenWithCodeGrant")
-    public void tesRefreshTokenExpiryTimeFailureInIntrospectForCodeGrant() throws Exception {
+            "Verify that the refresh token expiry time is correctly updated by the action in the refresh token grant flow.",
+            dependsOnMethods = "testGetRefreshTokenFromRefreshGrant")
+    public void tesRefreshTokenExpiryTimeInIntrospectForRefreshGrant() throws Exception {
+
+        JSONObject jsonResponse = invokeIntrospectEndpoint(refreshToken);
+        assertIntrospectResponse(jsonResponse, UPDATED_REFRESH_TOKEN_EXPIRY_TIME_BY_ACTION_AT_REFRESH_GRANT);
+    }
+
+    @Test(groups = "wso2.is", description =
+            "Test obtaining a refresh token using authorization code grant when the pre-issue access token " +
+                    "action completes successfully for re-login.",
+            dependsOnMethods = "tesRefreshTokenExpiryTimeInIntrospectForRefreshGrant")
+    public void testGetRefreshTokenWithCodeGrantForReLogin() throws Exception {
+
+        sendAuthorizeRequestForReLogin();
+        HttpResponse response = sendTokenRequestForCodeGrant();
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        JSONObject jsonResponse = new JSONObject(responseString);
+
+        assertTokenResponse(jsonResponse);
+
+        accessTokenClaims = getJWTClaimSetFromToken(accessToken);
+        assertNotNull(accessTokenClaims);
+    }
+
+    @Test(groups = "wso2.is", description =
+            "Verify that the refresh token expiry time is correctly updated by the action in the " +
+                    "authorization code grant on re-login.",
+            dependsOnMethods = "testGetRefreshTokenWithCodeGrantForReLogin")
+    public void tesRefreshTokenExpiryTimeInIntrospectForCodeGrantForReLogin() throws Exception {
 
         JSONObject jsonResponse = invokeIntrospectEndpoint(refreshToken);
         assertIntrospectResponse(jsonResponse, UPDATED_REFRESH_TOKEN_EXPIRY_TIME_BY_ACTION_AT_CODE_GRANT);
+    }
+
+    private void assertTokenResponse(JSONObject jsonResponse) throws JSONException {
+
+        assertTrue(jsonResponse.has("access_token"), "Access token not found in the token response.");
+        assertTrue(jsonResponse.has("refresh_token"), "Refresh token not found in the token response.");
+        assertTrue(jsonResponse.has("expires_in"), "Expiry time not found in the token response.");
+        assertTrue(jsonResponse.has("token_type"), "Token type not found in the token response.");
+
+        accessToken = jsonResponse.getString("access_token");
+        assertNotNull(accessToken, "Access token is null.");
+
+        refreshToken = jsonResponse.getString("refresh_token");
+        assertNotNull(refreshToken, "Refresh token is null.");
+
+        int expiresIn = jsonResponse.getInt("expires_in");
+        assertEquals(expiresIn, APP_CONFIGURED_ACCESS_TOKEN_EXPIRY_TIME, "Invalid expiry time for the access token.");
+
+        String tokenType = jsonResponse.getString("token_type");
+        assertEquals(tokenType, "Bearer", "Invalid token type for the access token.");
+    }
+
+    private void assertIntrospectResponse(JSONObject jsonResponse, long expectedRefreshTokenExpiryInSeconds)
+            throws JSONException {
+
+        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the refresh token introspection response");
+        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the refresh token introspection response");
+        long exp = jsonResponse.getLong("exp");
+        assertTrue(jsonResponse.has("iat"),
+                "Issued at timestamp not found in the refresh token introspection response");
+        long iat = jsonResponse.getLong("iat");
+
+        assertEquals((exp - iat), expectedRefreshTokenExpiryInSeconds,
+                "Invalid expiry time for the refresh token.");
+
+        assertTrue(jsonResponse.has("scope"), "Scopes not found in the refresh token introspection response");
+        List<String> authorizedScopes = Arrays.asList(jsonResponse.getString("scope").split(" "));
+        List<String> expectedScopes = requestedScopes;
+        for (String expectedScope : expectedScopes) {
+            assertTrue(authorizedScopes.contains(expectedScope),
+                    "Scope " + expectedScope + " not found in the refresh token introspection.");
+        }
+
+        assertTrue((Boolean) jsonResponse.get("active"), "Refresh token is inactive");
+        assertEquals(jsonResponse.get("token_type"), "Refresh", "Invalid token type");
+        assertEquals(jsonResponse.get("client_id"), clientId,
+                "Invalid client id in the refresh token introspection response");
+    }
+
+    private JSONObject invokeIntrospectEndpoint(String refreshToken)
+            throws XPathExpressionException, IOException, JSONException {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("token", refreshToken));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(isServer.getContextTenant().getTenantAdmin().getUserName(),
+                        isServer.getContextTenant().getTenantAdmin().getPassword())));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, urlParameters,
+                getTenantQualifiedURL(INTRO_SPEC_ENDPOINT, tenantInfo.getDomain()));
+
+        assertNotNull(response, "Failed to receive a response for introspection request.");
+        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                response.getStatusLine().getReasonPhrase());
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        EntityUtils.consume(response.getEntity());
+        assertTrue(StringUtils.isNotBlank(responseString));
+
+        return new JSONObject(responseString);
     }
 
     private HttpResponse sendTokenRequestForRefreshGrant() throws IOException {
@@ -303,7 +387,28 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
         EntityUtils.consume(response.getEntity());
     }
 
-    public void performUserLogin() throws Exception {
+    private void sendAuthorizeRequestForReLogin() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair("client_id", clientId));
+        urlParameters.add(new BasicNameValuePair("redirect_uri", OAuth2Constant.CALLBACK_URL));
+
+        String scopes = String.join(" ", requestedScopes);
+        urlParameters.add(new BasicNameValuePair("scope", scopes));
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
+
+        Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        assertNotNull(locationHeader, "Redirection URL to the application with authorization code is null.");
+        EntityUtils.consume(response.getEntity());
+
+        authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
+        assertNotNull(authorizationCode);
+    }
+
+    private void performUserLogin() throws Exception {
 
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, TEST_USER, TEST_WSO2);
 
@@ -339,60 +444,6 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
 
         return sendPostRequest(client, headers, urlParameters,
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
-    }
-
-    private JSONObject invokeIntrospectEndpoint(String refreshToken)
-            throws XPathExpressionException, IOException, JSONException {
-
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("token", refreshToken));
-
-        List<Header> headers = new ArrayList<>();
-        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
-                getBase64EncodedString(isServer.getContextTenant().getTenantAdmin().getUserName(),
-                        isServer.getContextTenant().getTenantAdmin().getPassword())));
-        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
-        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
-
-        HttpResponse response = sendPostRequest(client, headers, urlParameters,
-                getTenantQualifiedURL(INTRO_SPEC_ENDPOINT, tenantInfo.getDomain()));
-
-        assertNotNull(response, "Failed to receive a response for introspection request.");
-        assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
-                response.getStatusLine().getReasonPhrase());
-
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        EntityUtils.consume(response.getEntity());
-        assertTrue(StringUtils.isNotBlank(responseString));
-
-        return new JSONObject(responseString);
-    }
-
-    private void assertIntrospectResponse(JSONObject jsonResponse, long expectedRefreshTokenExpiryInSeconds)
-            throws JSONException {
-
-        assertTrue(jsonResponse.has("nbf"), "Not Before value not found in the refresh token introspection response");
-        assertTrue(jsonResponse.has("exp"), "Expiry timestamp not found in the refresh token introspection response");
-        long exp = jsonResponse.getLong("exp");
-        assertTrue(jsonResponse.has("iat"),
-                "Issued at timestamp not found in the refresh token introspection response");
-        long iat = jsonResponse.getLong("iat");
-
-        assertEquals((exp - iat), expectedRefreshTokenExpiryInSeconds,
-                "Invalid expiry time for the refresh token.");
-
-        assertTrue(jsonResponse.has("scope"), "Scopes not found in the refresh token introspection response");
-        List<String> authorizedScopes = Arrays.asList(jsonResponse.getString("scope").split(" "));
-        List<String> expectedScopes = requestedScopes;
-        for (String expectedScope : expectedScopes) {
-            assertTrue(authorizedScopes.contains(expectedScope),
-                    "Scope " + expectedScope + " not found in the refresh token introspection.");
-        }
-
-        assertTrue((Boolean) jsonResponse.get("active"), "Refresh token is inactive");
-        assertEquals(jsonResponse.get("token_type"), "Refresh", "Invalid token type");
-        assertEquals(jsonResponse.get("client_id"), clientId,
-                "Invalid client id in the refresh token introspection response");
     }
 
     private String getAuthorizationCodeFromURL(String location) {
@@ -450,17 +501,25 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
                 .claimsList(userClaimConfigs)
                 .grantTypes(new ArrayList<>(Arrays.asList("authorization_code", "refresh_token")))
                 .tokenType(ApplicationConfig.TokenType.JWT)
-                .expiryTime(APP_CONFIGURED_EXPIRY_TIME)
+                .expiryTime(APP_CONFIGURED_ACCESS_TOKEN_EXPIRY_TIME)
+                .refreshTokenExpiryTime(APP_CONFIGURED_REFRESH_TOKEN_EXPIRY_TIME)
                 .skipConsent(true)
                 .build();
 
         ApplicationResponseModel application = addApplication(applicationConfig);
-        String applicationIdentifier = application.getId();
+        String applicationId = application.getId();
 
-        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationIdentifier);
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
         clientId = oidcConfig.getClientId();
         clientSecret = oidcConfig.getClientSecret();
 
-        return applicationIdentifier;
+        return applicationId;
     }
+
+    private JWTClaimsSet getJWTClaimSetFromToken(String jwtToken) throws ParseException {
+
+        SignedJWT signedJWT = SignedJWT.parse(jwtToken);
+        return signedJWT.getJWTClaimsSet();
+    }
+
 }
