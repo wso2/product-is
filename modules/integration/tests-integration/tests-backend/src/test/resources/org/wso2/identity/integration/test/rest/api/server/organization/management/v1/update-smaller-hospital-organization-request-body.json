@@ -1,11 +1,10 @@
 {
-  "name": "Greater Hospital",
-  "orgHandle": "${orgHandle}",
+  "name": "Smaller Hospital",
   "description": "Hospital chain in South Asia",
-  "parentId": "${parentId}",
+  "status": "ACTIVE",
   "attributes": [
     {
-      "key": "Country",
+      "key": "Region",
       "value": "Sri Lanka"
     },
     {

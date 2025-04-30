@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -65,6 +65,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
     static final String ORGANIZATION_META_ATTRIBUTES_API_PATH = "/meta-attributes";
+    static final String CHECK_HANDLE_API_PATH = "/check-handle";
+    static final String ORGANIZATION_META_DATA_PATH = "/metadata";
     static final String AUTHORIZE_ENDPOINT = "oauth2/authorize";
     static final String TOKEN_ENDPOINT = "oauth2/token";
     static final String INTROSPECT_ENDPOINT = "oauth2/introspect";
@@ -73,6 +75,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
     protected static final String ORGANIZATION_ID = "id";
     protected static final String ORGANIZATION_NAME = "name";
+    protected static final String ORGANIZATION_HANDLE = "orgHandle";
     protected static final String ORGANIZATION_NAME_FORMAT = "Org-%d";
 
     protected static final String ORGANIZATION_EMAIL_FORMAT_1 = "org%d.com";
@@ -88,6 +91,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String LOGIN_HINT_QUERY_PARAM = "login_hint";
     protected static final String ORG_DISCOVERY_TYPE_QUERY_PARAM = "orgDiscoveryType";
     protected static final String AUTH_FAILURE_MSG_QUERY_PARAM = "authFailureMsg";
+    protected static final String AVAILABLE = "available";
 
     protected static final String ORGANIZATIONS_PATH_PARAM = "organizations";
     protected static final String LINKS_PATH_PARAM = "links";
@@ -133,6 +137,15 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String B2B_USER_NAME = "John";
     protected static final String B2B_USER_PASSWORD = "Test@1234";
     protected static final String B2B_USER_EMAIL = "johndoe@abc.com";
+    protected static final String ORG_HANDLE_SMALLER_HOSPITAL = "smallerhospital.com";
+    protected static final String ORG_HANDLE_GREATER_HOSPITAL = "greaterhospital.com";
+    protected static final String ORG_NAME_SMALLER_HOSPITAL = "Smaller Hospital";
+    protected static final String ORG_NAME_LITTLE_HOSPITAL = "Little Hospital";
+    protected static final String ORG_HANDLE_PLACEHOLDER = "${orgHandle}";
+
+    protected static final String RENAME_ORGANIZATION_REQUEST_BODY = "rename-organization-request-body.json";
+    protected static final String ORGANIZATION_UPDATE_REQUEST_BODY
+            = "update-smaller-hospital-organization-request-body.json";
 
     protected static String swaggerDefinition;
     protected OAuth2RestClient oAuth2RestClient;
