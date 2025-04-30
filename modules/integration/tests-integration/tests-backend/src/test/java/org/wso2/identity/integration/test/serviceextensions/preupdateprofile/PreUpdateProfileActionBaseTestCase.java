@@ -57,7 +57,7 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
 
-    protected static final String TEST_USER1_USERNAME = "testUsername";
+    protected static final String TEST_USER1_USERNAME = "preUpdateProfileTestUserName";
     protected static final String TEST_USER_PASSWORD = "TestPassword@123";
     protected static final String TEST_USER_CLAIM_VALUE = "testNickName";
     protected static final String TEST_USER_UPDATED_CLAIM_VALUE = "updateTestNickName";
@@ -77,7 +77,6 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String EMPTY_STRING = "";
 
     protected CloseableHttpClient client;
-    protected IdentityGovernanceRestClient identityGovernanceRestClient;
 
     private final CookieStore cookieStore = new BasicCookieStore();
 
@@ -103,7 +102,6 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
                 .setDefaultCookieStore(cookieStore)
                 .build();
 
-        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
     }
 
     protected String createPreUpdateProfileAction(String actionName, String actionDescription) throws IOException {

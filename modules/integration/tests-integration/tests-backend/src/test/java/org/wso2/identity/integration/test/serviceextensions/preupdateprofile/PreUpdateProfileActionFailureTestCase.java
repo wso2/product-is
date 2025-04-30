@@ -156,7 +156,6 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
         deleteApp(application.getId());
         scim2RestClient.deleteUser(userId);
         restClient.closeHttpClient();
-        identityGovernanceRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         actionsRestClient.closeHttpClient();
         client.close();
