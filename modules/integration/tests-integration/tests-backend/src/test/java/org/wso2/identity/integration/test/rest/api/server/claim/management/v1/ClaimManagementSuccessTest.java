@@ -18,7 +18,6 @@ package org.wso2.identity.integration.test.rest.api.server.claim.management.v1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -33,10 +32,15 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.IsNull.nullValue;
 
 /**
  * Test class for Claim Management REST APIs success path.
@@ -328,5 +332,30 @@ public class ClaimManagementSuccessTest extends ClaimManagementTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testGetLocalClaimsWithHiddenClaimsFiltered() {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("exclude-hidden-claims", "true");
+
+        List<String> hiddenClaims = Arrays.asList(
+            "http://wso2.org/claims/identity/askPassword",
+            "http://wso2.org/claims/identity/tenantAdminAskPassword",
+            "http://wso2.org/claims/identity/adminForcedPasswordReset",
+            "http://wso2.org/claims/identity/secretkey",
+            "http://wso2.org/claims/identity/verifySecretkey",
+            "http://wso2.org/claims/identity/backupCodes",
+            "http://wso2.org/claims/identity/verifyEmail",
+            "http://wso2.org/claims/identity/verifyMobile"
+        );
+
+        getResponseOfGet(CLAIM_DIALECTS_ENDPOINT_URI + LOCAL_CLAIMS_ENDPOINT_URI, params)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("claimURI", not(hasItems(hiddenClaims.toArray())));
     }
 }
