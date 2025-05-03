@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -82,6 +82,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     private String b2bUserID;
     private HttpClient client;
     private HttpClient httpClientWithoutAutoRedirections;
+    private String organizationHandle;
 
     protected OAuth2RestClient restClient;
     protected OrgMgtRestClient orgMgtRestClient;
@@ -147,8 +148,8 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public Object[][] organizationRequestBodyFilePaths() {
 
         return new Object[][] {
-                {"add-greater-hospital-organization-request-body.json"},
-                {"add-smaller-hospital-organization-request-body.json"}
+                {"add-greater-hospital-organization-request-body.json", ORG_HANDLE_GREATER_HOSPITAL},
+                {"add-smaller-hospital-organization-request-body.json", ORG_HANDLE_SMALLER_HOSPITAL}
         };
     }
 
@@ -164,10 +165,12 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testGetM2MAccessToken", dataProvider = "organizationRequestBodies")
-    public void testSelfOnboardOrganization(String requestBodyPath) throws Exception {
+    public void testSelfOnboardOrganization(String requestBodyPath, String orgHandleSuffix) throws Exception {
 
+        organizationHandle = System.currentTimeMillis() + "-" + orgHandleSuffix;
         String body = readResource(requestBodyPath);
-        body = body.replace("${parentId}", StringUtils.EMPTY);
+        body = body.replace("${parentId}", StringUtils.EMPTY)
+                .replace(ORG_HANDLE_PLACEHOLDER, organizationHandle);
         Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -182,6 +185,17 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testSelfOnboardOrganization")
+    public void testAddOrganizationWithExistingHandle() throws Exception {
+
+        String body = readResource("add-smaller-hospital-organization-request-body.json");
+        body = body.replace("${parentId}", StringUtils.EMPTY)
+                .replace(ORG_HANDLE_PLACEHOLDER, organizationHandle)
+                .replace(ORG_NAME_SMALLER_HOSPITAL, ORG_NAME_LITTLE_HOSPITAL);
+        Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60100");
+    }
+
+    @Test(dependsOnMethods = "testAddOrganizationWithExistingHandle")
     public void testGetOrganizationsWithInvalidOperator() {
 
         String filterQuery = "?filter=name ca G&limit=10&recursive=false";
