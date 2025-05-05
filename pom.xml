@@ -2456,7 +2456,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.127</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.128</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2533,7 +2533,7 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.29</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.30</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2588,10 +2588,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.54.13</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.19.8</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.54.14</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.19.9</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.24.2</identity.apps.core.version>
+        <identity.apps.core.version>2.24.3</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.381</identity.apps.tests.version>
 
