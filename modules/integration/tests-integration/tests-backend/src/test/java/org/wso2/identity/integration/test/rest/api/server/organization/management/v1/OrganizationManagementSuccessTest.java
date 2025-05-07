@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -98,6 +98,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
+import static org.wso2.carbon.identity.api.resource.mgt.constant.APIResourceManagementConstants.APIResourceTypes.SYSTEM;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.AUTHORIZATION_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.BASIC_AUTHORIZATION_ATTRIBUTE;
@@ -214,19 +215,19 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         Assert.assertTrue(b2bSelfServiceApp.isPresent(), "B2B self service application is not created");
         selfServiceAppId = b2bSelfServiceApp.get().getId();
 
-        JSONObject jsonObject = new JSONObject(readResource("organization-self-service-apis.json"));
+        JSONObject jsonObject = new JSONObject(readResource(ORGANIZATION_SELF_SERVICE_APIS));
 
         for (Iterator<String> apiNameIterator = jsonObject.keys(); apiNameIterator.hasNext(); ) {
             String apiName = apiNameIterator.next();
             Object requiredScopes = jsonObject.get(apiName);
 
             Response apiResource = given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                    .when().queryParam("filter", "identifier eq " + apiName).get("api-resources");
+                    .when().queryParam(FILTER_QUERY_PARAM, "identifier eq " + apiName).get("api-resources");
             apiResource.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
             String apiUUID = apiResource.getBody().jsonPath().getString("apiResources[0].id");
 
             JSONObject authorizedAPIRequestBody = new JSONObject();
-            authorizedAPIRequestBody.put("id", apiUUID);
+            authorizedAPIRequestBody.put(ORGANIZATION_ID, apiUUID);
             authorizedAPIRequestBody.put("policyIdentifier", "RBAC");
             authorizedAPIRequestBody.put("scopes", requiredScopes);
 
@@ -249,7 +250,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         ClientID clientID = new ClientID(selfServiceAppClientId);
         Secret clientSecret = new Secret(selfServiceAppClientSecret);
         ClientAuthentication clientAuth = new ClientSecretBasic(clientID, clientSecret);
-        Scope scope = new Scope("SYSTEM");
+        Scope scope = new Scope(SYSTEM);
 
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT,
                 tenantInfo.getDomain()));
@@ -270,8 +271,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "getM2MAccessToken")
     public void testSelfOnboardOrganization() throws IOException {
 
-        String body = readResource("add-greater-hospital-organization-request-body.json");
-        body = body.replace("${parentId}", StringUtils.EMPTY);
+        String body = readResource(ADD_GREATER_HOSPITAL_ORGANIZATION_REQUEST_BODY);
+        body = body.replace(PARENT_ID_PLACEHOLDER, StringUtils.EMPTY);
         Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -280,7 +281,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .header(HttpHeaders.LOCATION, notNullValue());
         String location = response.getHeader(HttpHeaders.LOCATION);
         assertNotNull(location);
-        organizationID = location.substring(location.lastIndexOf("/") + 1);
+        organizationID = location.substring(location.lastIndexOf(PATH_SEPARATOR) + 1);
         assertNotNull(organizationID);
     }
 
@@ -295,7 +296,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(organizationID));
+                .body(ORGANIZATION_ID, equalTo(organizationID));
     }
 
     @DataProvider(name = "dataProviderForFilterOrganizations")
@@ -399,7 +400,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         if (!SUPER_TENANT_DOMAIN.equals(tenant)) {
             return;
         }
-        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + SUPER_ORGANIZATION_ID
+        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + SUPER_ORGANIZATION_ID
                 + "/applications/" + b2bApplicationID + "/share";
         org.json.JSONObject shareAppObject = new org.json.JSONObject();
         shareAppObject.put("shareWithAllChildren", true);
@@ -412,7 +413,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         if (!SUPER_TENANT_DOMAIN.equals(tenant)) {
             return;
         }
-        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + SUPER_ORGANIZATION_ID
+        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + SUPER_ORGANIZATION_ID
                 + "/applications/" + b2bApplicationID + "/share";
         org.json.JSONObject shareAppObject = new org.json.JSONObject();
         shareAppObject.put("shareWithAllChildren", false);
@@ -422,8 +423,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "unShareB2BApplication")
     public void testOnboardChildOrganization() throws IOException {
 
-        String body = readResource("add-smaller-hospital-organization-request-body.json");
-        body = body.replace("${parentId}", organizationID);
+        String body = readResource(ADD_SMALLER_HOSPITAL_ORGANIZATION_REQUEST_BODY);
+        body = body.replace(PARENT_ID_PLACEHOLDER, organizationID);
         HttpPost request = new HttpPost(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
                 + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH);
         Header[] headerList = new Header[3];
@@ -437,7 +438,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String jsonResponse = EntityUtils.toString(response.getEntity());
         JsonObject responseObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
-        childOrganizationID = responseObject.get("id").getAsString();
+        childOrganizationID = responseObject.get(ORGANIZATION_ID).getAsString();
         assertNotNull(childOrganizationID);
     }
 
@@ -457,7 +458,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testGetOrganizationsMetaAttributes(String filter, boolean isRecursive, boolean expectEmptyList) {
 
         String query = "?filter=" + filter + "&limit=1&recursive=" + isRecursive;
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/meta-attributes" + query;
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + query;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
         Assert.assertNotNull(response.asString());
         response.then()
@@ -482,7 +483,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testAddDiscoveryConfig() throws IOException {
 
         String endpointURL = ORGANIZATION_CONFIGS_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
-        String requestBody = readResource("add-discovery-config-request-body.json");
+        String requestBody = readResource(ADD_DISCOVERY_CONFIG_REQUEST_BODY);
         Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -511,8 +512,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testAddDiscoveryAttributesToOrganization() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
-        String requestBody = readResource("add-discovery-attributes-request-body.json");
-        requestBody = requestBody.replace("${organizationID}", organizationID);
+        String requestBody = readResource(ADD_DISCOVERY_ATTRIBUTES_REQUEST_BODY);
+        requestBody = requestBody.replace(ORGANIZATION_ID_PLACEHOLDER, organizationID);
         Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
         validateHttpStatusCode(response, HttpStatus.SC_CREATED);
     }
@@ -592,7 +593,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID
                 + ORGANIZATION_DISCOVERY_API_PATH;
-        String requestBody = readResource("update-discovery-attributes-request-body.json");
+        String requestBody = readResource(UPDATE_DISCOVERY_ATTRIBUTES_REQUEST_BODY);
         Response response = getResponseOfPutWithOAuth2(endpointURL, requestBody, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -606,8 +607,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public Object[][] checkDiscoveryAttributeFilePaths() {
 
         return new Object[][] {
-                {"check-discovery-attributes-available-request-body.json", true},
-                {"check-discovery-attributes-unavailable-request-body.json", false}
+                {CHECK_DISCOVERY_ATTRIBUTES_AVAILABLE_REQUEST_BODY, true},
+                {CHECK_DISCOVERY_ATTRIBUTES_UNAVAILABLE_REQUEST_BODY, false}
         };
     }
 
@@ -615,7 +616,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testCheckDiscoveryAttributeExists(String requestBodyFileName, boolean expectedAvailability)
             throws IOException {
 
-        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + "check-discovery";
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + CHECK_DISCOVERY_API_PATH;
         String requestBody = readResource(requestBodyFileName);
         Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
         response.then()
@@ -667,7 +668,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testDisablingOrganization")
     public void testDeleteOrganization() {
 
-        String organizationPath = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + organizationID;
+        String organizationPath = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID;
         Response response = getResponseOfDelete(organizationPath);
         validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
     }
@@ -1838,7 +1839,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private void deleteSingleOrganization(Map<String, String> org) {
 
         String organizationId = org.get(ORGANIZATION_ID);
-        String deleteEndpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + "/" + organizationId;
+        String deleteEndpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationId;
 
         Response response = getResponseOfDelete(deleteEndpointURL);
 
