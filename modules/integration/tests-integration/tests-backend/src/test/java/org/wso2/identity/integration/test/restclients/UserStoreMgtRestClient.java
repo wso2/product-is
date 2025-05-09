@@ -187,6 +187,8 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     }
 
     /**
+     * Check for user store deletion,
+     *
      * @param domainId User store domain id.
      * @return true if the user store is deleted.
      * @throws Exception If an error occurred while checking the user store deletion.
