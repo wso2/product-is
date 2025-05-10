@@ -40,6 +40,7 @@ public class UserStoreConfigUtils {
     public boolean waitForUserStoreDeployment(UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient,
                                               String domain) throws Exception {
 
+        Thread.sleep(5000);
         long waitTime = System.currentTimeMillis() + 30000; //wait for 45 seconds
         while (System.currentTimeMillis() < waitTime) {
             UserStoreDTO[] userStoreDTOs = userStoreConfigAdminServiceClient.getActiveDomains();

@@ -179,6 +179,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         client.close();
         scim2RestClient.closeHttpClient();
         restClient.closeHttpClient();
+        userStoreMgtRestClient.closeHttpClient();
+        identityGovernanceRestClient.closeHttpClient();
         super.clear();
         serverConfigurationManager.restoreToLastConfiguration(false);
     }

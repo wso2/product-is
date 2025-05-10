@@ -87,7 +87,6 @@ public class JDBCUserStoreAddingTestCase extends ISIntegrationTest{
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(jdbcClass, domainId,
                 userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-        Thread.sleep(5000);
         Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId)
                 , "Domain addition via DTO has failed.");
 

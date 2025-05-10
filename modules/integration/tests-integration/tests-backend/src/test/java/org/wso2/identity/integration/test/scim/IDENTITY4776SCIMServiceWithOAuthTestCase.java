@@ -210,7 +210,6 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient
                 .createUserStoreDTO(jdbcClass, DOMAIN_ID, propertyDTOs);
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-        Thread.sleep(5000);
         userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID);
     }
 

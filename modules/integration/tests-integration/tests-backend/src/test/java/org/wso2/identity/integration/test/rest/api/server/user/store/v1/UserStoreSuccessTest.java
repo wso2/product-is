@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019-2025, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.server.user.store.v1;
@@ -33,11 +35,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
-import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.AvailableUserStoreClassesRes;
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreConfigurationsRes;
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreListResponse;
+import org.wso2.identity.integration.test.restclients.UserStoreMgtRestClient;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -52,9 +53,9 @@ import static org.hamcrest.core.IsNull.notNullValue;
 public class UserStoreSuccessTest extends UserStoreTestBase {
 
     private static String domainId;
-    private UserStoreConfigAdminServiceClient userStoreConfigAdminServiceClient;
-    private UserStoreConfigUtils userStoreConfigUtils;
+    private UserStoreMgtRestClient userStoreMgtRestClient;
     private static final String USER_STORE_TYPE_ID = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
+    private static final String USER_STORE_DOMAIN = "JDBC-3";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserStoreSuccessTest(TestUserMode userMode) throws Exception {
@@ -70,14 +71,14 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
     public void init() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-        userStoreConfigUtils = new UserStoreConfigUtils();
+        userStoreMgtRestClient = new UserStoreMgtRestClient(serverURL, tenantInfo);
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() {
+    public void testConclude() throws IOException {
 
         super.conclude();
+        userStoreMgtRestClient.closeHttpClient();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -111,7 +112,7 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue());
-        userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, domainId);
+        userStoreMgtRestClient.waitForUserStoreDeployment(USER_STORE_DOMAIN);
         String location = response.getHeader(HttpHeaders.LOCATION);
         domainId = location.substring(location.lastIndexOf("/") + 1);
     }
@@ -247,7 +248,8 @@ public class UserStoreSuccessTest extends UserStoreTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-        if (userStoreConfigUtils.waitForUserStoreUnDeployment(userStoreConfigAdminServiceClient, domainId)) {
+        log.info("deleting the user store with domain id: " + domainId.toString());
+        if (userStoreMgtRestClient.waitForUserStoreUnDeployment(domainId)) {
             getResponseOfGet(path)
                     .then()
                     .log().ifValidationFails()

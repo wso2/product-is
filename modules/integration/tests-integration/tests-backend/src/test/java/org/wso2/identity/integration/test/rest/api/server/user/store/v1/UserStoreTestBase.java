@@ -52,7 +52,7 @@ public class UserStoreTestBase extends RESTAPIServerTestBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() {
+    public void testConclude() throws IOException {
 
         super.conclude();
     }
