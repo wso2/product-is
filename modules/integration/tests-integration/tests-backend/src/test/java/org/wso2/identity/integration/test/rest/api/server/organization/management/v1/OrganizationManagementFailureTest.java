@@ -80,7 +80,6 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     private String b2bUserID;
     private HttpClient client;
     private HttpClient httpClientWithoutAutoRedirections;
-    private String organizationHandle;
 
     protected OAuth2RestClient restClient;
     protected OrgMgtRestClient orgMgtRestClient;
@@ -146,8 +145,8 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public Object[][] organizationRequestBodyFilePaths() {
 
         return new Object[][] {
-                {ADD_GREATER_HOSPITAL_ORGANIZATION_REQUEST_BODY, ORG_HANDLE_GREATER_HOSPITAL},
-                {ADD_SMALLER_HOSPITAL_ORGANIZATION_REQUEST_BODY, ORG_HANDLE_SMALLER_HOSPITAL}
+                {ADD_GREATER_HOSPITAL_ORGANIZATION_REQUEST_BODY},
+                {ADD_SMALLER_HOSPITAL_ORGANIZATION_REQUEST_BODY}
         };
     }
 
@@ -163,12 +162,10 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testGetM2MAccessToken", dataProvider = "organizationRequestBodies")
-    public void testSelfOnboardOrganization(String requestBodyPath, String orgHandleSuffix) throws Exception {
+    public void testSelfOnboardOrganization(String requestBodyPath) throws Exception {
 
-        organizationHandle = System.currentTimeMillis() + "-" + orgHandleSuffix;
         String body = readResource(requestBodyPath);
-        body = body.replace("${parentId}", StringUtils.EMPTY)
-                .replace(ORG_HANDLE_PLACEHOLDER, organizationHandle);
+        body = body.replace(PARENT_ID_PLACEHOLDER, StringUtils.EMPTY);
         Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
         response.then()
                 .log().ifValidationFails()
@@ -183,17 +180,6 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testSelfOnboardOrganization")
-    public void testAddOrganizationWithExistingHandle() throws Exception {
-
-        String body = readResource("add-smaller-hospital-organization-request-body.json");
-        body = body.replace("${parentId}", StringUtils.EMPTY)
-                .replace(ORG_HANDLE_PLACEHOLDER, organizationHandle)
-                .replace(ORG_NAME_SMALLER_HOSPITAL, ORG_NAME_LITTLE_HOSPITAL);
-        Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "ORG-60100");
-    }
-
-    @Test(dependsOnMethods = "testAddOrganizationWithExistingHandle")
     public void testGetOrganizationsWithInvalidOperator() {
 
         String filterQuery = "?filter=name ca G&limit=10&recursive=false";

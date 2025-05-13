@@ -141,15 +141,14 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String B2B_USER_PASSWORD = "Test@1234";
     protected static final String B2B_USER_EMAIL = "johndoe@abc.com";
 
-    protected static final String ORG_HANDLE_SMALLER_HOSPITAL = "smallerhospital.com";
-    protected static final String ORG_HANDLE_GREATER_HOSPITAL = "greaterhospital.com";
-    protected static final String ORG_NAME_SMALLER_HOSPITAL = "Smaller Hospital";
+    protected static final String ORG_HANDLE_CENTRAL_HOSPITAL = "centralhospital.com";
     protected static final String ORG_NAME_LITTLE_HOSPITAL = "Little Hospital";
+    protected static final String ORG_NAME_CENTRAL_HOSPITAL = "Central Hospital";
     protected static final String ORG_HANDLE_PLACEHOLDER = "${orgHandle}";
 
     protected static final String RENAME_ORGANIZATION_REQUEST_BODY = "rename-organization-request-body.json";
     protected static final String ORGANIZATION_UPDATE_REQUEST_BODY
-            = "update-smaller-hospital-organization-request-body.json";
+            = "update-hospital-organization-request-body.json";
 
     protected static final String ORGANIZATION_ID_PLACEHOLDER = "${organizationID}";
     protected static final String PARENT_ID_PLACEHOLDER = "${parentId}";
@@ -163,6 +162,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
             = "add-smaller-hospital-organization-request-body.json";
     protected static final String ADD_GREATER_HOSPITAL_ORGANIZATION_REQUEST_BODY
             = "add-greater-hospital-organization-request-body.json";
+    protected static final String ADD_ORGANIZATION_WITH_HANDLE_REQUEST_BODY
+            = "add-organization-with-handle-request-body.json";
     protected static final String CHECK_DISCOVERY_ATTRIBUTES_AVAILABLE_REQUEST_BODY
             = "check-discovery-attributes-available-request-body.json";
     protected static final String CHECK_DISCOVERY_ATTRIBUTES_UNAVAILABLE_REQUEST_BODY
