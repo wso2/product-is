@@ -65,6 +65,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
     static final String ORGANIZATION_META_ATTRIBUTES_API_PATH = "/meta-attributes";
+    static final String CHECK_HANDLE_API_PATH = "/check-handle";
+    static final String ORGANIZATION_META_DATA_PATH = "/metadata";
     static final String CHECK_DISCOVERY_API_PATH = "/check-discovery";
     static final String AUTHORIZE_ENDPOINT = "oauth2/authorize";
     static final String TOKEN_ENDPOINT = "oauth2/token";
@@ -74,6 +76,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
     protected static final String ORGANIZATION_ID = "id";
     protected static final String ORGANIZATION_NAME = "name";
+    protected static final String ORGANIZATION_HANDLE = "orgHandle";
     protected static final String ORGANIZATION_NAME_FORMAT = "Org-%d";
 
     protected static final String ORGANIZATION_EMAIL_FORMAT_1 = "org%d.com";
@@ -89,6 +92,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String LOGIN_HINT_QUERY_PARAM = "login_hint";
     protected static final String ORG_DISCOVERY_TYPE_QUERY_PARAM = "orgDiscoveryType";
     protected static final String AUTH_FAILURE_MSG_QUERY_PARAM = "authFailureMsg";
+    protected static final String AVAILABLE = "available";
     protected static final String LIMIT_10_QUERY_PARAM = "10";
     protected static final String LIMIT_MINUS_1_QUERY_PARAM = "-1";
 
@@ -136,6 +140,17 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String B2B_USER_NAME = "John";
     protected static final String B2B_USER_PASSWORD = "Test@1234";
     protected static final String B2B_USER_EMAIL = "johndoe@abc.com";
+
+    protected static final String ORG_HANDLE_CENTRAL_HOSPITAL = "centralhospital.com";
+    protected static final String ORG_NAME_LITTLE_HOSPITAL = "Little Hospital";
+    protected static final String ORG_NAME_CENTRAL_HOSPITAL = "Central Hospital";
+    protected static final String ORG_HANDLE_PLACEHOLDER = "${orgHandle}";
+
+    protected static final String EMPTY_REQUEST_BODY = "{}";
+    protected static final String RENAME_ORGANIZATION_REQUEST_BODY = "rename-organization-request-body.json";
+    protected static final String ORGANIZATION_UPDATE_REQUEST_BODY
+            = "update-hospital-organization-request-body.json";
+
     protected static final String ORGANIZATION_ID_PLACEHOLDER = "${organizationID}";
     protected static final String PARENT_ID_PLACEHOLDER = "${parentId}";
 
@@ -148,6 +163,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
             = "add-smaller-hospital-organization-request-body.json";
     protected static final String ADD_GREATER_HOSPITAL_ORGANIZATION_REQUEST_BODY
             = "add-greater-hospital-organization-request-body.json";
+    protected static final String ADD_ORGANIZATION_WITH_HANDLE_REQUEST_BODY
+            = "add-organization-with-handle-request-body.json";
     protected static final String CHECK_DISCOVERY_ATTRIBUTES_AVAILABLE_REQUEST_BODY
             = "check-discovery-attributes-available-request-body.json";
     protected static final String CHECK_DISCOVERY_ATTRIBUTES_UNAVAILABLE_REQUEST_BODY

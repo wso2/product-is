@@ -114,6 +114,8 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_U
 public class OrganizationManagementSuccessTest extends OrganizationManagementBaseTest {
 
     private String organizationID;
+    private String organizationWithHandleID;
+    private String organizationHandle;
     private String childOrganizationID;
     private String selfServiceAppId;
     private String selfServiceAppClientId;
@@ -283,9 +285,30 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         assertNotNull(location);
         organizationID = location.substring(location.lastIndexOf(PATH_SEPARATOR) + 1);
         assertNotNull(organizationID);
+        response.then().body(ORGANIZATION_HANDLE, equalTo(organizationID));
     }
 
     @Test(dependsOnMethods = "testSelfOnboardOrganization")
+    public void testSelfOnboardOrganizationWithHandle() throws IOException {
+
+        organizationHandle = System.currentTimeMillis() + "-" + ORG_HANDLE_CENTRAL_HOSPITAL;
+        String body = readResource(ADD_ORGANIZATION_WITH_HANDLE_REQUEST_BODY);
+        body = body.replace(PARENT_ID_PLACEHOLDER, StringUtils.EMPTY)
+                .replace(ORG_HANDLE_PLACEHOLDER, organizationHandle);
+        Response response = getResponseOfPostWithOAuth2(ORGANIZATION_MANAGEMENT_API_BASE_PATH, body, m2mToken);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue())
+                .body(ORGANIZATION_HANDLE, equalTo(organizationHandle));
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        organizationWithHandleID = location.substring(location.lastIndexOf(PATH_SEPARATOR) + 1);
+        assertNotNull(organizationWithHandleID);
+    }
+
+    @Test(dependsOnMethods = "testSelfOnboardOrganizationWithHandle")
     public void testGetOrganization() {
 
         Response response = getResponseOfGet(ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR
@@ -296,7 +319,49 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body(ORGANIZATION_ID, equalTo(organizationID));
+                .body(ORGANIZATION_ID, equalTo(organizationID))
+                .body(ORGANIZATION_HANDLE, equalTo(organizationID));
+    }
+
+    @Test(dependsOnMethods = "testGetOrganization")
+    public void testGetAnOrganizationWithHandle() {
+
+        Response response = getResponseOfGet(ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR
+                + organizationWithHandleID);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        Assert.assertNotNull(response.asString());
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(ORGANIZATION_ID, equalTo(organizationWithHandleID))
+                .body(ORGANIZATION_HANDLE, equalTo(organizationHandle));
+    }
+
+    @Test(dependsOnMethods = "testGetAnOrganizationWithHandle")
+    public void testGetOrganizationList() {
+
+        Response response = getResponseOfGet(ORGANIZATION_MANAGEMENT_API_BASE_PATH);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        assertNotNull(response.asString());
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .body("organizations[0].organizationId", equalTo(childOrganizationID));
+    }
+
+    @Test(dependsOnMethods = "testGetOrganizationList")
+    public void testGetOrganizationMetaData() {
+
+        Response response = getResponseOfGet(ORGANIZATION_MANAGEMENT_API_BASE_PATH
+                + ORGANIZATION_META_DATA_PATH);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        Assert.assertNotNull(response.asString());
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(ORGANIZATION_HANDLE, equalTo(tenantInfo.getDomain()));
     }
 
     @DataProvider(name = "dataProviderForFilterOrganizations")
@@ -311,7 +376,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods = "testGetOrganization", dataProvider = "dataProviderForFilterOrganizations")
+    @Test(dependsOnMethods = "testGetOrganizationMetaData", dataProvider = "dataProviderForFilterOrganizations")
     public void testFilterOrganizations(String filterQuery, boolean expectAttributes, boolean expectEmptyList) {
 
         String query = "?filter=" + filterQuery + "&limit=1&recursive=false";
@@ -440,6 +505,35 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         JsonObject responseObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
         childOrganizationID = responseObject.get(ORGANIZATION_ID).getAsString();
         assertNotNull(childOrganizationID);
+        assertEquals(responseObject.get(ORGANIZATION_HANDLE).getAsString(), childOrganizationID);
+    }
+
+    @Test(dependsOnMethods = "testOnboardChildOrganization")
+    public void testPatchOrganizationName() throws IOException {
+
+        String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationWithHandleID;
+        String body = readResource(RENAME_ORGANIZATION_REQUEST_BODY);
+        Response response = getResponseOfPatch(endpoint, body);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        String jsonResponse = response.asString();
+        JsonObject responseObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
+        assertEquals(responseObject.get(ORGANIZATION_NAME).getAsString(), ORG_NAME_LITTLE_HOSPITAL);
+        assertEquals(responseObject.get(ORGANIZATION_HANDLE).getAsString(), organizationHandle);
+    }
+
+    @Test(dependsOnMethods = "testPatchOrganizationName")
+    public void testPutOrganization() throws IOException {
+
+        String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationWithHandleID;
+        String body = readResource(ORGANIZATION_UPDATE_REQUEST_BODY);
+        Response response = getResponseOfPut(endpoint, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(ORGANIZATION_NAME, equalTo(ORG_NAME_CENTRAL_HOSPITAL))
+                .body(ORGANIZATION_HANDLE, equalTo(organizationHandle));
     }
 
     @DataProvider(name = "dataProviderForGetOrganizationsMetaAttributes")
@@ -453,7 +547,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods = "testOnboardChildOrganization",
+    @Test(dependsOnMethods = "testPutOrganization",
             dataProvider = "dataProviderForGetOrganizationsMetaAttributes")
     public void testGetOrganizationsMetaAttributes(String filter, boolean isRecursive, boolean expectEmptyList) {
 
@@ -530,6 +624,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .body(TOTAL_RESULTS_PATH_PARAM, equalTo(1))
                 .body("organizations[0].organizationId", equalTo(organizationID))
                 .body("organizations[0].organizationName", equalTo("Greater Hospital"))
+                .body("organizations[0].orgHandle", equalTo(organizationID))
                 .body("organizations[0].attributes[0].type", equalTo("emailDomain"))
                 .body("organizations[0].attributes[0].values[0]", equalTo("abc.com"));
     }
@@ -623,7 +718,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("available", equalTo(expectedAvailability));
+                .body(AVAILABLE, equalTo(expectedAvailability));
     }
 
     @Test(dependsOnMethods = "testCheckDiscoveryAttributeExists")
@@ -670,6 +765,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String organizationPath = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID;
         Response response = getResponseOfDelete(organizationPath);
+        validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
+
+        organizationPath = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationWithHandleID;
+        response = getResponseOfDelete(organizationPath);
         validateHttpStatusCode(response, HttpStatus.SC_NO_CONTENT);
     }
 
@@ -1397,6 +1496,28 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         }
 
         Assert.assertTrue(organizations.isEmpty(), "All organizations should be deleted, but the list is not empty.");
+    }
+
+    @DataProvider(name = "organizationHandleDataProvider")
+    public Object[][] organizationHandleDataProvider() {
+
+        return new Object[][] {
+                { organizationHandle, false },
+                { ORG_HANDLE_CENTRAL_HOSPITAL, true }
+        };
+    }
+
+    @Test(dependsOnMethods = "testDeleteOrganizationsForPagination", dataProvider = "organizationHandleDataProvider")
+    public void testCheckOrganizationHandle(String organizationHandle, boolean expectedAvailability) {
+
+        String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + CHECK_HANDLE_API_PATH;
+        String requestBody = String.format("{\"%s\": \"%s\"}", ORGANIZATION_HANDLE, organizationHandle);
+        Response response = getResponseOfPostWithOAuth2(endpointURL, requestBody, m2mToken);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(AVAILABLE, equalTo(expectedAvailability));
     }
 
     private void validateNextLink(Response response, boolean expectNextLink) {
