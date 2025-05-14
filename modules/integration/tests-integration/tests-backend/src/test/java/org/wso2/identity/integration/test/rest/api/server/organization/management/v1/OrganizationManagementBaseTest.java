@@ -146,6 +146,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String ORG_NAME_CENTRAL_HOSPITAL = "Central Hospital";
     protected static final String ORG_HANDLE_PLACEHOLDER = "${orgHandle}";
 
+    protected static final String EMPTY_REQUEST_BODY = "{}";
     protected static final String RENAME_ORGANIZATION_REQUEST_BODY = "rename-organization-request-body.json";
     protected static final String ORGANIZATION_UPDATE_REQUEST_BODY
             = "update-hospital-organization-request-body.json";

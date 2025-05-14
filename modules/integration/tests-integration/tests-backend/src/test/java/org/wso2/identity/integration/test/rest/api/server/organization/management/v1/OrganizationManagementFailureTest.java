@@ -327,7 +327,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testAddDiscoveryWithEmptyPayload() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_DISCOVERY_API_PATH;
-        Response response = getResponseOfPostWithOAuth2(endpointURL, StringUtils.EMPTY, m2mToken);
+        Response response = getResponseOfPostWithOAuth2(endpointURL, EMPTY_REQUEST_BODY, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
     }
 
