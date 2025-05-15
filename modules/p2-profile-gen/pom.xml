@@ -303,6 +303,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.role.v2.mgt.core.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.role.v3.mgt.core.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.secret.mgt.core.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <!-- Features related to Cloud Identity -->
@@ -851,6 +854,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.role.v2.mgt.core.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.role.v3.mgt.core.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
