@@ -2564,7 +2564,7 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.11</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.138</identity.org.mgt.version>
+        <identity.org.mgt.version>1.4.139</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.29</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.48</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.29</identity.oauth2.grant.organizationswitch.version>
@@ -2589,10 +2589,10 @@
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.55.5</identity.apps.console.version>
+        <identity.apps.console.version>2.55.6</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.13</identity.apps.myaccount.version>
 
-        <identity.apps.core.version>2.24.7</identity.apps.core.version>
+        <identity.apps.core.version>2.24.8</identity.apps.core.version>
 
         <identity.apps.tests.version>1.6.381</identity.apps.tests.version>
 
