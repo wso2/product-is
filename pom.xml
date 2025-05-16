@@ -2456,7 +2456,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.147</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.149</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2486,9 +2486,9 @@
         <identity.inbound.auth.oauth.version>7.0.294</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.55</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
-        <identity.inbound.auth.sts.version>5.12.9</identity.inbound.auth.sts.version>
+        <identity.inbound.auth.sts.version>5.12.10</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.144</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.145</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2577,19 +2577,19 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.103</identity.server.api.version>
-        <identity.user.api.version>1.3.61</identity.user.api.version>
+        <identity.server.api.version>1.3.104</identity.server.api.version>
+        <identity.user.api.version>1.3.62</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.27</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.77</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.78</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
 
-        <identity.apps.console.version>2.55.3</identity.apps.console.version>
+        <identity.apps.console.version>2.55.5</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.13</identity.apps.myaccount.version>
 
         <identity.apps.core.version>2.24.7</identity.apps.core.version>
