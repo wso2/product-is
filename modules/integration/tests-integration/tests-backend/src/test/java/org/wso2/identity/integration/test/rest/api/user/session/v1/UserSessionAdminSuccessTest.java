@@ -52,6 +52,8 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
         super.init(userMode);
         this.context = isServer;
         this.tenant = context.getContextTenant().getDomain();
+        this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
+        this.adminPassword = context.getContextTenant().getTenantAdmin().getPassword();
         this.session_test_user1 = username1;
         this.session_test_user2 = username2;
     }
@@ -93,10 +95,7 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
     public void testConclude() throws Exception {
 
         super.conclude();
-        appMgtclient.deleteApplication(serviceProviderTravelocity.getApplicationName());
-        appMgtclient.deleteApplication(serviceProviderAvis.getApplicationName());
-        userMgtClient.deleteUser(session_test_user1);
-        userMgtClient.deleteUser(session_test_user2);
+        cleanUp();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -114,7 +113,7 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
     @Test
     public void testErrorAtGetSessionsForInvalidUser() {
 
-        authenticateUser(this.session_test_user2);
+        authenticateUser(this.session_test_user2, this.TEST_USER_PASSWORD);
         getResponseOfGet(getSearchEndpointURI(null, null)).then().assertThat()
                 .log().ifValidationFails()
                 .statusCode(HttpStatus.SC_FORBIDDEN);
@@ -123,7 +122,7 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
     @Test(dataProvider = "getInvalidSearchData")
     public void testGetSessionsWithInvalidData(String filter) {
 
-        authenticateUser(this.session_test_user1);
+        authenticateUser(this.adminUsername, this.adminPassword);
         getResponseOfGet(getSearchEndpointURI(null, filter)).then().assertThat()
                 .log().ifValidationFails()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
@@ -132,7 +131,7 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
     @Test(dataProvider = "getValidSearchData")
     public void testGetSessionsWithValidData(String filter, Integer expectedResults) {
 
-        authenticateUser(this.session_test_user1);
+        authenticateUser(this.adminUsername, this.adminPassword);
         getResponseOfGet(getSearchEndpointURI(null, filter)).then().assertThat()
                 .log().ifValidationFails()
                 .statusCode(HttpStatus.SC_OK)
@@ -156,7 +155,7 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
     public void testGetSessionsWithPagination() {
 
         int limit = 1;
-        authenticateUser(this.session_test_user1);
+        authenticateUser(this.adminUsername, this.adminPassword);
 
         Response page1 = getResponseOfGet(getSearchEndpointURI(limit, null));
         page1.then().assertThat()
@@ -185,10 +184,10 @@ public class UserSessionAdminSuccessTest extends UserSessionTest {
                 .body("Resources.size()", is(limit));
     }
 
-    private void authenticateUser(String user) {
+    private void authenticateUser(String user, String password) {
 
         this.authenticatingUserName = user;
-        this.authenticatingCredential = TEST_USER_PASSWORD;
+        this.authenticatingCredential = password;
     }
 
     private String getSearchEndpointURI(Integer limit, String filter) {
