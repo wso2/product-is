@@ -28,29 +28,34 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundAuthenticationRequestConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.Property;
-import org.wso2.carbon.identity.application.common.model.xsd.RequestPathAuthenticatorConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
-import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
-import org.wso2.carbon.user.mgt.stub.UserAdminUserAdminException;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
-import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
-import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2Configuration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLRequestValidation;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UserSessionTest extends RESTAPIUserTestBase {
@@ -77,6 +82,7 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     private static final String SEC_TOKEN = "sectoken";
     private static final String PATH_SEPARATOR = "/";
     protected static String swaggerDefinition;
+    private OAuth2RestClient applicationMgtRestClient;
 
     static {
         try {
@@ -99,10 +105,11 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     private String DEFAULT_PROFILE = "default";
     protected UserManagementClient userMgtClient;
     private String isURL;
-    protected ApplicationManagementServiceClient appMgtclient;
-    private SAMLSSOConfigServiceClient ssoConfigServiceClient;
-    protected ServiceProvider serviceProviderTravelocity;
-    protected ServiceProvider serviceProviderAvis;
+    private String spIdTravelocity;
+    private String spIdAvis;
+    private String sessionTestUser1Id;
+    private String sessionTestUser2Id;
+    private SCIM2RestClient scim2RestClient;
 
     void initUrls(String pathParam) {
 
@@ -125,15 +132,10 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     @BeforeClass(alwaysRun = true)
     public void testInitData() throws Exception {
 
-        appMgtclient = new ApplicationManagementServiceClient(sessionCookie, backendURL, null);
-        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        ssoConfigServiceClient = new SAMLSSOConfigServiceClient(backendURL, sessionCookie);
-
         isURL = backendURL.substring(0, backendURL.indexOf("services/"));
-
-        serviceProviderTravelocity = createServiceProvider(ISSUER_TRAVELOCITY_COM, SERVICE_PROVIDER_NAME_TRAVELOCITY);
-        serviceProviderAvis = createServiceProvider(ISSUER_AVIS_COM, SERVICE_PROVIDER_NAME_AVIS);
-
+        applicationMgtRestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        createApplicationsForTesting();
         createUsersForTesting();
         createSessionsForTesting();
     }
@@ -144,26 +146,18 @@ public class UserSessionTest extends RESTAPIUserTestBase {
         super.conclude();
     }
 
-    private SAMLSSOServiceProviderDTO createSAMLServiceProviderDTO(String issuer) {
+    private void createApplicationsForTesting() throws Exception {
 
-        SAMLSSOServiceProviderDTO samlssoServiceProviderDTO = new SAMLSSOServiceProviderDTO();
-        samlssoServiceProviderDTO.setIssuer(issuer);
-        samlssoServiceProviderDTO.setAssertionConsumerUrls(new String[]
-                {String.format(SAMPLE_APP_URL, issuer) + APP_HOMEPAGE});
-        samlssoServiceProviderDTO.setDefaultAssertionConsumerUrl(String.format(SAMPLE_APP_URL, issuer) + APP_HOMEPAGE);
-        samlssoServiceProviderDTO.setAttributeConsumingServiceIndex("1239245949");
-        samlssoServiceProviderDTO.setNameIDFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
-        samlssoServiceProviderDTO.setDoSignAssertions(true);
-        samlssoServiceProviderDTO.setDoSignResponse(true);
-        samlssoServiceProviderDTO.setDoSingleLogout(true);
-        samlssoServiceProviderDTO.setLoginPageURL(LOGIN_PAGE);
-        return samlssoServiceProviderDTO;
+        spIdTravelocity = createApplication(ISSUER_TRAVELOCITY_COM, SERVICE_PROVIDER_NAME_TRAVELOCITY);
+        spIdAvis = createApplication(ISSUER_AVIS_COM, SERVICE_PROVIDER_NAME_AVIS);
     }
 
-    private void createUsersForTesting() throws RemoteException, UserAdminUserAdminException {
+    private void createUsersForTesting() throws Exception {
 
-        userMgtClient.addUser(session_test_user1, TEST_USER_PASSWORD, new String[]{ADMIN_ROLE}, DEFAULT_PROFILE);
-        userMgtClient.addUser(session_test_user2, TEST_USER_PASSWORD, null, DEFAULT_PROFILE);
+        sessionTestUser1Id = scim2RestClient.createUser(new UserObject().userName(session_test_user1)
+                .password(TEST_USER_PASSWORD));
+        sessionTestUser2Id = scim2RestClient.createUser(new UserObject().userName(session_test_user2)
+                .password(TEST_USER_PASSWORD));
     }
 
     private void createSessionsForTesting() throws Exception {
@@ -226,35 +220,72 @@ public class UserSessionTest extends RESTAPIUserTestBase {
         }
     }
 
-    private ServiceProvider createServiceProvider(String issuer, String serviceProviderName) throws Exception {
+    /**
+     * This method is used to clean up the created applications and
+     * users after the test execution.
+     *
+     * @throws Exception If an error occurs while cleaning up.
+     */
+    protected void cleanUp() throws Exception {
 
-        ssoConfigServiceClient.addServiceProvider(createSAMLServiceProviderDTO(issuer));
-        ServiceProvider serviceProvider = new ServiceProvider();
-        serviceProvider.setApplicationName(serviceProviderName);
-        serviceProvider.setDescription(SERVICE_PROVIDER_DESC);
-        appMgtclient.createApplication(serviceProvider);
-        serviceProvider = appMgtclient.getApplication(serviceProviderName);
+        deleteApplication(spIdTravelocity);
+        deleteApplication(spIdAvis);
+        deleteUser(sessionTestUser1Id);
+        deleteUser(sessionTestUser2Id);
+    }
 
-        InboundAuthenticationRequestConfig requestConfig = new InboundAuthenticationRequestConfig();
-        requestConfig.setInboundAuthKey(issuer);
-        requestConfig.setInboundAuthType(SAMLSSO);
+    private String createApplication(String issuer, String serviceProviderName) throws JSONException, IOException {
 
-        Property attributeConsumerServiceIndexProp = new Property();
-        attributeConsumerServiceIndexProp.setName("attrConsumServiceIndex");
-        attributeConsumerServiceIndexProp.setValue("1239245949");
-        requestConfig.setProperties(new Property[]{attributeConsumerServiceIndexProp});
+        ApplicationModel applicationModel = new ApplicationModel();
+        applicationModel.setName(serviceProviderName);
+        applicationModel.setDescription(SERVICE_PROVIDER_DESC);
 
-        InboundAuthenticationConfig inboundAuthenticationConfig = new InboundAuthenticationConfig();
-        inboundAuthenticationConfig
-                .setInboundAuthenticationRequestConfigs(new InboundAuthenticationRequestConfig[]{requestConfig});
+        SAML2ServiceProvider samlConfig = new SAML2ServiceProvider();
+        samlConfig.setIssuer(issuer);
+        samlConfig.setAssertionConsumerUrls(Collections.singletonList(
+                String.format(SAMPLE_APP_URL, issuer) + APP_HOMEPAGE));
+        samlConfig.setDefaultAssertionConsumerUrl(
+                String.format(SAMPLE_APP_URL, issuer) + APP_HOMEPAGE);
 
-        serviceProvider.setInboundAuthenticationConfig(inboundAuthenticationConfig);
-        RequestPathAuthenticatorConfig requestPathAuthenticatorConfig = new RequestPathAuthenticatorConfig();
-        requestPathAuthenticatorConfig.setName(BASIC_AUTH_REQUEST_PATH_AUTHENTICATOR);
+        SAMLAssertionConfiguration assertion = new SAMLAssertionConfiguration();
+        assertion.setNameIdFormat("urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress");
 
-        serviceProvider.setRequestPathAuthenticatorConfigs(
-                new RequestPathAuthenticatorConfig[]{requestPathAuthenticatorConfig});
-        appMgtclient.updateApplicationData(serviceProvider);
-        return appMgtclient.getApplication(serviceProviderName);
+        SingleSignOnProfile singleSignOnProfile = new SingleSignOnProfile();
+        singleSignOnProfile.setAttributeConsumingServiceIndex("1239245949");
+        singleSignOnProfile.setAssertion(assertion);
+        samlConfig.setSingleSignOnProfile(singleSignOnProfile);
+
+        SAMLResponseSigning responseSigning = new SAMLResponseSigning();
+        responseSigning.setEnabled(true);
+        samlConfig.setResponseSigning(responseSigning);
+
+        SAMLRequestValidation requestValidation = new SAMLRequestValidation();
+        requestValidation.enableSignatureValidation(false);
+        samlConfig.setRequestValidation(requestValidation);
+
+        SingleLogoutProfile singleLogoutProfile = new SingleLogoutProfile();
+        singleLogoutProfile.setEnabled(true);
+        samlConfig.setSingleLogoutProfile(singleLogoutProfile);
+
+        applicationModel.inboundProtocolConfiguration(new InboundProtocols().saml(
+                new SAML2Configuration().manualConfiguration(samlConfig)
+        ));
+
+        AuthenticationSequence authenticationSequence = new AuthenticationSequence();
+        authenticationSequence.setRequestPathAuthenticators(
+                Collections.singletonList(BASIC_AUTH_REQUEST_PATH_AUTHENTICATOR));
+        applicationModel.setAuthenticationSequence(authenticationSequence);
+
+        return applicationMgtRestClient.createApplication(applicationModel);
+    }
+
+    private void deleteApplication(String applicationId) throws Exception {
+
+        applicationMgtRestClient.deleteApplication(applicationId);
+    }
+
+    private void deleteUser(String userId) throws Exception {
+
+        scim2RestClient.deleteUser(userId);
     }
 }
