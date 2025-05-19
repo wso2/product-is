@@ -2461,7 +2461,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.150</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.152</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2582,8 +2582,8 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.106</identity.server.api.version>
-        <identity.user.api.version>1.3.62</identity.user.api.version>
+        <identity.server.api.version>1.3.107</identity.server.api.version>
+        <identity.user.api.version>1.3.63</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2593,7 +2593,7 @@
         <conditional.authentication.functions.version>1.2.78</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.55.6</identity.apps.console.version>
+        <identity.apps.console.version>2.55.7</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.13</identity.apps.myaccount.version>
         <identity.apps.core.version>2.24.8</identity.apps.core.version>
         <identity.apps.tests.version>1.6.381</identity.apps.tests.version>
