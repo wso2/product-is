@@ -580,6 +580,16 @@
                 <artifactId>org.wso2.carbon.identity.api.server.registration.execution.v1</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.asynchronous.operation.status.management.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.asynchronous.operation.status.management.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
 
             <!-- Legacy API dependencies -->
             <dependency>
