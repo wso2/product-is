@@ -16,11 +16,13 @@ rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
 
-set BC_FIPS_VERSION=1.0.2.4
-set BCPKIX_FIPS_VERSION=1.0.7
+set BC_FIPS_VERSION=2.1.0
+set BCPKIX_FIPS_VERSION=2.1.9
+set BCUTIL_FIPS_VERSION=2.1.4
 
-set EXPECTED_BC_FIPS_CHECKSUM=da62b32cb72591f5b4d322e6ab0ce7de3247b534
-set EXPECTED_BCPKIX_FIPS_CHECKSUM=fe07959721cfa2156be9722ba20fdfee2b5441b0
+set EXPECTED_BC_FIPS_CHECKSUM=c8df3d47f9854f3e9ca57e9fc862da18c9381fa9
+set EXPECTED_BCPKIX_FIPS_CHECKSUM=722eaefa83fd8c53e1fc019bde25e353258ed22b
+set EXPECTED_BCUTIL_FIPS_CHECKSUM=1d37b7a28560684f5b8e4fd65478c9130d4015d0
 
 rem ----- Only set CARBON_HOME if not already set ----------------------------
 :checkServer
@@ -60,6 +62,12 @@ if exist "%CARBON_HOME%\repository\components\lib\bcpkix-fips*.jar" (
     DEL /F "%CARBON_HOME%\repository\components\lib\bcpkix-fips*.jar"
     echo Successfully removed bcpkix-fips_%BCPKIX_FIPS_VERSION%.jar from components\lib.
 )
+if exist "%CARBON_HOME%\repository\components\lib\bcutil-fips*.jar" (
+    set server_restart_required=true
+    echo Remove existing bcutil-fips jar from lib folder.
+    DEL /F "%CARBON_HOME%\repository\components\lib\bcutil-fips*.jar"
+    echo Successfully removed bcutil-fips_%BCUTIL_FIPS_VERSION%.jar from components\lib.
+)
 if exist "%CARBON_HOME%\repository\components\dropins\bc_fips*.jar" (
     set server_restart_required=true
     echo Remove existing bc-fips jar from dropins folder.
@@ -71,6 +79,12 @@ if exist "%CARBON_HOME%\repository\components\dropins\bcpkix_fips*.jar" (
     echo Remove existing bcpkix_fips jar from dropins folder.
     DEL /F "%CARBON_HOME%\repository\components\dropins\bcpkix_fips*.jar"
     echo Successfully removed bcpkix-fips_%BCPKIX_FIPS_VERSION%.jar from components\dropins.
+)
+if exist "%CARBON_HOME%\repository\components\dropins\bcutil_fips*.jar" (
+    set server_restart_required=true
+    echo Remove existing bcutil_fips jar from dropins folder.
+    DEL /F "%CARBON_HOME%\repository\components\dropins\bcutil_fips*.jar"
+    echo Successfully removed bcutil-fips_%BCUTIL_FIPS_VERSION%.jar from components\dropins.
 )
 
 if not exist "%CARBON_HOME%\repository\components\plugins\bcprov-jdk18on*.jar" (
@@ -179,6 +193,7 @@ if exist %CARBON_HOME%\repository\components\plugins\bcpkix-jdk18on*.jar (
     move "%bcpkix_location%" "%homeDir%\.wso2-bc\backup"
     echo Successfully removed %bcpkix_file_name% from components\plugins.
 )
+
 if exist "%CARBON_HOME%\repository\components\lib\bc-fips*.jar" (
     for /f "delims=" %%a in ('dir /b /s "%CARBON_HOME%\repository\components\lib\bc-fips*.jar"') do (
         set bcfips_location=%%a
@@ -217,6 +232,27 @@ if exist "%CARBON_HOME%\repository\components\lib\bcpkix-fips*.jar" (
             echo Remove existing bcpkix-fips jar from dropins folder.
             del /q "%CARBON_HOME%\repository\components\dropins\bcpkix_fips*.jar" 2> nul
             echo Successfully removed bcpkix-fips_%BCPKIX_FIPS_VERSION%.jar from components/dropins.
+        )
+    )
+)
+
+if exist "%CARBON_HOME%\repository\components\lib\bcutil-fips*.jar" (
+    for /f "delims=" %%a in ('dir /b /s "%CARBON_HOME%\repository\components\lib\bcutil-fips*.jar"') do (
+        set bcutilfips_location=%%a
+        goto check_bcutilfips_location
+    )
+    :check_bcutilfips_location
+    for %%f in ("%bcutilfips_location%") do set "bcutilfips_location=%%~nxf"
+    if not "%bcutilfips_location%"=="bcutil-fips-%BCUTIL_FIPS_VERSION%.jar" (
+        set sever_restart_required=true
+        echo There is an update for bcutil-fips. Therefore Remove existing bcutil-fips jar from lib folder.
+        del /q "%CARBON_HOME%\repository\components\lib\bcutil-fips*.jar" 2> nul
+        echo Successfully removed bcutil-fips_%BCUTIL_FIPS_VERSION%.jar from components/lib.
+        if exist "%CARBON_HOME%\repository\components\dropins\bcutil_fips*.jar" (
+            set sever_restart_required=true
+            echo Remove existing bcutil-fips jar from dropins folder.
+            del /q "%CARBON_HOME%\repository\components\dropins\bcutil_fips*.jar" 2> nul
+            echo Successfully removed bcutil-fips_%BCUTIL_FIPS_VERSION%.jar from components/dropins.
         )
     )
 )
@@ -292,6 +328,42 @@ if not exist "%CARBON_HOME%\repository\components\lib\bcpkix-fips*.jar" (
         )
     )
 )
+
+if not exist "%CARBON_HOME%\repository\components\lib\bcutil-fips*.jar" (
+    set server_restart_required=true
+    if not "%arg1%"=="" (
+    if not exist "%arg1%\bcutil-fips-%BCUTIL_FIPS_VERSION%.jar" (
+        echo Can not be found requried bcutil-fips-%BCUTIL_FIPS_VERSION%.jar in given file path : "%arg1%".
+    ) else (
+        copy "%arg1%\bcutil-fips-%BCUTIL_FIPS_VERSION%.jar" "%CARBON_HOME%\repository\components\lib\"
+        if %errorlevel% equ 0 (
+            echo bcutil-fips JAR file copied successfully.
+        ) else (
+            echo Error copying bcutil-fips JAR file.
+        )
+    )
+    )
+    if not "%arg2%"=="" if "%arg1%"=="" (
+        echo Downloading required bcutil-fips jar : bcutil-fips-%BCUTIL_FIPS_VERSION%
+        curl %arg2%/org/bouncycastle/bcutil-fips/%BCUTIL_FIPS_VERSION%/bcutil-fips-%BCUTIL_FIPS_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/bcutil-fips-%BCUTIL_FIPS_VERSION%.jar
+        FOR /F "tokens=*" %%G IN ('certutil -hashfile "%CARBON_HOME%\repository\components\lib\bcutil-fips-%BCUTIL_FIPS_VERSION%.jar" SHA1 ^| FIND /V ":"') DO SET "ACTUAL_CHECKSUM_BCUTIL_FIPS=%%G"
+        if "%ACTUAL_CHECKSUM_BCUTIL_FIPS%"=="%EXPECTED_BCUTIL_FIPS_CHECKSUM%" (
+            echo Checksum verified: The downloaded bcutil-fips-%BCUTIL_FIPS_VERSION%.jar is valid.
+        ) else (
+            echo Checksum verification failed: The downloaded bcutil-fips-%BCUTIL_FIPS_VERSION%.jar may be corrupted.
+        )
+    )
+    if "%arg1%"=="" if "%arg2%"=="" (
+        echo Downloading required bcutil-fips jar : bcutil-fips-%BCUTIL_FIPS_VERSION%
+        curl https://repo1.maven.org/maven2/org/bouncycastle/bcutil-fips/%BCUTIL_FIPS_VERSION%/bcutil-fips-%BCUTIL_FIPS_VERSION%.jar -o %CARBON_HOME%/repository/components/lib/bcutil-fips-%BCUTIL_FIPS_VERSION%.jar
+        FOR /F "tokens=*" %%G IN ('certutil -hashfile "%CARBON_HOME%\repository\components\lib\bcutil-fips-%BCUTIL_FIPS_VERSION%.jar" SHA1 ^| FIND /V ":"') DO SET "ACTUAL_CHECKSUM_BCUTIL_FIPS=%%G"
+        if "%ACTUAL_CHECKSUM_BCUTIL_FIPS%"=="%EXPECTED_BCUTIL_FIPS_CHECKSUM%" (
+            echo Checksum verified: The downloaded bcutil-fips-%BCUTIL_FIPS_VERSION%.jar is valid.
+        ) else (
+            echo Checksum verification failed: The downloaded bcutil-fips-%BCUTIL_FIPS_VERSION%.jar may be corrupted.
+        )
+    )
+)
 set bcprov_text=bcprov-jdk18on,%bcprov_version%,../plugins/bcprov-jdk18on_%bcprov_version%.jar,4,true
 set bcpkix_text=bcpkix-jdk18on,%bcpkix_version%,../plugins/bcpkix-jdk18on_%bcpkix_version%.jar,4,true
 
@@ -342,6 +414,16 @@ if exist "%CARBON_HOME%\repository\components\lib\bcpkix-fips*.jar" (
 ) else (
     set verify=false
     echo can not be found bc-fips_%BC_FIPS_VERSION%.jar in components/lib folder. This jar should be added.
+)
+
+if exist "%CARBON_HOME%\repository\components\lib\bcutil-fips*.jar" (
+    if not exist "%CARBON_HOME%\repository\components\lib\bcutil-fips-%BCUTIL_FIPS_VERSION%.jar" (
+        set verify=false
+        echo There is an update for bcutil-fips. Run the script again to get updates.
+    )
+) else (
+    set verify=false
+    echo can not be found bcutil-fips_%BCUTIL_FIPS_VERSION%.jar in components/lib folder. This jar should be added.
 )
 
 findstr /i /c:"bcprov-jdk18on" "%bundles_info%" >nul
