@@ -2007,6 +2007,16 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.extension.identity.oauth.dpop</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth2.dpop</artifactId>
+                <version>${identity.oauth.dpop.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.extension.identity.oauth.dpop</groupId>
+                <artifactId>org.wso2.carbon.extension.identity.oauth.dpop.server.feature</artifactId>
+                <version>${identity.oauth.dpop.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
                 <artifactId>org.wso2.carbon.identity.servlet.mgt</artifactId>
                 <version>${carbon.identity.framework.version}</version>
@@ -2551,6 +2561,8 @@
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.6</identity.oauth2.jwt.bearer.grant.version>
         <identity.oauth2.token.exchange.grant.version>1.1.16</identity.oauth2.token.exchange.grant.version>
+
+        <identity.oauth.dpop.version>2.0.4</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.8.5</identity.metadata.saml.version>
