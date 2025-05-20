@@ -1,0 +1,15 @@
+{
+  "name": "Central Hospital",
+  "description": "Hospital chain in South Asia",
+  "status": "ACTIVE",
+  "attributes": [
+    {
+      "key": "Region",
+      "value": "Sri Lanka"
+    },
+    {
+      "key": "Language",
+      "value": "Sinhala"
+    }
+  ]
+}

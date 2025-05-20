@@ -129,7 +129,6 @@ public class SCIMUtils {
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(userStoreType, userStoreDomain,
                 userStoreProperties);
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-        Thread.sleep(5000);
         Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient,
                 userStoreDomain), "Domain addition via DTO has failed.");
 

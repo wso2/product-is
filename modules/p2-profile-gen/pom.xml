@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.0-m2-SNAPSHOT</version>
+        <version>7.2.0-m3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -285,6 +285,9 @@
                                     org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.identity.sts.passive.feature:${identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth.dpop:org.wso2.carbon.extension.identity.oauth.dpop.server.feature:${identity.oauth.dpop.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.userstore.remote:org.wso2.carbon.identity.user.store.remote.feature:${identity.userstore.remote.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -542,6 +545,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.framework.async.operation.status.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.client.attestation.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -796,6 +802,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth.feature.group</id>
                                     <version>${identity.inbound.auth.oauth.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.extension.identity.oauth.dpop.server.feature.group</id>
+                                    <version>${identity.oauth.dpop.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
@@ -1114,6 +1124,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.input.validation.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.framework.async.operation.status.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>

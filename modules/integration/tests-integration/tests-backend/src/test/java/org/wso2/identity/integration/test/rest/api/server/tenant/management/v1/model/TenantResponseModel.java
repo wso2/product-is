@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020-2025, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model;
@@ -26,8 +28,9 @@ import java.util.Objects;
 import javax.validation.Valid;
 
 public class TenantResponseModel {
-  
+
     private String id;
+    private String name;
     private String domain;
     private List<OwnerResponse> owners = null;
 
@@ -43,7 +46,7 @@ public class TenantResponseModel {
         this.id = id;
         return this;
     }
-    
+
     @ApiModelProperty(example = "123e4567-e89b-12d3-a456-556642440000", value = "tenant id of the tenant owner.")
     @JsonProperty("id")
     @Valid
@@ -55,6 +58,25 @@ public class TenantResponseModel {
     }
 
     /**
+     * Name of the tenant.
+     **/
+    public TenantResponseModel name(String name) {
+
+        this.name = name;
+        return this;
+    }
+
+    @ApiModelProperty(example = "ABC Builders", value = "Name of the tenant.")
+    @JsonProperty("name")
+    @Valid
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
     * Tenant domain of the tenant.
     **/
     public TenantResponseModel domain(String domain) {
@@ -62,7 +84,7 @@ public class TenantResponseModel {
         this.domain = domain;
         return this;
     }
-    
+
     @ApiModelProperty(example = "abc.com", value = "Tenant domain of the tenant.")
     @JsonProperty("domain")
     @Valid
@@ -80,7 +102,7 @@ public class TenantResponseModel {
         this.owners = owners;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("owners")
     @Valid
@@ -144,7 +166,7 @@ public class TenantResponseModel {
         this.region = region;
         return this;
     }
-    
+
     @ApiModelProperty(example = "USA", value = "Region of the tenant.")
     @JsonProperty("region")
     @Valid
@@ -168,6 +190,7 @@ public class TenantResponseModel {
         }
         TenantResponseModel tenantResponseModel = (TenantResponseModel) o;
         return Objects.equals(this.id, tenantResponseModel.id) &&
+            Objects.equals(this.name, tenantResponseModel.name) &&
             Objects.equals(this.domain, tenantResponseModel.domain) &&
             Objects.equals(this.owners, tenantResponseModel.owners) &&
             Objects.equals(this.createdDate, tenantResponseModel.createdDate) &&
@@ -177,7 +200,7 @@ public class TenantResponseModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, domain, owners, createdDate, lifecycleStatus, region);
+        return Objects.hash(id, name, domain, owners, createdDate, lifecycleStatus, region);
     }
 
     @Override
@@ -187,6 +210,7 @@ public class TenantResponseModel {
         sb.append("class TenantResponseModel {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    domain: ").append(toIndentedString(domain)).append("\n");
         sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
         sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");

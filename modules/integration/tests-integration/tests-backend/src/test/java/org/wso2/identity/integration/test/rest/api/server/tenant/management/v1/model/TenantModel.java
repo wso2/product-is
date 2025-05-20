@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2023-2025, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -29,8 +29,28 @@ import java.util.Objects;
 
 public class TenantModel  {
 
+    private String name;
     private String domain;
     private List<Owner> owners = new ArrayList<>();
+
+    /**
+     * Name of the tenant.
+     **/
+    public TenantModel name(String name) {
+
+        this.name = name;
+        return this;
+    }
+
+    @ApiModelProperty(example = "ABC Builders", value = "Name of the tenant.")
+    @JsonProperty("name")
+    @Valid
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     /**
      * Tenant domain of the tenant.
@@ -41,7 +61,7 @@ public class TenantModel  {
         return this;
     }
 
-    @ApiModelProperty(example = "wso2.com", required = true, value = "Tenant domain of the tenant.")
+    @ApiModelProperty(example = "abc.com", required = true, value = "Tenant domain of the tenant.")
     @JsonProperty("domain")
     @Valid
     @NotNull(message = "Property domain cannot be null.")
@@ -88,13 +108,14 @@ public class TenantModel  {
             return false;
         }
         TenantModel tenantModel = (TenantModel) o;
-        return Objects.equals(this.domain, tenantModel.domain) &&
+        return Objects.equals(this.name, tenantModel.name) &&
+                Objects.equals(this.domain, tenantModel.domain) &&
                 Objects.equals(this.owners, tenantModel.owners);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(domain, owners);
+        return Objects.hash(name, domain, owners);
     }
 
     @Override
@@ -102,6 +123,7 @@ public class TenantModel  {
 
         StringBuilder sb = new StringBuilder();
         sb.append("class TenantModel {\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    domain: ").append(toIndentedString(domain)).append("\n");
         sb.append("    owners: ").append(toIndentedString(owners)).append("\n");
         sb.append("}");
