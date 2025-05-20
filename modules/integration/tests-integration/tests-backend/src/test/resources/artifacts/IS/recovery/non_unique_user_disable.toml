@@ -47,6 +47,3 @@ hostname= "localhost"
 port= 3025
 enable_start_tls= true
 enable_authentication= true
-
-[identity_mgt.username_recovery.non_unique_user]
-enabled = true

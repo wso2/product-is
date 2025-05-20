@@ -1,12 +1,12 @@
 /*
- *  Copyright (c)  WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019-2025, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -100,6 +100,7 @@ public final class OAuth2Constant {
     // OAuth 2 request parameters.
     public static final String OAUTH2_RESPONSE_TYPE = "response_type";
     public static final String OAUTH2_CLIENT_ID = "client_id";
+    public static final String OAUTH2_CLIENT_SECRET = "client_secret";
     public static final String OAUTH2_REDIRECT_URI = "redirect_uri";
     public static final String OAUTH2_SCOPE = "scope";
     public static final String OAUTH2_NONCE = "nonce";
@@ -128,6 +129,8 @@ public final class OAuth2Constant {
     public final static String TENANT_TOKEN_ENDPOINT = "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/token";
     public static final String TENANT_INTROSPECT_ENDPOINT =
             "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/introspect";
+
+    public static final String FIDP_PARAM = "fidp";
 
     public static final String SUBJECT_TOKEN = "subject_token";
     public static final class PlaygroundAppPaths {

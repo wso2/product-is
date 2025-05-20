@@ -96,7 +96,6 @@ public class LegacyJDBCUserStoreAddingTestCase extends ISIntegrationTest {
 				userStoreConfigAdminServiceClient.createUserStoreDTO(LEGACY_JDBC_CLASS, DOMAIN_ID, propertyDTOs);
 		try {
 			userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-			Thread.sleep(5000);
 			Assert.assertTrue(
 					userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID),
 					"Domain addition via DTO has failed.");

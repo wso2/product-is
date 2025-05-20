@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.0-SNAPSHOT</version>
+        <version>7.2.0-m3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -45,6 +45,11 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.m2m-application</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mcp-client-application</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>

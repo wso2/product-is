@@ -71,6 +71,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         super.init();
         ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null, null);
         idpMgtServiceClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL, configContext);
+        idpMgtServiceClient.deleteIdP("SSO");
     }
 
 

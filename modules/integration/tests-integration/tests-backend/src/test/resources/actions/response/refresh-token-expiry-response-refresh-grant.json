@@ -1,0 +1,10 @@
+{
+  "actionStatus": "SUCCESS",
+  "operations": [
+    {
+      "op": "replace",
+      "path": "/refreshToken/claims/expires_in",
+      "value": 48600
+    }
+  ]
+}

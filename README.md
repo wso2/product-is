@@ -1,229 +1,143 @@
 <a href="http://wso2.com/products/identity-server/">
-<img src="http://b.content.wso2.com/sites/all/common/images/product-logos/identity-server.svg"
-     srcset="http://b.content.wso2.com/sites/all/common/images/product-logos/identity-server.svg@2x.png 2x"
-     alt="WSO2 Identity Server" />
+<img src="https://wso2.cachefly.net/wso2/sites/all/image_resources/wso2-branding-logos/wso2-logo-orange.png" alt="WSO2 logo" width=30% height=30% />
+
 </a>
 
-# Welcome to WSO2 Identity Server
+# WSO2 Identity Server
+
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/wso2/product-is/blob/master/LICENSE)
+[![Get Support on Stack Overflow](https://img.shields.io/badge/stackoverflow-wso2is-orange)](https://stackoverflow.com/questions/tagged/wso2is)
+[![Join the community on Discord](https://img.shields.io/badge/Join%20us%20on-Discord-%23e01563.svg)](https://discord.com/invite/wso2)
+[![X](https://img.shields.io/twitter/follow/wso2.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=wso2)
+
 
 |  Branch | Build Status | Test Results |
 | :------------ |:------------- |:-------------
 | master      | [![Build Status](https://wso2.org/jenkins/job/products/job/product-is/badge/icon)](https://wso2.org/jenkins/job/products/job/product-is/) | [![Test Results](https://wso2.org/jenkins/job/products/job/product-is/badge/icon)](https://wso2.org/jenkins/job/products/job/product-is/lastBuild/testReport/) |
 
-
-[![Stackoverflow](https://img.shields.io/badge/Ask%20for%20help%20on-Stackoverflow-orange)](https://stackoverflow.com/questions/tagged/wso2is)
-[![Discord](https://img.shields.io/badge/Join%20us%20on-Discord-%23e01563.svg)](https://discord.gg/wso2)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/wso2/product-is/blob/master/LICENSE)
-[![Twitter](https://img.shields.io/twitter/follow/wso2.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=wso2)
 ---
 
-WSO2 Identity Server is an open source Identity and Access Management solution federating and managing identities across 
-both enterprise and cloud service environments. It supports a wide array of authentication 
-protocols such as SAML 2.0 Web SSO, OpenID, OAuth 2.0, OpenID Connect and WS-Federation Passive. 
-It supports role based authorization and fined grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is 
-supported through SCIM.
+WSO2 Identity Server is a powerful, modern identity and access management solution for your on-premises or cloud environment. It enables organizations to deliver exceptional, trusted digital experiences to all types of users.
 
-This is based on the revolutionary WSO2 Carbon framework. All the major features have been developed as pluggable Carbon components.
+To learn more about WSO2 Identity Server please visit [WSO2 Identity Server website](https://wso2.com/identity-server/)
 
-System Requirements
+
+> ##### Looking for a Hosted Identity Solution?
+> Try **[Asgardeo](https://wso2.com/asgardeo/)** free of charge – a public identity cloud solution (iDaaS) offering, built on the same technology core as **WSO2 Identity Server**.
+
+
+Why WSO2 Identity Server?
+=========================
+Whether you’re securing apps for external consumers, internal workforce, business customers, or even API access, WSO2 Identity Server provides the modern, full-featured identity and access foundation you need. 
+
+Customers prefer Identity Server for its developer-centric design, extensive standards support, freedom to deploy however needed, and massive scalability.
+
+<details>
+  <summary>Optimized developer experience</summary>
+          
+    - New visual designer that simplifies development of authentication flows. 
+    - New templates to easily configure apps and authentication methods. 
+    - Simplified use of RBAC to define fine-grained API access policies. 
+    - New authentication API for in-app authentication, further streamlining user access. 
+</details>
+
+<details>
+  <summary>AI-assisted development</summary>
+            
+    - Natural language for login flow requirements to automatically generate complex authentication flows. 
+    - Assisted brand matching to automatically generate all UX components
+</details>
+
+<details>
+  <summary>Industry-leading B2B CIAM capabilities, simplifying secure access for business customers and partners</summary>
+              
+    - Advanced RBAC to define delegated administration rights.
+    - Choice of login options per customer, including enterprise IDP. 
+    - Subscription model to ensure the right apps are available to customers.
+    - Customizable branding per customer to ensure the highest user engagement.
+    - Rich support for various organization hierarchies, such as B2B2C. 
+</details>
+
+<details>
+  <summary>Best API security available anywhere, using the powerful FAPI standard</summary>
+              
+    - Additional security features built on top of the OAuth2 standard.
+    - Originating in financial services, but now desired by many industries. 
+</details>
+
+<details>
+  <summary>Unified user experience</summary>
+              
+    - All-new administrative console.
+    - Shared with [Asgardeo](https://wso2.com/asgardeo/) and Private Identity Cloud. 
+</details>
+
+
+Getting Started
 ===================
+## System prerequisites
 
-1. Minimum memory - 2 GB
+Refer to this page to consult pre-requisites based on your target architecture and operating system: https://is.docs.wso2.com/en/latest/deploy/get-started/install
 
-2. Processor - 2 Core/vCPU 1.1GHz or higher
+Installation
+----------------------------------
 
-3. Java SE Development Kit 11
+1. WSO2 Identity Server requires a JDK to run and supports versions from JDK 11 through JDK 21. For the full list of supported versions, please refer to the [environment compatibility](https://is.docs.wso2.com/en/latest/deploy/get-started/install/#environment-compatibility) section in the documentation.
+2. Make sure you have set the `JAVA_HOME` environment variable to point to your JDK. See [this documentation](https://is.docs.wso2.com/en/latest/deploy/get-started/install/#install-on-different-platforms) if you need help doing so. 
+3. Extract the downloaded distribution zip file and go to the 'bin' directory
+4. Run the wso2server.sh or wso2server.bat script based on your operating system.
+5. Access the respective WSO2 Identity Server interfaces
+    * **Developer and Administrator Console** web application is running at: https://localhost:9443/console \
+      You may sign in to the Developer and Administrator Console using the default administrator credentials (username: admin, password: admin).
+    * **End User Portal** web application is running at: - https://localhost:9443/myaccount \
+      You may sign in to the End User Portal using the default administrator credentials (username: admin, password: admin).
 
-4. The Management Console requires full Javascript enablement of the Web browser.
+## Try out a sample app or build your own sample app
 
-5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
+Follow our [Quick Start guide ](https://is.docs.wso2.com/en/latest/get-started/start-integrating-apps/) to try out a sample app or build your own sample app.
 
-For more details see
-   * https://is.docs.wso2.com/en/7.1.0/deploy/get-started/install/ (For IS 7.1.0 version)
-
-Project Resources
-=================
-
-* Home page          : http://wso2.com/products/identity-server
-* Library            : https://wso2.com/library/identity-and-access-management
-* Wiki 
-    * IS 7.1.0 version     : https://is.docs.wso2.com/en/7.1.0/
-* Issue Tracker      : https://github.com/wso2/product-is/issues      
-* Forums             : http://stackoverflow.com/questions/tagged/wso2is/
-* IAM Developer List: iam-dev@wso2.org
-
-
-Building the distribution from source
-=========================================
-
-1. Install Java SE Development Kit 11
-2. Install Apache Maven 3.x.x(https://maven.apache.org/download.cgi#)
-3. Get a clone from https://github.com/wso2/product-is.git or download the source 
-4. Run the one of the below maven commands from product-is directory, 
-    - `mvn clean install` (To build the binary and source distributions with the tests)
-    - `mvn clean install -Dmaven.test.skip=true` (To build the binary and source distribution, without running any of 
-    the unit/integration tests)
-5. You can find the binary distribution in `product-is/modules/distribution/target` directory.
-
-    
-Installation and Running
+Reporting Product Issues
 ========================
+All known issues of WSO2 IS are filed at: https://github.com/wso2/product-is/issues. Please check this list before opening a new issue.
 
-1. Extract the downloaded/built binary distribution zip file
-2. Run the wso2server.sh or wso2server.bat file in the /bin directory
-3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
-4. Developer and Administrator Console is available at https://localhost:9443/console
-5. End User Portal is available at https://localhost:9443/myaccount
-6. For more information, see the Installation Guide
+#### Opening an issue
+Help us make our software better! Submit any bug reports or feature requests through GitHub: https://github.com/wso2/product-is/issues.
 
-
-WSO2 Identity Server Distribution Directory Structure
-==============================================
-
-            CARBON_HOME
-            ├── bin
-            ├── dbscripts
-            ├── lib
-            ├── repository
-            │   ├── components
-            │   ├── conf
-            │   │   └── identity
-            │   │       ├── identity-providers
-            │   │       └── service-providers
-            │   ├── database
-            │   ├── deployment
-            │   ├── logs
-            │   ├── resources
-            │   │   ├── identity
-            │   │   └── security
-            │   └── tenants
-            └── tmp
+#### Reporting Security Issues
+Please do not report security issues via GitHub issues. Instead, follow the WSO2 Security Vulnerability Reporting Guidelines.
 
 
-    - bin
-      Contains various scripts .sh & .bat scripts.
-
-    - dbscripts
-      Contains the database creation & seed data population SQL scripts for
-      various supported databases.
-
-    - lib
-      Contains the basic set of libraries required to startup Carbon.
-
-    - repository
-      The repository where Carbon artifacts & Axis2 services and 
-      modules deployed in WSO2 Carbon are stored. 
-      In addition to this other custom deployers such as
-      dataservices and axis1services are also stored.
-
-        - components
-          Contains all OSGi related libraries and configurations.
-
-        - conf
-          Contains server configuration files. Ex: axis2.xml, carbon.xml
-
-	        - identity
-	          Contains all configurations related to identity.
-
-	            - identity-providers
-	              Identity providers configured using file
-
-	            - service-providers
-	              Service providers configured using file
-
-        - database
-          Contains the WSO2 Registry & User Manager database.
-
-        - deployment
-          Contains server side and client side Axis2 repositories. 
-	      All deployment artifacts should go into this directory.
-
-        - logs
-          Contains all log files created during execution.
-
-        - resources
-          Contains additional resources that may be required.
-
-	- tenants
-	  Directory will contain relevant tenant artifacts 
-	  in the case of a multitenant deployment.
-
-    - tmp
-      Used for storing temporary files, and is pointed to by the
-      java.io.tmpdir System property.
+Join our community!
+========================
+- Read our documentation at [https://is.docs.wso2.com/en/latest/](https://is.docs.wso2.com/en/latest/).
+- Get help on [Stack Overflow](https://stackoverflow.com/questions/tagged/wso2-is).
+- Join the conversation on [Discord](https://discord.gg/wso2).
+- Learn more by reading articles from our [library](https://wso2.com/library/).
 
 
-    - LICENSE.txt
-      Apache License 2.0 under which WSO2 Carbon is distributed.
-
-    - README.txt
-      This document.
-
-    - release-notes.html
-      Release information for WSO2 Carbon ${carbon.product.version}.
-
-Secure sensitive information in carbon configuration files
-----------------------------------------------------------
-
-There are sensitive information such as passwords in the carbon configuration. 
-You can secure them by using secure vault. Please go through following steps to 
-secure them with default mode. 
-
-1. Configure secure vault with default configurations by running ciphertool 
-	script from bin directory.  
-
-> ciphertool.sh -Dconfigure   (in UNIX)  
-
-This script would do following configurations that you need to do by manually 
-
-(i) Replaces sensitive elements in configuration files,  that have been defined in
-		 cipher-tool.properties, with alias token values.  
-(ii) Encrypts plain text password which is defined in cipher-text.properties file.
-(iii) Updates secret-conf.properties file with default keystore and callback class. 
-
-cipher-tool.properties, cipher-text.properties and secret-conf.properties files 
-			can be found at repository/conf/security directory. 
-
-2. Start server by running wso2server script from bin directory
-
-> wso2server.sh   (in UNIX)
-
-By default mode, it would ask you to enter the master password 
-(By default, master password is the password of carbon keystore and private key) 
-
-3. Change any password by running ciphertool script from bin directory.  
-
-> ciphertool -Dchange  (in UNIX)
-
-For more details see
-https://is.docs.wso2.com/en/7.1.0/deploy/security/encrypt-passwords-with-cipher-tool/
-
-Support
-=======
-We are committed to ensuring that your enterprise middleware deployment is completely supported from
-evaluation to production. Our unique approach ensures that all support leverages our open development
-methodology and is provided by the very same engineers who build the technology.
-
-For more details and to take advantage of this unique opportunity, visit http://wso2.com/support/.
 
 
-For more information on WSO2 Carbon, visit the WSO2 Oxygen Tank (http://wso2.org)
 
-For more information about WSO2 Identity Server please see http://wso2.org/projects/identity or visit the
-WSO2 Oxygen Tank developer portal for addition resources.
+Commercial Support
+==================
+You can take advantage of a WSO2 on-prem product subscription for the full range of software product benefits like expert support, continuous product updates, vulnerability monitoring, and access to the licensed distribution for commercial use.
 
-For further details, see the WSO2 Carbon documentation at
-https://docs.wso2.com/display/Carbon4411/WSO2+Carbon+Documentation
+To learn more, check WSO2 Subscription.
 
-Survey On Open Source Community Communication
-=============================================
 
+
+Contributing
+===============
+If you are planning on contributing to the development efforts of WSO2 Identity Server, you can do that by checking out the latest development version. The master branch holds the latest unreleased source code.
+
+Please follow the details instructions available here: https://wso2.github.io  
+
+Can you fill this survey ?
 WSO2 wants to learn more about our open source software (OSS) community and your communication preferences to serve you better.
 
 In addition, we may reach out to a small number of respondents to ask additional questions and offer a small gift.
 
-Link to survey: https://forms.gle/h5q4M3K7vyXba3bK6
-
+Survey is available at: https://forms.gle/h5q4M3K7vyXba3bK6 
 
 ---------------------------------------------------------------------------
-(c) Copyright 2022 WSO2 LLC.
+(c) Copyright 2019 - 2025 WSO2 LLC. All Rights Reserved.

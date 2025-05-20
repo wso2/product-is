@@ -19,7 +19,16 @@ package org.wso2.identity.integration.test.restclients;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -30,13 +39,10 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Map;
 
 public class RestBaseClient {
 
@@ -52,7 +58,7 @@ public class RestBaseClient {
     public static final String PATH_SEPARATOR = "/";
     public static final String OIDC = "oidc";
     public static final String SAML = "saml";
-    public final CloseableHttpClient client;
+    public CloseableHttpClient client;
 
     public RestBaseClient() {
         client = HttpClients.createDefault();
@@ -121,6 +127,30 @@ public class RestBaseClient {
         HttpPost request = new HttpPost(endPointUrl);
         request.setHeaders(headers);
         request.setEntity(new StringEntity(jsonRequest));
+
+        return client.execute(request);
+    }
+
+    /**
+     * Execute and get the response of HTTP POST with encoded parameters.
+     *
+     * @param endPointUrl REST endpoint.
+     * @param headers     Header list of the request.
+     * @param urlParams   URL parameters.
+     * @return Response of the Http request.
+     * @throws IOException If an error occurred while executing http POST request.
+     */
+    public CloseableHttpResponse getResponseOfHttpPostWithParameters(String endPointUrl, Header[] headers,
+                                                                     Map<String, String> urlParams)
+            throws IOException {
+
+        HttpPost request = new HttpPost(endPointUrl);
+        request.setHeaders(headers);
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        for (Map.Entry<String, String> entry : urlParams.entrySet()) {
+            urlParameters.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+        request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
         return client.execute(request);
     }

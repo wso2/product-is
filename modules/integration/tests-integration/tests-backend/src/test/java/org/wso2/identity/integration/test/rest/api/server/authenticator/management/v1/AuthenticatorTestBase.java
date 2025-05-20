@@ -41,16 +41,19 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
     protected static final String API_VERSION = "v1";
     protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.authenticators.v1";
 
+    protected static final String BASE_PATH = "/api/server/v1";
     protected static final String AUTHENTICATOR_API_BASE_PATH = "/authenticators";
     protected static final String AUTHENTICATOR_META_TAGS_PATH = "/authenticators/meta/tags";
     protected static final String AUTHENTICATOR_CUSTOM_API_BASE_PATH = "/authenticators/custom";
-    protected static final String AUTHENTICATOR_CONFIG_API_BASE_PATH = "/api/server/v1/configs/authenticators/";
+    protected static final String AUTHENTICATOR_CONFIG_API_BASE_PATH = "/configs/authenticators/";
     protected static final String PATH_SEPARATOR = "/";
 
     protected final String AUTHENTICATOR_NAME = "custom-Authenticator";
     protected final String AUTHENTICATOR_DISPLAY_NAME = "ABC custom authenticator";
+    protected final String AUTHENTICATOR_IMAGE = "https://test.com/authenticator.png";
+    protected final String AUTHENTICATOR_DESCRIPTION = "This is custom local authenticator.";
     protected final String AUTHENTICATOR_ENDPOINT_URI = "https://test.com/authenticate";
-    protected final String customIdPId = Base64.getUrlEncoder().withoutPadding().encodeToString(
+    protected final String customAuthenticatorId = Base64.getUrlEncoder().withoutPadding().encodeToString(
             AUTHENTICATOR_NAME.getBytes(StandardCharsets.UTF_8));
     protected final String UPDATE_VALUE_POSTFIX = "Updated";
 
@@ -89,6 +92,8 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
         UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(type);
         config.setName(AUTHENTICATOR_NAME);
         config.setDisplayName(AUTHENTICATOR_DISPLAY_NAME);
+        config.setImageUrl(AUTHENTICATOR_IMAGE);
+        config.setDescription(AUTHENTICATOR_DESCRIPTION);
         config.setEnabled(true);
 
         UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =

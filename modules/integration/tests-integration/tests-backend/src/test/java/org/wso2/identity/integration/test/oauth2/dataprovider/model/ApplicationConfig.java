@@ -28,6 +28,7 @@ public class ApplicationConfig {
     private List<UserClaimConfig> requestedClaimList;
     private List<String> grantTypes;
     private boolean skipConsent;
+    private long refreshTokenExpiryTime;
 
     private ApplicationConfig(Builder builder) {
 
@@ -37,6 +38,7 @@ public class ApplicationConfig {
         this.requestedClaimList = builder.claimsList;
         this.grantTypes = builder.grantTypes;
         this.skipConsent = builder.skipConsent;
+        this.refreshTokenExpiryTime = builder.refreshTokenExpiryTime;
     }
 
     public TokenType getTokenType() {
@@ -69,6 +71,11 @@ public class ApplicationConfig {
         return skipConsent;
     }
 
+    public long getRefreshTokenExpiryTime() {
+
+        return refreshTokenExpiryTime;
+    }
+
     public enum TokenType {
         JWT("JWT"), OPAQUE("Default");
 
@@ -93,6 +100,7 @@ public class ApplicationConfig {
         private List<UserClaimConfig> claimsList;
         private List<String> grantTypes;
         private boolean skipConsent;
+        private long refreshTokenExpiryTime;
 
         public Builder tokenType(TokenType tokenType) {
 
@@ -127,6 +135,12 @@ public class ApplicationConfig {
         public Builder skipConsent(boolean skipConsent) {
 
             this.skipConsent = skipConsent;
+            return this;
+        }
+
+        public Builder refreshTokenExpiryTime(long refreshTokenExpiryTime) {
+
+            this.refreshTokenExpiryTime = refreshTokenExpiryTime;
             return this;
         }
 

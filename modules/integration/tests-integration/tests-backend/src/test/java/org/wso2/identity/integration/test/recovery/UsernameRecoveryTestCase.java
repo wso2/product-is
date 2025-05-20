@@ -87,7 +87,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
     // Constants.
     private static final String SMS_SENDER_REQUEST_FORMAT = "{\"content\": {{body}}, \"to\": {{mobile}} }";
-    private static final String USERNAME = "testUser1";
+    private static final String USERNAME = "usernameRecoveryTestUser1";
     private static final String USER_MOBILE = "+94674898234";
     private static final String USER_PASSWORD = "Sample1$";
     private static final String MOBILE = "mobile";
@@ -117,10 +117,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
     private NotificationSenderRestClient notificationSenderRestClient;
     private ServerConfigurationManager serverConfigurationManager;
 
-
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
-
 
         super.init();
         changeISConfiguration(false);
@@ -149,7 +147,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Adding custom sms sender.
         notificationSenderRestClient = new NotificationSenderRestClient(
-               serverURL, tenantInfo);
+                serverURL, tenantInfo);
         SMSSender smsSender = initSMSSender();
         notificationSenderRestClient.createSMSProvider(smsSender);
 
@@ -181,6 +179,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         client.close();
         scim2RestClient.closeHttpClient();
         restClient.closeHttpClient();
+        userStoreMgtRestClient.closeHttpClient();
+        identityGovernanceRestClient.closeHttpClient();
         super.clear();
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
@@ -264,12 +264,12 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Create two users with same attributes in two user stores.
         List<UserObject> users = new ArrayList<>();
-        UserObject user1 = initUser(PRIMARY_DOMAIN_ID, "user1");
+        UserObject user1 = initUser(PRIMARY_DOMAIN_ID, "usernameRecoveryUser1");
         createUser(user1);
         String user1UserId = userId;
         users.add(user1);
 
-        UserObject user2 = initUser(SECONDARY_DOMAIN_ID, "user2");
+        UserObject user2 = initUser(SECONDARY_DOMAIN_ID, "UsernameRecoveryUser2");
         createUser(user2);
         String user2UserId = userId;
         users.add(user2);
@@ -380,20 +380,19 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
     @DataProvider(name = "userProvider")
     private Object[][] userProvider() {
+
         // Primary user store user.
         UserObject userObject1 = initUser(PRIMARY_DOMAIN_ID, USERNAME);
 
         // Secondary user store user.
         UserObject userObject2 = initUser(SECONDARY_DOMAIN_ID, USERNAME);
 
-        return new Object[][]{
-                {userObject1},
-                {userObject2}
-        };
+        return new Object[][]{{userObject1}, {userObject2}};
     }
 
     @DataProvider(name = "userProviderWithChannel")
     private Object[][] userProviderWithChannel() {
+
         // Primary user store user.
         UserObject userObject1 = initUser(PRIMARY_DOMAIN_ID, USERNAME);
 
@@ -570,22 +569,27 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         return null;
     }
 
-    private void changeISConfiguration(boolean  nonUniqueUserSupport)
+    private void changeISConfiguration(boolean nonUniqueUserSupport)
             throws IOException, XPathExpressionException, AutomationUtilException {
 
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
-        File tartgetTomlFile;
+        File targetTomlFile;
         if (nonUniqueUserSupport) {
-            tartgetTomlFile = new File(getISResourceLocation() + File.separator + "recovery" +
+            targetTomlFile = new File(getISResourceLocation() + File.separator + "recovery" +
                     File.separator + NON_UNIQUE_USER_ENABLE_TOML);
         } else {
-            tartgetTomlFile = new File(getISResourceLocation() + File.separator + "recovery" +
+            targetTomlFile = new File(getISResourceLocation() + File.separator + "recovery" +
                     File.separator + NON_UNIQUE_USER_DISABLE_TOML);
         }
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfiguration(tartgetTomlFile, defaultTomlFile, true, true);
+        serverConfigurationManager.applyConfiguration(targetTomlFile, defaultTomlFile, true, true);
+    }
+
+    public enum ChannelType {
+        SMS,
+        EMAIL
     }
 
     private static SMSSender initSMSSender() {
@@ -598,11 +602,6 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         properties.add(new Properties().key("body").value(SMS_SENDER_REQUEST_FORMAT));
         smsSender.setProperties(properties);
         return smsSender;
-    }
-
-    public enum ChannelType {
-        SMS,
-        EMAIL
     }
 
 }

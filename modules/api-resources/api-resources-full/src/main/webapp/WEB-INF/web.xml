@@ -40,6 +40,7 @@
                 org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi,
                 org.wso2.carbon.identity.api.server.admin.advisory.management.v1.AdminAdvisoryManagementApi,
                 org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi,
+                org.wso2.carbon.identity.api.server.asynchronous.operation.status.management.v1.AsyncOperationsApi,
                 org.wso2.carbon.identity.api.server.userstore.v1.UserstoresApi,
                 org.wso2.carbon.identity.api.server.permission.management.v1.PermissionManagementApi,
                 org.wso2.carbon.identity.api.server.keystore.management.v1.KeystoresApi,
@@ -74,7 +75,8 @@
                 org.wso2.carbon.identity.api.server.rule.metadata.v1.RulesApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.AuthorizationDetailsTypesApi,
                 org.wso2.carbon.identity.api.server.registration.management.v1.RegistrationFlowApi,
-                org.wso2.carbon.identity.api.server.registration.execution.v1.RegistrationApi
+                org.wso2.carbon.identity.api.server.registration.execution.v1.RegistrationApi,
+                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowsApi
             </param-value>
         </init-param>
         <init-param>
@@ -111,7 +113,8 @@
         <init-param>
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
-                org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi
+                org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
             </param-value>
         </init-param>
         <init-param>
@@ -146,6 +149,7 @@
                 org.wso2.carbon.identity.rest.api.server.notification.template.v1.NotificationApi,
                 org.wso2.carbon.identity.api.server.identity.governance.v1.IdentityGovernanceApi,
                 org.wso2.carbon.identity.api.server.application.management.v1.ApplicationsApi,
+                org.wso2.carbon.identity.api.server.asynchronous.operation.status.management.v1.AsyncOperationsApi,
                 org.wso2.carbon.identity.api.server.userstore.v1.UserstoresApi,
                 org.wso2.carbon.identity.api.server.idp.v1.IdentityProvidersApi,
                 org.wso2.carbon.identity.api.server.configs.v1.ConfigsApi,
@@ -201,7 +205,8 @@
         <init-param>
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
-                org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi
+                org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
             </param-value>
         </init-param>
         <init-param>
@@ -357,7 +362,8 @@
                 org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
-                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi
+                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
+                org.wso2.carbon.identity.rest.api.user.approval.v1.MeApi
             </param-value>
         </init-param>
         <init-param>
