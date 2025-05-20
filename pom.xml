@@ -2062,6 +2062,16 @@
                 <version>${identity.oauth2.grant.organizationswitch.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.identity.workflow.mgt.server.feature</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.workflow</groupId>
+                <artifactId>org.wso2.carbon.identity.workflow.engine.server.feature</artifactId>
+                <version>${identity.workflow.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.outbound.provisioning.scim2</groupId>
                 <artifactId>org.wso2.carbon.identity.provisioning.connector.scim2.server.feature</artifactId>
                 <version>${provisioning.connector.scim2.version}</version>
@@ -2471,7 +2481,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.8.152</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.156</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.0.6</identity.notification.push.version>
@@ -2566,6 +2576,9 @@
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.8.5</identity.metadata.saml.version>
+
+        <!-- Identity Workflow -->
+        <identity.workflow.version>1.0.3</identity.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.37</authenticator.totp.version>
