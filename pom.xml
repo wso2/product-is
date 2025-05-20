@@ -2578,7 +2578,7 @@
         <identity.metadata.saml.version>1.8.5</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
-        <identity.workflow.version>1.0.3</identity.workflow.version>
+        <identity.workflow.version>1.0.4</identity.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.37</authenticator.totp.version>
