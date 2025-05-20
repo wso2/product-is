@@ -85,10 +85,16 @@ public class RegistrationExecutionTestBase extends RESTAPIServerTestBase {
 
         ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
         connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        PropertyReq enableProperty = new PropertyReq();
+        enableProperty.setName("SelfRegistration.Enable");
+        enableProperty.setValue("true");
+        connectorsPatchReq.addProperties(enableProperty);
+
         PropertyReq propertyReq = new PropertyReq();
         propertyReq.setName("SelfRegistration.EnableDynamicPortal");
         propertyReq.setValue("true");
         connectorsPatchReq.addProperties(propertyReq);
+
         client.updateConnectors("VXNlciBPbmJvYXJkaW5n", "c2VsZi1zaWduLXVw", connectorsPatchReq);
     }
 
@@ -96,10 +102,17 @@ public class RegistrationExecutionTestBase extends RESTAPIServerTestBase {
 
         ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
         connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+
+        PropertyReq enableProperty = new PropertyReq();
+        enableProperty.setName("SelfRegistration.Enable");
+        enableProperty.setValue("false");
+        connectorsPatchReq.addProperties(enableProperty);
+
         PropertyReq propertyReq = new PropertyReq();
         propertyReq.setName("SelfRegistration.EnableDynamicPortal");
         propertyReq.setValue("false");
         connectorsPatchReq.addProperties(propertyReq);
+
         client.updateConnectors("VXNlciBPbmJvYXJkaW5n", "c2VsZi1zaWduLXVw", connectorsPatchReq);
     }
 }
