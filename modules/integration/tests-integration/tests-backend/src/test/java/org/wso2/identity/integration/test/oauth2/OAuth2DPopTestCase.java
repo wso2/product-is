@@ -93,7 +93,6 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.PAR_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
-
 public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String USERS = "users";
@@ -101,7 +100,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String TOKEN_TYPE = "DPoP";
     private static final String BINDING_TYPE = "DPoP";
     private static final String SCIM2_USERS_API = "/scim2/Users";
-    public final static String SCIM2_USERS_ENDPOINT = "https://localhost:9853/scim2/Users";
+    private final static String SCIM2_USERS_ENDPOINT = "https://localhost:9853/scim2/Users";
     private final static String INTERNAL_USER_MGT_LIST  = "internal_user_mgt_list";
     private static final String TEST_USER = "test_user";
     private static final String ADMIN_WSO2 = "Admin@wso2";
@@ -131,7 +130,6 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private String roleId;
     private String requestURI;
 
-
     @Factory(dataProvider = "testExecutionContextProvider")
     public OAuth2DPopTestCase(TestUserMode testUserMode) {
 
@@ -149,6 +147,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
+
         super.init(userMode);
         super.setSystemproperties();
 
