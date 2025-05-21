@@ -3,6 +3,7 @@
 
 <product name="Carbon Product" uid="carbon.product.id" id="carbon.product" application="carbon.application"
 version="4.10.53" useFeatures="true" includeLaunchers="true">
+
    <configIni use="default">
    </configIni>
 
