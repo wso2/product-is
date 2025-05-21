@@ -2067,6 +2067,11 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.workflow.user</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.workflow.server.feature</artifactId>
+                <version>5.6.5</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.workflow</groupId>
                 <artifactId>org.wso2.carbon.identity.workflow.engine.server.feature</artifactId>
                 <version>${identity.workflow.version}</version>
