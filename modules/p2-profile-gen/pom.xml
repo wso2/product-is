@@ -609,7 +609,7 @@
                                     org.wso2.carbon.identity.workflow:org.wso2.carbon.identity.workflow.engine.server.feature:${identity.workflow.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.server.feature:5.6.5
+                                    org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.server.feature:${identity.user.workflow.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -1262,7 +1262,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
-                                    <version>5.6.5</version>
+                                    <version>${identity.user.workflow.version}</version>
                                 </feature>
                             </features>
                         </configuration>

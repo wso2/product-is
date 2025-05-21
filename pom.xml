@@ -2069,7 +2069,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.workflow.user</groupId>
                 <artifactId>org.wso2.carbon.user.mgt.workflow.server.feature</artifactId>
-                <version>5.6.5</version>
+                <version>${identity.user.workflow.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.workflow</groupId>
@@ -2584,6 +2584,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.4</identity.workflow.version>
+        <identity.user.workflow.version>5.6.5</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.37</authenticator.totp.version>
