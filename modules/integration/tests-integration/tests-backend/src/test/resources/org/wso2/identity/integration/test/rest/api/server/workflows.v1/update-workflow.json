@@ -1,0 +1,22 @@
+{
+  "name": "User Approval Workflow",
+  "description": "Workflow to approve user role related requests",
+  "engine": "Simple Workflow Engine",
+  "template": {
+    "name": "MultiStepApprovalTemplate",
+    "steps": [
+      {
+        "step": 1,
+        "options": [
+          {
+            "entity": "roles",
+            "values": [
+              "301",
+              "302"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
