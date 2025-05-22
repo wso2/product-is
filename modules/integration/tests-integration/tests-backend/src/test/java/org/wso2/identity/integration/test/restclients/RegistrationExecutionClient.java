@@ -28,8 +28,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationSubmissionRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationSubmissionResponse;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model.Error;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -75,7 +75,7 @@ public class RegistrationExecutionClient extends RestBaseClient {
             if (response.getStatusLine().getStatusCode() != HTTP_OK) {
                 return objectMapper.readValue(responseString, Error.class);
             } else {
-                return objectMapper.readValue(responseString, RegistrationSubmissionResponse.class);
+                return objectMapper.readValue(responseString, RegistrationExecutionResponse.class);
             }
         }
     }
@@ -83,13 +83,13 @@ public class RegistrationExecutionClient extends RestBaseClient {
     /**
      * Submit the registration request.
      *
-     * @param registrationSubmissionRequest The registration submission request.
+     * @param registrationExecutionRequest The registration execution request.
      * @return The response of the registration submission.
      * @throws Exception If an error occurred while submitting the registration request.
      */
-    public Object submitRegistration(RegistrationSubmissionRequest registrationSubmissionRequest) throws Exception {
+    public Object submitRegistration(RegistrationExecutionRequest registrationExecutionRequest) throws Exception {
 
-        String jsonRequestBody = toJSONString(registrationSubmissionRequest);
+        String jsonRequestBody = toJSONString(registrationExecutionRequest);
         String executionUrl = registrationExecutionBasePath + PATH_SEPARATOR + REGISTRATION_EXECUTION_ENDPOINT;
         try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,
                 getHeadersWithBasicAuth())) {
@@ -98,7 +98,7 @@ public class RegistrationExecutionClient extends RestBaseClient {
             if (response.getStatusLine().getStatusCode() != HTTP_OK) {
                 return objectMapper.readValue(responseString, Error.class);
             } else {
-                return objectMapper.readValue(responseString, RegistrationSubmissionResponse.class);
+                return objectMapper.readValue(responseString, RegistrationExecutionResponse.class);
             }
         }
     }

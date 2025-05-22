@@ -22,19 +22,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Objects;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
-public class RegistrationSubmissionResponse {
+public class RegistrationExecutionResponse  {
 
     private String flowId;
     private String flowStatus;
 
-    @XmlType(name = "TypeEnum")
+    @XmlType(name="TypeEnum")
     @XmlEnum(String.class)
     public enum TypeEnum {
 
@@ -72,7 +69,7 @@ public class RegistrationSubmissionResponse {
     /**
      * Unique identifier for the registration flow
      **/
-    public RegistrationSubmissionResponse flowId(String flowId) {
+    public RegistrationExecutionResponse flowId(String flowId) {
 
         this.flowId = flowId;
         return this;
@@ -86,15 +83,13 @@ public class RegistrationSubmissionResponse {
     public String getFlowId() {
         return flowId;
     }
-
     public void setFlowId(String flowId) {
         this.flowId = flowId;
     }
 
     /**
-     *
      **/
-    public RegistrationSubmissionResponse flowStatus(String flowStatus) {
+    public RegistrationExecutionResponse flowStatus(String flowStatus) {
 
         this.flowStatus = flowStatus;
         return this;
@@ -108,15 +103,13 @@ public class RegistrationSubmissionResponse {
     public String getFlowStatus() {
         return flowStatus;
     }
-
     public void setFlowStatus(String flowStatus) {
         this.flowStatus = flowStatus;
     }
 
     /**
-     *
      **/
-    public RegistrationSubmissionResponse type(TypeEnum type) {
+    public RegistrationExecutionResponse type(TypeEnum type) {
 
         this.type = type;
         return this;
@@ -130,15 +123,13 @@ public class RegistrationSubmissionResponse {
     public TypeEnum getType() {
         return type;
     }
-
     public void setType(TypeEnum type) {
         this.type = type;
     }
 
     /**
-     *
      **/
-    public RegistrationSubmissionResponse data(Data data) {
+    public RegistrationExecutionResponse data(Data data) {
 
         this.data = data;
         return this;
@@ -150,14 +141,14 @@ public class RegistrationSubmissionResponse {
     public Data getData() {
         return data;
     }
-
     public void setData(Data data) {
         this.data = data;
     }
 
 
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -165,11 +156,11 @@ public class RegistrationSubmissionResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RegistrationSubmissionResponse registrationSubmissionResponse = (RegistrationSubmissionResponse) o;
-        return Objects.equals(this.flowId, registrationSubmissionResponse.flowId) &&
-                Objects.equals(this.flowStatus, registrationSubmissionResponse.flowStatus) &&
-                Objects.equals(this.type, registrationSubmissionResponse.type) &&
-                Objects.equals(this.data, registrationSubmissionResponse.data);
+        RegistrationExecutionResponse registrationExecutionResponse = (RegistrationExecutionResponse) o;
+        return Objects.equals(this.flowId, registrationExecutionResponse.flowId) &&
+                Objects.equals(this.flowStatus, registrationExecutionResponse.flowStatus) &&
+                Objects.equals(this.type, registrationExecutionResponse.type) &&
+                Objects.equals(this.data, registrationExecutionResponse.data);
     }
 
     @Override
@@ -181,7 +172,7 @@ public class RegistrationSubmissionResponse {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class RegistrationSubmissionResponse {\n");
+        sb.append("class RegistrationExecutionResponse {\n");
 
         sb.append("    flowId: ").append(toIndentedString(flowId)).append("\n");
         sb.append("    flowStatus: ").append(toIndentedString(flowStatus)).append("\n");
@@ -195,7 +186,7 @@ public class RegistrationSubmissionResponse {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";
