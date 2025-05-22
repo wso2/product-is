@@ -104,7 +104,7 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
     public void submitRegistrationFlow() throws Exception {
 
         Object responseObj = registrationExecutionClient
-                .submitRegistration(getRegistrationSubmissionRequest());
+                .submitRegistration(getRegistrationExecutionRequest());
         Assert.assertTrue(responseObj instanceof RegistrationExecutionResponse);
         RegistrationExecutionResponse response = (RegistrationExecutionResponse) responseObj;
         Assert.assertNotNull(response);
@@ -113,18 +113,18 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
         Assert.assertNotNull(response.getData());
     }
 
-    private static RegistrationExecutionRequest getRegistrationSubmissionRequest() {
+    private static RegistrationExecutionRequest getRegistrationExecutionRequest() {
 
-        RegistrationExecutionRequest registrationSubmissionRequest = new RegistrationExecutionRequest();
-        registrationSubmissionRequest.setFlowId(flowId);
-        registrationSubmissionRequest.setActionId("button_5zqc");
+        RegistrationExecutionRequest registrationExecutionRequest = new RegistrationExecutionRequest();
+        registrationExecutionRequest.setFlowId(flowId);
+        registrationExecutionRequest.setActionId("button_5zqc");
         Map<String, String> inputs = new HashMap<>();
         inputs.put("http://wso2.org/claims/username", USER);
         inputs.put("password", "Wso2@test");
         inputs.put("http://wso2.org/claims/emailaddress", "test@wso2.com");
         inputs.put("http://wso2.org/claims/givenname", "RegExecPosJohn");
         inputs.put("http://wso2.org/claims/lastname", "RegExecPosDoe");
-        registrationSubmissionRequest.setInputs(inputs);
-        return registrationSubmissionRequest;
+        registrationExecutionRequest.setInputs(inputs);
+        return registrationExecutionRequest;
     }
 }
