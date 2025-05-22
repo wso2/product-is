@@ -43,8 +43,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 public class RegistrationExecutionClient extends RestBaseClient {
 
     private static final String REGISTRATION_EXECUTION_API_PATH = "registration";
-    private static final String REGISTRATION_INITIATE_ENDPOINT = "initiate";
-    private static final String REGISTRATION_SUBMIT_ENDPOINT = "submit";
+    private static final String REGISTRATION_EXECUTION_ENDPOINT = "execute";
     private final String tenantDomain;
     private final String username;
     private final String password;
@@ -67,7 +66,7 @@ public class RegistrationExecutionClient extends RestBaseClient {
     public Object initiateRegistrationExecution() throws Exception {
 
         String jsonRequestBody = "{}";
-        String executionUrl = registrationExecutionBasePath + PATH_SEPARATOR + REGISTRATION_INITIATE_ENDPOINT;
+        String executionUrl = registrationExecutionBasePath + PATH_SEPARATOR + REGISTRATION_EXECUTION_ENDPOINT;
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,
                 getHeadersWithBasicAuth())) {
@@ -91,7 +90,7 @@ public class RegistrationExecutionClient extends RestBaseClient {
     public Object submitRegistration(RegistrationSubmissionRequest registrationSubmissionRequest) throws Exception {
 
         String jsonRequestBody = toJSONString(registrationSubmissionRequest);
-        String executionUrl = registrationExecutionBasePath + PATH_SEPARATOR + REGISTRATION_SUBMIT_ENDPOINT;
+        String executionUrl = registrationExecutionBasePath + PATH_SEPARATOR + REGISTRATION_EXECUTION_ENDPOINT;
         try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,
                 getHeadersWithBasicAuth())) {
             ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
