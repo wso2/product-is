@@ -2626,7 +2626,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.56.4</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.13</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.24.9</identity.apps.core.version>
+        <identity.apps.core.version>2.24.10</identity.apps.core.version>
         <identity.apps.tests.version>1.6.381</identity.apps.tests.version>
 
         <!-- Charon -->
