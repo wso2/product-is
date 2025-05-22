@@ -25,8 +25,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationSubmissionRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationSubmissionResponse;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model.Error;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.RegistrationExecutionClient;
@@ -100,7 +100,7 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
     @Test(dependsOnMethods = "initiateRegistrationFlowWithoutEnable")
     public void testSubmitRegistrationFlowWithoutEnable() throws Exception {
 
-        Object responseObj = registrationExecutionClient.submitRegistration(getRegistrationSubmissionRequest(flowId));
+        Object responseObj = registrationExecutionClient.submitRegistration(getRegistrationExecutionRequest(flowId));
         Assert.assertTrue(responseObj instanceof Error);
         Error error = (Error) responseObj;
         Assert.assertNotNull(error);
@@ -113,8 +113,8 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
 
         enableNewRegistrationFlow(identityGovernanceRestClient);
         Object responseObj = registrationExecutionClient.initiateRegistrationExecution();
-        Assert.assertTrue(responseObj instanceof RegistrationSubmissionResponse);
-        RegistrationSubmissionResponse response = (RegistrationSubmissionResponse) responseObj;
+        Assert.assertTrue(responseObj instanceof RegistrationExecutionResponse);
+        RegistrationExecutionResponse response = (RegistrationExecutionResponse) responseObj;
         Assert.assertNotNull(response);
         Assert.assertNotNull(response.getFlowId());
         flowId = response.getFlowId();
@@ -128,7 +128,7 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
     @Test(dependsOnMethods = "testInitiateRegistrationFlow")
     public void testSubmitRegistrationFlowWithInvalidFlowId() throws Exception {
 
-        Object responseObj = registrationExecutionClient.submitRegistration(getRegistrationSubmissionRequest(
+        Object responseObj = registrationExecutionClient.submitRegistration(getRegistrationExecutionRequest(
                 "INVALID_FLOW_ID"));
         Assert.assertTrue(responseObj instanceof Error);
         Error error = (Error) responseObj;
@@ -142,7 +142,7 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
 
         Map<String, String> inputs = new HashMap<>();
         Object responseObj = registrationExecutionClient
-                .submitRegistration(getRegistrationSubmissionRequest(flowId, inputs));
+                .submitRegistration(getRegistrationExecutionRequest(flowId, inputs));
     }
 
     @Test(dependsOnMethods = "testSubmitRegistrationFlowWithEmptyInputs")
@@ -155,7 +155,7 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
         inputs.put("http://wso2.org/claims/givenname", "John");
         inputs.put("http://wso2.org/claims/lastname", "Doe");
         Object responseObj = registrationExecutionClient
-                .submitRegistration(getRegistrationSubmissionRequest(flowId, inputs));
+                .submitRegistration(getRegistrationExecutionRequest(flowId, inputs));
         Assert.assertTrue(responseObj instanceof Error);
         Error error = (Error) responseObj;
         Assert.assertNotNull(error);
@@ -163,17 +163,17 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
         Assert.assertEquals(error.getCode(), "RFE-60002");
     }
 
-    private static RegistrationSubmissionRequest getRegistrationSubmissionRequest(String flowId,
-                                                                                  Map<String, String> inputs) {
+    private static RegistrationExecutionRequest getRegistrationExecutionRequest(String flowId,
+                                                                                Map<String, String> inputs) {
 
-        RegistrationSubmissionRequest registrationSubmissionRequest = new RegistrationSubmissionRequest();
-        registrationSubmissionRequest.setFlowId(flowId != null ? flowId : "FLOW_ID");
-        registrationSubmissionRequest.setActionId(RegistrationExecutionNegativeTest.ACTION_ID);
-        registrationSubmissionRequest.setInputs(inputs);
-        return registrationSubmissionRequest;
+        RegistrationExecutionRequest registrationExecutionRequest = new RegistrationExecutionRequest();
+        registrationExecutionRequest.setFlowId(flowId != null ? flowId : "FLOW_ID");
+        registrationExecutionRequest.setActionId(RegistrationExecutionNegativeTest.ACTION_ID);
+        registrationExecutionRequest.setInputs(inputs);
+        return registrationExecutionRequest;
     }
 
-    private static RegistrationSubmissionRequest getRegistrationSubmissionRequest(String flowId) {
+    private static RegistrationExecutionRequest getRegistrationExecutionRequest(String flowId) {
 
         Map<String, String> inputs = new HashMap<>();
         inputs.put("http://wso2.org/claims/username", USER);
@@ -181,6 +181,6 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
         inputs.put("http://wso2.org/claims/emailaddress", "test@wso2.com");
         inputs.put("http://wso2.org/claims/givenname", "RegExecNegJohn");
         inputs.put("http://wso2.org/claims/lastname", "RegExecNegDoe");
-        return getRegistrationSubmissionRequest(flowId, inputs);
+        return getRegistrationExecutionRequest(flowId, inputs);
     }
 }
