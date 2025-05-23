@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.1.0-beta2-SNAPSHOT</version>
+        <version>7.2.0-m3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -285,6 +285,9 @@
                                     org.wso2.carbon.identity.inbound.auth.sts:org.wso2.carbon.identity.sts.passive.feature:${identity.inbound.auth.sts.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.extension.identity.oauth.dpop:org.wso2.carbon.extension.identity.oauth.dpop.server.feature:${identity.oauth.dpop.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.userstore.remote:org.wso2.carbon.identity.user.store.remote.feature:${identity.userstore.remote.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -353,6 +356,11 @@
                                 <!-- API Resource Management Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.resource.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- Registration Framework Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.registration.framework.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
                                 <!-- Action Management Feature -->
@@ -537,6 +545,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.input.validation.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.framework.async.operation.status.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.client.attestation.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -587,6 +598,18 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.outbound.auth.adapter:org.wso2.carbon.identity.application.authenticator.adapter.feature:${identity.outbound.auth.adapter.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.authorization.framework.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.workflow.mgt.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.workflow:org.wso2.carbon.identity.workflow.engine.server.feature:${identity.workflow.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.server.feature:${identity.user.workflow.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -790,6 +813,10 @@
                                     <version>${identity.inbound.auth.oauth.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.extension.identity.oauth.dpop.server.feature.group</id>
+                                    <version>${identity.oauth.dpop.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.scim.feature.group</id>
                                     <version>${identity.inbound.provisioning.scim.version}</version>
                                 </feature>
@@ -882,6 +909,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.api.resource.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.registration.framework.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
@@ -1105,6 +1136,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.framework.async.operation.status.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.client.attestation.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -1212,6 +1247,22 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.outbound.auth.adapter.feature.group</id>
                                     <version>${identity.outbound.auth.adapter.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.authorization.framework.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.workflow.mgt.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.workflow.engine.server.feature.group</id>
+                                    <version>${identity.workflow.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.user.mgt.workflow.server.feature.group</id>
+                                    <version>${identity.user.workflow.version}</version>
                                 </feature>
                             </features>
                         </configuration>

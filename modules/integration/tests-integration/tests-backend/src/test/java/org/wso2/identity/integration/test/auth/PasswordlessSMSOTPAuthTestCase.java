@@ -119,7 +119,6 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         mockApplicationServer = new MockApplicationServer();
         mockApplicationServer.start();
 
-        super.init();
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())

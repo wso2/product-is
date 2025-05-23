@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019-2025, WSO2 LLC. (http://www.wso2.com).
  *
- * WSO2 Inc. licenses this file to you under the Apache License,
+ * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.user.application.v1;
 
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -55,7 +56,12 @@ public class UserDiscoverableApplicationFailureTest extends UserDiscoverableAppl
     public void testStart() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        super.testStart();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testEnd() {
+
+        super.conclude();
     }
 
     @Test

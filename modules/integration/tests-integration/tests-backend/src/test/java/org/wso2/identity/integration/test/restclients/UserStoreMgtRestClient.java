@@ -44,6 +44,7 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     public static final String PATH_SEPARATOR = "/";
     public static final int TIMEOUT_MILLIS = 30000;
     public static final int POLLING_INTERVAL_MILLIS = 500;
+    public static final int WAIT_TIME_MILLIS = 5000;
 
     private final CloseableHttpClient client;
     private final String username;
@@ -130,12 +131,12 @@ public class UserStoreMgtRestClient extends RestBaseClient {
     /**
      * Delete a user store.
      *
-     * @param domain User store domain(id).
+     * @param domainId User store domain id.
      * @throws IOException If an error occurred while deleting a user store.
      */
-    public void deleteUserStore(String domain) throws IOException {
+    public void deleteUserStore(String domainId) throws IOException {
 
-        String endpointUrl = userStoreBasePath + PATH_SEPARATOR + domain;
+        String endpointUrl = userStoreBasePath + PATH_SEPARATOR + domainId;
 
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
@@ -170,7 +171,8 @@ public class UserStoreMgtRestClient extends RestBaseClient {
      */
     public boolean waitForUserStoreDeployment(String domain) throws Exception {
 
-        long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS; //wait for 30 seconds
+        Thread.sleep(WAIT_TIME_MILLIS);
+        long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS; // wait for 30 seconds.
         while (System.currentTimeMillis() < waitTime) {
             JSONArray userStores = getUserStores();
             for (Object userStore : userStores) {
@@ -180,6 +182,34 @@ public class UserStoreMgtRestClient extends RestBaseClient {
                 }
             }
             Thread.sleep(POLLING_INTERVAL_MILLIS);
+        }
+        return false;
+    }
+
+    /**
+     * Check for user store deletion,
+     *
+     * @param domainId User store domain id.
+     * @return true if the user store is deleted.
+     * @throws Exception If an error occurred while checking the user store deletion.
+     */
+    public boolean waitForUserStoreUnDeployment(String domainId) throws Exception {
+
+        Thread.sleep(WAIT_TIME_MILLIS);
+        long waitTime = System.currentTimeMillis() + TIMEOUT_MILLIS; // wait for 30 seconds.
+        while (System.currentTimeMillis() < waitTime) {
+                JSONArray userStores = getUserStores();
+                boolean isUserStoreFound = false;
+                for (Object userStore : userStores) {
+                    String userStoreId = ((JSONObject) userStore).get("id").toString();
+                    if (userStoreId.equalsIgnoreCase(domainId)) {
+                        Thread.sleep(POLLING_INTERVAL_MILLIS);
+                        isUserStoreFound = true;
+                    }
+                }
+                if (!isUserStoreFound) {
+                    return true;
+                }
         }
         return false;
     }

@@ -40,8 +40,16 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -97,18 +105,19 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     private static final String CONTAINS = "+Co+";
 
     private CloseableHttpClient client;
+    private SCIM2RestClient scim2RestClient;
     private String userId1;
     private String userId2;
     private String userId3;
     private String userId4;
 
+    private TestUserMode userMode;
     private String adminUsername;
     private String password;
     private String tenant;
 
     private String groupId;
     private String groupId1;
-
 
     @Factory(dataProvider = "SCIM2MeConfigProvider")
     public SCIM2GroupTestCase(TestUserMode userMode) throws Exception {
@@ -117,6 +126,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
         this.password = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
+        this.userMode = userMode;
     }
 
     @DataProvider(name = "SCIM2MeConfigProvider")
@@ -129,8 +139,9 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        super.init();
+        super.init(userMode);
         client = HttpClients.createDefault();
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
         HttpResponse response = createUser(
                 USERNAME_1,
@@ -210,6 +221,9 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
+
+        scim2RestClient.closeHttpClient();
+        client.close();
     }
 
     private HttpResponse deleteUser(String userId) throws IOException {
@@ -441,6 +455,73 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
         EntityUtils.consume(response.getEntity());
+    }
+
+    @Test(dependsOnMethods = "testDeleteGroup")
+    public void testGetGroupsWithPagination() throws Exception {
+
+        int existingGroupsCount = Integer.parseInt(scim2RestClient.getGroups().get("totalResults").toString());
+        List<String> GROUP_LIST = Arrays.asList("testGroup4", "testGroup3", "testGroup2", "testGroup1", "group4",
+                "group3", "group2","group1");
+        List<String> groupIds = new ArrayList<>();
+        for (String groupName : GROUP_LIST) {
+            groupIds.add(scim2RestClient.createGroup(new GroupRequestObject().displayName(groupName)));
+        }
+
+        validateGroupsFromGetWithPagination(null, null, null, existingGroupsCount + GROUP_LIST.size(),
+                existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 3, null, existingGroupsCount + GROUP_LIST.size() - 2,
+                existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, null, 4, 4, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 4, 5, 5, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 20, 5, 0, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, Integer.MAX_VALUE, 2, 0, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 6, Integer.MAX_VALUE, existingGroupsCount + GROUP_LIST.size() - 5,
+                existingGroupsCount + GROUP_LIST.size());
+
+
+        String filter = SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE + CONTAINS + "test";
+        validateGroupsFromGetWithPagination(filter, null, null, 4, 4);
+        validateGroupsFromGetWithPagination(filter, 3, null, 2, 4);
+        validateGroupsFromGetWithPagination(filter, null, 3, 3, 4);
+        validateGroupsFromGetWithPagination(filter, 1, 2, 2, 4);
+        validateGroupsFromGetWithPagination(filter, 9, 3, 0, 4);
+        validateGroupsFromGetWithPagination(filter, Integer.MAX_VALUE, 2, 0, 4);
+        validateGroupsFromGetWithPagination(filter, 2, Integer.MAX_VALUE, 3, 4);
+
+        for (String groupId : groupIds) {
+            scim2RestClient.deleteGroup(groupId);
+        }
+    }
+
+    private void validateGroupsFromGetWithPagination(String filter, Integer startIndex, Integer count,
+                                                     Integer itemsPerPage, Integer totalResult) throws IOException {
+
+        List<String> paramsList = Stream.of(
+                        filter != null ? "filter=" + filter : null,
+                        startIndex != null ? "startIndex=" + startIndex : null,
+                        count != null ? "count=" + count : null)
+                .filter(Objects::nonNull).collect(Collectors.toList());
+
+        String endpointUrl = getPath() + (paramsList.isEmpty() ? "" : "?" + String.join("&", paramsList));
+        HttpGet request = new HttpGet(endpointUrl);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200,
+                "Error while getting groups with pagination");
+
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+
+        assertEquals(Integer.parseInt(((JSONObject) responseObj).get("totalResults").toString()), totalResult.intValue());
+        assertEquals(Integer.parseInt(((JSONObject) responseObj).get("itemsPerPage").toString()), itemsPerPage.intValue());
+        assertEquals(Integer.parseInt(((JSONObject) responseObj).get("startIndex").toString()),
+                startIndex == null ? 1 : startIndex);
+        if (itemsPerPage != 0) {
+            assertEquals(((JSONArray) ((JSONObject) responseObj).get("Resources")).size(), itemsPerPage.intValue());
+        }
     }
 
     private String getPath() {

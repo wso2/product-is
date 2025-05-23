@@ -22,7 +22,12 @@ import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Header;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.message.BasicHeader;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -32,7 +37,12 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
+import org.wso2.identity.integration.test.restclients.RestBaseClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +52,9 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.AUTHORIZATION_ATTRIBUTE;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.BASIC_AUTHORIZATION_ATTRIBUTE;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
 
 /**
  * Test REST API for managing user associations.
@@ -58,6 +71,13 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     private String federatedAssociationIdHolder;
     private String associatedUserIdHolder;
     private TestUserMode userMode;
+    private SCIM2RestClient scim2RestClient;
+    private IdpMgtRestClient idpMgtRestClient;
+    private String testUserId1;
+    private String testUserId2;
+    private String adminId;
+    private String idpId;
+    private RestBaseClient restBaseClient;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public UserMeSuccessTestBase(TestUserMode userMode) throws Exception {
@@ -72,16 +92,21 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
     @BeforeClass(alwaysRun = true)
     public void init() throws XPathExpressionException, RemoteException {
 
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
+        restBaseClient = new RestBaseClient();
+
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         initUrls("me");
 
         try {
-            createUser(TEST_USER_1, TEST_USER_PW, null);
-            createUser(TEST_USER_2, TEST_USER_PW, null);
+            testUserId1 = createUser(TEST_USER_1, TEST_USER_PW);
+            testUserId2 = createUser(TEST_USER_2, TEST_USER_PW);
 
-            createIdP(EXTERNAL_IDP_NAME);
-            createMyFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
-            createMyFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_2);
+            adminId = getLoginUserId();
+            idpId = createIdP(EXTERNAL_IDP_NAME);
+            createFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
+            createFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_2);
         } catch (Exception e) {
             log.error("Error while creating the users :" + TEST_USER_1 + ", and " + TEST_USER_2, e);
         }
@@ -93,15 +118,17 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         super.conclude();
 
         try {
-            deleteUser(TEST_USER_1);
-            deleteUser(TEST_USER_2);
+            deleteUser(TEST_USER_1, testUserId1);
+            deleteUser(TEST_USER_2, testUserId2);
 
-            deleteIdP(EXTERNAL_IDP_NAME);
+            deleteIdP(idpId);
 
             // Clear up any possible associations that may have created while running tests. The following delete
             // operations are expected to silently ignore any non-existing federated associations.
-            deleteFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_1);
-            deleteFederatedAssociation(EXTERNAL_IDP_NAME, EXTERNAL_USER_ID_2);
+            deleteFederatedAssociation();
+            scim2RestClient.closeHttpClient();
+            idpMgtRestClient.closeHttpClient();
+            restBaseClient.client.close();
         } catch (Exception e) {
             log.error("Error while deleting the users :" + TEST_USER_1 + ", and " + TEST_USER_2, e);
         }
@@ -217,30 +244,55 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    protected void createUser(String username, String password, String[] roles) throws Exception {
+    protected String createUser(String username, String password) throws Exception {
 
         log.info("Creating User " + username);
-        remoteUSMServiceClient.addUser(username, password, roles, null, null, true);
+        UserObject userObject = new UserObject();
+        userObject.setUserName(username);
+        userObject.setPassword(password);
+        return scim2RestClient.createUser(userObject);
     }
 
-    protected void createMyFederatedAssociation(String idpName, String associatedUserId) throws Exception {
+    protected void createFederatedAssociation(String idpName, String associatedUserId)
+            throws Exception {
 
         log.info("Creating federated association with the idp: " + idpName + ", and associated user: "
                 + associatedUserId);
-        userProfileMgtServiceClient.addFedIdpAccountAssociation(idpName, associatedUserId);
+        String endpoint = "/api/users/v1/" + adminId + "/federated-associations" ;
+        String requestURL = serverURL + ISIntegrationTest.getTenantedRelativePath(endpoint,
+                tenantInfo.getDomain());
+        String body = "{\n" +
+                "  \"federatedUserId\": \"" + associatedUserId + "\",\n" +
+                "  \"idp\": \"" + idpName + "\"\n" +
+                "}";
+
+        Header[] headers = new Header[2];
+        headers[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
+                org.apache.commons.codec.binary.Base64.encodeBase64String((
+                        tenantInfo.getTenantAdmin().getUserName() + ":" +
+                        tenantInfo.getTenantAdmin().getPassword()).getBytes()).trim());
+        headers[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/json");
+        CloseableHttpResponse response = restBaseClient.getResponseOfHttpPost(requestURL, body, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
     }
 
-    protected void deleteUser(String username) throws Exception {
+    protected void deleteUser(String username, String testUserId) throws Exception {
 
         log.info("Deleting User " + username);
-        remoteUSMServiceClient.deleteUser(username);
+        scim2RestClient.deleteUser(testUserId);
     }
 
-    protected void deleteFederatedAssociation(String idpName, String associatedUserId) throws Exception {
+    protected void deleteFederatedAssociation() throws Exception {
 
-        log.info("Deleting Federated Association with the idp: " + idpName + ", and associated user: "
-                + associatedUserId);
-        userProfileMgtServiceClient.deleteFedIdpAccountAssociation(idpName, associatedUserId);
+        String endpoint = "/api/users/v1/" + adminId + "/federated-associations" ;
+        String requestURL = serverURL + ISIntegrationTest.getTenantedRelativePath(endpoint,
+                tenantInfo.getDomain());
+        Header[] headers = new Header[1];
+        headers[0] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BASIC_AUTHORIZATION_ATTRIBUTE +
+                org.apache.commons.codec.binary.Base64.encodeBase64String((
+                        tenantInfo.getTenantAdmin().getUserName() + ":" +
+                        tenantInfo.getTenantAdmin().getPassword()).getBytes()).trim());
+        restBaseClient.getResponseOfHttpDelete(requestURL, headers);
     }
 
     private void createLocalAssociation(String body) {
@@ -257,23 +309,28 @@ public class UserMeSuccessTestBase extends UserAssociationTestBase {
         return Base64.getUrlEncoder().encodeToString(username.getBytes(StandardCharsets.UTF_8));
     }
 
-    private void createIdP(String idpName) {
+    private String createIdP(String idpName) throws Exception {
 
-        try {
-            IdentityProvider identityProvider = new IdentityProvider();
-            identityProvider.setIdentityProviderName(idpName);
-            identityProviderMgtServiceClient.addIdP(identityProvider);
-        } catch (Exception e) {
-            Assert.fail("Error while trying to create Identity Provider", e);
-        }
+        IdentityProviderPOSTRequest idpPostRequest = new IdentityProviderPOSTRequest()
+                .name(idpName);
+        return idpMgtRestClient.createIdentityProvider(idpPostRequest);
     }
 
-    private void deleteIdP(String idpName) {
+    private void deleteIdP(String idpId) throws Exception {
 
-        try {
-            identityProviderMgtServiceClient.deleteIdP(idpName);
-        } catch (Exception e) {
-            Assert.fail("Error while trying to delete Identity Provider", e);
-        }
+        idpMgtRestClient.deleteIdp(idpId);
+    }
+
+    private String getLoginUserId() throws Exception {
+
+        String userSearchReq = new JSONObject()
+                .put("schemas", new JSONArray().put("urn:ietf:params:scim:api:messages:2.0:SearchRequest"))
+                .put("attributes", new JSONArray().put("id"))
+                .put("filter", "userName eq " + tenantInfo.getTenantAdmin().getUserNameWithoutDomain())
+                .toString();
+
+        org.json.simple.JSONObject userSearchResponse = scim2RestClient.searchUser(userSearchReq);
+        return ((org.json.simple.JSONObject) ((org.json.simple.JSONArray) userSearchResponse.get("Resources")).get(0))
+                .get("id").toString();
     }
 }

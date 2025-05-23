@@ -107,6 +107,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", notNullValue())
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -125,7 +126,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .statusCode(HttpStatus.SC_OK)
                 .body( "find { it.id == '" + testActionId + "' }.name", equalTo(TEST_ACTION_NAME))
                 .body( "find { it.id == '" + testActionId + "' }.description", equalTo(TEST_ACTION_DESCRIPTION))
-                .body( "find { it.id == '" + testActionId + "' }.status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body( "find { it.id == '" + testActionId + "' }.status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("find { it.id == '" + testActionId + "' }.links", notNullValue())
                 .body("find { it.id == '" + testActionId + "' }.links.find { it.rel == 'self' }.href",
                         equalTo(buildBaseURL() + ACTION_MANAGEMENT_API_BASE_PATH +
@@ -146,7 +147,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -195,7 +196,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_UPDATED_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -217,7 +218,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -240,7 +241,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -268,7 +269,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -296,7 +297,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -326,7 +327,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -356,7 +357,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
@@ -386,7 +387,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
@@ -427,7 +428,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
@@ -463,7 +464,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("id", equalTo(testActionId))
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
@@ -471,21 +472,6 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
     }
 
     @Test(dependsOnMethods = {"testUpdateActionRemovingExistingRule"})
-    public void testDeactivateAction() {
-
-        getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
-                "/" + testActionId + ACTION_DEACTIVATE_PATH, "")
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(testActionId))
-                .body("name", equalTo(TEST_ACTION_NAME))
-                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
-                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS));
-    }
-
-    @Test(dependsOnMethods = {"testDeactivateAction"})
     public void testActivateAction() {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
@@ -498,6 +484,21 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("name", equalTo(TEST_ACTION_NAME))
                 .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
                 .body("status", equalTo(TEST_ACTION_ACTIVE_STATUS));
+    }
+
+    @Test(dependsOnMethods = {"testActivateAction"})
+    public void testDeactivateAction() {
+
+        getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_ISSUE_ACCESS_TOKEN_PATH +
+                "/" + testActionId + ACTION_DEACTIVATE_PATH, "")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS));
     }
 
     @Test(dependsOnMethods = {"testActivateAction"})

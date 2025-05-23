@@ -80,7 +80,7 @@
        {% if custom_transport.x509 %}
         <Connector
         {% for property_name,property_value in custom_transport.x509.properties.items() %}
-                        {{property_name}}="{{property_value}}"
+            {{property_name}}="{{property_value}}"
         {% endfor %}
         >
         </Connector>

@@ -264,6 +264,23 @@ public class RESTTestBase extends ISIntegrationTest {
 
     /**
      * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential with no filter.
+     *
+     * @param endpointUri endpoint to be invoked
+     * @return response of GET
+     */
+    protected Response getResponseOfGetNoFilter(String endpointUri) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .when()
+                .get(endpointUri);
+    }
+
+    /**
+     * Invoke given endpointUri for GET with Basic authentication, authentication credential being the
      * authenticatingUserName and authenticatingCredential
      *
      * @param endpointUri endpoint to be invoked
@@ -334,6 +351,24 @@ public class RESTTestBase extends ISIntegrationTest {
 
         return given().auth().preemptive().oauth2(accessToken)
                 .contentType(ContentType.JSON)
+                .when()
+                .get(endpointURL);
+    }
+
+    /**
+     * Invoke given endpointURL with params for GET with OAuth2 authentication, using the provided token.
+     *
+     * @param endpointURL Endpoint to be invoked.
+     * @param accessToken OAuth2 access token.
+     * @param queryParams request query parameters
+     * @return Response.
+     */
+    protected Response getResponseOfGetWithOAuth2(String endpointURL, String accessToken,
+                                                  Map<String, Object> queryParams) {
+
+        return given().auth().preemptive().oauth2(accessToken)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .queryParams(queryParams)
                 .when()
                 .get(endpointURL);
     }

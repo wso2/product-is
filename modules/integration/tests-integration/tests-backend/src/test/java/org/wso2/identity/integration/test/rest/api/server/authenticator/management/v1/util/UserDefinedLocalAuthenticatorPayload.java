@@ -22,7 +22,7 @@ package org.wso2.identity.integration.test.rest.api.server.authenticator.managem
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.wso2.carbon.identity.action.management.model.AuthProperty;
+import org.wso2.carbon.identity.action.management.api.model.AuthProperty;
 import org.wso2.carbon.identity.api.server.authenticators.v1.model.AuthenticationType;
 import org.wso2.carbon.identity.api.server.authenticators.v1.model.UserDefinedLocalAuthenticatorCreation;
 import org.wso2.carbon.identity.api.server.authenticators.v1.model.Endpoint;
@@ -65,6 +65,8 @@ public class UserDefinedLocalAuthenticatorPayload {
         configForCreation.setName(config.getName());
         configForCreation.setDisplayName(config.getDisplayName());
         configForCreation.setIsEnabled(config.isEnabled());
+        configForCreation.setImage(config.getImageUrl());
+        configForCreation.setDescription(config.getDescription());
         configForCreation.setAuthenticationType(UserDefinedLocalAuthenticatorCreation.AuthenticationTypeEnum.valueOf(
                 config.getAuthenticationType().toString()));
         configForCreation.setEndpoint(convertToEndpoint(config.getEndpointConfig()));
@@ -83,6 +85,8 @@ public class UserDefinedLocalAuthenticatorPayload {
         UserDefinedLocalAuthenticatorUpdate configForUpdate = new UserDefinedLocalAuthenticatorUpdate();
         configForUpdate.setDisplayName(config.getDisplayName());
         configForUpdate.setIsEnabled(config.isEnabled());
+        configForUpdate.setImage(config.getImageUrl());
+        configForUpdate.setDescription(config.getDescription());
         configForUpdate.setEndpoint(convertToEndpoint(config.getEndpointConfig()));
         return configForUpdate;
     }

@@ -85,7 +85,6 @@ public class ClaimMappingsOnSecondaryUserStoreTestCase extends ISIntegrationTest
         UserStoreDTO userStoreDTO = userStoreConfigAdminServiceClient.createUserStoreDTO(JDBC_CLASS, DOMAIN_ID,
                 userStoreConfigUtils.getJDBCUserStoreProperties(USER_STORE_DB_NAME));
         userStoreConfigAdminServiceClient.addUserStore(userStoreDTO);
-        Thread.sleep(5000);
         Assert.assertTrue(userStoreConfigUtils.waitForUserStoreDeployment(userStoreConfigAdminServiceClient, DOMAIN_ID)
                 , "Domain addition via DTO has failed.");
     }

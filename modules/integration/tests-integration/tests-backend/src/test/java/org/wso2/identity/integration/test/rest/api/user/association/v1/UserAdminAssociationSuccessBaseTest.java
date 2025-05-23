@@ -34,7 +34,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.rmi.RemoteException;
@@ -50,7 +52,7 @@ import static org.hamcrest.core.Is.is;
  */
 public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase {
 
-    private static final Log log = LogFactory.getLog(UserMeSuccessTestBase.class);
+    private static final Log log = LogFactory.getLog(UserAdminAssociationSuccessBaseTest.class);
     private static final String TEST_USER_1 = "TestUser01";
     private static final String TEST_USER_2 = "TestUser02";
     private static final String TEST_USER_PW = "Test@123";
@@ -58,9 +60,11 @@ public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase
     private static final String EXTERNAL_USER_ID_1 = "ExternalUser1";
     private static final String EXTERNAL_USER_ID_2 = "ExternalUser2";
     SCIM2RestClient scim2RestClient;
+    IdpMgtRestClient idpMgtRestClient;
     private Map<String, String> userAssociationIdHolder = new HashMap<>();
     private String testUser1Id;
     private String testUser2Id;
+    private String idpId;
 
     public UserAdminAssociationSuccessBaseTest() throws Exception {
 
@@ -70,6 +74,7 @@ public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase
         this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = context.getContextTenant().getDomain();
         this.scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        this.idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
     }
 
     @BeforeClass(alwaysRun = true)
@@ -79,7 +84,7 @@ public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase
         try {
             testUser1Id = createUser(TEST_USER_1, TEST_USER_PW);
             testUser2Id = createUser(TEST_USER_2, TEST_USER_PW);
-            createIdP(EXTERNAL_IDP_NAME);
+            createIdP();
         } catch (Exception e) {
             log.error("Error while creating the users :" + TEST_USER_1 + ", and " + TEST_USER_2, e);
         }
@@ -92,7 +97,7 @@ public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase
         try {
             deleteUser(testUser1Id);
             deleteUser(testUser2Id);
-            deleteIdP(EXTERNAL_IDP_NAME);
+            deleteIdP();
         } catch (Exception e) {
             log.error("Error while deleting the users :" + TEST_USER_1 + ", and " + TEST_USER_2, e);
         }
@@ -176,21 +181,21 @@ public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase
         scim2RestClient.deleteUser(userId);
     }
 
-    private void createIdP(String idpName) {
+    private void createIdP() {
 
         try {
-            IdentityProvider identityProvider = new IdentityProvider();
-            identityProvider.setIdentityProviderName(idpName);
-            identityProviderMgtServiceClient.addIdP(identityProvider);
+            IdentityProviderPOSTRequest identityProviderPOSTRequest = new IdentityProviderPOSTRequest();
+            identityProviderPOSTRequest.name(EXTERNAL_IDP_NAME);
+            idpId = idpMgtRestClient.createIdentityProvider(identityProviderPOSTRequest);
         } catch (Exception e) {
             Assert.fail("Error while trying to create Identity Provider", e);
         }
     }
 
-    private void deleteIdP(String idpName) {
+    private void deleteIdP() {
 
         try {
-            identityProviderMgtServiceClient.deleteIdP(idpName);
+            idpMgtRestClient.deleteIdp(idpId);
         } catch (Exception e) {
             Assert.fail("Error while trying to delete Identity Provider", e);
         }

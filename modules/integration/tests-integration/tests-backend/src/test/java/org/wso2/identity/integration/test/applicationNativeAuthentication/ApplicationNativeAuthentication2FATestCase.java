@@ -555,7 +555,7 @@ public class ApplicationNativeAuthentication2FATestCase extends OAuth2ServiceAbs
         Message[] messages = Utils.getMailServer().getReceivedMessages();
         String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
 
-        String otpPattern = "One-Time Passcode:\\s*<b>(\\d+)</b>";
+        String otpPattern = "\\s*<b>(\\d+)</b>";
         Pattern pattern = Pattern.compile(otpPattern);
         Matcher matcher = pattern.matcher(body);
 

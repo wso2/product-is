@@ -40,7 +40,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OIDCDiscoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCMetadataTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2JWKSEndpointTestCase"/>
-            <!--<class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>-->
+            <class name="org.wso2.identity.integration.test.identity.governance.AdminForcedPasswordResetTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.user.mgt.UserMgtUISecurityTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase" />
@@ -130,18 +130,22 @@
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthentication2FATestCase"/>
             <class name="org.wso2.identity.integration.test.apiAuthorization.RBACWithAPIAuthorizationTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessPasswordGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessCodeGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionSuccessRefreshTokenGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureCodeGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailurePasswordGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtPasswordGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.preupdatepassword.PreUpdatePasswordActionSuccessTestCase"/>
-            <class name="org.wso2.identity.integration.test.actions.preupdatepassword.PreUpdatePasswordActionFailureTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessPasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionFailureCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionFailurePasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionWithRulesAtPasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSuccessTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionFailureTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSmsOtpFailureTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preupdateprofile.PreUpdateProfileActionSuccessTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preupdateprofile.PreUpdateProfileActionFailureTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCHybridFlowIntegrationTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>
@@ -151,6 +155,7 @@
             <class name="org.wso2.identity.integration.test.recovery.PasswordRecoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCIdentityFederationTestCase"/>
             <class name="org.wso2.identity.integration.test.auth.PasswordlessSMSOTPAuthTestCase"/>
+            <class name="org.wso2.identity.integration.test.auth.PasswordLessEmailOTPAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuthAppsWithSameClientIdTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCPasswordGrantTest"/>
             <class name="org.wso2.identity.integration.test.saml.RegistryMountTestCase"/>
@@ -158,6 +163,7 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.SharedUserProfileClaimMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.notification.template.mgt.OrganizationNotificationOrgTemplatesTestCase"/>
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimUniquenessValidationTestCase"/>
+            <class name="org.wso2.identity.integration.test.apiAuthorization.APIResourceInheritanceTestCase"/>
         </classes>
     </test>
 
@@ -258,11 +264,18 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken.PreIssueAccessTokenActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.PreUpdateProfileActionSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.PreUpdateProfileActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.rules.metadata.v1.RulesMetadataSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.rules.metadata.v1.RulesMetadataFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.UserSharingSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.registration.management.v1.RegistrationManagementPositiveTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.registration.management.v1.RegistrationManagementNegativeTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.RegistrationExecutionPositiveTest"/>
+<!--            <class name="org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.RegistrationExecutionNegativeTest"/>-->
         </classes>
     </test>
 

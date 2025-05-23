@@ -25,6 +25,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
+import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
@@ -41,9 +42,12 @@ public class ActionsRestClient extends RestBaseClient {
 
     private static final String PRE_ISSUE_ACCESS_TOKEN_TYPE = "preIssueAccessToken";
     private static final String PRE_UPDATE_PASSWORD_TYPE = "preUpdatePassword";
+    private static final String PRE_UPDATE_PROFILE_TYPE = "preUpdateProfile";
     private static final String ACTIONS_PATH = "/actions";
     private static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
     private static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
+    private static final String PRE_UPDATE_PROFILE_PATH = "/preUpdateProfile";
+    private static final String ACTION_ACTIVATE_PATH = "/activate";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -78,6 +82,21 @@ public class ActionsRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequestBody, getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Activate a given action by id.
+     *
+     * @param actionType  Type of the action
+     * @param actionId    ID of the action
+     * @throws IOException If an error occurred while activating the action
+     */
+    public void activateAction(String actionType, String actionId) throws IOException {
+
+        String endPointUrl = getActionEndpointOfType(actionType) + "/" + actionId + ACTION_ACTIVATE_PATH;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, StringUtils.EMPTY, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
         }
     }
 
@@ -134,6 +153,8 @@ public class ActionsRestClient extends RestBaseClient {
                 return actionsBasePath + PRE_ISSUE_ACCESS_TOKEN_PATH;
             case PRE_UPDATE_PASSWORD_TYPE:
                 return actionsBasePath + PRE_UPDATE_PASSWORD_PATH;
+            case PRE_UPDATE_PROFILE_TYPE:
+                return actionsBasePath + PRE_UPDATE_PROFILE_PATH;
             default:
                 return StringUtils.EMPTY;
         }
