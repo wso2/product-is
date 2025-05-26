@@ -101,14 +101,14 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String BINDING_TYPE = "DPoP";
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private final static String SCIM2_USERS_ENDPOINT = "https://localhost:9853/scim2/Users";
-    private final static String INTERNAL_USER_MGT_LIST  = "internal_user_mgt_list";
+    private final static String INTERNAL_USER_MGT_LIST = "internal_user_mgt_list";
     private static final String TEST_USER = "test_user";
     private static final String ADMIN_WSO2 = "Admin@wso2";
     private static final String USER_EMAIL = "dpopUser@wso2.com";
     private static final String APPLICATION_AUDIENCE = "APPLICATION";
     private static final String TEST_ROLE_APPLICATION = "test_role_application";
     private static final String TEST_USER_FIRST_NAME = "DpopUserFirst";
-    private static final String TEST_USER_LAST_NAME =  "DpopUserLast";
+    private static final String TEST_USER_LAST_NAME = "DpopUserLast";
 
     private CloseableHttpClient client;
     private OpenIDConnectConfiguration oidcConfig;
@@ -154,8 +154,6 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
         tenantInfo = isServer.getContextTenant();
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
-
-
         cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
@@ -169,13 +167,10 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
                 .setRedirectStrategy(new DefaultRedirectStrategy() {
                     @Override
                     protected boolean isRedirectable(String method) {
-
                         return false;
                     }
                 })
                 .build();
-
-
         ApplicationResponseModel application = getApplicationWithDpopEnabled();
 
         appId = application.getId();
@@ -183,7 +178,6 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
         this.oidcConfig = super.restClient.getOIDCInboundDetails(this.appId);
         assertNotNull(this.oidcConfig, "Error while retrieving the OIDC configuration of the application.");
-
 
         this.clientId = this.oidcConfig.getClientId();
         assertNotNull(this.clientId, "Error while retrieving the client id of the application.");
@@ -193,11 +187,12 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void testClear() throws Exception {
+
         deleteRole(roleId);
         super.deleteApp(this.appId);
         scim2RestClient.deleteUser(userId);
-        cookieStore.clear();
 
+        cookieStore.clear();
         this.client.close();
         super.restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
@@ -219,7 +214,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
         oidcConfig = new OpenIDConnectConfiguration();
 
         List<String> grantTypes = new ArrayList<>();
-        Collections.addAll(grantTypes,OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS, OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE,
+        Collections.addAll(grantTypes, OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS, OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE,
                 OAUTH2_GRANT_TYPE_REFRESH_TOKEN, OAUTH2_GRANT_TYPE_RESOURCE_OWNER);
 
         oidcConfig.setCallbackURLs(callBackUrls);
@@ -246,15 +241,15 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     @Test(groups = "wso2.is", description = "Get a DPoP access token with client credentials")
     public void getDPoPTokenWithClientCredentials() throws Exception {
 
-        String dpopProof = genarateDPoPProof("RSA","DUMMYJTI", "POST",
+        String dpopProof = genarateDPoPProof("RSA", "DUMMYJTI", "POST",
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()),
-                new Date(System.currentTimeMillis()),"dpop+jwt" );
+                new Date(System.currentTimeMillis()), "dpop+jwt");
 
         jkt = getThumbprintOfKeyFromDpopProof(dpopProof);
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
-        parameters.add(new BasicNameValuePair("scope", INTERNAL_USER_MGT_LIST ));
+        parameters.add(new BasicNameValuePair("scope", INTERNAL_USER_MGT_LIST));
 
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader(AUTHORIZATION_HEADER, BASIC_HEADER + " " +
@@ -273,7 +268,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
         assertTrue(jsonResponse.has("token_type"), "Token type is not present in the response.");
         assertTrue(jsonResponse.has("expires_in"), "Expires in is not present in the response.");
 
-        String  accessToken = jsonResponse.getString("access_token");
+        String accessToken = jsonResponse.getString("access_token");
         this.accessToken = accessToken;
         assertNotNull(accessToken, "Access token is null.");
 
@@ -294,7 +289,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
             dependsOnMethods = "getDPoPTokenWithClientCredentials")
     public void getDPoPTokenWithExpiredDPoPProof() throws Exception {
 
-        String dpopProof = genarateDPoPProof("RSA","DUMMYJTI", "POST",
+        String dpopProof = genarateDPoPProof("RSA", "DUMMYJTI", "POST",
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()),
                 new Date(System.currentTimeMillis() - 3_000_001), "dpop+jwt");
 
@@ -364,7 +359,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Send authorize user request and bind DPoP proofs thumbprint",
             dependsOnMethods = "accessResourceWithDPoPTokenFromClientCredentials")
-    public void testSendAuthorizeRequest() throws Exception{
+    public void testSendAuthorizeRequest() throws Exception {
 
         refreshHTTPClient();
 
@@ -420,9 +415,9 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
             dependsOnMethods = "testSendLoginPost")
     public void testGetAccessTokenWithAuthorizationCode() throws Exception {
 
-        String dpopProof = genarateDPoPProof("RSA","DUMMYJTI", "POST",
+        String dpopProof = genarateDPoPProof("RSA", "DUMMYJTI", "POST",
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()),
-                new Date(System.currentTimeMillis()),"dpop+jwt" );
+                new Date(System.currentTimeMillis()), "dpop+jwt");
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code", authorizationCode));
@@ -461,7 +456,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     @Test(groups = "wso2.is", description = "Get SCIM2 users list using DPoP access token and proof",
             dependsOnMethods = "testGetAccessTokenWithAuthorizationCode")
-    public void accessResourceWithDPoPTokenFromAuthCode() throws Exception{
+    public void accessResourceWithDPoPTokenFromAuthCode() throws Exception {
 
         String dpopProof = genarateDPoPProof("RSA", "1233482123", "GET",
                 getTenantQualifiedURL(SCIM2_USERS_ENDPOINT, tenantInfo.getDomain()),
@@ -484,9 +479,9 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
             dependsOnMethods = "accessResourceWithDPoPTokenFromAuthCode")
     public void testGetAccessTokenWithRefreshToken() throws Exception {
 
-        String dpopProof = genarateDPoPProof("RSA","DUMMYJTI", "POST",
+        String dpopProof = genarateDPoPProof("RSA", "DUMMYJTI", "POST",
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()),
-                new Date(System.currentTimeMillis()),"dpop+jwt" );
+                new Date(System.currentTimeMillis()), "dpop+jwt");
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAUTH2_GRANT_TYPE_REFRESH_TOKEN));
@@ -524,9 +519,9 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
             dependsOnMethods = "testGetAccessTokenWithRefreshToken")
     public void testGetAccessTokenWithPassword() throws Exception {
 
-        String dpopProof = genarateDPoPProof("RSA","DUMMYJTIQWE", "POST",
+        String dpopProof = genarateDPoPProof("RSA", "DUMMYJTIQWE", "POST",
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()),
-                new Date(System.currentTimeMillis()),"dpop+jwt" );
+                new Date(System.currentTimeMillis()), "dpop+jwt");
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
@@ -641,9 +636,9 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
             dependsOnMethods = "testSendLoginPostWithPar")
     public void testGetAccessTokenWithAuthorizationCodeUsingParWithDifferentThumbprint() throws Exception {
 
-        String dpopProof = genarateDPoPProof("EC","DUMMYJTI", "POST",
+        String dpopProof = genarateDPoPProof("EC", "DUMMYJTI", "POST",
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()),
-                new Date(System.currentTimeMillis()),"dpop+jwt" );
+                new Date(System.currentTimeMillis()), "dpop+jwt");
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code", authorizationCode));
@@ -673,9 +668,9 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
             dependsOnMethods = "testGetAccessTokenWithAuthorizationCodeUsingParWithDifferentThumbprint")
     public void testGetAccessTokenWithAuthorizationCodeUsingPar() throws Exception {
 
-        String dpopProof = genarateDPoPProof("RSA","DUMMYJTI", "POST",
+        String dpopProof = genarateDPoPProof("RSA", "DUMMYJTI", "POST",
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()),
-                new Date(System.currentTimeMillis()),"dpop+jwt" );
+                new Date(System.currentTimeMillis()), "dpop+jwt");
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code", authorizationCode));
@@ -737,7 +732,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
         List<Permission> userPermissions = new ArrayList<>();
         Collections.addAll(userPermissions, new Permission(INTERNAL_USER_MGT_LIST));
 
-        Audience roleAudience = new Audience(APPLICATION_AUDIENCE , appId);
+        Audience roleAudience = new Audience(APPLICATION_AUDIENCE, appId);
         RoleV2 role = new RoleV2(roleAudience, TEST_ROLE_APPLICATION, userPermissions, Collections.emptyList());
         roleId = addRole(role);
 
@@ -760,7 +755,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     /**
      * Refresh the cookie store and http client.
      */
-    private void refreshHTTPClient () throws Exception {
+    private void refreshHTTPClient() throws Exception {
 
         if (client != null) {
             client.close();
