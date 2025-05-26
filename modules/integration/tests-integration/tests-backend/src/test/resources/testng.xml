@@ -32,6 +32,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2PKCETestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2DeviceFlowTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2DPopTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2PushedAuthRequestTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ResponseModeTestCase"/>
             <class name="org.wso2.identity.integration.test.consent.ConsentMgtTestCase"/>

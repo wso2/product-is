@@ -90,6 +90,7 @@
       "cookie",
       "sso-session",
       "device-flow",
+      "DPoP",
       "certificate",
       "client-request"
     ],
