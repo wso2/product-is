@@ -25,8 +25,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationSubmissionRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationSubmissionResponse;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionResponse;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.RegistrationExecutionClient;
 import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
@@ -88,8 +88,8 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
     public void initiateRegistrationFlow() throws Exception {
 
         Object responseObj = registrationExecutionClient.initiateRegistrationExecution();
-        Assert.assertTrue(responseObj instanceof RegistrationSubmissionResponse);
-        RegistrationSubmissionResponse response = (RegistrationSubmissionResponse) responseObj;
+        Assert.assertTrue(responseObj instanceof RegistrationExecutionResponse);
+        RegistrationExecutionResponse response = (RegistrationExecutionResponse) responseObj;
         Assert.assertNotNull(response);
         Assert.assertNotNull(response.getFlowId());
         flowId = response.getFlowId();
@@ -104,27 +104,27 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
     public void submitRegistrationFlow() throws Exception {
 
         Object responseObj = registrationExecutionClient
-                .submitRegistration(getRegistrationSubmissionRequest());
-        Assert.assertTrue(responseObj instanceof RegistrationSubmissionResponse);
-        RegistrationSubmissionResponse response = (RegistrationSubmissionResponse) responseObj;
+                .submitRegistration(getRegistrationExecutionRequest());
+        Assert.assertTrue(responseObj instanceof RegistrationExecutionResponse);
+        RegistrationExecutionResponse response = (RegistrationExecutionResponse) responseObj;
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getFlowStatus(), STATUS_COMPLETE);
         Assert.assertEquals(response.getType().toString(), TYPE_REDIRECTION);
         Assert.assertNotNull(response.getData());
     }
 
-    private static RegistrationSubmissionRequest getRegistrationSubmissionRequest() {
+    private static RegistrationExecutionRequest getRegistrationExecutionRequest() {
 
-        RegistrationSubmissionRequest registrationSubmissionRequest = new RegistrationSubmissionRequest();
-        registrationSubmissionRequest.setFlowId(flowId);
-        registrationSubmissionRequest.setActionId("button_5zqc");
+        RegistrationExecutionRequest registrationExecutionRequest = new RegistrationExecutionRequest();
+        registrationExecutionRequest.setFlowId(flowId);
+        registrationExecutionRequest.setActionId("button_5zqc");
         Map<String, String> inputs = new HashMap<>();
         inputs.put("http://wso2.org/claims/username", USER);
         inputs.put("password", "Wso2@test");
         inputs.put("http://wso2.org/claims/emailaddress", "test@wso2.com");
         inputs.put("http://wso2.org/claims/givenname", "RegExecPosJohn");
         inputs.put("http://wso2.org/claims/lastname", "RegExecPosDoe");
-        registrationSubmissionRequest.setInputs(inputs);
-        return registrationSubmissionRequest;
+        registrationExecutionRequest.setInputs(inputs);
+        return registrationExecutionRequest;
     }
 }

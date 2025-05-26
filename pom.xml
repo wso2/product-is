@@ -2067,6 +2067,11 @@
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.workflow.user</groupId>
+                <artifactId>org.wso2.carbon.user.mgt.workflow.server.feature</artifactId>
+                <version>${identity.user.workflow.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.workflow</groupId>
                 <artifactId>org.wso2.carbon.identity.workflow.engine.server.feature</artifactId>
                 <version>${identity.workflow.version}</version>
@@ -2498,7 +2503,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.70</identity.governance.version>
+        <identity.governance.version>1.11.75</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
@@ -2513,7 +2518,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.147</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.148</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2579,6 +2584,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.4</identity.workflow.version>
+        <identity.user.workflow.version>5.6.6</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.37</authenticator.totp.version>
@@ -2594,8 +2600,8 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.11</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.139</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.29</identity.org.mgt.core.version>
+        <identity.org.mgt.version>1.4.141</identity.org.mgt.version>
+        <identity.org.mgt.core.version>1.1.31</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.48</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.29</identity.oauth2.grant.organizationswitch.version>
 
@@ -2607,7 +2613,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.110</identity.server.api.version>
+        <identity.server.api.version>1.3.112</identity.server.api.version>
         <identity.user.api.version>1.3.64</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2618,16 +2624,16 @@
         <conditional.authentication.functions.version>1.2.78</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.56.1</identity.apps.console.version>
+        <identity.apps.console.version>2.57.0</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.13</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.24.9</identity.apps.core.version>
+        <identity.apps.core.version>2.25.0</identity.apps.core.version>
         <identity.apps.tests.version>1.6.381</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.50</carbon.kernel.version>
+        <carbon.kernel.version>4.10.54</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>
