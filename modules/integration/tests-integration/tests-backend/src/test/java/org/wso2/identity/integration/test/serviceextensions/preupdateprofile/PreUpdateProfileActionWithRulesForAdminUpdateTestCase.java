@@ -32,8 +32,6 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.c
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Expression;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ORRule;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
@@ -64,12 +62,9 @@ public class PreUpdateProfileActionWithRulesForAdminUpdateTestCase extends PreUp
 
     private SCIM2RestClient scim2RestClient;
 
-    private String clientId;
-    private String clientSecret;
     private String actionId;
     private String userId;
     private String currentClaimValue = TEST_USER_CLAIM_VALUE;
-    private ApplicationResponseModel application;
     private ServiceExtensionMockServer serviceExtensionMockServer;
 
     @Factory(dataProvider = "testExecutionContextProvider")
@@ -94,11 +89,6 @@ public class PreUpdateProfileActionWithRulesForAdminUpdateTestCase extends PreUp
         super.init(userMode);
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-
-        application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
-        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
-        clientId = oidcConfig.getClientId();
-        clientSecret = oidcConfig.getClientSecret();
 
         UserObject userInfo = new UserObject()
                 .userName(TEST_USER1_USERNAME)
@@ -127,7 +117,6 @@ public class PreUpdateProfileActionWithRulesForAdminUpdateTestCase extends PreUp
     public void atEnd() throws Exception {
 
         deleteAction(PRE_UPDATE_PROFILE_API_PATH, actionId);
-        deleteApp(application.getId());
         scim2RestClient.deleteUser(userId);
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
