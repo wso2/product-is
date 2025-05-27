@@ -245,8 +245,8 @@ public class PreUpdateProfileActionWithRulesForAdminUpdateTestCase extends PreUp
     }
 
     @Test(dataProvider = "rulesProvider", groups = "wso2.is", description = "Update profile")
-    public void testPreUpdateProfileActionInvocationForRules(ORRule rule, String value, UserItemAddGroupobj.OpEnum operation, boolean shouldActionExecute)
-            throws Exception {
+    public void testPreUpdateProfileActionInvocationForRules(ORRule rule, String value, UserItemAddGroupobj.OpEnum operation,
+                                                             boolean shouldActionExecute) throws Exception {
 
         assertTrue(updatePreUpdateProfileActionRule(rule),
                 "Updating the pre update profile action rule returned an error.");
