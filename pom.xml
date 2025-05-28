@@ -2487,7 +2487,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.176</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.177</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2520,7 +2520,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.149</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.150</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2536,7 +2536,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.15</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.57</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.59</identity.event.handler.notification.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2602,7 +2602,7 @@
         <identity.extension.utils>1.0.21</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.11</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>1.4.141</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.0</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.31</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.48</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.29</identity.oauth2.grant.organizationswitch.version>
@@ -2635,7 +2635,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.54</carbon.kernel.version>
+        <carbon.kernel.version>4.10.55</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>
