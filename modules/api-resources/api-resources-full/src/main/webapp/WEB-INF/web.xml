@@ -75,7 +75,7 @@
                 org.wso2.carbon.identity.api.server.rule.metadata.v1.RulesApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.AuthorizationDetailsTypesApi,
                 org.wso2.carbon.identity.api.server.registration.management.v1.RegistrationFlowApi,
-                org.wso2.carbon.identity.api.server.registration.execution.v1.RegistrationApi,
+                org.wso2.carbon.identity.api.server.flow.execution.v1.RegistrationApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowsApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi
             </param-value>
