@@ -41,9 +41,9 @@ public class RegistrationExecutionTestBase extends RESTAPIServerTestBase {
     protected static final String TYPE_VIEW = "VIEW";
     protected static final String TYPE_REDIRECTION = "REDIRECTION";
     protected static final String REGISTRATION_FLOW = "registration-flow.json";
-    protected static final String API_DEFINITION_NAME = "registration-execution.yaml";
+    protected static final String API_DEFINITION_NAME = "flow-execution.yaml";
     protected static final String API_VERSION = "v1";
-    protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.registration.execution.v1";
+    protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.flow.execution.v1";
     protected static String swaggerDefinition;
 
     static {
