@@ -558,11 +558,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
-            <artifactId>org.wso2.carbon.identity.api.server.registration.execution.common</artifactId>
+            <artifactId>org.wso2.carbon.identity.api.server.flow.execution.common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
-            <artifactId>org.wso2.carbon.identity.api.server.registration.execution.v1</artifactId>
+            <artifactId>org.wso2.carbon.identity.api.server.flow.execution.v1</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>

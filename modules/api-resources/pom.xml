@@ -582,12 +582,12 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
-                <artifactId>org.wso2.carbon.identity.api.server.registration.execution.common</artifactId>
+                <artifactId>org.wso2.carbon.identity.api.server.flow.execution.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.server.api</groupId>
-                <artifactId>org.wso2.carbon.identity.api.server.registration.execution.v1</artifactId>
+                <artifactId>org.wso2.carbon.identity.api.server.flow.execution.v1</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
             <dependency>
