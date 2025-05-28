@@ -40,7 +40,6 @@ import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTe
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.model.PreUpdateProfileActionModel;
-import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
