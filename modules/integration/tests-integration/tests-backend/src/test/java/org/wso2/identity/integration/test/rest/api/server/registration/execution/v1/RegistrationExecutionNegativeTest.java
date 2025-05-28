@@ -25,8 +25,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionResponse;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model.Error;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.RegistrationExecutionClient;
@@ -113,8 +113,8 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
 
         enableNewRegistrationFlow(identityGovernanceRestClient);
         Object responseObj = registrationExecutionClient.initiateRegistrationExecution();
-        Assert.assertTrue(responseObj instanceof RegistrationExecutionResponse);
-        RegistrationExecutionResponse response = (RegistrationExecutionResponse) responseObj;
+        Assert.assertTrue(responseObj instanceof FlowExecutionResponse);
+        FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertNotNull(response);
         Assert.assertNotNull(response.getFlowId());
         flowId = response.getFlowId();
@@ -163,17 +163,17 @@ public class RegistrationExecutionNegativeTest extends RegistrationExecutionTest
         Assert.assertEquals(error.getCode(), "RFE-60002");
     }
 
-    private static RegistrationExecutionRequest getRegistrationExecutionRequest(String flowId,
-                                                                                Map<String, String> inputs) {
+    private static FlowExecutionRequest getRegistrationExecutionRequest(String flowId,
+                                                                        Map<String, String> inputs) {
 
-        RegistrationExecutionRequest registrationExecutionRequest = new RegistrationExecutionRequest();
+        FlowExecutionRequest registrationExecutionRequest = new FlowExecutionRequest();
         registrationExecutionRequest.setFlowId(flowId != null ? flowId : "FLOW_ID");
         registrationExecutionRequest.setActionId(RegistrationExecutionNegativeTest.ACTION_ID);
         registrationExecutionRequest.setInputs(inputs);
         return registrationExecutionRequest;
     }
 
-    private static RegistrationExecutionRequest getRegistrationExecutionRequest(String flowId) {
+    private static FlowExecutionRequest getRegistrationExecutionRequest(String flowId) {
 
         Map<String, String> inputs = new HashMap<>();
         inputs.put("http://wso2.org/claims/username", USER);

@@ -19,18 +19,23 @@
 package org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.*;
+
+/**
+ * Represent individual UI components in the flow execution
+ **/
+
+import io.swagger.annotations.*;
 import java.util.Objects;
-
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-@ApiModel(description = "Represent individual UI components in the registration flow")
-public class Component {
+import javax.xml.bind.annotation.*;
+@ApiModel(description = "Represent individual UI components in the flow execution")
+public class Component  {
 
     private String id;
     private String type;
@@ -56,7 +61,6 @@ public class Component {
     public String getId() {
         return id;
     }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -78,7 +82,6 @@ public class Component {
     public String getType() {
         return type;
     }
-
     public void setType(String type) {
         this.type = type;
     }
@@ -98,13 +101,11 @@ public class Component {
     public String getVariant() {
         return variant;
     }
-
     public void setVariant(String variant) {
         this.variant = variant;
     }
 
     /**
-     *
      **/
     public Component components(List<Component> components) {
 
@@ -118,7 +119,6 @@ public class Component {
     public List<Component> getComponents() {
         return components;
     }
-
     public void setComponents(List<Component> components) {
         this.components = components;
     }
@@ -146,14 +146,14 @@ public class Component {
     public Object getConfig() {
         return config;
     }
-
     public void setConfig(Object config) {
         this.config = config;
     }
 
 
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -193,7 +193,7 @@ public class Component {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";
