@@ -3,6 +3,8 @@
   "description": "emailAddresses",
   "displayOrder": 0,
   "displayName": "emailAddresses",
+  "dataType": "string",
+  "multiValued": true,
   "readOnly": false,
   "required": false,
   "supportedByDefault": true,
