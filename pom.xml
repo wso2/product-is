@@ -2575,8 +2575,8 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.30</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.18</identity.local.auth.fido.version>
+        <identity.local.auth.basicauth.version>6.8.31</identity.local.auth.basicauth.version>
+        <identity.local.auth.fido.version>5.4.19</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
