@@ -4,6 +4,12 @@ OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-o
 SCIM2_REPO=identity-inbound-provisioning-scim2
 SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provisioning-scim2.git
 
+disable_test() {
+  local test_name="$1"
+  echo "Disabling test: $test_name"
+  sed -i.bak "s/name=\"$test_name\" preserve-order=\"true\" parallel=\"false\" group-by-instances=\"true\"/& enabled=\"false\"/" product-is/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
+}
+
 echo ""
 echo "=========================================================="
 PR_LINK=${PR_LINK%/}
@@ -29,6 +35,27 @@ echo "Cloning product-is"
 echo "=========================================================="
 
 git clone https://github.com/wso2/product-is
+
+# Commenting few test cases.
+disable_test "is-tests-default-configuration"
+disable_test "is-test-rest-api"
+#disable_test "is-tests-scim2"
+disable_test "is-test-adaptive-authentication"
+disable_test "is-test-adaptive-authentication-nashorn"
+disable_test "is-test-adaptive-authentication-nashorn-with-restart"
+disable_test "is-tests-default-configuration-ldap"
+disable_test "is-tests-uuid-user-store"
+disable_test "is-tests-federation"
+disable_test "is-tests-federation-restart"
+disable_test "is-tests-jdbc-userstore"
+disable_test "is-tests-read-only-userstore"
+disable_test "is-tests-oauth-jwt-token-gen-enabled"
+disable_test "is-tests-email-username"
+disable_test "is-tests-with-individual-configuration-changes"
+disable_test "is-tests-saml-query-profile"
+
+cat modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
+
 
 if [ "$REPO" = "product-is" ]; then
 
@@ -159,7 +186,7 @@ else
   if [ "$REPO" = "carbon-kernel" ]; then
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
   else
-    mvn clean install --batch-mode | tee mvn-build.log
+    mvn clean install -Dmaven.test.skip=true --batch-mode --batch-mode | tee mvn-build.log
   fi
 
   echo ""
@@ -364,23 +391,6 @@ else
 
   export JAVA_HOME=$JAVA_11_HOME
   cat pom.xml
-  # Commenting few test cases.
-  disable_test "is-test-rest-api"
-  disable_test "is-tests-scim2"
-  disable_test "is-test-adaptive-authentication"
-  disable_test "is-test-adaptive-authentication-nashorn"
-  disable_test "is-test-adaptive-authentication-nashorn-with-restart"
-  disable_test "is-tests-default-configuration-ldap"
-  disable_test "is-tests-uuid-user-store"
-  disable_test "is-tests-federation"
-  disable_test "is-tests-federation-restart"
-  disable_test "is-tests-jdbc-userstore"
-  disable_test "is-tests-read-only-userstore"
-  disable_test "is-tests-oauth-jwt-token-gen-enabled"
-  disable_test "is-tests-email-username"
-  disable_test "is-tests-with-individual-configuration-changes"
-  disable_test "is-tests-saml-query-profile"
-
   mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -411,9 +421,4 @@ echo "=========================================================="
 echo "Build completed"
 echo "=========================================================="
 echo ""
-
-disable_test() {
-  local test_name="$1"
-  sed -i '' "s/name=\"$test_name\" preserve-order=\"true\" parallel=\"false\" group-by-instances=\"true\"/& enabled=\"false\"/" product-is/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
-}
 

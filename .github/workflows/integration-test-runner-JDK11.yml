@@ -75,8 +75,7 @@ jobs:
           JAVA_8_HOME: ${{env.J8HOME}}
           JAVA_11_HOME: ${{env.J11HOME}}
         run: |
-          wget ../scripts/pr-builder.sh
-          bash pr-builder.sh
+          bash .github/scripts/pr-builder.sh
       - name: Archive PR diff file
         if: always()
         uses: actions/upload-artifact@v4
