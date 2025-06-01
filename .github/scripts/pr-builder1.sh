@@ -7,7 +7,7 @@ SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provis
 disable_test() {
   local test_name="$1"
   echo "Disabling test: $test_name"
-  sed -i.bak "s/name=\"$test_name\" preserve-order=\"true\" parallel=\"false\" group-by-instances=\"true\"/& enabled=\"false\"/" product-is/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
+  sed -i.bak "s/name=\"$test_name\"/& enabled=\"false\"/" product-is/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
 }
 
 echo ""
@@ -37,25 +37,23 @@ echo "=========================================================="
 git clone https://github.com/wso2/product-is
 
 # Commenting few test cases.
-disable_test "is-tests-default-configuration"
-disable_test "is-test-rest-api"
+#disable_test "is-tests-default-configuration"
+#disable_test "is-test-rest-api"
 #disable_test "is-tests-scim2"
-disable_test "is-test-adaptive-authentication"
-disable_test "is-test-adaptive-authentication-nashorn"
-disable_test "is-test-adaptive-authentication-nashorn-with-restart"
-disable_test "is-tests-default-configuration-ldap"
-disable_test "is-tests-uuid-user-store"
-disable_test "is-tests-federation"
-disable_test "is-tests-federation-restart"
+#disable_test "is-test-adaptive-authentication"
+#disable_test "is-test-adaptive-authentication-nashorn"
+#disable_test "is-test-adaptive-authentication-nashorn-with-restart"
+#disable_test "is-tests-default-configuration-ldap"
+#disable_test "is-tests-uuid-user-store"
+#disable_test "is-tests-federation"
+#disable_test "is-tests-federation-restart"
 disable_test "is-tests-jdbc-userstore"
 disable_test "is-tests-read-only-userstore"
 disable_test "is-tests-oauth-jwt-token-gen-enabled"
 disable_test "is-tests-email-username"
 disable_test "is-tests-with-individual-configuration-changes"
 disable_test "is-tests-saml-query-profile"
-
-cat modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
-
+disable_test "is-tests-default-encryption"
 
 if [ "$REPO" = "product-is" ]; then
 
@@ -183,11 +181,7 @@ else
     export JAVA_HOME=$JAVA_8_HOME
   fi
 
-  if [ "$REPO" = "carbon-kernel" ]; then
-    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
-  else
-    mvn clean install -Dmaven.test.skip=true --batch-mode --batch-mode | tee mvn-build.log
-  fi
+  mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
   echo ""
   echo "Dependency repo $REPO build complete."
