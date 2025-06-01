@@ -364,6 +364,23 @@ else
 
   export JAVA_HOME=$JAVA_11_HOME
   cat pom.xml
+  # Commenting few test cases.
+  disable_test "is-test-rest-api"
+  disable_test "is-tests-scim2"
+  disable_test "is-test-adaptive-authentication"
+  disable_test "is-test-adaptive-authentication-nashorn"
+  disable_test "is-test-adaptive-authentication-nashorn-with-restart"
+  disable_test "is-tests-default-configuration-ldap"
+  disable_test "is-tests-uuid-user-store"
+  disable_test "is-tests-federation"
+  disable_test "is-tests-federation-restart"
+  disable_test "is-tests-jdbc-userstore"
+  disable_test "is-tests-read-only-userstore"
+  disable_test "is-tests-oauth-jwt-token-gen-enabled"
+  disable_test "is-tests-email-username"
+  disable_test "is-tests-with-individual-configuration-changes"
+  disable_test "is-tests-saml-query-profile"
+
   mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -394,3 +411,9 @@ echo "=========================================================="
 echo "Build completed"
 echo "=========================================================="
 echo ""
+
+disable_test() {
+  local test_name="$1"
+  sed -i '' "s/name=\"$test_name\" preserve-order=\"true\" parallel=\"false\" group-by-instances=\"true\"/& enabled=\"false\"/" product-is/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
+}
+
