@@ -120,7 +120,7 @@ public class OAuth2PKCETestCase extends OAuth2ServiceAbstractIntegrationTest {
         restClient.closeHttpClient();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow.")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration.")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel oAuthConsumerApp = getBasicOAuthApplication(CALLBACK_URL);

@@ -41,7 +41,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
  */
 public class RegistrationManagementClient extends RestBaseClient {
 
-    private static final String REGISTRATION_MANAGEMENT_API_PATH = "flow-flow";
+    private static final String REGISTRATION_MANAGEMENT_API_PATH = "registration-flow";
     private final String tenantDomain;
     private final String username;
     private final String password;
@@ -56,10 +56,10 @@ public class RegistrationManagementClient extends RestBaseClient {
     }
 
     /**
-     * Update a flow flow.
+     * Update a registration flow.
      *
      * @param registrationFlowRequest Registration flow request.
-     * @throws Exception If an error occurs while updating the flow flow.
+     * @throws Exception If an error occurs while updating the registration flow.
      */
     public void putRegistrationFlow(RegistrationFlowRequest registrationFlowRequest)
             throws Exception {
@@ -70,23 +70,23 @@ public class RegistrationManagementClient extends RestBaseClient {
                 getHeadersWithBasicAuth())) {
             if (response.getStatusLine().getStatusCode() != HTTP_OK) {
                 throw new Exception("Error code " + response.getStatusLine().getStatusCode() +
-                        " occurred while updating the flow flow");
+                        " occurred while updating the registration flow");
             }
         }
     }
 
     /**
-     * Get the flow flow.
+     * Get the registration flow.
      *
      * @return Registration flow response.
-     * @throws Exception If an error occurs while getting the flow flow.
+     * @throws Exception If an error occurs while getting the registration flow.
      */
     public RegistrationFlowResponse getRegistrationFlow() throws Exception {
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(registrationManagementBasePath,
                 getHeadersWithBasicAuth())) {
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new Exception("Failed to get the flow flow");
+                throw new Exception("Failed to get the registration flow");
             }
             String responseBody = EntityUtils.toString(response.getEntity());
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());

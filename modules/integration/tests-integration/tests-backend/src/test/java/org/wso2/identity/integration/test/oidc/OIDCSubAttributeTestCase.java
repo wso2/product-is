@@ -151,7 +151,7 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
         client.close();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow.")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration.")
     public void testRegisterApplication() throws Exception {
 
         OAuthConsumerAppDTO oAuthConsumerAppDTO = getBasicOAuthApp(CALLBACK_URL);

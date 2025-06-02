@@ -97,7 +97,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 		applicationId = null;
 	}
 
-	@Test(groups = "wso2.is", description = "Check Oauth2 application flow")
+	@Test(groups = "wso2.is", description = "Check Oauth2 application registration")
 	public void testRegisterApplication() throws Exception {
 
 		ApplicationResponseModel application = createTestApplication();

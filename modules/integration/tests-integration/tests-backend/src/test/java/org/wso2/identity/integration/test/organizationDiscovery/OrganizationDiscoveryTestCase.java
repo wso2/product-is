@@ -372,11 +372,11 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
     }
 
     /**
-     * This method parses the user flow page content and checks the values of three specific variables in the
+     * This method parses the user registration page content and checks the values of three specific variables in the
      * page. If all three variables are true, it will return true indicating that the page will redirect to the domain
      * discovery page.
      *
-     * @param pageContent The content of the flow page.
+     * @param pageContent The content of the registration page.
      * @return true if the page content will redirect to the domain discovery page.
      */
     private boolean willRedirectToDomainDiscovery(String pageContent) {

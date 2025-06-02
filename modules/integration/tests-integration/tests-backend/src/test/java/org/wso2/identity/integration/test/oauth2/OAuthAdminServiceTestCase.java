@@ -61,7 +61,7 @@ public class OAuthAdminServiceTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         createOauthApp();

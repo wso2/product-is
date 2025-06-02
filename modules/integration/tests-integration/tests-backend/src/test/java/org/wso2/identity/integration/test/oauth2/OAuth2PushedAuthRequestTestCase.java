@@ -99,7 +99,7 @@ public class OAuth2PushedAuthRequestTestCase extends OAuth2ServiceAbstractIntegr
         restClient.closeHttpClient();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = createApp();

@@ -28,7 +28,7 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-@ApiModel(description = "Request payload for creating or updating a flow flow")
+@ApiModel(description = "Request payload for creating or updating a registration flow")
 public class RegistrationFlowRequest {
 
     private List<Step> steps = null;

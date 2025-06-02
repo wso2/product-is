@@ -74,7 +74,7 @@ public class OAuth2ServiceRefreshTokenGrantTestCase extends OAuth2ServiceAbstrac
         restClient.closeHttpClient();
     }
 
-    @Test(alwaysRun = true, description = "Check Oauth2 application flow")
+    @Test(alwaysRun = true, description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();

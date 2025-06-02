@@ -130,7 +130,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
         applicationId = null;
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();

@@ -110,7 +110,7 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
         serverConfigurationManager = null;
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         OAuthConsumerAppDTO appDto = createApplication();

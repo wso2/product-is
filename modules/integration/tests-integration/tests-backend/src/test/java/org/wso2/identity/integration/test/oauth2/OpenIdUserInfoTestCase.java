@@ -142,7 +142,7 @@ public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest
         accessToken = null;
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();

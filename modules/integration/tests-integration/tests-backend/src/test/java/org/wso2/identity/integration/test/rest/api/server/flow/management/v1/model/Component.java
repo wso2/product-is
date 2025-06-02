@@ -29,7 +29,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-@ApiModel(description = "Represent individual UI components in the flow flow")
+@ApiModel(description = "Represent individual UI components in the registration flow")
 public class Component {
 
     private String id;

@@ -149,9 +149,9 @@ public class LocalClaimReq {
     }
 
     /**
-     * Specifies if the claim is required for user flow.
+     * Specifies if the claim is required for user registration.
      **/
-    @ApiModelProperty(value = "Specifies if the claim is required for user flow.")
+    @ApiModelProperty(value = "Specifies if the claim is required for user registration.")
     @JsonProperty("required")
     public Boolean getRequired() {
 
@@ -164,9 +164,9 @@ public class LocalClaimReq {
     }
 
     /**
-     * Specifies if the claim will be prompted during user flow and displayed on the user profile.
+     * Specifies if the claim will be prompted during user registration and displayed on the user profile.
      **/
-    @ApiModelProperty(value = "Specifies if the claim will be prompted during user flow and displayed on the user profile.")
+    @ApiModelProperty(value = "Specifies if the claim will be prompted during user registration and displayed on the user profile.")
     @JsonProperty("supportedByDefault")
     public Boolean getSupportedByDefault() {
 

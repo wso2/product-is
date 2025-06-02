@@ -75,7 +75,7 @@ public class RegistrationManagementPositiveTest extends RegistrationManagementTe
         super.testConclude();
     }
 
-    @Test(description = "Test update flow flow")
+    @Test(description = "Test update registration flow")
     public void testUpdateRegistrationFlow() throws Exception {
 
         ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
@@ -83,7 +83,7 @@ public class RegistrationManagementPositiveTest extends RegistrationManagementTe
         registrationManagementClient.putRegistrationFlow(registrationFlowRequest);
     }
 
-    @Test(description = "Test get flow flow", dependsOnMethods = "testUpdateRegistrationFlow")
+    @Test(description = "Test get registration flow", dependsOnMethods = "testUpdateRegistrationFlow")
     public void testGetRegistrationFlow() throws Exception {
 
         ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());

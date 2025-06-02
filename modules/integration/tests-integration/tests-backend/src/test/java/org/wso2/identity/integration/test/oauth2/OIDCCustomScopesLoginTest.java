@@ -207,7 +207,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         Assert.assertEquals(claimValue, CUSTOM_CLAIM_VALUE);
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow.",
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration.",
             dependsOnMethods = "testUpdateUserAttribute")
     public void testRegisterApplication() throws Exception {
 

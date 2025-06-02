@@ -227,7 +227,7 @@ public class ApplicationNativeAuthentication2FATestCase extends OAuth2ServiceAbs
         scim2RestClient.deleteUser(userId);
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow for default configurations.")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration for default configurations.")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = createApp();

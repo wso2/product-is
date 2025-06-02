@@ -113,7 +113,7 @@ public class RBACWithAPIAuthorizationTestCase extends OAuth2ServiceAbstractInteg
     }
 
     /**
-     * Provides data for testing flow pre-requisites.
+     * Provides data for testing registration pre-requisites.
      * Each dataset consists of an application name and its audience type.
      *
      * @return Two-dimensional array containing pairs of application names and audience types.

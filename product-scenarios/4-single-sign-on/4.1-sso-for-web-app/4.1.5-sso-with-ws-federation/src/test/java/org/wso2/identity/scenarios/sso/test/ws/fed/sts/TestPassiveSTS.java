@@ -148,7 +148,7 @@ public class TestPassiveSTS extends ScenarioTestBase {
         serviceProvider.setDescription(SERVICE_PROVIDER_Desc);
         appMgtclient.createApplication(serviceProvider);
         serviceProvider = appMgtclient.getApplication(SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(serviceProvider, "Service provider flow failed.");
+        Assert.assertNotNull(serviceProvider, "Service provider registration failed.");
     }
 
     @Test(alwaysRun = true, description = "4.1.5.2",

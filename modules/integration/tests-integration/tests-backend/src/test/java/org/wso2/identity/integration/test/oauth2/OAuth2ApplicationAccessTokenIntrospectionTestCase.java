@@ -91,7 +91,7 @@ public class OAuth2ApplicationAccessTokenIntrospectionTestCase extends OAuth2Ser
         applicationId = null;
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplicationWithGrantType("client_credentials");

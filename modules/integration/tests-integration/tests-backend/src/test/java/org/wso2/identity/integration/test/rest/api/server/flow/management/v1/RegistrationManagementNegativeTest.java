@@ -74,7 +74,7 @@ public class RegistrationManagementNegativeTest extends RegistrationManagementTe
         super.testConclude();
     }
 
-    @Test(description = "Test invalid flow flow request")
+    @Test(description = "Test invalid registration flow request")
     public void testInvalidRegistrationFlowRequest() throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());

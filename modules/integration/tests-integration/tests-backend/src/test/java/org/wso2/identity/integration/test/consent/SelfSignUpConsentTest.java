@@ -77,7 +77,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
     private static final String DISABLE_ACC_LOCK_ON_SELF_REG_PROP_KEY = "SelfRegistration.LockOnCreation";
     private static final String FINANCIAL_PURPOSE_NAME = "Financial Purpose";
     private static final String FINANCIAL = "Financial";
-    private static final String ERROR_MESSAGE_SELF_REGISTRATION_DISABLED = "self registration is disabled for tenant" +
+    private static final String ERROR_MESSAGE_SELF_REGISTRATION_DISABLED = "Self registration is disabled for tenant" +
             " - %s";
     private static final String ERROR_MESSAGE_INVALID_TENANT = "%s is an invalid tenant domain";
     private static final String ERROR_MESSAGE_USERNAME_TAKEN = "Username &#39;%s&#39; is already taken. Please pick a " +
@@ -149,7 +149,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
         Assert.assertTrue(content.contains("Enter your username"), "Page for entering username is not prompted while" +
                 " self registering");
         Assert.assertTrue(content.contains(TENANTED_CALLBACK_ENDPOINT), "Callback endpoint is not available in self " +
-                "flow username input page.");
+                "registration username input page.");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Test without enabling self registration")
@@ -157,7 +157,7 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
         String content = doCallSignUpDo(ADMIN);
         Assert.assertNotNull(content);
-        Assert.assertTrue(content.contains("self registration is disabled for tenant - " +
+        Assert.assertTrue(content.contains("Self registration is disabled for tenant - " +
                 isServer.getSuperTenant().getDomain()));
     }
 
