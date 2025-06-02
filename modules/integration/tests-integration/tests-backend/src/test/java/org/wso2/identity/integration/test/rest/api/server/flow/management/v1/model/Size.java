@@ -16,50 +16,66 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-@ApiModel(description = "Response payload for retrieving a registration flow")
-public class RegistrationFlowResponse {
+@ApiModel(description = "Represent the dimensions of a step")
+public class Size {
 
-    private List<Step> steps = null;
-
+    private BigDecimal height;
+    private BigDecimal width;
 
     /**
      *
      **/
-    public RegistrationFlowResponse steps(List<Step> steps) {
+    public Size height(BigDecimal height) {
 
-        this.steps = steps;
+        this.height = height;
         return this;
     }
 
-    @ApiModelProperty(value = "")
-    @JsonProperty("steps")
+    @ApiModelProperty(example = "200", required = true, value = "")
+    @JsonProperty("height")
     @Valid
-    public List<Step> getSteps() {
-        return steps;
+    @NotNull(message = "Property height cannot be null.")
+
+    public BigDecimal getHeight() {
+        return height;
     }
 
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
+    public void setHeight(BigDecimal height) {
+        this.height = height;
     }
 
-    public RegistrationFlowResponse addStepsItem(Step stepsItem) {
-        if (this.steps == null) {
-            this.steps = new ArrayList<Step>();
-        }
-        this.steps.add(stepsItem);
+    /**
+     *
+     **/
+    public Size width(BigDecimal width) {
+
+        this.width = width;
         return this;
+    }
+
+    @ApiModelProperty(example = "160", required = true, value = "")
+    @JsonProperty("width")
+    @Valid
+    @NotNull(message = "Property width cannot be null.")
+
+    public BigDecimal getWidth() {
+        return width;
+    }
+
+    public void setWidth(BigDecimal width) {
+        this.width = width;
     }
 
 
@@ -72,22 +88,24 @@ public class RegistrationFlowResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RegistrationFlowResponse registrationFlowResponse = (RegistrationFlowResponse) o;
-        return Objects.equals(this.steps, registrationFlowResponse.steps);
+        Size size = (Size) o;
+        return Objects.equals(this.height, size.height) &&
+                Objects.equals(this.width, size.width);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(steps);
+        return Objects.hash(height, width);
     }
 
     @Override
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class RegistrationFlowResponse {\n");
+        sb.append("class Size {\n");
 
-        sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
+        sb.append("    height: ").append(toIndentedString(height)).append("\n");
+        sb.append("    width: ").append(toIndentedString(width)).append("\n");
         sb.append("}");
         return sb.toString();
     }

@@ -16,10 +16,9 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
@@ -30,10 +29,9 @@ import javax.validation.constraints.*;
  * Represent individual UI components in the flow execution
  **/
 
-import io.swagger.annotations.*;
 import java.util.Objects;
 import javax.validation.Valid;
-import javax.xml.bind.annotation.*;
+
 @ApiModel(description = "Represent individual UI components in the flow execution")
 public class Component  {
 

@@ -119,7 +119,7 @@ public class OIDCMetadataTest extends ISIntegrationTest {
             Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
                     JKWS_URI_SUPER_TENANT, "Incorrect jwks uri");
             Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
-                    REGISTRATION_ENDPOINT_SUPER_TENANT, "Incorrect registration endpoint");
+                    REGISTRATION_ENDPOINT_SUPER_TENANT, "Incorrect flow endpoint");
             Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
                     INTROSPECTION_ENDPOINT_SUPER_TENANT, "Incorrect introspection endpoint");
         }
@@ -129,7 +129,7 @@ public class OIDCMetadataTest extends ISIntegrationTest {
             Assert.assertEquals(oidcMetadataEndpoints.getString("jwks_uri"),
                     JKWS_URI_TENANT, "Incorrect jwks uri");
             Assert.assertEquals(oidcMetadataEndpoints.getString("registration_endpoint"),
-                    REGISTRATION_ENDPOINT_TENANT, "Incorrect registration endpoint");
+                    REGISTRATION_ENDPOINT_TENANT, "Incorrect flow endpoint");
             Assert.assertEquals(oidcMetadataEndpoints.getString("introspection_endpoint"),
                     INTROSPECTION_ENDPOINT_TENANT, "Incorrect introspection endpoint");
         }

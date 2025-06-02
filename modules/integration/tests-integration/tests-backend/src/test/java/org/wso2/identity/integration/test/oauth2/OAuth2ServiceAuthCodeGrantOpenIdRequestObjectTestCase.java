@@ -191,7 +191,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         client.close();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();

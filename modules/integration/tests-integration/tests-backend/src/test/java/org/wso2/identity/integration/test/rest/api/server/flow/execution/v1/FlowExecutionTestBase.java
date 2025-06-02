@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.execution.v1;
+package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -27,20 +27,20 @@ import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
-import org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model.RegistrationFlowRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowRequest;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
 
 /**
  * This class contains the test cases for Registration Execution API.
  */
-public class RegistrationExecutionTestBase extends RESTAPIServerTestBase {
+public class FlowExecutionTestBase extends RESTAPIServerTestBase {
 
     protected static final String STATUS_INCOMPLETE = "INCOMPLETE";
     protected static final String STATUS_COMPLETE = "COMPLETE";
     protected static final String TYPE_VIEW = "VIEW";
     protected static final String TYPE_REDIRECTION = "REDIRECTION";
-    protected static final String REGISTRATION_FLOW = "registration-flow.json";
+    protected static final String REGISTRATION_FLOW = "flow-flow.json";
     protected static final String API_DEFINITION_NAME = "flow-execution.yaml";
     protected static final String API_VERSION = "v1";
     protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.flow.execution.v1";

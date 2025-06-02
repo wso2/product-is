@@ -62,7 +62,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
         restClient.closeHttpClient();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();

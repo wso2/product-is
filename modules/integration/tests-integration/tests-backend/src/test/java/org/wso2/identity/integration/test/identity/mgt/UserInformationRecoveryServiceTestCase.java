@@ -275,7 +275,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 	}
     
 	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
-    @Test(groups = "wso2.is", description = "Check user registration", dependsOnMethods = "testVerifyUserAccount")
+    @Test(groups = "wso2.is", description = "Check user flow", dependsOnMethods = "testVerifyUserAccount")
 	public void testRegisterUser() throws Exception { 
     	UserIdentityClaimDTO[] claims =  new UserIdentityClaimDTO[2];
     	UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
@@ -296,14 +296,14 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-	@Test(groups = "wso2.is", description = "Check user registration confirmation", dependsOnMethods = "testRegisterUser")
+	@Test(groups = "wso2.is", description = "Check user flow confirmation", dependsOnMethods = "testRegisterUser")
 	public void testConfirmUserSelfRegistration() throws Exception {
 		VerificationBean bean = infoRecoveryClient.confirmUserSelfRegistration("user2", confKey, null, null);
-		Assert.assertNotNull(bean, "Confirmation of user registration has failed with null return");
+		Assert.assertNotNull(bean, "Confirmation of user flow has failed with null return");
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-	@Test(groups = "wso2.is", description = "Check existing user registration validation", dependsOnMethods = "testRegisterUser")
+	@Test(groups = "wso2.is", description = "Check existing user flow validation", dependsOnMethods = "testRegisterUser")
 	public void testRegisterExistingUser() throws Exception {
 		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
 		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
@@ -321,7 +321,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-	@Test(groups = "wso2.is", description = "Check user registration validation with empty password", dependsOnMethods = "testRegisterUser")
+	@Test(groups = "wso2.is", description = "Check user flow validation with empty password", dependsOnMethods = "testRegisterUser")
 	public void testRegisterUserWithEmptyPassword() throws Exception {
 		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
 		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
@@ -339,7 +339,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-	@Test(groups = "wso2.is", description = "Check user registration validation with empty password", dependsOnMethods = "testRegisterUser")
+	@Test(groups = "wso2.is", description = "Check user flow validation with empty password", dependsOnMethods = "testRegisterUser")
 	public void testRegisterUserWithEmptyUserName() throws Exception {
 		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
 		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();
@@ -357,14 +357,14 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-	@Test(groups = "wso2.is", description = "Check user registration validation with Invalid Claims", dependsOnMethods = "testRegisterUser")
+	@Test(groups = "wso2.is", description = "Check user flow validation with Invalid Claims", dependsOnMethods = "testRegisterUser")
 	public void testRegisterUserWithInvalidClaims() throws Exception {
 		VerificationBean bean = infoRecoveryClient.registerUser(null, "passWord1@", null, "default", null);
 		Assert.assertNotNull(bean.getError(), "The expected error message is null with null return");
 	}
 
 	@SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-	@Test(groups = "wso2.is", description = "Check user registration validation with Invalid Tenant", dependsOnMethods = "testRegisterUser")
+	@Test(groups = "wso2.is", description = "Check user flow validation with Invalid Tenant", dependsOnMethods = "testRegisterUser")
 	public void testRegisterUserWithInvalidTenant() throws Exception {
 		UserIdentityClaimDTO[] claims = new UserIdentityClaimDTO[2];
 		UserIdentityClaimDTO claimEmail = new UserIdentityClaimDTO();

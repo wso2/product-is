@@ -53,7 +53,7 @@ public class DCRTestCase extends ScenarioTestBase {
 
     private static final Log log = LogFactory.getLog(DCRTestCase.class);
 
-    private static final String REGISTER_REQUESTS_LOCATION = "registration.requests.location";
+    private static final String REGISTER_REQUESTS_LOCATION = "flow.requests.location";
 
     private static final String UPDATE_REQUESTS_LOCATION = "update.requests.location";
 

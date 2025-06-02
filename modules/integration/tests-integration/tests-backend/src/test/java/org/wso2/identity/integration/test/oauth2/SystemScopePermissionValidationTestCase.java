@@ -112,7 +112,7 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
         accessToken = null;
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();

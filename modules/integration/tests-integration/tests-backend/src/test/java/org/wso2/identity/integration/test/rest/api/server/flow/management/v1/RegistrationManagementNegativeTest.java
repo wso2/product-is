@@ -16,19 +16,18 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.management.v1;
+package org.wso2.identity.integration.test.rest.api.server.flow.management.v1;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model.RegistrationFlowRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model.RegistrationFlowResponse;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowRequest;
 import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
 
 import java.io.IOException;
@@ -36,12 +35,12 @@ import java.io.IOException;
 /**
  * This class contains the test cases for Registration Management API.
  */
-public class RegistrationManagementPositiveTest extends RegistrationManagementTestBase {
+public class RegistrationManagementNegativeTest extends RegistrationManagementTestBase {
 
     private RegistrationManagementClient registrationManagementClient;
     private static String registrationFlowRequestJson;
 
-    @DataProvider(name = "restAPIUserConfigProvider")
+    @DataProvider
     public static Object[][] restAPIUserConfigProvider() {
 
         return new Object[][]{
@@ -51,7 +50,7 @@ public class RegistrationManagementPositiveTest extends RegistrationManagementTe
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public RegistrationManagementPositiveTest(TestUserMode userMode) throws Exception {
+    public RegistrationManagementNegativeTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
@@ -68,34 +67,25 @@ public class RegistrationManagementPositiveTest extends RegistrationManagementTe
         registrationFlowRequestJson = readResource(REGISTRATION_FLOW);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void testCleanup() throws Exception {
+    @AfterClass
+    public void cleanup() throws Exception {
 
         registrationManagementClient.closeHttpClient();
         super.testConclude();
     }
 
-    @Test(description = "Test update registration flow")
-    public void testUpdateRegistrationFlow() throws Exception {
+    @Test(description = "Test invalid flow flow request")
+    public void testInvalidRegistrationFlowRequest() throws Exception {
 
-        ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
-        RegistrationFlowRequest registrationFlowRequest = getRegistrationFlowRequest(jsonReader);
-        registrationManagementClient.putRegistrationFlow(registrationFlowRequest);
-    }
-
-    @Test(description = "Test get registration flow", dependsOnMethods = "testUpdateRegistrationFlow")
-    public void testGetRegistrationFlow() throws Exception {
-
-        ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
-        RegistrationFlowRequest expectedRegistrationFlowRequest = getRegistrationFlowRequest(jsonReader);
-        RegistrationFlowResponse registrationFlowResponse = registrationManagementClient.getRegistrationFlow();
-        assert registrationFlowResponse.getSteps().equals(expectedRegistrationFlowRequest.getSteps())
-                : "Registration flow mismatch";
-    }
-
-    private static RegistrationFlowRequest getRegistrationFlowRequest(ObjectMapper jsonReader)
-            throws JsonProcessingException {
-
-        return jsonReader.readValue(registrationFlowRequestJson, RegistrationFlowRequest.class);
+        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+        RegistrationFlowRequest registrationFlowRequest = objectMapper.readValue(registrationFlowRequestJson,
+                RegistrationFlowRequest.class);
+        registrationFlowRequest.getSteps().get(0).setType("INVALID");
+        try {
+            registrationManagementClient.putRegistrationFlow(registrationFlowRequest);
+        } catch (Exception e) {
+            Assert.assertNotNull(e.getMessage());
+            Assert.assertTrue(e.getMessage().contains("Error code 400"));
+        }
     }
 }

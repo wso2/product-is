@@ -28,9 +28,9 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionResponse;
-import org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model.Error;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Error;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -38,35 +38,35 @@ import java.io.IOException;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
- * This class is used to perform REST API calls to the Registration Execution API.
+ * This class is used to perform REST API calls to the flow Execution API.
  */
-public class RegistrationExecutionClient extends RestBaseClient {
+public class FlowExecutionClient extends RestBaseClient {
 
-    private static final String REGISTRATION_EXECUTION_API_PATH = "registration";
-    private static final String REGISTRATION_EXECUTION_ENDPOINT = "execute";
+    private static final String FLOW_EXECUTION_API_PATH = "flow";
+    private static final String FLOW_EXECUTION_ENDPOINT = "execute";
     private final String tenantDomain;
     private final String username;
     private final String password;
-    private final String registrationExecutionBasePath;
+    private final String flowExecutionBasePath;
 
-    public RegistrationExecutionClient(String serverUrl, Tenant tenantInfo) {
+    public FlowExecutionClient(String serverUrl, Tenant tenantInfo) {
 
         this.tenantDomain = tenantInfo.getContextUser().getUserDomain();
         this.username = tenantInfo.getContextUser().getUserName();
         this.password = tenantInfo.getContextUser().getPassword();
-        this.registrationExecutionBasePath = getRegistrationExecutionPath(serverUrl, tenantDomain);
+        this.flowExecutionBasePath = getFlowExecutionPath(serverUrl, tenantDomain);
     }
 
     /**
-     * Initiate the registration execution.
+     * Initiate the flow execution.
      *
-     * @return The response of the registration initiation.
-     * @throws Exception If an error occurred while initiating the registration execution.
+     * @return The response of the flow initiation.
+     * @throws Exception If an error occurred while initiating the flow execution.
      */
-    public Object initiateRegistrationExecution() throws Exception {
+    public Object initiateFlowExecution() throws Exception {
 
         String jsonRequestBody = "{}";
-        String executionUrl = registrationExecutionBasePath + PATH_SEPARATOR + REGISTRATION_EXECUTION_ENDPOINT;
+        String executionUrl = flowExecutionBasePath + PATH_SEPARATOR + FLOW_EXECUTION_ENDPOINT;
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,
                 getHeadersWithBasicAuth())) {
@@ -81,16 +81,16 @@ public class RegistrationExecutionClient extends RestBaseClient {
     }
 
     /**
-     * Submit the registration request.
+     * Submit the flow request.
      *
-     * @param registrationExecutionRequest The registration execution request.
-     * @return The response of the registration submission.
-     * @throws Exception If an error occurred while submitting the registration request.
+     * @param flowExecutionRequest The flow execution request.
+     * @return The response of the flow execution.
+     * @throws Exception If an error occurred while submitting the flow request.
      */
-    public Object submitRegistration(FlowExecutionRequest registrationExecutionRequest) throws Exception {
+    public Object executeFlow(FlowExecutionRequest flowExecutionRequest) throws Exception {
 
-        String jsonRequestBody = toJSONString(registrationExecutionRequest);
-        String executionUrl = registrationExecutionBasePath + PATH_SEPARATOR + REGISTRATION_EXECUTION_ENDPOINT;
+        String jsonRequestBody = toJSONString(flowExecutionRequest);
+        String executionUrl = flowExecutionBasePath + PATH_SEPARATOR + FLOW_EXECUTION_ENDPOINT;
         try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,
                 getHeadersWithBasicAuth())) {
             ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
@@ -113,13 +113,13 @@ public class RegistrationExecutionClient extends RestBaseClient {
         client.close();
     }
 
-    private String getRegistrationExecutionPath(String serverUrl, String tenantDomain) {
+    private String getFlowExecutionPath(String serverUrl, String tenantDomain) {
 
         if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {
-            return serverUrl + API_SERVER_PATH + PATH_SEPARATOR + REGISTRATION_EXECUTION_API_PATH;
+            return serverUrl + API_SERVER_PATH + PATH_SEPARATOR + FLOW_EXECUTION_API_PATH;
         }
         return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_PATH + PATH_SEPARATOR +
-                REGISTRATION_EXECUTION_API_PATH;
+                FLOW_EXECUTION_API_PATH;
     }
 
     private Header[] getHeadersWithBasicAuth() {

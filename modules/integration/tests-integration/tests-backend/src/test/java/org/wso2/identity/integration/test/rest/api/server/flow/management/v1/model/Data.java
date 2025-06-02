@@ -16,10 +16,9 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
@@ -28,38 +27,58 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-@ApiModel(description = "Request payload for creating or updating a registration flow")
-public class RegistrationFlowRequest {
+public class Data {
 
-    private List<Step> steps = null;
+    private List<Component> components = null;
 
+    private Action action;
 
     /**
      *
      **/
-    public RegistrationFlowRequest steps(List<Step> steps) {
+    public Data components(List<Component> components) {
 
-        this.steps = steps;
+        this.components = components;
         return this;
     }
 
     @ApiModelProperty(value = "")
-    @JsonProperty("steps")
+    @JsonProperty("components")
     @Valid
-    public List<Step> getSteps() {
-        return steps;
+    public List<Component> getComponents() {
+        return components;
     }
 
-    public void setSteps(List<Step> steps) {
-        this.steps = steps;
+    public void setComponents(List<Component> components) {
+        this.components = components;
     }
 
-    public RegistrationFlowRequest addStepsItem(Step stepsItem) {
-        if (this.steps == null) {
-            this.steps = new ArrayList<Step>();
+    public Data addComponentsItem(Component componentsItem) {
+        if (this.components == null) {
+            this.components = new ArrayList<Component>();
         }
-        this.steps.add(stepsItem);
+        this.components.add(componentsItem);
         return this;
+    }
+
+    /**
+     *
+     **/
+    public Data action(Action action) {
+
+        this.action = action;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("action")
+    @Valid
+    public Action getAction() {
+        return action;
+    }
+
+    public void setAction(Action action) {
+        this.action = action;
     }
 
 
@@ -72,22 +91,24 @@ public class RegistrationFlowRequest {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RegistrationFlowRequest registrationFlowRequest = (RegistrationFlowRequest) o;
-        return Objects.equals(this.steps, registrationFlowRequest.steps);
+        Data data = (Data) o;
+        return Objects.equals(this.components, data.components) &&
+                Objects.equals(this.action, data.action);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(steps);
+        return Objects.hash(components, action);
     }
 
     @Override
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class RegistrationFlowRequest {\n");
+        sb.append("class Data {\n");
 
-        sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
+        sb.append("    components: ").append(toIndentedString(components)).append("\n");
+        sb.append("    action: ").append(toIndentedString(action)).append("\n");
         sb.append("}");
         return sb.toString();
     }

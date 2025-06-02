@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.execution.v1;
+package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -25,22 +25,22 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
-import org.wso2.identity.integration.test.restclients.RegistrationExecutionClient;
+import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Test class for Registration Execution API.
+ * Test class for Flow Execution API.
  */
-public class RegistrationExecutionPositiveTest extends RegistrationExecutionTestBase {
+public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
 
     public static final String USER = "RegExecPosTestUser";
-    private RegistrationExecutionClient registrationExecutionClient;
+    private FlowExecutionClient flowExecutionClient;
     private RegistrationManagementClient registrationManagementClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
     private static String flowId;
@@ -55,7 +55,7 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public RegistrationExecutionPositiveTest(TestUserMode userMode) throws Exception {
+    public FlowExecutionPositiveTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
@@ -68,7 +68,7 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
     public void setupClass() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenantInfo.getDomain());
-        registrationExecutionClient = new RegistrationExecutionClient(serverURL, tenantInfo);
+        flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
         registrationManagementClient = new RegistrationManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
         enableNewRegistrationFlow(identityGovernanceRestClient);
@@ -80,14 +80,14 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
 
         disableNewRegistrationFlow(identityGovernanceRestClient);
         identityGovernanceRestClient.closeHttpClient();
-        registrationExecutionClient.closeHttpClient();
+        flowExecutionClient.closeHttpClient();
         registrationManagementClient.closeHttpClient();
     }
 
     @Test
-    public void initiateRegistrationFlow() throws Exception {
+    public void initiateFlow() throws Exception {
 
-        Object responseObj = registrationExecutionClient.initiateRegistrationExecution();
+        Object responseObj = flowExecutionClient.initiateFlowExecution();
         Assert.assertTrue(responseObj instanceof FlowExecutionResponse);
         FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertNotNull(response);
@@ -100,11 +100,11 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
         Assert.assertEquals(response.getData().getComponents().size(), 2);
     }
 
-    @Test(dependsOnMethods = "initiateRegistrationFlow")
-    public void submitRegistrationFlow() throws Exception {
+    @Test(dependsOnMethods = "initiateFlow")
+    public void executeFlow() throws Exception {
 
-        Object responseObj = registrationExecutionClient
-                .submitRegistration(getRegistrationExecutionRequest());
+        Object responseObj = flowExecutionClient
+                .executeFlow(getFlowExecutionRequest());
         Assert.assertTrue(responseObj instanceof FlowExecutionResponse);
         FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertNotNull(response);
@@ -113,18 +113,18 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
         Assert.assertNotNull(response.getData());
     }
 
-    private static FlowExecutionRequest getRegistrationExecutionRequest() {
+    private static FlowExecutionRequest getFlowExecutionRequest() {
 
-        FlowExecutionRequest registrationExecutionRequest = new FlowExecutionRequest();
-        registrationExecutionRequest.setFlowId(flowId);
-        registrationExecutionRequest.setActionId("button_5zqc");
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowId(flowId);
+        flowExecutionRequest.setActionId("button_5zqc");
         Map<String, String> inputs = new HashMap<>();
         inputs.put("http://wso2.org/claims/username", USER);
         inputs.put("password", "Wso2@test");
         inputs.put("http://wso2.org/claims/emailaddress", "test@wso2.com");
         inputs.put("http://wso2.org/claims/givenname", "RegExecPosJohn");
         inputs.put("http://wso2.org/claims/lastname", "RegExecPosDoe");
-        registrationExecutionRequest.setInputs(inputs);
-        return registrationExecutionRequest;
+        flowExecutionRequest.setInputs(inputs);
+        return flowExecutionRequest;
     }
 }

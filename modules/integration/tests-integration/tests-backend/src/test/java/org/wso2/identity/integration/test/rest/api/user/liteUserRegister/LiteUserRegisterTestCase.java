@@ -69,7 +69,7 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     @Test(
             alwaysRun = true,
             groups = "wso2.is",
-            description = "Lite user registration with new and existing usernames"
+            description = "Lite user flow with new and existing usernames"
     )
     public void testLiteUserRegistration() throws Exception {
 
@@ -77,7 +77,7 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
         String data = "{\"email\": \"testlitteuser@wso2.com\",\"realm\": \"PRIMARY\"," +
                 "\"preferredChannel\":\"Email\",\"claims\":[], \"properties\": []}";
         Response responseOfPost = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
-        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Lite user registration unsuccessful");
+        Assert.assertEquals(responseOfPost.statusCode(), HttpStatus.SC_CREATED, "Lite user flow unsuccessful");
 
         Response responseOfPostConflict = getResponseOfPost(LITE_USER_REGISTRATION_ENDPOINT, data);
         Assert.assertEquals(responseOfPostConflict.statusCode(), HttpStatus.SC_CONFLICT, "Username already exist");
@@ -86,7 +86,7 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     @Test(
             alwaysRun = true,
             groups = "wso2.is",
-            description = "Lite user registration endpoint test before enabling the lite user register functionality"
+            description = "Lite user flow endpoint test before enabling the lite user register functionality"
     )
     public void testLiteUserRegistrationBeforeEnabling() throws Exception {
 

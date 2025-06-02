@@ -83,7 +83,7 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
         resetISConfiguration();
     }
 
-    @Test(description = "Check Oauth2 application registration")
+    @Test(description = "Check Oauth2 application flow")
     public void testRegisterApplication() throws Exception {
         OAuthConsumerAppDTO appDto = createApplication();
         Assert.assertNotNull(appDto, "Application creation failed.");

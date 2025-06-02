@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -27,7 +27,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-@ApiModel(description = "Represent an action which controls the registration flow")
+@ApiModel(description = "Represent an action which controls the flow flow")
 public class Action {
 
     private String type;

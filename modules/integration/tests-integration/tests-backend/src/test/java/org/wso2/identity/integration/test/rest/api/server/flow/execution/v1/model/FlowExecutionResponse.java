@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 import java.util.Objects;
 
-public class FlowExecutionResponse  {
+public class FlowExecutionResponse {
   
     private String flowId;
     private String flowStatus;

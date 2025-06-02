@@ -75,7 +75,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
     private static final Log log = LogFactory.getLog(SelfRegistrationTestCase.class);
 
-    private static final String REGISTER_REQUESTS_LOCATION = "registration.requests.location";
+    private static final String REGISTER_REQUESTS_LOCATION = "flow.requests.location";
 
     private static JSONParser parser = new JSONParser();
 
@@ -213,7 +213,7 @@ public class SelfRegistrationTestCase extends ScenarioTestBase {
 
         confirmationCode = httpCommonClient.getStringFromResponse(response);
         assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
-                "Self registration failed. Request Object: " + registerRequestJSON.toJSONString() + " Response body: "
+                "self registration failed. Request Object: " + registerRequestJSON.toJSONString() + " Response body: "
                         + confirmationCode);
 
         assertNotNull(confirmationCode, "Failed to receive the confirmation code.");

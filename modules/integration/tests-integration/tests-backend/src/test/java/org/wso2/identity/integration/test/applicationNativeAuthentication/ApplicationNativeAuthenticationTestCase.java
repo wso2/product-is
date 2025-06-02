@@ -159,7 +159,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
         restClient.closeHttpClient();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration for default configurations.")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow for default configurations.")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = createAppWithoutClientNativeAuthentication();
@@ -195,7 +195,7 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
                         + json.get(CODE));
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration for client native authentication",
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow for client native authentication",
             dependsOnMethods = "testSendAuthRequestPostWithDefaultConfiguration")
     public void testUpdateApplication() throws Exception {
 

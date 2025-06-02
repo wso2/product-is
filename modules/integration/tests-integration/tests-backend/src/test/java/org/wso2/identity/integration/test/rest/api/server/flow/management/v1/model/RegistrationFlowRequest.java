@@ -16,66 +16,50 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.management.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
-@ApiModel(description = "Represent the dimensions of a step")
-public class Size {
+@ApiModel(description = "Request payload for creating or updating a flow flow")
+public class RegistrationFlowRequest {
 
-    private BigDecimal height;
-    private BigDecimal width;
+    private List<Step> steps = null;
 
-    /**
-     *
-     **/
-    public Size height(BigDecimal height) {
-
-        this.height = height;
-        return this;
-    }
-
-    @ApiModelProperty(example = "200", required = true, value = "")
-    @JsonProperty("height")
-    @Valid
-    @NotNull(message = "Property height cannot be null.")
-
-    public BigDecimal getHeight() {
-        return height;
-    }
-
-    public void setHeight(BigDecimal height) {
-        this.height = height;
-    }
 
     /**
      *
      **/
-    public Size width(BigDecimal width) {
+    public RegistrationFlowRequest steps(List<Step> steps) {
 
-        this.width = width;
+        this.steps = steps;
         return this;
     }
 
-    @ApiModelProperty(example = "160", required = true, value = "")
-    @JsonProperty("width")
+    @ApiModelProperty(value = "")
+    @JsonProperty("steps")
     @Valid
-    @NotNull(message = "Property width cannot be null.")
-
-    public BigDecimal getWidth() {
-        return width;
+    public List<Step> getSteps() {
+        return steps;
     }
 
-    public void setWidth(BigDecimal width) {
-        this.width = width;
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
+    }
+
+    public RegistrationFlowRequest addStepsItem(Step stepsItem) {
+        if (this.steps == null) {
+            this.steps = new ArrayList<Step>();
+        }
+        this.steps.add(stepsItem);
+        return this;
     }
 
 
@@ -88,24 +72,22 @@ public class Size {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Size size = (Size) o;
-        return Objects.equals(this.height, size.height) &&
-                Objects.equals(this.width, size.width);
+        RegistrationFlowRequest registrationFlowRequest = (RegistrationFlowRequest) o;
+        return Objects.equals(this.steps, registrationFlowRequest.steps);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(height, width);
+        return Objects.hash(steps);
     }
 
     @Override
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class Size {\n");
+        sb.append("class RegistrationFlowRequest {\n");
 
-        sb.append("    height: ").append(toIndentedString(height)).append("\n");
-        sb.append("    width: ").append(toIndentedString(width)).append("\n");
+        sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
         sb.append("}");
         return sb.toString();
     }

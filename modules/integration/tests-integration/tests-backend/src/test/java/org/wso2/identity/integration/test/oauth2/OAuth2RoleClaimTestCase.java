@@ -106,7 +106,7 @@ public class OAuth2RoleClaimTestCase extends OAuth2ServiceAbstractIntegrationTes
         scim2RestClient.closeHttpClient();
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
     public void testRegisterApplication() throws Exception {
 
         ApplicationResponseModel application = addApplication();

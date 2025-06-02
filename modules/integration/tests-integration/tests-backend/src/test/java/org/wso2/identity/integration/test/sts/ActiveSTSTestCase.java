@@ -120,7 +120,7 @@ public class ActiveSTSTestCase extends ISIntegrationTest {
 
         addServiceProvider();
         serviceProvider = applicationManagementServiceClient.getApplication(SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(serviceProvider, "Service provider registration failed.");
+        Assert.assertNotNull(serviceProvider, "Service provider flow failed.");
     }
 
     @Test(alwaysRun = true, description = "Update service provider with the required configurations."

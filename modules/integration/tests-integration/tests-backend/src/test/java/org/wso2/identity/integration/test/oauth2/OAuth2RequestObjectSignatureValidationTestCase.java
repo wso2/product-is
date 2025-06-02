@@ -101,7 +101,7 @@ public class OAuth2RequestObjectSignatureValidationTestCase extends OAuth2Servic
         Assert.assertNotNull(sp1X509PublicCert);
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration",
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow",
             dependsOnMethods = "testGenerateServiceProviderKeys")
     public void testRegisterApplication() throws Exception {
 

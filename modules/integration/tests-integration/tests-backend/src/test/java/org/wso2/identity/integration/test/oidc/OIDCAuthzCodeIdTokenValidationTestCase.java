@@ -120,7 +120,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
         Assert.assertNotNull(spX509PublicCert);
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration.",
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow.",
             dependsOnMethods = "testGenerateServiceProviderKeys")
     public void testRegisterApplication() throws Exception {
 

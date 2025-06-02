@@ -136,7 +136,7 @@ public class TestPassiveSTS extends ISIntegrationTest {
         serviceProvider.setDescription(SERVICE_PROVIDER_Desc);
         appMgtClient.createApplication(serviceProvider);
         serviceProvider = appMgtClient.getApplication(SERVICE_PROVIDER_NAME);
-        Assert.assertNotNull(serviceProvider, "Service provider registration failed for tenant domain: " +
+        Assert.assertNotNull(serviceProvider, "Service provider flow failed for tenant domain: " +
                 tenantDomain);
     }
 

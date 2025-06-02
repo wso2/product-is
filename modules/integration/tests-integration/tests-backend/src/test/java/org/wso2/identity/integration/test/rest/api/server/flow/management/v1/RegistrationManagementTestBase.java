@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.registration.management.v1;
+package org.wso2.identity.integration.test.rest.api.server.flow.management.v1;
 
 import io.restassured.RestAssured;
 import org.apache.commons.lang.StringUtils;
@@ -33,10 +33,10 @@ import java.io.IOException;
  */
 public class RegistrationManagementTestBase extends RESTAPIServerTestBase {
 
-    protected static final String REGISTRATION_FLOW = "registration-flow.json";
-    private static final String API_DEFINITION_NAME = "registration-flow.yaml";
+    protected static final String REGISTRATION_FLOW = "flow-flow.json";
+    private static final String API_DEFINITION_NAME = "flow-flow.yaml";
     protected static final String API_VERSION = "v1";
-    private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.registration.management.v1";
+    private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.flow.management.v1";
     protected static String swaggerDefinition;
 
     static {

@@ -83,7 +83,7 @@ public class OAuth2RichAuthorizationRequestsTestCase extends OAuth2ServiceAbstra
         super.restClient.closeHttpClient();
     }
 
-    @Test(groups = "wso2.is", description = "Checks api resource registration with authorization details types")
+    @Test(groups = "wso2.is", description = "Checks api resource flow with authorization details types")
     public void testRegisterApiResourceWithAuthorizationDetails() throws IOException {
 
         final List<AuthorizationDetailsType> types =

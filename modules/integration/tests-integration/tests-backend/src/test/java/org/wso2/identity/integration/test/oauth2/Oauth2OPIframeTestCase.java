@@ -83,7 +83,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
         consumerKey = null;
     }
 
-    @Test(groups = "wso2.is", description = "Check Oauth2 application registration")
+    @Test(groups = "wso2.is", description = "Check Oauth2 application flow")
     public void testOPIFrameRegex() throws Exception {
 
         ApplicationModel application = new ApplicationModel();
