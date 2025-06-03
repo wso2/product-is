@@ -2515,7 +2515,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.78</identity.governance.version>
+        <identity.governance.version>1.11.79</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.9</identity.carbon.auth.saml2.version>
@@ -2613,7 +2613,7 @@
         <authenticator.auth.otp.commons.version>1.0.11</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.0.1</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.32</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.1.33</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.48</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.29</identity.oauth2.grant.organizationswitch.version>
 
@@ -2636,9 +2636,9 @@
         <conditional.authentication.functions.version>1.2.78</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.58.3</identity.apps.console.version>
+        <identity.apps.console.version>2.58.4</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.14</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.25.6</identity.apps.core.version>
+        <identity.apps.core.version>2.25.12</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
         <!-- Charon -->
