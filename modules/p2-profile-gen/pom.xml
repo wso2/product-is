@@ -376,11 +376,6 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.webhook.management.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
-                                <!-- Webhook Metadata Feature -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.webhook.metadata.server.feature:${carbon.identity.framework.version}
-                                </featureArtifactDef>
-
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.system.config.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
@@ -942,10 +937,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.webhook.management.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.webhook.metadata.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
