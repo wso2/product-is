@@ -68,18 +68,15 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_
  */
 public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
-    private IdentityGovernanceRestClient identityGovernanceRestClient;
-
+    public static final String USERNAME = "recoverytestuser";
+    public static final String PASSWORD = "Oidcsessiontestuser@123";
+    public static final String PASSWORD_NEW = "Oidcsessiontestuser@1234";
     private final CookieStore cookieStore = new BasicCookieStore();
-
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
     private CloseableHttpClient client;
     private OIDCApplication oidcApplication;
     private UserObject userObject;
     private MockApplicationServer mockApplicationServer;
-
-    public static final String USERNAME = "recoverytestuser";
-    public static final String PASSWORD = "Oidcsessiontestuser@123";
-    public static final String PASSWORD_NEW = "Oidcsessiontestuser@1234";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -126,6 +123,7 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
     @Test
     public void testPasswordRecovery() throws Exception {
+
         String passwordRecoveryFormURL = retrievePasswordResetURL(oidcApplication, client);
         submitPasswordRecoveryForm(passwordRecoveryFormURL, userObject.getUserName(), client);
 
@@ -195,7 +193,8 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
         propertyReq.setName("Recovery.Notification.Password.emailLink.Enable");
         propertyReq.setValue(enable ? "true" : "false");
         connectorsPatchReq.addProperties(propertyReq);
-        identityGovernanceRestClient.updateConnectors("QWNjb3VudCBNYW5hZ2VtZW50", "YWNjb3VudC1yZWNvdmVyeQ", connectorsPatchReq);
+        identityGovernanceRestClient.updateConnectors("QWNjb3VudCBNYW5hZ2VtZW50", "YWNjb3VudC1yZWNvdmVyeQ",
+                connectorsPatchReq);
     }
 
     private OIDCApplication initApplication() {
