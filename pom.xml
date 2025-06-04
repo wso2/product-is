@@ -2625,7 +2625,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.122</identity.server.api.version>
+        <identity.server.api.version>1.3.123</identity.server.api.version>
         <identity.user.api.version>1.3.64</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2636,9 +2636,9 @@
         <conditional.authentication.functions.version>1.2.78</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.58.4</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.19.14</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.25.12</identity.apps.core.version>
+        <identity.apps.console.version>2.58.5</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.19.15</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.25.15</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
         <!-- Charon -->
