@@ -21,11 +21,11 @@ package org.wso2.identity.integration.test.rest.api.server.registration.executio
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Objects;
 import javax.validation.Valid;
+import java.util.Objects;
 
-public class RegistrationExecutionRequest  {
-
+public class FlowExecutionRequest  {
+  
     private String applicationId;
     private String callbackUrl;
     private String flowId;
@@ -33,14 +33,14 @@ public class RegistrationExecutionRequest  {
     private Object inputs;
 
     /**
-     * Unique identifier for the application
-     **/
-    public RegistrationExecutionRequest applicationId(String applicationId) {
+    * Unique identifier for the application
+    **/
+    public FlowExecutionRequest applicationId(String applicationId) {
 
         this.applicationId = applicationId;
         return this;
     }
-
+    
     @ApiModelProperty(example = "01afc2d2-f7b8-46db-95a9-c17336e7a1c6", value = "Unique identifier for the application")
     @JsonProperty("applicationId")
     @Valid
@@ -52,15 +52,15 @@ public class RegistrationExecutionRequest  {
     }
 
     /**
-     * URL to redirect during registration if required
-     **/
-    public RegistrationExecutionRequest callbackUrl(String callbackUrl) {
+    * URL to redirect during the flow execution if required
+    **/
+    public FlowExecutionRequest callbackUrl(String callbackUrl) {
 
         this.callbackUrl = callbackUrl;
         return this;
     }
-
-    @ApiModelProperty(example = "https://localhost:3000/myRegistrationPortal", value = "URL to redirect during registration if required")
+    
+    @ApiModelProperty(example = "https://localhost:3000/myRegistrationPortal", value = "URL to redirect during the flow execution if required")
     @JsonProperty("callbackUrl")
     @Valid
     public String getCallbackUrl() {
@@ -71,15 +71,15 @@ public class RegistrationExecutionRequest  {
     }
 
     /**
-     * Unique identifier for the registration flow
-     **/
-    public RegistrationExecutionRequest flowId(String flowId) {
+    * Unique identifier for the flow execution
+    **/
+    public FlowExecutionRequest flowId(String flowId) {
 
         this.flowId = flowId;
         return this;
     }
-
-    @ApiModelProperty(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", value = "Unique identifier for the registration flow")
+    
+    @ApiModelProperty(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", value = "Unique identifier for the flow execution")
     @JsonProperty("flowId")
     @Valid
     public String getFlowId() {
@@ -90,14 +90,14 @@ public class RegistrationExecutionRequest  {
     }
 
     /**
-     * Action identifier
-     **/
-    public RegistrationExecutionRequest actionId(String actionId) {
+    * Action identifier
+    **/
+    public FlowExecutionRequest actionId(String actionId) {
 
         this.actionId = actionId;
         return this;
     }
-
+    
     @ApiModelProperty(example = "dnd-component-01afc2d2-f7b8-46db-95a9-c17336e7a1c6", value = "Action identifier")
     @JsonProperty("actionId")
     @Valid
@@ -109,15 +109,15 @@ public class RegistrationExecutionRequest  {
     }
 
     /**
-     * Input values for the registration step
-     **/
-    public RegistrationExecutionRequest inputs(Object inputs) {
+    * Input values for the execution step
+    **/
+    public FlowExecutionRequest inputs(Object inputs) {
 
         this.inputs = inputs;
         return this;
     }
-
-    @ApiModelProperty(example = "{\"username\":\"johnw\"}", value = "Input values for the registration step")
+    
+    @ApiModelProperty(example = "{\"username\":\"johnw\"}", value = "Input values for the execution step")
     @JsonProperty("inputs")
     @Valid
     public Object getInputs() {
@@ -130,7 +130,7 @@ public class RegistrationExecutionRequest  {
 
 
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
 
         if (this == o) {
             return true;
@@ -138,12 +138,12 @@ public class RegistrationExecutionRequest  {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RegistrationExecutionRequest registrationExecutionRequest = (RegistrationExecutionRequest) o;
-        return Objects.equals(this.applicationId, registrationExecutionRequest.applicationId) &&
-                Objects.equals(this.callbackUrl, registrationExecutionRequest.callbackUrl) &&
-                Objects.equals(this.flowId, registrationExecutionRequest.flowId) &&
-                Objects.equals(this.actionId, registrationExecutionRequest.actionId) &&
-                Objects.equals(this.inputs, registrationExecutionRequest.inputs);
+        FlowExecutionRequest flowExecutionRequest = (FlowExecutionRequest) o;
+        return Objects.equals(this.applicationId, flowExecutionRequest.applicationId) &&
+            Objects.equals(this.callbackUrl, flowExecutionRequest.callbackUrl) &&
+            Objects.equals(this.flowId, flowExecutionRequest.flowId) &&
+            Objects.equals(this.actionId, flowExecutionRequest.actionId) &&
+            Objects.equals(this.inputs, flowExecutionRequest.inputs);
     }
 
     @Override
@@ -155,8 +155,8 @@ public class RegistrationExecutionRequest  {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class RegistrationExecutionRequest {\n");
-
+        sb.append("class FlowExecutionRequest {\n");
+        
         sb.append("    applicationId: ").append(toIndentedString(applicationId)).append("\n");
         sb.append("    callbackUrl: ").append(toIndentedString(callbackUrl)).append("\n");
         sb.append("    flowId: ").append(toIndentedString(flowId)).append("\n");
@@ -167,10 +167,10 @@ public class RegistrationExecutionRequest  {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
+    * Convert the given object to string with each line indented by 4 spaces
+    * (except the first line).
+    */
+    private String toIndentedString(Object o) {
 
         if (o == null) {
             return "null";
@@ -178,3 +178,4 @@ public class RegistrationExecutionRequest  {
         return o.toString().replace("\n", "\n");
     }
 }
+

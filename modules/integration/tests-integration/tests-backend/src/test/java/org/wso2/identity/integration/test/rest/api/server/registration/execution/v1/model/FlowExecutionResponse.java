@@ -21,61 +21,63 @@ package org.wso2.identity.integration.test.rest.api.server.registration.executio
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
+import java.util.Objects;
 
-public class RegistrationExecutionResponse  {
-
+public class FlowExecutionResponse  {
+  
     private String flowId;
     private String flowStatus;
 
-    @XmlType(name="TypeEnum")
-    @XmlEnum(String.class)
-    public enum TypeEnum {
+@XmlType(name="TypeEnum")
+@XmlEnum(String.class)
+public enum TypeEnum {
 
-        @XmlEnumValue("VIEW") VIEW(String.valueOf("VIEW")), @XmlEnumValue("REDIRECTION") REDIRECTION(String.valueOf("REDIRECTION"));
+    @XmlEnumValue("VIEW") VIEW(String.valueOf("VIEW")), @XmlEnumValue("REDIRECTION") REDIRECTION(String.valueOf("REDIRECTION")), @XmlEnumValue("INTERACT") INTERACT(String.valueOf("INTERACT")), @XmlEnumValue("INTERNAL_PROMPT") INTERNAL_PROMPT(String.valueOf("INTERNAL_PROMPT"));
 
 
-        private String value;
+    private String value;
 
-        TypeEnum(String v) {
-            value = v;
-        }
-
-        public String value() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-
-        public static TypeEnum fromValue(String value) {
-            for (TypeEnum b : TypeEnum.values()) {
-                if (b.value.equals(value)) {
-                    return b;
-                }
-            }
-            throw new IllegalArgumentException("Unexpected value '" + value + "'");
-        }
+    TypeEnum(String v) {
+        value = v;
     }
+
+    public String value() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+
+    public static TypeEnum fromValue(String value) {
+        for (TypeEnum b : TypeEnum.values()) {
+            if (b.value.equals(value)) {
+                return b;
+            }
+        }
+        throw new IllegalArgumentException("Unexpected value '" + value + "'");
+    }
+}
 
     private TypeEnum type;
     private Data data;
 
     /**
-     * Unique identifier for the registration flow
-     **/
-    public RegistrationExecutionResponse flowId(String flowId) {
+    * Unique identifier for the flow execution
+    **/
+    public FlowExecutionResponse flowId(String flowId) {
 
         this.flowId = flowId;
         return this;
     }
-
-    @ApiModelProperty(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true, value = "Unique identifier for the registration flow")
+    
+    @ApiModelProperty(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true, value = "Unique identifier for the flow execution")
     @JsonProperty("flowId")
     @Valid
     @NotNull(message = "Property flowId cannot be null.")
@@ -88,13 +90,13 @@ public class RegistrationExecutionResponse  {
     }
 
     /**
-     **/
-    public RegistrationExecutionResponse flowStatus(String flowStatus) {
+    **/
+    public FlowExecutionResponse flowStatus(String flowStatus) {
 
         this.flowStatus = flowStatus;
         return this;
     }
-
+    
     @ApiModelProperty(example = "INCOMPLETE", required = true, value = "")
     @JsonProperty("flowStatus")
     @Valid
@@ -108,13 +110,13 @@ public class RegistrationExecutionResponse  {
     }
 
     /**
-     **/
-    public RegistrationExecutionResponse type(TypeEnum type) {
+    **/
+    public FlowExecutionResponse type(TypeEnum type) {
 
         this.type = type;
         return this;
     }
-
+    
     @ApiModelProperty(example = "VIEW", required = true, value = "")
     @JsonProperty("type")
     @Valid
@@ -128,13 +130,13 @@ public class RegistrationExecutionResponse  {
     }
 
     /**
-     **/
-    public RegistrationExecutionResponse data(Data data) {
+    **/
+    public FlowExecutionResponse data(Data data) {
 
         this.data = data;
         return this;
     }
-
+    
     @ApiModelProperty(value = "")
     @JsonProperty("data")
     @Valid
@@ -148,7 +150,7 @@ public class RegistrationExecutionResponse  {
 
 
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
 
         if (this == o) {
             return true;
@@ -156,11 +158,11 @@ public class RegistrationExecutionResponse  {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RegistrationExecutionResponse registrationExecutionResponse = (RegistrationExecutionResponse) o;
-        return Objects.equals(this.flowId, registrationExecutionResponse.flowId) &&
-                Objects.equals(this.flowStatus, registrationExecutionResponse.flowStatus) &&
-                Objects.equals(this.type, registrationExecutionResponse.type) &&
-                Objects.equals(this.data, registrationExecutionResponse.data);
+        FlowExecutionResponse flowExecutionResponse = (FlowExecutionResponse) o;
+        return Objects.equals(this.flowId, flowExecutionResponse.flowId) &&
+            Objects.equals(this.flowStatus, flowExecutionResponse.flowStatus) &&
+            Objects.equals(this.type, flowExecutionResponse.type) &&
+            Objects.equals(this.data, flowExecutionResponse.data);
     }
 
     @Override
@@ -172,8 +174,8 @@ public class RegistrationExecutionResponse  {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class RegistrationExecutionResponse {\n");
-
+        sb.append("class FlowExecutionResponse {\n");
+        
         sb.append("    flowId: ").append(toIndentedString(flowId)).append("\n");
         sb.append("    flowStatus: ").append(toIndentedString(flowStatus)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
@@ -183,10 +185,10 @@ public class RegistrationExecutionResponse  {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
-     */
-    private String toIndentedString(java.lang.Object o) {
+    * Convert the given object to string with each line indented by 4 spaces
+    * (except the first line).
+    */
+    private String toIndentedString(Object o) {
 
         if (o == null) {
             return "null";

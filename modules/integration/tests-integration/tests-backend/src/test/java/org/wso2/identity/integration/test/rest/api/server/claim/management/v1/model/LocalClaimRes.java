@@ -40,6 +40,9 @@ public class LocalClaimRes {
     private String regEx = null;
     private Boolean required = null;
     private Boolean supportedByDefault = null;
+    private String dataType = null;
+    private String[] subAttributes = null;
+    private String[] canonicalValues = null;
     private Boolean multiValued = null;
 
     public enum UniquenessScopeEnum {
@@ -208,6 +211,51 @@ public class LocalClaimRes {
     public void setSupportedByDefault(Boolean supportedByDefault) {
 
         this.supportedByDefault = supportedByDefault;
+    }
+
+    /**
+     * Specifies the data type of the claim.
+     **/
+    @ApiModelProperty(value = "Specifies the data type of the claim.")
+    @JsonProperty("dataType")
+    public String getDataType() {
+
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+
+        this.dataType = dataType;
+    }
+
+    /**
+     * Gets the sub attributes of the claim.
+     **/
+    @ApiModelProperty(value = "Gets the sub attributes of the claim")
+    @JsonProperty("subAttributes")
+    public String[] getSubAttributes() {
+
+        return subAttributes;
+    }
+
+    public void setSubAttributes(String[] subAttributes) {
+
+        this.subAttributes = subAttributes;
+    }
+
+    /**
+     * Gets the canonical values of the claim.
+     **/
+    @ApiModelProperty(value = "Gets the canonical values of the claim")
+    @JsonProperty("canonicalValues")
+    public String[] getCanonicalValues() {
+
+        return canonicalValues;
+    }
+
+    public void setCanonicalValues(String[] canonicalValues) {
+
+        this.canonicalValues = canonicalValues;
     }
 
     /**

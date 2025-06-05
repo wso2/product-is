@@ -3,6 +3,8 @@
   "description": "mobileNumbers",
   "displayOrder": 0,
   "displayName": "mobileNumbers",
+  "dataType": "string",
+  "multiValued": true,
   "readOnly": false,
   "required": false,
   "supportedByDefault": true,

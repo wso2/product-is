@@ -19,17 +19,22 @@
 package org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.*;
+
+
+import io.swagger.annotations.*;
 import java.util.Objects;
-
 import javax.validation.Valid;
+import javax.xml.bind.annotation.*;
 
-public class Data {
+public class Data  {
 
     private List<Component> components = null;
 
@@ -40,7 +45,6 @@ public class Data {
 
 
     /**
-     *
      **/
     public Data components(List<Component> components) {
 
@@ -54,7 +58,6 @@ public class Data {
     public List<Component> getComponents() {
         return components;
     }
-
     public void setComponents(List<Component> components) {
         this.components = components;
     }
@@ -68,7 +71,6 @@ public class Data {
     }
 
     /**
-     *
      **/
     public Data redirectURL(String redirectURL) {
 
@@ -82,13 +84,11 @@ public class Data {
     public String getRedirectURL() {
         return redirectURL;
     }
-
     public void setRedirectURL(String redirectURL) {
         this.redirectURL = redirectURL;
     }
 
     /**
-     *
      **/
     public Data requiredParams(List<String> requiredParams) {
 
@@ -102,7 +102,6 @@ public class Data {
     public List<String> getRequiredParams() {
         return requiredParams;
     }
-
     public void setRequiredParams(List<String> requiredParams) {
         this.requiredParams = requiredParams;
     }
@@ -116,7 +115,6 @@ public class Data {
     }
 
     /**
-     *
      **/
     public Data additionalData(Map<String, Object> additionalData) {
 
@@ -130,7 +128,6 @@ public class Data {
     public Map<String, Object> getAdditionalData() {
         return additionalData;
     }
-
     public void setAdditionalData(Map<String, Object> additionalData) {
         this.additionalData = additionalData;
     }
@@ -145,8 +142,9 @@ public class Data {
     }
 
 
+
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -184,7 +182,7 @@ public class Data {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";
@@ -192,4 +190,3 @@ public class Data {
         return o.toString().replace("\n", "\n");
     }
 }
-

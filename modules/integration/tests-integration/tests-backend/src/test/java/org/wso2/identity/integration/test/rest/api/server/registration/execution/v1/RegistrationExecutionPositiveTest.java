@@ -25,8 +25,8 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionRequest;
-import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.RegistrationExecutionResponse;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.RegistrationExecutionClient;
 import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
@@ -88,8 +88,8 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
     public void initiateRegistrationFlow() throws Exception {
 
         Object responseObj = registrationExecutionClient.initiateRegistrationExecution();
-        Assert.assertTrue(responseObj instanceof RegistrationExecutionResponse);
-        RegistrationExecutionResponse response = (RegistrationExecutionResponse) responseObj;
+        Assert.assertTrue(responseObj instanceof FlowExecutionResponse);
+        FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertNotNull(response);
         Assert.assertNotNull(response.getFlowId());
         flowId = response.getFlowId();
@@ -105,17 +105,17 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
 
         Object responseObj = registrationExecutionClient
                 .submitRegistration(getRegistrationExecutionRequest());
-        Assert.assertTrue(responseObj instanceof RegistrationExecutionResponse);
-        RegistrationExecutionResponse response = (RegistrationExecutionResponse) responseObj;
+        Assert.assertTrue(responseObj instanceof FlowExecutionResponse);
+        FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getFlowStatus(), STATUS_COMPLETE);
         Assert.assertEquals(response.getType().toString(), TYPE_REDIRECTION);
         Assert.assertNotNull(response.getData());
     }
 
-    private static RegistrationExecutionRequest getRegistrationExecutionRequest() {
+    private static FlowExecutionRequest getRegistrationExecutionRequest() {
 
-        RegistrationExecutionRequest registrationExecutionRequest = new RegistrationExecutionRequest();
+        FlowExecutionRequest registrationExecutionRequest = new FlowExecutionRequest();
         registrationExecutionRequest.setFlowId(flowId);
         registrationExecutionRequest.setActionId("button_5zqc");
         Map<String, String> inputs = new HashMap<>();
