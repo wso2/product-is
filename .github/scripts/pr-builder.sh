@@ -4,11 +4,50 @@ OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-o
 SCIM2_REPO=identity-inbound-provisioning-scim2
 SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provisioning-scim2.git
 
-disable_test() {
-  local test_name="$1"
-  echo "Disabling test: $test_name"
-  sed -i.bak "s/name=\"$test_name\"/& enabled=\"false\"/" product-is/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
+# Define all available tests.
+declare -a ALL_TESTS=(
+    "is-tests-default-configuration"
+    "is-test-rest-api"
+    "is-tests-scim2"
+    "is-test-adaptive-authentication"
+    "is-test-adaptive-authentication-nashorn"
+    "is-test-adaptive-authentication-nashorn-with-restart"
+    "is-tests-default-configuration-ldap"
+    "is-tests-uuid-user-store"
+    "is-tests-federation"
+    "is-tests-federation-restart"
+    "is-tests-jdbc-userstore"
+    "is-tests-read-only-userstore"
+    "is-tests-oauth-jwt-token-gen-enabled"
+    "is-tests-email-username"
+    "is-tests-with-individual-configuration-changes"
+    "is-tests-saml-query-profile"
+    "is-tests-default-encryption"
+)
+
+# Function to disable tests not in the enabled list.
+disable_tests() {
+    local enabled_tests=$1
+    local testng_path="product-is-$BUILDER_NUMBER/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml"
+
+    # Convert comma-separated string to array.
+    IFS=',' read -ra ENABLED_ARRAY <<< "$enabled_tests"
+
+    echo "Tests that will run:"
+    printf '%s\n' "${ENABLED_ARRAY[@]}"
+
+    echo -e "\nDisabling other tests:"
+    for test in "${ALL_TESTS[@]}"; do
+        if [[ ! " ${ENABLED_ARRAY[@]} " =~ " ${test} " ]]; then
+            echo "- Disabling: $test"
+            sed -i.bak "s/name=\"$test\"/& enabled=\"false\"/" "$testng_path"
+        fi
+    done
 }
+
+# Main execution starts here.
+BUILDER_NUMBER=$1
+ENABLED_TESTS=$2
 
 echo ""
 echo "=========================================================="
@@ -34,33 +73,16 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-git clone https://github.com/wso2/product-is
+git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
-# Commenting few test cases.
-#disable_test "is-tests-default-configuration"
-#disable_test "is-test-rest-api"
-#disable_test "is-tests-scim2"
-#disable_test "is-test-adaptive-authentication"
-#disable_test "is-test-adaptive-authentication-nashorn"
-#disable_test "is-test-adaptive-authentication-nashorn-with-restart"
-#disable_test "is-tests-default-configuration-ldap"
-#disable_test "is-tests-uuid-user-store"
-#disable_test "is-tests-federation"
-#disable_test "is-tests-federation-restart"
-disable_test "is-tests-jdbc-userstore"
-disable_test "is-tests-read-only-userstore"
-disable_test "is-tests-oauth-jwt-token-gen-enabled"
-disable_test "is-tests-email-username"
-disable_test "is-tests-with-individual-configuration-changes"
-disable_test "is-tests-saml-query-profile"
-disable_test "is-tests-default-encryption"
+disable_tests "$ENABLED_TESTS"
 
 if [ "$REPO" = "product-is" ]; then
 
   echo ""
   echo "PR is for the product-is itself. Start building with test..."
   echo "=========================================================="
-  cd product-is
+  cd product-is-$BUILDER_NUMBER
 
   echo ""
   echo "Applying PR $PULL_NUMBER as a diff..."
@@ -118,7 +140,7 @@ else
   echo "Determining dependency version property key..."
   echo "=========================================================="
   wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/version_property_finder.py
-  VERSION_PROPERTY=$(python version_property_finder.py $REPO product-is 2>&1)
+  VERSION_PROPERTY=$(python version_property_finder.py $REPO product-is-$BUILDER_NUMBER 2>&1)
   VERSION_PROPERTY_KEY=""
   if [ "$VERSION_PROPERTY" != "invalid" ]; then
     echo "Version property key for the $REPO is $VERSION_PROPERTY"
@@ -181,6 +203,7 @@ else
     export JAVA_HOME=$JAVA_8_HOME
   fi
 
+
   mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
   echo ""
@@ -214,7 +237,7 @@ else
       fi
       REPO_TEST_RESULT_1=$(sed -n -e '/Results :/,/Tests run:/ p' mvn-build.log)
       REPO_TEST_RESULT_2=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
-  
+
       REPO_FINAL_RESULT=$(
           echo "==========================================================="
           if [ $REPO_BUILD_STATUS = "SUCCESS" ]; then
@@ -357,7 +380,7 @@ else
     cd ..
   fi
 
-  cd product-is
+  cd product-is-$BUILDER_NUMBER
 
   echo "Updating dependency version in product-is..."
   echo "=========================================================="
@@ -415,4 +438,3 @@ echo "=========================================================="
 echo "Build completed"
 echo "=========================================================="
 echo ""
-
