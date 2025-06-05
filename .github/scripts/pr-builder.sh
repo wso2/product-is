@@ -4,8 +4,7 @@ OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-o
 SCIM2_REPO=identity-inbound-provisioning-scim2
 SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provisioning-scim2.git
 
-
-# Define all available tests
+# Define all available tests.
 declare -a ALL_TESTS=(
     "is-tests-default-configuration"
     "is-test-rest-api"
@@ -26,12 +25,12 @@ declare -a ALL_TESTS=(
     "is-tests-default-encryption"
 )
 
-# Function to disable tests not in the enabled list
+# Function to disable tests not in the enabled list.
 disable_tests() {
     local enabled_tests=$1
     local testng_path="product-is-$BUILDER_NUMBER/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml"
 
-    # Convert comma-separated string to array
+    # Convert comma-separated string to array.
     IFS=',' read -ra ENABLED_ARRAY <<< "$enabled_tests"
 
     echo "Tests that will run:"
@@ -46,7 +45,7 @@ disable_tests() {
     done
 }
 
-# Main execution starts here
+# Main execution starts here.
 BUILDER_NUMBER=$1
 ENABLED_TESTS=$2
 

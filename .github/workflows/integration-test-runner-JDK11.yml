@@ -135,8 +135,7 @@ jobs:
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
-          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: 
-          token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: ${{ needs.run-test-runners.result }}"}'
+          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: ${{ needs.run-test-runners.result }}"}'
       - name: Approve PR
         if: ${{ needs.run-test-runners.result == 'success' }}
         run: |
