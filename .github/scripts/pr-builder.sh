@@ -4,20 +4,51 @@ OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-o
 SCIM2_REPO=identity-inbound-provisioning-scim2
 SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provisioning-scim2.git
 
-# Function to disable specified tests
+
+# Define all available tests
+declare -a ALL_TESTS=(
+    "is-tests-default-configuration"
+    "is-test-rest-api"
+    "is-tests-scim2"
+    "is-test-adaptive-authentication"
+    "is-test-adaptive-authentication-nashorn"
+    "is-test-adaptive-authentication-nashorn-with-restart"
+    "is-tests-default-configuration-ldap"
+    "is-tests-uuid-user-store"
+    "is-tests-federation"
+    "is-tests-federation-restart"
+    "is-tests-jdbc-userstore"
+    "is-tests-read-only-userstore"
+    "is-tests-oauth-jwt-token-gen-enabled"
+    "is-tests-email-username"
+    "is-tests-with-individual-configuration-changes"
+    "is-tests-saml-query-profile"
+    "is-tests-default-encryption"
+)
+
+# Function to disable tests not in the enabled list
 disable_tests() {
-    local tests=$1
-    IFS=',' read -ra TEST_ARRAY <<< "$tests"
-    for test in "${TEST_ARRAY[@]}"; do
-        echo "Disabling test: $test"
-        sed -i.bak "s/name=\"$test\"/& enabled=\"false\"/" product-is-$BUILDER_NUMBER/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
+    local enabled_tests=$1
+    local testng_path="product-is-$BUILDER_NUMBER/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml"
+
+    # Convert comma-separated string to array
+    IFS=',' read -ra ENABLED_ARRAY <<< "$enabled_tests"
+
+    echo "Tests that will run:"
+    printf '%s\n' "${ENABLED_ARRAY[@]}"
+
+    echo -e "\nDisabling other tests:"
+    for test in "${ALL_TESTS[@]}"; do
+        if [[ ! " ${ENABLED_ARRAY[@]} " =~ " ${test} " ]]; then
+            echo "- Disabling: $test"
+            sed -i.bak "s/name=\"$test\"/& enabled=\"false\"/" "$testng_path"
+        fi
     done
-    cat product-is-$BUILDER_NUMBER/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml
 }
 
 # Main execution starts here
 BUILDER_NUMBER=$1
-TESTS_TO_DISABLE=$2
+ENABLED_TESTS=$2
 
 echo ""
 echo "=========================================================="
@@ -45,8 +76,7 @@ echo "=========================================================="
 
 git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
-# Commenting few test cases.
-disable_tests "$TESTS_TO_DISABLE"
+disable_tests "$ENABLED_TESTS"
 
 if [ "$REPO" = "product-is" ]; then
 
