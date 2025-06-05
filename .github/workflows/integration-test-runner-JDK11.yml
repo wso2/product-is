@@ -76,7 +76,7 @@ jobs:
           JAVA_8_HOME: ${{env.J8HOME}}
           JAVA_11_HOME: ${{env.J11HOME}}
         run: |
-          bash .github/scripts/pr-builder1.sh
+          bash .github/scripts/pr-builder.sh 1 "is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-with-individual-configuration-changes,is-tests-saml-query-profile,is-tests-default-encryption"
       - name: Archive PR diff file
         if: always()
         uses: actions/upload-artifact@v4
