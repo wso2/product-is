@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.registration.execution.v1;
 
+import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,10 +28,16 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.registration.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
+import org.wso2.identity.integration.test.restclients.AuthenticatorRestClient;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.RegistrationExecutionClient;
 import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.utils.UserUtil;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,10 +47,14 @@ import java.util.Map;
 public class RegistrationExecutionPositiveTest extends RegistrationExecutionTestBase {
 
     public static final String USER = "RegExecPosTestUser";
+    private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
+    private static final String ACCOUNT_LOCKED_ATTRIBUTE ="accountLocked";
     private RegistrationExecutionClient registrationExecutionClient;
     private RegistrationManagementClient registrationManagementClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
     private static String flowId;
+    private AuthenticatorRestClient authenticatorRestClient;
+    private SCIM2RestClient scim2RestClient;
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
@@ -71,6 +82,8 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
         registrationExecutionClient = new RegistrationExecutionClient(serverURL, tenantInfo);
         registrationManagementClient = new RegistrationManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        authenticatorRestClient = new AuthenticatorRestClient(serverURL);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         enableNewRegistrationFlow(identityGovernanceRestClient);
         addRegistrationFlow(registrationManagementClient);
     }
@@ -113,6 +126,15 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
         Assert.assertNotNull(response.getData());
     }
 
+    @Test(dependsOnMethods = "submitRegistrationFlow")
+    public void verifyUserLogin() throws Exception {
+
+        String userId = UserUtil.getUserId(USER, context.getContextTenant());
+        unlockUser(userId);
+        JSONObject authenticationResponse =  authenticatorRestClient.login(USER, "Wso2@test");
+        Assert.assertNotNull(authenticationResponse.get("token"), "Authentication failed for user: " + USER);
+    }
+
     private static FlowExecutionRequest getRegistrationExecutionRequest() {
 
         FlowExecutionRequest registrationExecutionRequest = new FlowExecutionRequest();
@@ -126,5 +148,13 @@ public class RegistrationExecutionPositiveTest extends RegistrationExecutionTest
         inputs.put("http://wso2.org/claims/lastname", "RegExecPosDoe");
         registrationExecutionRequest.setInputs(inputs);
         return registrationExecutionRequest;
+    }
+
+    private void unlockUser(String loginUserId) throws IOException {
+
+        UserItemAddGroupobj userUnlockPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        userUnlockPatchOp.setPath(USER_SYSTEM_SCHEMA_ATTRIBUTE + ":" + ACCOUNT_LOCKED_ATTRIBUTE);
+        userUnlockPatchOp.setValue(false);
+        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(userUnlockPatchOp), loginUserId);
     }
 }
