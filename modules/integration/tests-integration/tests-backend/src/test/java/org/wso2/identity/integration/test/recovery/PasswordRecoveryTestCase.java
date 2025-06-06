@@ -61,6 +61,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.testng.AssertJUnit.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 
 /**
@@ -131,6 +132,8 @@ public class PasswordRecoveryTestCase extends OIDCAbstractIntegrationTest {
         HttpResponse postResponse = resetPassword(recoveryLink);
         Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), 200);
         Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
+        // Failing a test intentionally for testing purposes.
+        assertTrue(false);
     }
 
     private String retrievePasswordResetURL(OIDCApplication application, HttpClient client) throws Exception {
