@@ -117,6 +117,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowId(flowId);
+        flowExecutionRequest.setFlowType("REGISTRATION");
         flowExecutionRequest.setActionId("button_5zqc");
         Map<String, String> inputs = new HashMap<>();
         inputs.put("http://wso2.org/claims/username", USER);

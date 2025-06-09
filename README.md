@@ -130,14 +130,14 @@ Contributing
 ===============
 If you are planning on contributing to the development efforts of WSO2 Identity Server, you can do that by checking out the latest development version. The master branch holds the latest unreleased source code.
 
-Please follow the details instructions available here: https://wso2.github.io  
+Please read our [Contribution Guide](./docs/CONTRIBUTING.md) for detailed instructions on how to contribute.
 
 Can you fill this survey ?
 WSO2 wants to learn more about our open source software (OSS) community and your communication preferences to serve you better.
 
 In addition, we may reach out to a small number of respondents to ask additional questions and offer a small gift.
 
-Survey is available at: https://forms.gle/h5q4M3K7vyXba3bK6 
+Survey is available at: https://forms.gle/h5q4M3K7vyXba3bK6
 
 ---------------------------------------------------------------------------
 (c) Copyright 2019 - 2025 WSO2 LLC. All Rights Reserved.

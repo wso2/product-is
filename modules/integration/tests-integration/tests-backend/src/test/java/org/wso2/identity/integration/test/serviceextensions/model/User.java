@@ -26,6 +26,7 @@ import java.util.Objects;
 public class User {
 
     private String id;
+    private Organization organization;
 
     public User(String id) {
 
@@ -44,6 +45,16 @@ public class User {
     public void setId(String id) {
 
         this.id = id;
+    }
+
+    public Organization getOrganization() {
+
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+
+        this.organization = organization;
     }
 
     @Override

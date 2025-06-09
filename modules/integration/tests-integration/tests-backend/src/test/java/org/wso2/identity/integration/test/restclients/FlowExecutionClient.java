@@ -28,6 +28,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionNegativeTest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Error;
@@ -65,7 +66,9 @@ public class FlowExecutionClient extends RestBaseClient {
      */
     public Object initiateFlowExecution() throws Exception {
 
-        String jsonRequestBody = "{}";
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType("REGISTRATION");
+        String jsonRequestBody = toJSONString(flowExecutionRequest);
         String executionUrl = flowExecutionBasePath + PATH_SEPARATOR + FLOW_EXECUTION_ENDPOINT;
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,

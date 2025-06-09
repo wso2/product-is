@@ -105,7 +105,7 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
         Error error = (Error) responseObj;
         Assert.assertNotNull(error);
         Assert.assertNotNull(error.getCode());
-        Assert.assertEquals(error.getCode(), "RFM-60101");
+        Assert.assertEquals(error.getCode(), "FM-60101");
     }
 
     @Test(dependsOnMethods = "testExecuteFlowWithoutEnable")
@@ -134,7 +134,7 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
         Error error = (Error) responseObj;
         Assert.assertNotNull(error);
         Assert.assertNotNull(error.getCode());
-        Assert.assertEquals(error.getCode(), "RFE-60001");
+        Assert.assertEquals(error.getCode(), "FE-60001");
     }
 
     @Test(dependsOnMethods = "testExecuteFlowWithInvalidFlowId")
@@ -160,7 +160,7 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
         Error error = (Error) responseObj;
         Assert.assertNotNull(error);
         Assert.assertNotNull(error.getCode());
-        Assert.assertEquals(error.getCode(), "RFE-60002");
+        Assert.assertEquals(error.getCode(), "FE-60002");
     }
 
     private static FlowExecutionRequest getFlowExecutionRequest(String flowId,
@@ -168,6 +168,7 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowId(flowId != null ? flowId : "FLOW_ID");
+        flowExecutionRequest.setFlowType("REGISTRATION");
         flowExecutionRequest.setActionId(FlowExecutionNegativeTest.ACTION_ID);
         flowExecutionRequest.setInputs(inputs);
         return flowExecutionRequest;

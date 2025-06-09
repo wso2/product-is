@@ -3,51 +3,63 @@
     "options": [
       {
         "name": "refresh_token",
-        "displayName": "Refresh Token"
+        "displayName": "Refresh Token",
+        "publicClientAllowed": true
       },
       {
         "name": "urn:ietf:params:oauth:grant-type:saml2-bearer",
-        "displayName": "SAML2"
+        "displayName": "SAML2",
+        "publicClientAllowed": true
       },
       {
         "name": "implicit",
-        "displayName": "Implicit"
+        "displayName": "Implicit",
+        "publicClientAllowed": false
       },
       {
         "name": "password",
-        "displayName": "Password"
+        "displayName": "Password",
+        "publicClientAllowed": true
       },
       {
         "name": "client_credentials",
-        "displayName": "Client Credential"
+        "displayName": "Client Credential",
+        "publicClientAllowed": false
       },
       {
         "name": "iwa:ntlm",
-        "displayName": "IWA-NTLM"
+        "displayName": "IWA-NTLM",
+        "publicClientAllowed": true
       },
       {
         "name": "urn:ietf:params:oauth:grant-type:device_code",
-        "displayName": "Device Code"
+        "displayName": "Device Code",
+        "publicClientAllowed": true
       },
       {
         "name": "authorization_code",
-        "displayName": "Code"
+        "displayName": "Code",
+        "publicClientAllowed": true
       },
       {
         "name": "account_switch",
-        "displayName": "account_switch"
+        "displayName": "account_switch",
+        "publicClientAllowed": true
       },
       {
         "name": "urn:ietf:params:oauth:grant-type:token-exchange",
-        "displayName": "Token Exchange"
+        "displayName": "Token Exchange",
+        "publicClientAllowed": true
       },
       {
         "name": "organization_switch",
-        "displayName": "Organization Switch"
+        "displayName": "Organization Switch",
+        "publicClientAllowed": true
       },
       {
         "name": "urn:ietf:params:oauth:grant-type:jwt-bearer",
-        "displayName": "JWT Bearer"
+        "displayName": "JWT Bearer",
+        "publicClientAllowed": true
       }
     ]
   },
