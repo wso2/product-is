@@ -27,9 +27,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
-import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
 
     public static final String USER = "RegExecPosTestUser";
     private FlowExecutionClient flowExecutionClient;
-    private RegistrationManagementClient registrationManagementClient;
+    private FlowManagementClient flowManagementClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
     private static String flowId;
 
@@ -69,10 +69,10 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
 
         super.testInit(API_VERSION, swaggerDefinition, tenantInfo.getDomain());
         flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
-        registrationManagementClient = new RegistrationManagementClient(serverURL, tenantInfo);
+        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
         enableNewRegistrationFlow(identityGovernanceRestClient);
-        addRegistrationFlow(registrationManagementClient);
+        addRegistrationFlow(flowManagementClient);
     }
 
     @AfterClass(alwaysRun = true)
@@ -81,7 +81,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
         disableNewRegistrationFlow(identityGovernanceRestClient);
         identityGovernanceRestClient.closeHttpClient();
         flowExecutionClient.closeHttpClient();
-        registrationManagementClient.closeHttpClient();
+        flowManagementClient.closeHttpClient();
     }
 
     @Test

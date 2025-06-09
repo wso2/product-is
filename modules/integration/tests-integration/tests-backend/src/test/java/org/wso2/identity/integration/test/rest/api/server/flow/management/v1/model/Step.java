@@ -27,7 +27,7 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-@ApiModel(description = "Represent a single step in the registration flow process")
+@ApiModel(description = "Represent a single step in the flow process")
 public class Step {
 
     private String id;

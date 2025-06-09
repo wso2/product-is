@@ -19,64 +19,67 @@
 package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.Data;
+import javax.validation.constraints.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.xml.bind.annotation.XmlEnum;
-import javax.xml.bind.annotation.XmlEnumValue;
-import javax.xml.bind.annotation.XmlType;
+
+import io.swagger.annotations.*;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.xml.bind.annotation.*;
 
-public class FlowExecutionResponse {
-  
+public class FlowExecutionResponse  {
+
     private String flowId;
     private String flowStatus;
 
-@XmlType(name="TypeEnum")
-@XmlEnum(String.class)
-public enum TypeEnum {
+    @XmlType(name="TypeEnum")
+    @XmlEnum(String.class)
+    public enum TypeEnum {
 
-    @XmlEnumValue("VIEW") VIEW(String.valueOf("VIEW")), @XmlEnumValue("REDIRECTION") REDIRECTION(String.valueOf("REDIRECTION")), @XmlEnumValue("INTERACT") INTERACT(String.valueOf("INTERACT")), @XmlEnumValue("INTERNAL_PROMPT") INTERNAL_PROMPT(String.valueOf("INTERNAL_PROMPT"));
+        @XmlEnumValue("VIEW") VIEW(String.valueOf("VIEW")), @XmlEnumValue("REDIRECTION") REDIRECTION(String.valueOf("REDIRECTION")), @XmlEnumValue("INTERNAL_PROMPT") INTERNAL_PROMPT(String.valueOf("INTERNAL_PROMPT")), @XmlEnumValue("WEBAUTHN") WEBAUTHN(String.valueOf("WEBAUTHN"));
 
 
-    private String value;
+        private String value;
 
-    TypeEnum(String v) {
-        value = v;
-    }
-
-    public String value() {
-        return value;
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
-    }
-
-    public static TypeEnum fromValue(String value) {
-        for (TypeEnum b : TypeEnum.values()) {
-            if (b.value.equals(value)) {
-                return b;
-            }
+        TypeEnum(String v) {
+            value = v;
         }
-        throw new IllegalArgumentException("Unexpected value '" + value + "'");
+
+        public String value() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        public static TypeEnum fromValue(String value) {
+            for (TypeEnum b : TypeEnum.values()) {
+                if (b.value.equals(value)) {
+                    return b;
+                }
+            }
+            throw new IllegalArgumentException("Unexpected value '" + value + "'");
+        }
     }
-}
 
     private TypeEnum type;
     private Data data;
 
     /**
-    * Unique identifier for the flow execution
-    **/
+     * Unique identifier for the flow execution
+     **/
     public FlowExecutionResponse flowId(String flowId) {
 
         this.flowId = flowId;
         return this;
     }
-    
+
     @ApiModelProperty(example = "3fa85f64-5717-4562-b3fc-2c963f66afa6", required = true, value = "Unique identifier for the flow execution")
     @JsonProperty("flowId")
     @Valid
@@ -90,13 +93,13 @@ public enum TypeEnum {
     }
 
     /**
-    **/
+     **/
     public FlowExecutionResponse flowStatus(String flowStatus) {
 
         this.flowStatus = flowStatus;
         return this;
     }
-    
+
     @ApiModelProperty(example = "INCOMPLETE", required = true, value = "")
     @JsonProperty("flowStatus")
     @Valid
@@ -110,13 +113,13 @@ public enum TypeEnum {
     }
 
     /**
-    **/
+     **/
     public FlowExecutionResponse type(TypeEnum type) {
 
         this.type = type;
         return this;
     }
-    
+
     @ApiModelProperty(example = "VIEW", required = true, value = "")
     @JsonProperty("type")
     @Valid
@@ -130,13 +133,13 @@ public enum TypeEnum {
     }
 
     /**
-    **/
+     **/
     public FlowExecutionResponse data(Data data) {
 
         this.data = data;
         return this;
     }
-    
+
     @ApiModelProperty(value = "")
     @JsonProperty("data")
     @Valid
@@ -150,7 +153,7 @@ public enum TypeEnum {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -160,9 +163,9 @@ public enum TypeEnum {
         }
         FlowExecutionResponse flowExecutionResponse = (FlowExecutionResponse) o;
         return Objects.equals(this.flowId, flowExecutionResponse.flowId) &&
-            Objects.equals(this.flowStatus, flowExecutionResponse.flowStatus) &&
-            Objects.equals(this.type, flowExecutionResponse.type) &&
-            Objects.equals(this.data, flowExecutionResponse.data);
+                Objects.equals(this.flowStatus, flowExecutionResponse.flowStatus) &&
+                Objects.equals(this.type, flowExecutionResponse.type) &&
+                Objects.equals(this.data, flowExecutionResponse.data);
     }
 
     @Override
@@ -175,7 +178,7 @@ public enum TypeEnum {
 
         StringBuilder sb = new StringBuilder();
         sb.append("class FlowExecutionResponse {\n");
-        
+
         sb.append("    flowId: ").append(toIndentedString(flowId)).append("\n");
         sb.append("    flowStatus: ").append(toIndentedString(flowStatus)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
@@ -185,10 +188,10 @@ public enum TypeEnum {
     }
 
     /**
-    * Convert the given object to string with each line indented by 4 spaces
-    * (except the first line).
-    */
-    private String toIndentedString(Object o) {
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";

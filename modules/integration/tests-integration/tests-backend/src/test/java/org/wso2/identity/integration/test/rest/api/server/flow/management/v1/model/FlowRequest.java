@@ -27,25 +27,51 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
-@ApiModel(description = "Response payload for retrieving a registration flow")
-public class RegistrationFlowResponse {
+@ApiModel(description = "Request payload for creating or updating a flow")
+public class FlowRequest {
 
-    private List<Step> steps = null;
+    private String flowType;
+    private List<Step> steps = new ArrayList<Step>();
 
+
+    /**
+     * Type of the flow being updated
+     **/
+    public FlowRequest flowType(String flowType) {
+
+        this.flowType = flowType;
+        return this;
+    }
+
+    @ApiModelProperty(example = "SELF_REGISTRATION", required = true, value = "Type of the flow being updated")
+    @JsonProperty("flowType")
+    @Valid
+    @NotNull(message = "Property flowType cannot be null.")
+
+    public String getFlowType() {
+        return flowType;
+    }
+
+    public void setFlowType(String flowType) {
+        this.flowType = flowType;
+    }
 
     /**
      *
      **/
-    public RegistrationFlowResponse steps(List<Step> steps) {
+    public FlowRequest steps(List<Step> steps) {
 
         this.steps = steps;
         return this;
     }
 
-    @ApiModelProperty(value = "")
+    @ApiModelProperty(required = true, value = "")
     @JsonProperty("steps")
     @Valid
+    @NotNull(message = "Property steps cannot be null.")
+
     public List<Step> getSteps() {
         return steps;
     }
@@ -54,10 +80,7 @@ public class RegistrationFlowResponse {
         this.steps = steps;
     }
 
-    public RegistrationFlowResponse addStepsItem(Step stepsItem) {
-        if (this.steps == null) {
-            this.steps = new ArrayList<Step>();
-        }
+    public FlowRequest addStepsItem(Step stepsItem) {
         this.steps.add(stepsItem);
         return this;
     }
@@ -72,21 +95,23 @@ public class RegistrationFlowResponse {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RegistrationFlowResponse registrationFlowResponse = (RegistrationFlowResponse) o;
-        return Objects.equals(this.steps, registrationFlowResponse.steps);
+        FlowRequest flowRequest = (FlowRequest) o;
+        return Objects.equals(this.flowType, flowRequest.flowType) &&
+                Objects.equals(this.steps, flowRequest.steps);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(steps);
+        return Objects.hash(flowType, steps);
     }
 
     @Override
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class RegistrationFlowResponse {\n");
+        sb.append("class FlowRequest {\n");
 
+        sb.append("    flowType: ").append(toIndentedString(flowType)).append("\n");
         sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
         sb.append("}");
         return sb.toString();
@@ -104,4 +129,3 @@ public class RegistrationFlowResponse {
         return o.toString().replace("\n", "\n");
     }
 }
-

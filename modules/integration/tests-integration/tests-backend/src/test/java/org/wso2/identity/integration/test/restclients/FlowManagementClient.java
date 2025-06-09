@@ -28,8 +28,8 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowRequest;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowResponse;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowResponse;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -39,34 +39,34 @@ import static java.net.HttpURLConnection.HTTP_OK;
 /**
  * Rest client which provides methods to interact with the Registration Management REST API.
  */
-public class RegistrationManagementClient extends RestBaseClient {
+public class FlowManagementClient extends RestBaseClient {
 
-    private static final String REGISTRATION_MANAGEMENT_API_PATH = "registration-flow";
+    private static final String FLOW_MANAGEMENT_API_PATH = "flow";
     private final String tenantDomain;
     private final String username;
     private final String password;
-    private final String registrationManagementBasePath;
+    private final String flowManagementBasePath;
 
-    public RegistrationManagementClient(String serverUrl, Tenant tenantInfo) {
+    public FlowManagementClient(String serverUrl, Tenant tenantInfo) {
 
         this.tenantDomain = tenantInfo.getContextUser().getUserDomain();
         this.username = tenantInfo.getContextUser().getUserName();
         this.password = tenantInfo.getContextUser().getPassword();
-        this.registrationManagementBasePath = getRegistrationMgtPath(serverUrl, tenantDomain);
+        this.flowManagementBasePath = getFlowMgtPath(serverUrl, tenantDomain);
     }
 
     /**
      * Update a registration flow.
      *
-     * @param registrationFlowRequest Registration flow request.
+     * @param flowRequest Registration flow request.
      * @throws Exception If an error occurs while updating the registration flow.
      */
-    public void putRegistrationFlow(RegistrationFlowRequest registrationFlowRequest)
+    public void putFlow(FlowRequest flowRequest)
             throws Exception {
 
-        String jsonRequestBody = toJSONString(registrationFlowRequest);
+        String jsonRequestBody = toJSONString(flowRequest);
 
-        try (CloseableHttpResponse response = getResponseOfHttpPut(registrationManagementBasePath, jsonRequestBody,
+        try (CloseableHttpResponse response = getResponseOfHttpPut(flowManagementBasePath, jsonRequestBody,
                 getHeadersWithBasicAuth())) {
             if (response.getStatusLine().getStatusCode() != HTTP_OK) {
                 throw new Exception("Error code " + response.getStatusLine().getStatusCode() +
@@ -81,16 +81,17 @@ public class RegistrationManagementClient extends RestBaseClient {
      * @return Registration flow response.
      * @throws Exception If an error occurs while getting the registration flow.
      */
-    public RegistrationFlowResponse getRegistrationFlow() throws Exception {
+    public FlowResponse getRegistrationFlow() throws Exception {
 
-        try (CloseableHttpResponse response = getResponseOfHttpGet(registrationManagementBasePath,
+        String registrationFlowPath = flowManagementBasePath + "?flowType=REGISTRATION";
+        try (CloseableHttpResponse response = getResponseOfHttpGet(registrationFlowPath,
                 getHeadersWithBasicAuth())) {
             if (response.getStatusLine().getStatusCode() != 200) {
                 throw new Exception("Failed to get the registration flow");
             }
             String responseBody = EntityUtils.toString(response.getEntity());
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
-            return jsonWriter.readValue(responseBody, RegistrationFlowResponse.class);
+            return jsonWriter.readValue(responseBody, FlowResponse.class);
         }
     }
 
@@ -104,13 +105,13 @@ public class RegistrationManagementClient extends RestBaseClient {
         client.close();
     }
 
-    private String getRegistrationMgtPath(String serverUrl, String tenantDomain) {
+    private String getFlowMgtPath(String serverUrl, String tenantDomain) {
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return serverUrl + API_SERVER_PATH + PATH_SEPARATOR + REGISTRATION_MANAGEMENT_API_PATH;
+            return serverUrl + API_SERVER_PATH + PATH_SEPARATOR + FLOW_MANAGEMENT_API_PATH;
         }
         return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + API_SERVER_PATH + PATH_SEPARATOR +
-                REGISTRATION_MANAGEMENT_API_PATH;
+                FLOW_MANAGEMENT_API_PATH;
     }
 
     private Header[] getHeadersWithBasicAuth() {

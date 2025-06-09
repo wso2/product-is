@@ -25,11 +25,11 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowRequest;
+import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
-import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
 
 /**
  * This class contains the test cases for Registration Execution API.
@@ -73,12 +73,12 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
-    protected void addRegistrationFlow(RegistrationManagementClient client) throws Exception {
+    protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
 
         String registrationFlowRequestJson = readResource(REGISTRATION_FLOW);
-        RegistrationFlowRequest registrationFlowRequest = new ObjectMapper()
-                .readValue(registrationFlowRequestJson, RegistrationFlowRequest.class);
-        client.putRegistrationFlow(registrationFlowRequest);
+        FlowRequest flowRequest = new ObjectMapper()
+                .readValue(registrationFlowRequestJson, FlowRequest.class);
+        client.putFlow(flowRequest);
     }
 
     protected void enableNewRegistrationFlow(IdentityGovernanceRestClient client) throws Exception {

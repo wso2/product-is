@@ -27,17 +27,17 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowRequest;
-import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 
 import java.io.IOException;
 
 /**
- * This class contains the test cases for Registration Management API.
+ * This class contains the test cases for Flow Management API.
  */
-public class RegistrationManagementNegativeTest extends RegistrationManagementTestBase {
+public class FlowManagementNegativeTest extends FlowManagementTestBase {
 
-    private RegistrationManagementClient registrationManagementClient;
+    private FlowManagementClient flowManagementClient;
     private static String registrationFlowRequestJson;
 
     @DataProvider
@@ -50,7 +50,7 @@ public class RegistrationManagementNegativeTest extends RegistrationManagementTe
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public RegistrationManagementNegativeTest(TestUserMode userMode) throws Exception {
+    public FlowManagementNegativeTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
@@ -63,14 +63,14 @@ public class RegistrationManagementNegativeTest extends RegistrationManagementTe
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenantInfo.getDomain());
-        registrationManagementClient = new RegistrationManagementClient(serverURL, tenantInfo);
+        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         registrationFlowRequestJson = readResource(REGISTRATION_FLOW);
     }
 
     @AfterClass
     public void cleanup() throws Exception {
 
-        registrationManagementClient.closeHttpClient();
+        flowManagementClient.closeHttpClient();
         super.testConclude();
     }
 
@@ -78,11 +78,11 @@ public class RegistrationManagementNegativeTest extends RegistrationManagementTe
     public void testInvalidRegistrationFlowRequest() throws Exception {
 
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-        RegistrationFlowRequest registrationFlowRequest = objectMapper.readValue(registrationFlowRequestJson,
-                RegistrationFlowRequest.class);
+        FlowRequest registrationFlowRequest = objectMapper.readValue(registrationFlowRequestJson,
+                FlowRequest.class);
         registrationFlowRequest.getSteps().get(0).setType("INVALID");
         try {
-            registrationManagementClient.putRegistrationFlow(registrationFlowRequest);
+            flowManagementClient.putFlow(registrationFlowRequest);
         } catch (Exception e) {
             Assert.assertNotNull(e.getMessage());
             Assert.assertTrue(e.getMessage().contains("Error code 400"));

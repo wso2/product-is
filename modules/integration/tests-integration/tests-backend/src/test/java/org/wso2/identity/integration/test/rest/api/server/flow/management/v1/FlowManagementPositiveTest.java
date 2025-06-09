@@ -27,18 +27,18 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowRequest;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.RegistrationFlowResponse;
-import org.wso2.identity.integration.test.restclients.RegistrationManagementClient;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowResponse;
+import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 
 import java.io.IOException;
 
 /**
- * This class contains the test cases for Registration Management API.
+ * This class contains the test cases for Flow Management API.
  */
-public class RegistrationManagementPositiveTest extends RegistrationManagementTestBase {
+public class FlowManagementPositiveTest extends FlowManagementTestBase {
 
-    private RegistrationManagementClient registrationManagementClient;
+    private FlowManagementClient flowManagementClient;
     private static String registrationFlowRequestJson;
 
     @DataProvider(name = "restAPIUserConfigProvider")
@@ -51,7 +51,7 @@ public class RegistrationManagementPositiveTest extends RegistrationManagementTe
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
-    public RegistrationManagementPositiveTest(TestUserMode userMode) throws Exception {
+    public FlowManagementPositiveTest(TestUserMode userMode) throws Exception {
 
         super.init(userMode);
         this.context = isServer;
@@ -64,14 +64,14 @@ public class RegistrationManagementPositiveTest extends RegistrationManagementTe
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenantInfo.getDomain());
-        registrationManagementClient = new RegistrationManagementClient(serverURL, tenantInfo);
+        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         registrationFlowRequestJson = readResource(REGISTRATION_FLOW);
     }
 
     @AfterClass(alwaysRun = true)
     public void testCleanup() throws Exception {
 
-        registrationManagementClient.closeHttpClient();
+        flowManagementClient.closeHttpClient();
         super.testConclude();
     }
 
@@ -79,23 +79,23 @@ public class RegistrationManagementPositiveTest extends RegistrationManagementTe
     public void testUpdateRegistrationFlow() throws Exception {
 
         ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
-        RegistrationFlowRequest registrationFlowRequest = getRegistrationFlowRequest(jsonReader);
-        registrationManagementClient.putRegistrationFlow(registrationFlowRequest);
+        FlowRequest registrationFlowRequest = getFlowRequest(jsonReader);
+        flowManagementClient.putFlow(registrationFlowRequest);
     }
 
     @Test(description = "Test get registration flow", dependsOnMethods = "testUpdateRegistrationFlow")
     public void testGetRegistrationFlow() throws Exception {
 
         ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
-        RegistrationFlowRequest expectedRegistrationFlowRequest = getRegistrationFlowRequest(jsonReader);
-        RegistrationFlowResponse registrationFlowResponse = registrationManagementClient.getRegistrationFlow();
+        FlowRequest expectedRegistrationFlowRequest = getFlowRequest(jsonReader);
+        FlowResponse registrationFlowResponse = flowManagementClient.getRegistrationFlow();
         assert registrationFlowResponse.getSteps().equals(expectedRegistrationFlowRequest.getSteps())
                 : "Registration flow mismatch";
     }
 
-    private static RegistrationFlowRequest getRegistrationFlowRequest(ObjectMapper jsonReader)
+    private static FlowRequest getFlowRequest(ObjectMapper jsonReader)
             throws JsonProcessingException {
 
-        return jsonReader.readValue(registrationFlowRequestJson, RegistrationFlowRequest.class);
+        return jsonReader.readValue(registrationFlowRequestJson, FlowRequest.class);
     }
 }

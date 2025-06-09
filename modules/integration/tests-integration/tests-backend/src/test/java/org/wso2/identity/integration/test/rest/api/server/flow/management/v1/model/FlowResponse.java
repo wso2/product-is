@@ -28,8 +28,8 @@ import java.util.Objects;
 
 import javax.validation.Valid;
 
-@ApiModel(description = "Request payload for creating or updating a registration flow")
-public class RegistrationFlowRequest {
+@ApiModel(description = "Response payload for retrieving a flow")
+public class FlowResponse {
 
     private List<Step> steps = null;
 
@@ -37,7 +37,7 @@ public class RegistrationFlowRequest {
     /**
      *
      **/
-    public RegistrationFlowRequest steps(List<Step> steps) {
+    public FlowResponse steps(List<Step> steps) {
 
         this.steps = steps;
         return this;
@@ -54,7 +54,7 @@ public class RegistrationFlowRequest {
         this.steps = steps;
     }
 
-    public RegistrationFlowRequest addStepsItem(Step stepsItem) {
+    public FlowResponse addStepsItem(Step stepsItem) {
         if (this.steps == null) {
             this.steps = new ArrayList<Step>();
         }
@@ -64,7 +64,7 @@ public class RegistrationFlowRequest {
 
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -72,8 +72,8 @@ public class RegistrationFlowRequest {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        RegistrationFlowRequest registrationFlowRequest = (RegistrationFlowRequest) o;
-        return Objects.equals(this.steps, registrationFlowRequest.steps);
+        FlowResponse flowResponse = (FlowResponse) o;
+        return Objects.equals(this.steps, flowResponse.steps);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class RegistrationFlowRequest {
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
-        sb.append("class RegistrationFlowRequest {\n");
+        sb.append("class FlowResponse {\n");
 
         sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
         sb.append("}");
@@ -104,4 +104,3 @@ public class RegistrationFlowRequest {
         return o.toString().replace("\n", "\n");
     }
 }
-
