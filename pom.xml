@@ -2637,12 +2637,12 @@
         <identity.tool.samlsso.validator.version>5.5.10</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.27</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.78</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.58.9</identity.apps.console.version>
+        <identity.apps.console.version>2.58.10</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.18</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.25.20</identity.apps.core.version>
+        <identity.apps.core.version>2.25.21</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
         <!-- Charon -->
