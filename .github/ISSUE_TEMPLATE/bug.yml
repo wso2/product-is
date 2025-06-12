@@ -33,13 +33,13 @@ body:
     id: developer-checklist
     attributes:
       label: Developer Checklist
-      description: Please confirm the following when closing the issue.
+      description: Please review and confirm the following items before closing the issue.
       options:
-        - label: Will this change make a behavioural change to the product?
-        - label: " ↳ If yes, has it been approved by the team lead?"
-        - label: " ↳ If yes, has the label `impact/behavioral-change` been added to this issue?"
-        - label: Will this change has a migration impact?
-        - label: " ↳ If yes, has the relevant migration labels has been added? ex:`7.2.0-migration`"
-        - label: " ↳ If yes, has the relevant migration issues were created and linked?"
-        - label: Will this change introduce a new configuration?
-        - label: " ↳ If yes, have the new configurations been properly documented?"
+        - label: "[Behavioural Change] Does this change introduce a behavioral change to the product?"
+        - label: " ↳ Approved by team lead"
+        - label: " ↳ Label `impact/behavioral-change` added"
+        - label: "[Migration Impact] Does this change have a migration impact?"
+        - label: " ↳ Migration label added (e.g., `7.2.0-migration`)"
+        - label: " ↳ Migration issues created and linked"
+        - label: "[New Configuration] Does this change introduce a new configuration?"
+        - label: " ↳ Configuration is properly documented"
