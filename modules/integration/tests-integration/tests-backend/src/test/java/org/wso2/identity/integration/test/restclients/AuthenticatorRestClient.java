@@ -24,18 +24,30 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
+import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.test.rest.api.user.common.model.AuthenticationRequest;
 
 import java.io.IOException;
 
+import static org.wso2.identity.integration.common.utils.ISIntegrationTest.TENANTED_URL_PATH_SPECIFIER;
+import static org.wso2.identity.integration.common.utils.ISIntegrationTest.URL_SEPARATOR;
+
 public class AuthenticatorRestClient extends RestBaseClient {
 
     private final String serverUrl;
+    private final String tenantDomain;
     private final String AUTHENTICATION_BASE_PATH = "api/identity/auth/v1.1/authenticate";
 
     public AuthenticatorRestClient(String serverUrl) {
 
         this.serverUrl = serverUrl;
+        this.tenantDomain = null;
+    }
+
+    public AuthenticatorRestClient(String serverUrl, Tenant tenantInfo) {
+
+        this.serverUrl = serverUrl;
+        this.tenantDomain = tenantInfo.getContextUser().getUserDomain();
     }
 
     /**
@@ -53,7 +65,13 @@ public class AuthenticatorRestClient extends RestBaseClient {
         loginRequest.setPassword(password);
 
         String jsonRequest = toJSONString(loginRequest);
-        String endPointUrl =  serverUrl + AUTHENTICATION_BASE_PATH;
+        String endPointUrl;
+        if (tenantDomain != null) {
+            endPointUrl = serverUrl + TENANTED_URL_PATH_SPECIFIER +
+                    tenantDomain + URL_SEPARATOR + AUTHENTICATION_BASE_PATH;
+        } else {
+            endPointUrl = serverUrl + AUTHENTICATION_BASE_PATH;
+        }
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest, getHeaders())) {
             return getJSONObject(EntityUtils.toString(response.getEntity()));

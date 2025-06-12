@@ -37,7 +37,6 @@ import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.UserUtil;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -82,7 +81,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
         flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
         flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
-        authenticatorRestClient = new AuthenticatorRestClient(serverURL);
+        authenticatorRestClient = new AuthenticatorRestClient(serverURL, tenantInfo);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         enableNewRegistrationFlow(identityGovernanceRestClient);
         addRegistrationFlow(flowManagementClient);
@@ -91,10 +90,13 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
     @AfterClass(alwaysRun = true)
     public void tearDownClass() throws Exception {
 
+        deleteUser();
         disableNewRegistrationFlow(identityGovernanceRestClient);
         identityGovernanceRestClient.closeHttpClient();
         flowExecutionClient.closeHttpClient();
         flowManagementClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        authenticatorRestClient.closeHttpClient();
     }
 
     @Test
@@ -129,9 +131,8 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
     @Test(dependsOnMethods = "executeFlow")
     public void verifyUserLogin() throws Exception {
 
-        String userId = UserUtil.getUserId(USER, context.getContextTenant());
-        unlockUser(userId);
-        JSONObject authenticationResponse =  authenticatorRestClient.login(USER, "Wso2@test");
+        unLockUser();
+        JSONObject authenticationResponse = authenticatorRestClient.login(USER, "Wso2@test");
         Assert.assertNotNull(authenticationResponse.get("token"), "Authentication failed for user: " + USER);
     }
 
@@ -151,11 +152,18 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
         return flowExecutionRequest;
     }
 
-    private void unlockUser(String loginUserId) throws IOException {
+    private void unLockUser() throws Exception {
 
-        UserItemAddGroupobj userUnlockPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        userUnlockPatchOp.setPath(USER_SYSTEM_SCHEMA_ATTRIBUTE + ":" + ACCOUNT_LOCKED_ATTRIBUTE);
-        userUnlockPatchOp.setValue(false);
-        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(userUnlockPatchOp), loginUserId);
+        String userId = UserUtil.getUserId(USER, context.getContextTenant());
+        UserItemAddGroupobj userLockPatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        userLockPatchOp.setPath(USER_SYSTEM_SCHEMA_ATTRIBUTE + ":" + ACCOUNT_LOCKED_ATTRIBUTE);
+        userLockPatchOp.setValue(false);
+        scim2RestClient.updateUser(new PatchOperationRequestObject().addOperations(userLockPatchOp), userId);
+    }
+
+    private void deleteUser() throws Exception {
+
+        String userId = UserUtil.getUserId(USER, context.getContextTenant());
+        scim2RestClient.deleteUser(userId);
     }
 }
