@@ -30,3 +30,17 @@ body:
       description: Enter product/component version.
     validations:
       required: false
+  - type: checkboxes
+    id: developer-checklist
+    attributes:
+      label: Developer Checklist
+      description: Please confirm the following when closing the issue.
+      options:
+        - label: Will this change make a behavioural change to the product?
+        - label: " ↳ If yes, has it been approved by the team lead?"
+        - label: " ↳ If yes, has the label `impact/behavioral-change` been added to this issue?"
+        - label: Will this change has a migration impact?
+        - label: " ↳ If yes, has the relevant migration labels has been added? ex:`7.2.0-migration`"
+        - label: " ↳ If yes, has the relevant migration issues were created and linked?"
+        - label: Will this change introduce a new configuration?
+        - label: " ↳ If yes, have the new configurations been properly documented?"
