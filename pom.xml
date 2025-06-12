@@ -2530,7 +2530,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.308</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.309</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.56</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
@@ -2641,7 +2641,7 @@
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.59.2</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.19.18</identity.apps.myaccount.version>
+        <identity.apps.myaccount.version>2.19.19</identity.apps.myaccount.version>
         <identity.apps.core.version>2.25.21</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
@@ -2785,7 +2785,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.19</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.20</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
