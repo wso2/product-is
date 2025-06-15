@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2019-2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -875,6 +875,22 @@ public class RESTTestBase extends ISIntegrationTest {
         return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .headers(headers)
+                .when()
+                .delete(endpointURI);
+    }
+
+    /**
+     * Invoke given endpointURI for DELETE with Basic authentication, authentication credential being the
+     * authenticatingUserName and authenticatingCredential with query parameters.
+     *
+     * @param endpointURI Endpoint to be invoked.
+     * @param queryParams Query parameters to be passed.
+     * @return Response.
+     */
+    protected Response getResponseOfDeleteWithQueryParams(String endpointURI, Map<String, Object> queryParams) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .queryParams(queryParams)
                 .when()
                 .delete(endpointURI);
     }
