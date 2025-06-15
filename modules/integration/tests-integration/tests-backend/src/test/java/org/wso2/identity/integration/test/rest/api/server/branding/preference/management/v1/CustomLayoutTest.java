@@ -88,7 +88,6 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     private static final String SUB_ORG_APP = "SubOrgApp";
     private static final String AUTH_URL = "/oauth2/authorize";
     private static final String COMMON_AUTH_URL = "/commonauth";
-    private static final String MY_ACCOUNT_URL = "/myaccount";
     private static final String CLIENT_ID_KEY = "client_id";
     private static final String REDIRECT_URI_KEY = "redirect_uri";
     private static final String SCOPE_KEY = "scope";
@@ -171,8 +170,6 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     public void testConclude() throws Exception {
 
         super.conclude();
-
-        deleteInitialData();
         restClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
     }
@@ -408,6 +405,16 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
 
         loginPageResponse = getLoginPageResponse(appId2, true);
         validateCustomLayout(loginPageResponse, SUB_ORG);
+
+        queryParams.put("type", ORG_TYPE);
+        queryParams.put("name", tenant);
+        queryParams.put("locale", DEFAULT_LOCALE);
+        response = getResponseOfDeleteWithQueryParams(BRANDING_PREFERENCE_API_BASE_PATH, queryParams);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
     @Test(description = "Add custom layout with only HTML content.",
@@ -430,9 +437,6 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
 
         String loginPageResponse = getLoginPageResponse(appId1, false);
         validateCustomLayoutWithOnlyHtml(loginPageResponse, ROOT_APP);
-
-        loginPageResponse = getLoginPageResponse(appId2, false);
-        validateCustomLayout(loginPageResponse, ROOT_TENANT);
 
         loginPageResponse = getLoginPageResponse(appId1, true);
         validateCustomLayout(loginPageResponse, SUB_ORG_APP);
