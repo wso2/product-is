@@ -170,6 +170,8 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     public void testConclude() throws Exception {
 
         super.conclude();
+
+        deleteInitialData();
         restClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
     }
