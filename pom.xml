@@ -2502,7 +2502,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.216</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.218-SNAPSHOT</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2626,7 +2626,7 @@
         <hashprovider.pbkdf2.version>0.1.7</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.1.23</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.1.24-SNAPSHOT</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
@@ -2640,9 +2640,9 @@
         <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.58.10</identity.apps.console.version>
+        <identity.apps.console.version>2.58.10-SNAPSHOT</identity.apps.console.version>
         <identity.apps.myaccount.version>2.19.18</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.25.21</identity.apps.core.version>
+        <identity.apps.core.version>2.25.22-SNAPSHOT</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
         <!-- Charon -->
