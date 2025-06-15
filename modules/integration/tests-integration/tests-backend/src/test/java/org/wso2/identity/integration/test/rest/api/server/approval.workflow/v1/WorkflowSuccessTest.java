@@ -1,5 +1,22 @@
-package org.wso2.identity.integration.test.rest.api.server.workflows.v1;
+/*
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
+package org.wso2.identity.integration.test.rest.api.server.approval.workflow.v1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -15,7 +32,6 @@ import org.wso2.identity.integration.test.rest.api.server.workflows.v1.model.Wor
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 
@@ -61,6 +77,14 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
         RestAssured.basePath = StringUtils.EMPTY;
     }
 
+    @DataProvider(name = "restAPIUserConfigProvider")
+    public static Object[][] restAPIUserConfigProvider() {
+
+        return new Object[][]{
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
     @Test(description = "Test adding workflows.")
     public void testAddWorkflow() throws IOException {
 
@@ -95,8 +119,8 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .body("id", equalTo(workflowId))
                 .body("name", equalTo("User Approval Workflow"))
                 .body("description", equalTo("Workflow to approve user role related requests"))
-                .body("engine", equalTo("Simple Workflow Engine"))
-                .body("template.name", equalTo("MultiStepApproval"))
+                .body("engine", equalTo("WorkflowEngine"))
+                .body("template.name", equalTo("MultiStepApprovalTemplate"))
                 .body(stepBase + "step", equalTo(stepNumber))
                 .body(rolesEntityPath, notNullValue())
                 .body(usersEntityPath, notNullValue());
@@ -116,9 +140,9 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .statusCode(HttpStatus.SC_OK)
                 .body(baseIdentifier + "id", equalTo(workflowId))
                 .body(baseIdentifier + "name", equalTo("User Approval Workflow"))
-                .body("description", equalTo("Workflow to approve user role related requests"))
-                .body("engine", equalTo("Simple Workflow Engine"))
-                .body("template",equalTo("MultiStepApprovalTemplate"));
+                .body(baseIdentifier + "description", equalTo("Workflow to approve user role related requests"))
+                .body(baseIdentifier + "engine", equalTo("WorkflowEngine"))
+                .body(baseIdentifier + "template",equalTo("MultiStepApprovalTemplate"));
     }
 
     @Test(dependsOnMethods = {"testGetWorkflows"})

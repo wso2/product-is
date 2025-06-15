@@ -1,7 +1,7 @@
 {
   "name": "User Approval Workflow",
   "description": "Workflow to approve user role related requests",
-  "engine": "Simple Workflow Engine",
+  "engine": "WorkflowEngine",
   "template": {
     "name": "MultiStepApprovalTemplate",
     "steps": [
