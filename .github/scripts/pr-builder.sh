@@ -278,7 +278,7 @@ else
     echo "Building Outbound Auth OIDC repo..."
     echo "=========================================================="
     git clone $OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK
-    OUTBOUND_AUTH_OIDC_VERSION_PROPERTY=$(python version_property_finder.py $OUTBOUND_AUTH_OIDC_REPO product-is 2>&1)
+    OUTBOUND_AUTH_OIDC_VERSION_PROPERTY=$(python version_property_finder.py $OUTBOUND_AUTH_OIDC_REPO product-is-$BUILDER_NUMBER 2>&1)
     if [ "$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY" != "invalid" ]; then
       echo "Version property key for the $OUTBOUND_AUTH_OIDC_REPO is $OUTBOUND_AUTH_OIDC_VERSION_PROPERTY"
       OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY=$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY
@@ -333,7 +333,7 @@ else
     echo "Building SCIM2 repo..."
     echo "=========================================================="
     git clone $SCIM2_REPO_CLONE_LINK
-    SCIM2_VERSION_PROPERTY=$(python version_property_finder.py $SCIM2_REPO product-is 2>&1)
+    SCIM2_VERSION_PROPERTY=$(python version_property_finder.py $SCIM2_REPO product-is-$BUILDER_NUMBER 2>&1)
     if [ "$SCIM2_VERSION_PROPERTY" != "invalid" ]; then
       echo "Version property key for the $SCIM2_REPO is $SCIM2_VERSION_PROPERTY"
       SCIM2_VERSION_PROPERTY_KEY=$SCIM2_VERSION_PROPERTY
