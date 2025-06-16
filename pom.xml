@@ -2526,7 +2526,7 @@
         <identity.carbon.auth.saml2.version>5.9.10</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.9.30</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.9.31</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
@@ -2618,7 +2618,7 @@
         <authenticator.auth.otp.commons.version>1.0.12</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.0.1</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.34</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.1.35</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.48</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.29</identity.oauth2.grant.organizationswitch.version>
 
@@ -2626,11 +2626,11 @@
         <hashprovider.pbkdf2.version>0.1.7</hashprovider.pbkdf2.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.1.24</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.1.25</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.130</identity.server.api.version>
+        <identity.server.api.version>1.3.132</identity.server.api.version>
         <identity.user.api.version>1.3.64</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2640,7 +2640,7 @@
         <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.60.3</identity.apps.console.version>
+        <identity.apps.console.version>2.60.4</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.0</identity.apps.myaccount.version>
         <identity.apps.core.version>2.25.23</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
