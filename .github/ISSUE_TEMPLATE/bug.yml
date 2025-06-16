@@ -26,7 +26,7 @@ body:
         - B2B
         - Identity Server Core
         - Other
-      default: 6
+      default: 5
       multiple: false
     validations:
       required: true
