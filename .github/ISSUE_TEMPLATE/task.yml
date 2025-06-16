@@ -44,4 +44,5 @@ body:
         - label: " ↳ Migration label added (e.g., `7.2.0-migration`)"
         - label: " ↳ Migration issues created and linked"
         - label: "[New Configuration] Does this change introduce a new configuration?"
+        - label: " ↳ Label `config` added"
         - label: " ↳ Configuration is properly documented"
