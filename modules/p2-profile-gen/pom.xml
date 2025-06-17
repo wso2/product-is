@@ -380,6 +380,16 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.webhook.management.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
+                                <!-- Event Handler Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.webhook.event.handlers:org.wso2.identity.webhook.event.handlers.server.feature:${org.wso2.identity.webhook.event.handlers.version}
+                                </featureArtifactDef>
+
+                                <!-- Common Event Publisher Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.event.publishers:org.wso2.identity.event.common.publisher.server.feature:${org.wso2.identity.event.publishers.version}
+                                </featureArtifactDef>
+
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.system.config.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
@@ -946,6 +956,14 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.webhook.management.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.webhook.event.handlers.server.feature.group</id>
+                                    <version>${org.wso2.identity.webhook.event.handlers.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.event.common.publisher.server.feature.group</id>
+                                    <version>${org.wso2.identity.event.publishers.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.certificate.management.server.feature.group</id>

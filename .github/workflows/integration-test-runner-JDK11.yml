@@ -18,6 +18,7 @@ jobs:
   run-test-runners:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         include:
           - runner_id: 1

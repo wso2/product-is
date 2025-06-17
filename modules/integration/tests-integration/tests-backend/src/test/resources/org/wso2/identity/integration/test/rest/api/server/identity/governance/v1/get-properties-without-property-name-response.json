@@ -15,6 +15,10 @@
         "value": "false"
       },
       {
+        "name": "SelfRegistration.EmailOTP.Enable",
+        "value": "false"
+      },
+      {
         "name": "SelfRegistration.OTP.UseUppercaseCharactersInOTP",
         "value": "true"
       },
