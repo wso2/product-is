@@ -28,6 +28,12 @@
           "description": "Enable to send OTP in verification e-mail instead of confirmation code."
         },
         {
+          "name": "SelfRegistration.EmailOTP.Enable",
+          "value": "false",
+          "displayName": "Enable email OTP",
+          "description": "Enable to send email OTP for self registration."
+        },
+        {
           "name": "SelfRegistration.OTP.UseUppercaseCharactersInOTP",
           "value": "true",
           "displayName": "Include uppercase characters in OTP",

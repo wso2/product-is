@@ -23,6 +23,21 @@ body:
       description: Describe any alternatives have you considered
     validations:
       required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Please select the area issue is related to
+      options:
+        - Authentication & Registration
+        - User & Identity Administration
+        - API Access Mgt & Authorization
+        - B2B
+        - Identity Server Core
+        - Other
+      default: 5
+      multiple: false
+    validations:
+      required: true
   - type: input
     id: version
     attributes:
@@ -43,4 +58,5 @@ body:
         - label: " ↳ Migration label added (e.g., `7.2.0-migration`)"
         - label: " ↳ Migration issues created and linked"
         - label: "[New Configuration] Does this change introduce a new configuration?"
+        - label: " ↳ Label `config` added"
         - label: " ↳ Configuration is properly documented"
