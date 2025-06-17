@@ -72,6 +72,9 @@ import java.util.stream.Collectors;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.FIDP_PARAM;
 
+/**
+ * Test class for verifying the custom layout feature in both configuration and runtime scenarios.
+ */
 public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
 
     private static final String APPLICATION_NAME_1 = "TestApp1";
