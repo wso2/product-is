@@ -34,7 +34,7 @@ def getAccessToken(request):
     if authHeader is None:
         raise Unauthorized('Missing Authorization header.')
     authHeaderParts = authHeader.split(" ")
-    if len(authHeaderParts) != 2 or authHeaderParts[0] != 'Bearer':
+    if len(authHeaderParts) != 2 or authHeaderParts[0].lower() != 'bearer':
         raise Unauthorized('Bearer token missing.')
     accessToken = authHeaderParts[1]
     if accessToken == None or accessToken == '':
