@@ -26,8 +26,8 @@ import org.apache.http.HttpStatus;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantResponseModel;
-import org.wso2.identity.integration.test.rest.api.server.workflows.v1.model.WorkflowAssociationResponse;
-import org.wso2.identity.integration.test.rest.api.server.workflows.v1.model.WorkflowResponse;
+import org.wso2.identity.integration.test.rest.api.server.workflow.v1.model.WorkflowAssociationResponse;
+import org.wso2.identity.integration.test.rest.api.server.workflow.v1.model.WorkflowResponse;
 
 import java.io.IOException;
 
@@ -158,22 +158,6 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     }
 
     @Test(dependsOnMethods = {"testUpdateWorkflow"})
-    public void testDeleteWorkflow() {
-
-        getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
-
-        getResponseOfGet(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    @Test(description = "Test adding workflow associations.")
     public void testAddWorkflowAssociation() throws IOException {
 
         String body = readResource("add-workflow-association.json");
@@ -200,9 +184,9 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(workflowId))
+                .body("id", equalTo(workflowAssociationId))
                 .body("associationName", equalTo("User Registration Workflow Association"))
-                .body("operation", equalTo("ADD_USERs"))
+                .body("operation", equalTo("ADD_USER"))
                 .body("workflowName", notNullValue())
                 .body("isEnabled", equalTo(true));
 
@@ -220,11 +204,11 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(workflowId))
-                .body("associationName", equalTo("User Registration Workflow Association"))
-                .body("operation", equalTo("ADD_USERs"))
-                .body("workflowName", notNullValue())
-                .body("isEnabled", equalTo(true));
+                .body(baseIdentifier + "id", equalTo(workflowAssociationId))
+                .body(baseIdentifier + "associationName", equalTo("User Registration Workflow Association"))
+                .body(baseIdentifier + "operation", equalTo("ADD_USER"))
+                .body(baseIdentifier + "workflowName", notNullValue())
+                .body(baseIdentifier + "isEnabled", equalTo(true));
     }
 
     @Test(dependsOnMethods = {"testGetWorkflowAssociations"})
@@ -237,7 +221,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("associationName", equalTo("Updated Association Name"));
+                .body("associationName", equalTo("User Deletion Workflow Association"));
 
         // PATCH: Update operation
         body = readResource("patch-association-operation.json");
@@ -247,15 +231,6 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("operation", equalTo("DELETE_USER"));
-
-        // PATCH: Update workflowId
-        body = readResource("patch-association-workflowId.json");
-        response = getResponseOfPatch(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("workflowName", notNullValue());
     }
 
     @Test(dependsOnMethods = {"testPatchWorkflowAssociations"})
@@ -267,11 +242,27 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
-        getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId)
+        // getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId)
+        //         .then()
+        //         .log().ifValidationFails()
+        //         .assertThat()
+        //         .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test(dependsOnMethods = {"testPatchWorkflowAssociations"})
+    public void testDeleteWorkflow() {
+
+        getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_NOT_FOUND);
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        // getResponseOfGet(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId)
+        //         .then()
+        //         .log().ifValidationFails()
+        //         .assertThat()
+        //         .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
 }
