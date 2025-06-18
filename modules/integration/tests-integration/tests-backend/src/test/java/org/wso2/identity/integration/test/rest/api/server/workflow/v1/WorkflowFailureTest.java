@@ -32,9 +32,6 @@ import java.io.IOException;
  */
 public class WorkflowFailureTest extends WorkflowBaseTest{
 
-    private String workflowId;
-    private String workflowAssociationId;
-
     public WorkflowFailureTest() throws Exception  {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -47,7 +44,7 @@ public class WorkflowFailureTest extends WorkflowBaseTest{
     @BeforeClass(alwaysRun = true)
     public void init() throws IOException {
 
-        super.testInitWithoutTenantQualifiedPath(API_VERSION, swaggerDefinition);
+        super.testInit(API_VERSION, swaggerDefinition, tenant);
     }
 
     @AfterClass(alwaysRun = true)
@@ -96,7 +93,7 @@ public class WorkflowFailureTest extends WorkflowBaseTest{
 
         String body = readResource("update-workflow.json");
         Response response =
-                getResponseOfPut(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + "random-id" + PATH_SEPARATOR + "random-id", body);
+                getResponseOfPut(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + "random-id", body);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-51004", "random-id");
     }
 

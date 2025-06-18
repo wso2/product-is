@@ -165,6 +165,7 @@
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimUniquenessValidationTestCase"/>
             <class name="org.wso2.identity.integration.test.apiAuthorization.APIResourceInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowFailureTest"/>
         </classes>
     </test>
 

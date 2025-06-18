@@ -161,6 +161,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     public void testAddWorkflowAssociation() throws IOException {
 
         String body = readResource("add-workflow-association.json");
+        body = body.replace("{workflowId}", workflowId);
         Response response = getResponseOfPost(WORKFLOW_ASSOCIATION_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
