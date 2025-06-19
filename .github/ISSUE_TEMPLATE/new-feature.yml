@@ -60,3 +60,33 @@ body:
         - label: "[New Configuration] Does this change introduce a new configuration?"
         - label: " ↳ Label `config` added"
         - label: " ↳ Configuration is properly documented"
+  - type: dropdown
+    id: behavioral-change
+    attributes:
+      label: "Behavioural Change – Does this change introduce a behavioral change to the product?"
+      options:
+        - "Yes"
+        - "No"
+
+  - type: markdown
+    attributes:
+      value: |
+          If yes
+              - [ ] Approved by team lead
+            - [ ] Label Added
+
+  - type: dropdown
+    id: migration-impact
+    attributes:
+      label: "Migration Impact – Does this change have a migration impact?"
+      options:
+        - "Yes"
+        - "No"
+
+  - type: dropdown
+    id: new-configuration
+    attributes:
+      label: "New Configuration – Does this change introduce a new configuration?"
+      options:
+        - "Yes"
+        - "No"
