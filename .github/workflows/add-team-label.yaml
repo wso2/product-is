@@ -5,23 +5,21 @@ on:
     types: [opened, reopened]
 
 jobs:
-  update-team-label:
+  extract-area:
     runs-on: ubuntu-latest
-    permissions:
-      issues: write
-
     steps:
-      - name: Extract area dropdown value
-        id: extract
+      - name: Extract area from issue body
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
           echo "Issue body:"
-          echo "${{ github.event.issue.body }}"
-
-          # Extract the area value (line after the heading)
-          area=$(echo "${{ github.event.issue.body }}" | awk '/^### Please select the area issue is related to$/ {getline; print}')
+          echo "$ISSUE_BODY"
+          
+          area=$(echo "$ISSUE_BODY" | awk 'BEGIN{found=0} /area issue is related to/ {found=1; next} found==1 && NF {print; exit}')
+          
           echo "Selected area: $area"
 
-          # Map dropdown selection to label
+          # Map selected area to corresponding label
           case "$area" in
             "Authentication & Registration")
               label="Team/Authentication & registration"
@@ -46,6 +44,7 @@ jobs:
               ;;
           esac
 
+          echo "Final mapped label: $label"
           echo "label=$label" >> "$GITHUB_OUTPUT"
 
       - name: Add new Team label (if applicable)
@@ -61,5 +60,7 @@ jobs:
                 issue_number: context.issue.number,
                 labels: [ labelToAdd ]
               });
-              console.log(`Added label: ${labelToAdd}`);
+              console.log(`✅ Added label: ${labelToAdd}`);
+            } else {
+              console.log("ℹ️ No label to add (possibly 'Other' was selected).");
             }
