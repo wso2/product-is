@@ -1,0 +1,85 @@
+name: Add Team Label from Area Dropdown
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  update-area-label:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Extract area dropdown value
+        id: extract
+        run: |
+          echo "Issue body:"
+          echo "${{ github.event.issue.body }}"
+
+          # Get the line after the specific heading for the area dropdown
+          area=$(echo "${{ github.event.issue.body }}" | awk '/^### Please select the area issue is related to$/ {getline; print}')
+
+          echo "Selected area: $area"
+
+          # Map the selected area to a label (or empty if 'Other')
+          case "$area" in
+            "Authentication & Registration")
+              label="Team/Authentication & registration"
+              ;;
+            "User & Identity Administration")
+              label="Team/User & identity administration"
+              ;;
+            "API Access Mgt & Authorization")
+              label="Team/API Access Mgt & Authorization"
+              ;;
+            "B2B")
+              label="Team/B2B"
+              ;;
+            "Identity Server Core")
+              label="Team/Identity Server Core"
+              ;;
+            "Other")
+              label=""
+              ;;
+            *)
+              label=""
+              ;;
+          esac
+
+          echo "label=$label" >> $GITHUB_OUTPUT
+
+      - name: Remove existing Team/* labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = await github.rest.issues.listLabelsOnIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const teamLabels = labels.data
+              .map(label => label.name)
+              .filter(name.startsWith("Team/") && name !== "Team/Content");
+
+            for (const label of teamLabels) {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: label,
+              });
+            }
+
+      - name: Add new Team label (if applicable)
+        if: steps.extract.outputs.label != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              labels: [ "${{ steps.extract.outputs.label }}" ]
+            });
