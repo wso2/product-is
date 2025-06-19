@@ -61,7 +61,7 @@ jobs:
 
             const teamLabels = labels.data
               .map(label => label.name)
-              .filter(name.startsWith("Team/") && name !== "Team/Content");
+              .filter(name => name.startsWith("Team/") && name !== "Team/Content");
 
             for (const label of teamLabels) {
               await github.rest.issues.removeLabel({
