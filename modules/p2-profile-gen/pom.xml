@@ -189,9 +189,6 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.flow.orchestration.framework.feature:${carbon.identity.framework.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.profile.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -361,11 +358,7 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.resource.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
-                                <!-- Registration Framework Feature -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.registration.framework.feature:${carbon.identity.framework.version}
-                                </featureArtifactDef>
-
+                                <!-- Orchestration Framework Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.flow.orchestration.framework.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
@@ -935,14 +928,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.api.resource.mgt.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.registration.framework.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.flow.orchestration.framework.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
