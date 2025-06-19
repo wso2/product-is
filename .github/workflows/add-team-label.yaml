@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Extract area from issue body
+        id: extract
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
