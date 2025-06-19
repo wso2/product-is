@@ -2492,7 +2492,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.234</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.235</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2545,7 +2545,7 @@
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.313</org.wso2.identity.webhook.event.handlers.version>
 
-        <org.wso2.identity.event.publishers.version>1.0.14</org.wso2.identity.event.publishers.version>
+        <org.wso2.identity.event.publishers.version>1.0.16</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
