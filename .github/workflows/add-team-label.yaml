@@ -14,15 +14,23 @@ jobs:
       - name: Extract area dropdown value
         id: extract
         run: |
-          echo "Issue body:"
-          echo "${{ github.event.issue.body }}"
+          # Safely assign the multiline issue body to a variable
+          body="${{ github.event.issue.body }}"
 
-          # Get the line after the specific heading for the area dropdown
-          area=$(echo "${{ github.event.issue.body }}" | awk '/^### Please select the area issue is related to$/ {getline; print}')
+          echo "Full issue body (for debug):"
+          echo "$body" | cat -A
+
+          # Now safely parse it to extract the area (the line after the heading)
+          area=$(echo "$body" | awk '
+            BEGIN { found=0 }
+            /^\s*### Please select the area issue is related to\s*$/ { found=1; next }
+            found { print; exit }
+          ' | xargs)
 
           echo "Selected area: $area"
 
-          # Map the selected area to a label (or empty if 'Other')
+          label=""
+
           case "$area" in
             "Authentication & Registration")
               label="Team/Authentication & registration"
@@ -38,12 +46,6 @@ jobs:
               ;;
             "Identity Server Core")
               label="Team/Identity Server Core"
-              ;;
-            "Other")
-              label=""
-              ;;
-            *)
-              label=""
               ;;
           esac
 
