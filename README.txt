@@ -16,9 +16,9 @@ seamless modularity to your SOA solution via componentization.
 System Requirements
 ===================
 
-1. Minimum memory - 2 GB
+1. Minimum memory - 4 GB
 
-2. Processor - 2 Core/vCPU 1.1GHz or higher.
+2. Processor - 4 vCPUs (x86_64 Architecture) or higher.
 
 3. Java SE Development Kit 11
 
@@ -27,7 +27,7 @@ System Requirements
 5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-    https://is.docs.wso2.com/en/${product.version}/deploy/get-started/install/
+    https://is.docs.wso2.com/en/latest/deploy/get-started/install/
 
 
 Project Resources
@@ -35,7 +35,7 @@ Project Resources
 
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
-* Wiki               : https://is.docs.wso2.com/en/${product.version}
+* Wiki               : https://is.docs.wso2.com/en/latest
 * Issue Tracker      : https://github.com/wso2/product-is/issues
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: iam-dev@wso2.org
@@ -49,7 +49,7 @@ Installation and Running
 3. Once the server starts, point your Web browser to https://localhost:9443/console/
 4. User dashboard is available at https://localhost:9443/myaccount
 5. For more information, see the Installation Guide
-    https://is.docs.wso2.com/en/${product.version}/deploy/get-started/install/
+    https://is.docs.wso2.com/en/latest/deploy/get-started/install/
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -172,7 +172,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://is.docs.wso2.com/en/${product.version}/deploy/security/encrypt-passwords-with-cipher-tool/
+https://is.docs.wso2.com/en/latest/deploy/security/encrypt-passwords-with-cipher-tool/
 
 Support
 =======
@@ -220,7 +220,7 @@ For more information about WSO2 Identity Server please see http://wso2.org/proje
 WSO2 Oxygen Tank developer portal for addition resources.
 
 For further details, see the WSO2 Identity Server documentation at
-https://is.docs.wso2.com/en/${product.version}
+https://is.docs.wso2.com/en/latest
 
 ---------------------------------------------------------------------------
 (c) Copyright 2025 WSO2 LLC.
