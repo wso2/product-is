@@ -2492,7 +2492,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.239</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.243</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2510,7 +2510,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.88</identity.governance.version>
+        <identity.governance.version>1.11.89</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.10</identity.carbon.auth.saml2.version>
@@ -2553,7 +2553,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.30</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.31</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.9</identity.outbound.auth.samlsso.version>
@@ -2562,7 +2562,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.18</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.19</social.authenticator.google.version>
+        <social.authenticator.google.version>5.2.20</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.5</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.6</social.authenticator.apple.version>
         <social.authenticator.github.version>1.1.17</social.authenticator.github.version>
@@ -2574,7 +2574,7 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.34</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.35</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.21</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2600,7 +2600,7 @@
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.37</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
-        <authenticator.office365.version>2.1.7</authenticator.office365.version>
+        <authenticator.office365.version>2.1.8</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.38</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.32</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
@@ -2624,7 +2624,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.134</identity.server.api.version>
+        <identity.server.api.version>1.3.135</identity.server.api.version>
         <identity.user.api.version>1.3.65</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2634,7 +2634,7 @@
         <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.62.3</identity.apps.console.version>
+        <identity.apps.console.version>2.62.5</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.1</identity.apps.myaccount.version>
         <identity.apps.core.version>2.26.0</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
