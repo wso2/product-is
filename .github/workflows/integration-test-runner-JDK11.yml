@@ -33,7 +33,7 @@ jobs:
       JAVA_TOOL_OPTIONS: "-Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true"
     steps:
       - name: Print Input
-        run: echo Running the Test runner {{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}
+        run: echo "Running the Test runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
       - name: Comment build info
         if: ${{ matrix.runner_id == 1 }}
         run: |
