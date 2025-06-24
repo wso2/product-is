@@ -63,6 +63,8 @@ public class LocalClaimRes {
 
     private HashMap<String, AttributeProfileDTO> profiles = null;
 
+    private HashMap<String, String> inputFormat = null;
+
     /**
      * claim ID.
      **/
@@ -347,6 +349,21 @@ public class LocalClaimRes {
         this.profiles = profiles;
     }
 
+    /**
+     *
+     **/
+    @ApiModelProperty(value = "Input format for the claim.")
+    @JsonProperty("inputFormat")
+    public HashMap<String, String> getInputFormat() {
+
+        return inputFormat;
+    }
+
+    public void setInputFormat(HashMap<String, String> inputFormat) {
+
+        this.inputFormat = inputFormat;
+    }
+
     @Override
     public String toString() {
 
@@ -369,6 +386,7 @@ public class LocalClaimRes {
         sb.append("    attributeMapping: ").append(attributeMapping).append("\n");
         sb.append("    properties: ").append(properties).append("\n");
         sb.append("    profiles: ").append(profiles).append("\n");
+        sb.append("    inputFormat: ").append(inputFormat).append("\n");
 
         sb.append("}\n");
         return sb.toString();
