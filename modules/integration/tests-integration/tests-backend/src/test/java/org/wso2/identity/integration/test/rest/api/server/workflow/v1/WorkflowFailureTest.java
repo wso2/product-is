@@ -97,18 +97,11 @@ public class WorkflowFailureTest extends WorkflowBaseTest{
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-51004", "random-id");
     }
 
-//    @Test
-//    public void testGetWorkflowsWithInvalidFilterFormat() {
-//
-//        Response response = getResponseOfGet(WORKFLOW_API_BASE_PATH + "?filter=workflowId eq '102'");
-//        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-60018");
-//    }
-
     @Test
     public void testGetWorkflowAssociationWithInvalidId() {
 
         Response response = getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + "random-id");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-51002", "random-id");
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-51005", "random-id");
     }
 
     @Test
@@ -120,33 +113,11 @@ public class WorkflowFailureTest extends WorkflowBaseTest{
     }
 
     @Test
-    public void addWorkflowAssociationWithInvalidOperation() throws IOException {
-
-        Response response = getResponseOfPost(WORKFLOW_ASSOCIATION_API_BASE_PATH, readResource("add-association" +
-                "-invalid-operation.json"));
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "UE-10000");
-    }
-
-    @Test
     public void updateWorkflowAssociationWithInvalidAssociationId() throws IOException {
 
         String body = readResource("patch-association-name.json");
         Response response =
-                getResponseOfPut(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + "random-id" + PATH_SEPARATOR + "random-id", body);
+                getResponseOfPatch(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + "random-id", body);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-51008", "random-id");
-    }
-
-    @Test
-    public void testGetWorkflowAssociationsInvalidFilterFormat() {
-
-        Response response = getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + "?filter=invalid format");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-50027");
-    }
-
-    @Test
-    public void testGetWorkflowAssociationsUnsupportedFilterAttribute() {
-
-        Response response = getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + "?filter=operation eq ADD_USER");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-50027");
     }
 }

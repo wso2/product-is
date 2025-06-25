@@ -243,11 +243,11 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
-        // getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId)
-        //         .then()
-        //         .log().ifValidationFails()
-        //         .assertThat()
-        //         .statusCode(HttpStatus.SC_NOT_FOUND);
+        getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
     @Test(dependsOnMethods = {"testPatchWorkflowAssociations"})
@@ -259,11 +259,11 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
-        // getResponseOfGet(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId)
-        //         .then()
-        //         .log().ifValidationFails()
-        //         .assertThat()
-        //         .statusCode(HttpStatus.SC_NOT_FOUND);
+        getResponseOfGet(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
 }
