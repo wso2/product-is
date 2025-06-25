@@ -263,7 +263,7 @@
                                     org.wso2.carbon.extension.identity.authenticator.outbound.emailotp:org.wso2.carbon.identity.authenticator.emailotp.feature:${authenticator.emailotp.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature:${identity.oauth.addons.version}
+                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature:identity.oauth.addons.token.handler.clientauth.jwt.version
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -1204,7 +1204,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
-                                    <version>${identity.oauth.addons.version}</version>
+                                    <version>${identity.oauth.addons.token.handler.clientauth.jwt.version}</version>
                                 </feature>
 
                                 <feature>
