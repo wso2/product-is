@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.approval.workflow.v1.model;
+package org.wso2.identity.integration.test.rest.api.server.workflow.v1.model;
 
 import io.swagger.annotations.ApiModel;
 import javax.validation.constraints.*;

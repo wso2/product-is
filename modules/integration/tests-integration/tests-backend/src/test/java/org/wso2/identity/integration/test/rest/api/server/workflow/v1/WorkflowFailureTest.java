@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.rest.api.server.approval.workflow.v1;
+package org.wso2.identity.integration.test.rest.api.server.workflow.v1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
