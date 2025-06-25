@@ -2104,7 +2104,7 @@
             <dependency>
                 <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt</artifactId>
-                <version>${identity.oauth.addons.token.handler.clientauth.jwt.version>}</version>
+                <version>${identity.oauth.addons.token.handler.clientauth.jwt.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.framework</groupId>
