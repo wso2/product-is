@@ -97,6 +97,16 @@
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.notification.providers.firebase</artifactId>
             <type>zip</type>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.react-application</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.nextjs-application</artifactId>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
