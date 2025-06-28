@@ -2793,7 +2793,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.21</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.22</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
