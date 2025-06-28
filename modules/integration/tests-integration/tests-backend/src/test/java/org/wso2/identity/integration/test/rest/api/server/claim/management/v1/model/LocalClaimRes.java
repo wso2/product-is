@@ -42,7 +42,7 @@ public class LocalClaimRes {
     private Boolean supportedByDefault = null;
     private String dataType = null;
     private String[] subAttributes = null;
-    private String[] canonicalValues = null;
+    private LabelValueDTO[] canonicalValues = null;
     private Boolean multiValued = null;
 
     public enum UniquenessScopeEnum {
@@ -250,12 +250,12 @@ public class LocalClaimRes {
      **/
     @ApiModelProperty(value = "Gets the canonical values of the claim")
     @JsonProperty("canonicalValues")
-    public String[] getCanonicalValues() {
+    public LabelValueDTO[] getCanonicalValues() {
 
         return canonicalValues;
     }
 
-    public void setCanonicalValues(String[] canonicalValues) {
+    public void setCanonicalValues(LabelValueDTO[] canonicalValues) {
 
         this.canonicalValues = canonicalValues;
     }
