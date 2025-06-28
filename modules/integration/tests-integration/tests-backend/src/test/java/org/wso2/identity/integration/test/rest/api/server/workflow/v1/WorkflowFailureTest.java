@@ -69,7 +69,7 @@ public class WorkflowFailureTest extends WorkflowBaseTest{
     public void testGetWorkflowWithInvalidId() {
 
         Response response = getResponseOfGet(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + "random-id");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-51001", "random-id");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "WF-51001", "random-id");
     }
 
     @Test
@@ -101,7 +101,7 @@ public class WorkflowFailureTest extends WorkflowBaseTest{
     public void testGetWorkflowAssociationWithInvalidId() {
 
         Response response = getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + "random-id");
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "WF-51005", "random-id");
+        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "WF-51005", "random-id");
     }
 
     @Test

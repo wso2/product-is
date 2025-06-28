@@ -250,7 +250,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    @Test(dependsOnMethods = {"testPatchWorkflowAssociations"})
+    @Test(dependsOnMethods = {"testDeleteWorkflowAssociation"})
     public void testDeleteWorkflow() {
 
         getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId)
