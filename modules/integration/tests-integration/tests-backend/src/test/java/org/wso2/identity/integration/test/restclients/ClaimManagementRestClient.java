@@ -93,6 +93,16 @@ public class ClaimManagementRestClient extends RestBaseClient {
         }
     }
 
+    public void addInvalidLocalClaim(LocalClaimReq claimRequest, int statusCode) throws IOException {
+
+        String endPointUrl = serverBasePath + CLAIM_DIALECTS_ENDPOINT_URI + PATH_SEPARATOR + LOCAL_CLAIMS_ENDPOINT_URI +
+                CLAIMS_ENDPOINT_URI;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, toJSONString(claimRequest),
+                getHeaders())) {
+            Assert.assertEquals(statusCode, response.getStatusLine().getStatusCode());
+        }
+    }
+
     /**
      * Delete a Local Claim.
      *
