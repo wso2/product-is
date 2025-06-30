@@ -23,6 +23,7 @@ import org.json.simple.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.identity.claim.metadata.mgt.util.ClaimConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.AttributeMappingDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LabelValueDTO;
@@ -31,6 +32,7 @@ import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.util.Collections;
+import java.util.HashMap;
 
 /**
  * Includes automated tests for operations in ClaimMetadataManagementService.
@@ -40,10 +42,12 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
     private static final String LOCAL_CLAIM_URI_PREFIX = "http://wso2.org/claims/";
     private final static String DOMAIN = "PRIMARY";
 
-    private final static int DISPLAY_ORDER = 0;
     private final static boolean REQUIRED = true;
     private final static boolean SUPPORTED = true;
     private final static boolean READONLY = false;
+    private final static String ACCOUNT_ID_CLAIM = "account_id";
+    private final static String INPUT_TYPE = "inputType";
+    private final static String INPUT_TYPE_CHECKBOX_GROUP = "checkbox_group";
 
     private ClaimManagementRestClient claimManagementRestClient;
     private SCIM2RestClient scim2RestClient;
@@ -66,42 +70,13 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
     @Test
     public void testAddClaimComplexClaimWithCanonicalValues() throws Exception {
 
-        // Account ID claim.
-        String ACCOUNT_ID_CLAIM = "account_id";
-        LocalClaimReq accountIDClaimReq = new LocalClaimReq();
-        accountIDClaimReq.setClaimURI(LOCAL_CLAIM_URI_PREFIX + ACCOUNT_ID_CLAIM);
-        accountIDClaimReq.setDisplayName(ACCOUNT_ID_CLAIM);
-        accountIDClaimReq.setDescription(ACCOUNT_ID_CLAIM);
-        accountIDClaimReq.setSupportedByDefault(SUPPORTED);
-        accountIDClaimReq.setRequired(false);
-        accountIDClaimReq.setReadOnly(READONLY);
-        accountIDClaimReq.setDataType("integer");
-
-        AttributeMappingDTO accountIdMapping = new AttributeMappingDTO();
-        accountIdMapping.setMappedAttribute(ACCOUNT_ID_CLAIM);
-        accountIdMapping.setUserstore(DOMAIN);
-        accountIDClaimReq.setAttributeMapping(Collections.singletonList(accountIdMapping));
-
+        LocalClaimReq accountIDClaimReq = buildLocalClaimReq(ACCOUNT_ID_CLAIM, "integer");
         claimManagementRestClient.addLocalClaim(accountIDClaimReq);
 
         // Account type claim.
         String ACCOUNT_TYPE_CLAIM = "account_type";
-        LocalClaimReq accountTypeClaimReq = new LocalClaimReq();
-        accountTypeClaimReq.setClaimURI(LOCAL_CLAIM_URI_PREFIX + ACCOUNT_TYPE_CLAIM);
-        accountTypeClaimReq.setDisplayName(ACCOUNT_TYPE_CLAIM);
-        accountTypeClaimReq.setDescription(ACCOUNT_TYPE_CLAIM);
-        accountTypeClaimReq.setSupportedByDefault(SUPPORTED);
-        accountTypeClaimReq.setRequired(REQUIRED);
-        accountTypeClaimReq.setReadOnly(READONLY);
-        accountTypeClaimReq.setDisplayOrder(DISPLAY_ORDER);
-
-        accountTypeClaimReq.setDataType("complex");
+        LocalClaimReq accountTypeClaimReq = buildLocalClaimReq(ACCOUNT_TYPE_CLAIM, "complex");
         accountTypeClaimReq.setSubAttributes(new String[] { LOCAL_CLAIM_URI_PREFIX + ACCOUNT_ID_CLAIM });
-
-        AttributeMappingDTO accountTypeMapping = new AttributeMappingDTO();
-        accountTypeMapping.setMappedAttribute(ACCOUNT_TYPE_CLAIM);
-        accountTypeMapping.setUserstore(DOMAIN);
-        accountTypeClaimReq.setAttributeMapping(Collections.singletonList(accountTypeMapping));
 
         LabelValueDTO[] accountTypes = new LabelValueDTO[2];
         LabelValueDTO labelValueDTO1 = new LabelValueDTO();
@@ -113,18 +88,58 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
         labelValueDTO2.setValue("work");
         accountTypes[1] = labelValueDTO2;
         accountTypeClaimReq.setCanonicalValues(accountTypes);
+        HashMap<String, String> inputFormat = new HashMap<>();
+        inputFormat.put(INPUT_TYPE, INPUT_TYPE_CHECKBOX_GROUP);
+        accountTypeClaimReq.setInputFormat(inputFormat);
         String accountTypeClaimId = claimManagementRestClient.addLocalClaim(accountTypeClaimReq);
 
         JSONObject claim = claimManagementRestClient.getLocalClaim(accountTypeClaimId);
-        JSONArray subAttributes = (JSONArray) claim.get("subAttributes");
+        JSONArray subAttributes = (JSONArray) claim.get(ClaimConstants.SUB_ATTRIBUTES_PROPERTY);
         assert (subAttributes != null && subAttributes.size() == 1 &&
                 subAttributes.get(0).equals(LOCAL_CLAIM_URI_PREFIX + ACCOUNT_ID_CLAIM));
 
-        JSONArray canonicalValues = (JSONArray) claim.get("canonicalValues");
+        JSONArray canonicalValues = (JSONArray) claim.get(ClaimConstants.CANONICAL_VALUES_PROPERTY);
         assert (canonicalValues != null && canonicalValues.size() == 2
                 && ((JSONObject) canonicalValues.get(0)).get("label").equals("Personal")
                 && ((JSONObject) canonicalValues.get(0)).get("value").equals("personal")
                 && ((JSONObject) canonicalValues.get(1)).get("label").equals("Work")
                 && ((JSONObject) canonicalValues.get(1)).get("value").equals("work"));
+
+        assert ((JSONObject) claim.get(ClaimConstants.INPUT_FORMAT_PROPERTY)).get(INPUT_TYPE)
+                .equals(INPUT_TYPE_CHECKBOX_GROUP);
+    }
+
+
+    @Test(dependsOnMethods = {"testAddClaimComplexClaimWithCanonicalValues"})
+    public void testDeleteClaim() throws Exception {
+
+        claimManagementRestClient.deleteLocalClaim(ACCOUNT_ID_CLAIM);
+        JSONObject response = claimManagementRestClient.getLocalClaim(ACCOUNT_ID_CLAIM);
+        assert "CMT-50019".equals(response.get("code"));
+    }
+
+    @Test(dependsOnMethods = {"testDeleteClaim"})
+    public void testAddClaimWithInvalidDataType() throws Exception {
+
+        LocalClaimReq accountIDClaimReq = buildLocalClaimReq(ACCOUNT_ID_CLAIM, "invalid-data-type");
+        claimManagementRestClient.addInvalidLocalClaim(accountIDClaimReq, 400);
+    }
+
+    private LocalClaimReq buildLocalClaimReq(String claim, String dataType) {
+
+        LocalClaimReq localClaimReq = new LocalClaimReq();
+        localClaimReq.setClaimURI(LOCAL_CLAIM_URI_PREFIX + claim);
+        localClaimReq.setDisplayName(claim);
+        localClaimReq.setDescription(claim);
+        localClaimReq.setSupportedByDefault(SUPPORTED);
+        localClaimReq.setRequired(REQUIRED);
+        localClaimReq.setReadOnly(READONLY);
+        localClaimReq.setDataType(dataType);
+
+        AttributeMappingDTO mapping = new AttributeMappingDTO();
+        mapping.setMappedAttribute(claim);
+        mapping.setUserstore(DOMAIN);
+        localClaimReq.setAttributeMapping(Collections.singletonList(mapping));
+        return localClaimReq;
     }
 }

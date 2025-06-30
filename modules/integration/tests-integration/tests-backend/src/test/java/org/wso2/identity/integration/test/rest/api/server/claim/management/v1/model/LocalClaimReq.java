@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -42,6 +43,7 @@ public class LocalClaimReq {
     private String dataType = null;
     private String[] subAttributes = null;
     private LabelValueDTO[] canonicalValues = null;
+    private HashMap<String, String> inputFormat = null;
 
     public enum UniquenessScopeEnum {
         NONE,  WITHIN_USERSTORE,  ACROSS_USERSTORES,
@@ -297,6 +299,21 @@ public class LocalClaimReq {
     public void setCanonicalValues(LabelValueDTO[] canonicalValues) {
 
         this.canonicalValues = canonicalValues != null ? canonicalValues.clone() : null;
+    }
+
+    /**
+     *
+     **/
+    @ApiModelProperty(value = "Input format for the claim.")
+    @JsonProperty("inputFormat")
+    public HashMap<String, String> getInputFormat() {
+
+        return inputFormat;
+    }
+
+    public void setInputFormat(HashMap<String, String> inputFormat) {
+
+        this.inputFormat = inputFormat;
     }
 
     @Override
