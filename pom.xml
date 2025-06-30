@@ -1797,6 +1797,21 @@
                 <version>${identity.event.handler.notification.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.identity.webhook.event.handlers</groupId>
+                <artifactId>org.wso2.identity.webhook.wso2.event.handler</artifactId>
+                <version>${org.wso2.identity.webhook.event.handlers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.webhook.event.handlers</groupId>
+                <artifactId>org.wso2.identity.webhook.common.event.handler</artifactId>
+                <version>${org.wso2.identity.webhook.event.handlers.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.event.publishers</groupId>
+                <artifactId>org.wso2.identity.event.common.publisher</artifactId>
+                <version>${org.wso2.identity.event.publishers.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.metadata.saml2</groupId>
                 <artifactId>org.wso2.carbon.identity.idp.metadata.saml2.server.feature</artifactId>
                 <version>${identity.metadata.saml.version}</version>
