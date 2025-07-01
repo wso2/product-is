@@ -54,6 +54,9 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
     private ClaimManagementRestClient claimManagementRestClient;
     private SCIM2RestClient scim2RestClient;
 
+    private String accountIDClaimId;
+    private String accountTypeClaimId;
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -73,7 +76,7 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
     public void testAddClaimComplexClaimWithCanonicalValues() throws Exception {
 
         LocalClaimReq accountIDClaimReq = buildLocalClaimReq(ACCOUNT_ID_CLAIM, "integer");
-        claimManagementRestClient.addLocalClaim(accountIDClaimReq);
+        accountIDClaimId = claimManagementRestClient.addLocalClaim(accountIDClaimReq);
 
         LocalClaimReq accountTypeClaimReq = buildLocalClaimReq(ACCOUNT_TYPE_CLAIM, "complex");
         accountTypeClaimReq.setSubAttributes(new String[] { LOCAL_CLAIM_URI_PREFIX + ACCOUNT_ID_CLAIM });
@@ -91,7 +94,7 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
         HashMap<String, String> inputFormat = new HashMap<>();
         inputFormat.put(INPUT_TYPE, INPUT_TYPE_CHECKBOX_GROUP);
         accountTypeClaimReq.setInputFormat(inputFormat);
-        String accountTypeClaimId = claimManagementRestClient.addLocalClaim(accountTypeClaimReq);
+        accountTypeClaimId = claimManagementRestClient.addLocalClaim(accountTypeClaimReq);
 
         JSONObject claim = claimManagementRestClient.getLocalClaim(accountTypeClaimId);
         JSONArray subAttributes = (JSONArray) claim.get(ClaimConstants.SUB_ATTRIBUTES_PROPERTY);
@@ -113,12 +116,12 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = {"testAddClaimComplexClaimWithCanonicalValues"})
     public void testDeleteClaim() throws Exception {
 
-        claimManagementRestClient.deleteLocalClaim(ACCOUNT_ID_CLAIM);
-        JSONObject response = claimManagementRestClient.getLocalClaim(ACCOUNT_ID_CLAIM);
+        claimManagementRestClient.deleteLocalClaim(accountIDClaimId);
+        JSONObject response = claimManagementRestClient.getLocalClaim(accountIDClaimId);
         assert ERROR_CODE_LOCAL_CLAIM_NOT_FOUND.equals(response.get("code"));
 
-        claimManagementRestClient.deleteLocalClaim(ACCOUNT_TYPE_CLAIM);
-        response = claimManagementRestClient.getLocalClaim(ACCOUNT_TYPE_CLAIM);
+        claimManagementRestClient.deleteLocalClaim(accountTypeClaimId);
+        response = claimManagementRestClient.getLocalClaim(accountTypeClaimId);
         assert ERROR_CODE_LOCAL_CLAIM_NOT_FOUND.equals(response.get("code"));
     }
 
