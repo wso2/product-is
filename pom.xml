@@ -2519,7 +2519,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.256</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.257</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2588,7 +2588,7 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.8</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.19</social.authenticator.facebook.version>
+        <social.authenticator.facebook.version>5.2.20</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.20</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.5</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.6</social.authenticator.apple.version>
@@ -2663,9 +2663,9 @@
         <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.65.6</identity.apps.console.version>
+        <identity.apps.console.version>2.65.11</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.3</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.26.2</identity.apps.core.version>
+        <identity.apps.core.version>2.26.5</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
         <!-- Charon -->
