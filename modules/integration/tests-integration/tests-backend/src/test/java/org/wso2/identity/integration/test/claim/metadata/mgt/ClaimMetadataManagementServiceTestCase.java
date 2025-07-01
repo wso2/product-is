@@ -46,8 +46,10 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
     private final static boolean SUPPORTED = true;
     private final static boolean READONLY = false;
     private final static String ACCOUNT_ID_CLAIM = "account_id";
+    private final static String ACCOUNT_TYPE_CLAIM = "account_type";
     private final static String INPUT_TYPE = "inputType";
     private final static String INPUT_TYPE_CHECKBOX_GROUP = "checkbox_group";
+    private final static String ERROR_CODE_LOCAL_CLAIM_NOT_FOUND = "CMT-50019";
 
     private ClaimManagementRestClient claimManagementRestClient;
     private SCIM2RestClient scim2RestClient;
@@ -73,8 +75,6 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
         LocalClaimReq accountIDClaimReq = buildLocalClaimReq(ACCOUNT_ID_CLAIM, "integer");
         claimManagementRestClient.addLocalClaim(accountIDClaimReq);
 
-        // Account type claim.
-        String ACCOUNT_TYPE_CLAIM = "account_type";
         LocalClaimReq accountTypeClaimReq = buildLocalClaimReq(ACCOUNT_TYPE_CLAIM, "complex");
         accountTypeClaimReq.setSubAttributes(new String[] { LOCAL_CLAIM_URI_PREFIX + ACCOUNT_ID_CLAIM });
 
@@ -115,7 +115,11 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
 
         claimManagementRestClient.deleteLocalClaim(ACCOUNT_ID_CLAIM);
         JSONObject response = claimManagementRestClient.getLocalClaim(ACCOUNT_ID_CLAIM);
-        assert "CMT-50019".equals(response.get("code"));
+        assert ERROR_CODE_LOCAL_CLAIM_NOT_FOUND.equals(response.get("code"));
+
+        claimManagementRestClient.deleteLocalClaim(ACCOUNT_TYPE_CLAIM);
+        response = claimManagementRestClient.getLocalClaim(ACCOUNT_TYPE_CLAIM);
+        assert ERROR_CODE_LOCAL_CLAIM_NOT_FOUND.equals(response.get("code"));
     }
 
     @Test(dependsOnMethods = {"testDeleteClaim"})
