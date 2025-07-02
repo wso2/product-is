@@ -83,7 +83,7 @@ public class FlowManagementClient extends RestBaseClient {
      */
     public FlowResponse getRegistrationFlow() throws Exception {
 
-        String registrationFlowPath = flowManagementBasePath + "?flowType=REGISTRATION";
+        String registrationFlowPath = flowManagementBasePath + "?flowType=USER_REGISTRATION";
         try (CloseableHttpResponse response = getResponseOfHttpGet(registrationFlowPath,
                 getHeadersWithBasicAuth())) {
             if (response.getStatusLine().getStatusCode() != 200) {

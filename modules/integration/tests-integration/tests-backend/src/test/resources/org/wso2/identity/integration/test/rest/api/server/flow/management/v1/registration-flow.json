@@ -1,5 +1,5 @@
 {
-  "flowType": "REGISTRATION",
+  "flowType": "USER_REGISTRATION",
   "steps": [
     {
       "id": "view_9jk7",

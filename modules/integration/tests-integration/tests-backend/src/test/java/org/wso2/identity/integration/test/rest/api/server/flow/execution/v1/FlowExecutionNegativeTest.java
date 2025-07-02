@@ -168,7 +168,7 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowId(flowId != null ? flowId : "FLOW_ID");
-        flowExecutionRequest.setFlowType("REGISTRATION");
+        flowExecutionRequest.setFlowType("USER_REGISTRATION");
         flowExecutionRequest.setActionId(FlowExecutionNegativeTest.ACTION_ID);
         flowExecutionRequest.setInputs(inputs);
         return flowExecutionRequest;

@@ -47,7 +47,7 @@ public class FlowExecutionRequest  {
         return this;
     }
 
-    @ApiModelProperty(example = "REGISTRATION", value = "Unique identifier to identify the flow type")
+    @ApiModelProperty(example = "USER_REGISTRATION", value = "Unique identifier to identify the flow type")
     @JsonProperty("flowType")
     @Valid
     public String getFlowType() {
