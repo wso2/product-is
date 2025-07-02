@@ -2537,7 +2537,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.90</identity.governance.version>
+        <identity.governance.version>1.11.91</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.10</identity.carbon.auth.saml2.version>
@@ -2547,12 +2547,12 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.315</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.316</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.57</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.166</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.167</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2570,7 +2570,7 @@
         <identity.event.handler.account.lock.version>1.9.16</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.9.61</identity.event.handler.notification.version>
 
-        <org.wso2.identity.webhook.event.handlers.version>1.0.326</org.wso2.identity.webhook.event.handlers.version>
+        <org.wso2.identity.webhook.event.handlers.version>1.0.327</org.wso2.identity.webhook.event.handlers.version>
 
         <org.wso2.identity.event.publishers.version>1.0.25</org.wso2.identity.event.publishers.version>
 
@@ -2601,7 +2601,7 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.35</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.36</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.21</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2663,7 +2663,7 @@
         <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.65.13</identity.apps.console.version>
+        <identity.apps.console.version>2.65.15</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.3</identity.apps.myaccount.version>
         <identity.apps.core.version>2.26.5</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
