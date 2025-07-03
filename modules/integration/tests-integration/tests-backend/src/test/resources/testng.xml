@@ -147,6 +147,7 @@
         <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSmsOtpFailureTestCase"/>
         <class name="org.wso2.identity.integration.test.serviceextensions.preupdateprofile.PreUpdateProfileActionSuccessTestCase"/>
         <class name="org.wso2.identity.integration.test.serviceextensions.preupdateprofile.PreUpdateProfileActionFailureTestCase"/>
+        <class name="org.wso2.identity.integration.test.serviceextensions.preupdateprofile.PreUpdateProfileActionWithRulesForAdminUpdateTestCase"/>
         <class name="org.wso2.identity.integration.test.oidc.OIDCHybridFlowIntegrationTest"/>
         <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>
         <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>
