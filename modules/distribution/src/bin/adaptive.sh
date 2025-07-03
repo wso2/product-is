@@ -26,6 +26,8 @@
 #   ASM_VERSION   	ASM Util, Commons Version.
 #
 #   JMS_VERSION   	Geronimo Spec JMS Version.
+#                       Note: JMS API is also available as OSGi bundle in plugins directory
+#                       for JMS Output Event Adapter support.
 #
 # -----------------------------------------------------------------------------
 

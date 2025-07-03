@@ -103,6 +103,25 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <!-- Copy JMS spec bundle for JMS Output Adapter -->
+                    <execution>
+                        <id>copy-jms-spec-bundle</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.geronimo.specs</groupId>
+                                    <artifactId>geronimo-jms_1.1_spec</artifactId>
+                                    <version>1.1.1</version>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/components/plugins</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>unpack-wso2carbon</id>
                         <phase>package</phase>
