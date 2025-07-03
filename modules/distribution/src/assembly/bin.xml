@@ -192,6 +192,17 @@
             </includes>
         </fileSet>
 
+        <!--copy event profile files of webhook metadata feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/eventprofiles
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/eventprofiles</outputDirectory>
+            <includes>
+                <include>**/*.json</include>
+            </includes>
+        </fileSet>
+
         <fileSet>
             <directory>src/repository/resources/conf/templates</directory>
             <outputDirectory>wso2is-${pom.version}/repository/resources/conf/templates</outputDirectory>

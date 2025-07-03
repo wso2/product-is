@@ -139,10 +139,12 @@ install_tomcat_native() {
 
     # Download tcnative
     cd "$1" \
-        && wget https://dlcdn.apache.org/tomcat/tomcat-connectors/native/$TCNATIVE_VERSION/source/tomcat-native-$TCNATIVE_VERSION-src.tar.gz \
-        && tar -xf tomcat-native-$TCNATIVE_VERSION-src.tar.gz
+        && wget https://github.com/apache/tomcat-native/archive/refs/tags/$TCNATIVE_VERSION.tar.gz \
+        && tar -xf $TCNATIVE_VERSION.tar.gz
     echo "Installing tcnative"
-    cd "$1/tomcat-native-$TCNATIVE_VERSION-src/native" \
+    cd "$1/tomcat-native-$TCNATIVE_VERSION/native" \
+        && git clone https://github.com/apache/apr.git \
+        && ./buildconf --with-apr="$1/tomcat-native-$TCNATIVE_VERSION/native/apr" \
         && ./configure "$apr_config" "$ssl" --prefix="$2" \
         && make \
         && make install
@@ -204,7 +206,7 @@ for arg in "$@"; do
 done
 
 # Check for build dependencies
-check_dependencies make cmake wget tar gcc
+check_dependencies make cmake wget tar gcc autoconf
 # Check for Perl on RHEL-based systems
 if [ -f "/etc/redhat-release" ]; then
     check_dependencies perl

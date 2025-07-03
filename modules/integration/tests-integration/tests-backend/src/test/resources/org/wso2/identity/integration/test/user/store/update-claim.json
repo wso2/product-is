@@ -3,6 +3,8 @@
   "description": "Address updated",
   "displayOrder": 4,
   "displayName": "Address updated",
+  "dataType": "string",
+  "multiValued": false,
   "readOnly": false,
   "regEx": "",
   "required": false,

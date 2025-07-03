@@ -22,8 +22,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -38,6 +40,10 @@ public class LocalClaimReq {
     private String regEx = null;
     private Boolean required = null;
     private Boolean supportedByDefault = null;
+    private String dataType = null;
+    private String[] subAttributes = null;
+    private LabelValueDTO[] canonicalValues = null;
+    private HashMap<String, String> inputFormat = null;
 
     public enum UniquenessScopeEnum {
         NONE,  WITHIN_USERSTORE,  ACROSS_USERSTORES,
@@ -253,6 +259,63 @@ public class LocalClaimReq {
         this.profiles = profiles;
     }
 
+    /**
+     * Specifies the type of data which the claim holds.
+     **/
+    @ApiModelProperty(value = "Specifies the type of data stored in the corresponding claim value.")
+    @JsonProperty("dataType")
+    public String getDataType() {
+
+        return dataType;
+    }
+    public void setDataType(String dataType) {
+
+        this.dataType = dataType;
+    }
+
+    /**
+     * The sub attributes of the complex attribute.
+     **/
+    @ApiModelProperty(value = "The sub attributes of the complex attribute.")
+    @JsonProperty("subAttributes")
+    public String[] getSubAttributes() {
+
+        return subAttributes != null ? subAttributes.clone() : new String[0];
+    }
+    public void setSubAttributes(String[] subAttributes) {
+
+        this.subAttributes = subAttributes != null ? subAttributes.clone() : null;
+    }
+
+    /**
+     * The possible values for the attribute.
+     **/
+    @ApiModelProperty(value = "The possible values for the attribute.")
+    @JsonProperty("canonicalValues")
+    public LabelValueDTO[] getCanonicalValues() {
+
+        return canonicalValues != null ? canonicalValues.clone() : new LabelValueDTO[0];
+    }
+    public void setCanonicalValues(LabelValueDTO[] canonicalValues) {
+
+        this.canonicalValues = canonicalValues != null ? canonicalValues.clone() : null;
+    }
+
+    /**
+     *
+     **/
+    @ApiModelProperty(value = "Input format for the claim.")
+    @JsonProperty("inputFormat")
+    public HashMap<String, String> getInputFormat() {
+
+        return inputFormat;
+    }
+
+    public void setInputFormat(HashMap<String, String> inputFormat) {
+
+        this.inputFormat = inputFormat;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -271,6 +334,9 @@ public class LocalClaimReq {
                 Objects.equals(this.regEx, localClaimReq.regEx) &&
                 Objects.equals(this.required, localClaimReq.required) &&
                 Objects.equals(this.supportedByDefault, localClaimReq.supportedByDefault) &&
+                Objects.equals(this.dataType, localClaimReq.dataType) &&
+                Arrays.equals(this.subAttributes, localClaimReq.subAttributes) &&
+                Arrays.equals(this.canonicalValues, localClaimReq.canonicalValues) &&
                 Objects.equals(this.uniquenessScope, localClaimReq.uniquenessScope) &&
                 Objects.equals(this.sharedProfileValueResolvingMethod, localClaimReq.sharedProfileValueResolvingMethod) &&
                 Objects.equals(this.attributeMapping, localClaimReq.attributeMapping) &&
@@ -283,7 +349,7 @@ public class LocalClaimReq {
 
         return Objects.hash(claimURI, description, displayOrder, displayName, readOnly, regEx, required,
                 supportedByDefault, uniquenessScope, sharedProfileValueResolvingMethod, attributeMapping, properties,
-                profiles);
+                profiles, dataType, subAttributes, canonicalValues);
     }
 
     @Override
@@ -298,6 +364,9 @@ public class LocalClaimReq {
                 "    regEx: " + toIndentedString(regEx) + "\n" +
                 "    required: " + toIndentedString(required) + "\n" +
                 "    supportedByDefault: " + toIndentedString(supportedByDefault) + "\n" +
+                "    dataType: " + toIndentedString(dataType) + "\n" +
+                "    subAttributes: " + toIndentedString(subAttributes) + "\n" +
+                "    canonicalValues: " + toIndentedString(canonicalValues) + "\n" +
                 "    uniquenessScope: " + toIndentedString(uniquenessScope) + "\n" +
                 "    sharedProfileValueResolvingMethod: " + toIndentedString(sharedProfileValueResolvingMethod) + "\n" +
                 "    attributeMapping: " + toIndentedString(attributeMapping) + "\n" +

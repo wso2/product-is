@@ -1,0 +1,448 @@
+{
+  "type": "{{type}}",
+  "name": "{{name}}",
+  "locale": "en-US",
+  "preference": {
+    "configs": {
+      "isBrandingEnabled": true,
+      "removeDefaultBranding": true
+    },
+    "layout": {
+      "activeLayout": "custom",
+      "content": {
+        "html": "<div class=\"page-wrapper layout-file\" id=\"page-wrapper-root\">\n   \t<div class=\"center-segment\" id=\"init-loader\">\n        <div class=\"content-loader\">\n            <div class=\"ui dimmer\">\n                <div class=\"ui loader\"></div>\n            </div>\n        </div>\n    </div>\n    <main class=\"center-segment\" id=\"page-content-section\">\n        <div class=\"ui container medium center aligned middle\">\n            <div class=\"custom-tag-class-{{resourceId}}-updated\" id=\"custom-tag\">Resource id: {{resourceId}}-updated</div>\n            {{{ProductHeader}}}\n            {{{MainSection}}}\n        </div>\n        {{{ProductFooter}}}\n    </main>\n</div>",
+        "css": "#page-content-section {\n\tdisplay: none;\n}\n\n.login-portal.layout .page-wrapper.layout-file .center-segment>.ui.container>.ui.segment .ui.header:first-child {\n\ttext-align: center;\n}\n\n.login-portal.layout .page-wrapper.layout-file .center-segment {\n\tflex-direction: column;\n}\n\n.login-portal.layout .page-wrapper.layout-file .footer {\n\tborder-top: 0;\n\tpadding: 0;\n\twidth: 100%;\n\tmargin-bottom: 50px;\n}\n\n.login-portal.layout .page-wrapper.layout-file .footer a#copyright span {\n    max-width: 300px;\n    overflow-wrap: break-word;\n}\n\n.login-portal.layout .page-wrapper.layout-file .footer .ui.menu {\n    flex-direction: column;\n    align-items: center;\n    width: 100%;\n}\n\n.login-portal.layout .page-wrapper.layout-file .footer .ui.menu:not(.vertical) .right.item, .ui.menu:not(.vertical) .right.menu {\n    margin-left: 0 !important;\n    justify-content: center;\n    width: 100%;\n}\n\n.login-portal.layout .page-wrapper.layout-file .center-segment>.ui.container {\n    margin-bottom: 10px;\n}\n\n.custom-tag-class-{{resourceId}}-updated {\n    color: red !important;\n}",
+        "js": "const dataset = document.body.dataset;\n\ndocument.addEventListener('DOMContentLoaded', function () {\n\tif (document.body.dataset.responseType === \"success\") {\n        document.querySelector(\"#page-wrapper-root\").classList.add(\"success-page\");\n    } else if (document.body.dataset.responseType === \"error\") {\n     \tdocument.querySelector(\"#page-wrapper-root\").classList.add(\"error-page\");\n    }\n    document.getElementById(\"init-loader\").style.display = \"none\";\n\tdocument.getElementById(\"page-content-section\").style.display = \"block\";\n});\n\nconst reference = document.getElementById(\"custom-tag\");\n\nconst newEl = document.createElement(\"div\");\nnewEl.textContent = \"This is a text from JS - {{resourceId}}-updated\";\n\nreference.after(newEl);\n"
+      }
+    },
+    "organizationDetails": {
+      "displayName": "",
+      "supportEmail": ""
+    },
+    "theme": {
+      "activeTheme": "LIGHT",
+      "LIGHT": {
+        "buttons": {
+          "externalConnection": {
+            "base": {
+              "background": {
+                "backgroundColor": "#FFFFFF"
+              },
+              "border": {
+                "borderRadius": "22px"
+              },
+              "font": {
+                "color": "#000000de"
+              }
+            }
+          },
+          "primary": {
+            "base": {
+              "border": {
+                "borderRadius": "22px"
+              },
+              "font": {
+                "color": "#ffffffe6"
+              }
+            }
+          },
+          "secondary": {
+            "base": {
+              "border": {
+                "borderRadius": "22px"
+              },
+              "font": {
+                "color": "#000000de"
+              }
+            }
+          }
+        },
+        "colors": {
+          "alerts": {
+            "error": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#ffd8d8",
+              "inverted": ""
+            },
+            "info": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#eff7fd",
+              "inverted": ""
+            },
+            "neutral": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#f8f8f9",
+              "inverted": ""
+            },
+            "warning": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#fff6e7",
+              "inverted": ""
+            }
+          },
+          "background": {
+            "body": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#fbfbfb",
+              "inverted": ""
+            },
+            "surface": {
+              "contrastText": "",
+              "dark": "#F6F4F2",
+              "light": "#f9fafb",
+              "main": "#ffffff",
+              "inverted": "#212A32"
+            }
+          },
+          "illustrations": {
+            "accent1": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#3865B5",
+              "inverted": ""
+            },
+            "accent2": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#19BECE",
+              "inverted": ""
+            },
+            "accent3": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#FFFFFF",
+              "inverted": ""
+            },
+            "primary": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#FF7300",
+              "inverted": ""
+            },
+            "secondary": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#E0E1E2",
+              "inverted": ""
+            }
+          },
+          "outlined": {
+            "default": "#dadce0"
+          },
+          "primary": {
+            "contrastText": "",
+            "dark": "",
+            "light": "",
+            "main": "#FF7300",
+            "inverted": ""
+          },
+          "secondary": {
+            "contrastText": "",
+            "dark": "",
+            "light": "",
+            "main": "#E0E1E2",
+            "inverted": ""
+          },
+          "text": {
+            "primary": "#000000de",
+            "secondary": "#00000066"
+          }
+        },
+        "footer": {
+          "border": {
+            "borderColor": ""
+          },
+          "font": {
+            "color": ""
+          }
+        },
+        "images": {
+          "favicon": {},
+          "logo": {},
+          "myAccountLogo": {
+            "title": "Account"
+          }
+        },
+        "inputs": {
+          "base": {
+            "background": {
+              "backgroundColor": "#FFFFFF"
+            },
+            "border": {
+              "borderColor": "",
+              "borderRadius": "8px"
+            },
+            "font": {
+              "color": ""
+            },
+            "labels": {
+              "font": {
+                "color": ""
+              }
+            }
+          }
+        },
+        "loginBox": {
+          "background": {
+            "backgroundColor": ""
+          },
+          "border": {
+            "borderColor": "",
+            "borderRadius": "12px",
+            "borderWidth": "1px"
+          },
+          "font": {
+            "color": ""
+          }
+        },
+        "loginPage": {
+          "background": {
+            "backgroundColor": ""
+          },
+          "font": {
+            "color": ""
+          }
+        },
+        "typography": {
+          "font": {
+            "fontFamily": "Gilmer",
+            "importURL": ""
+          },
+          "heading": {
+            "font": {
+              "color": ""
+            }
+          }
+        }
+      },
+      "DARK": {
+        "buttons": {
+          "externalConnection": {
+            "base": {
+              "background": {
+                "backgroundColor": "#24292e"
+              },
+              "border": {
+                "borderRadius": "22px"
+              },
+              "font": {
+                "color": "#ffffff"
+              }
+            }
+          },
+          "primary": {
+            "base": {
+              "border": {
+                "borderRadius": "22px"
+              },
+              "font": {
+                "color": "#ffffff"
+              }
+            }
+          },
+          "secondary": {
+            "base": {
+              "border": {
+                "borderRadius": "22px"
+              },
+              "font": {
+                "color": "#000000"
+              }
+            }
+          }
+        },
+        "colors": {
+          "alerts": {
+            "error": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#ff000054",
+              "inverted": ""
+            },
+            "info": {
+              "contrastText": "",
+              "dark": "#01579b",
+              "light": "#03a9f4",
+              "main": "#1971c233",
+              "inverted": ""
+            },
+            "neutral": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#343a4033",
+              "inverted": ""
+            },
+            "warning": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#f08c0033",
+              "inverted": ""
+            }
+          },
+          "background": {
+            "body": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#17191a",
+              "inverted": ""
+            },
+            "surface": {
+              "contrastText": "",
+              "dark": "#1e2021",
+              "light": "#2b2d2e",
+              "main": "#242627",
+              "inverted": "#17191a"
+            }
+          },
+          "illustrations": {
+            "accent1": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#3865B5",
+              "inverted": ""
+            },
+            "accent2": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#19BECE",
+              "inverted": ""
+            },
+            "accent3": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#FFFFFF",
+              "inverted": ""
+            },
+            "primary": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#FF7300",
+              "inverted": ""
+            },
+            "secondary": {
+              "contrastText": "",
+              "dark": "",
+              "light": "",
+              "main": "#E0E1E2",
+              "inverted": ""
+            }
+          },
+          "outlined": {
+            "default": "#3f4042"
+          },
+          "primary": {
+            "contrastText": "",
+            "dark": "",
+            "light": "",
+            "main": "#FF7300",
+            "inverted": ""
+          },
+          "secondary": {
+            "contrastText": "",
+            "dark": "",
+            "light": "",
+            "main": "#E0E1E2",
+            "inverted": ""
+          },
+          "text": {
+            "primary": "#EBEBEF",
+            "secondary": "#B9B9C6"
+          }
+        },
+        "footer": {
+          "border": {
+            "borderColor": ""
+          },
+          "font": {
+            "color": ""
+          }
+        },
+        "images": {
+          "favicon": {},
+          "logo": {},
+          "myAccountLogo": {
+            "title": "Account"
+          }
+        },
+        "inputs": {
+          "base": {
+            "background": {
+              "backgroundColor": "#000000"
+            },
+            "border": {
+              "borderColor": "",
+              "borderRadius": "8px"
+            },
+            "font": {
+              "color": ""
+            },
+            "labels": {
+              "font": {
+                "color": ""
+              }
+            }
+          }
+        },
+        "loginBox": {
+          "background": {
+            "backgroundColor": ""
+          },
+          "border": {
+            "borderColor": "",
+            "borderRadius": "12px",
+            "borderWidth": "1px"
+          },
+          "font": {
+            "color": ""
+          }
+        },
+        "loginPage": {
+          "background": {
+            "backgroundColor": ""
+          },
+          "font": {
+            "color": ""
+          }
+        },
+        "typography": {
+          "font": {
+            "fontFamily": "Gilmer"
+          },
+          "heading": {
+            "font": {
+              "color": ""
+            }
+          }
+        }
+      }
+    },
+    "urls": {
+      "cookiePolicyURL": "",
+      "privacyPolicyURL": "",
+      "termsOfUseURL": ""
+    }
+  }
+}

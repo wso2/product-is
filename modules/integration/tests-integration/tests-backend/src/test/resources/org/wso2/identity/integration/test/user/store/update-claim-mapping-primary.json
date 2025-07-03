@@ -3,6 +3,8 @@
   "description": "Address",
   "displayOrder": 4,
   "displayName": "Address",
+  "dataType": "string",
+  "multiValued": false,
   "readOnly": false,
   "regEx": "",
   "required": false,

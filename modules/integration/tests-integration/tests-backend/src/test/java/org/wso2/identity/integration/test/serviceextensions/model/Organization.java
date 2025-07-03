@@ -29,6 +29,8 @@ public class Organization {
 
     private String name;
 
+    private String orgHandle;
+
     public Organization(String id, String name) {
 
         this.id = id;
@@ -57,6 +59,16 @@ public class Organization {
     public void setName(String name) {
 
         this.name = name;
+    }
+
+    public String getOrgHandle() {
+
+        return orgHandle;
+    }
+
+    public void setOrgHandle(String orgHandle) {
+
+        this.orgHandle = orgHandle;
     }
 
     @Override

@@ -40,6 +40,9 @@ public class LocalClaimRes {
     private String regEx = null;
     private Boolean required = null;
     private Boolean supportedByDefault = null;
+    private String dataType = null;
+    private String[] subAttributes = null;
+    private LabelValueDTO[] canonicalValues = null;
     private Boolean multiValued = null;
 
     public enum UniquenessScopeEnum {
@@ -59,6 +62,8 @@ public class LocalClaimRes {
     private List<PropertyDTO> properties = new ArrayList<PropertyDTO>();
 
     private HashMap<String, AttributeProfileDTO> profiles = null;
+
+    private HashMap<String, String> inputFormat = null;
 
     /**
      * claim ID.
@@ -211,6 +216,51 @@ public class LocalClaimRes {
     }
 
     /**
+     * Specifies the data type of the claim.
+     **/
+    @ApiModelProperty(value = "Specifies the data type of the claim.")
+    @JsonProperty("dataType")
+    public String getDataType() {
+
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+
+        this.dataType = dataType;
+    }
+
+    /**
+     * Gets the sub attributes of the claim.
+     **/
+    @ApiModelProperty(value = "Gets the sub attributes of the claim")
+    @JsonProperty("subAttributes")
+    public String[] getSubAttributes() {
+
+        return subAttributes;
+    }
+
+    public void setSubAttributes(String[] subAttributes) {
+
+        this.subAttributes = subAttributes;
+    }
+
+    /**
+     * Gets the canonical values of the claim.
+     **/
+    @ApiModelProperty(value = "Gets the canonical values of the claim")
+    @JsonProperty("canonicalValues")
+    public LabelValueDTO[] getCanonicalValues() {
+
+        return canonicalValues;
+    }
+
+    public void setCanonicalValues(LabelValueDTO[] canonicalValues) {
+
+        this.canonicalValues = canonicalValues;
+    }
+
+    /**
      * Specifies if the claim can hold multiple values.
      **/
     @ApiModelProperty(value = "Specifies if the claim can hold multiple values.")
@@ -299,6 +349,21 @@ public class LocalClaimRes {
         this.profiles = profiles;
     }
 
+    /**
+     *
+     **/
+    @ApiModelProperty(value = "Input format for the claim.")
+    @JsonProperty("inputFormat")
+    public HashMap<String, String> getInputFormat() {
+
+        return inputFormat;
+    }
+
+    public void setInputFormat(HashMap<String, String> inputFormat) {
+
+        this.inputFormat = inputFormat;
+    }
+
     @Override
     public String toString() {
 
@@ -321,6 +386,7 @@ public class LocalClaimRes {
         sb.append("    attributeMapping: ").append(attributeMapping).append("\n");
         sb.append("    properties: ").append(properties).append("\n");
         sb.append("    profiles: ").append(profiles).append("\n");
+        sb.append("    inputFormat: ").append(inputFormat).append("\n");
 
         sb.append("}\n");
         return sb.toString();

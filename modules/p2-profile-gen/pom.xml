@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.0-m3-SNAPSHOT</version>
+        <version>7.2.0-m5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -263,7 +263,7 @@
                                     org.wso2.carbon.extension.identity.authenticator.outbound.emailotp:org.wso2.carbon.identity.authenticator.emailotp.feature:${authenticator.emailotp.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature:${identity.oauth.addons.version}
+                                    org.wso2.carbon.extension.identity.oauth.addons:org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature:${identity.oauth.addons.token.handler.clientauth.jwt.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -358,14 +358,29 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.api.resource.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
-                                <!-- Registration Framework Feature -->
+                                <!-- Orchestration Framework Feature -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.registration.framework.feature:${carbon.identity.framework.version}
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.flow.orchestration.framework.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
 
                                 <!-- Action Management Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.action.management.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- Webhook Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.webhook.management.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+
+                                <!-- Event Handler Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.webhook.event.handlers:org.wso2.identity.webhook.event.handlers.server.feature:${org.wso2.identity.webhook.event.handlers.version}
+                                </featureArtifactDef>
+
+                                <!-- Common Event Publisher Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.event.publishers:org.wso2.identity.event.common.publisher.server.feature:${org.wso2.identity.event.publishers.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -741,6 +756,10 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
+                                    <id>org.wso2.carbon.identity.flow.orchestration.framework.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
                                     <id>org.wso2.carbon.identity.user.profile.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
@@ -912,16 +931,24 @@
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.identity.registration.framework.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.identity.ai.service.mgt.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.action.management.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.webhook.management.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.webhook.event.handlers.server.feature.group</id>
+                                    <version>${org.wso2.identity.webhook.event.handlers.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.event.common.publisher.server.feature.group</id>
+                                    <version>${org.wso2.identity.event.publishers.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.certificate.management.server.feature.group</id>
@@ -1177,7 +1204,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.oauth2.token.handler.clientauth.jwt.feature.group</id>
-                                    <version>${identity.oauth.addons.version}</version>
+                                    <version>${identity.oauth.addons.token.handler.clientauth.jwt.version}</version>
                                 </feature>
 
                                 <feature>

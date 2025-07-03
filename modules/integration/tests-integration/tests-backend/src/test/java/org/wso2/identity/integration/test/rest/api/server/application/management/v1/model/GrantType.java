@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020-2025, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ public class GrantType {
 
     private String name;
     private String displayName;
+    private Boolean publicClientAllowed;
 
     /**
      *
@@ -67,6 +68,23 @@ public class GrantType {
         this.displayName = displayName;
     }
 
+    public GrantType publicClientAllowed(Boolean publicClientAllowed) {
+
+        this.publicClientAllowed = publicClientAllowed;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false", value = "")
+    @JsonProperty("publicClientAllowed")
+    @Valid
+    public Boolean getPublicClientAllowed() {
+        return publicClientAllowed;
+    }
+
+    public void setPublicClientAllowed(Boolean publicClientAllowed) {
+        this.publicClientAllowed = publicClientAllowed;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -79,12 +97,14 @@ public class GrantType {
         }
         GrantType grantType = (GrantType) o;
         return Objects.equals(this.name, grantType.name) &&
-                Objects.equals(this.displayName, grantType.displayName);
+            Objects.equals(this.displayName, grantType.displayName) &&
+            Objects.equals(this.publicClientAllowed, grantType.publicClientAllowed);
+
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, displayName);
+        return Objects.hash(name, displayName, publicClientAllowed);
     }
 
     @Override
@@ -95,6 +115,7 @@ public class GrantType {
 
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
+        sb.append("    publicClientAllowed: ").append(toIndentedString(publicClientAllowed)).append("\n");
         sb.append("}");
         return sb.toString();
     }

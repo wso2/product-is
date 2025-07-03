@@ -1,0 +1,67 @@
+name: Add Team Label from Area Dropdown
+
+on:
+  issues:
+    types: [opened, reopened]
+
+jobs:
+  extract-area:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract area from issue body
+        id: extract
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          echo "Issue body:"
+          echo "$ISSUE_BODY"
+          
+          area=$(echo "$ISSUE_BODY" | awk 'BEGIN{found=0} /area issue is related to/ {found=1; next} found==1 && NF {print; exit}')
+          
+          echo "Selected area: $area"
+
+          # Map selected area to corresponding label
+          case "$area" in
+            "Authentication & Registration")
+              label="Team/Authentication & registration"
+              ;;
+            "User & Identity Administration")
+              label="Team/User & identity administration"
+              ;;
+            "API Access Mgt & Authorization")
+              label="Team/API Access Mgt & Authorization"
+              ;;
+            "B2B")
+              label="Team/B2B"
+              ;;
+            "Identity Server Core")
+              label="Team/Identity Server Core"
+              ;;
+            "Other")
+              label=""
+              ;;
+            *)
+              label=""
+              ;;
+          esac
+
+          echo "Final mapped label: $label"
+          echo "label=$label" >> "$GITHUB_OUTPUT"
+
+      - name: Add new Team label (if applicable)
+        if: steps.extract.outputs.label != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labelToAdd = "${{ steps.extract.outputs.label }}";
+            if (labelToAdd) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: [ labelToAdd ]
+              });
+              console.log(`✅ Added label: ${labelToAdd}`);
+            } else {
+              console.log("ℹ️ No label to add (possibly 'Other' was selected).");
+            }
