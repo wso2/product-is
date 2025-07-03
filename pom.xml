@@ -2458,6 +2458,12 @@
                 <version>${identity.integration.ui.templates.version}</version>
                 <type>zip</type>
             </dependency>
+            <!-- JMS API for OSGi JMS Output Event Adapter -->
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>1.1.1</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

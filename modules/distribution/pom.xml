@@ -58,6 +58,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>
+        <!-- JMS API for JMS Output Event Adapter -->
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+            <version>1.1.1</version>
+        </dependency>
         <!--
               dependency> <groupId>org.wso2.carbon</groupId>
               <artifactId>com.wso2.carbon.multitenancy.tenant.mgt</artifactId>
