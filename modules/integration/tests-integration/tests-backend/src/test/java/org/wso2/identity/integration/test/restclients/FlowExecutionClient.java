@@ -67,7 +67,7 @@ public class FlowExecutionClient extends RestBaseClient {
     public Object initiateFlowExecution() throws Exception {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
-        flowExecutionRequest.setFlowType("REGISTRATION");
+        flowExecutionRequest.setFlowType("USER_REGISTRATION");
         String jsonRequestBody = toJSONString(flowExecutionRequest);
         String executionUrl = flowExecutionBasePath + PATH_SEPARATOR + FLOW_EXECUTION_ENDPOINT;
 
