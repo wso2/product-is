@@ -2552,7 +2552,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.169</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.170</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.11</identity.user.account.association.version>
@@ -2572,7 +2572,7 @@
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.328</org.wso2.identity.webhook.event.handlers.version>
 
-        <org.wso2.identity.event.publishers.version>1.0.25</org.wso2.identity.event.publishers.version>
+        <org.wso2.identity.event.publishers.version>1.0.26</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2622,7 +2622,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.4</identity.workflow.version>
-        <identity.user.workflow.version>5.6.8</identity.user.workflow.version>
+        <identity.user.workflow.version>5.6.9</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.38</authenticator.totp.version>
@@ -2663,7 +2663,7 @@
         <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.65.16</identity.apps.console.version>
+        <identity.apps.console.version>2.65.17</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.3</identity.apps.myaccount.version>
         <identity.apps.core.version>2.26.5</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
