@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -33,6 +34,7 @@ import javax.validation.constraints.NotNull;
 public class PreUpdatePasswordActionModel extends ActionModel {
 
     private PasswordSharing passwordSharing;
+    private List<String> attributes;
 
     public PreUpdatePasswordActionModel() {
         // Default constructor required for Jackson
@@ -66,6 +68,25 @@ public class PreUpdatePasswordActionModel extends ActionModel {
         this.passwordSharing = passwordSharing;
     }
 
+    public PreUpdatePasswordActionModel attributes(List<String> attributes) {
+
+        this.attributes = attributes;
+        return this;
+    }
+
+    @ApiModelProperty()
+    @JsonProperty("attributes")
+    @Valid
+    public List<String> getAttributes() {
+
+        return attributes;
+    }
+
+    public void setAttributes(List<String> attributes) {
+
+        this.attributes = attributes;
+    }
+
     @Override
     public boolean equals(java.lang.Object o) {
 
@@ -80,12 +101,13 @@ public class PreUpdatePasswordActionModel extends ActionModel {
                 Objects.equals(this.getDescription(), actionModel.getDescription()) &&
                 Objects.equals(this.getEndpoint(), actionModel.getEndpoint()) &&
                 Objects.equals(this.passwordSharing, actionModel.passwordSharing) &&
+                Objects.equals(this.attributes, actionModel.attributes) &&
                 Objects.equals(this.getRule(), actionModel.getRule());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getDescription(), getEndpoint(), passwordSharing, getRule());
+        return Objects.hash(getName(), getDescription(), getEndpoint(), passwordSharing, attributes, getRule());
     }
 
     @Override
@@ -97,6 +119,7 @@ public class PreUpdatePasswordActionModel extends ActionModel {
         sb.append("    description: ").append(toIndentedString(getDescription())).append("\n");
         sb.append("    endpoint: ").append(toIndentedString(getEndpoint())).append("\n");
         sb.append("    passwordSharing: ").append(toIndentedString(passwordSharing)).append("\n");
+        sb.append("    attributes: ").append(toIndentedString(attributes)).append("\n");
         sb.append("    rule: ").append(toIndentedString(getRule())).append("\n");
         sb.append("}");
         return sb.toString();

@@ -27,10 +27,12 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.c
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.*;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasKey;
 
 public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBase {
@@ -75,6 +77,7 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .passwordSharing(new PasswordSharing()
                         .format(PasswordSharing.FormatEnum.PLAIN_TEXT)
                         .certificate(TEST_CERTIFICATE))
+                .attributes(TEST_ATTRIBUTES)
                 .name(TEST_ACTION_NAME)
                 .description(TEST_ACTION_DESCRIPTION)
                 .endpoint(new Endpoint()
@@ -101,7 +104,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_ATTRIBUTES.toArray()));
 
         testActionId = responseOfPost.getBody().jsonPath().getString("id");
     }
@@ -143,7 +147,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testGetActionByActionId"})
@@ -170,6 +175,7 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .passwordSharing(new PasswordSharingUpdateModel()
                         .format(PasswordSharing.FormatEnum.SHA256_HASHED)
                         .certificate(TEST_UPDATED_CERTIFICATE))
+                .attributes(TEST_UPDATED_ATTRIBUTES)
                 .name(TEST_ACTION_UPDATED_NAME)
                 .description(TEST_ACTION_UPDATED_DESCRIPTION)
                 .endpoint(new EndpointUpdateModel()
@@ -197,7 +203,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.SHA256_HASHED.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAllProperties"})
@@ -222,7 +229,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.SHA256_HASHED.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingName"})
@@ -247,7 +255,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.SHA256_HASHED.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingEndpoint"})
@@ -277,7 +286,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.SHA256_HASHED.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAuthentication"})
@@ -307,7 +317,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.SHA256_HASHED.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAuthenticationProperties"})
@@ -339,7 +350,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.SHA256_HASHED.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingEndpointUriAndAuthentication"})
@@ -371,7 +383,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.SHA256_HASHED.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingEndpointUriAndAuthenticationProperties"})
@@ -397,7 +410,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_UPDATED_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingPasswordSharingFormat"})
@@ -423,7 +437,8 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
-                .body("passwordSharing.certificate", equalTo(TEST_CERTIFICATE));
+                .body("passwordSharing.certificate", equalTo(TEST_CERTIFICATE))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingPasswordSharingCertificate"})
@@ -449,10 +464,63 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
                 .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
                 .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
-                .body("passwordSharing", not(hasKey(TEST_PROPERTIES_CERTIFICATE_ATTRIBUTE)));
+                .body("passwordSharing", not(hasKey(TEST_PROPERTIES_CERTIFICATE_ATTRIBUTE)))
+                .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionDeletePasswordSharingCertificate"})
+    public void testUpdateActionUpdatingAttributes() {
+
+        ActionUpdateModel actionUpdateModel = new PreUpdatePasswordActionUpdateModel()
+                .attributes(TEST_ATTRIBUTES);
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
+                .body("passwordSharing", not(hasKey(TEST_PROPERTIES_CERTIFICATE_ATTRIBUTE)))
+                .body("attributes", containsInAnyOrder(TEST_ATTRIBUTES.toArray()));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionUpdatingAttributes"})
+    public void testUpdateActionUpdatingWithDuplicatedAttributes() {
+
+        ActionUpdateModel actionUpdateModel = new PreUpdatePasswordActionUpdateModel()
+                .attributes(TEST_DUPLICATED_ATTRIBUTES);
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("passwordSharing.format", equalTo(PasswordSharing.FormatEnum.PLAIN_TEXT.toString()))
+                .body("passwordSharing", not(hasKey(TEST_PROPERTIES_CERTIFICATE_ATTRIBUTE)))
+                .body("attributes", equalTo(Collections.singletonList(TEST_DUPLICATED_ATTRIBUTES.get(0))));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionUpdatingWithDuplicatedAttributes"})
     public void testActivateAction() {
 
         getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH + PRE_UPDATE_PASSWORD_PATH +
@@ -500,7 +568,7 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
     }
 
     @Test(dependsOnMethods = {"testDeleteAction"})
-    public void testCreateActionWithoutPasswordSharingCertificate() {
+    public void testCreateActionWithoutAttributesAndPasswordSharingCertificate() {
 
         action = new PreUpdatePasswordActionModel()
                 .passwordSharing(new PasswordSharing()
@@ -536,7 +604,7 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
         deleteAction(PRE_UPDATE_PASSWORD_PATH, responseOfPost.getBody().jsonPath().getString("id"));
     }
 
-    @Test(dependsOnMethods = {"testCreateActionWithoutPasswordSharingCertificate"})
+    @Test(dependsOnMethods = {"testCreateActionWithoutAttributesAndPasswordSharingCertificate"})
     public void testDeleteNonExistingAction() {
 
         getResponseOfDelete(ACTION_MANAGEMENT_API_BASE_PATH + PRE_UPDATE_PASSWORD_PATH +
@@ -575,6 +643,43 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()));
 
         // Delete, created action.
+        deleteAction(PRE_UPDATE_PASSWORD_PATH , responseOfPost.getBody().jsonPath().getString("id"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithExtraEndpointAuthProperties"})
+    public void testCreateActionWithDuplicatedAttributes() {
+
+        action = new PreUpdatePasswordActionModel()
+                .passwordSharing(new PasswordSharing()
+                        .format(PasswordSharing.FormatEnum.PLAIN_TEXT))
+                .attributes(TEST_DUPLICATED_ATTRIBUTES)
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(action);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("id", notNullValue())
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("attributes", equalTo(Collections.singletonList(TEST_DUPLICATED_ATTRIBUTES.get(0))));
+
         deleteAction(PRE_UPDATE_PASSWORD_PATH , responseOfPost.getBody().jsonPath().getString("id"));
     }
 }
