@@ -2537,7 +2537,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.92</identity.governance.version>
+        <identity.governance.version>1.11.93</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.10</identity.carbon.auth.saml2.version>
@@ -2570,7 +2570,7 @@
         <identity.event.handler.account.lock.version>1.9.18</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.9.62</identity.event.handler.notification.version>
 
-        <org.wso2.identity.webhook.event.handlers.version>1.0.333</org.wso2.identity.webhook.event.handlers.version>
+        <org.wso2.identity.webhook.event.handlers.version>1.0.336</org.wso2.identity.webhook.event.handlers.version>
 
         <org.wso2.identity.event.publishers.version>1.0.26</org.wso2.identity.event.publishers.version>
 
