@@ -46,5 +46,5 @@ public class PreUpdateProfileTestBase extends ActionTestBase {
     protected static final List<String> ROLES_CLAIM_ATTRIBUTE =
             Collections.singletonList("http://wso2.org/claims/roles");
 
-    public static final List<String> INVALID_TEST_ATTRIBUTES = Arrays.asList("invalidattribute");;
+    public static final List<String> INVALID_TEST_ATTRIBUTES = Arrays.asList("invalidattribute");
 }

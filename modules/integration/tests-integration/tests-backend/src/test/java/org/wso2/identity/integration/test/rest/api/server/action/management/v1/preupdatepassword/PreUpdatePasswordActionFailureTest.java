@@ -26,6 +26,7 @@ import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.*;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PasswordSharing;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PasswordSharingUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model
         .PreUpdatePasswordActionModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model
@@ -124,6 +125,56 @@ public class PreUpdatePasswordActionFailureTest extends PreUpdatePasswordTestBas
     }
 
     @Test(dependsOnMethods = {"testCreateActionWithEmptyEndpointAuthPropertyValues"})
+    public void testCreateActionWithInvalidPasswordSharingCertificate() {
+
+        action1.getEndpoint().getAuthentication().setProperties(new HashMap<String, Object>() {{
+            put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+        }});
+        ((PreUpdatePasswordActionModel) action1).getPasswordSharing().setCertificate(TEST_INVALID_CERTIFICATE);
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Certificate content is invalid."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithInvalidPasswordSharingCertificate"})
+    public void testCreateActionWithExceededMaximumAttributes() {
+
+        ((PreUpdatePasswordActionModel) action1).setPasswordSharing(new PasswordSharing()
+                .format(PasswordSharing.FormatEnum.PLAIN_TEXT));
+        ((PreUpdatePasswordActionModel) action1).setAttributes(INVALID_TEST_ATTRIBUTES_COUNT);
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The number of configured attributes: %d exceeds " +
+                        "the maximum allowed limit: %d", INVALID_TEST_ATTRIBUTES_COUNT.size(), MAX_ATTRIBUTES_COUNT)));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithExceededMaximumAttributes"})
+    public void testCreateActionWithInvalidAttributes() {
+
+        ((PreUpdatePasswordActionModel) action1).setAttributes(INVALID_TEST_ATTRIBUTES);
+
+        String body = toJSONString(action1);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The provided %s attribute is not available " +
+                        "in the system.", INVALID_TEST_ATTRIBUTES.get(0))));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithInvalidAttributes"})
     public void testCreateActionAfterReachingMaxActionCount() {
 
         // Create an action.
@@ -190,6 +241,53 @@ public class PreUpdatePasswordActionFailureTest extends PreUpdatePasswordTestBas
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND)
                 .body("description", equalTo("No Action is configured on the given Action Type and Id."));
+    }
+
+    @Test(dependsOnMethods = {"testDeactivateActionWithInvalidID"})
+    public void testUpdateActionWithInvalidPasswordSharingCertificate() {
+
+        ActionUpdateModel actionUpdateModel = new PreUpdatePasswordActionUpdateModel()
+                .passwordSharing(new PasswordSharingUpdateModel().certificate(TEST_INVALID_CERTIFICATE));
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPost = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH + "/" + testActionId2, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Certificate content is invalid."));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithInvalidPasswordSharingCertificate"})
+    public void testUpdateActionWithExceededMaximumAttributes() {
+
+        ActionUpdateModel actionUpdateModel = new PreUpdatePasswordActionUpdateModel()
+                .attributes(INVALID_TEST_ATTRIBUTES_COUNT);
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH + "/" + testActionId2, body);
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The number of configured attributes: %d exceeds " +
+                        "the maximum allowed limit: %d", INVALID_TEST_ATTRIBUTES_COUNT.size(), MAX_ATTRIBUTES_COUNT)));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionWithExceededMaximumAttributes"})
+    public void testUpdateActionWithInvalidAttributes() {
+
+        ActionUpdateModel actionUpdateModel = new PreUpdatePasswordActionUpdateModel()
+                .attributes(INVALID_TEST_ATTRIBUTES);
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PASSWORD_PATH + "/" + testActionId2, body);
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo(String.format("The provided %s attribute is not available " +
+                        "in the system.", INVALID_TEST_ATTRIBUTES.get(0))));
 
         deleteAction(PRE_UPDATE_PASSWORD_PATH , testActionId2);
     }

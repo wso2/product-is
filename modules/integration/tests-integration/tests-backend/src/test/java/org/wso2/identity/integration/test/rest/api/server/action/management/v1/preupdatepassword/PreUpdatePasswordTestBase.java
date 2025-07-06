@@ -20,6 +20,10 @@ package org.wso2.identity.integration.test.rest.api.server.action.management.v1.
 
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.ActionTestBase;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class PreUpdatePasswordTestBase extends ActionTestBase {
 
     protected static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
@@ -72,5 +76,17 @@ public class PreUpdatePasswordTestBase extends ActionTestBase {
             "JQUnYva2Z2TE5hM1pQbkxNTXhVOThNdmgNClBYeTNQa0I4Kys2VTRZM3ZkazJOaTJXWVlsSWxzOHlxYk00MzI3SUtta" +
             "0RjMlRpbVM4dTYwQ1Q0N21LVTdhRFkNCmNiVFY1UkRrcmxhWXdtNXlxbFRJZ2x2Q3Y3bz0NCi0tLS0tRU5EIENFUlRJ" +
             "RklDQVRFLS0tLS0K";
+    protected static final String TEST_INVALID_CERTIFICATE = "invalid_certificate";
 
+    protected static final int MAX_ATTRIBUTES_COUNT = 10;
+    protected static final List<String> TEST_ATTRIBUTES = Arrays.asList("http://wso2.org/claims/active",
+            "http://wso2.org/claims/dob");
+    protected static final List<String> TEST_UPDATED_ATTRIBUTES = Arrays.asList("http://wso2.org/claims/country",
+            "http://wso2.org/claims/created");
+
+    protected static final List<String> INVALID_TEST_ATTRIBUTES_COUNT =  Collections.nCopies(11,
+            "http://wso2.org/claims/active");
+    protected static final List<String> TEST_DUPLICATED_ATTRIBUTES =  Collections.nCopies(2,
+            "http://wso2.org/claims/active");
+    public static final List<String> INVALID_TEST_ATTRIBUTES = Collections.singletonList("invalidattribute");
 }
