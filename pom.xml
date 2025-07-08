@@ -2537,7 +2537,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.94</identity.governance.version>
+        <identity.governance.version>1.11.95</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.10</identity.carbon.auth.saml2.version>
@@ -2601,7 +2601,7 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.38</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.39</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.21</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2665,7 +2665,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.65.24</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.4</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.26.5</identity.apps.core.version>
+        <identity.apps.core.version>2.26.7</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
         <!-- Charon -->
