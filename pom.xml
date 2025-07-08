@@ -2532,7 +2532,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.96</identity.governance.version>
+        <identity.governance.version>1.11.97</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.10</identity.carbon.auth.saml2.version>
