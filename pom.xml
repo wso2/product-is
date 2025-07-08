@@ -2519,7 +2519,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.275</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.277</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2570,7 +2570,7 @@
         <identity.event.handler.account.lock.version>1.9.18</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.9.62</identity.event.handler.notification.version>
 
-        <org.wso2.identity.webhook.event.handlers.version>1.0.335</org.wso2.identity.webhook.event.handlers.version>
+        <org.wso2.identity.webhook.event.handlers.version>1.0.336</org.wso2.identity.webhook.event.handlers.version>
 
         <org.wso2.identity.event.publishers.version>1.0.26</org.wso2.identity.event.publishers.version>
 
@@ -2580,7 +2580,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.31</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.32</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.9</identity.outbound.auth.samlsso.version>
@@ -2591,7 +2591,7 @@
         <social.authenticator.facebook.version>5.2.20</social.authenticator.facebook.version>
         <social.authenticator.google.version>5.2.20</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.5</social.authenticator.windowslive.version>
-        <social.authenticator.apple.version>1.0.6</social.authenticator.apple.version>
+        <social.authenticator.apple.version>1.0.7</social.authenticator.apple.version>
         <social.authenticator.github.version>1.1.17</social.authenticator.github.version>
 
         <!-- Provisioning connector Versions -->
@@ -2601,7 +2601,7 @@
         <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.37</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.38</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.21</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2663,7 +2663,7 @@
         <conditional.authentication.functions.version>1.2.79</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.65.23</identity.apps.console.version>
+        <identity.apps.console.version>2.65.24</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.4</identity.apps.myaccount.version>
         <identity.apps.core.version>2.26.5</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
