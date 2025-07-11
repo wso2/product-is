@@ -48,6 +48,7 @@
 
   "monitoring.jmx.rmi_server_start": false,
   "product.version" : "${product.version}",
+  "console.product_version.configs.productVersion": "${product.version}",
 
   "transport.http.enabled" : true,
   "transport.https.enabled" : true,
