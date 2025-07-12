@@ -48,7 +48,6 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
@@ -515,19 +514,37 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         Response response = getResponseOfGet(ORGANIZATION_MANAGEMENT_API_BASE_PATH);
         validateHttpStatusCode(response, HttpStatus.SC_OK);
-        assertNotNull(response.asString());
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .body(notNullValue());
+
         /*
         The first organization in the list is "organizationWithHandleID", which was added most recently
         and does not have child organizations. The second organization is "organizationID", which is
         the parent of the child organization added in the previous method.
          */
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .body("organizations[0].id", equalTo(organizationWithHandleID))
-                .body("organizations[0].hasChildren", equalTo(false))
-                .body("organizations[1].id", equalTo(organizationID))
-                .body("organizations[1].hasChildren", equalTo(true));
+        JsonObject responseObject = JsonParser.parseString(response.asString()).getAsJsonObject();
+        JsonArray organizations = responseObject.getAsJsonArray("organizations");
+        boolean organizationWithHandleIDFound = false;
+        boolean organizationIDFound = false;
+        for (int i = 0; i < organizations.size(); i++) {
+            JsonObject organization = organizations.get(i).getAsJsonObject();
+            String id = organization.get("id").getAsString();
+            if (id.equals(organizationWithHandleID)) {
+                Assert.assertFalse(organization.get(HAS_CHILDREN).getAsBoolean(),
+                        "Organization with handle ID should not have children.");
+                organizationWithHandleIDFound = true;
+            } else if (id.equals(organizationID)) {
+                Assert.assertTrue(organization.get(HAS_CHILDREN).getAsBoolean(), "Organization ID should have children.");
+                organizationIDFound = true;
+            }
+            if (organizationWithHandleIDFound && organizationIDFound) {
+                break;
+            }
+        }
+        Assert.assertTrue(organizationWithHandleIDFound, "Organization with handle ID not found in the response.");
+        Assert.assertTrue(organizationIDFound, "Organization ID not found in the response.");
     }
 
     @Test(dependsOnMethods = "testHasChildrenStatusOnOrganizationList")
@@ -553,17 +570,11 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testAncestorPathOfChildFromRoot")
     public void testAncestorPathOfChildFromParent() throws IOException {
 
-        HttpGet request = new HttpGet(serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
-                + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + childOrganizationID);
-        Header[] headerList = new Header[3];
-        headerList[0] = new BasicHeader("Authorization", "Bearer " + switchedM2MToken);
-        headerList[1] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/json");
-        headerList[2] = new BasicHeader(HttpHeaders.ACCEPT, "application/json");
-        request.setHeaders(headerList);
-        HttpResponse response = client.execute(request);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
-        String jsonResponse = EntityUtils.toString(response.getEntity());
-        JsonObject responseObject = JsonParser.parseString(jsonResponse).getAsJsonObject();
+        String endpoint = serverURL + TENANT_PATH + tenant + PATH_SEPARATOR + ORGANIZATION_PATH
+                + API_SERVER_PATH + ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + childOrganizationID;
+        Response response = getResponseOfGetWithOAuth2(endpoint, switchedM2MToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+        JsonObject responseObject = JsonParser.parseString(response.asString()).getAsJsonObject();
         JsonArray ancestorPath = responseObject.get(ANCESTOR_PATH).getAsJsonArray();
         assertEquals(ancestorPath.size(), 1, "Ancestor path size is not as expected.");
         assertEquals(ancestorPath.get(0).getAsJsonObject().get("depth").getAsInt(), 1, "Ancestor depth is not 1.");
