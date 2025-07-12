@@ -77,6 +77,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String ORGANIZATION_ID = "id";
     protected static final String ORGANIZATION_NAME = "name";
     protected static final String ORGANIZATION_HANDLE = "orgHandle";
+    protected static final String HAS_CHILDREN = "hasChildren";
+    protected static final String ANCESTOR_PATH = "ancestorPath";
     protected static final String ORGANIZATION_NAME_FORMAT = "Org-%d";
 
     protected static final String ORGANIZATION_EMAIL_FORMAT_1 = "org%d.com";

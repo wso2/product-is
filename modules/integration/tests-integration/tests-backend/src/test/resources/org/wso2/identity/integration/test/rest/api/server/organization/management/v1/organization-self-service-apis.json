@@ -30,6 +30,7 @@
     "internal_org_application_mgt_view"
   ],
   "/o/api/server/v1/organizations": [
+    "internal_org_organization_view",
     "internal_org_organization_create",
     "internal_org_organization_delete"
   ]
