@@ -183,6 +183,7 @@
         <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
         <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserAdminAssociationSuccessBaseTest"/>
         <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserAdminAssociationNegativeBaseTest"/>
+        <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserAdminBulkFederatedAssociationBaseTest"/>
         <!--Disabling since the workflow is provided as a connector and it does not exist in the product by default.-->
         <!--<class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>-->
         <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsNegativeTest"/>
