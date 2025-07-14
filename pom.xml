@@ -2514,7 +2514,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.299</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.303</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2532,7 +2532,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.98</identity.governance.version>
+        <identity.governance.version>1.11.101</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.10</identity.carbon.auth.saml2.version>
@@ -2616,7 +2616,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.5</identity.workflow.version>
-        <identity.user.workflow.version>5.6.11</identity.user.workflow.version>
+        <identity.user.workflow.version>5.6.12</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.38</authenticator.totp.version>
@@ -2625,15 +2625,15 @@
         <authenticator.smsotp.version>3.3.38</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.32</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.44</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.45</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.30</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.33</authenticator.x509.version>
         <identity.extension.utils>1.0.22</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.12</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.13</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.0.6</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.39</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.1.40</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.51</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.30</identity.oauth2.grant.organizationswitch.version>
 
@@ -2645,7 +2645,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.148</identity.server.api.version>
+        <identity.server.api.version>1.3.150</identity.server.api.version>
         <identity.user.api.version>1.3.66</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
