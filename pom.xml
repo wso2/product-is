@@ -2542,8 +2542,8 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.317</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.11.57</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>7.0.318</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.11.58</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
@@ -2557,7 +2557,7 @@
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
-        <identity.data.publisher.authentication.version>5.7.6</identity.data.publisher.authentication.version>
+        <identity.data.publisher.authentication.version>5.7.7</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.7.4</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.8</identity.data.publisher.audit.version>
 
@@ -2632,7 +2632,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.13</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.6</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.7</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.40</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.51</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.30</identity.oauth2.grant.organizationswitch.version>
