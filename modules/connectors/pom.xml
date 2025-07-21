@@ -191,6 +191,29 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>download_http_publisher</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.identity.event.publishers</groupId>
+                                    <artifactId>
+                                        org.wso2.identity.event.http.publisher
+                                    </artifactId>
+                                    <version>${org.wso2.identity.event.publishers.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
