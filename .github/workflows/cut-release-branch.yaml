@@ -1,0 +1,49 @@
+# This workflow will create a release branch for WSO2 Identity Server releases.
+name: Cut Release Branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        description: 'Release version (e.g., 7.2.0)'
+        required: true
+      base_ref:
+        description: 'Base branch, tag, or commit SHA (e.g., master or v7.2.0-alpha)'
+        required: true
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create and push release branch
+        run: |
+          # Infer release branch name
+          if [[ "${{ github.event.inputs.release_branch }}" == release-is-* ]]; then
+            BRANCH_NAME="${{ github.event.inputs.release_branch }}"
+          else
+            BRANCH_NAME="release-is-${{ github.event.inputs.release_branch }}"
+          fi
+
+          echo "Using release branch name: $BRANCH_NAME"
+          echo "Fetching base ref: ${{ github.event.inputs.base_ref }} from origin..."
+          git fetch origin ${{ github.event.inputs.base_ref }} || true
+
+          echo "Checking if ${{ github.event.inputs.base_ref }} is a remote branch..."
+          if git show-ref --verify --quiet refs/remotes/origin/${{ github.event.inputs.base_ref }}; then
+            echo "Creating branch $BRANCH_NAME from origin/${{ github.event.inputs.base_ref }}"
+            git checkout -b "$BRANCH_NAME" origin/${{ github.event.inputs.base_ref }}
+          else
+            echo "Creating branch $BRANCH_NAME from ${{ github.event.inputs.base_ref }} (assumed commit SHA or tag)"
+            git checkout -b "$BRANCH_NAME" ${{ github.event.inputs.base_ref }}
+          fi
+
+          echo "Pushing branch $BRANCH_NAME to origin..."
+          git push origin "$BRANCH_NAME"
