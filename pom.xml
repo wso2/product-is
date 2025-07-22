@@ -2650,7 +2650,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.159</identity.server.api.version>
+        <identity.server.api.version>1.3.160</identity.server.api.version>
         <identity.user.api.version>1.3.66</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
