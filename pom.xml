@@ -2519,7 +2519,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.331</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.333</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2543,7 +2543,7 @@
         <identity.carbon.auth.saml2.version>5.9.12</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.9.32</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.9.33</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
