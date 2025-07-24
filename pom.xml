@@ -2519,7 +2519,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.335</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.336</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2568,7 +2568,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.65</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.66</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.351</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.31</org.wso2.identity.event.publishers.version>
@@ -2620,7 +2620,7 @@
         <identity.metadata.saml.version>1.8.5</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
-        <identity.workflow.version>1.0.6</identity.workflow.version>
+        <identity.workflow.version>1.0.7</identity.workflow.version>
         <identity.user.workflow.version>5.6.12</identity.user.workflow.version>
 
         <!-- Connector Versions -->
@@ -2628,7 +2628,7 @@
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.8</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.39</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.32</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.33</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.45</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.31</authenticator.local.auth.smsotp.version>
@@ -2662,9 +2662,9 @@
         <conditional.authentication.functions.version>1.2.80</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.68.21</identity.apps.console.version>
+        <identity.apps.console.version>2.68.24</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.6</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.27.14</identity.apps.core.version>
+        <identity.apps.core.version>2.27.15</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
 
         <!-- Charon -->
