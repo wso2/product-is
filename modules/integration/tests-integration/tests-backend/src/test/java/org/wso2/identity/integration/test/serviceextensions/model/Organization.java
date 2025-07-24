@@ -31,6 +31,8 @@ public class Organization {
 
     private String orgHandle;
 
+    private int depth;
+
     public Organization(String id, String name) {
 
         this.id = id;
@@ -69,6 +71,16 @@ public class Organization {
     public void setOrgHandle(String orgHandle) {
 
         this.orgHandle = orgHandle;
+    }
+
+    public int getDepth() {
+
+        return depth;
+    }
+
+    public void setDepth(int depth) {
+
+        this.depth = depth;
     }
 
     @Override
