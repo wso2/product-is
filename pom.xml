@@ -2519,7 +2519,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.337</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.338</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2579,7 +2579,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.33</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.34</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.9</identity.outbound.auth.samlsso.version>
@@ -2650,7 +2650,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.160</identity.server.api.version>
+        <identity.server.api.version>1.3.162</identity.server.api.version>
         <identity.user.api.version>1.3.66</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2662,7 +2662,7 @@
         <conditional.authentication.functions.version>1.2.80</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.68.24</identity.apps.console.version>
+        <identity.apps.console.version>2.68.26</identity.apps.console.version>
         <identity.apps.myaccount.version>2.20.6</identity.apps.myaccount.version>
         <identity.apps.core.version>2.27.15</identity.apps.core.version>
         <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
