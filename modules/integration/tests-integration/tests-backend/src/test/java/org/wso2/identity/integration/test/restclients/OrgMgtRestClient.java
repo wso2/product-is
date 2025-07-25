@@ -72,6 +72,7 @@ public class OrgMgtRestClient extends RestBaseClient {
     private static final String APPLICATION_MANAGEMENT_PATH = "/applications";
     private static final String ORGANIZATION_MANAGEMENT_PATH = "/organizations";
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
+    private static final String SELF_PATH = "/self";
     private static final String AUTHORIZED_APIS_PATH = "/authorized-apis";
     private static final String B2B_APP_NAME = "b2b-app";
     private static final String API_RESOURCES = "apiResources";
@@ -277,6 +278,36 @@ public class OrgMgtRestClient extends RestBaseClient {
                     String.format("API authorization failed for the application with ID: %s for API: %s.",
                             b2bAppId, apiName));
         }
+    }
+
+    /**
+     * Update the version of the carbon.super organization.
+     *
+     * @param newVersion New version to be set for the organization.
+     * @throws Exception If an error occurs while updating the organization version.
+     */
+    public void updateOrganizationVersion(String newVersion) throws Exception {
+
+        String endpointUrl = organizationManagementApiBasePath + SELF_PATH;
+        String m2mToken = getM2MAccessToken();
+        JSONArray requestBody = buildOrganizationVersionUpdateRequestBody(newVersion);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endpointUrl,
+                requestBody.toString(), getHeadersWithBearerToken(m2mToken))) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                    "Organization version update failed for the carbon.super organization.");
+        }
+    }
+
+    private JSONArray buildOrganizationVersionUpdateRequestBody(String newVersion) throws Exception {
+
+        JSONArray orgVersionUpdateRequestBody = new JSONArray();
+        JSONObject organizationVersionUpdateRequest = new JSONObject();
+        organizationVersionUpdateRequest.put("operation", "REPLACE");
+        organizationVersionUpdateRequest.put("path", "/version");
+        organizationVersionUpdateRequest.put("value", newVersion);
+        orgVersionUpdateRequestBody.put(organizationVersionUpdateRequest);
+        return orgVersionUpdateRequestBody;
     }
 
     private void createB2BApplication(JSONObject authorizedAPIs)
