@@ -736,7 +736,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
         UserItemAddGroupobj managedOrgUpdatePatchOp = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
         managedOrgUpdatePatchOp.setPath(SCIM2_SYSTEM_SCHEMA_DIALECT_URI + ":managedOrg");
         managedOrgUpdatePatchOp.setValue("UpdatedManagedOrg");
-        String managedOrgUpdateFailureDetail = "The managed organization is a read only property.";
+        String managedOrgUpdateFailureDetail = "Can not replace a immutable attribute or a read-only attribute";
         // Try to update managed org of shared user in level 1 org.
         tryToUpdateUnmodifiableAttributes(managedOrgUpdatePatchOp, sharedUserIdInLevel1Org,
                 switchedM2MTokenForLevel1Org, managedOrgUpdateFailureDetail);
