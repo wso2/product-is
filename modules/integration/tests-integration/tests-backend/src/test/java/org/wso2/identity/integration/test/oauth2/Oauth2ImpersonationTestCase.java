@@ -364,6 +364,12 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
     public void testSSOImpersonationAuthorizeRequestPostWithSkipLoginConsent() throws Exception {
 
         updateApplicationToSkipLoginConsent(true);
+        ApplicationResponseModel application = getApplication(applicationId);
+        if (application == null) {
+            Assert.fail("Application not found for the given application Id: " + applicationId);
+        }
+        Assert.assertTrue(application.getAdvancedConfigurations().getSkipLoginConsent(),
+                "Skip login consent is not enabled for the application.");
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
