@@ -1,8 +1,28 @@
+/*
+ * Copyright (c) 2025, WSO2 Inc. (http://www.wso2.org).
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.identity.integration.test.scim2;
 
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -21,8 +41,10 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.util.UUID;
 
-import static org.testng.Assert.*;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_ROLES_V3_ENDPOINT;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
 
 public class SCIM2RolesV3TestCase extends ISIntegrationTest {
 
