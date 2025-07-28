@@ -18,14 +18,15 @@
 
 package org.wso2.identity.integration.test.rest.api.server.workflow.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.workflow.v1.model.WorkflowAssociationResponse;
 import org.wso2.identity.integration.test.rest.api.server.workflow.v1.model.WorkflowResponse;
 
@@ -53,34 +54,17 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
         this.tenant = context.getContextTenant().getDomain();
     }
 
+    @Override
     @BeforeClass(alwaysRun = true)
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void testConclude() {
-
-        super.conclude();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() {
-
-        RestAssured.basePath = basePath;
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void testFinish() {
-
-        RestAssured.basePath = StringUtils.EMPTY;
-    }
-
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return new Object[][] {
                 {TestUserMode.TENANT_ADMIN}
         };
     }
@@ -103,7 +87,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     }
 
     @Test(dependsOnMethods = {"testAddWorkflow"})
-    public void testGetWorkflow() throws IOException {
+    public void testGetWorkflow() {
 
         Response response = getResponseOfGet(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId);
         int stepNumber = 1;
@@ -130,7 +114,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     }
 
     @Test(dependsOnMethods = {"testGetWorkflow"})
-    public void testGetWorkflows() throws Exception {
+    public void testGetWorkflows() {
 
         String baseIdentifier = "workflows.find{ it.id == '" + workflowId + "' }.";
         Response response = getResponseOfGet(WORKFLOW_API_BASE_PATH);
@@ -142,7 +126,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .body(baseIdentifier + "name", equalTo("User Approval Workflow"))
                 .body(baseIdentifier + "description", equalTo("Workflow to approve user role related requests"))
                 .body(baseIdentifier + "engine", equalTo("WorkflowEngine"))
-                .body(baseIdentifier + "template",equalTo("MultiStepApprovalTemplate"));
+                .body(baseIdentifier + "template", equalTo("MultiStepApprovalTemplate"));
     }
 
     @Test(dependsOnMethods = {"testGetWorkflows"})
@@ -176,7 +160,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     }
 
     @Test(dependsOnMethods = {"testAddWorkflowAssociation"})
-    public void testGetWorkflowAssociation() throws IOException {
+    public void testGetWorkflowAssociation() {
 
         Response response =
                 getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId);
@@ -197,7 +181,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     }
 
     @Test(dependsOnMethods = {"testGetWorkflowAssociation"})
-    public void testGetWorkflowAssociations() throws Exception {
+    public void testGetWorkflowAssociations() {
 
         String baseIdentifier = "workflowAssociations.find{ it.id == '" + workflowAssociationId + "' }.";
         Response response = getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH);
@@ -215,18 +199,20 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     @Test(dependsOnMethods = {"testGetWorkflowAssociations"})
     public void testPatchWorkflowAssociations() throws IOException {
 
-        // PATCH: Update associationName
+        // PATCH: Update associationName.
         String body = readResource("patch-association-name.json");
-        Response response = getResponseOfPatch(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId, body);
+        Response response =
+                getResponseOfPatch(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("associationName", equalTo("User Deletion Workflow Association"));
 
-        // PATCH: Update operation
+        // PATCH: Update operation.
         body = readResource("patch-association-operation.json");
-        response = getResponseOfPatch(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId, body);
+        response =
+                getResponseOfPatch(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -265,5 +251,4 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
-
 }

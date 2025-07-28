@@ -53,7 +53,7 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() throws Exception {
+    public void testConclude() {
 
         super.conclude();
     }
