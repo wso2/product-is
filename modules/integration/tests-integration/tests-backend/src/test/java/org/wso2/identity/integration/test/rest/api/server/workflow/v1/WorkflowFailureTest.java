@@ -18,11 +18,11 @@
 
 package org.wso2.identity.integration.test.rest.api.server.workflow.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
@@ -30,9 +30,9 @@ import java.io.IOException;
 /**
  * Test class for Workflow Management REST APIs failure paths.
  */
-public class WorkflowFailureTest extends WorkflowBaseTest{
+public class WorkflowFailureTest extends WorkflowBaseTest {
 
-    public WorkflowFailureTest() throws Exception  {
+    public WorkflowFailureTest() throws Exception {
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         this.context = isServer;
@@ -41,28 +41,11 @@ public class WorkflowFailureTest extends WorkflowBaseTest{
         this.tenant = context.getContextTenant().getDomain();
     }
 
+    @Override
     @BeforeClass(alwaysRun = true)
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void testConclude() {
-
-        super.conclude();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() {
-
-        RestAssured.basePath = basePath;
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void testFinish() {
-
-        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @Test
