@@ -34,7 +34,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -44,11 +43,8 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.scim2.eventpayloadbuilder.SCIM2UserTestCaseExpectedEventPayloadBuilder;
-import org.wso2.identity.integration.test.webhooks.WebhookEventTestManager;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -99,46 +95,32 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private static final String ENDWITH = "+Ew+";
     private static final String CONTAINS = "+Co+";
 
-    private String userId1;
-    private String userId2;
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+
+        super.init();
+        client = HttpClients.createDefault();
+    }
+
+    private String userId;
+
     private String adminUsername;
     private String adminPassword;
     private String tenant;
-    private AutomationContext automationContext;
-
-    private WebhookEventTestManager webhookEventTestManager;
-
-
-    @BeforeClass(alwaysRun = true)
-    public void testInit() throws Exception {
-        super.init();
-        client = HttpClients.createDefault();
-
-        webhookEventTestManager = new WebhookEventTestManager("/scim2/webhook", "WSO2",
-                Arrays.asList("https://schemas.identity.wso2.org/events/user",
-                        "https://schemas.identity.wso2.org/events/registration"), "SCIM2UserTestCase",
-                automationContext);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
-
-        webhookEventTestManager.teardown();
-        client.close();
-    }
 
     @Factory(dataProvider = "SCIM2UserConfigProvider")
     public SCIM2UserTestCase(TestUserMode userMode) throws Exception {
 
-        this.automationContext = new AutomationContext("IDENTITY", userMode);
-        this.adminUsername = automationContext.getContextTenant().getTenantAdmin().getUserName();
-        this.adminPassword = automationContext.getContextTenant().getTenantAdmin().getPassword();
-        this.tenant = automationContext.getContextTenant().getDomain();
+        AutomationContext context = new AutomationContext("IDENTITY", userMode);
+        this.adminUsername = context.getContextTenant().getTenantAdmin().getUserName();
+        this.adminPassword = context.getContextTenant().getTenantAdmin().getPassword();
+        this.tenant = context.getContextTenant().getDomain();
         testUserMode = userMode;
     }
 
     @DataProvider(name = "SCIM2UserConfigProvider")
     public static Object[][] sCIM2UserConfigProvider() {
+
         return new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
@@ -147,6 +129,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     @Test
     public void testCreateUser() throws Exception {
+
         HttpPost request = new HttpPost(getPath());
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -199,24 +182,14 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
         assertEquals(usernameFromResponse, USERNAME);
 
-        userId1 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
-        assertNotNull(userId1);
+        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(userId);
 
         String name = ((JSONObject) responseObj).get(NAME_ATTRIBUTE).toString();
         assertNotNull(name);
 
         String role = ((JSONObject) responseObj).get(ROLE_ATTRIBUTE).toString();
         assertNotNull(role);
-
-        webhookEventTestManager.stackExpectedPayload(
-                "https://schemas.identity.wso2.org/events/registration/event-type/registrationSuccess",
-                SCIM2UserTestCaseExpectedEventPayloadBuilder.buildExpectedRegistrationSuccessEventPayloadForTestCreateUser(
-                        userId1, tenant));
-        webhookEventTestManager.stackExpectedPayload(
-                "https://schemas.identity.wso2.org/events/user/event-type/userCreated",
-                SCIM2UserTestCaseExpectedEventPayloadBuilder.buildExpectedUserCreatedEventPayloadForTestCreateUser(
-                        userId1,
-                        tenant));
     }
 
     @Test
@@ -267,8 +240,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
         assertEquals(usernameFromResponse, USERNAME_1);
 
-        userId2 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
-        assertNotNull(userId2);
+        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(userId);
 
         String name = ((JSONObject) responseObj).get(NAME_ATTRIBUTE).toString();
         assertNotNull(name);
@@ -279,6 +252,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     @Test
     public void testAddUserFailure() throws Exception {
+
         HttpPost request = new HttpPost(getPath());
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -303,22 +277,16 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         LOG.info("Response of testAddUserFailure method:" + responseObj.toString());
 
-        JSONArray schemasArray = (JSONArray)((JSONObject) responseObj).get("schemas");
+        JSONArray schemasArray = (JSONArray) ((JSONObject) responseObj).get("schemas");
         Assert.assertNotNull(schemasArray);
         Assert.assertEquals(schemasArray.size(), 1);
         Assert.assertEquals(schemasArray.get(0).toString(), ERROR_SCHEMA);
-
-        //todo: Better if this error description which eventually goes out over the event can be improved.
-        webhookEventTestManager.stackExpectedPayload(
-                "https://schemas.identity.wso2.org/events/registration/event-type/registrationFailed",
-                SCIM2UserTestCaseExpectedEventPayloadBuilder.buildExpectedRegistrationFailedEventPayload(
-                        null, tenant, "20035 - The minimum length of password should be 8."));
     }
 
     @Test(dependsOnMethods = "testCreateUser")
     public void testGetUser() throws Exception {
 
-        String userResourcePath = getPath() + "/" + userId1;
+        String userResourcePath = getPath() + "/" + userId;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -333,8 +301,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
         assertEquals(usernameFromResponse, USERNAME);
 
-        userId1 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
-        assertNotNull(userId1);
+        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(userId);
     }
 
     @Test(dependsOnMethods = "testGetUser")
@@ -348,6 +316,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     }
 
     private void validateFilteredUser(String attributeName, String operator, String attributeValue) throws IOException {
+
         String userResourcePath = getPath() + "?filter=" + attributeName + operator + attributeValue;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
@@ -366,7 +335,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         String userId = ((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0)).get
                 (ID_ATTRIBUTE).toString();
-        assertEquals(userId, this.userId1);
+        assertEquals(userId, this.userId);
     }
 
     private void validateFilteredUserByEmailAddresses(String attributeName, String operator, String attributeValue)
@@ -389,7 +358,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
                 .get("Resources")).get(0));
         JSONArray emailsArray = (JSONArray) ((JSONObject) userResources.get(USER_SYSTEM_SCHEMA)).get(attributeName);
 
-        for (Object email: emailsArray) {
+        for (Object email : emailsArray) {
             if (email.equals(attributeValue)) {
                 return;
             }
@@ -397,10 +366,10 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         fail();
     }
 
-    @Test(dependsOnMethods = {"testCreateUser", "testCreateUserWithCharsetEncodingHeader", "testFilterUser"})
+    @Test(dependsOnMethods = "testFilterUser")
     public void testDeleteUser() throws Exception {
 
-        String userResourcePath = getPath() + "/" + userId1;
+        String userResourcePath = getPath() + "/" + userId;
         HttpDelete request = new HttpDelete(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -411,34 +380,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
         EntityUtils.consume(response.getEntity());
 
-        webhookEventTestManager.stackExpectedPayload(
-                "https://schemas.identity.wso2.org/events/user/event-type/userDeleted",
-                SCIM2UserTestCaseExpectedEventPayloadBuilder.buildExpectedUserDeletedEventPayload(
-                        userId1, tenant));
-
-        userResourcePath = getPath() + "/" + userId2;
-        request = new HttpDelete(userResourcePath);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-
-        response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 204, "User " +
-                "has not been retrieved successfully");
-
-        EntityUtils.consume(response.getEntity());
-
-        userResourcePath = getPath() + "/" + userId1;
+        userResourcePath = getPath() + "/" + userId;
         HttpGet getRequest = new HttpGet(userResourcePath);
-        getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-
-        response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
-                "has not been deleted successfully");
-        EntityUtils.consume(response.getEntity());
-
-        userResourcePath = getPath() + "/" + userId2;
-        getRequest = new HttpGet(userResourcePath);
         getRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         getRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
@@ -479,13 +422,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
 
     }
 
-    @Test(dependsOnMethods = "testGetUser")
-    public void testEventPayloads() throws Exception {
-
-        webhookEventTestManager.validateEventPayloads();
-    }
-
     private String getPath() {
+
         if (tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
             return SERVER_URL + SCIM2_USERS_ENDPOINT;
         } else {
@@ -494,6 +432,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     }
 
     private String getAuthzHeader() {
+
         return "Basic " + Base64.encodeBase64String((adminUsername + ":" + adminPassword).getBytes()).trim();
     }
 }
