@@ -23,8 +23,10 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
@@ -34,6 +36,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
@@ -52,6 +55,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SubjectTokenConfiguration;
@@ -65,21 +69,32 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperat
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
 import static org.testng.Assert.assertEquals;
+import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
+import static org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementBaseTest.FIDP_QUERY_PARAM;
+import static org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementBaseTest.ORGANIZATION_SSO;
+import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.QUERY_PARAM_ORG_ID;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_CODE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_IMPLICIT;
@@ -92,15 +107,25 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String impersonationResourceIdentifier = "system:impersonation";
+    private static final String orgImpersonationResourceIdentifier = "org:impersonation";
     private static final String scim2UserResourceIdentifier = "/scim2/Users";
+    private static final String orgScim2UserResourceIdentifier = "/o/scim2/Users";
     private static final String IMPERSONATOR_USERNAME = "Impersonator";
-    private static final String IMPERSONATOR_PASSWORD = "ImpersonatorUser@123";
+    private static final String IMPERSONATOR_PASSWORD = "Impersonator@123";
     private static final String IMPERSONATOR_EMAIL = "Impersonator@wso2.com";
+    private static final String ORG_IMPERSONATOR_USERNAME = "OrgImpersonator";
+    private static final String ORG_IMPERSONATOR_PASSWORD = "OrgImpersonator@123";
+    private static final String ORG_IMPERSONATOR_EMAIL = "OrgImpersonator@wso2.com";
     private static final String END_USER_USERNAME = "EndUser";
     private static final String END_USER_PASSWORD = "EndUser@123";
     private static final String END_USER_EMAIL = "EndUser@wso2.com";
+    private static final String ORG_END_USER_USERNAME = "OrgEndUser";
+    private static final String ORG_END_USER_PASSWORD = "OrgEndUser@123";
+    private static final String ORG_END_USER_EMAIL = "OrgEndUser@wso2.com";
     private static final String PERMISSION_VIEW = "internal_user_mgt_view";
     private static final String PERMISSION_LIST = "internal_user_mgt_list";
+    private static final String ORG_PERMISSION_VIEW = "internal_org_user_mgt_view";
+    private static final String ORG_PERMISSION_LIST = "internal_org_user_mgt_list";
     private static final String AUDIENCE_TYPE = "APPLICATION";
     public static final String SUBJECT_TOKEN_KEY = "subject_token";
     public static final String SUBJECT_TOKEN_TYPE_KEY = "subject_token_type";
@@ -114,23 +139,33 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
     public static final String ACTOR_TOKEN_TYPE_VALUE = "urn:ietf:params:oauth:token-type:id_token";
     private static final String USERS = "users";
     private static final String INTERNAL_USER_IMPERSONATE = "internal_user_impersonate";
-    private static final String IMPERSONATION_ROLE_APPLICATION = "impersonation_role_application";
-    private static final String TEST_ROLE_APPLICATION = "test_role_application";
+    private static final String ORG_INTERNAL_USER_IMPERSONATE = "internal_org_user_impersonate";
+    private static final String END_USER_ROLE_NAME = "EndUserRole";
+    private static final String IMPERSONATOR_ROLE_NAME = "ImpersonatorRole";
     public final static String SCIM2_USERS_ENDPOINT = "https://localhost:9853/scim2/Users";
+    public final static String ORG_SCIM2_USERS_ENDPOINT = "https://localhost:9853/o/scim2/Users";
     public static final String CONTENT_TYPE = "application/json";
     private static final String USERS_PATH = "users";
     private static final String COUNTRY_CLAIM_VALUE = "USA";
+    private static final String SUB_ORG_NAME = "sub-org";
     private String impersonationRoleID;
     private String endUserRoleID;
     private String applicationId;
     private String impersonatorId;
     private String endUserId;
+    private String orgImpersonatorId;
+    private String orgEndUserId;
     private SCIM2RestClient scim2RestClient;
     private CloseableHttpClient client;
+    protected OrgMgtRestClient orgMgtRestClient;
+    private CloseableHttpClient httpClientWithoutAutoRedirections;
+    private final CookieStore cookieStore = new BasicCookieStore();
     private String subjectToken;
     private String idToken;
     private String code;
     private String accessToken;
+    private String subOrgID;
+    private String subOrgToken;
 
     @BeforeClass
     public void setup() throws Exception {
@@ -148,12 +183,23 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
                 .build();
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        orgMgtRestClient = new OrgMgtRestClient(
+                isServer, tenantInfo, serverURL,
+                new org.json.JSONObject(readResource("impersonation-org-test-apis.json", this.getClass())));
+        httpClientWithoutAutoRedirections = HttpClientBuilder.create()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .disableRedirectHandling()
+                .setDefaultCookieStore(cookieStore).build();
         addImpersonator();
         addEndUser();
         ApplicationResponseModel application = createImpersonationApplication();
         applicationId = application.getId();
         createImpersonatorRole(applicationId);
         createEndUserRole(applicationId);
+        createOrganization();
+        createOrgUsers();
+        assignOrgRolesToOrgUsers();
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
         consumerKey = oidcConfig.getClientId();
         consumerSecret = oidcConfig.getClientSecret();
@@ -170,6 +216,8 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
 
         restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
+        orgMgtRestClient.closeHttpClient();
+        cookieStore.clear();
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request with impersonation related response types " +
@@ -400,20 +448,315 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
 //
 //        updateApplicationToSkipLoginConsent(false);
 //    }
-//
-//    @Test(dependsOnMethods = { "testSendTokenExchangeRequestPost", "testSendCodeTokenRequestPost",
-//            "testSSOImpersonationImplicitAuthorizeRequestPost",
-//            "testSSOImpersonationAuthorizeRequestPostWithSkipLoginConsent" },
-//            description = "Tests the impersonated access token with user listing API.")
-//    public void testImpersonatedAccessToken() throws Exception {
-//
-//        HttpGet request = new HttpGet(SCIM2_USERS_ENDPOINT);
-//        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-//        request.addHeader("User-Agent", USER_AGENT);
-//        HttpResponse response = client.execute(request);
-//        assertEquals(response.getStatusLine().getStatusCode(), 200, "Response for User listing is" +
-//                " failed");
-//    }
+
+    @Test(dependsOnMethods = { "testSendTokenExchangeRequestPost", "testSendCodeTokenRequestPost",
+            "testSSOImpersonationImplicitAuthorizeRequestPost" },
+            description = "Tests the impersonated access token with user listing API.")
+    public void testImpersonatedAccessToken() throws Exception {
+
+        HttpGet request = new HttpGet(SCIM2_USERS_ENDPOINT);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader("User-Agent", USER_AGENT);
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "Response for User listing is" +
+                " failed");
+    }
+
+    @Test(groups = "wso2.is", description = "Org - Send authorize user request with impersonation related response types " +
+            "and response modes.")
+    public void testInitOrgImpersonationAuthorizeRequestPost() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE, URLEncoder.encode(
+                "id_token subject_token", "UTF-8")));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, URLEncoder.encode(
+                "internal_org_user_mgt_delete internal_login openid internal_org_user_impersonate " +
+                        "internal_org_user_mgt_delete internal_org_user_mgt_view internal_org_user_mgt_list", "UTF-8")));
+        urlParameters.add(new BasicNameValuePair("requested_subject", orgEndUserId));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE, UUID.randomUUID().toString()));
+        urlParameters.add(new BasicNameValuePair(QUERY_PARAM_ORG_ID, subOrgID));
+        urlParameters.add(new BasicNameValuePair(FIDP_QUERY_PARAM, ORGANIZATION_SSO));
+
+        String sessionDataKey = sendAuthorizationRequest(buildGetRequestURL(
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL, "carbon.super", urlParameters), false);
+        if (sessionDataKey != null) {
+            sendLoginPost(sessionDataKey);
+        }
+
+        Assert.assertNotNull(subjectToken, "Subject token is null or could not be found.");
+        Assert.assertNotNull(idToken, "Id token is null or could not be found.");
+
+        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(subjectToken).getJWTClaimsSet();
+        assertEquals(jwtClaimsSet.getSubject(), orgEndUserId,
+                "Subject Id is not end user Id in the impersonation flow." );
+        Map<String, String> mayActClaimSet = (Map) jwtClaimsSet.getClaim("may_act");
+        Assert.assertNotNull(mayActClaimSet, "may_act claim of subject token is empty");
+        assertEquals(mayActClaimSet.get("sub"), orgImpersonatorId,
+                "Impersonator Id is not in the may act claim." );
+    }
+
+    @Test(groups = "wso2.is", description = "Org - Send authorize user request with impersonation related response types " +
+            "and response modes.")
+    public void testSSOOrgImpersonationAuthorizeRequestPost() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
+                OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE, URLEncoder.encode(
+                "internal_org_user_mgt_delete internal_login openid internal_org_user_mgt_delete " +
+                        "internal_org_user_mgt_view internal_org_user_mgt_list", "UTF-8")));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_NONCE, UUID.randomUUID().toString()));
+        urlParameters.add(new BasicNameValuePair(QUERY_PARAM_ORG_ID, subOrgID));
+        urlParameters.add(new BasicNameValuePair(FIDP_QUERY_PARAM, ORGANIZATION_SSO));
+
+        String sessionDataKey = sendAuthorizationRequest(buildGetRequestURL(
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL, "carbon.super", urlParameters), true);
+        if (sessionDataKey != null) {
+            sendLoginPost(sessionDataKey);
+        }
+
+        Assert.assertNotNull(subjectToken, "Subject token is null or could not be found.");
+        Assert.assertNotNull(idToken, "Id token is null or could not be found.");
+
+        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(subjectToken).getJWTClaimsSet();
+        assertEquals(jwtClaimsSet.getSubject(), orgEndUserId,
+                "Subject Id is not end user Id in the impersonation flow." );
+        Map<String, String>  mayActClaimSet = (Map) jwtClaimsSet.getClaim("may_act");
+        Assert.assertNotNull(mayActClaimSet, "may_act claim of subject token is empty");
+        assertEquals(mayActClaimSet.get("sub"), orgImpersonatorId,
+                "Impersonator Id is not in the may act claim." );
+    }
+    @Test(groups = "wso2.is", description = "Org - Send authorize user request with response types and response modes.",
+            dependsOnMethods = "testInitOrgImpersonationAuthorizeRequestPost")
+    public void testOrgSendTokenExchangeRequestPost() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(SUBJECT_TOKEN_KEY, subjectToken));
+        urlParameters.add(new BasicNameValuePair(SUBJECT_TOKEN_TYPE_KEY, SUBJECT_TOKEN_TYPE_VALUE));
+        urlParameters.add(new BasicNameValuePair(REQUESTED_TOKEN_TYPE_KEY, REQUESTED_TOKEN_TYPE_VALUE));
+        urlParameters.add(new BasicNameValuePair(GRANT_TYPE_KEY, GRANT_TYPE_VALUE));
+        urlParameters.add(new BasicNameValuePair(ACTOR_TOKEN_KEY, idToken));
+        urlParameters.add(new BasicNameValuePair(ACTOR_TOKEN_TYPE_KEY, ACTOR_TOKEN_TYPE_VALUE));
+
+        String url = OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+        JSONObject jsonResponse = responseObject(url, urlParameters, consumerKey, consumerSecret);
+        Assert.assertNotNull(jsonResponse.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
+        accessToken = (String) jsonResponse.get(OAuth2Constant.ACCESS_TOKEN);
+        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
+        assertEquals(jwtClaimsSet.getSubject(), orgEndUserId,
+                "Subject Id is not end user Id in the impersonation flow." );
+        Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
+        Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
+        assertEquals(actClaimSet.get("sub"), orgImpersonatorId, "Impersonator Id is not in the act claim." );
+    }
+
+    @Test(groups = "wso2.is", description = "Org - Send token request to get an impersonated token using code grant.",
+            dependsOnMethods = "testSSOOrgImpersonationAuthorizeRequestPost")
+    public void testOrgSendCodeTokenRequestPost() throws Exception {
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(GRANT_TYPE_KEY, OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE));
+        urlParameters.add(new BasicNameValuePair(OAUTH2_GRANT_TYPE_CODE, code));
+        urlParameters.add(new BasicNameValuePair(REDIRECT_URI_NAME, OAuth2Constant.CALLBACK_URL));
+
+        String url = OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+        JSONObject jsonResponse = responseObject(url, urlParameters, consumerKey, consumerSecret);
+        Assert.assertNotNull(jsonResponse.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
+        accessToken = (String) jsonResponse.get(OAuth2Constant.ACCESS_TOKEN);
+        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
+        assertEquals(jwtClaimsSet.getSubject(), orgEndUserId,
+                "Subject Id is not end user Id in the impersonation flow." );
+
+        Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
+        Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
+        assertEquals(actClaimSet.get("sub"), orgImpersonatorId, "Impersonator Id is not in the act claim.");
+    }
+
+    @Test(dependsOnMethods = { "testOrgSendTokenExchangeRequestPost", "testOrgSendCodeTokenRequestPost" },
+            description = "Tests the impersonated access token with user listing API.")
+    public void testOrgImpersonatedAccessToken() throws Exception {
+
+        HttpGet request = new HttpGet(ORG_SCIM2_USERS_ENDPOINT);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader("User-Agent", USER_AGENT);
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "Response for User listing is" +
+                " failed");
+    }
+
+    private String sendAuthorizationRequest(String endPointUrl, boolean isSSORequest) throws Exception {
+
+        HttpResponse authorizeResponse = sendGetRequest(endPointUrl, httpClientWithoutAutoRedirections);
+        Assert.assertNotNull(authorizeResponse, "Authorize response is null.");
+        Assert.assertEquals(authorizeResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Authorize response status code is invalid.");
+        Header authorizeLocationHeader = authorizeResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(authorizeLocationHeader, "Authorize response header location is null.");
+        EntityUtils.consume(authorizeResponse.getEntity());
+
+        HttpResponse authorizeRedirectResponse =
+                sendGetRequest(authorizeLocationHeader.getValue(), httpClientWithoutAutoRedirections);
+
+        if (isSSORequest) {
+            // Authorize redirect request to root org.
+            Assert.assertEquals(authorizeRedirectResponse.getStatusLine().getStatusCode(),
+                    HttpStatus.SC_MOVED_TEMPORARILY, "Root organization common auth redirection status code is invalid.");
+            Assert.assertNotNull(authorizeRedirectResponse, "Root organization common auth response is null.");
+            Header rootOrgAuthRedirectionLocation =
+                    authorizeRedirectResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            Assert.assertNotNull(rootOrgAuthRedirectionLocation,
+                    "Root organization common auth response location header is null.");
+            EntityUtils.consume(authorizeRedirectResponse.getEntity());
+
+            HttpResponse commonAuthResponse =
+                    sendGetRequest(rootOrgAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
+
+            // Common auth response to parent org.
+            Header commonAuthResponseRedirectionLocation =
+                    commonAuthResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            Assert.assertNotNull(commonAuthResponseRedirectionLocation, "Common auth response location header is null.");
+            Assert.assertTrue(commonAuthResponseRedirectionLocation.toString().contains(OAuth2Constant.SESSION_DATA_KEY),
+                    "sessionDataKey not found in response.");
+            EntityUtils.consume(commonAuthResponse.getEntity());
+
+            HttpResponse consentRequestResponse = sendGetRequest(commonAuthResponseRedirectionLocation.getValue(),
+                    httpClientWithoutAutoRedirections);
+
+            // Consent request parent org.
+            Header consentRequestRedirectionLocation = consentRequestResponse.getFirstHeader(
+                    OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            Assert.assertNotNull(consentRequestRedirectionLocation, "Authorization code response location header is null.");
+            Assert.assertTrue(consentRequestRedirectionLocation.toString().contains(OAuth2Constant.SESSION_DATA_KEY_CONSENT),
+                    "sessionDataKeyConsent not found in response.");
+            String sessionDataKeyConsent = DataExtractUtil.getParamFromURIString(
+                    consentRequestRedirectionLocation.getValue(), OAuth2Constant.SESSION_DATA_KEY_CONSENT);
+            Assert.assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent is null.");
+            EntityUtils.consume(consentRequestResponse.getEntity());
+
+            HttpResponse authCodeResponse = sendApprovalPost(client, sessionDataKeyConsent);
+
+            // Code response request parent org.
+            Assert.assertNotNull(authCodeResponse, "Approval request failed. response is invalid.");
+            Header authCodeRedirectionLocation = authCodeResponse.getFirstHeader(
+                    OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+
+            URI authCodeRedirectionURI = new URI(authCodeRedirectionLocation.getValue());
+            code = Arrays.stream(authCodeRedirectionURI.getQuery().split(AMPERSAND))
+                    .filter(param -> param.startsWith(OAuth2Constant.AUTHORIZATION_CODE_NAME))
+                    .map(param -> param.split(EQUAL)[1])
+                    .findFirst()
+                    .orElse(null);
+
+            return null;
+        } else {
+            // Login request to child org.
+            Assert.assertNotNull(authorizeRedirectResponse, "Redirected authorize response is null.");
+            Assert.assertEquals(authorizeRedirectResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                    "Redirected authorize response status code is invalid.");
+            Header authorizeRedirectLocationHeader =
+                    authorizeRedirectResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            Assert.assertNotNull(authorizeRedirectLocationHeader, "Redirected authorize response header location is null.");
+            Assert.assertTrue(authorizeRedirectLocationHeader.getValue().contains(ORGANIZATION_PATH + subOrgID),
+                    "Not redirected to child organization login page.");
+            EntityUtils.consume(authorizeRedirectResponse.getEntity());
+
+            HttpResponse childOrgLoginPageResponse =
+                    sendGetRequest(authorizeRedirectLocationHeader.getValue(), httpClientWithoutAutoRedirections);
+            Assert.assertNotNull(childOrgLoginPageResponse, "Child organization login page is empty.");
+            Assert.assertEquals(childOrgLoginPageResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                    "Child organization login redirection status code is invalid.");
+
+            Map<String, Integer> keyPositionMap = new HashMap<>(1);
+            keyPositionMap.put("name=\"sessionDataKey\"", 1);
+            List<DataExtractUtil.KeyValue> keyValues =
+                    DataExtractUtil.extractDataFromResponse(childOrgLoginPageResponse, keyPositionMap);
+            Assert.assertNotNull(keyValues, "Retrieved key value pairs are empty.");
+
+            String sessionDataKey = keyValues.get(0).getValue();
+            Assert.assertNotNull(sessionDataKey, "Session data key is null.");
+            EntityUtils.consume(childOrgLoginPageResponse.getEntity());
+
+            return sessionDataKey;
+        }
+    }
+
+    private void sendLoginPost(String sessionDataKey) throws Exception {
+
+        // Common auth org request.
+        String commonAuthURL = serverURL + ORGANIZATION_PATH + subOrgID + "/commonauth";
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair("username", ORG_IMPERSONATOR_USERNAME));
+        urlParameters.add(new BasicNameValuePair("password", ORG_IMPERSONATOR_PASSWORD));
+        urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+        HttpResponse loginPostResponse =
+                sendPostRequest(commonAuthURL, urlParameters, httpClientWithoutAutoRedirections);
+
+        // Common auth child redirect request.
+        Assert.assertNotNull(loginPostResponse, "Login request failed. Login response is null.");
+        Assert.assertEquals(loginPostResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
+                "Login status code is invalid.");
+        Header childOrgAuthRedirectionLocation =
+                loginPostResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(childOrgAuthRedirectionLocation, "Login response location header is null.");
+        EntityUtils.consume(loginPostResponse.getEntity());
+
+        HttpResponse childOrgAuthRedirectResponse =
+                sendGetRequest(childOrgAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
+
+        // Common auth parent org redirect request.
+        Assert.assertEquals(childOrgAuthRedirectResponse.getStatusLine().getStatusCode(),
+                HttpStatus.SC_MOVED_TEMPORARILY, "Child organization auth redirection status code is invalid.");
+        Assert.assertNotNull(childOrgAuthRedirectResponse,
+                "Child organization authorize redirection response is null.");
+        Header rootOrgCommonAuthRedirectionLocation =
+                childOrgAuthRedirectResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(rootOrgCommonAuthRedirectionLocation,
+                "Child organization authorize redirection response location header is null.");
+        EntityUtils.consume(childOrgAuthRedirectResponse.getEntity());
+
+        HttpResponse rootOrgCommonAuthRedirectionResponse =
+                sendGetRequest(rootOrgCommonAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
+
+        // Authorize redirect request to root org.
+        Assert.assertEquals(rootOrgCommonAuthRedirectionResponse.getStatusLine().getStatusCode(),
+                HttpStatus.SC_MOVED_TEMPORARILY, "Root organization common auth redirection status code is invalid.");
+        Assert.assertNotNull(rootOrgCommonAuthRedirectionResponse, "Root organization common auth response is null.");
+        Header rootOrgAuthRedirectionLocation =
+                rootOrgCommonAuthRedirectionResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(rootOrgAuthRedirectionLocation,
+                "Root organization common auth response location header is null.");
+        EntityUtils.consume(rootOrgCommonAuthRedirectionResponse.getEntity());
+
+        HttpResponse consentRequestResponse =
+                sendGetRequest(rootOrgAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
+
+        // Consent request parent org.
+        Header consentRequestRedirectionLocation =
+                consentRequestResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        Assert.assertNotNull(consentRequestRedirectionLocation, "Authorization code response location header is null.");
+        Assert.assertTrue(consentRequestRedirectionLocation.toString().contains(OAuth2Constant.SESSION_DATA_KEY_CONSENT),
+                "sessionDataKeyConsent not found in response.");
+        String sessionDataKeyConsent = DataExtractUtil.getParamFromURIString(
+                consentRequestRedirectionLocation.getValue(), OAuth2Constant.SESSION_DATA_KEY_CONSENT);
+        Assert.assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent is null.");
+        EntityUtils.consume(consentRequestResponse.getEntity());
+
+        HttpResponse authCodeResponse = sendApprovalPost(client, sessionDataKeyConsent);
+
+        // Code response request parent org.
+        Assert.assertNotNull(authCodeResponse, "Approval request failed. response is invalid.");
+        Header authCodeRedirectionLocation = authCodeResponse.getFirstHeader(
+                OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+
+        subjectToken = getFragmentParam(authCodeRedirectionLocation.getValue(), OAuth2Constant.SUBJECT_TOKEN);
+        idToken = getFragmentParam(authCodeRedirectionLocation.getValue(), OAuth2Constant.ID_TOKEN);
+
+        EntityUtils.consume(authCodeResponse.getEntity());
+    }
 
     private ApplicationResponseModel createImpersonationApplication() throws Exception {
 
@@ -449,9 +792,21 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             // Authorize few system APIs.
             authorizeSystemAPIs(appId,
-                    new ArrayList<>(Arrays.asList(impersonationResourceIdentifier, scim2UserResourceIdentifier)));
+                    new ArrayList<>(Arrays.asList(impersonationResourceIdentifier, scim2UserResourceIdentifier,
+                            orgImpersonationResourceIdentifier, orgScim2UserResourceIdentifier)));
         }
+        shareApplication(appId);
         return getApplication(appId);
+    }
+
+    private void shareApplication(String appId) throws IOException {
+
+        ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
+        applicationSharePOSTRequest.setShareWithAllChildren(true);
+        restClient.shareApplication(appId, applicationSharePOSTRequest);
+
+        // Since application sharing is an async operation, wait for some time for it to finish.
+        await().atMost(5, TimeUnit.SECONDS).until(() -> true);
     }
 
     private void updateApplicationToSkipLoginConsent(boolean skipLoginConsent) throws Exception {
@@ -463,6 +818,54 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         updateApplication(applicationId, updatedApplication);
     }
 
+    private void createOrganization() throws Exception {
+
+        subOrgID = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
+        subOrgToken = orgMgtRestClient.switchM2MToken(subOrgID);
+    }
+
+    private void createOrgUsers() throws Exception {
+
+        // Create sub org end user.
+        UserObject endUser = new UserObject();
+        endUser.setUserName(ORG_END_USER_USERNAME);
+        endUser.setPassword(ORG_END_USER_PASSWORD);
+        endUser.addEmail(new Email().value(ORG_END_USER_EMAIL));
+        orgEndUserId = scim2RestClient.createSubOrgUser(endUser, subOrgToken);
+        // Create sub org impersonator.
+        UserObject impersonator = new UserObject();
+        impersonator.setUserName(ORG_IMPERSONATOR_USERNAME);
+        impersonator.setPassword(ORG_IMPERSONATOR_PASSWORD);
+        impersonator.addEmail(new Email().value(ORG_IMPERSONATOR_EMAIL));
+        orgImpersonatorId = scim2RestClient.createSubOrgUser(impersonator, subOrgToken);
+    }
+
+    private void assignOrgRolesToOrgUsers() throws Exception {
+
+        String sharedAppId = restClient.getAppIdUsingAppNameInOrganization(SERVICE_PROVIDER_NAME, subOrgToken);
+        // Assign end user role to sub org end user.
+        String endUserSharedAppRoleId =
+                scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(END_USER_ROLE_NAME, sharedAppId, subOrgToken);
+        RoleItemAddGroupobj endUserRolePatchObj = new RoleItemAddGroupobj();
+        endUserRolePatchObj.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        endUserRolePatchObj.setPath(USERS_PATH);
+        endUserRolePatchObj.addValue(new ListObject().value(orgEndUserId));
+        scim2RestClient.updateUsersOfRoleV2InSubOrg(
+                endUserSharedAppRoleId,
+                new PatchOperationRequestObject().addOperations(endUserRolePatchObj),
+                subOrgToken);
+        // Assign impersonator role to sub org impersonator.
+        String impersonatorSharedAppRoleId =
+                scim2RestClient.getRoleIdByNameAndAudienceInSubOrg(IMPERSONATOR_ROLE_NAME, sharedAppId, subOrgToken);
+        RoleItemAddGroupobj impersonatorRolePatchObj = new RoleItemAddGroupobj();
+        impersonatorRolePatchObj.setOp(RoleItemAddGroupobj.OpEnum.ADD);
+        impersonatorRolePatchObj.setPath(USERS_PATH);
+        impersonatorRolePatchObj.addValue(new ListObject().value(orgImpersonatorId));
+        scim2RestClient.updateUsersOfRoleV2InSubOrg(
+                impersonatorSharedAppRoleId,
+                new PatchOperationRequestObject().addOperations(impersonatorRolePatchObj),
+                subOrgToken);
+    }
 
     private void addImpersonator() throws Exception {
 
@@ -482,7 +885,6 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         patchRoleItem.addValue(new ListObject().value(impersonatorId));
         scim2RestClient.updateUserRole(new PatchOperationRequestObject().addOperations(patchRoleItem), roleId);
     }
-
 
     private void addEndUser() throws Exception {
 
@@ -508,9 +910,10 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
 
         List<Permission> permissions = new ArrayList<>();
         permissions.add(new Permission(INTERNAL_USER_IMPERSONATE));
+        permissions.add(new Permission(ORG_INTERNAL_USER_IMPERSONATE));
         Audience roleAudience = new Audience("APPLICATION", appID);
         List<String> schemas = Collections.emptyList();
-        RoleV2 role = new RoleV2(roleAudience, TEST_ROLE_APPLICATION, permissions, schemas);
+        RoleV2 role = new RoleV2(roleAudience, IMPERSONATOR_ROLE_NAME, permissions, schemas);
 
         impersonationRoleID = addRole(role);
         RoleItemAddGroupobj rolePatchReqObject = new RoleItemAddGroupobj();
@@ -526,9 +929,11 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         List<Permission> permissions = new ArrayList<>();
         permissions.add(new Permission(PERMISSION_VIEW));
         permissions.add(new Permission(PERMISSION_LIST));
+        permissions.add(new Permission(ORG_PERMISSION_VIEW));
+        permissions.add(new Permission(ORG_PERMISSION_LIST));
         Audience roleAudience = new Audience(AUDIENCE_TYPE, appID);
         List<String> schemas = Collections.emptyList();
-        RoleV2 role = new RoleV2(roleAudience, IMPERSONATION_ROLE_APPLICATION, permissions, schemas);
+        RoleV2 role = new RoleV2(roleAudience, END_USER_ROLE_NAME, permissions, schemas);
         endUserRoleID = addRole(role);
         RoleItemAddGroupobj rolePatchReqObject = new RoleItemAddGroupobj();
         rolePatchReqObject.setOp(RoleItemAddGroupobj.OpEnum.ADD);

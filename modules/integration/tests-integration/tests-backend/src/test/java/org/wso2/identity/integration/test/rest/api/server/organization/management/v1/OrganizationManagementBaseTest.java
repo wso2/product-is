@@ -90,7 +90,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String RECURSIVE_QUERY_PARAM = "recursive";
     protected static final String OFFSET_QUERY_PARAM = "offset";
     protected static final String FILTER_QUERY_PARAM = "filter";
-    protected static final String FIDP_QUERY_PARAM = "fidp";
+    public static final String FIDP_QUERY_PARAM = "fidp";
     protected static final String LOGIN_HINT_QUERY_PARAM = "login_hint";
     protected static final String ORG_DISCOVERY_TYPE_QUERY_PARAM = "orgDiscoveryType";
     protected static final String AUTH_FAILURE_MSG_QUERY_PARAM = "authFailureMsg";
@@ -136,7 +136,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final int NUM_OF_ORGANIZATIONS_WITH_META_ATTRIBUTES = 3;
     protected static final int DEFAULT_META_ATTRIBUTES_LIMIT = 15;
 
-    protected static final String ORGANIZATION_SSO = "OrganizationSSO";
+    public static final String ORGANIZATION_SSO = "OrganizationSSO";
     protected static final String EMAIL_DOMAIN_DISCOVERY = "emailDomain";
     protected static final String B2B_APP_NAME = "Guardio-Business-App";
     protected static final String B2B_USER_NAME = "John";
