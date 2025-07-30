@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import org.wso2.carbon.identity.action.execution.api.exception.ActionExecutionRequestBuilderException;
 
+import java.util.List;
 import java.util.Objects;
 
 @JsonDeserialize(builder = PasswordUpdatingUser.Builder.class)
@@ -31,7 +32,11 @@ public class PasswordUpdatingUser extends User {
 
     private PasswordUpdatingUser(Builder builder) {
 
-        super(builder.id);
+        super(new User.Builder()
+                .id(builder.id)
+                .claims(builder.claims)
+                .groups(builder.groups)
+                .organization(builder.organization));
         this.updatingCredential = builder.updatingCredential;
     }
 
@@ -64,11 +69,32 @@ public class PasswordUpdatingUser extends User {
     public static class Builder {
 
         private String id;
+        private List<UserClaim> claims;
+        private List<String> groups;
+        private Organization organization;
         private Credential updatingCredential;
 
         public Builder id(String id) {
 
             this.id = id;
+            return this;
+        }
+
+        public Builder claims(List<? extends UserClaim> claims) {
+
+            this.claims.addAll(claims);
+            return this;
+        }
+
+        public Builder groups(List<String> groups) {
+
+            this.groups.addAll(groups);
+            return this;
+        }
+
+        public Builder organization(Organization organization) {
+
+            this.organization = organization;
             return this;
         }
 

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import org.wso2.carbon.identity.action.execution.api.exception.ActionExecutionRequestBuilderException;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -30,17 +31,13 @@ import java.util.Objects;
 @JsonDeserialize(builder = ProfileUpdatingUser.Builder.class)
 public class ProfileUpdatingUser extends User {
 
-    private final Claim[] claims;
-
     private ProfileUpdatingUser(ProfileUpdatingUser.Builder builder) {
 
-        super(builder.id);
-        this.claims = builder.claims;
-    }
-
-    public Claim[] getClaims() {
-
-        return claims;
+        super(new User.Builder()
+                .id(builder.id)
+                .claims(builder.claims)
+                .groups(builder.groups)
+                .organization(builder.organization));
     }
 
     @Override
@@ -50,14 +47,10 @@ public class ProfileUpdatingUser extends User {
 
         ProfileUpdatingUser that = (ProfileUpdatingUser) o;
 
-        return Objects.equals(claims, that.claims);
-
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(claims);
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getClaims(), that.getClaims()) &&
+                Objects.equals(getGroups(), that.getGroups()) &&
+                Objects.equals(getOrganization(), that.getOrganization());
     }
 
     /**
@@ -67,17 +60,31 @@ public class ProfileUpdatingUser extends User {
     public static class Builder {
 
         private String id;
-        private Claim[] claims;
+        private List<UpdatingUserClaim> claims;
+        private List<String> groups;
+        private Organization organization;
 
-        public ProfileUpdatingUser.Builder id(String id) {
+        public Builder id(String id) {
 
             this.id = id;
             return this;
         }
 
-        public ProfileUpdatingUser.Builder claims(Claim[] claims) {
+        public Builder claims(List<UpdatingUserClaim> claims) {
 
             this.claims = claims;
+            return this;
+        }
+
+        public Builder groups(List<String> groups) {
+
+            this.groups = groups;
+            return this;
+        }
+
+        public Builder organization(Organization organization) {
+
+            this.organization = organization;
             return this;
         }
 

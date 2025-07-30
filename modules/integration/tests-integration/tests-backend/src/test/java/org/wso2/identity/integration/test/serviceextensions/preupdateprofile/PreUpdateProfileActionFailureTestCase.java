@@ -263,9 +263,9 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
 
         PreUpdateProfileRequest request = actionRequest.getEvent().getRequest();
 
-        assertEquals(request.getClaims()[0].getUri(), GIVEN_NAME_CLAIM_URI);
-        assertNull(request.getClaims()[0].getUpdatingValue());
-        assertEquals(request.getClaims()[0].getValue(), updateClaimValue);
+        assertEquals(request.getClaims().get(0).getUri(), GIVEN_NAME_CLAIM_URI);
+        assertNull(request.getClaims().get(0).getUpdatingValue());
+        assertEquals(request.getClaims().get(0).getValue(), updateClaimValue);
     }
 }
 

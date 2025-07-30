@@ -18,14 +18,23 @@
 
 package org.wso2.identity.integration.test.serviceextensions.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
+
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * This class models the User sent in the request payload to the API endpoint of a particular action.
  */
+@JsonDeserialize(builder = User.Builder.class)
 public class User {
 
     private String id;
+    private List<? extends UserClaim> claims;
+    private List<String> groups;
+    private List<String> roles;
     private Organization organization;
 
     public User(String id) {
@@ -33,8 +42,13 @@ public class User {
         this.id = id;
     }
 
-    public User() {
+    public User(Builder builder) {
 
+        this.id = builder.id;
+        this.claims = builder.claims;
+        this.groups = builder.groups;
+        this.roles = builder.roles;
+        this.organization = builder.organization;
     }
 
     public String getId() {
@@ -42,19 +56,24 @@ public class User {
         return id;
     }
 
-    public void setId(String id) {
+    public List<UserClaim> getClaims() {
 
-        this.id = id;
+        return claims != null ? Collections.unmodifiableList(claims) : null;
+    }
+
+    public List<String> getGroups() {
+
+        return groups != null ? Collections.unmodifiableList(groups) : null;
+    }
+
+    public List<String> getRoles() {
+
+        return roles != null ? Collections.unmodifiableList(roles) : null;
     }
 
     public Organization getOrganization() {
 
         return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-
-        this.organization = organization;
     }
 
     @Override
@@ -66,9 +85,51 @@ public class User {
         return Objects.equals(id, user.id);
     }
 
-    @Override
-    public int hashCode() {
+    /**
+     * Builder for the User.
+     */
+    @JsonPOJOBuilder(withPrefix = "")
+    public static class Builder {
 
-        return Objects.hash(id);
+        private String id;
+        private List<? extends UserClaim> claims;
+        private List<String> groups;
+        private List<String> roles;
+        private Organization organization;
+
+        public Builder id(String id) {
+
+            this.id = id;
+            return this;
+        }
+
+        public Builder claims(List<? extends UserClaim> claims) {
+
+            this.claims = claims;
+            return this;
+        }
+
+        public Builder groups(List<String> groups) {
+
+            this.groups = groups;
+            return this;
+        }
+
+        public Builder roles(List<String> roles) {
+
+            this.roles = roles;
+            return this;
+        }
+
+        public Builder organization(Organization organization) {
+
+            this.organization = organization;
+            return this;
+        }
+
+        public User build() {
+
+            return new User(this);
+        }
     }
 }
