@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class models the User sent in the request payload to the API endpoint of a particular action.
@@ -73,6 +74,15 @@ public class User {
     public Organization getOrganization() {
 
         return organization;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id);
     }
 
     /**
