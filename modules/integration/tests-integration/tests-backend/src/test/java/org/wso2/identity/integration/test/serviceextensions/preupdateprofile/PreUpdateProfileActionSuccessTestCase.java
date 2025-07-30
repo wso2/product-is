@@ -43,6 +43,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperat
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.serviceextensions.model.UpdatingUserClaim;
 import org.wso2.identity.integration.test.utils.FileUtils;
 
 import static org.testng.Assert.assertEquals;
@@ -329,19 +330,19 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         if (operation == UserItemAddGroupobj.OpEnum.ADD) {
             assertNull(user.getClaims());
         } else if (operation == UserItemAddGroupobj.OpEnum.REPLACE) {
-            assertEquals(user.getClaims()[0].getUri(), NICK_NAME_CLAIM_URI);
-            assertEquals(user.getClaims()[0].getUpdatingValue(), updateClaimValue);
-            assertEquals(user.getClaims()[0].getValue(), currentClaimValue);
+            assertEquals(user.getClaims().get(0).getUri(), NICK_NAME_CLAIM_URI);
+            assertEquals(((UpdatingUserClaim) user.getClaims().get(0)).getUpdatingValue(), updateClaimValue);
+            assertEquals(user.getClaims().get(0).getValue(), currentClaimValue);
         } else if (operation == UserItemAddGroupobj.OpEnum.REMOVE) {
-            assertEquals(user.getClaims()[0].getUri(), NICK_NAME_CLAIM_URI);
-            assertEquals(user.getClaims()[0].getValue(), currentClaimValue);
+            assertEquals(user.getClaims().get(0).getUri(), NICK_NAME_CLAIM_URI);
+            assertEquals(user.getClaims().get(0).getValue(), currentClaimValue);
         }
 
         PreUpdateProfileRequest request = actionRequest.getEvent().getRequest();
 
-        assertEquals(request.getClaims()[0].getUri(), NICK_NAME_CLAIM_URI);
-        assertNull(request.getClaims()[0].getUpdatingValue());
-        assertEquals(request.getClaims()[0].getValue(), updateClaimValue);
+        assertEquals(request.getClaims().get(0).getUri(), NICK_NAME_CLAIM_URI);
+        assertNull(request.getClaims().get(0).getUpdatingValue());
+        assertEquals(request.getClaims().get(0).getValue(), updateClaimValue);
     }
 }
 

@@ -26,7 +26,7 @@ import java.util.Objects;
 /**
  * This class models the event at a pre update password trigger.
  * PasswordEvent is the entity that represents the event that is sent to the Action
- * over {@link org.wso2.carbon.identity.action.execution.model.ActionExecutionRequest}.
+ * over {@link org.wso2.carbon.identity.action.execution.api.model.ActionExecutionRequest}.
  */
 @JsonDeserialize(builder = PreUpdatePasswordEvent.Builder.class)
 public class PreUpdatePasswordEvent extends Event {

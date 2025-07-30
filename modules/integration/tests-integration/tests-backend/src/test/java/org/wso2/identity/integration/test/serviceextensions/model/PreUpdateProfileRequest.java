@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import org.wso2.carbon.identity.action.execution.api.exception.ActionExecutionRequestBuilderException;
 import org.wso2.carbon.identity.action.execution.api.model.Request;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,14 +32,14 @@ import java.util.Objects;
 @JsonDeserialize(builder = PreUpdateProfileRequest.Builder.class)
 public class PreUpdateProfileRequest extends Request {
 
-    private final Claim[] claims;
+    private final List<UpdatingUserClaim> claims;
 
     private PreUpdateProfileRequest(PreUpdateProfileRequest.Builder builder) {
 
         this.claims = builder.claims;
     }
 
-    public Claim[] getClaims() {
+    public List<UpdatingUserClaim> getClaims() {
 
         return claims;
     }
@@ -66,9 +67,9 @@ public class PreUpdateProfileRequest extends Request {
     @JsonPOJOBuilder(withPrefix = "")
     public static class Builder {
 
-        private Claim[] claims;
+        private List<UpdatingUserClaim> claims;
 
-        public PreUpdateProfileRequest.Builder claims(Claim[] claims) {
+        public Builder claims(List<UpdatingUserClaim> claims) {
 
             this.claims = claims;
             return this;
