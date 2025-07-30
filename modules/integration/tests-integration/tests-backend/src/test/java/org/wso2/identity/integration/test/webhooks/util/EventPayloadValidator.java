@@ -89,16 +89,11 @@ public class EventPayloadValidator {
             LOG.info("Validating key: {}", key);
 
             if (!actualEvent.has(key)) {
-                throw new IllegalArgumentException("Missing key in extracted payload: " + key);
+                throw new IllegalArgumentException("Missing key in actual event payload: " + key);
             }
 
             Object expectedValue = expectedEvent.get(key);
             Object actualValue = actualEvent.get(key);
-
-            if ("tenant".equals(key)) {
-                validateTenantField(expectedValue, actualValue);
-                continue;
-            }
 
             if ("claims".equals(key)) {
                 validateClaimsArray((JSONArray) actualValue, (JSONArray) expectedValue);
@@ -140,27 +135,6 @@ public class EventPayloadValidator {
             set.add(element.toString());
         }
         return set;
-    }
-
-    private static void validateTenantField(Object expectedValue, Object actualValue) throws JSONException {
-
-        if (!(expectedValue instanceof JSONObject) || !(actualValue instanceof JSONObject)) {
-            throw new IllegalArgumentException("Invalid structure for 'tenant' field.");
-        }
-
-        JSONObject expectedTenant = (JSONObject) expectedValue;
-        JSONObject actualTenant = (JSONObject) actualValue;
-
-        validateRequiredFields(expectedTenant, "name");
-        validateRequiredFields(actualTenant, "name");
-
-        String expectedName = expectedTenant.getString("name");
-        String actualName = actualTenant.getString("name");
-
-        if (!expectedName.equals(actualName)) {
-            throw new IllegalArgumentException("Value mismatch for 'tenant.name': expected " +
-                    expectedName + ", but found " + actualName);
-        }
     }
 
     private static void validateRequiredFields(JSONObject jsonObject, String... fields) {

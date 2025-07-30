@@ -80,4 +80,9 @@ public class WebhookMockService {
 
         return new ArrayList<>(orderedRequests);
     }
+
+    public void clearOrderedRequests() {
+
+        orderedRequests.clear();
+    }
 }
