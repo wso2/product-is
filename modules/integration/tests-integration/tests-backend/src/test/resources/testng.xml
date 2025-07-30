@@ -366,6 +366,12 @@
     </classes>
 </test>
 
+<test name="is-test-webhooks" preserve-order="true" parallel="false">
+    <classes>
+        <class name="org.wso2.identity.integration.test.webhooks.usermanagement.AdminInitUserManagementEventTestCase"/>
+    </classes>
+</test>
+
 <!--
 ====================================================================================================================
     IMPORTANT : All the tests below this section, should be the ones that requires additional Identity Server

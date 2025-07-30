@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.scim2.eventpayloadbuilder;
+package org.wso2.identity.integration.test.webhooks.usermanagement.eventpayloadbuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +26,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 /**
  * Utility class to build expected event payloads for SCIM2 user test cases.
  */
-public class SCIM2UserTestCaseExpectedEventPayloadBuilder {
+public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
     /**
      * Builds the expected payload for a user created event in the context of a test case.
@@ -40,7 +40,7 @@ public class SCIM2UserTestCaseExpectedEventPayloadBuilder {
                                                                                    String tenantDomain)
             throws Exception {
 
-        JSONObject userCreatedEvent = new org.json.JSONObject();
+        JSONObject userCreatedEvent = new JSONObject();
 
         userCreatedEvent.put("initiatorType", "ADMIN");
         userCreatedEvent.put("user", createUserObject(userId, tenantDomain));
@@ -91,7 +91,6 @@ public class SCIM2UserTestCaseExpectedEventPayloadBuilder {
         userDeletedEvent.put("user", createUserObjectForDelete(userId, tenantDomain));
         userDeletedEvent.put("tenant", createTenantObject(tenantDomain));
         userDeletedEvent.put("userStore", createUserStoreObject());
-        userDeletedEvent.put("action", "DELETE");
 
         return userDeletedEvent;
     }
@@ -112,7 +111,6 @@ public class SCIM2UserTestCaseExpectedEventPayloadBuilder {
         JSONObject registrationFailedEvent = new JSONObject();
 
         registrationFailedEvent.put("initiatorType", "ADMIN");
-        registrationFailedEvent.put("user", createUserObjectForFailure(userId, tenantDomain));
         registrationFailedEvent.put("tenant", createTenantObject(tenantDomain));
         registrationFailedEvent.put("action", "REGISTER");
         registrationFailedEvent.put("reason", createReasonObject(reasonDescription));
@@ -122,10 +120,10 @@ public class SCIM2UserTestCaseExpectedEventPayloadBuilder {
 
     private static JSONObject createUserObject(String userId, String tenantDomain) throws JSONException {
 
-        JSONObject user = new org.json.JSONObject();
+        JSONObject user = new JSONObject();
         user.put("id", userId);
 
-        JSONArray claims = new org.json.JSONArray();
+        JSONArray claims = new JSONArray();
         claims.put(new JSONObject().put("uri", "http://wso2.org/claims/username").put("value", "scim2user"));
         claims.put(new JSONObject().put("uri", "http://wso2.org/claims/emailAddresses")
                 .put("value", new JSONArray().put("scim2user@wso2.com").put("scim2user@gmail.com")));
@@ -180,16 +178,16 @@ public class SCIM2UserTestCaseExpectedEventPayloadBuilder {
         return user;
     }
 
-    private static JSONObject createTenantObject(String tenantDomain) throws org.json.JSONException {
+    private static JSONObject createTenantObject(String tenantDomain) throws JSONException {
 
-        JSONObject tenant = new org.json.JSONObject();
+        JSONObject tenant = new JSONObject();
         tenant.put("name", tenantDomain);
         return tenant;
     }
 
-    private static JSONObject createUserStoreObject() throws org.json.JSONException {
+    private static JSONObject createUserStoreObject() throws JSONException {
 
-        JSONObject userStore = new org.json.JSONObject();
+        JSONObject userStore = new JSONObject();
         userStore.put("id", "UFJJTUFSWQ==");
         userStore.put("name", "PRIMARY");
         return userStore;

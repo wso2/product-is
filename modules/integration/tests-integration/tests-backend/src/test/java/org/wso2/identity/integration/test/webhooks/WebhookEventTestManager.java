@@ -33,6 +33,7 @@ import org.wso2.identity.integration.test.webhooks.util.EventPayloadValidator;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -43,9 +44,11 @@ public class WebhookEventTestManager {
 
     private static final int START_PORT = 8580;
     private static final int PORT_LIMIT = 8590;
-    private static final AtomicInteger currentPort = new AtomicInteger(START_PORT);
+    private static final int MAX_RETRIES_ON_EVENTS_RECEIVED = 3;
+    private static final int WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED = 500;
     private static final String SERVER_BASE_URL = "https://localhost:9853/";
     private static final String WSO2_EVENT_PROFILE_URI = "https://schemas.identity.wso2.org/events";
+    private static final AtomicInteger currentPort = new AtomicInteger(START_PORT);
 
     private final String webhookEndpointPath;
     private final String eventProfile;
@@ -101,7 +104,9 @@ public class WebhookEventTestManager {
      * @param eventUri        the URI of the event for which the payload is expected.
      * @param expectedPayload the expected JSON payload for the event.
      */
-    public void stackExpectedPayload(String eventUri, JSONObject expectedPayload) {
+    public void stackExpectedEventPayload(String eventUri, JSONObject expectedPayload) {
+
+        LOG.info("Stacking expected payload for event URI: {}", eventUri);
 
         eventPayloadStack.addExpectedPayload(eventUri, expectedPayload);
     }
@@ -111,27 +116,83 @@ public class WebhookEventTestManager {
      *
      * @throws Exception if an error occurs during validation, such as if no payloads are received or if validation fails.
      */
-    public void validateEventPayloads() throws Exception {
+    public void validateStackedEventPayloads() throws Exception {
 
-        while (!eventPayloadStack.isEmpty()) {
-            Map.Entry<String, JSONObject> expectedEntry = eventPayloadStack.popExpectedPayload();
-            validatePayloadForEventUri(expectedEntry.getKey(), expectedEntry.getValue());
+        if (eventPayloadStack.isEmpty()) {
+            return;
+        }
+
+        waitForEvents();
+
+        try {
+            while (!eventPayloadStack.isEmpty()) {
+                Map.Entry<String, JSONObject> expectedEntry = eventPayloadStack.popExpectedPayload();
+                validateEventPayloadForEventUri(expectedEntry.getKey(), expectedEntry.getValue());
+            }
+        } finally {
+            eventPayloadStack.clearStack();
         }
     }
 
-    private void validatePayloadForEventUri(String eventUri, JSONObject expectedPayload) throws Exception {
+    private void waitForEvents() throws InterruptedException {
 
-        List<JSONObject> receivedPayloads = extractReceivedPayloads();
+        int retryCount = 0;
 
-        if (receivedPayloads.isEmpty()) {
-            throw new AssertionError("No received payloads found for event URI: " + eventUri);
+        while (mockService.getOrderedRequests().isEmpty() && retryCount < MAX_RETRIES_ON_EVENTS_RECEIVED) {
+            LOG.info("No events received for the webhook. Retrying... Attempt: {}/{}", retryCount + 1,
+                    MAX_RETRIES_ON_EVENTS_RECEIVED);
+            TimeUnit.MILLISECONDS.sleep(WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED);
+            retryCount++;
         }
 
+        if (mockService.getOrderedRequests().isEmpty()) {
+            throw new AssertionError(
+                    "No events received for the webhook after " + MAX_RETRIES_ON_EVENTS_RECEIVED + " retries.");
+        }
+    }
+
+    private void validateEventPayloadForEventUri(String eventUri, JSONObject expectedPayload) throws Exception {
+
+        waitForSpecificEvent(eventUri);
+
+        List<JSONObject> receivedPayloads = extractReceivedPayloads();
         boolean isMatched = matchAndValidatePayload(eventUri, expectedPayload, receivedPayloads);
 
         if (!isMatched) {
             throw new AssertionError("No matching payload found for event URI: " + eventUri);
         }
+    }
+
+    private void waitForSpecificEvent(String eventUri) throws InterruptedException {
+
+        int retryCount = 0;
+
+        while (retryCount < MAX_RETRIES_ON_EVENTS_RECEIVED) {
+            List<JSONObject> receivedPayloads = extractReceivedPayloads();
+
+            boolean eventExists = receivedPayloads.stream()
+                    .anyMatch(payload -> {
+                        try {
+                            return payload != null && payload.has("events") &&
+                                    payload.getJSONObject("events").has(eventUri);
+                        } catch (JSONException e) {
+                            LOG.error("Error parsing JSON payload for event URI '{}': {}", eventUri, e.getMessage());
+                            return false;
+                        }
+                    });
+
+            if (eventExists) {
+                return;
+            }
+
+            LOG.info("Event for URI '{}' not found in received payloads. Retrying... Attempt: {}/{}",
+                    eventUri, retryCount + 1, MAX_RETRIES_ON_EVENTS_RECEIVED);
+            TimeUnit.MILLISECONDS.sleep(WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED);
+            retryCount++;
+        }
+
+        throw new AssertionError("Event for URI '" + eventUri + "' not found after " +
+                MAX_RETRIES_ON_EVENTS_RECEIVED + " retries.");
     }
 
     private List<JSONObject> extractReceivedPayloads() {
@@ -166,6 +227,8 @@ public class WebhookEventTestManager {
                             eventField, expectedPayload, eventUri);
 
                     EventPayloadValidator.validateEventField(eventField, expectedPayload);
+                    LOG.info("Payload validation successful for event URI: {}", eventUri);
+                    LOG.info("Removing matched payload from received list for event URI: {}", eventUri);
                     receivedPayloads.remove(i);
                     return true;
 
@@ -242,5 +305,4 @@ public class WebhookEventTestManager {
 
         return "WSO2".equals(eventProfile) ? WSO2_EVENT_PROFILE_URI : null;
     }
-
 }
