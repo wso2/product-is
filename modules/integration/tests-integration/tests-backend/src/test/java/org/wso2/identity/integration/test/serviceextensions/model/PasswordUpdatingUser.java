@@ -32,7 +32,8 @@ public class PasswordUpdatingUser extends User {
 
     private PasswordUpdatingUser(Builder builder) {
 
-        super(new User.Builder(builder.id)
+        super(new User.Builder()
+                .id(builder.id)
                 .claims(builder.claims)
                 .groups(builder.groups)
                 .organization(builder.organization));
