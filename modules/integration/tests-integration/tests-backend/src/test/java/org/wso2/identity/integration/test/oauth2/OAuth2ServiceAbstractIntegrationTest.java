@@ -92,8 +92,10 @@ import java.security.interfaces.RSAPrivateKey;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 import static org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase.INBOUND_AUTH_TYPE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
@@ -119,6 +121,9 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	private static final String END_CERT = "-----END CERTIFICATE-----";
 	public static final String OIDC = "oidc";
 	public static final String SAML = "saml";
+	protected static final String AMPERSAND = "&";
+	protected static final String QUESTION_MARK = "?";
+	protected static final String EQUAL = "=";
 	private final static int TOMCAT_PORT = 8490;
 	private static final boolean REQUIRES_AUTHORIZATION = true;
 	protected ApplicationManagementServiceClient appMgtclient;
@@ -142,6 +147,20 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		adminClient = new OauthAdminClient(backendURL, sessionCookie);
 		remoteUSMServiceClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 		restClient = new OAuth2RestClient(serverURL, tenantInfo);
+	}
+
+	protected String buildGetRequestURL(String endpointURL, String tenantDomain, List<NameValuePair> queryParams) {
+
+		String authorizeEndpoint = getTenantQualifiedURL(endpointURL, tenantDomain);
+		if (queryParams == null || queryParams.isEmpty()) {
+			return authorizeEndpoint;
+		}
+		StringJoiner queryParamJoiner = new StringJoiner(AMPERSAND);
+		for (NameValuePair queryParam : queryParams) {
+			queryParamJoiner.add(queryParam.getName() + EQUAL + queryParam.getValue());
+		}
+
+		return authorizeEndpoint + QUESTION_MARK + queryParamJoiner;
 	}
 
 	/**
@@ -541,6 +560,13 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return client.execute(request);
 	}
 
+	protected HttpResponse sendGetRequest(String endpointURL, HttpClient client) throws IOException {
+
+		HttpGet request = new HttpGet(endpointURL);
+		request.setHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
+		return client.execute(request);
+	}
+
 	public HttpResponse sendPostRequest(HttpClient client, List<Header> headerList, List<NameValuePair> urlParameters,
 										String url) throws IOException {
 
@@ -548,6 +574,15 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		request.setHeaders(headerList.toArray(new Header[0]));
 		request.setEntity(new UrlEncodedFormEntity(urlParameters));
 
+		return client.execute(request);
+	}
+
+	protected HttpResponse sendPostRequest(String commonAuthURL, List<NameValuePair> urlParameters, HttpClient client)
+			throws IOException {
+
+		HttpPost request = new HttpPost(commonAuthURL);
+		request.setHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
+		request.setEntity(new UrlEncodedFormEntity(urlParameters));
 		return client.execute(request);
 	}
 
