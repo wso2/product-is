@@ -208,16 +208,23 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        restClient.deleteV2Role(impersonationRoleID);
-        restClient.deleteV2Role(endUserRoleID);
+        cookieStore.clear();
+
         scim2RestClient.deleteUser(impersonatorId);
         scim2RestClient.deleteUser(endUserId);
-        deleteApp(applicationId);
+        scim2RestClient.deleteSubOrgUser(orgImpersonatorId, subOrgToken);
+        scim2RestClient.deleteSubOrgUser(orgEndUserId, subOrgToken);
+        restClient.deleteV2Role(impersonationRoleID);
+        restClient.deleteV2Role(endUserRoleID);
+        restClient.deleteApplication(applicationId);
+        orgMgtRestClient.deleteOrganization(subOrgID);
 
-        restClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();
-        cookieStore.clear();
+        httpClientWithoutAutoRedirections.close();
+        restClient.closeHttpClient();
+        client.close();
+
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request with impersonation related response types " +
