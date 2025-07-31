@@ -285,6 +285,12 @@
     </classes>
 </test>
 
+<test name="is-test-webhooks" preserve-order="true" parallel="false">
+    <classes>
+        <class name="org.wso2.identity.integration.test.webhooks.usermanagement.AdminInitUserManagementEventTestCase"/>
+    </classes>
+</test>
+
 <test name="is-tests-scim2" preserve-order="true" parallel="false">
     <classes>
         <class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/>
@@ -363,12 +369,6 @@
         <class name="org.wso2.identity.integration.test.user.mgt.uuid.UUIDUserManagerInitializerTestCase"/>
         <class name="org.wso2.identity.integration.test.user.mgt.uuid.ReadWriteLDAPUUIDUMTestCase"/>
         <class name="org.wso2.identity.integration.test.user.mgt.uuid.JDBCUUIDUMTestCase"/>
-    </classes>
-</test>
-
-<test name="is-test-webhooks" preserve-order="true" parallel="false">
-    <classes>
-        <class name="org.wso2.identity.integration.test.webhooks.usermanagement.AdminInitUserManagementEventTestCase"/>
     </classes>
 </test>
 
