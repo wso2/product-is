@@ -2635,9 +2635,9 @@
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.33</authenticator.x509.version>
         <identity.extension.utils>1.0.22</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.14</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.15</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.14</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.16</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.45</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.51</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.30</identity.oauth2.grant.organizationswitch.version>
@@ -2662,10 +2662,10 @@
         <conditional.authentication.functions.version>1.2.80</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.68.38</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.20.6</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.27.20</identity.apps.core.version>
-        <identity.apps.tests.version>1.6.382</identity.apps.tests.version>
+        <identity.apps.console.version>2.69.0</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.21.0</identity.apps.myaccount.version>
+        <identity.apps.core.version>2.27.21</identity.apps.core.version>
+        <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
