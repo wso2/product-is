@@ -43,12 +43,15 @@ public class ValidationRulesRestClient extends RestBaseClient {
     private static final String API_SERVER_BASE_PATH = "/api/server/v1";
     private static final String VALIDATION_RULES_PATH = "/validation-rules";
     private static final String REVERT_PATH = "/revert";
+    private static final String ORG_PATH = "/o";
+    private static final String ORG_ID_PLACEHOLDER = "{orgId}";
 
     private final CloseableHttpClient client;
     private final String username;
     private final String password;
     private final String validationRulesBasePath;
     private final String validationRulesSubOrgBasePath;
+    private final String validationRulesGetSubOrgBasePath;
 
     public ValidationRulesRestClient(String backendURL, Tenant tenantInfo) {
 
@@ -61,22 +64,25 @@ public class ValidationRulesRestClient extends RestBaseClient {
                 API_SERVER_BASE_PATH + VALIDATION_RULES_PATH, tenantDomain);
         validationRulesSubOrgBasePath = backendURL + ISIntegrationTest.getTenantedOrgRelativePath(
                 API_SERVER_BASE_PATH + VALIDATION_RULES_PATH, tenantDomain);
+        validationRulesGetSubOrgBasePath = backendURL + ORG_PATH + PATH_SEPARATOR + ORG_ID_PLACEHOLDER +
+                API_SERVER_BASE_PATH + VALIDATION_RULES_PATH;
     }
 
     /**
      * Retrieves validation rules in a sub-organization for a specific field.
      *
      * @param field            The field for which validation rules are to be retrieved.
-     * @param switchedM2MToken The M2M token for the sub-organization.
+     * @param orgId            The ID of the sub-organization.
      * @return A JSON object containing the validation rules for the specified field.
      * @throws Exception If an error occurs while retrieving the validation rules.
      */
-    public JSONObject getValidationRulesForFieldInSubOrg(String field, String switchedM2MToken) throws Exception {
+    public JSONObject getValidationRulesForFieldInSubOrg(String field, String orgId) throws Exception {
 
-        String endpointUrl = validationRulesSubOrgBasePath + PATH_SEPARATOR + field;
+        String endpointUrl = validationRulesGetSubOrgBasePath.replace(ORG_ID_PLACEHOLDER, orgId) +
+                PATH_SEPARATOR + field;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(
-                endpointUrl, getHeadersWithBearerToken(switchedM2MToken))) {
+                endpointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "validation rules retrieval failed.");
             return getJSONObject(EntityUtils.toString(response.getEntity()));

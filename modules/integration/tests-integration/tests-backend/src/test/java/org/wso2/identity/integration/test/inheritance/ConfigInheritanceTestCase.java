@@ -203,7 +203,7 @@ public class ConfigInheritanceTestCase extends ISIntegrationTest {
 
         updatePasswordValidationRules(false);
         org.json.simple.JSONObject validationRulesInSubOrg =
-                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, switchedM2MToken);
+                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, subOrgId);
 
         JSONArray rules = (JSONArray) validationRulesInSubOrg.get(RULES);
         for (Object rule : rules) {
@@ -238,7 +238,7 @@ public class ConfigInheritanceTestCase extends ISIntegrationTest {
 
         updatePasswordValidationRules(true);
         org.json.simple.JSONObject validationRulesInSubOrg =
-                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, switchedM2MToken);
+                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, subOrgId);
 
         JSONArray rules = (JSONArray) validationRulesInSubOrg.get(RULES);
         for (Object rule : rules) {
@@ -273,7 +273,7 @@ public class ConfigInheritanceTestCase extends ISIntegrationTest {
 
         revertPasswordValidationRules(true);
         org.json.simple.JSONObject validationRulesInSubOrg =
-                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, switchedM2MToken);
+                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, subOrgId);
 
         JSONArray rules = (JSONArray) validationRulesInSubOrg.get(RULES);
         for (Object rule : rules) {
@@ -335,7 +335,7 @@ public class ConfigInheritanceTestCase extends ISIntegrationTest {
 
         // Validating validation rules configurations.
         org.json.simple.JSONObject defaultValidationRulesInSubOrg =
-                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, switchedM2MToken);
+                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, subOrgId);
 
         JSONArray rules = (JSONArray) defaultValidationRulesInSubOrg.get(RULES);
         for (Object rule : rules) {
@@ -394,7 +394,7 @@ public class ConfigInheritanceTestCase extends ISIntegrationTest {
 
         // Validating validation rules configurations.
         org.json.simple.JSONObject updatedValidationRulesInSubOrg =
-                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, switchedM2MToken);
+                validationRulesRestClient.getValidationRulesForFieldInSubOrg(PASSWORD_FIELD, subOrgId);
         JSONArray updatedRules = (JSONArray) updatedValidationRulesInSubOrg.get(RULES);
         for (Object rule : updatedRules) {
             org.json.simple.JSONObject ruleObject = (org.json.simple.JSONObject) rule;
