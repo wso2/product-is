@@ -2519,7 +2519,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.368</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.369</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2547,7 +2547,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.322</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.323</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.58</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
@@ -2568,7 +2568,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.66</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.67</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.357</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.31</org.wso2.identity.event.publishers.version>
@@ -2601,7 +2601,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.41</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.22</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.23</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
@@ -2662,9 +2662,9 @@
         <conditional.authentication.functions.version>1.2.80</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.69.2</identity.apps.console.version>
+        <identity.apps.console.version>2.69.4</identity.apps.console.version>
         <identity.apps.myaccount.version>2.22.0</identity.apps.myaccount.version>
-        <identity.apps.core.version>2.27.21</identity.apps.core.version>
+        <identity.apps.core.version>2.27.23</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
