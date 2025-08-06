@@ -192,6 +192,24 @@
           "description": "Enable to send OTP in verification e-mail instead of confirmation code."
         },
         {
+          "name": "EmailVerification.OTP",
+          "value": "false",
+          "displayName": "Send OTP in e-mail",
+          "description": "Enable to send OTP to verify email."
+        },
+        {
+          "name": "EmailVerification.AskPassword.EmailOTP",
+          "value": "false",
+          "displayName": "Send email OTP to setup the password",
+          "description": "Enable to send email OTP to setup the password."
+        },
+        {
+          "name": "EmailVerification.AskPassword.SMSOTP",
+          "value": "false",
+          "displayName": "Send SMS OTP to setup the password",
+          "description": "Enable to send SMS OTP to setup the password."
+        },
+        {
           "name": "EmailVerification.OTP.UseUppercaseCharactersInOTP",
           "value": "true",
           "displayName": "Include uppercase characters in OTP",

@@ -92,6 +92,18 @@
         "value": "false"
       },
       {
+        "name": "EmailVerification.OTP",
+        "value": "false"
+      },
+      {
+        "name": "EmailVerification.AskPassword.EmailOTP",
+        "value": "false"
+      },
+      {
+        "name": "EmailVerification.AskPassword.SMSOTP",
+        "value": "false"
+      },
+      {
         "name": "EmailVerification.OTP.UseUppercaseCharactersInOTP",
         "value": "true"
       },
