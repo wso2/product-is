@@ -2540,15 +2540,15 @@
         <identity.governance.version>1.11.111</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.9.12</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.9.13</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.9.35</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.323</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.11.58</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>7.0.325</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.11.60</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
@@ -2568,7 +2568,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.67</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.68</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.358</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.31</org.wso2.identity.event.publishers.version>
@@ -2582,7 +2582,7 @@
         <identity.outbound.auth.oidc.version>5.12.35</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.9.9</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.9.10</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.5.7</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.5.8</identity.outbound.auth.requestpath.oauth.version>
 
@@ -2650,7 +2650,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.166</identity.server.api.version>
+        <identity.server.api.version>1.3.168</identity.server.api.version>
         <identity.user.api.version>1.3.66</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
