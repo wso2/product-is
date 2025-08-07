@@ -2537,7 +2537,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.111</identity.governance.version>
+        <identity.governance.version>1.11.112</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.13</identity.carbon.auth.saml2.version>
@@ -2601,7 +2601,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.42</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.23</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.24</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
