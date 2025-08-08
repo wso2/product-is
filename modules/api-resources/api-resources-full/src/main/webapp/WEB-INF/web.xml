@@ -79,7 +79,8 @@
                 org.wso2.carbon.identity.api.server.flow.management.v1.FlowApi,
                 org.wso2.carbon.identity.api.server.flow.execution.v1.FlowApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowsApi,
-                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi
+                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi,
+                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi
             </param-value>
         </init-param>
         <init-param>
