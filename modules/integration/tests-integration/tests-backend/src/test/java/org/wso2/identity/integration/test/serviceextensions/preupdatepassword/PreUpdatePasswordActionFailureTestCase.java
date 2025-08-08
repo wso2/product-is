@@ -50,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -303,6 +304,8 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the user password set with pre update password action via offline invite link")
     public void testUserSetPasswordViaOfflineInviteLink() throws Exception {
 
+        // Deactivating action to stop action execution at user creation, which is not required for this test.
+        deactivateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId);
         UserObject offlineInvitingUserInfo = new UserObject()
                 .userName(TEST_USER2_USERNAME)
                 .password(TEST_USER_PASSWORD)
@@ -310,6 +313,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         String offlineInvitingUserId = scim2RestClient.createUser(offlineInvitingUserInfo);
 
+        activateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId);
         InvitationRequest invitationRequest = new InvitationRequest()
                 .username(offlineInvitingUserInfo.getUserName())
                 .userstore(PRIMARY_USER_STORE_NAME);

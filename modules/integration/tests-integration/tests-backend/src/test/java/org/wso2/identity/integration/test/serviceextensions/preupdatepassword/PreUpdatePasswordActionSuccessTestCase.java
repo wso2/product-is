@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 /**
  * Integration test class for testing the pre update password action execution.
@@ -257,6 +258,10 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         String offlineInvitingUserId = scim2RestClient.createUser(offlineInvitingUserInfo);
+        // Password action is triggered in user creation in offline link flow due architectural gap.
+        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+                PreUpdatePasswordEvent.Action.REGISTER);
+        serviceExtensionMockServer.resetRequests();
 
         InvitationRequest invitationRequest = new InvitationRequest()
                 .username(offlineInvitingUserInfo.getUserName())
@@ -292,6 +297,30 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         assertEquals(user.getUpdatingCredential().getType(), Credential.Type.PASSWORD);
         assertEquals(user.getUpdatingCredential().getFormat(), Credential.Format.PLAIN_TEXT);
         assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
+        assertEquals(actionRequest.getEvent().getInitiatorType(), initiatorType);
+        assertEquals(actionRequest.getEvent().getAction(), action);
+    }
+
+    private void assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType initiatorType,
+                                                            PreUpdatePasswordEvent.Action action)
+            throws JsonProcessingException {
+
+        String actualRequestPayload = serviceExtensionMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
+        PreUpdatePasswordActionRequest actionRequest = new ObjectMapper()
+                .readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
+
+        assertEquals(actionRequest.getActionType(), ActionType.PRE_UPDATE_PASSWORD);
+        assertEquals(actionRequest.getEvent().getTenant().getName(), tenantInfo.getDomain());
+        assertEquals(actionRequest.getEvent().getTenant().getId(), tenantId);
+        assertEquals(actionRequest.getEvent().getUserStore().getName(), PRIMARY_USER_STORE_NAME);
+        assertEquals(actionRequest.getEvent().getUserStore().getId(), PRIMARY_USER_STORE_ID);
+
+        PasswordUpdatingUser user = actionRequest.getEvent().getPasswordUpdatingUser();
+
+        assertNull(user.getId());
+        assertEquals(user.getUpdatingCredential().getType(), Credential.Type.PASSWORD);
+        assertEquals(user.getUpdatingCredential().getFormat(), Credential.Format.PLAIN_TEXT);
+        assertNotNull(user.getUpdatingCredential().getValue());
         assertEquals(actionRequest.getEvent().getInitiatorType(), initiatorType);
         assertEquals(actionRequest.getEvent().getAction(), action);
     }
