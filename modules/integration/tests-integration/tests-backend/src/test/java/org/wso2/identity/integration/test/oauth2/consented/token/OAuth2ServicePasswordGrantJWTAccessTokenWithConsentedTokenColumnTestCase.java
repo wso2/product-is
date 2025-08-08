@@ -49,6 +49,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 
 public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTestCase extends
         OAuth2ServiceWithConsentedTokenColumnAbstractIntegrationTest {
@@ -149,7 +150,7 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
 
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), USER_EMAIL,
                 "Requested user claims is not returned back with the ID token.");
-        Assert.assertEquals(((net.minidev.json.JSONObject) oidcTokens.getIDToken().getJWTClaimsSet()
+        Assert.assertEquals(((Map<String, Object>) oidcTokens.getIDToken().getJWTClaimsSet()
                         .getClaim(ADDRESS_OIDC_CLAIM)).get(COUNTRY_OIDC_CLAIM).toString(), COUNTRY,
                 "Requested user claims is not returned back with the ID token.");
     }
