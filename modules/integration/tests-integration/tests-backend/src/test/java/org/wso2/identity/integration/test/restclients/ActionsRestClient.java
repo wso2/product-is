@@ -48,6 +48,7 @@ public class ActionsRestClient extends RestBaseClient {
     private static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
     private static final String PRE_UPDATE_PROFILE_PATH = "/preUpdateProfile";
     private static final String ACTION_ACTIVATE_PATH = "/activate";
+    private static final String ACTION_DEACTIVATE_PATH = "/deactivate";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
@@ -95,6 +96,21 @@ public class ActionsRestClient extends RestBaseClient {
     public void activateAction(String actionType, String actionId) throws IOException {
 
         String endPointUrl = getActionEndpointOfType(actionType) + "/" + actionId + ACTION_ACTIVATE_PATH;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, StringUtils.EMPTY, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
+        }
+    }
+
+    /**
+     * Activate a given action by id.
+     *
+     * @param actionType  Type of the action
+     * @param actionId    ID of the action
+     * @throws IOException If an error occurred while activating the action
+     */
+    public void deactivateAction(String actionType, String actionId) throws IOException {
+
+        String endPointUrl = getActionEndpointOfType(actionType) + "/" + actionId + ACTION_DEACTIVATE_PATH;
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, StringUtils.EMPTY, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK);
         }
