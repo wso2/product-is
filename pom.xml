@@ -2620,7 +2620,7 @@
         <identity.metadata.saml.version>1.8.5</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
-        <identity.workflow.version>1.0.7</identity.workflow.version>
+        <identity.workflow.version>1.0.8</identity.workflow.version>
         <identity.user.workflow.version>5.6.13</identity.user.workflow.version>
 
         <!-- Connector Versions -->
@@ -2662,7 +2662,7 @@
         <conditional.authentication.functions.version>1.2.80</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.71.0</identity.apps.console.version>
+        <identity.apps.console.version>2.71.1</identity.apps.console.version>
         <identity.apps.myaccount.version>2.23.1</identity.apps.myaccount.version>
         <identity.apps.core.version>2.27.23</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
