@@ -1,0 +1,30 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_update",
+    "internal_organization_delete"
+  ],
+  "/api/server/v1/identity-governance": [
+    "internal_governance_view",
+    "internal_governance_update"
+  ],
+  "/o/api/server/v1/identity-governance": [
+    "internal_org_governance_view",
+    "internal_org_governance_update"
+  ],
+  "/api/server/v1/configs": [
+    "internal_config_view",
+    "internal_config_update"
+  ],
+  "/o/api/server/v1/configs": [
+    "internal_org_config_view",
+    "internal_org_config_update"
+  ],
+  "/api/server/v1/validation-rules": [
+    "internal_validation_rule_mgt_update"
+  ],
+  "/o/api/server/v1/validation-rules": [
+    "internal_org_validation_rule_mgt_update"
+  ]
+}
