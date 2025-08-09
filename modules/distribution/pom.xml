@@ -472,6 +472,14 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint.war" />
 
+                                <!-- Explode the accounts.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accounts">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="accounts.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accounts.war" />
+
                                 <!-- Explode the accountrecoveryendpoint.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accountrecoveryendpoint">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">

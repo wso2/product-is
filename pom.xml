@@ -1843,6 +1843,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.identity.apps</groupId>
+                <artifactId>org.wso2.identity.apps.accounts.portal.server.feature</artifactId>
+                <version>${identity.apps.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.identity.apps</groupId>
                 <artifactId>org.wso2.identity.apps.recovery.portal.server.feature</artifactId>
                 <version>${identity.apps.core.version}</version>
             </dependency>

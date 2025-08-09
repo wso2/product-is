@@ -497,6 +497,11 @@
                                     org.wso2.identity.apps:org.wso2.identity.apps.authentication.portal.server.feature:${identity.apps.core.version}
                                 </featureArtifactDef>
 
+                                <!-- Accounts portal feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.apps:org.wso2.identity.apps.accounts.portal.server.feature:${identity.apps.core.version}
+                                </featureArtifactDef>
+
                                 <!-- Recovery portal feature -->
                                 <featureArtifactDef>
                                     org.wso2.identity.apps:org.wso2.identity.apps.recovery.portal.server.feature:${identity.apps.core.version}
@@ -994,6 +999,13 @@
                                 <feature>
                                     <id>
                                         org.wso2.identity.apps.authentication.portal.server.feature.group
+                                    </id>
+                                    <version>${identity.apps.core.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>
+                                        org.wso2.identity.apps.accounts.portal.server.feature.group
                                     </id>
                                     <version>${identity.apps.core.version}</version>
                                 </feature>
