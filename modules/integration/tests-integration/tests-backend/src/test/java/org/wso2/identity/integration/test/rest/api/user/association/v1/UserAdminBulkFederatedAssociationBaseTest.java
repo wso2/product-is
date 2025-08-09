@@ -68,21 +68,6 @@ public class UserAdminBulkFederatedAssociationBaseTest extends UserAssociationTe
     private static final String EXTERNAL_USER_ID_3 = "ExternalUser3";
     private static final String EXTERNAL_USER_ID_4 = "ExternalUser4";
 
-    private static final String bulk_api_pass =
-            "{\n" + "  \"failOnErrors\": 0,\n" + "  \"operations\": [\n" + "    {\n" + "      \"method\": \"POST\",\n" +
-                    "      \"bulkId\": \"ytrewq\",\n" +
-                    "      \"path\": \"/b1781d25-bde5-460a-a58a-8fe8dbfd8487/federated-associations\",\n" +
-                    "      \"data\": {\n" + "        \"idp\": \"exampleIdP\",\n" +
-                    "        \"federatedUserId\": \"john@example.com\"\n" + "      }\n" + "    },\n" + "    {\n" +
-                    "      \"method\": \"POST\",\n" + "      \"bulkId\": \"qweascae\",\n" +
-                    "      \"path\": \"/b1781d25-bde5-460a-a58a-8fe8dbfd8487/federated-associations\",\n" +
-                    "      \"data\": {\n" + "        \"idp\": \"exampleIdP\",\n" +
-                    "        \"federatedUserId\": \"sam@example.com\"\n" + "      }\n" + "    },\n" + "    {\n" +
-                    "      \"method\": \"DELETE\",\n" + "      \"bulkId\": \"ieabhvsd\",\n" +
-                    "      \"path\": \"/b1781d25-bde5-460a-a58a-8fe8dbfd8487/federated-associations/ff2d1f1e-0736-43c1-b402-cc9ef5a1c184\"\n" +
-                    "    },\n" + "    {\n" + "      \"method\": \"DELETE\",\n" + "      \"bulkId\": \"pqd98aks\",\n" +
-                    "      \"path\": \"/b1781d25-bde5-460a-a58a-8fe8dbfd8487/federated-associations/ee2d1f1e-0656-43c1-b402-cc56f5a1c184\"\n" +
-                    "    }\n" + "  ]\n" + "}";
     private static final String bulkAPIBody =
             "{\n" + "  %s,\n" + "  \"operations\": [\n" + "    {\n" + "      \"method\": \"POST\",\n" +
                     "      \"bulkId\": \"ytrewq\",\n" + "      \"path\": \"/%s/federated-associations\",\n" +
@@ -150,9 +135,9 @@ public class UserAdminBulkFederatedAssociationBaseTest extends UserAssociationTe
                 // First operation is invalid and, the failOnErrors flag is false.
                 {"\"failOnErrors\": 0", invalidUserId1, EXTERNAL_USER_ID_3, testUser2Id, EXTERNAL_USER_ID_4, testUser1Id,
                         true, testUser2Id, true, 4, new int[]{404, 201, 204, 204}},
-                // First operation is invalid and, the failOnErrors flag is true.
-                {"\"failOnErrors\": 1", invalidUserId1, EXTERNAL_USER_ID_3, testUser2Id, EXTERNAL_USER_ID_4,
-                        testUser1Id, true, testUser2Id, true, 1, new int[]{404}}
+                // Second operation is invalid and, the failOnErrors flag is true.
+                {"\"failOnErrors\": 1", testUser1Id, EXTERNAL_USER_ID_3, invalidUserId1, EXTERNAL_USER_ID_4,
+                        testUser1Id, true, testUser2Id, true, 2, new int[]{201, 404}}
         };
     }
 
