@@ -2552,7 +2552,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.8</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.185</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.186</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.12</identity.user.account.association.version>
@@ -2621,7 +2621,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.9</identity.workflow.version>
-        <identity.user.workflow.version>5.6.13</identity.user.workflow.version>
+        <identity.user.workflow.version>5.6.14</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.38</authenticator.totp.version>
