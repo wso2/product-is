@@ -469,6 +469,7 @@
         <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
         <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
         <class name="org.wso2.identity.integration.test.recovery.UsernameRecoveryTestCase"/>
+        <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerLockedTestCase"/>
     </classes>
 </test>
 
