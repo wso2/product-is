@@ -621,9 +621,11 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
             description = "Verify the claims resolved from first found in hierarchy.")
     public void testClaimsResolvedFromFirstFoundInHierarchy() throws Exception {
 
-        // Sub orgs should not have custom claim before shared app mark it as requested claim.
-        verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel1Org);
-        verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel2Org);
+        if (TestUserMode.TENANT_ADMIN.equals(userMode)) {
+            // V0 sub-orgs should not have custom claims before a shared app marks them as requested claims.
+            verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel1Org);
+            verifyCustomClaimIsNotShared(customClaimId, switchedM2MTokenForLevel2Org);
+        }
 
         updateRequestedClaimsOfApp(application1WithAppAudienceRoles.getId(), getClaimConfigurationsWithCustomClaim());
 
