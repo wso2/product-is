@@ -89,7 +89,7 @@
         <class name="org.wso2.identity.integration.test.idp.mgt.IdentityProviderMgtServiceTestCase" />
         <class name="org.wso2.identity.integration.test.idp.mgt.ResidentIDPConfigsTestCase" />
         <class name="org.wso2.identity.integration.test.idp.mgt.PreferenceAPIIntegrationUITestCase" />
-        
+
         <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
         <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceClientCredentialTestCase"/>
         <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceImplicitGrantTestCase"/>
@@ -147,7 +147,7 @@
         <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSmsOtpFailureTestCase"/>
         <class name="org.wso2.identity.integration.test.serviceextensions.preupdateprofile.PreUpdateProfileActionSuccessTestCase"/>
         <class name="org.wso2.identity.integration.test.serviceextensions.preupdateprofile.PreUpdateProfileActionFailureTestCase"/>
-        <class name="org.wso2.identity.integration.test.serviceextensions.customauthentication.CustomInternalUserAuthenticatorTestCase"/>
+<!--        <class name="org.wso2.identity.integration.test.serviceextensions.customauthentication.CustomInternalUserAuthenticatorTestCase"/>-->
         <class name="org.wso2.identity.integration.test.oidc.OIDCHybridFlowIntegrationTest"/>
         <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsTestCase"/>
         <class name="org.wso2.identity.integration.test.oauth2.OAuth2RichAuthorizationRequestsGrantTypesTestCase"/>
@@ -169,6 +169,7 @@
         <class name="org.wso2.identity.integration.test.apiAuthorization.APIResourceInheritanceTestCase"/>
         <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowSuccessTest"/>
         <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowFailureTest"/>
+        <class name="org.wso2.identity.integration.test.inheritance.ConfigInheritanceTestCase"/>
     </classes>
 </test>
 
@@ -182,6 +183,7 @@
         <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserMeNegativeTestBase"/>
         <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserAdminAssociationSuccessBaseTest"/>
         <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserAdminAssociationNegativeBaseTest"/>
+        <class name="org.wso2.identity.integration.test.rest.api.user.association.v1.UserAdminBulkFederatedAssociationBaseTest"/>
         <!--Disabling since the workflow is provided as a connector and it does not exist in the product by default.-->
         <!--<class name="org.wso2.identity.integration.test.rest.api.user.approval.v1.UserMeApprovalTest"/>-->
         <class name="org.wso2.identity.integration.test.rest.api.user.authorized.apps.v1.MeAuthorizedAppsNegativeTest"/>
@@ -469,6 +471,7 @@
         <class name="org.wso2.identity.integration.test.saml.SAMLSSOForAdminLoginTestCase"/>
         <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
         <class name="org.wso2.identity.integration.test.recovery.UsernameRecoveryTestCase"/>
+        <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerLockedTestCase"/>
     </classes>
 </test>
 

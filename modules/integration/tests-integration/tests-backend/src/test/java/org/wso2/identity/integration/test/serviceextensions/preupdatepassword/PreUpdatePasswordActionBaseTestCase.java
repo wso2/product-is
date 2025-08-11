@@ -207,7 +207,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
         Assert.assertTrue(org.wso2.identity.integration.test.util.Utils.getMailServer().waitForIncomingEmail(10000, 1));
         Message[] messages = org.wso2.identity.integration.test.util.Utils.getMailServer().getReceivedMessages();
-        String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
+        String body = GreenMailUtil.getBody(messages[0]).replaceAll("=3D", "=").replaceAll("=\r?\n", "");
         Document doc = Jsoup.parse(body);
 
         return doc.selectFirst("#bodyCell").selectFirst("a").attr("href");

@@ -39,6 +39,7 @@ public class UserAssociationTestBase extends RESTAPIUserTestBase {
 
     public static final String ASSOCIATION_ENDPOINT_URI = "/%s/associations";
     public static final String FEDERATED_ASSOCIATION_ENDPOINT_URI = "/%s/federated-associations";
+    public static final String BULK_FEDERATED_ASSOCIATION_ENDPOINT_URI = "federated-associations/bulk";
 
     protected String userAssociationEndpointURI;
     protected String federatedUserAssociationEndpointURI;
