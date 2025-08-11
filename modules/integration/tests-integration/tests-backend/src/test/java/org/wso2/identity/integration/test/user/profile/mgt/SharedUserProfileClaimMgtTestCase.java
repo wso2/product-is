@@ -131,6 +131,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     private static final String ISS_CLAIM = "iss";
     private static final String ORG_ID_CLAIM = "org_id";
     private static final String ORG_NAME_CLAIM = "org_name";
+    private static final String ORG_VERSION_V0 = "v0.0.0";
     private final TestUserMode userMode;
     private ClaimManagementRestClient claimManagementRestClient;
     private SCIM2RestClient scim2RestClient;
@@ -202,6 +203,10 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
         switchedM2MTokenForLevel1Org = orgMgtRestClient.switchM2MToken(level1OrgId);
         switchedM2MTokenForLevel2Org = orgMgtRestClient.switchM2MToken(level2OrgId);
+
+        if (TestUserMode.TENANT_ADMIN.equals(userMode)) {
+            orgMgtRestClient.updateOrganizationVersion(ORG_VERSION_V0);
+        }
 
         // Create a custom claim setting FromFirstFoundInHierarchy as SharedProfileValueResolvingMethod.
         LocalClaimReq localClaimReq = buildLocalClaimReq(CUSTOM_CLAIM_URI, CUSTOM_CLAIM_NAME, CUSTOM_CLAIM_NAME,
