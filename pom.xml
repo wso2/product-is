@@ -2700,6 +2700,9 @@
         <!-- agent-identity -->
         <carbon.identity.agent.version>1.0.6</carbon.identity.agent.version>
 
+        <!-- agent-identity -->
+        <carbon.identity.agent.version>1.0.6</carbon.identity.agent.version>
+
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
         <securevault.wso2.version>1.1.12</securevault.wso2.version>
