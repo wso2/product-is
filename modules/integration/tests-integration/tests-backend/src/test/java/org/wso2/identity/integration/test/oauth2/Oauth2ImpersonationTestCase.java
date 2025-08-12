@@ -224,7 +224,6 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         httpClientWithoutAutoRedirections.close();
         restClient.closeHttpClient();
         client.close();
-
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request with impersonation related response types " +
@@ -414,50 +413,51 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         EntityUtils.consume(response.getEntity());
     }
 
-//    @Test(groups = "wso2.is", description = "Send authorize user request to SSO as the impersonatee.",
-//            dependsOnMethods = "testSSOImpersonationImplicitAuthorizeRequestPost")
-//    public void testSSOImpersonationAuthorizeRequestPostWithSkipLoginConsent() throws Exception {
-//
-//        updateApplicationToSkipLoginConsent(true);
-//        ApplicationResponseModel application = getApplication(applicationId);
-//        if (application == null) {
-//            Assert.fail("Application not found for the given application Id: " + applicationId);
-//        }
-//        Assert.assertTrue(application.getAdvancedConfigurations().getSkipLoginConsent(),
-//                "Skip login consent is not enabled for the application.");
-//
-//        List<NameValuePair> urlParameters = new ArrayList<>();
-//        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
-//                OAUTH2_GRANT_TYPE_IMPLICIT));
-//        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
-//        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
-//        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE,
-//                "internal_user_mgt_delete internal_login internal_user_mgt_delete " +
-//                        "internal_user_mgt_view internal_user_mgt_list"));
-//
-//        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-//                OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
-//        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
-//
-//        String locationValue = getLocationHeaderValue(response);
-//        EntityUtils.consume(response.getEntity());
-//        accessToken = getFragmentParam(locationValue, OAuth2Constant.ACCESS_TOKEN);
-//        Assert.assertNotNull(accessToken, "Access token is null or could not be found.");
-//        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
-//        Assert.assertEquals(jwtClaimsSet.getSubject(), endUserId,
-//                "Subject Id is not end user Id in the impersonation flow." );
-//
-//        Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
-//        Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
-//        Assert.assertEquals(actClaimSet.get("sub"), impersonatorId, "Impersonator Id is not in the act claim.");
-//
-//        EntityUtils.consume(response.getEntity());
-//
-//        updateApplicationToSkipLoginConsent(false);
-//    }
+    @Test(groups = "wso2.is", description = "Send authorize user request to SSO as the impersonatee.",
+            dependsOnMethods = "testSSOImpersonationImplicitAuthorizeRequestPost")
+    public void testSSOImpersonationAuthorizeRequestPostWithSkipLoginConsent() throws Exception {
+
+        updateApplicationToSkipLoginConsent(true);
+        ApplicationResponseModel application = getApplication(applicationId);
+        if (application == null) {
+            Assert.fail("Application not found for the given application Id: " + applicationId);
+        }
+        Assert.assertTrue(application.getAdvancedConfigurations().getSkipLoginConsent(),
+                "Skip login consent is not enabled for the application.");
+
+        List<NameValuePair> urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_RESPONSE_TYPE,
+                OAUTH2_GRANT_TYPE_IMPLICIT));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, consumerKey));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_REDIRECT_URI, OAuth2Constant.CALLBACK_URL));
+        urlParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_SCOPE,
+                "internal_user_mgt_delete internal_login internal_user_mgt_delete " +
+                        "internal_user_mgt_view internal_user_mgt_list"));
+
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
+        Assert.assertNotNull(response, "Authorization request failed. Authorized response is null.");
+
+        String locationValue = getLocationHeaderValue(response);
+        EntityUtils.consume(response.getEntity());
+        accessToken = getFragmentParam(locationValue, OAuth2Constant.ACCESS_TOKEN);
+        Assert.assertNotNull(accessToken, "Access token is null or could not be found.");
+        JWTClaimsSet jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
+        Assert.assertEquals(jwtClaimsSet.getSubject(), endUserId,
+                "Subject Id is not end user Id in the impersonation flow." );
+
+        Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
+        Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
+        Assert.assertEquals(actClaimSet.get("sub"), impersonatorId, "Impersonator Id is not in the act claim.");
+
+        EntityUtils.consume(response.getEntity());
+
+        updateApplicationToSkipLoginConsent(false);
+    }
 
     @Test(dependsOnMethods = { "testSendTokenExchangeRequestPost", "testSendCodeTokenRequestPost",
-            "testSSOImpersonationImplicitAuthorizeRequestPost" },
+            "testSSOImpersonationImplicitAuthorizeRequestPost",
+            "testSSOImpersonationAuthorizeRequestPostWithSkipLoginConsent" },
             description = "Tests the impersonated access token with user listing API.")
     public void testImpersonatedAccessToken() throws Exception {
 
@@ -791,8 +791,7 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         inboundProtocolsConfig.setOidc(oidcConfig);
 
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName(SERVICE_PROVIDER_NAME);
-        application.setIsManagementApp(true);
+        application.setName("ImpersonationTestApp");
 
         String appId = addApplication(application);
 
