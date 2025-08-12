@@ -21,12 +21,6 @@ jwks = {
         "x5u" : "https://keystore.openbankingtest.org.uk/0015800001HQQrZAAX/Cxhf6SoaTPr_YB_zbfP3NEdYZzg.pem",
         "x5t#S256" : "lrVzLM-OMGpc0nBMiusS2dLIy-Gg9hSPFdaJEAZPkhc="
     }, {
-        "kid" : "Pn7wWY8GW2wX4sT8rKVgUSR0WJU",
-        "kty" : "RSA",
-        "n" : "2-1zVMBojig-vQ--UopUalovrUQxHgSAJ6gwOJOH-mDCEXUly0KGxu60UfiTpLm0tf6UH74fNVH01DqfP6DL9T17pk_RHDfALdSFRMU37iKZNlOB6uYrEODgL3-crOvgengMWNs9YoQR5gHF3uJJEczJh8PihRfbJOanjsHMdBwuGfDEMh38rQ6P4LEeTc8MtdR2qNm3R3DfFJZu0GrR5g-xdSFZ4XV1ik8Ad4lGjATK-84clJmwsgjGLHvP57R6BvJjj8K8nPfQ2Cxd9der_KVV6W5QMVokCk_fcAyfvrOAHILcYOC-NeB_EiIqEm4dxNH9RVzRf_7gxZNiMq6Q8Q",
-        "e" : "AQAB",
-        "use" : "enc"
-    }, {
         "kid" : "_R4CIMA-v0c1SRr9eHzVC-PWj8Y",
         "kty" : "RSA",
         "n" : "yUSmfxrRo3JIL4Ivvx_M-_fWiU-V63lw4S1TLr0zguI4ZBcCC8ivg8V7O-VWGd69W21V0afYmBs0rVOoz30G4VChu84INM3izd-6us3GcNaIUyXMaXv75v4Cuj0zcdoaR0AGKflJAwuLTDZlkBpqFT6QDZ90kCOxxjAu0I3maL_4X6XeMm9StHbK9lsmHU7jXhk980qQEextjbbsA3xjXsIVmi7xigMG2CTrmegEP233JuGJOi57R7gVpi0xR66firAw7OXY4fl7R1QKzX5iibDDQqYOkxGk5MPP0dKPmxDezQvlLC8Cynh7x9QD_bagPIdtJlijw4HCHuehfVCsQQ",
