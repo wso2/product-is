@@ -2535,7 +2535,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.411</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.412</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2553,7 +2553,7 @@
         <carbon.consent.mgt.version>2.6.8</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.115</identity.governance.version>
+        <identity.governance.version>1.11.116</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.13</identity.carbon.auth.saml2.version>
@@ -2563,7 +2563,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.331</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.334</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.60</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.11</identity.inbound.auth.sts.version>
@@ -2586,7 +2586,7 @@
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.9.68</identity.event.handler.notification.version>
 
-        <org.wso2.identity.webhook.event.handlers.version>1.0.367</org.wso2.identity.webhook.event.handlers.version>
+        <org.wso2.identity.webhook.event.handlers.version>1.0.370</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.31</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
@@ -2595,7 +2595,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.35</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.36</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.10</identity.outbound.auth.samlsso.version>
@@ -2603,10 +2603,10 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.8</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.20</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.20</social.authenticator.google.version>
+        <social.authenticator.facebook.version>5.2.21</social.authenticator.facebook.version>
+        <social.authenticator.google.version>5.2.21</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.5</social.authenticator.windowslive.version>
-        <social.authenticator.apple.version>1.0.8</social.authenticator.apple.version>
+        <social.authenticator.apple.version>1.0.9</social.authenticator.apple.version>
         <social.authenticator.github.version>1.1.17</social.authenticator.github.version>
 
         <!-- Provisioning connector Versions -->
@@ -2617,7 +2617,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.42</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.24</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.25</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
@@ -2644,14 +2644,14 @@
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.8</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.39</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.33</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.34</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.45</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.31</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.46</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.32</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.33</authenticator.x509.version>
         <identity.extension.utils>1.0.22</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.15</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.16</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.0.23</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.49</identity.org.mgt.core.version>
