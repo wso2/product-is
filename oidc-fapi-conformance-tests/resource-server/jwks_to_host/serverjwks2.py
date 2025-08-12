@@ -1,5 +1,6 @@
 jwks = {
-    "keys" : [ {
+    "keys" : [
+    {
         "kid" : "5dBuoFxTMIrwWd9hzUMVgF2jMbk",
         "kty" : "RSA",
         "n" : "sKqhlaZIYGcIaBFWapVVR5-lWrG7ksFFhrqMMGLSg1-78Y-YnCIdB8MODdeU96yajlonXoluELC7CJcN5riX-iSKG1tYM3BNvqqvycQ2YQd5OtQMEsBDLFfgdK_SyF2NIjH12ru0pRqlivHwpC49Era3EoOs-opfwhSsqLr9_OCxsmwq4TsNqtFR7CAri9O7HN6laHS1wQ2ZqiI2-UuqCXUE8gZ8vQekcjTh1MWzt9rTsatwfK1pvB69yOs--M18vfp5dUmpuEF1EWUoR49KsYkWR_YbG5M1hHTbWvoRVunIZg8KTNotbzaRCC3xHEburw3VCU6EgXqBEI0Fh_INzw",
