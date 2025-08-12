@@ -621,7 +621,7 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.server.feature:${identity.user.workflow.version}
                                 </featureArtifactDef>
-                                <!-- API Resource Management Feature -->
+                                <!-- AI Agent Identity Management Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.agent:org.wso2.carbon.identity.agent.manager.server.feature:${carbon.identity.agent.version}
                                 </featureArtifactDef>
