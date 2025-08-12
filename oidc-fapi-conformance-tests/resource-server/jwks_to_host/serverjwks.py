@@ -1,4 +1,4 @@
-{
+jwks = {
     "keys": [
         {
             "kid": "qGSq26Iezcl8OuSDV89JiKAYDuY",

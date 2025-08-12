@@ -1,4 +1,4 @@
-{
+jwks = {
     "keys" : [ {
         "kid" : "5dBuoFxTMIrwWd9hzUMVgF2jMbk",
         "kty" : "RSA",
