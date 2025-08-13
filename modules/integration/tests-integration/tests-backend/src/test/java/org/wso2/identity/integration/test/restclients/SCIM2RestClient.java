@@ -102,6 +102,28 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create a user with an invalid request.
+     *
+     * @param userInfo Object with user creation details.
+     * @throws Exception If an error occurred while creating a user.
+     */
+    public void createUserWithInvalidRequest(UserObject userInfo) throws Exception {
+
+        String jsonRequest = toJSONString(userInfo);
+        if (userInfo.getScimSchemaExtensionEnterprise() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
+        }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
+        }
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_BAD_REQUEST,
+                    "Expected user creation to fail with a bad request.");
+        }
+    }
+
+    /**
      * Create a user inside an organization.
      *
      * @param userInfo         Object with user creation details.
