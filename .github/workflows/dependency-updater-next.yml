@@ -49,8 +49,6 @@ jobs:
             ${{ runner.os }}-
       - name: Update Dependencies
         id: builder_step
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           echo "REPO_NAME=${{ env.REPOSITORY }}" >> "$GITHUB_OUTPUT"
           echo ""
@@ -82,11 +80,6 @@ jobs:
           echo 'Updating dependencies'
           echo "=========================================================="
           mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
-          
-          echo ""
-          echo 'Running next version dependency updates'
-          echo "=========================================================="
-          ./.github/scripts/update-dependencies.sh next
           echo ""
           echo 'Available updates'
           echo "=========================================================="
@@ -136,7 +129,7 @@ jobs:
             echo 'Send Pull Request'
             echo "=========================================================="
 
-            TITLE="Bump Dependencies (Next Branch) #"${{ env.BUILD_NUMBER }}
+            TITLE="[Next Branch] Bump Dependencies #"${{ env.BUILD_NUMBER }}
             RESPONSE=$(curl -s -w "%{http_code}" -k -X \
             POST https://api.github.com/repos/${{ env.PRODUCT_REPOSITORY_PUBLIC }}/pulls \
             -H "Authorization: Bearer "${{ secrets.PAT }}"" \

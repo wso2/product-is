@@ -49,8 +49,6 @@ jobs:
             ${{ runner.os }}-
       - name: Update Dependencies
         id: builder_step
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           echo "REPO_NAME=${{ env.REPOSITORY }}" >> "$GITHUB_OUTPUT"
           echo ""
@@ -81,12 +79,7 @@ jobs:
           echo ""
           echo 'Updating dependencies'
           echo "=========================================================="
-          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
-          
-          echo ""
-          echo 'Running post-update dependency script'
-          echo "=========================================================="
-          ./.github/scripts/update-dependencies.sh stable
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
           echo ""
           echo 'Available updates'
           echo "=========================================================="
