@@ -96,8 +96,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userProfileUpdateEvent.put("tenant", createTenantObject(tenantDomain));
         userProfileUpdateEvent.put("organization", createOrganizationObject(tenantDomain));
         userProfileUpdateEvent.put("userStore", createUserStoreObject());
-        // todo: This value should be updated to 'PROFILE_UPDATE' in payload
-        userProfileUpdateEvent.put("action", "UPDATE");
+        userProfileUpdateEvent.put("action", "PROFILE_UPDATE");
 
         return userProfileUpdateEvent;
     }
@@ -122,8 +121,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userProfileUpdateEvent.put("tenant", createTenantObject(tenantDomain));
         userProfileUpdateEvent.put("organization", createOrganizationObject(tenantDomain));
         userProfileUpdateEvent.put("userStore", createUserStoreObject());
-        // todo: This value should be updated to 'PROFILE_UPDATE' in payload
-        userProfileUpdateEvent.put("action", "UPDATE");
+        userProfileUpdateEvent.put("action", "PROFILE_UPDATE");
 
         return userProfileUpdateEvent;
     }
@@ -190,8 +188,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userProfileUpdateEvent.put("tenant", createTenantObject(tenantDomain));
         userProfileUpdateEvent.put("organization", createOrganizationObject(tenantDomain));
         userProfileUpdateEvent.put("userStore", createUserStoreObject());
-        // todo: This value should be updated to 'PROFILE_UPDATE' in payload
-        userProfileUpdateEvent.put("action", "UPDATE");
+        userProfileUpdateEvent.put("action", "PROFILE_UPDATE");
 
         return userProfileUpdateEvent;
     }
