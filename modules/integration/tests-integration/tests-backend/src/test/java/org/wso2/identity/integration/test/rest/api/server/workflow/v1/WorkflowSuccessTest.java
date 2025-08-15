@@ -250,10 +250,9 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
         JSONArray roleUsers = (JSONArray) roleJson.get("users");
         assertNotNull(roleUsers, "Users array not returned for role");
         boolean contains = false;
-        for (Object u : roleUsers) {
-            JSONObject uObj = (JSONObject) u;
-            assertNotNull(userId);
-            if (userId.equals(uObj.get("value"))) {
+        for (Object roleUser : roleUsers) {
+            JSONObject userObject = (JSONObject) roleUser;
+            if (userObject.get("value") != null && userObject.get("value").equals(userId)) {
                 contains = true;
                 break;
             }
