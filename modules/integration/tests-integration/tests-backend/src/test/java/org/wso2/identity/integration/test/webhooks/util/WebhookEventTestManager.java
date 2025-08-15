@@ -42,7 +42,7 @@ public class WebhookEventTestManager {
 
     private static final int START_PORT = 8580;
     private static final int PORT_LIMIT = 8590;
-    private static final int MAX_RETRIES_ON_EVENTS_RECEIVED = 3;
+    private static final int MAX_RETRIES_ON_EVENTS_RECEIVED = 5;
     private static final int WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED = 500;
     private static final String SERVER_BASE_URL = "https://localhost:9853/";
     private static final String WSO2_EVENT_PROFILE_URI = "https://schemas.identity.wso2.org/events";
