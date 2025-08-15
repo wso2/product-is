@@ -167,7 +167,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
 
         String body = readResource("update-workflow.json");
         String roleId = scim2RestClient.getRoleIdByName("admin");
-        body = body.replace("<role-id>", roleId);
+        body = body.replace("{role-id}", roleId);
         Response response = getResponseOfPut(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId, body);
 
         response.then()

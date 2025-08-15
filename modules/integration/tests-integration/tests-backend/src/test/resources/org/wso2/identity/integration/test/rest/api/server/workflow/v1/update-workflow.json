@@ -11,7 +11,7 @@
           {
             "entity": "roles",
             "values": [
-              "<role-id>"
+              "{role-id}"
             ]
           }
         ]
