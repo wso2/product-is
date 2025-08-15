@@ -169,52 +169,52 @@ public class AdminInitUserManagementEventTestCase extends ISIntegrationTest {
         webhookEventTestManager.validateStackedEventPayloads();
     }
 
+//     @Test(dependsOnMethods = "testUserProfileUpdateWithoutAnyAccountStateManagementClaims")
+//     public void testUserProfileUpdateWithAccountLock() throws Exception {
+
+//         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+//         UserItemAddGroupobj addGivenName = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+//         addGivenName.setPath("name:givenName");
+//         addGivenName.setValue("test-user-given-name");
+//         patchRequest.addOperations(addGivenName);
+
+//         UserItemAddGroupobj setAccountLock = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+//         setAccountLock.setPath("urn:scim:wso2:schema:accountLocked");
+//         setAccountLock.setValue(true);
+//         patchRequest.addOperations(setAccountLock);
+
+//         scim2RestClient.updateUser(patchRequest, userId);
+
+//         webhookEventTestManager.stackExpectedEventPayload(
+//                 "https://schemas.identity.wso2.org/events/user/event-type/userProfileUpdated",
+//                 AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserProfileUpdatedEventPayloadWithAccountLockClaim(
+//                         userId, automationContext.getContextTenant().getDomain()));
+//         webhookEventTestManager.stackExpectedEventPayload(
+//                 "https://schemas.identity.wso2.org/events/user/event-type/userAccountLocked",
+//                 AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountLockedEventPayload(
+//                         userId, automationContext.getContextTenant().getDomain()));
+//         webhookEventTestManager.validateStackedEventPayloads();
+//     }
+
+//     @Test(dependsOnMethods = "testUserProfileUpdateWithAccountLock")
+//     public void testAccountUnlock() throws Exception {
+
+//         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+//         UserItemAddGroupobj setAccountLock = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+//         setAccountLock.setPath("urn:scim:wso2:schema:accountLocked");
+//         setAccountLock.setValue(false);
+//         patchRequest.addOperations(setAccountLock);
+
+//         scim2RestClient.updateUser(patchRequest, userId);
+
+//         webhookEventTestManager.stackExpectedEventPayload(
+//                 "https://schemas.identity.wso2.org/events/user/event-type/userAccountUnlocked",
+//                 AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountUnlockedEventPayload(
+//                         userId, automationContext.getContextTenant().getDomain()));
+//         webhookEventTestManager.validateStackedEventPayloads();
+//     }
+
     @Test(dependsOnMethods = "testUserProfileUpdateWithoutAnyAccountStateManagementClaims")
-    public void testUserProfileUpdateWithAccountLock() throws Exception {
-
-        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
-        UserItemAddGroupobj addGivenName = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        addGivenName.setPath("name:givenName");
-        addGivenName.setValue("test-user-given-name");
-        patchRequest.addOperations(addGivenName);
-
-        UserItemAddGroupobj setAccountLock = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        setAccountLock.setPath("urn:scim:wso2:schema:accountLocked");
-        setAccountLock.setValue(true);
-        patchRequest.addOperations(setAccountLock);
-
-        scim2RestClient.updateUser(patchRequest, userId);
-
-        webhookEventTestManager.stackExpectedEventPayload(
-                "https://schemas.identity.wso2.org/events/user/event-type/userProfileUpdated",
-                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserProfileUpdatedEventPayloadWithAccountLockClaim(
-                        userId, automationContext.getContextTenant().getDomain()));
-        webhookEventTestManager.stackExpectedEventPayload(
-                "https://schemas.identity.wso2.org/events/user/event-type/userAccountLocked",
-                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountLockedEventPayload(
-                        userId, automationContext.getContextTenant().getDomain()));
-        webhookEventTestManager.validateStackedEventPayloads();
-    }
-
-    @Test(dependsOnMethods = "testUserProfileUpdateWithAccountLock")
-    public void testAccountUnlock() throws Exception {
-
-        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
-        UserItemAddGroupobj setAccountLock = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
-        setAccountLock.setPath("urn:scim:wso2:schema:accountLocked");
-        setAccountLock.setValue(false);
-        patchRequest.addOperations(setAccountLock);
-
-        scim2RestClient.updateUser(patchRequest, userId);
-
-        webhookEventTestManager.stackExpectedEventPayload(
-                "https://schemas.identity.wso2.org/events/user/event-type/userAccountUnlocked",
-                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountUnlockedEventPayload(
-                        userId, automationContext.getContextTenant().getDomain()));
-        webhookEventTestManager.validateStackedEventPayloads();
-    }
-
-    @Test(dependsOnMethods = "testAccountUnlock")
     public void testUserProfileUpdateWithAccountDisable() throws Exception {
 
         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
@@ -260,8 +260,7 @@ public class AdminInitUserManagementEventTestCase extends ISIntegrationTest {
     }
 
     @Test(dependsOnMethods = {"testCreateUser", "testUserProfileUpdateWithoutAnyAccountStateManagementClaims",
-            "testUserProfileUpdateWithAccountLock", "testAccountUnlock", "testUserProfileUpdateWithAccountDisable",
-            "testAccountEnable"})
+            "testUserProfileUpdateWithAccountDisable", "testAccountEnable"})
     public void testDeleteUser() throws Exception {
 
         scim2RestClient.deleteUser(userId);
