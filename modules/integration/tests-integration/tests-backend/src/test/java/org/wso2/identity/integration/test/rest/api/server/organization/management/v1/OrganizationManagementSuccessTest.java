@@ -100,6 +100,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.carbon.identity.api.resource.mgt.constant.APIResourceManagementConstants.APIResourceTypes.SYSTEM;
+import static org.wso2.carbon.identity.application.mgt.ApplicationConstants.SUPER_TENANT;
+import static org.wso2.carbon.identity.organization.management.service.constant.OrganizationManagementConstants.SUPER_ORG_ID;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.AUTHORIZATION_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.BASIC_AUTHORIZATION_ATTRIBUTE;
@@ -131,6 +133,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     private HttpClient httpClientWithoutAutoRedirections;
     private List<Map<String, String>> organizations;
     private List<String> metaAttributes;
+    private String rootOrganizationName;
 
     protected OAuth2RestClient restClient;
 
@@ -463,10 +466,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "addB2BApplication")
     public void shareB2BApplication() throws JSONException {
 
-        if (!SUPER_TENANT_DOMAIN.equals(tenant)) {
+        if (!SUPER_TENANT.equals(tenant)) {
             return;
         }
-        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + SUPER_ORGANIZATION_ID
+        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + SUPER_ORG_ID
                 + "/applications/" + b2bApplicationID + "/share";
         org.json.JSONObject shareAppObject = new org.json.JSONObject();
         shareAppObject.put("shareWithAllChildren", true);
@@ -476,10 +479,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "shareB2BApplication")
     public void unShareB2BApplication() throws JSONException {
 
-        if (!SUPER_TENANT_DOMAIN.equals(tenant)) {
+        if (!SUPER_TENANT.equals(tenant)) {
             return;
         }
-        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + SUPER_ORGANIZATION_ID
+        String shareApplicationUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + SUPER_ORG_ID
                 + "/applications/" + b2bApplicationID + "/share";
         org.json.JSONObject shareAppObject = new org.json.JSONObject();
         shareAppObject.put("shareWithAllChildren", false);
@@ -589,6 +592,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
 
         String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationWithHandleID;
         String body = readResource(RENAME_ORGANIZATION_REQUEST_BODY);
+        body = body.replace(NEW_ORG_NAME_PLACEHOLDER, ORG_NAME_LITTLE_HOSPITAL);
         Response response = getResponseOfPatch(endpoint, body);
         validateHttpStatusCode(response, HttpStatus.SC_OK);
 
@@ -614,6 +618,38 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 .body(HAS_CHILDREN, equalTo(false));
     }
 
+    @Test(dependsOnMethods = "testPutOrganization")
+    public void testGetSelfOrganization() {
+
+        String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + SELF_ENDPOINT;
+        Response response = getResponseOfGetWithOAuth2(endpoint, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        JsonObject responseObject = JsonParser.parseString(response.asString()).getAsJsonObject();
+        assertEquals(responseObject.get(ORGANIZATION_HANDLE).getAsString(), tenant);
+        rootOrganizationName = responseObject.get(ORGANIZATION_NAME).getAsString();
+    }
+
+    @Test(dependsOnMethods = "testGetSelfOrganization")
+    public void testPatchSelfOrganizationName() throws IOException {
+
+        String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + SELF_ENDPOINT;
+        String body = readResource(RENAME_ORGANIZATION_REQUEST_BODY);
+        body = body.replace(NEW_ORG_NAME_PLACEHOLDER, ORG_NAME_MAIN_HOSPITAL);
+        Response response = getResponseOfPatchWithOAuth2(endpoint, body, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        JsonObject responseObject = JsonParser.parseString(response.asString()).getAsJsonObject();
+        assertEquals(responseObject.get(ORGANIZATION_NAME).getAsString(), ORG_NAME_MAIN_HOSPITAL);
+
+        body = body.replace(ORG_NAME_MAIN_HOSPITAL, rootOrganizationName);
+        response = getResponseOfPatchWithOAuth2(endpoint, body, m2mToken);
+        validateHttpStatusCode(response, HttpStatus.SC_OK);
+
+        responseObject = JsonParser.parseString(response.asString()).getAsJsonObject();
+        assertEquals(responseObject.get(ORGANIZATION_NAME).getAsString(), rootOrganizationName);
+    }
+
     @DataProvider(name = "dataProviderForGetOrganizationsMetaAttributes")
     public Object[][] dataProviderForGetOrganizationsMetaAttributes() {
 
@@ -625,7 +661,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
         };
     }
 
-    @Test(dependsOnMethods = "testPutOrganization",
+    @Test(dependsOnMethods = "testPatchSelfOrganizationName",
             dataProvider = "dataProviderForGetOrganizationsMetaAttributes")
     public void testGetOrganizationsMetaAttributes(String filter, boolean isRecursive, boolean expectEmptyList) {
 

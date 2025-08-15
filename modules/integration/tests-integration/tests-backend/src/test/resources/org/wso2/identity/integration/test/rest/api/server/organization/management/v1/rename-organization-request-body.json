@@ -2,6 +2,6 @@
   {
     "operation": "REPLACE",
     "path": "/name",
-    "value": "Little Hospital"
+    "value": "${newOrganizationName}"
   }
 ]

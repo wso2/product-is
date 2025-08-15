@@ -1,7 +1,9 @@
 {
   "/api/server/v1/organizations": [
     "internal_organization_view",
-    "internal_organization_create"
+    "internal_organization_create",
+    "internal_organization_update",
+    "internal_organization_delete"
   ],
   "/api/server/v1/organizations/discovery": [
     "internal_organization_discovery_view",
@@ -32,6 +34,7 @@
   "/o/api/server/v1/organizations": [
     "internal_org_organization_view",
     "internal_org_organization_create",
+    "internal_org_organization_update",
     "internal_org_organization_delete"
   ]
 }
