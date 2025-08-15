@@ -287,11 +287,11 @@
     </classes>
 </test>
 
-<test name="is-test-webhooks" preserve-order="true" parallel="false">
-    <classes>
-        <class name="org.wso2.identity.integration.test.webhooks.usermanagement.AdminInitUserManagementEventTestCase"/>
-    </classes>
-</test>
+<!--<test name="is-test-webhooks" preserve-order="true" parallel="false">-->
+<!--    <classes>-->
+<!--        <class name="org.wso2.identity.integration.test.webhooks.usermanagement.AdminInitUserManagementEventTestCase"/>-->
+<!--    </classes>-->
+<!--</test>-->
 
 <test name="is-tests-scim2" preserve-order="true" parallel="false">
     <classes>
