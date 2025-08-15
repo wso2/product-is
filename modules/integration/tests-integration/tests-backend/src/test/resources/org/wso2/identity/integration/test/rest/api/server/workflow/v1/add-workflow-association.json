@@ -1,6 +1,6 @@
 {
   "associationName": "User Registration Workflow Association",
-  "operation": "ADD_USER",
+  "operation": "{operation}",
   "workflowId": "{workflowId}",
   "isEnabled": true
 }

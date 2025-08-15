@@ -47,7 +47,6 @@ import java.rmi.RemoteException;
 public class UserApprovalTestBase extends RESTAPIUserTestBase {
 
     private static final Log log = LogFactory.getLog(UserApprovalTestBase.class);
-    private static final int MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT = 100;
 
     protected static String templateId = "MultiStepApprovalTemplate";
     protected static String workflowImplId = "ApprovalWorkflow";
@@ -198,43 +197,6 @@ public class UserApprovalTestBase extends RESTAPIUserTestBase {
                 new ClaimValue[0], null, false);
         this.usmClient.addUser(userName3, "test12345", new String[]{"wfRestRole1", "wfRestRole2",
                 "wfRestRole3"}, new ClaimValue[0], null, false);
-    }
-
-    protected void waitForWorkflowToDeploy() throws Exception {
-
-        boolean isBpelDeployed = false;
-        boolean isHumanTaskDeployed = false;
-        String url;
-        for (int count = 1; count <= MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT; count++) {
-            log.info("Verifying workflow deployment on " + count + " of " +
-                    MAX_WAIT_ITERATIONS_TILL_WORKFLOW_DEPLOYMENT + " attempts.");
-            if (!isBpelDeployed) {
-                log.info("Verifying BPEL deployment.");
-                url = identityContextUrls.getSecureServiceUrl() + "/" + addUserWorkflowName + "Service?wsdl";
-                if (isServiceDeployed(url)) {
-                    isBpelDeployed = true;
-                    log.info("Verified BPEL Workflow deployment successfully in " + count + " attempt(s).");
-                }
-            }
-
-            if (isBpelDeployed) {
-                log.info("Verifying Human Task deployment.");
-                url = identityContextUrls.getSecureServiceUrl() + "/" + addUserWorkflowName + "TaskService?wsdl";
-                if (isServiceDeployed(url)) {
-                    isHumanTaskDeployed = true;
-                    log.info("Verified Human Task Workflow deployment successfully in " + count + " attempt(s).");
-                    log.info("Workflow deployment successfully Verified.");
-                    break;
-                }
-            }
-            log.info("Still no luck :(. So going to wait 1 seconds and retry");
-            Thread.sleep(1000);
-        }
-
-        // Give up after 100 seconds.
-        if (!isBpelDeployed || !isHumanTaskDeployed) {
-            log.warn("No luck. Going to give up. Test will most probably fail.");
-        }
     }
 
     private boolean isServiceDeployed(String url) throws IOException {
