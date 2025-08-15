@@ -85,4 +85,9 @@ public class WebhookMockService {
 
         orderedRequests.clear();
     }
+
+    public void removeRequest(Request request) {
+
+        orderedRequests.remove(request);
+    }
 }

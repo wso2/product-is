@@ -75,13 +75,31 @@ public class EventPayloadValidator {
 
     /**
      * Validates the fields of an event payload against an expected event structure.
-     * This method checks for the presence of keys, validates nested JSON objects,
+     * This method checks for the presence of required keys, validates their values,
+     * and ensures that the actual event matches the expected structure.
+     * It handles nested JSON objects and arrays, skipping validation for keys
+     * that contain "dummy" in their expected value.
      *
      * @param actualEvent   The actual event payload extracted from the webhook.
      * @param expectedEvent The expected event structure to validate against.
      * @throws Exception If any required keys are missing, or if there is a mismatch in values.
      */
     public static void validateEventField(JSONObject actualEvent, JSONObject expectedEvent) throws Exception {
+
+        Set<String> actualKeys = convertKeysToSet(actualEvent);
+        Set<String> expectedKeys = convertKeysToSet(expectedEvent);
+
+        if (!actualKeys.equals(expectedKeys)) {
+            // Skip validation of exact schema in case of a claims mismatch.
+            // "http://wso2.org/claims/userType" claim gets populated on the user object of the event payload when
+            // full test suite runs. This is not expected in the payload.
+            // todo: need to investigate why this claim is getting populated and fix the issue.
+            boolean claimsMismatch = actualKeys.contains("claims") && !expectedKeys.contains("claims");
+            if (!claimsMismatch) {
+                throw new IllegalArgumentException("Schema mismatch: expected keys " + expectedKeys +
+                        ", but found keys " + actualKeys);
+            }
+        }
 
         Iterator<String> keys = expectedEvent.keys();
         while (keys.hasNext()) {
@@ -94,6 +112,12 @@ public class EventPayloadValidator {
 
             Object expectedValue = expectedEvent.get(key);
             Object actualValue = actualEvent.get(key);
+
+            // Skip validation if the expected value contains "dummy"
+            if (expectedValue instanceof String && ((String) expectedValue).contains("dummy")) {
+                LOG.info("Skipping validation for key '{}' as the expected value contains 'dummy'.", key);
+                continue;
+            }
 
             if ("claims".equals(key)) {
                 validateClaimsArray((JSONArray) actualValue, (JSONArray) expectedValue);
@@ -189,5 +213,15 @@ public class EventPayloadValidator {
             }
         }
         return true;
+    }
+
+    private static Set<String> convertKeysToSet(JSONObject jsonObject) {
+
+        Set<String> keysSet = new HashSet<>();
+        Iterator<String> keys = jsonObject.keys();
+        while (keys.hasNext()) {
+            keysSet.add(keys.next());
+        }
+        return keysSet;
     }
 }

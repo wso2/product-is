@@ -18,19 +18,6 @@
 
 package org.wso2.identity.integration.test.webhooks.usermanagement;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -38,240 +25,279 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.webhooks.WebhookEventTestManager;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.webhooks.usermanagement.eventpayloadbuilder.AdminInitUserManagementEventTestExpectedEventPayloadBuilder;
+import org.wso2.identity.integration.test.webhooks.util.WebhookEventTestManager;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAILS_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_ADDRESSES_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_HOME_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_WORK_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ERROR_SCHEMA;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.FAMILY_NAME_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.GIVEN_NAME_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PARAM;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_SYSTEM_SCHEMA;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
 
 /**
- * This class tests the user management events triggered by the admin user.
+ * This class tests the user management events triggered by the admin user via SCIM2 User API.
  */
 public class AdminInitUserManagementEventTestCase extends ISIntegrationTest {
 
-    private static final String FAMILY_NAME_CLAIM_VALUE = "scim";
-    private static final String GIVEN_NAME_CLAIM_VALUE = "user";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2user@wso2.com";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
-    public static final String USERNAME = "scim2user";
-    public static final String PASSWORD = "Wso2@test";
+    public static final String GOVERNANCE_CATEGORY_ACCOUNT_MANAGEMENT_ID = "QWNjb3VudCBNYW5hZ2VtZW50";
+    public static final String ACCOUNT_DISABLE_CONNECTOR_ID = "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI";
     private String userId;
-    private final String adminUsername;
-    private final String adminPassword;
-    private final String tenant;
     private final AutomationContext automationContext;
-    private CloseableHttpClient client;
+    private final TestUserMode userMode;
     private WebhookEventTestManager webhookEventTestManager;
+    private SCIM2RestClient scim2RestClient;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
-        client = HttpClients.createDefault();
+        super.init(userMode);
+
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
+
+        enableUserAccountDisablingFeature();
 
         webhookEventTestManager = new WebhookEventTestManager("/scim2/webhook", "WSO2",
                 Arrays.asList("https://schemas.identity.wso2.org/events/user",
                         "https://schemas.identity.wso2.org/events/registration"),
                 "AdminInitUserManagementEventTestCase",
                 automationContext);
+
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        disableUserAccountDisablingFeature();
+        scim2RestClient.closeHttpClient();
+        identityGovernanceRestClient.closeHttpClient();
         webhookEventTestManager.teardown();
-        client.close();
     }
 
-    @Factory(dataProvider = "SCIM2UserConfigProvider")
+    @Factory(dataProvider = "testExecutionContextProvider")
     public AdminInitUserManagementEventTestCase(TestUserMode userMode) throws Exception {
 
+        this.userMode = userMode;
         automationContext = new AutomationContext("IDENTITY", userMode);
-        adminUsername = automationContext.getContextTenant().getTenantAdmin().getUserName();
-        adminPassword = automationContext.getContextTenant().getTenantAdmin().getPassword();
-        tenant = automationContext.getContextTenant().getDomain();
     }
 
-    @DataProvider(name = "SCIM2UserConfigProvider")
-    public static Object[][] sCIM2UserConfigProvider() {
+    @DataProvider(name = "testExecutionContextProvider")
+    public static Object[][] getTestExecutionContext() {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN},
-                {TestUserMode.TENANT_ADMIN}
+                {TestUserMode.SUPER_TENANT_USER},
+                {TestUserMode.TENANT_USER}
         };
     }
 
     @Test
     public void testCreateUser() throws Exception {
 
-        HttpPost request = buildUserCreateRequest();
-
-        HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 201, "User " +
-                "has not been created successfully");
-
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
-        EntityUtils.consume(response.getEntity());
-
-        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        UserObject userInfo = new UserObject()
+                .userName("test-user")
+                .password("TestPassword@123")
+                .name(new Name().givenName("test-user-given-name").familyName("test-user-last-name"))
+                .addEmail(new Email().value("test-user@test.com"));
+        userId = scim2RestClient.createUser(userInfo);
         assertNotNull(userId);
 
         webhookEventTestManager.stackExpectedEventPayload(
                 "https://schemas.identity.wso2.org/events/registration/event-type/registrationSuccess",
                 AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedRegistrationSuccessEventPayloadForTestCreateUser(
-                        userId, tenant));
+                        userId, automationContext.getContextTenant().getDomain()));
         webhookEventTestManager.stackExpectedEventPayload(
                 "https://schemas.identity.wso2.org/events/user/event-type/userCreated",
                 AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserCreatedEventPayloadForTestCreateUser(
-                        userId,
-                        tenant));
+                        userId, automationContext.getContextTenant().getDomain()));
         webhookEventTestManager.validateStackedEventPayloads();
     }
 
-    @Test (dependsOnMethods = "testCreateUser")
-    public void testAddUserFailure() throws Exception {
+    @Test(dependsOnMethods = "testCreateUser")
+    public void testCreateUserFailure() throws Exception {
 
-        HttpPost request = buildInvalidUserCreateRequest();
+        UserObject userInfo = new UserObject()
+                .userName("password-incompatible-test-user")
+                .password("a");
+        scim2RestClient.createUserWithInvalidRequest(userInfo);
 
-        HttpResponse response = client.execute(request);
-
-        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
-        EntityUtils.consume(response.getEntity());
-
-        JSONArray schemasArray = (JSONArray) ((JSONObject) responseObj).get("schemas");
-        Assert.assertNotNull(schemasArray);
-        Assert.assertEquals(schemasArray.size(), 1);
-        Assert.assertEquals(schemasArray.get(0).toString(), ERROR_SCHEMA);
-
-        //todo: Better if this error description which eventually goes out over the event can be improved.
         webhookEventTestManager.stackExpectedEventPayload(
                 "https://schemas.identity.wso2.org/events/registration/event-type/registrationFailed",
                 AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedRegistrationFailedEventPayload(
-                        userId, tenant, "20035 - The minimum length of password should be 8."));
+                        automationContext.getContextTenant().getDomain(),
+                        "20035 - The minimum length of password should be 8."));
         webhookEventTestManager.validateStackedEventPayloads();
     }
 
-    @Test(dependsOnMethods = "testAddUserFailure")
+    @Test(dependsOnMethods = "testCreateUser")
+    public void testUserProfileUpdateWithoutAnyAccountStateManagementClaims() throws Exception {
+
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj addNickName = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.ADD);
+        addNickName.setPath("nickName");
+        addNickName.setValue("test-user-nickname");
+        patchRequest.addOperations(addNickName);
+
+        UserItemAddGroupobj replaceCountry = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        replaceCountry.setPath("urn:scim:wso2:schema:country");
+        replaceCountry.setValue("United States");
+        patchRequest.addOperations(replaceCountry);
+
+        UserItemAddGroupobj replaceEmails = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        replaceEmails.setPath("urn:scim:wso2:schema:emailAddresses");
+        replaceEmails.setValue(Arrays.asList("test-user-personal@test.com", "test-user-work@test.com"));
+        patchRequest.addOperations(replaceEmails);
+
+        UserItemAddGroupobj removeGivenName = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REMOVE);
+        removeGivenName.setPath("name:givenName");
+        patchRequest.addOperations(removeGivenName);
+
+        scim2RestClient.updateUser(patchRequest, userId);
+
+        webhookEventTestManager.stackExpectedEventPayload(
+                "https://schemas.identity.wso2.org/events/user/event-type/userProfileUpdated",
+                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserProfileUpdatedEventPayloadWithoutAnyAccountStateManagementClaims(
+                        userId, automationContext.getContextTenant().getDomain()));
+        webhookEventTestManager.validateStackedEventPayloads();
+    }
+
+    @Test(dependsOnMethods = "testUserProfileUpdateWithoutAnyAccountStateManagementClaims")
+    public void testUserProfileUpdateWithAccountLock() throws Exception {
+
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj addGivenName = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        addGivenName.setPath("name:givenName");
+        addGivenName.setValue("test-user-given-name");
+        patchRequest.addOperations(addGivenName);
+
+        UserItemAddGroupobj setAccountLock = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        setAccountLock.setPath("urn:scim:wso2:schema:accountLocked");
+        setAccountLock.setValue(true);
+        patchRequest.addOperations(setAccountLock);
+
+        scim2RestClient.updateUser(patchRequest, userId);
+
+        webhookEventTestManager.stackExpectedEventPayload(
+                "https://schemas.identity.wso2.org/events/user/event-type/userProfileUpdated",
+                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserProfileUpdatedEventPayloadWithAccountLockClaim(
+                        userId, automationContext.getContextTenant().getDomain()));
+        webhookEventTestManager.stackExpectedEventPayload(
+                "https://schemas.identity.wso2.org/events/user/event-type/userAccountLocked",
+                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountLockedEventPayload(
+                        userId, automationContext.getContextTenant().getDomain()));
+        webhookEventTestManager.validateStackedEventPayloads();
+    }
+
+    @Test(dependsOnMethods = "testUserProfileUpdateWithAccountLock")
+    public void testAccountUnlock() throws Exception {
+
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj setAccountLock = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        setAccountLock.setPath("urn:scim:wso2:schema:accountLocked");
+        setAccountLock.setValue(false);
+        patchRequest.addOperations(setAccountLock);
+
+        scim2RestClient.updateUser(patchRequest, userId);
+
+        webhookEventTestManager.stackExpectedEventPayload(
+                "https://schemas.identity.wso2.org/events/user/event-type/userAccountUnlocked",
+                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountUnlockedEventPayload(
+                        userId, automationContext.getContextTenant().getDomain()));
+        webhookEventTestManager.validateStackedEventPayloads();
+    }
+
+    @Test(dependsOnMethods = "testAccountUnlock")
+    public void testUserProfileUpdateWithAccountDisable() throws Exception {
+
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj addGivenName = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        addGivenName.setPath("name:givenName");
+        addGivenName.setValue("test-user-updated-given-name");
+        patchRequest.addOperations(addGivenName);
+
+        UserItemAddGroupobj setAccountDisable = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        setAccountDisable.setPath("urn:scim:wso2:schema:accountDisabled");
+        setAccountDisable.setValue(true);
+        patchRequest.addOperations(setAccountDisable);
+
+        scim2RestClient.updateUser(patchRequest, userId);
+
+        webhookEventTestManager.stackExpectedEventPayload(
+                "https://schemas.identity.wso2.org/events/user/event-type/userProfileUpdated",
+                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserProfileUpdatedEventPayloadWithAccountDisableClaim(
+                        userId, automationContext.getContextTenant().getDomain()));
+        webhookEventTestManager.stackExpectedEventPayload(
+                "https://schemas.identity.wso2.org/events/user/event-type/userDisabled",
+                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountDisabledEventPayload(
+                        userId, automationContext.getContextTenant().getDomain()));
+        webhookEventTestManager.validateStackedEventPayloads();
+    }
+
+    @Test(dependsOnMethods = "testUserProfileUpdateWithAccountDisable")
+    public void testAccountEnable() throws Exception {
+
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj setAccountDisable = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
+        setAccountDisable.setPath("urn:scim:wso2:schema:accountDisabled");
+        setAccountDisable.setValue(false);
+        patchRequest.addOperations(setAccountDisable);
+
+        scim2RestClient.updateUser(patchRequest, userId);
+
+        webhookEventTestManager.stackExpectedEventPayload(
+                "https://schemas.identity.wso2.org/events/user/event-type/userEnabled",
+                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedAccountEnabledEventPayload(
+                        userId, automationContext.getContextTenant().getDomain()));
+        webhookEventTestManager.validateStackedEventPayloads();
+    }
+
+    @Test(dependsOnMethods = {"testCreateUser", "testUserProfileUpdateWithoutAnyAccountStateManagementClaims",
+            "testUserProfileUpdateWithAccountLock", "testAccountUnlock", "testUserProfileUpdateWithAccountDisable",
+            "testAccountEnable"})
     public void testDeleteUser() throws Exception {
 
-        String userResourcePath = getPath() + "/" + userId;
-        HttpDelete request = new HttpDelete(userResourcePath);
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-
-        HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 204, "User " +
-                "has not been retrieved successfully");
-
-        EntityUtils.consume(response.getEntity());
+        scim2RestClient.deleteUser(userId);
 
         webhookEventTestManager.stackExpectedEventPayload(
                 "https://schemas.identity.wso2.org/events/user/event-type/userDeleted",
                 AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserDeletedEventPayload(
-                        userId, tenant));
+                        userId, automationContext.getContextTenant().getDomain()));
         webhookEventTestManager.validateStackedEventPayloads();
     }
 
-    private HttpPost buildUserCreateRequest() throws UnsupportedEncodingException {
+    private void enableUserAccountDisablingFeature() throws Exception {
 
-        HttpPost request = new HttpPost(getPath());
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        PropertyReq property = new PropertyReq();
+        property.setName("account.disable.handler.enable");
+        property.setValue("true");
 
-        JSONObject rootObject = new JSONObject();
+        ConnectorsPatchReq connectorPatchRequest = new ConnectorsPatchReq();
+        connectorPatchRequest.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        connectorPatchRequest.addProperties(property);
 
-        JSONArray schemas = new JSONArray();
-        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
-
-        JSONObject names = new JSONObject();
-        names.put(FAMILY_NAME_ATTRIBUTE, FAMILY_NAME_CLAIM_VALUE);
-        names.put(GIVEN_NAME_ATTRIBUTE, GIVEN_NAME_CLAIM_VALUE);
-
-        rootObject.put(NAME_ATTRIBUTE, names);
-        rootObject.put(USER_NAME_ATTRIBUTE, USERNAME);
-
-        JSONObject emailWork = new JSONObject();
-        emailWork.put(TYPE_PARAM, EMAIL_TYPE_WORK_ATTRIBUTE);
-        emailWork.put(VALUE_PARAM, EMAIL_TYPE_WORK_CLAIM_VALUE);
-
-        JSONObject emailHome = new JSONObject();
-        emailHome.put(TYPE_PARAM, EMAIL_TYPE_HOME_ATTRIBUTE);
-        emailHome.put(VALUE_PARAM, EMAIL_TYPE_HOME_CLAIM_VALUE);
-
-        JSONArray emails = new JSONArray();
-        emails.add(emailWork);
-        emails.add(emailHome);
-
-        rootObject.put(EMAILS_ATTRIBUTE, emails);
-
-        rootObject.put(PASSWORD_ATTRIBUTE, PASSWORD);
-
-        JSONArray emailAddresses = new JSONArray();
-        emailAddresses.add(EMAIL_TYPE_WORK_CLAIM_VALUE);
-        emailAddresses.add(EMAIL_TYPE_HOME_CLAIM_VALUE);
-        JSONObject emailAddressesObject = new JSONObject();
-        emailAddressesObject.put(EMAIL_ADDRESSES_ATTRIBUTE, emailAddresses);
-        rootObject.put(USER_SYSTEM_SCHEMA, emailAddressesObject);
-
-        StringEntity entity = new StringEntity(rootObject.toString());
-        request.setEntity(entity);
-        return request;
+        identityGovernanceRestClient.updateConnectors(GOVERNANCE_CATEGORY_ACCOUNT_MANAGEMENT_ID,
+                ACCOUNT_DISABLE_CONNECTOR_ID, connectorPatchRequest);
     }
 
-    private HttpPost buildInvalidUserCreateRequest() throws UnsupportedEncodingException {
+    private void disableUserAccountDisablingFeature() throws Exception {
 
-        HttpPost request = new HttpPost(getPath());
-        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
-        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        PropertyReq property = new PropertyReq();
+        property.setName("account.disable.handler.enable");
+        property.setValue("false");
 
-        JSONObject rootObject = new JSONObject();
+        ConnectorsPatchReq connectorPatchRequest = new ConnectorsPatchReq();
+        connectorPatchRequest.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        connectorPatchRequest.addProperties(property);
 
-        JSONArray schemas = new JSONArray();
-        rootObject.put(SCHEMAS_ATTRIBUTE, schemas);
-
-        JSONObject names = new JSONObject();
-        rootObject.put(NAME_ATTRIBUTE, names);
-        rootObject.put(USER_NAME_ATTRIBUTE, "passwordIncompatibleUser");
-        rootObject.put(PASSWORD_ATTRIBUTE, "a");
-
-        StringEntity entity = new StringEntity(rootObject.toString());
-        request.setEntity(entity);
-        return request;
-    }
-
-    private String getPath() {
-
-        if (tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return SERVER_URL + SCIM2_USERS_ENDPOINT;
-        } else {
-            return SERVER_URL + "/t/" + tenant + SCIM2_USERS_ENDPOINT;
-        }
-    }
-
-    private String getAuthzHeader() {
-
-        return "Basic " + Base64.encodeBase64String((adminUsername + ":" + adminPassword).getBytes()).trim();
+        identityGovernanceRestClient.updateConnectors(GOVERNANCE_CATEGORY_ACCOUNT_MANAGEMENT_ID,
+                ACCOUNT_DISABLE_CONNECTOR_ID, connectorPatchRequest);
     }
 }

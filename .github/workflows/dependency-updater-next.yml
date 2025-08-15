@@ -1,5 +1,5 @@
-# This workflow will update dependencies for product-is.
-name: Dependency Updater
+# This workflow will update dependencies for product-is next branch.
+name: Dependency Updater (Next Branch)
 on:
   workflow_dispatch:
   schedule:
@@ -15,7 +15,7 @@ env:
   REMOTE_PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
   PRODUCT_REPOSITORY_PUBLIC: wso2/$REPOSITORY
   BUILD_NUMBER: ${{github.run_id}}
-  DEPENDENCY_UPGRADE_BRANCH_NAME: IS_dependency_updater_github_action/$BUILD_NUMBER
+  DEPENDENCY_UPGRADE_BRANCH_NAME: IS_dependency_updater_next_github_action/$BUILD_NUMBER
   PR: "https://github.com/wso2/product-is/pulls"
 
 jobs:
@@ -72,14 +72,14 @@ jobs:
           echo "=========================================================="
           git fetch ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}
           echo ""
-          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'master branch'
+          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'next branch'
           echo "=========================================================="
-          git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/master'
+          git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/next'
 
           echo ""
           echo 'Updating dependencies'
           echo "=========================================================="
-          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
           echo ""
           echo 'Available updates'
           echo "=========================================================="
@@ -116,7 +116,7 @@ jobs:
             echo "=========================================================="
             git config --global user.email ${{ env.GIT_EMAIL }}
             git config --global user.name ${{ env.GIT_USERNAME }}
-            git commit -a -m 'Bump dependencies from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
+            git commit -a -m 'Bump dependencies (next branch) from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
             git remote rm origin
             git remote add origin 'https://'${{ secrets.PAT }}'@github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}
 
@@ -129,12 +129,12 @@ jobs:
             echo 'Send Pull Request'
             echo "=========================================================="
 
-            TITLE="Bump Dependencies #"${{ env.BUILD_NUMBER }}
+            TITLE="[Next Branch] Bump Dependencies #"${{ env.BUILD_NUMBER }}
             RESPONSE=$(curl -s -w "%{http_code}" -k -X \
             POST https://api.github.com/repos/${{ env.PRODUCT_REPOSITORY_PUBLIC }}/pulls \
             -H "Authorization: Bearer "${{ secrets.PAT }}"" \
             -H "Content-Type: application/json" \
-            -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"master"}')
+            -d '{ "title": "'"${TITLE}"'","body": "Bumps dependencies for product-is next branch. Link : https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","head": "'"${{ env.GIT_USERNAME }}:${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}"'","base":"next"}')
             RESPONSE_BODY=${RESPONSE::-3}
             STATUS=$(printf "%s" "$RESPONSE" | tail -c 3)
             if [[ $STATUS == "201" ]]; then
@@ -181,7 +181,7 @@ jobs:
               "cards": [
                   {
                       "header": {
-                          "title": "Dependency Updater",
+                          "title": "Dependency Updater (Next Branch)",
                           "subtitle": "GitHub Action #${{ env.BUILD_NUMBER }}"
                       },
                       "sections": [
