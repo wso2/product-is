@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.webhooks;
+package org.wso2.identity.integration.test.webhooks.util;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +28,6 @@ import org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.
 import org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.model.WebhookResponse;
 import org.wso2.identity.integration.test.restclients.WebhooksRestClient;
 import org.wso2.identity.integration.test.webhooks.mockservice.WebhookMockService;
-import org.wso2.identity.integration.test.webhooks.util.EventPayloadStack;
-import org.wso2.identity.integration.test.webhooks.util.EventPayloadValidator;
 
 import java.util.List;
 import java.util.Map;
@@ -44,7 +42,7 @@ public class WebhookEventTestManager {
 
     private static final int START_PORT = 8580;
     private static final int PORT_LIMIT = 8590;
-    private static final int MAX_RETRIES_ON_EVENTS_RECEIVED = 3;
+    private static final int MAX_RETRIES_ON_EVENTS_RECEIVED = 5;
     private static final int WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED = 500;
     private static final String SERVER_BASE_URL = "https://localhost:9853/";
     private static final String WSO2_EVENT_PROFILE_URI = "https://schemas.identity.wso2.org/events";
@@ -129,7 +127,14 @@ public class WebhookEventTestManager {
                 Map.Entry<String, JSONObject> expectedEntry = eventPayloadStack.popExpectedPayload();
                 validateEventPayloadForEventUri(expectedEntry.getKey(), expectedEntry.getValue());
             }
+
+            if (!mockService.getOrderedRequests().isEmpty()) {
+                throw new AssertionError(
+                        "There are " + mockService.getOrderedRequests().size() +
+                                " unexpected event notifications received to the mock service.");
+            }
         } finally {
+            mockService.clearOrderedRequests();
             eventPayloadStack.clearStack();
         }
     }
@@ -151,12 +156,13 @@ public class WebhookEventTestManager {
         }
     }
 
-    private void validateEventPayloadForEventUri(String eventUri, JSONObject expectedPayload) throws Exception {
+    private void validateEventPayloadForEventUri(String eventUri, JSONObject expectedEventsObjectInPayload)
+            throws Exception {
 
         waitForSpecificEvent(eventUri);
 
         List<JSONObject> receivedPayloads = extractReceivedPayloads();
-        boolean isMatched = matchAndValidatePayload(eventUri, expectedPayload, receivedPayloads);
+        boolean isMatched = matchAndValidatePayload(eventUri, expectedEventsObjectInPayload, receivedPayloads);
 
         if (!isMatched) {
             throw new AssertionError("No matching payload found for event URI: " + eventUri);
@@ -210,7 +216,7 @@ public class WebhookEventTestManager {
                 .collect(Collectors.toList());
     }
 
-    private boolean matchAndValidatePayload(String eventUri, JSONObject expectedPayload,
+    private boolean matchAndValidatePayload(String eventUri, JSONObject expectedEventsObject,
                                             List<JSONObject> receivedPayloads) throws Exception {
 
         for (int i = 0; i < receivedPayloads.size(); i++) {
@@ -221,19 +227,23 @@ public class WebhookEventTestManager {
 
                 try {
                     EventPayloadValidator.validateCommonEventPayloadFields(eventUri, receivedPayload);
-                    JSONObject eventField = EventPayloadValidator.extractEventPayload(eventUri, receivedPayload);
+                    JSONObject actualEventsObject =
+                            EventPayloadValidator.extractEventPayload(eventUri, receivedPayload);
 
                     LOG.info("Validating received event payload: {} against expected payload: {} for event URI: {}.",
-                            eventField, expectedPayload, eventUri);
+                            actualEventsObject, expectedEventsObject, eventUri);
 
-                    EventPayloadValidator.validateEventField(eventField, expectedPayload);
+                    EventPayloadValidator.validateEventField(actualEventsObject, expectedEventsObject);
                     LOG.info("Payload validation successful for event URI: {}", eventUri);
-                    LOG.info("Removing matched payload from received list for event URI: {}", eventUri);
+                    LOG.info("Removing matched payload from request list of the mock service for event URI: {}",
+                            eventUri);
                     receivedPayloads.remove(i);
+                    mockService.removeRequest(mockService.getOrderedRequests().get(i));
                     return true;
 
                 } catch (IllegalArgumentException e) {
-                    throw new AssertionError("Payload validation failed for event URI: " + eventUri, e);
+                    throw new AssertionError(
+                            "Payload validation failed for event URI: " + eventUri + ". Error: " + e.getMessage(), e);
                 }
             }
         }
