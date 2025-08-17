@@ -56,8 +56,6 @@ import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER
  */
 public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
 
-    public static final String SUPER_ORGANIZATION_ID = "10084a8d-113f-4211-a0d5-efe36b082211";
-    public static final String SUPER_TENANT_DOMAIN = "carbon.super";
     private static final String API_DEFINITION_NAME = "org.wso2.carbon.identity.organization.management.yaml";
     static final String API_VERSION = "v1";
 
@@ -73,6 +71,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     static final String INTROSPECT_ENDPOINT = "oauth2/introspect";
     static final String COMMON_AUTH_ENDPOINT = "/commonauth";
     static final String PATH_SEPARATOR = "/";
+    static final String SELF_ENDPOINT = "/self";
 
     protected static final String ORGANIZATION_ID = "id";
     protected static final String ORGANIZATION_NAME = "name";
@@ -146,7 +145,9 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     protected static final String ORG_HANDLE_CENTRAL_HOSPITAL = "centralhospital.com";
     protected static final String ORG_NAME_LITTLE_HOSPITAL = "Little Hospital";
     protected static final String ORG_NAME_CENTRAL_HOSPITAL = "Central Hospital";
+    protected static final String ORG_NAME_MAIN_HOSPITAL = "Main Hospital";
     protected static final String ORG_HANDLE_PLACEHOLDER = "${orgHandle}";
+    protected static final String NEW_ORG_NAME_PLACEHOLDER = "${newOrganizationName}";
 
     protected static final String EMPTY_REQUEST_BODY = "{}";
     protected static final String RENAME_ORGANIZATION_REQUEST_BODY = "rename-organization-request-body.json";
