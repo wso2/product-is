@@ -774,6 +774,24 @@ public class RESTTestBase extends ISIntegrationTest {
     }
 
     /**
+     * Invoke the given endpointURL for PATCH with the provided body and OAuth2 authentication, using the provided
+     * access token.
+     *
+     * @param endpointURL Endpoint to be invoked.
+     * @param body Payload.
+     * @param accessToken OAuth2 access token.
+     * @return Response.
+     */
+    protected Response getResponseOfPatchWithOAuth2(String endpointURL, String body, String accessToken) {
+
+        return given().auth().preemptive().oauth2(accessToken)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .when()
+                .patch(endpointURL);
+    }
+
+    /**
      * Invoke given endpointUri for  PATCH request with given body, headers and Basic authentication, authentication
      * credential being the authenticatingUserName and authenticatingCredential.
      *

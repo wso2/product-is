@@ -60,6 +60,8 @@ import java.util.List;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
+import static org.wso2.carbon.identity.application.mgt.ApplicationConstants.SUPER_TENANT;
+import static org.wso2.carbon.identity.organization.management.service.constant.OrganizationManagementConstants.SUPER;
 
 /**
  * Tests for failure cases of the Organization Management REST APIs.
@@ -125,6 +127,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testConclude() throws Exception {
 
         super.conclude();
+        deleteOrganizations();
         OAuth2Util.deleteApplication(oAuth2RestClient, applicationID);
         OAuth2Util.deleteApplication(oAuth2RestClient, b2bApplicationID);
         oAuth2RestClient.closeHttpClient();
@@ -499,20 +502,6 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     }
 
     @Test(dependsOnMethods = "testDeleteDiscoveryConfigUnauthorized")
-    public void deleteOrganizations() {
-
-        for (String organizationID : organizationIDs) {
-            String organizationPath = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationID;
-            Response responseOfDelete = getResponseOfDelete(organizationPath);
-            responseOfDelete.then()
-                    .log()
-                    .ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_NO_CONTENT);
-        }
-    }
-
-    @Test(dependsOnMethods = "testUpdateDiscoveryAttributesUnauthorized")
     public void testGetPaginatedOrganizationsWithInvalidLimit() {
 
         String invalidLimitUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + QUESTION_MARK + LIMIT_QUERY_PARAM
@@ -594,5 +583,33 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST,
                 OrganizationManagementConstants.ErrorMessages.ERROR_CODE_INVALID_CURSOR_FOR_PAGINATION.getCode());
+    }
+
+    @Test(dependsOnMethods = "testGetPaginatedMetaAttributesWithInvalidBeforeCursor")
+    public void testPatchSelfOrganizationNameRestrictions() throws IOException {
+
+        if (SUPER_TENANT.equals(tenant)) {
+            String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + SELF_ENDPOINT;
+            String body = readResource(RENAME_ORGANIZATION_REQUEST_BODY);
+            body = body.replace(NEW_ORG_NAME_PLACEHOLDER, SUPER);
+            Response response = getResponseOfPatchWithOAuth2(endpoint, body, m2mToken);
+            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST,
+                    OrganizationManagementConstants.ErrorMessages.ERROR_CODE_SUPER_ORGANIZATION_RENAME_CONFLICT
+                            .getCode());
+        } else {
+            String endpoint = ORGANIZATION_MANAGEMENT_API_BASE_PATH + SELF_ENDPOINT;
+            String body = readResource(RENAME_ORGANIZATION_REQUEST_BODY);
+            body = body.replace(NEW_ORG_NAME_PLACEHOLDER, SUPER);
+            Response response = getResponseOfPatchWithOAuth2(endpoint, body, m2mToken);
+            validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST,
+                    OrganizationManagementConstants.ErrorMessages.ERROR_CODE_ORGANIZATION_NAME_RESERVED.getCode());
+        }
+    }
+
+    private void deleteOrganizations() throws Exception {
+
+        for (String organizationID : organizationIDs) {
+            orgMgtRestClient.deleteOrganization(organizationID);
+        }
     }
 }
