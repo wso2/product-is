@@ -360,6 +360,21 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Attempt to delete a user and return the response status code.
+     *
+     * @param userId ID of the user.
+     * @throws IOException If an error occurred while deleting a user.
+     */
+    public int attemptUserDelete(String userId) throws IOException {
+
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
      * Delete an existing user of an organization.
      *
      * @param userId           ID of the user.
@@ -393,6 +408,30 @@ public class SCIM2RestClient extends RestBaseClient {
                     roleInfo.getDisplayName() + " Role creation failed");
             JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
             return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Attempt to add a new role and return the response status code without assertions.
+     * If successfully created (201), returns the created role id as well.
+     * If engaged with workflow (202), roleId will be null and the caller should approve the task and verify.
+     *
+     * @param roleInfo Role request object.
+     * @return Response with status code and role id (if created).
+     * @throws Exception If an error occurred while adding a role.
+     */
+    public RoleCreateResponse attemptRoleV2Creation(RoleRequestObject roleInfo) throws Exception {
+
+        String jsonRequest = toJSONString(roleInfo);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesV2Path(), jsonRequest, getHeaders())) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String roleId = null;
+            if (statusCode == HttpServletResponse.SC_CREATED) {
+                JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+                roleId = jsonResponse.get("id").toString();
+            }
+            return new RoleCreateResponse(statusCode, roleId);
         }
     }
 
@@ -455,6 +494,97 @@ public class SCIM2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Role deletion failed");
+        }
+    }
+
+    /**
+     * Attempt to delete an existing role and return the response status code.
+     *
+     * @param roleId Role id.
+     * @return Response status code.
+     * @throws IOException If an error occurred while deleting a role.
+     */
+    public int attemptRoleV2Delete(String roleId) throws IOException {
+
+        String endPointUrl = getRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Attempt to update users of a role (SCIM2 v2 Roles endpoint) and return the response status code.
+     *
+     * @param roleId        Role id.
+     * @param patchRoleInfo Role patch request object.
+     * @return Response status code.
+     * @throws IOException If an error occurred while updating users of a role.
+     */
+    public int attemptUpdateUsersOfRoleV2(String roleId, PatchOperationRequestObject patchRoleInfo) throws IOException {
+
+        String jsonRequest = toJSONString(patchRoleInfo);
+        String endPointUrl = getRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Get role by id and return the raw JSON body.
+     *
+     * @param roleId Role id.
+     * @return JSONObject of the HTTP response body.
+     * @throws Exception If an error occurred while getting the role.
+     */
+    public JSONObject getRole(String roleId) throws Exception {
+
+        String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Attempt to get a role and return the status code without parsing/validations.
+     *
+     * @param roleId Role id.
+     * @return HTTP status code.
+     * @throws IOException If an error occurred while invoking the GET request.
+     */
+    public int attemptGetRoleV2(String roleId) throws IOException {
+
+        String endPointUrl = getRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Response object for role creation attempts.
+     */
+    public static class RoleCreateResponse {
+
+        private final int statusCode;
+        private final String roleId;
+
+        public RoleCreateResponse(int statusCode, String roleId) {
+
+            this.statusCode = statusCode;
+            this.roleId = roleId;
+        }
+
+        public int getStatusCode() {
+
+            return statusCode;
+        }
+
+        public String getRoleId() {
+
+            return roleId;
         }
     }
 
