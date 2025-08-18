@@ -90,7 +90,10 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     public void cleanup() throws Exception {
 
         if (createdRoleId != null) {
-            scim2RestClient.attemptRoleV2Delete(createdRoleId);
+            scim2RestClient.deleteV2Role(createdRoleId);
+        }
+        if (createdUserId != null) {
+            scim2RestClient.deleteUser(createdUserId);
         }
     }
 
@@ -166,8 +169,8 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     public void testUpdateWorkflow() throws Exception {
 
         String body = readResource("update-workflow.json");
-        String roleId = scim2RestClient.getRoleIdByName("admin");
-        body = body.replace("{role-id}", roleId);
+        String adminRoleId = scim2RestClient.getRoleIdByName("admin");
+        body = body.replace("{role-id}", adminRoleId);
         Response response = getResponseOfPut(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId, body);
 
         response.then()
@@ -274,6 +277,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
         // 3) Approve deletion and verify user is removed.
         approveFirstPendingTask();
         assertUserExists(createdUserName, false);
+        createdUserId = null; // Clear user ID after deletion approval.
     }
 
     @Test(dependsOnMethods = {"testAssignUsersToRolePendingApprovalAndApprove"})
