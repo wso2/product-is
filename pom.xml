@@ -2136,16 +2136,7 @@
                 <artifactId>org.wso2.carbon.identity.authorization.framework.server.feature</artifactId>
                 <version>${carbon.identity.framework.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.authorization.common</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.identity.framework</groupId>
-                <artifactId>org.wso2.carbon.identity.authorization.common.server.feature</artifactId>
-                <version>${carbon.identity.framework.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>org.wso2.msf4j</groupId>
                 <artifactId>msf4j-core</artifactId>
@@ -2544,7 +2535,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.440</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.438</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
