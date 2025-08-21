@@ -2535,7 +2535,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.436</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.438</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2563,7 +2563,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.342</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.343</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.60</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.12</identity.inbound.auth.sts.version>
@@ -2586,7 +2586,7 @@
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.9.68</identity.event.handler.notification.version>
 
-        <org.wso2.identity.webhook.event.handlers.version>1.0.379</org.wso2.identity.webhook.event.handlers.version>
+        <org.wso2.identity.webhook.event.handlers.version>1.0.380</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.32</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
@@ -2653,7 +2653,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.16</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.25</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.26</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.51</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.52</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.30</identity.oauth2.grant.organizationswitch.version>
@@ -2666,7 +2666,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.180</identity.server.api.version>
+        <identity.server.api.version>1.3.181</identity.server.api.version>
         <identity.user.api.version>1.3.69</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
