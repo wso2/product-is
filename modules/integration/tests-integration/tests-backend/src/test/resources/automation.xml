@@ -64,6 +64,13 @@
         </selenium>
     </tools>
 
+    <!--  Configs to add in deployment.toml at startup to enable admin/SOAP services. -->
+    <enableAdminServices>
+        <expectedParentKey>server</expectedParentKey>
+        <expectedKey>disable_admin_services</expectedKey>
+        <expectedValue>false</expectedValue>
+    </enableAdminServices>
+
     <!--  SMTP Server configs to be added to the deployment.toml during the initial server startup  -->
     <emailSenderConfigs>
         <from_address>admin@wso2.com</from_address>
