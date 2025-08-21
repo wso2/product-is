@@ -2622,7 +2622,7 @@
         <provisioning.connector.google.version>5.2.8</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.10</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.5</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>2.0.10</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>2.0.11</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.44</identity.local.auth.basicauth.version>
@@ -2696,7 +2696,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.80</carbon.kernel.version>
+        <carbon.kernel.version>4.10.83</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>
