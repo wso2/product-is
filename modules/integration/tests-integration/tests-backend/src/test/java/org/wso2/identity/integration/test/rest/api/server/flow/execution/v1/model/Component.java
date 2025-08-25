@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.*;
 public class Component  {
 
     private String id;
+    private String actionId;
     private String type;
     private String variant;
     private List<Component> components = null;
@@ -53,7 +54,7 @@ public class Component  {
         return this;
     }
 
-    @ApiModelProperty(example = "dnd-component-210e95c0-c580-40b0-9646-7054bb340f64", required = true, value = "Unique identifier of the component")
+    @ApiModelProperty(example = "button_40f64", required = true, value = "Unique identifier of the component")
     @JsonProperty("id")
     @Valid
     @NotNull(message = "Property id cannot be null.")
@@ -63,6 +64,25 @@ public class Component  {
     }
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * Action identifier
+     **/
+    public Component actionId(String actionId) {
+
+        this.actionId = actionId;
+        return this;
+    }
+
+    @ApiModelProperty(example = "button_40f64", value = "Action identifier")
+    @JsonProperty("actionId")
+    @Valid
+    public String getActionId() {
+        return actionId;
+    }
+    public void setActionId(String actionId) {
+        this.actionId = actionId;
     }
 
     /**
@@ -163,6 +183,7 @@ public class Component  {
         }
         Component component = (Component) o;
         return Objects.equals(this.id, component.id) &&
+                Objects.equals(this.actionId, component.actionId) &&
                 Objects.equals(this.type, component.type) &&
                 Objects.equals(this.variant, component.variant) &&
                 Objects.equals(this.components, component.components) &&
@@ -171,7 +192,7 @@ public class Component  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, variant, components, config);
+        return Objects.hash(id, actionId, type, variant, components, config);
     }
 
     @Override
@@ -181,6 +202,7 @@ public class Component  {
         sb.append("class Component {\n");
 
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    actionId: ").append(toIndentedString(actionId)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    variant: ").append(toIndentedString(variant)).append("\n");
         sb.append("    components: ").append(toIndentedString(components)).append("\n");
