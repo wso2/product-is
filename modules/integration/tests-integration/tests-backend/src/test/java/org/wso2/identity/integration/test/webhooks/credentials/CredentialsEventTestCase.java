@@ -109,7 +109,7 @@ public class CredentialsEventTestCase extends ISIntegrationTest {
 
         UserItemAddGroupobj newPassword = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
         newPassword.setPath("password");
-        newPassword.setValue("NewSecurePassword123!");
+        newPassword.setValue("NewSecurePassword1234!");
         patchRequest.addOperations(newPassword);
 
         scim2RestClient.updateUser(patchRequest, userId);
