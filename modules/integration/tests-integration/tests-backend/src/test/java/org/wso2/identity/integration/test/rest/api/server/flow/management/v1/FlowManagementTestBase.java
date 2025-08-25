@@ -65,4 +65,9 @@ public class FlowManagementTestBase extends RESTAPIServerTestBase {
 
         RestAssured.basePath = StringUtils.EMPTY;
     }
+
+    protected static class FlowTypes {
+
+        public static final String REGISTRATION = "REGISTRATION";
+    }
 }

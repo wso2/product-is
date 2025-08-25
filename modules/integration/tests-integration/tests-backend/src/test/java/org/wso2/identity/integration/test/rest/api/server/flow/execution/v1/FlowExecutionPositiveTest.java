@@ -31,14 +31,16 @@ import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.mode
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.restclients.AuthenticatorRestClient;
+import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
-import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.UserUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionTestBase.FlowTypes.REGISTRATION;
 
 /**
  * Test class for Flow Execution API.
@@ -46,8 +48,8 @@ import java.util.Map;
 public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
 
     public static final String USER = "RegExecPosTestUser";
-    private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
-    private static final String ACCOUNT_LOCKED_ATTRIBUTE ="accountLocked";
+    private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE = "urn:scim:wso2:schema";
+    private static final String ACCOUNT_LOCKED_ATTRIBUTE = "accountLocked";
     private FlowExecutionClient flowExecutionClient;
     private FlowManagementClient flowManagementClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -83,7 +85,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
         authenticatorRestClient = new AuthenticatorRestClient(serverURL, tenantInfo);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        enableNewRegistrationFlow(identityGovernanceRestClient);
+        enableFlow(REGISTRATION, flowManagementClient);
         addRegistrationFlow(flowManagementClient);
     }
 
@@ -91,7 +93,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
     public void tearDownClass() throws Exception {
 
         deleteUser();
-        disableNewRegistrationFlow(identityGovernanceRestClient);
+        disableFlow(REGISTRATION, flowManagementClient);
         identityGovernanceRestClient.closeHttpClient();
         flowExecutionClient.closeHttpClient();
         flowManagementClient.closeHttpClient();
@@ -102,7 +104,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
     @Test
     public void initiateFlow() throws Exception {
 
-        Object responseObj = flowExecutionClient.initiateFlowExecution();
+        Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION);
         Assert.assertTrue(responseObj instanceof FlowExecutionResponse);
         FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertNotNull(response);
