@@ -13,7 +13,7 @@
   "keystore.primary.file_name": "wso2carbon.p12",
   "truststore.file_name": "client-truststore.p12",
 
-  "transport.https.sslHostConfig.properties.certificateVerification": "want",
+  "transport.https.sslHostConfig.properties.certificateVerification": "false",
   "transport.https.sslHostConfig.properties.protocols": "+TLSv1,+TLSv1.1,+TLSv1.2",
 
   "authentication.consent.data_source": "jdbc/WSO2IdentityDB",
