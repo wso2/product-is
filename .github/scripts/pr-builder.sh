@@ -8,6 +8,7 @@ SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provis
 declare -a ALL_TESTS=(
     "is-tests-default-configuration"
     "is-test-rest-api"
+    "is-test-webhooks"
     "is-tests-scim2"
     "is-test-adaptive-authentication"
     "is-test-adaptive-authentication-nashorn"
