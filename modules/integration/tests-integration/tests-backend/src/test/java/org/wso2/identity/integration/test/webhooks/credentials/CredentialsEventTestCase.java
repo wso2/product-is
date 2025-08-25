@@ -15,7 +15,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAdd
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
-import org.wso2.identity.integration.test.webhooks.usermanagement.eventpayloadbuilder.AdminInitUserManagementEventTestExpectedEventPayloadBuilder;
+import org.wso2.identity.integration.test.webhooks.usermanagement.eventpayloadbuilder.AdminInitCredentialEventTestExpectedEventPayloadBuilder;
 import org.wso2.identity.integration.test.webhooks.util.WebhookEventTestManager;
 
 import java.util.Arrays;
@@ -60,6 +60,7 @@ public class CredentialsEventTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        scim2RestClient.deleteUser(userId);
         scim2RestClient.closeHttpClient();
         identityGovernanceRestClient.closeHttpClient();
         webhookEventTestManager.teardown();
@@ -97,14 +98,8 @@ public class CredentialsEventTestCase extends ISIntegrationTest {
 
         webhookEventTestManager.stackExpectedEventPayload(
                 "https://schemas.identity.wso2.org/events/credential/event-type/credentialUpdated",
-                AdminInitUserManagementEventTestExpectedEventPayloadBuilder.buildExpectedUserCredentialUpdatedEventPayloadWithoutAnyOtherClaims(
+                AdminInitCredentialEventTestExpectedEventPayloadBuilder.buildExpectedUserCredentialUpdatedEventPayloadWithoutAnyOtherClaims(
                         userId, automationContext.getContextTenant().getDomain()));
         webhookEventTestManager.validateStackedEventPayloads();
-    }
-
-    @Test(dependsOnMethods = {"testUserProfileUpdateWithoutAnyAccountStateManagementClaims"})
-    public void testDeleteUser() throws Exception {
-
-        scim2RestClient.deleteUser(userId);
     }
 }
