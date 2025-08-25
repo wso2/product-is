@@ -1,0 +1,14 @@
+{
+  "failOnErrors":1,
+  "schemas": ["urn:ietf:params:scim:api:messages:2.0:BulkRequest"],
+  "Operations": [
+    {
+      "method": "POST",
+      "path": "/v2/Roles",
+      "bulkId": "qwertyy",
+      "data": {
+        "displayName": "roleName"
+      }
+    }
+  ]
+}
