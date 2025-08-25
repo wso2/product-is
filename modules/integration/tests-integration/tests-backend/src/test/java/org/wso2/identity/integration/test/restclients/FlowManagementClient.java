@@ -28,6 +28,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowResponse;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -37,7 +38,7 @@ import java.io.IOException;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
- * Rest client which provides methods to interact with the Registration Management REST API.
+ * Rest client which provides methods to interact with the Flow Management REST API.
  */
 public class FlowManagementClient extends RestBaseClient {
 
@@ -56,10 +57,10 @@ public class FlowManagementClient extends RestBaseClient {
     }
 
     /**
-     * Update a registration flow.
+     * Update a flow.
      *
-     * @param flowRequest Registration flow request.
-     * @throws Exception If an error occurs while updating the registration flow.
+     * @param flowRequest Flow request.
+     * @throws Exception If an error occurs while updating the flow.
      */
     public void putFlow(FlowRequest flowRequest)
             throws Exception {
@@ -70,28 +71,57 @@ public class FlowManagementClient extends RestBaseClient {
                 getHeadersWithBasicAuth())) {
             if (response.getStatusLine().getStatusCode() != HTTP_OK) {
                 throw new Exception("Error code " + response.getStatusLine().getStatusCode() +
-                        " occurred while updating the registration flow");
+                        String.format(" occurred while updating the %s flow", flowRequest.getFlowType()));
             }
         }
     }
 
     /**
-     * Get the registration flow.
+     * Get the flow.
      *
-     * @return Registration flow response.
-     * @throws Exception If an error occurs while getting the registration flow.
+     * @return Flow response.
+     * @throws Exception If an error occurs while getting the flow.
      */
-    public FlowResponse getRegistrationFlow() throws Exception {
+    public FlowResponse getFlow(String flowType) throws Exception {
 
-        String registrationFlowPath = flowManagementBasePath + "?flowType=REGISTRATION";
-        try (CloseableHttpResponse response = getResponseOfHttpGet(registrationFlowPath,
-                getHeadersWithBasicAuth())) {
+        String flowPath = flowManagementBasePath + "?flowType=" + flowType;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(flowPath, getHeadersWithBasicAuth())) {
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new Exception("Failed to get the registration flow");
+                throw new Exception(String.format("Failed to get the %s flow", flowType));
             }
             String responseBody = EntityUtils.toString(response.getEntity());
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
             return jsonWriter.readValue(responseBody, FlowResponse.class);
+        }
+    }
+
+    public FlowConfig getFlowConfig(String flowType) throws Exception {
+
+        String flowConfigPath = flowManagementBasePath + "/config?flowType=" + flowType;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(flowConfigPath,
+                getHeadersWithBasicAuth())) {
+            if (response.getStatusLine().getStatusCode() != 200) {
+                throw new Exception(String.format("Failed to get the %s flow config", flowType));
+            }
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, FlowConfig.class);
+        }
+    }
+
+    public FlowConfig updateFlowConfig(FlowConfig flowConfig) throws Exception {
+
+        String flowConfigPath = flowManagementBasePath + "/config";
+        String jsonRequestBody = toJSONString(flowConfig);
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(flowConfigPath, jsonRequestBody,
+                getHeadersWithBasicAuth())) {
+            if (response.getStatusLine().getStatusCode() != HTTP_OK) {
+                throw new Exception("Error code " + response.getStatusLine().getStatusCode() +
+                        String.format(" occurred while updating the %s flow config", flowConfig.getFlowType()));
+            }
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, FlowConfig.class);
         }
     }
 
