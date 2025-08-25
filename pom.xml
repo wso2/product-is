@@ -2781,7 +2781,7 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <axis2.client.version>${axis2.wso2.version}</axis2.client.version>
         <axis2.wso2.version>1.6.1-wso2v42</axis2.wso2.version>
-        <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
+        <nimbusds.version>10.3.0.wso2v1</nimbusds.version>
         <commons-codec.version>1.14.0.wso2v1</commons-codec.version>
         <eclipse.microprofile.version>1.2</eclipse.microprofile.version>
         <xmltooling.version>1.3.1</xmltooling.version>
