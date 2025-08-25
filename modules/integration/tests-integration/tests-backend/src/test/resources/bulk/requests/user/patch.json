@@ -1,0 +1,24 @@
+{
+  "failOnErrors": 1,
+  "schemas": [
+    "urn:ietf:params:scim:api:messages:2.0:BulkRequest"
+  ],
+  "Operations": [
+    {
+      "method": "PATCH",
+      "path": "/Users/{{id}}",
+      "data": {
+        "Operations": [
+          {
+            "op": "replace",
+            "path": "name",
+            "value": {
+              "givenName": "john",
+              "familyName": "Anderson"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

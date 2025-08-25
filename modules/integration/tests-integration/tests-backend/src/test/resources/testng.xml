@@ -303,6 +303,7 @@
         <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
         <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
         <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2SchemasTest"/>
+        <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2BulkResourceTestCase"/>
         <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaUserTestCase"/>
         <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaMeTestCase"/>
     </classes>
