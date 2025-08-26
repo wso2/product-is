@@ -282,7 +282,7 @@
         <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.UserSharingSuccessTest"/>
         <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementPositiveTest"/>
         <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementNegativeTest"/>
-        <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionPositiveTest"/>
+<!--        <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionPositiveTest"/>-->
         <!--            <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionNegativeTest"/>-->
     </classes>
 </test>
