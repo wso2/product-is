@@ -124,7 +124,7 @@ public class FlowExecutionPositiveTest extends FlowExecutionTestBase {
         FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertNotNull(response);
         Assert.assertEquals(response.getFlowStatus(), STATUS_COMPLETE);
-        Assert.assertEquals(response.getType().toString(), TYPE_REDIRECTION);
+        Assert.assertEquals(response.getType().toString(), TYPE_VIEW);
         Assert.assertNotNull(response.getData());
     }
 
