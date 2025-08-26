@@ -2660,7 +2660,7 @@
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.33</authenticator.x509.version>
         <identity.extension.utils>1.0.22</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.16</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.17</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.0.28</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.52</identity.org.mgt.core.version>
@@ -2689,7 +2689,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.77.27</identity.apps.console.version>
         <identity.apps.myaccount.version>2.23.7</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.1.18</identity.apps.core.version>
+        <identity.apps.core.version>3.1.19</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
