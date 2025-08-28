@@ -1,0 +1,370 @@
+# This workflow will sync PRs from the master branch to the next branch.
+
+name: 🔄 Sync PRs to next
+
+on:
+  workflow_run:
+    workflows: ["💡 PR Merged"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to sync to next branch'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  BASE_BRANCH: master
+  TARGET_BRANCH: next
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Skip conditions for PRs (comma-separated arrays)
+  SKIP_AUTHORS: ""
+  SKIP_TITLE_PATTERNS: "[skip ci]"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    if: >
+      github.repository == 'wso2/product-is' &&
+      (
+        (github.event_name == 'workflow_run' &&
+         github.event.workflow_run.event == 'pull_request' &&
+         github.event.workflow_run.conclusion == 'success') ||
+        github.event_name == 'workflow_dispatch'
+      )
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: 📥 Download PR Number Artifact (for workflow_run)
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-number
+          github-token: ${{ env.GH_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: 🔍 Debug Artifact Contents
+        if: github.event_name == 'workflow_run'
+        run: |
+          echo "=== Current working directory ==="
+          pwd
+          echo "=== Contents of current directory ==="
+          ls -la
+          echo "=== Looking for pr-number directory ==="
+          find . -name "pr-number*" -type d
+          echo "=== Contents of pr-number directory (if exists) ==="
+          if [ -d "pr-number" ]; then
+            ls -la pr-number/
+            echo "=== File contents in pr-number directory ==="
+            find pr-number/ -type f -exec sh -c 'echo "=== {} ==="; cat "{}"' \;
+          else
+            echo "pr-number directory not found"
+          fi
+          echo "=== Looking for any PR_NUMBER files ==="
+          find . -name "*PR_NUMBER*" -o -name "*pr-number*" -o -name "*pr_number*"
+
+      - name: Prepare PR_NUMBER file
+        if: github.event_name == 'workflow_run'
+        run: |
+          # Enhanced file extraction with multiple fallback methods
+          PR_FILE=""
+
+          # Method 1: Check common artifact locations
+          if [ -f "pr-number/PR_NUMBER" ]; then
+            PR_FILE="pr-number/PR_NUMBER"
+            echo "Found PR_NUMBER at: pr-number/PR_NUMBER"
+          elif [ -f "pr-number/pr-number" ]; then
+            PR_FILE="pr-number/pr-number"
+            echo "Found pr-number at: pr-number/pr-number"
+          elif [ -f "PR_NUMBER" ]; then
+            PR_FILE="PR_NUMBER"
+            echo "Found PR_NUMBER at root"
+          else
+            # Method 2: Search for any file containing PR number
+            echo "Searching for PR number files..."
+            FOUND_FILES=$(find . -name "*PR_NUMBER*" -o -name "*pr-number*" -o -name "*pr_number*" | head -5)
+            if [ -n "$FOUND_FILES" ]; then
+              echo "Found potential PR files:"
+              echo "$FOUND_FILES"
+              # Use the first found file
+              PR_FILE=$(echo "$FOUND_FILES" | head -1)
+              echo "Using file: $PR_FILE"
+            else
+              echo "❌ No PR_NUMBER file found anywhere in the artifact"
+              echo "Available files and directories:"
+              find . -type f | head -20
+              exit 1
+            fi
+          fi
+
+          # Extract PR number and store it
+          if [ -n "$PR_FILE" ] && [ -f "$PR_FILE" ]; then
+            PR_NUMBER=$(cat "$PR_FILE" | tr -d '\n\r' | tr -d ' ')
+            if [ -n "$PR_NUMBER" ] && [ "$PR_NUMBER" != "null" ]; then
+              echo "$PR_NUMBER" > ./PR_NUMBER
+              echo "✅ Successfully extracted PR number: $PR_NUMBER"
+              echo "PR_NUMBER_EXTRACTED=$PR_NUMBER" >> $GITHUB_ENV
+            else
+              echo "❌ PR file found but contains invalid data: '$PR_NUMBER'"
+              exit 1
+            fi
+          else
+            echo "❌ PR file not accessible: $PR_FILE"
+            exit 1
+          fi
+
+      - name: Get merged PR information
+        id: trigger_info
+        run: |
+          # Get PR number based on trigger type
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            PR_NUMBER="${{ github.event.inputs.pr_number }}"
+            echo "Using manual PR number: $PR_NUMBER"
+          else
+            # Get the PR number from the artifact (workflow_run trigger)
+            PR_NUMBER=$(cat ./PR_NUMBER)
+            echo "PR Number from artifact: $PR_NUMBER"
+          fi
+
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+          echo "SYNC_MODE=pr" >> $GITHUB_ENV
+
+          # Verify PR exists and is merged
+          PR_STATE=$(gh pr view $PR_NUMBER --json state -q '.state')
+          if [[ "$PR_STATE" != "MERGED" ]]; then
+            echo "Error: PR #$PR_NUMBER is not merged (state: $PR_STATE)"
+            exit 1
+          fi
+
+          # Get PR details to check if we should skip it
+          PR_TITLE=$(gh pr view $PR_NUMBER --json title -q '.title')
+          PR_AUTHOR=$(gh pr view $PR_NUMBER --json author -q '.author.login')
+
+          # Check skip conditions using environment variables (support arrays)
+          SKIP_AUTHORS="${{ env.SKIP_AUTHORS }}"
+          SKIP_TITLE_PATTERNS="${{ env.SKIP_TITLE_PATTERNS }}"
+
+          # Convert comma-separated values to arrays
+          IFS=',' read -ra AUTHORS_ARRAY <<< "$SKIP_AUTHORS"
+          IFS=',' read -ra TITLE_PATTERNS_ARRAY <<< "$SKIP_TITLE_PATTERNS"
+
+          # Check if PR title matches any skip pattern
+          SKIP_TITLE=false
+          for pattern in "${TITLE_PATTERNS_ARRAY[@]}"; do
+            if [[ "$PR_TITLE" == *"$pattern"* ]]; then
+              SKIP_TITLE=true
+              break
+            fi
+          done
+
+          # If we have skip authors configured, check both author and title
+          # If no skip authors configured, just check title
+          SHOULD_SKIP=false
+          if [[ -n "$SKIP_AUTHORS" && "$SKIP_AUTHORS" != "" ]]; then
+            # Check if PR author should be skipped
+            SKIP_AUTHOR=false
+            for author in "${AUTHORS_ARRAY[@]}"; do
+              if [[ "$PR_AUTHOR" == "$author" ]]; then
+                SKIP_AUTHOR=true
+                break
+              fi
+            done
+            # Skip if both author and title conditions are met
+            if [[ "$SKIP_AUTHOR" == "true" && "$SKIP_TITLE" == "true" ]]; then
+              SHOULD_SKIP=true
+            fi
+          else
+            # No specific authors to skip, just check title patterns
+            if [[ "$SKIP_TITLE" == "true" ]]; then
+              SHOULD_SKIP=true
+            fi
+          fi
+
+          # Skip PR if conditions are met (but allow override for manual trigger)
+          if [[ "$SHOULD_SKIP" == "true" && "${{ github.event_name }}" != "workflow_dispatch" ]]; then
+            echo "Skipping sync for PR #$PR_NUMBER from $PR_AUTHOR with title: $PR_TITLE"
+            echo "skip_sync=true" >> $GITHUB_OUTPUT
+            exit 0
+          elif [[ "$SHOULD_SKIP" == "true" && "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "⚠️ Warning: PR #$PR_NUMBER matches skip conditions but proceeding due to manual trigger"
+          fi
+
+          echo "skip_sync=false" >> $GITHUB_OUTPUT
+
+          # Create unique sync branch name for this PR
+          SYNC_BRANCH="sync-pr-${PR_NUMBER}-to-next"
+          echo "SYNC_BRANCH=$SYNC_BRANCH" >> $GITHUB_ENV
+          echo "Sync branch for PR #$PR_NUMBER: $SYNC_BRANCH"
+
+      - name: Set up Git
+        if: steps.trigger_info.outputs.skip_sync != 'true'
+        run: |
+          git config user.name "wso2-iam-bot"
+          git config user.email "wso2-iam-bot@users.noreply.github.com"
+
+      - name: Get PR commits
+        if: steps.trigger_info.outputs.skip_sync != 'true'
+        run: |
+          # Get all commits from this specific PR
+          COMMITS=$(gh pr view $PR_NUMBER --json commits -q '.commits[].oid' | tr '\n' ' ')
+          echo "COMMITS_TO_SYNC=$COMMITS" >> $GITHUB_ENV
+          echo "Commits from PR #$PR_NUMBER: $COMMITS"
+
+      - name: Create sync branch
+        if: steps.trigger_info.outputs.skip_sync != 'true'
+        run: |
+          # Validate that SYNC_BRANCH is set
+          if [ -z "$SYNC_BRANCH" ]; then
+            echo "Error: SYNC_BRANCH is not set"
+            exit 1
+          fi
+
+          echo "Creating sync branch: $SYNC_BRANCH"
+
+          # Fetch latest from target branch
+          git fetch origin $TARGET_BRANCH
+
+          # Create new sync branch from target
+          git checkout $TARGET_BRANCH
+          git checkout -b "$SYNC_BRANCH"
+
+      - name: Cherry-pick commits
+        if: steps.trigger_info.outputs.skip_sync != 'true'
+        run: |
+          if [ -z "$COMMITS_TO_SYNC" ]; then
+            echo "No commits to sync."
+            exit 0
+          fi
+
+          for commit in $COMMITS_TO_SYNC; do
+            if [ -z "$commit" ]; then
+              continue
+            fi
+
+            echo "Cherry-picking commit $commit: $(git log -1 --oneline $commit)"
+            git cherry-pick $commit || {
+              echo "Cherry-pick failed for $commit. Attempting to skip..."
+              git cherry-pick --skip
+            }
+          done
+
+      - name: Create PR to sync to target branch
+        if: steps.trigger_info.outputs.skip_sync != 'true'
+        run: |
+          # Debug: Show current branch and target branch info
+          echo "=== Branch Information ==="
+          echo "Current branch: $(git branch --show-current)"
+          echo "Target branch: ${{ env.TARGET_BRANCH }}"
+          echo "Sync branch: $SYNC_BRANCH"
+
+          # Ensure we're on the sync branch
+          git checkout "$SYNC_BRANCH" || {
+            echo "Failed to checkout sync branch: $SYNC_BRANCH"
+            exit 1
+          }
+
+          # Check if there are any commits to sync
+          echo "=== Checking for commits to sync ==="
+          git log --oneline "${{ env.TARGET_BRANCH }}..HEAD" || echo "No commits found"
+          COMMITS_ON_BRANCH=$(git log "${{ env.TARGET_BRANCH }}..HEAD" --oneline 2>/dev/null || true)
+
+          # Count commits more reliably
+          COMMIT_COUNT=0
+          if [ -n "$COMMITS_ON_BRANCH" ]; then
+            COMMIT_COUNT=$(echo "$COMMITS_ON_BRANCH" | wc -l | tr -d ' ')
+          fi
+
+          echo "Commits found: $COMMIT_COUNT"
+          echo "Commit details:"
+          echo "$COMMITS_ON_BRANCH"
+
+          if [ "$COMMIT_COUNT" -eq 0 ] || [ -z "$COMMITS_ON_BRANCH" ]; then
+            echo "✅ No commits to sync. The changes from PR #$PR_NUMBER already exist in ${{ env.TARGET_BRANCH }}."
+            echo "This is normal if the PR was already synced or if the target branch already contains these changes."
+            exit 0
+          fi
+
+          # Push the sync branch to remote before creating PR
+          echo "=== Pushing sync branch to remote ==="
+          git push origin "$SYNC_BRANCH" --force || {
+            echo "Failed to push sync branch to remote"
+            exit 1
+          }
+
+          # Check for existing open PR for this sync branch
+          EXISTING_PR=$(gh pr list \
+            --base "${{ env.TARGET_BRANCH }}" \
+            --head "$SYNC_BRANCH" \
+            --state open \
+            --json number \
+            -q '.[0].number')
+
+          # Get PR details for the merged PR
+          PR_TITLE=$(gh pr view $PR_NUMBER --json title -q '.title')
+          PR_AUTHOR=$(gh pr view $PR_NUMBER --json author -q '.author.login')
+          TOTAL_COMMITS=$(echo "$COMMITS_ON_BRANCH" | wc -l | tr -d ' ')
+
+          SYNC_TITLE="[Sync][${{ env.BASE_BRANCH }} -> ${{ env.TARGET_BRANCH }}][#${PR_NUMBER}]: $PR_TITLE"
+          PR_BODY="🤖 **Auto-sync from ${{ env.BASE_BRANCH }}**
+
+          This PR automatically syncs the changes from #${PR_NUMBER} to the \`${{ env.TARGET_BRANCH }}\` branch.
+
+          **Original PR:** https://github.com/${{ github.repository }}/pull/${PR_NUMBER}
+          **Author:** @${PR_AUTHOR}
+          **Total commits:** $TOTAL_COMMITS
+          **Workflow run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          **Commits:**
+          \`\`\`
+          $(git log ${{ env.TARGET_BRANCH }}..HEAD --oneline)
+          \`\`\`"
+
+          if [ -n "$EXISTING_PR" ]; then
+            echo "✅ PR #$EXISTING_PR already exists for sync branch. Updating with new commits."
+            gh pr edit $EXISTING_PR --title "$SYNC_TITLE" --body "$PR_BODY" || {
+              echo "⚠️ Failed to update existing PR, but continuing..."
+            }
+            echo "Updated existing PR #$EXISTING_PR with $TOTAL_COMMITS total commits"
+          else
+            echo "=== Creating new PR ==="
+            echo "Base: ${{ env.TARGET_BRANCH }}"
+            echo "Head: $SYNC_BRANCH"
+            echo "Title: $SYNC_TITLE"
+
+            # Verify branch exists on remote
+            if ! git ls-remote --heads origin "$SYNC_BRANCH" | grep -q "$SYNC_BRANCH"; then
+              echo "❌ Sync branch $SYNC_BRANCH does not exist on remote"
+              exit 1
+            fi
+
+            # Create PR with error handling
+            NEW_PR=$(gh pr create \
+              --base "${{ env.TARGET_BRANCH }}" \
+              --head "$SYNC_BRANCH" \
+              --title "$SYNC_TITLE" \
+              --body "$PR_BODY" 2>&1) || {
+              echo "❌ Failed to create PR:"
+              echo "$NEW_PR"
+
+              # Additional debugging info
+              echo "=== Additional Debug Info ==="
+              echo "Available branches:"
+              git branch -a | grep -E "(next|sync-pr-.*-to-next)" || echo "No matching branches found"
+              echo "Remote branches:"
+              git ls-remote --heads origin | grep -E "(next|sync-pr-.*-to-next)" || echo "No matching remote branches"
+              echo "Commit comparison:"
+              git log --oneline "${{ env.TARGET_BRANCH }}..HEAD" | head -5 || echo "No commits to show"
+
+              exit 1
+            }
+            echo "✅ Created new PR: $NEW_PR"
+          fi
