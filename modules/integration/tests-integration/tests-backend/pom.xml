@@ -65,6 +65,7 @@
                                 <!--<suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>-->
                                 <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>
+                            <skipAfterFailureCount>1</skipAfterFailureCount>
 
                             <classpathDependencyExcludes>
                                 <classpathDependencyExclude>org.wso2.org.ops4j.pax.logging:pax-logging-api
