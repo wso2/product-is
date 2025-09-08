@@ -77,6 +77,9 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     protected static final String TEST_USER1_USERNAME = "testUsername";
     protected static final String TEST_USER2_USERNAME = "testUsername2";
+    protected static final String TEST_USER3_USERNAME = "testUsername3";
+    protected static final String TEST_USER4_USERNAME = "testUsername4";
+    protected static final String TEST_USER5_USERNAME = "testUsername5";
     protected static final String TEST_USER_PASSWORD = "TestPassword@123";
     protected static final String TEST_USER_UPDATED_PASSWORD = "UpdatedTestPassword@123";
     protected static final String RESET_PASSWORD = "ResetTestPassword@123";
@@ -92,6 +95,8 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String ACTION_DESCRIPTION = "This is a test for pre update password action type";
     protected static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
+    protected static final String REGISTRATION_FLOW =
+            "/org/wso2/identity/integration/test/rest/api/server/flow/execution/v1/registration-flow.json";
 
 
     protected CloseableHttpClient client;
@@ -285,8 +290,8 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return createAction(PRE_UPDATE_PASSWORD_API_PATH, actionModel);
     }
 
-    protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret) throws Exception {
-
+    protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret,
+                                                        String scope) throws Exception {
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));
         }
@@ -297,7 +302,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
-        parameters.add(new BasicNameValuePair("scope", scopes));
+        parameters.add(new BasicNameValuePair("scope", scope));
 
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +

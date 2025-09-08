@@ -26,6 +26,7 @@ import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
@@ -132,5 +133,21 @@ public class FlowExecutionClient extends RestBaseClient {
                 Base64.encodeBase64String((username + ":" + password).getBytes()).trim());
         headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
         return headerList;
+    }
+
+    public JSONObject executeFlowAndReturnResponse(FlowExecutionRequest userRegistrationRequest) {
+
+        String jsonRequestBody = toJSONString(userRegistrationRequest);
+        String executionUrl = flowExecutionBasePath + PATH_SEPARATOR + FLOW_EXECUTION_ENDPOINT;
+        try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,
+                getHeadersWithBasicAuth())) {
+            String responseString = EntityUtils.toString(response.getEntity());
+            JSONObject responseObject = new JSONObject();
+            responseObject.put("statusCode", response.getStatusLine().getStatusCode());
+            responseObject.put("body", responseString);
+            return responseObject;
+        } catch (Exception e) {
+            throw new RuntimeException("Error while executing the flow.", e);
+        }
     }
 }
