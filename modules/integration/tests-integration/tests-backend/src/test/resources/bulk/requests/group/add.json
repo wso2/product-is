@@ -1,0 +1,14 @@
+{
+  "schemas": ["urn:ietf:params:scim:api:messages:2.0:BulkRequest"],
+  "Operations": [
+    {
+      "method": "POST",
+      "path": "/Groups",
+      "bulkId": "ytrewq",
+      "data": {
+        "schemas": ["urn:ietf:params:scim:schemas:core:2.0:Group"],
+        "displayName": "TourGuideGroup"
+      }
+    }
+  ]
+}
