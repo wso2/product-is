@@ -2596,7 +2596,7 @@
         <identity.event.handler.notification.version>1.9.69</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.393</org.wso2.identity.webhook.event.handlers.version>
-        <org.wso2.identity.event.publishers.version>1.0.37</org.wso2.identity.event.publishers.version>
+        <org.wso2.identity.event.publishers.version>1.0.38</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2675,7 +2675,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.189</identity.server.api.version>
+        <identity.server.api.version>1.3.190</identity.server.api.version>
         <identity.user.api.version>1.3.69</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2687,9 +2687,9 @@
         <conditional.authentication.functions.version>1.2.82</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.77.39</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.23.13</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.1.23</identity.apps.core.version>
+        <identity.apps.console.version>2.77.40</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.23.14</identity.apps.myaccount.version>
+        <identity.apps.core.version>3.1.24</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
