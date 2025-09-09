@@ -2544,7 +2544,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.478</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.481</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2566,7 +2566,7 @@
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
-        <identity.carbon.auth.mutual.ssl.version>5.5.0</identity.carbon.auth.mutual.ssl.version>
+        <identity.carbon.auth.mutual.ssl.version>5.5.2</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.9.39</identity.carbon.auth.rest.version>
 
@@ -2577,7 +2577,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.12</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.11</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.204</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.205</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.12</identity.user.account.association.version>
@@ -2625,7 +2625,7 @@
         <provisioning.connector.scim2.version>2.0.11</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.45</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.46</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.26</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
@@ -2662,7 +2662,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.18</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.32</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.33</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.55</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.52</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.30</identity.oauth2.grant.organizationswitch.version>
@@ -2687,7 +2687,7 @@
         <conditional.authentication.functions.version>1.2.82</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.77.38</identity.apps.console.version>
+        <identity.apps.console.version>2.77.39</identity.apps.console.version>
         <identity.apps.myaccount.version>2.23.13</identity.apps.myaccount.version>
         <identity.apps.core.version>3.1.23</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
