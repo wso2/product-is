@@ -296,10 +296,6 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
             authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));
         }
 
-        List<String> requestedScopes = new ArrayList<>();
-        Collections.addAll(requestedScopes,INTERNAL_USER_MANAGEMENT_UPDATE);
-        String scopes = String.join(" ", requestedScopes);
-
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
         parameters.add(new BasicNameValuePair("scope", scope));

@@ -885,9 +885,10 @@ public class SCIM2RestClient extends RestBaseClient {
      *
      * @param appRegisteredUserInfo UserObject containing user details.
      * @param token                 Bearer token for authentication.
-     * @return ID of the created user.
+     * @param returnFullResponse    Flag to determine whether to return the full response as a JSONObject.
+     * @return Object containing either the user ID (String) or the full response (JSONObject), depending on the flag.
      */
-    public String createUserWithBearerToken(UserObject appRegisteredUserInfo, String token) {
+    public Object createUserWithBearerToken(UserObject appRegisteredUserInfo, String token, boolean returnFullResponse) {
         String jsonRequest = toJSONString(appRegisteredUserInfo);
         if (appRegisteredUserInfo.getScimSchemaExtensionEnterprise() != null) {
             jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
@@ -898,13 +899,38 @@ public class SCIM2RestClient extends RestBaseClient {
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest,
                 getHeadersWithBearerToken(token))) {
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
-                    "User creation failed");
-            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
-            return jsonResponse.get("id").toString();
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseString = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
+
+            if (!returnFullResponse) {
+                Assert.assertEquals(statusCode, HttpServletResponse.SC_CREATED, "User creation failed");
+                JSONObject jsonResponse = getJSONObject(responseString);
+                return jsonResponse.get("id").toString();
+            }
+
+            if (responseString == null || responseString.trim().isEmpty()) {
+                JSONObject result = new JSONObject();
+                result.put("status", statusCode);
+                result.put("message", "Empty response body");
+                return result;
+            }
+
+            try {
+                return getJSONObject(responseString);
+            } catch (org.json.simple.parser.ParseException pe) {
+                JSONObject errorObj = new JSONObject();
+                errorObj.put("error", "ParseException: " + pe.getMessage());
+                errorObj.put("rawResponse", responseString);
+                errorObj.put("statusCode", statusCode);
+                return errorObj;
+            }
         } catch (Exception e) {
-            Assert.fail("Error occurred while creating user with bearer token.", e);
-            return null;
+            if (!returnFullResponse) {
+                return null;
+            }
+            JSONObject errorObj = new JSONObject();
+            errorObj.put("error", "Exception: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
+            return errorObj;
         }
     }
 
@@ -940,65 +966,6 @@ public class SCIM2RestClient extends RestBaseClient {
             JSONObject errorObj = new JSONObject();
             errorObj.put("error", "Exception: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
             return errorObj;
-        }
-    }
-
-    /**
-     * Create a user with the provided bearer token and return the full response as a JSONObject.
-     * This method does not assert the response status code, allowing the caller to handle different scenarios.
-     *
-     * @param appRegisteredUserInfo UserObject containing user details.
-     * @param token                 Bearer token for authentication.
-     * @return JSONObject containing the full response, including status code and any error messages.
-     */
-    public JSONObject createUserWithBearerTokenAndReturnResponse(UserObject appRegisteredUserInfo, String token) {
-        String jsonRequest = toJSONString(appRegisteredUserInfo);
-        if (appRegisteredUserInfo.getScimSchemaExtensionEnterprise() != null) {
-            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
-        }
-        if (appRegisteredUserInfo.getScimSchemaExtensionSystem() != null) {
-            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
-        }
-
-        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest,
-                getHeadersWithBearerToken(token))) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            String responseString = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
-            if (responseString == null || responseString.trim().isEmpty()) {
-                JSONObject result = new JSONObject();
-                result.put("status", statusCode);
-                result.put("message", "Empty response body");
-                return result;
-            }
-            try {
-                return getJSONObject(responseString);
-            } catch (org.json.simple.parser.ParseException pe) {
-                JSONObject errorObj = new JSONObject();
-                errorObj.put("error", "ParseException: " + pe.getMessage());
-                errorObj.put("rawResponse", responseString);
-                errorObj.put("statusCode", statusCode);
-                return errorObj;
-            }
-        } catch (Exception e) {
-            JSONObject errorObj = new JSONObject();
-            errorObj.put("error", "Exception: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
-            return errorObj;
-        }
-    }
-
-    /**
-     * Get the ID of a user by username.
-     *
-     * @param s Username of the user.
-     * @return ID of the user.
-     */
-    public String getUserId(String s) {
-        try {
-            JSONObject user = getUser(s, null);
-            return user.get("id").toString();
-        } catch (Exception e) {
-            Assert.fail("Error occurred while retrieving user ID.", e);
-            return null;
         }
     }
 
