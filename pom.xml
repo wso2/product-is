@@ -2544,7 +2544,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.484</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.487</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2662,7 +2662,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.18</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.33</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.34</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.55</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.52</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.30</identity.oauth2.grant.organizationswitch.version>
