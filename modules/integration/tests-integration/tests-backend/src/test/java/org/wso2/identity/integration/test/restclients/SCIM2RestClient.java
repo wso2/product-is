@@ -881,12 +881,12 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Create a user with the provided bearer token.
+     * Create a user with bearer token and return either the user ID or the full response based on the flag.
      *
      * @param appRegisteredUserInfo UserObject containing user details.
      * @param token                 Bearer token for authentication.
-     * @param returnFullResponse    Flag to determine whether to return the full response as a JSONObject.
-     * @return Object containing either the user ID (String) or the full response (JSONObject), depending on the flag.
+     * @param returnFullResponse    If true, returns the full response as a JSONObject. if false, returns only the user ID.
+     * @return Either the user ID (String) or the full response based on the flag.
      */
     public Object createUserWithBearerToken(UserObject appRegisteredUserInfo, String token, boolean returnFullResponse) {
         String jsonRequest = toJSONString(appRegisteredUserInfo);

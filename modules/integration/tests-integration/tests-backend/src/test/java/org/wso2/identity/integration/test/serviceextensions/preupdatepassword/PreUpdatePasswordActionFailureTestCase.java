@@ -345,8 +345,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the password update by an authorized application with pre update password action")
     public void testApplicationUpdatePassword() throws Exception {
 
-        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret,
-                "internal_user_mgt_update");
+        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret, "update");
         Map<String, String> passwordValue = new HashMap<>();
         passwordValue.put(PASSWORD_PROPERTY, TEST_USER_PASSWORD);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
@@ -421,8 +420,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the application initiated user registration with pre update password action failure")
     public void testApplicationInitiatedUserRegistration() throws Exception {
 
-        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret,
-                "internal_user_mgt_create");
+        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret, "create");
 
         UserObject appRegisteredUserInfo = new UserObject()
                 .userName(TEST_USER4_USERNAME)

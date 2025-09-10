@@ -290,10 +290,22 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return createAction(PRE_UPDATE_PASSWORD_API_PATH, actionModel);
     }
 
-    protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret,
-                                                        String scope) throws Exception {
+    protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId,
+                                                        String clientSecret, String actionType) throws Exception {
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));
+        }
+
+        String scope;
+        switch (actionType) {
+            case "update":
+                scope = "internal_user_mgt_update";
+                break;
+            case "create":
+                scope = "internal_user_mgt_create";
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported action type: " + actionType);
         }
 
         List<NameValuePair> parameters = new ArrayList<>();
@@ -315,4 +327,5 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         assertTrue(jsonResponse.has("access_token"));
         return jsonResponse.getString("access_token");
     }
+
 }
