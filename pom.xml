@@ -2544,7 +2544,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.482</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.483</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2577,7 +2577,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.12</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.11</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.205</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.206</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.12</identity.user.account.association.version>
@@ -2651,7 +2651,7 @@
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.40</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
-        <authenticator.office365.version>2.1.8</authenticator.office365.version>
+        <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.39</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.35</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
@@ -2684,12 +2684,12 @@
 	<identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.32</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	<identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.30</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.27</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.82</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.83</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.77.40</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.23.14</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.1.24</identity.apps.core.version>
+        <identity.apps.console.version>2.77.41</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.23.15</identity.apps.myaccount.version>
+        <identity.apps.core.version>3.1.25</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
