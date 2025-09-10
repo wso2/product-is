@@ -2576,8 +2576,8 @@
         <identity.inbound.auth.saml.version>5.11.60</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.12.12</identity.inbound.auth.sts.version>
-        <identity.inbound.provisioning.scim.version>5.7.11</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.5.7</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim.version>5.7.12</identity.inbound.provisioning.scim.version>
+        <identity.inbound.provisioning.scim2.version>3.5.9</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.12</identity.user.account.association.version>
@@ -2596,7 +2596,7 @@
         <identity.event.handler.notification.version>1.9.69</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.1.3</org.wso2.identity.webhook.event.handlers.version>
-        <org.wso2.identity.event.publishers.version>1.1.5</org.wso2.identity.event.publishers.version>
+        <org.wso2.identity.event.publishers.version>1.1.6</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2651,7 +2651,7 @@
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.40</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
-        <authenticator.office365.version>2.1.8</authenticator.office365.version>
+        <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.39</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.35</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
@@ -2662,7 +2662,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.18</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.1.0</identity.org.mgt.version>
+        <identity.org.mgt.version>2.1.1</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.2.1</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.52</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.30</identity.oauth2.grant.organizationswitch.version>
@@ -2684,12 +2684,12 @@
 	<identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.32</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	<identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.30</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.27</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.82</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.83</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.78.23</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.24.9</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.2.17</identity.apps.core.version>
+        <identity.apps.console.version>2.78.25</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.24.11</identity.apps.myaccount.version>
+        <identity.apps.core.version>3.2.18</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
