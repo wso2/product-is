@@ -154,7 +154,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 actionResponse.getResponseBody(), actionResponse.getStatusCode());
-        enableFlow(flowManagementClient);
+        enableFlow(flowManagementClient, "REGISTRATION");
         addRegistrationFlow(flowManagementClient);
     }
 
@@ -182,7 +182,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
-        disableFlow(flowManagementClient);
+        disableFlow(flowManagementClient, "REGISTRATION");
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -344,7 +344,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     public void testAdminInitiatedUserRegistration() throws Exception {
 
         UserObject adminRegisteredUserInfo = new UserObject()
-                .userName(TEST_USER3_USERNAME)
+                .userName(TEST_USER2_USERNAME)
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
@@ -370,7 +370,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         UserObject appRegisteredUserInfo = new UserObject()
-                .userName(TEST_USER4_USERNAME)
+                .userName(TEST_USER2_USERNAME)
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));

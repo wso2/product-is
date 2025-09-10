@@ -87,9 +87,6 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     protected static final String TEST_USER1_USERNAME = "testUsername";
     protected static final String TEST_USER2_USERNAME = "testUsername2";
-    protected static final String TEST_USER3_USERNAME = "testUsername3";
-    protected static final String TEST_USER4_USERNAME = "testUsername4";
-    protected static final String TEST_USER5_USERNAME = "testUsername5";
     protected static final String TEST_USER_PASSWORD = "TestPassword@123";
     protected static final String TEST_USER_UPDATED_PASSWORD = "UpdatedTestPassword@123";
     protected static final String RESET_PASSWORD = "ResetTestPassword@123";
@@ -107,7 +104,6 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     protected static final String REGISTRATION_FLOW =
             "/org/wso2/identity/integration/test/rest/api/server/flow/execution/v1/registration-flow.json";
-
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -307,7 +303,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         }
 
         List<String> requestedScopes = new ArrayList<>();
-        Collections.addAll(requestedScopes,INTERNAL_USER_MANAGEMENT_UPDATE, INTERNAL_USER_MANAGEMENT_CREATE);
+        Collections.addAll(requestedScopes, INTERNAL_USER_MANAGEMENT_UPDATE, INTERNAL_USER_MANAGEMENT_CREATE);
         String scopes = String.join(" ", requestedScopes);
 
         List<NameValuePair> parameters = new ArrayList<>();
@@ -330,32 +326,28 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return jsonResponse.getString("access_token");
     }
 
-    protected void enableFlow(FlowManagementClient client) throws Exception {
+    protected void enableFlow(FlowManagementClient client, String flowType) throws Exception {
 
         FlowConfig flowConfigDTO = new FlowConfig();
         flowConfigDTO.setIsEnabled(true);
-        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        flowConfigDTO.setFlowType(flowType);
         client.updateFlowConfig(flowConfigDTO);
     }
 
-    protected void disableFlow(FlowManagementClient client) throws Exception {
+    protected void disableFlow(FlowManagementClient client, String flowType) throws Exception {
 
         FlowConfig flowConfigDTO = new FlowConfig();
         flowConfigDTO.setIsEnabled(false);
-        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        flowConfigDTO.setFlowType(flowType);
         client.updateFlowConfig(flowConfigDTO);
     }
 
     protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
+
         String registrationFlowRequestJson = readResource(REGISTRATION_FLOW, this.getClass());
         FlowRequest flowRequest = new ObjectMapper()
                 .readValue(registrationFlowRequestJson, FlowRequest.class);
         client.putFlow(flowRequest);
-    }
-
-    protected static class FlowTypes {
-
-        public static final String REGISTRATION = "REGISTRATION";
     }
 
     protected FlowExecutionRequest buildUserRegistrationFlowRequest() {
@@ -364,7 +356,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         flowExecutionRequest.setActionId("button_5zqc");
 
         Map<String, String> inputs = new HashMap<>();
-        inputs.put("http://wso2.org/claims/username", TEST_USER5_USERNAME);
+        inputs.put("http://wso2.org/claims/username", TEST_USER2_USERNAME);
         inputs.put("password", TEST_USER_PASSWORD);
         inputs.put("http://wso2.org/claims/emailaddress", TEST_USER_EMAIL);
         inputs.put("http://wso2.org/claims/givenname", TEST_USER_GIVEN_NAME);
