@@ -2544,7 +2544,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.9.55</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.9.59</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2562,7 +2562,7 @@
         <carbon.consent.mgt.version>2.6.9</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.12.6</identity.governance.version>
+        <identity.governance.version>1.12.7</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
@@ -2646,7 +2646,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.18</identity.workflow.version>
-        <identity.user.workflow.version>5.6.21</identity.user.workflow.version>
+        <identity.user.workflow.version>6.0.1</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.40</authenticator.totp.version>
@@ -2675,7 +2675,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.17</identity.api.dispatcher.version>
-        <identity.server.api.version>1.4.7</identity.server.api.version>
+        <identity.server.api.version>1.4.9</identity.server.api.version>
         <identity.user.api.version>1.4.0</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
