@@ -28,10 +28,8 @@ import org.jsoup.select.Elements;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
 import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.dataprovider.model.ActionResponse;
@@ -46,9 +44,7 @@ import org.wso2.identity.integration.test.restclients.UsersRestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.FileUtils;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -188,54 +184,6 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         serviceExtensionMockServer = null;
         disableFlow(flowManagementClient);
     }
-    protected void enableFlow(FlowManagementClient client) throws Exception {
-
-        FlowConfig flowConfigDTO = new FlowConfig();
-        flowConfigDTO.setIsEnabled(true);
-        flowConfigDTO.setFlowType(PreUpdatePasswordActionSuccessTestCase.FlowTypes.REGISTRATION);
-        client.updateFlowConfig(flowConfigDTO);
-    }
-
-    protected void disableFlow(FlowManagementClient client) throws Exception {
-
-        FlowConfig flowConfigDTO = new FlowConfig();
-        flowConfigDTO.setIsEnabled(false);
-        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
-        client.updateFlowConfig(flowConfigDTO);
-    }
-
-    protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
-        String registrationFlowRequestJson = readResource(REGISTRATION_FLOW);
-        FlowRequest flowRequest = new ObjectMapper()
-                .readValue(registrationFlowRequestJson, FlowRequest.class);
-        client.putFlow(flowRequest);
-    }
-
-    protected String readResource(String filename) throws IOException {
-
-        return readResource(filename, this.getClass());
-    }
-
-    public static String readResource(String filename, Class cClass) throws IOException {
-
-        try (InputStream resourceAsStream = cClass.getResourceAsStream(filename);
-             BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream)) {
-            StringBuilder resourceFile = new StringBuilder();
-
-            int character;
-            while ((character = bufferedInputStream.read()) != -1) {
-                char value = (char) character;
-                resourceFile.append(value);
-            }
-
-            return resourceFile.toString();
-        }
-    }
-
-    protected static class FlowTypes {
-
-        public static final String REGISTRATION = "REGISTRATION";
-    }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
     public void testUserUpdatePassword() throws Exception {
@@ -345,7 +293,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the password update by an authorized application with pre update password action")
     public void testApplicationUpdatePassword() throws Exception {
 
-        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret, "update");
+        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         Map<String, String> passwordValue = new HashMap<>();
         passwordValue.put(PASSWORD_PROPERTY, TEST_USER_PASSWORD);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
@@ -420,8 +368,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the application initiated user registration with pre update password action failure")
     public void testApplicationInitiatedUserRegistration() throws Exception {
 
-        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret, "create");
-
+        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         UserObject appRegisteredUserInfo = new UserObject()
                 .userName(TEST_USER4_USERNAME)
                 .password(TEST_USER_PASSWORD)
@@ -451,17 +398,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         assertNotNull(responseObj, "Flow initiation response is null.");
         assertTrue(responseObj instanceof FlowExecutionResponse, "Unexpected response type for flow initiation.");
 
-        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
-        flowExecutionRequest.setFlowType("REGISTRATION");
-        flowExecutionRequest.setActionId("button_5zqc");
-        Map<String, String> inputs = new HashMap<>();
-        inputs.put("http://wso2.org/claims/username", TEST_USER5_USERNAME);
-        inputs.put("password", TEST_USER_PASSWORD);
-        inputs.put("http://wso2.org/claims/emailaddress", TEST_USER_EMAIL);
-        inputs.put("http://wso2.org/claims/givenname", TEST_USER_GIVEN_NAME);
-        inputs.put("http://wso2.org/claims/lastname", TEST_USER_LASTNAME);
-        flowExecutionRequest.setInputs(inputs);
-
+        FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         org.json.simple.JSONObject response = flowExecutionClient.executeFlowAndReturnResponse(flowExecutionRequest);
         assertNotNull(response, "User creation response is null");
         if (response.containsKey("error")) {

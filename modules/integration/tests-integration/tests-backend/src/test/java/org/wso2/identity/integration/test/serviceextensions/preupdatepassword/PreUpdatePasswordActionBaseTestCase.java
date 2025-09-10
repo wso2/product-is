@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.serviceextensions.preupdatepassword;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
 import org.apache.http.Header;
@@ -42,6 +43,11 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
+import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
@@ -58,15 +64,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.testng.Assert.assertTrue;
+import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
 public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
+    private static final String INTERNAL_USER_MANAGEMENT_CREATE = "internal_user_mgt_create";
     private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_OFFLINE = "Recovery.AdminPasswordReset.Offline";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_OTP = "Recovery.AdminPasswordReset.OTP";
@@ -290,27 +300,19 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return createAction(PRE_UPDATE_PASSWORD_API_PATH, actionModel);
     }
 
-    protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId,
-                                                        String clientSecret, String actionType) throws Exception {
+    protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret) throws Exception {
+
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));
         }
 
-        String scope;
-        switch (actionType) {
-            case "update":
-                scope = "internal_user_mgt_update";
-                break;
-            case "create":
-                scope = "internal_user_mgt_create";
-                break;
-            default:
-                throw new IllegalArgumentException("Unsupported action type: " + actionType);
-        }
+        List<String> requestedScopes = new ArrayList<>();
+        Collections.addAll(requestedScopes,INTERNAL_USER_MANAGEMENT_UPDATE, INTERNAL_USER_MANAGEMENT_CREATE);
+        String scopes = String.join(" ", requestedScopes);
 
         List<NameValuePair> parameters = new ArrayList<>();
         parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
-        parameters.add(new BasicNameValuePair("scope", scope));
+        parameters.add(new BasicNameValuePair("scope", scopes));
 
         List<Header> headers = new ArrayList<>();
         headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
@@ -328,4 +330,47 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return jsonResponse.getString("access_token");
     }
 
+    protected void enableFlow(FlowManagementClient client) throws Exception {
+
+        FlowConfig flowConfigDTO = new FlowConfig();
+        flowConfigDTO.setIsEnabled(true);
+        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        client.updateFlowConfig(flowConfigDTO);
+    }
+
+    protected void disableFlow(FlowManagementClient client) throws Exception {
+
+        FlowConfig flowConfigDTO = new FlowConfig();
+        flowConfigDTO.setIsEnabled(false);
+        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        client.updateFlowConfig(flowConfigDTO);
+    }
+
+    protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
+        String registrationFlowRequestJson = readResource(REGISTRATION_FLOW, this.getClass());
+        FlowRequest flowRequest = new ObjectMapper()
+                .readValue(registrationFlowRequestJson, FlowRequest.class);
+        client.putFlow(flowRequest);
+    }
+
+    protected static class FlowTypes {
+
+        public static final String REGISTRATION = "REGISTRATION";
+    }
+
+    protected FlowExecutionRequest buildUserRegistrationFlowRequest() {
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType("REGISTRATION");
+        flowExecutionRequest.setActionId("button_5zqc");
+
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("http://wso2.org/claims/username", TEST_USER5_USERNAME);
+        inputs.put("password", TEST_USER_PASSWORD);
+        inputs.put("http://wso2.org/claims/emailaddress", TEST_USER_EMAIL);
+        inputs.put("http://wso2.org/claims/givenname", TEST_USER_GIVEN_NAME);
+        inputs.put("http://wso2.org/claims/lastname", TEST_USER_LASTNAME);
+
+        flowExecutionRequest.setInputs(inputs);
+        return flowExecutionRequest;
+    }
 }
