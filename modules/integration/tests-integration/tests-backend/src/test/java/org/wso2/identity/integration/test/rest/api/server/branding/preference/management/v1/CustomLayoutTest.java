@@ -80,6 +80,7 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     private static final String APPLICATION_NAME_1 = "TestApp1";
     private static final String APPLICATION_NAME_2 = "TestApp2";
     private static final String ORGANIZATION_NAME = "TestOrganization";
+    private static final String ORGANIZATION_HANDLE = "testorg";
     private static final String RESOURCE_ID_PLACEHOLDER = "{{resourceId}}";
     private static final String BRANDING_TYPE_PLACEHOLDER = "{{type}}";
     private static final String BRANDING_RESOURCE_NAME = "{{name}}";
@@ -103,6 +104,7 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     private static final String CALLBACK_URL = "https://example.com/oidc-callback";
     private static final String SUB_ORG_LOGIN_IDP = "OrganizationSSO";
     private static final String ORG_NAME_PAGE = "org_name.do";
+    private static final String ORG_HANDLE_PAGE = "org_handle.do";
     private static final String SESSION_DATA_KEY = "sessionDataKey";
     private static final String HTML_ELEMENT = "<div class=\"custom-tag-class-{{resourceId}}\" id=\"custom-tag\">" +
             "Resource id: {{resourceId}}</div>";
@@ -134,6 +136,7 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     private String appId2;
     private String sharedAppId2;
     private String brandingJSON;
+    private String organizationHandle;
 
     private OAuth2RestClient restClient;
     private OrgMgtRestClient orgMgtRestClient;
@@ -199,7 +202,8 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     private void createInitialData() throws Exception {
 
         // Create a new sub-organization.
-        subOrgID = orgMgtRestClient.addOrganization(ORGANIZATION_NAME);
+        organizationHandle = System.currentTimeMillis() + "-" + ORGANIZATION_HANDLE;
+        subOrgID = orgMgtRestClient.addOrganization(ORGANIZATION_NAME, organizationHandle);
         subOrgToken = orgMgtRestClient.switchM2MToken(subOrgID);
 
         // Create a second application for testing.
@@ -590,13 +594,18 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
         if (StringUtils.isBlank(location)) {
             return null;
         }
-        if (!location.contains(ORG_NAME_PAGE)) {
+        BasicNameValuePair discoveryParam;
+        if (location.contains(ORG_NAME_PAGE)) {
+            discoveryParam = new BasicNameValuePair("org", ORGANIZATION_NAME);
+        } else if (location.contains(ORG_HANDLE_PAGE)) {
+            discoveryParam = new BasicNameValuePair("orgHandle", organizationHandle);
+        } else {
             return location;
         }
         List<NameValuePair> formParams = new ArrayList<>();
         String sessionDataKey = extractQueryParams(location).get(SESSION_DATA_KEY);
+        formParams.add(discoveryParam);
         formParams.add(new BasicNameValuePair(SESSION_DATA_KEY, sessionDataKey));
-        formParams.add(new BasicNameValuePair("org", ORGANIZATION_NAME));
         formParams.add(new BasicNameValuePair("idp", "SSO"));
         formParams.add(new BasicNameValuePair("authenticator", "OrganizationAuthenticator"));
         HttpPost post = new HttpPost(resolveTenantedPath(COMMON_AUTH_URL));
