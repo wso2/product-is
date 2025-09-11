@@ -2544,7 +2544,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.9.60</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.9.61</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2653,7 +2653,7 @@
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.39</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.35</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.36</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.47</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.35</authenticator.local.auth.smsotp.version>
@@ -2687,9 +2687,9 @@
         <conditional.authentication.functions.version>1.2.83</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.78.25</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.24.11</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.2.18</identity.apps.core.version>
+        <identity.apps.console.version>2.78.26</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.24.12</identity.apps.myaccount.version>
+        <identity.apps.core.version>3.2.19</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
