@@ -46,7 +46,6 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
-import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;

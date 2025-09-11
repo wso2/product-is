@@ -360,7 +360,8 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
             assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
         }
-        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+
+        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.REGISTER);
     }
 
@@ -386,7 +387,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
         }
 
-        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
+        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.REGISTER);
     }
 
@@ -412,37 +413,11 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
         }
 
-        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
+        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
     }
 
-    private void assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType initiatorType,
-                                                            PreUpdatePasswordEvent.Action action)
-            throws JsonProcessingException {
-
-        String actualRequestPayload = serviceExtensionMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.configure(com.fasterxml.jackson.databind.DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        PreUpdatePasswordActionRequest actionRequest = objectMapper
-                .readValue(actualRequestPayload, PreUpdatePasswordActionRequest.class);
-
-        assertEquals(actionRequest.getActionType(), ActionType.PRE_UPDATE_PASSWORD);
-        assertEquals(actionRequest.getEvent().getTenant().getName(), tenantInfo.getDomain());
-        assertEquals(actionRequest.getEvent().getTenant().getId(), tenantId);
-        assertEquals(actionRequest.getEvent().getUserStore().getName(), PRIMARY_USER_STORE_NAME);
-        assertEquals(actionRequest.getEvent().getUserStore().getId(), PRIMARY_USER_STORE_ID);
-
-        PasswordUpdatingUser user = actionRequest.getEvent().getPasswordUpdatingUser();
-
-        assertNull(user.getId());
-        assertEquals(user.getUpdatingCredential().getType(), Credential.Type.PASSWORD);
-        assertEquals(user.getUpdatingCredential().getFormat(), Credential.Format.PLAIN_TEXT);
-        assertNotNull(user.getUpdatingCredential().getValue());
-        assertEquals(actionRequest.getEvent().getInitiatorType(), initiatorType);
-        assertEquals(actionRequest.getEvent().getAction(), action);
-    }
-
-    private void assertActionRequestPayload(String userId, String updatedPassword,
+    private void assertActionRequestPayload(String expectedUserId, String updatedPassword,
                                             PreUpdatePasswordEvent.FlowInitiatorType initiatorType,
                                             PreUpdatePasswordEvent.Action action) throws JsonProcessingException {
 
@@ -458,10 +433,17 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         PasswordUpdatingUser user = actionRequest.getEvent().getPasswordUpdatingUser();
 
-        assertEquals(user.getId(), userId);
+        if (expectedUserId == null) {
+            assertNull(user.getId(), "User ID should be null in registration case");
+            assertNotNull(user.getUpdatingCredential().getValue(),
+                    "Password value should be present in registration case");
+        } else {
+            assertEquals(user.getId(), expectedUserId);
+            assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
+        }
+
         assertEquals(user.getUpdatingCredential().getType(), Credential.Type.PASSWORD);
         assertEquals(user.getUpdatingCredential().getFormat(), Credential.Format.PLAIN_TEXT);
-        assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
         assertEquals(actionRequest.getEvent().getInitiatorType(), initiatorType);
         assertEquals(actionRequest.getEvent().getAction(), action);
     }
