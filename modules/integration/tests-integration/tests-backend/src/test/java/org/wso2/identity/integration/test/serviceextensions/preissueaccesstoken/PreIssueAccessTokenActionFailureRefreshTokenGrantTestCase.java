@@ -417,6 +417,8 @@ public class PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase extends A
         Endpoint endpoint = new Endpoint();
         endpoint.setUri(EXTERNAL_SERVICE_URI);
         endpoint.setAuthentication(authenticationType);
+        endpoint.addAllowedHeadersItem("testHeader");
+        endpoint.addAllowedParametersItem("testParam");
 
         ActionModel actionModel = new ActionModel();
         actionModel.setName("Access Token Pre Issue");

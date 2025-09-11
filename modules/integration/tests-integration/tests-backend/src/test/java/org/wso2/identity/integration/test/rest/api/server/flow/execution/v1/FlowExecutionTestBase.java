@@ -25,11 +25,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
-import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
-import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
-import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 
 /**
  * This class contains the test cases for Registration Execution API.
@@ -81,38 +79,24 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
         client.putFlow(flowRequest);
     }
 
-    protected void enableNewRegistrationFlow(IdentityGovernanceRestClient client) throws Exception {
+    protected void enableFlow(String flowType, FlowManagementClient client) throws Exception {
 
-        ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
-        connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
-        PropertyReq enableProperty = new PropertyReq();
-        enableProperty.setName("SelfRegistration.Enable");
-        enableProperty.setValue("true");
-        connectorsPatchReq.addProperties(enableProperty);
-
-        PropertyReq propertyReq = new PropertyReq();
-        propertyReq.setName("SelfRegistration.EnableDynamicPortal");
-        propertyReq.setValue("true");
-        connectorsPatchReq.addProperties(propertyReq);
-
-        client.updateConnectors("VXNlciBPbmJvYXJkaW5n", "c2VsZi1zaWduLXVw", connectorsPatchReq);
+        FlowConfig flowConfigDTO = new FlowConfig();
+        flowConfigDTO.setIsEnabled(true);
+        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        client.updateFlowConfig(flowConfigDTO);
     }
 
-    protected void disableNewRegistrationFlow(IdentityGovernanceRestClient client) throws Exception {
+    protected void disableFlow(String flowType, FlowManagementClient client) throws Exception {
 
-        ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
-        connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        FlowConfig flowConfigDTO = new FlowConfig();
+        flowConfigDTO.setIsEnabled(false);
+        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        client.updateFlowConfig(flowConfigDTO);
+    }
 
-        PropertyReq enableProperty = new PropertyReq();
-        enableProperty.setName("SelfRegistration.Enable");
-        enableProperty.setValue("false");
-        connectorsPatchReq.addProperties(enableProperty);
+    protected static class FlowTypes {
 
-        PropertyReq propertyReq = new PropertyReq();
-        propertyReq.setName("SelfRegistration.EnableDynamicPortal");
-        propertyReq.setValue("false");
-        connectorsPatchReq.addProperties(propertyReq);
-
-        client.updateConnectors("VXNlciBPbmJvYXJkaW5n", "c2VsZi1zaWduLXVw", connectorsPatchReq);
+        public static final String REGISTRATION = "REGISTRATION";
     }
 }
