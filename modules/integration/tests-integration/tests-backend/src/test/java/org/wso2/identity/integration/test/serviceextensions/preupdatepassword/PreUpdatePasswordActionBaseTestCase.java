@@ -350,6 +350,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     }
 
     protected FlowExecutionRequest buildUserRegistrationFlowRequest() {
+
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowType("REGISTRATION");
         flowExecutionRequest.setActionId("button_5zqc");
