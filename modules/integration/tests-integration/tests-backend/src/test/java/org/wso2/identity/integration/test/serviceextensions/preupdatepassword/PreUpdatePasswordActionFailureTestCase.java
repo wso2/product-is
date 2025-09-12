@@ -70,8 +70,6 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
     private SCIM2RestClient scim2RestClient;
     private UsersRestClient usersRestClient;
-    private FlowExecutionClient flowExecutionClient;
-    private FlowManagementClient flowManagementClient;
 
     private String clientId;
     private String clientSecret;
@@ -154,7 +152,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 actionResponse.getResponseBody(), actionResponse.getStatusCode());
-        enableFlow(flowManagementClient, "REGISTRATION");
+        enableFlow(REGISTRATION_FLOW_TYPE);
         addRegistrationFlow(flowManagementClient);
     }
 
@@ -182,7 +180,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
-        disableFlow(flowManagementClient, "REGISTRATION");
+        disableFlow(REGISTRATION_FLOW_TYPE);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -348,7 +346,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
-        org.json.simple.JSONObject response = scim2RestClient.createUserWithBearerToken(adminRegisteredUserInfo, null);
+        org.json.simple.JSONObject response = scim2RestClient.createUser(adminRegisteredUserInfo, null);
         assertNotNull(response, "User creation response is null");
         if (response.containsKey("error")) {
             Assert.fail("User creation failed: " + response.get("error"));
@@ -374,7 +372,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
-        org.json.simple.JSONObject response = scim2RestClient.createUserWithBearerToken(appRegisteredUserInfo, token);
+        org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
         assertNotNull(response, "User creation response is null");
         if (response.containsKey("error")) {
             Assert.fail("User creation failed: " + response.get("error"));
@@ -394,7 +392,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the user initiated registration with pre update password action failure")
     public void testUserInitiatedUserRegistration() throws Exception {
 
-        Object responseObj = flowExecutionClient.initiateFlowExecution("REGISTRATION");
+        Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         assertNotNull(responseObj, "Flow initiation response is null.");
         assertTrue(responseObj instanceof FlowExecutionResponse, "Unexpected response type for flow initiation.");
 

@@ -61,8 +61,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 
     private SCIM2RestClient scim2RestClient;
     private UsersRestClient usersRestClient;
-    private FlowExecutionClient flowExecutionClient;
-    private FlowManagementClient flowManagementClient;
 
     private String clientId;
     private String clientSecret;
@@ -122,7 +120,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 FileUtils.readFileInClassPathAsString("actions/response/pre-update-password-response.json"));
-        enableFlow(flowManagementClient, "REGISTRATION");
+        enableFlow(REGISTRATION_FLOW_TYPE);
         addRegistrationFlow(flowManagementClient);
     }
 
@@ -151,7 +149,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
-        disableFlow(flowManagementClient, "REGISTRATION");
+        disableFlow(REGISTRATION_FLOW_TYPE);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -317,7 +315,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
-        org.json.simple.JSONObject response = scim2RestClient.createUserWithBearerToken(appRegisteredUserInfo, token);
+        org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
         String appRegisteredUserId = (String) response.get("id");
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
@@ -329,7 +327,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
             description = "Verify the user initiated registration with pre update password action")
     public void testUserInitiatedRegistration() throws Exception {
 
-        Object responseObj = flowExecutionClient.initiateFlowExecution("REGISTRATION");
+        Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         assertNotNull(responseObj, "Flow initiation response is null.");
         assertTrue(responseObj instanceof FlowExecutionResponse, "Unexpected response type for flow initiation.");
 

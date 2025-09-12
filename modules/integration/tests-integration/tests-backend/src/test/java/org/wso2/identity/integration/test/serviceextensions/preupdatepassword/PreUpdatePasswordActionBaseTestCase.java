@@ -46,6 +46,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
@@ -103,9 +104,12 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     protected static final String REGISTRATION_FLOW =
             "/org/wso2/identity/integration/test/rest/api/server/flow/execution/v1/registration-flow.json";
+    protected static final String REGISTRATION_FLOW_TYPE = "REGISTRATION";
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
+    protected FlowExecutionClient flowExecutionClient;
+    protected FlowManagementClient flowManagementClient;
 
     private final CookieStore cookieStore = new BasicCookieStore();
 
@@ -325,20 +329,22 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return jsonResponse.getString("access_token");
     }
 
-    protected void enableFlow(FlowManagementClient client, String flowType) throws Exception {
+    protected void updateFlowStatus(String flowType, boolean enable) throws Exception {
 
         FlowConfig flowConfigDTO = new FlowConfig();
-        flowConfigDTO.setIsEnabled(true);
+        flowConfigDTO.setIsEnabled(enable);
         flowConfigDTO.setFlowType(flowType);
-        client.updateFlowConfig(flowConfigDTO);
+        flowManagementClient.updateFlowConfig(flowConfigDTO);
     }
 
-    protected void disableFlow(FlowManagementClient client, String flowType) throws Exception {
+    protected void enableFlow(String flowType) throws Exception {
 
-        FlowConfig flowConfigDTO = new FlowConfig();
-        flowConfigDTO.setIsEnabled(false);
-        flowConfigDTO.setFlowType(flowType);
-        client.updateFlowConfig(flowConfigDTO);
+        updateFlowStatus(flowType, true);
+    }
+
+    protected void disableFlow(String flowType) throws Exception {
+
+        updateFlowStatus(flowType, false);
     }
 
     protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
@@ -352,7 +358,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected FlowExecutionRequest buildUserRegistrationFlowRequest() {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
-        flowExecutionRequest.setFlowType("REGISTRATION");
+        flowExecutionRequest.setFlowType(REGISTRATION_FLOW_TYPE);
         flowExecutionRequest.setActionId("button_5zqc");
 
         Map<String, String> inputs = new HashMap<>();
