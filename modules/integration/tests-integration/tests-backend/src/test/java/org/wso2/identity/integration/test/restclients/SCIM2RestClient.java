@@ -102,13 +102,13 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
-     * Create a user with a bearer token.
+     * Create a user with bearer token.
      *
-     * @param userInfo    Object with user creation details.
+     * @param userInfo object with user creation details.
      * @param bearerToken Bearer token to be used in the request.
      * @return JSONObject of the HTTP response.
      */
-    public JSONObject createUserWithBearerToken(UserObject userInfo, String bearerToken) {
+    public JSONObject createUser(UserObject userInfo, String bearerToken) {
         
         String jsonRequest = toJSONString(userInfo);
         if (userInfo.getScimSchemaExtensionEnterprise() != null) {
