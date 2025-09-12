@@ -348,8 +348,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
-        org.json.simple.JSONObject response = scim2RestClient.createUserAndReturnResponse(adminRegisteredUserInfo);
-
+        org.json.simple.JSONObject response = scim2RestClient.createUserWithBearerToken(adminRegisteredUserInfo, null);
         assertNotNull(response, "User creation response is null");
         if (response.containsKey("error")) {
             Assert.fail("User creation failed: " + response.get("error"));
@@ -375,7 +374,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
-        org.json.simple.JSONObject response = (org.json.simple.JSONObject) scim2RestClient.createUserWithBearerToken(appRegisteredUserInfo, token, true);
+        org.json.simple.JSONObject response = scim2RestClient.createUserWithBearerToken(appRegisteredUserInfo, token);
         assertNotNull(response, "User creation response is null");
         if (response.containsKey("error")) {
             Assert.fail("User creation failed: " + response.get("error"));

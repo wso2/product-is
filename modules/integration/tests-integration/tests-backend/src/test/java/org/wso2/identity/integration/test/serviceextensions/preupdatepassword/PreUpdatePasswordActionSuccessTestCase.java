@@ -317,8 +317,8 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
-        String appRegisteredUserId = (String) scim2RestClient.createUserWithBearerToken(appRegisteredUserInfo,
-                token, false);
+        org.json.simple.JSONObject response = scim2RestClient.createUserWithBearerToken(appRegisteredUserInfo, token);
+        String appRegisteredUserId = (String) response.get("id");
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.REGISTER);

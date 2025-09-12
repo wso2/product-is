@@ -102,6 +102,45 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create a user with a bearer token.
+     *
+     * @param userInfo    Object with user creation details.
+     * @param bearerToken Bearer token to be used in the request.
+     * @return JSONObject of the HTTP response.
+     */
+    public JSONObject createUserWithBearerToken(UserObject userInfo, String bearerToken) {
+        String jsonRequest = toJSONString(userInfo);
+        if (userInfo.getScimSchemaExtensionEnterprise() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
+        }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
+        }
+
+        try (CloseableHttpResponse response = bearerToken != null
+                ? getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeadersWithBearerToken(bearerToken))
+                : getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseString = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
+
+            if (responseString == null || responseString.trim().isEmpty()) {
+                JSONObject result = new JSONObject();
+                result.put("status", statusCode);
+                result.put("message", "Empty response body");
+                return result;
+            }
+            JSONObject jsonResponse = getJSONObject(responseString);
+            jsonResponse.put("status", statusCode);
+            return jsonResponse;
+        } catch (Exception e) {
+            JSONObject errorObj = new JSONObject();
+            errorObj.put("error", "Exception: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
+            return errorObj;
+        }
+    }
+
+    /**
      * Create a user with an invalid request.
      *
      * @param userInfo Object with user creation details.
@@ -877,95 +916,6 @@ public class SCIM2RestClient extends RestBaseClient {
 
         try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
             return response.getStatusLine().getStatusCode();
-        }
-    }
-
-    /**
-     * Create a user with bearer token and return either the user ID or the full response based on the flag.
-     *
-     * @param appRegisteredUserInfo UserObject containing user details.
-     * @param token                 Bearer token for authentication.
-     * @param returnFullResponse    If true, returns the full response as a JSONObject. if false, returns only the user ID.
-     * @return Either the user ID (String) or the full response based on the flag.
-     */
-    public Object createUserWithBearerToken(UserObject appRegisteredUserInfo, String token, boolean returnFullResponse) {
-        String jsonRequest = toJSONString(appRegisteredUserInfo);
-        if (appRegisteredUserInfo.getScimSchemaExtensionEnterprise() != null) {
-            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
-        }
-        if (appRegisteredUserInfo.getScimSchemaExtensionSystem() != null) {
-            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
-        }
-
-        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest,
-                getHeadersWithBearerToken(token))) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            String responseString = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
-
-            if (!returnFullResponse) {
-                Assert.assertEquals(statusCode, HttpServletResponse.SC_CREATED, "User creation failed");
-                JSONObject jsonResponse = getJSONObject(responseString);
-                return jsonResponse.get("id").toString();
-            }
-
-            if (responseString == null || responseString.trim().isEmpty()) {
-                JSONObject result = new JSONObject();
-                result.put("status", statusCode);
-                result.put("message", "Empty response body");
-                return result;
-            }
-
-            try {
-                return getJSONObject(responseString);
-            } catch (org.json.simple.parser.ParseException pe) {
-                JSONObject errorObj = new JSONObject();
-                errorObj.put("error", "ParseException: " + pe.getMessage());
-                errorObj.put("rawResponse", responseString);
-                errorObj.put("statusCode", statusCode);
-                return errorObj;
-            }
-        } catch (Exception e) {
-            if (!returnFullResponse) {
-                return null;
-            }
-            JSONObject errorObj = new JSONObject();
-            errorObj.put("error", "Exception: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
-            return errorObj;
-        }
-    }
-
-    /**
-     * Create a user with admin credentials and return the full response as a JSONObject.
-     * This method does not assert the response status code, allowing the caller to handle different scenarios.
-     *
-     * @param adminRegisteredUserInfo UserObject containing user details.
-     * @return JSONObject containing the full response, including status code and any error messages.
-     */
-    public JSONObject createUserAndReturnResponse(UserObject adminRegisteredUserInfo) {
-        String jsonRequest = toJSONString(adminRegisteredUserInfo);
-
-        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
-            int statusCode = response.getStatusLine().getStatusCode();
-            String responseString = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
-            if (responseString == null || responseString.trim().isEmpty()) {
-                JSONObject result = new JSONObject();
-                result.put("status", statusCode);
-                result.put("message", "Empty response body");
-                return result;
-            }
-            try {
-                return getJSONObject(responseString);
-            } catch (org.json.simple.parser.ParseException pe) {
-                JSONObject errorObj = new JSONObject();
-                errorObj.put("error", "ParseException: " + pe.getMessage());
-                errorObj.put("rawResponse", responseString);
-                errorObj.put("statusCode", statusCode);
-                return errorObj;
-            }
-        } catch (Exception e) {
-            JSONObject errorObj = new JSONObject();
-            errorObj.put("error", "Exception: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
-            return errorObj;
         }
     }
 
