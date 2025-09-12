@@ -126,7 +126,26 @@ public class OrgMgtRestClient extends RestBaseClient {
     public String addOrganization(String orgName) throws Exception {
 
         String m2mToken = getM2MAccessToken();
-        String body = buildOrgCreationRequestBody(orgName, null);
+        String body = buildOrgCreationRequestBody(orgName, null, null);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(organizationManagementApiBasePath, body,
+                getHeadersWithBearerToken(m2mToken))) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Add an organization with an organization handle within the root organization.
+     *
+     * @param orgName   Name of the organization.
+     * @param orgHandle Handle of the organization.
+     * @return ID of the created organization.
+     * @throws Exception If an error occurs while creating the organization.
+     */
+    public String addOrganization(String orgName, String orgHandle) throws Exception {
+
+        String m2mToken = getM2MAccessToken();
+        String body = buildOrgCreationRequestBody(orgName, null, orgHandle);
         try (CloseableHttpResponse response = getResponseOfHttpPost(organizationManagementApiBasePath, body,
                 getHeadersWithBearerToken(m2mToken))) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
@@ -145,7 +164,7 @@ public class OrgMgtRestClient extends RestBaseClient {
     public String addSubOrganization(String orgName, String parentOrgId) throws Exception {
 
         String m2mToken = switchM2MToken(parentOrgId);
-        String body = buildOrgCreationRequestBody(orgName, parentOrgId);
+        String body = buildOrgCreationRequestBody(orgName, parentOrgId, null);
         try (CloseableHttpResponse response = getResponseOfHttpPost(subOrganizationManagementApiBasePath, body,
                 getHeadersWithBearerToken(m2mToken))) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
@@ -380,12 +399,16 @@ public class OrgMgtRestClient extends RestBaseClient {
         return b2bSelfServiceApp.toString();
     }
 
-    private String buildOrgCreationRequestBody(String orgName, String parentOrgId) throws JSONException {
+    private String buildOrgCreationRequestBody(String orgName, String parentOrgId, String orgHandle)
+            throws JSONException {
 
         JSONObject organization = new JSONObject();
         organization.put("name", orgName);
         if (StringUtils.isNotBlank(parentOrgId)) {
             organization.put("parentId", parentOrgId);
+        }
+        if (StringUtils.isNotBlank(orgHandle)) {
+            organization.put("orgHandle", orgHandle);
         }
         return organization.toString();
     }
