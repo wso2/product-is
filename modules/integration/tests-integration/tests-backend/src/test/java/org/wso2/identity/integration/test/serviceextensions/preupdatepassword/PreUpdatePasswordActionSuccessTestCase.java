@@ -25,6 +25,9 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
 import org.wso2.identity.integration.test.serviceextensions.model.*;
@@ -42,6 +45,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
@@ -88,6 +92,9 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         usersRestClient = new UsersRestClient(serverURL, tenantInfo);
+        flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
+        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -113,6 +120,8 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 FileUtils.readFileInClassPathAsString("actions/response/pre-update-password-response.json"));
+        enableFlow(REGISTRATION_FLOW_TYPE);
+        addRegistrationFlow(flowManagementClient);
     }
 
     @BeforeMethod
@@ -135,10 +144,12 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         identityGovernanceRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         actionsRestClient.closeHttpClient();
+        flowExecutionClient.closeHttpClient();
         client.close();
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
+        disableFlow(REGISTRATION_FLOW_TYPE);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -275,6 +286,58 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         assertActionRequestPayload(offlineInvitingUserId, RESET_PASSWORD,
                 PreUpdatePasswordEvent.FlowInitiatorType.ADMIN, PreUpdatePasswordEvent.Action.INVITE);
         scim2RestClient.deleteUser(offlineInvitingUserId);
+    }
+
+    @Test(dependsOnMethods = "testUserSetPasswordViaOfflineInviteLink",
+            description = "Verify the admin initiated user registration with pre update password action")
+    public void testAdminInitiatedUserRegistration() throws Exception {
+
+        UserObject adminRegisteredUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL));
+
+        String adminRegisteredUserId = scim2RestClient.createUser(adminRegisteredUserInfo);
+
+        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+                PreUpdatePasswordEvent.Action.REGISTER);
+        scim2RestClient.deleteUser(adminRegisteredUserId);
+    }
+
+    @Test(dependsOnMethods = "testAdminInitiatedUserRegistration",
+            description = "Verify the application initiated user registration with pre update password action")
+    public void testApplicationInitiatedUserRegistration() throws Exception {
+
+        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
+        UserObject appRegisteredUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL));
+        org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
+        String appRegisteredUserId = (String) response.get("id");
+
+        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
+                PreUpdatePasswordEvent.Action.REGISTER);
+        scim2RestClient.deleteUser(appRegisteredUserId);
+    }
+
+    @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
+            description = "Verify the user initiated registration with pre update password action")
+    public void testUserInitiatedRegistration() throws Exception {
+
+        Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
+        assertNotNull(responseObj, "Flow initiation response is null.");
+        assertTrue(responseObj instanceof FlowExecutionResponse, "Unexpected response type for flow initiation.");
+
+        FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
+        Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
+        assertNotNull(executionResponseObj, "Flow execution response is null.");
+        assertTrue(executionResponseObj instanceof FlowExecutionResponse, "Unexpected response type for flow execution.");
+
+        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.REGISTER);
     }
 
     private void assertActionRequestPayload(String userId, String updatedPassword,

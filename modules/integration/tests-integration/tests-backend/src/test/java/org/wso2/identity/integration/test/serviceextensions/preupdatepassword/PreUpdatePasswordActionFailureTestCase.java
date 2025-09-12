@@ -28,6 +28,9 @@ import org.jsoup.select.Elements;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.dataprovider.model.ActionResponse;
 import org.wso2.identity.integration.test.serviceextensions.dataprovider.model.ExpectedPasswordUpdateResponse;
@@ -121,6 +124,9 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         usersRestClient = new UsersRestClient(serverURL, tenantInfo);
+        flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
+        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -146,6 +152,8 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 actionResponse.getResponseBody(), actionResponse.getStatusCode());
+        enableFlow(REGISTRATION_FLOW_TYPE);
+        addRegistrationFlow(flowManagementClient);
     }
 
     @BeforeMethod
@@ -172,6 +180,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
+        disableFlow(REGISTRATION_FLOW_TYPE);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -328,7 +337,84 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         scim2RestClient.deleteUser(offlineInvitingUserId);
     }
 
-    private void assertActionRequestPayload(String userId, String updatedPassword,
+    @Test(dependsOnMethods = "testUserSetPasswordViaOfflineInviteLink",
+            description = "Verify the admin initiated user registration with pre update password action failure")
+    public void testAdminInitiatedUserRegistration() throws Exception {
+
+        UserObject adminRegisteredUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL));
+        org.json.simple.JSONObject response = scim2RestClient.createUser(adminRegisteredUserInfo, null);
+        assertNotNull(response, "User creation response is null");
+        if (response.containsKey("error")) {
+            Assert.fail("User creation failed: " + response.get("error"));
+        }
+        Object statusObj = response.get("status");
+        assertNotNull(statusObj, "Status field is missing in response. Raw response: " + response.toJSONString());
+        String status = statusObj.toString();
+        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
+
+        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+                PreUpdatePasswordEvent.Action.REGISTER);
+    }
+
+    @Test(dependsOnMethods = "testAdminInitiatedUserRegistration",
+            description = "Verify the application initiated user registration with pre update password action failure")
+    public void testApplicationInitiatedUserRegistration() throws Exception {
+
+        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
+        UserObject appRegisteredUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL));
+        org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
+        assertNotNull(response, "User creation response is null");
+        if (response.containsKey("error")) {
+            Assert.fail("User creation failed: " + response.get("error"));
+        }
+        Object statusObj = response.get("status");
+        assertNotNull(statusObj, "Status field is missing in response. Raw response: " + response.toJSONString());
+        String status = statusObj.toString();
+        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
+
+        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
+                PreUpdatePasswordEvent.Action.REGISTER);
+    }
+
+    @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
+            description = "Verify the user initiated registration with pre update password action failure")
+    public void testUserInitiatedUserRegistration() throws Exception {
+
+        Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
+        assertNotNull(responseObj, "Flow initiation response is null.");
+        assertTrue(responseObj instanceof FlowExecutionResponse, "Unexpected response type for flow initiation.");
+
+        FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
+        org.json.simple.JSONObject response = flowExecutionClient.executeFlowAndReturnResponse(flowExecutionRequest);
+        assertNotNull(response, "User creation response is null");
+        if (response.containsKey("error")) {
+            Assert.fail("User creation failed: " + response.get("error"));
+        }
+        Object statusObj = response.get("statusCode");
+        assertNotNull(statusObj, "StatusCode field is missing in response. Raw response: " +
+                response.toJSONString());
+        String status = statusObj.toString();
+        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
+
+        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.REGISTER);
+    }
+
+    private void assertActionRequestPayload(String expectedUserId, String updatedPassword,
                                             PreUpdatePasswordEvent.FlowInitiatorType initiatorType,
                                             PreUpdatePasswordEvent.Action action) throws JsonProcessingException {
 
@@ -344,10 +430,17 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         PasswordUpdatingUser user = actionRequest.getEvent().getPasswordUpdatingUser();
 
-        assertEquals(user.getId(), userId);
+        if (expectedUserId == null) {
+            assertNull(user.getId(), "User ID should be null in registration case");
+            assertNotNull(user.getUpdatingCredential().getValue(),
+                    "Password value should be present in registration case");
+        } else {
+            assertEquals(user.getId(), expectedUserId);
+            assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
+        }
+
         assertEquals(user.getUpdatingCredential().getType(), Credential.Type.PASSWORD);
         assertEquals(user.getUpdatingCredential().getFormat(), Credential.Format.PLAIN_TEXT);
-        assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
         assertEquals(actionRequest.getEvent().getInitiatorType(), initiatorType);
         assertEquals(actionRequest.getEvent().getAction(), action);
     }

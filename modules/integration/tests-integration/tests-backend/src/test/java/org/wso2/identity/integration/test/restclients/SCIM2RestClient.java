@@ -102,6 +102,46 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create a user with bearer token.
+     *
+     * @param userInfo object with user creation details.
+     * @param bearerToken Bearer token to be used in the request.
+     * @return JSONObject of the HTTP response.
+     */
+    public JSONObject createUser(UserObject userInfo, String bearerToken) {
+        
+        String jsonRequest = toJSONString(userInfo);
+        if (userInfo.getScimSchemaExtensionEnterprise() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
+        }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
+        }
+
+        try (CloseableHttpResponse response = bearerToken != null
+                ? getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeadersWithBearerToken(bearerToken))
+                : getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseString = response.getEntity() != null ? EntityUtils.toString(response.getEntity()) : "";
+
+            if (responseString == null || responseString.trim().isEmpty()) {
+                JSONObject result = new JSONObject();
+                result.put("status", statusCode);
+                result.put("message", "Empty response body");
+                return result;
+            }
+            JSONObject jsonResponse = getJSONObject(responseString);
+            jsonResponse.put("status", statusCode);
+            return jsonResponse;
+        } catch (Exception e) {
+            JSONObject errorObj = new JSONObject();
+            errorObj.put("error", "Exception: " + (e.getMessage() != null ? e.getMessage() : e.getClass().getName()));
+            return errorObj;
+        }
+    }
+
+    /**
      * Create a user with an invalid request.
      *
      * @param userInfo Object with user creation details.
