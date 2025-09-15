@@ -2649,7 +2649,7 @@
         <identity.user.workflow.version>6.0.1</identity.user.workflow.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.40</authenticator.totp.version>
+        <authenticator.totp.version>3.3.41</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.39</authenticator.smsotp.version>
