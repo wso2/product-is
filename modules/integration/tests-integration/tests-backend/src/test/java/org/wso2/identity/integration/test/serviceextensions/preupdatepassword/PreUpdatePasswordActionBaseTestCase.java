@@ -337,16 +337,6 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         flowManagementClient.updateFlowConfig(flowConfigDTO);
     }
 
-    protected void enableFlow(String flowType) throws Exception {
-
-        updateFlowStatus(flowType, true);
-    }
-
-    protected void disableFlow(String flowType) throws Exception {
-
-        updateFlowStatus(flowType, false);
-    }
-
     protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
 
         String registrationFlowRequestJson = readResource(REGISTRATION_FLOW, this.getClass());

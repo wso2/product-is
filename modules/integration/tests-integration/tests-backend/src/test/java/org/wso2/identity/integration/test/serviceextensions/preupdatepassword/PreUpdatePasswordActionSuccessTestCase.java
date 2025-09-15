@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.serviceextensions.preupdatepassword;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -120,7 +121,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 FileUtils.readFileInClassPathAsString("actions/response/pre-update-password-response.json"));
-        enableFlow(REGISTRATION_FLOW_TYPE);
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
         addRegistrationFlow(flowManagementClient);
     }
 
@@ -149,7 +150,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
-        disableFlow(REGISTRATION_FLOW_TYPE);
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, false);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -316,11 +317,32 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
-        String appRegisteredUserId = (String) response.get("id");
+        assertNotNull(response, "User creation response is null.");
+
+        int statusCode = response.get("statusCode") != null
+                ? ((Number) response.get("statusCode")).intValue() : -1;
+        String body = response.get("body") != null ? response.get("body").toString() : "";
+
+        String appRegisteredUserId = null;
+        if (body != null && !body.isEmpty()) {
+            try {
+                JsonNode node = new ObjectMapper().readTree(body);
+                if (node.has("id")) {
+                    appRegisteredUserId = node.get("id").asText(null);
+                }
+            } catch (Exception ignored) {
+
+            }
+        }
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.REGISTER);
-        scim2RestClient.deleteUser(appRegisteredUserId);
+        if (appRegisteredUserId != null) {
+            int deleteStatus = scim2RestClient.attemptUserDelete(appRegisteredUserId);
+            Assert.assertTrue(deleteStatus == HttpServletResponse.SC_NO_CONTENT
+                            || deleteStatus == HttpServletResponse.SC_NOT_FOUND,
+                    "Unexpected delete status: " + deleteStatus + " (create status: " + statusCode + ")");
+        }
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",

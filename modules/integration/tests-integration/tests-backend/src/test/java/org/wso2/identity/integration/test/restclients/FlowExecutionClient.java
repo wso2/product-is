@@ -134,20 +134,4 @@ public class FlowExecutionClient extends RestBaseClient {
         headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
         return headerList;
     }
-
-    public JSONObject executeFlowAndReturnResponse(FlowExecutionRequest userRegistrationRequest) {
-
-        String jsonRequestBody = toJSONString(userRegistrationRequest);
-        String executionUrl = flowExecutionBasePath + PATH_SEPARATOR + FLOW_EXECUTION_ENDPOINT;
-        try (CloseableHttpResponse response = getResponseOfHttpPost(executionUrl, jsonRequestBody,
-                getHeadersWithBasicAuth())) {
-            String responseString = EntityUtils.toString(response.getEntity());
-            JSONObject responseObject = new JSONObject();
-            responseObject.put("statusCode", response.getStatusLine().getStatusCode());
-            responseObject.put("body", responseString);
-            return responseObject;
-        } catch (Exception e) {
-            throw new RuntimeException("Error while executing the flow.", e);
-        }
-    }
 }

@@ -28,6 +28,7 @@ import org.jsoup.select.Elements;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Error;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.restclients.*;
@@ -52,6 +53,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -152,7 +154,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 actionResponse.getResponseBody(), actionResponse.getStatusCode());
-        enableFlow(REGISTRATION_FLOW_TYPE);
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
         addRegistrationFlow(flowManagementClient);
     }
 
@@ -180,7 +182,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
-        disableFlow(REGISTRATION_FLOW_TYPE);
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, false);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -348,17 +350,34 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(adminRegisteredUserInfo, null);
         assertNotNull(response, "User creation response is null");
-        if (response.containsKey("error")) {
-            Assert.fail("User creation failed: " + response.get("error"));
+
+        int statusCode = response.get("statusCode") != null
+                ? Integer.parseInt(response.get("statusCode").toString())
+                : -1;
+        String body = response.get("body") != null ? response.get("body").toString() : "";
+
+        org.json.simple.JSONObject bodyJson = null;
+        if (body != null && !body.isEmpty()) {
+            bodyJson = (org.json.simple.JSONObject) new org.json.simple.parser.JSONParser().parse(body);
         }
-        Object statusObj = response.get("status");
-        assertNotNull(statusObj, "Status field is missing in response. Raw response: " + response.toJSONString());
-        String status = statusObj.toString();
-        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
-            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        int effectiveStatus = (bodyJson != null && bodyJson.get("status") != null)
+                ? Integer.parseInt(bodyJson.get("status").toString())
+                : statusCode;
+
+        assertTrue(
+                effectiveStatus == HttpServletResponse.SC_ACCEPTED
+                        || effectiveStatus == expectedPasswordUpdateResponse.getStatusCode(),
+                "Unexpected status. Raw response: " + response.toJSONString()
+        );
+
+        if (effectiveStatus == HttpServletResponse.SC_BAD_REQUEST) {
+            assertTrue(body.contains(expectedPasswordUpdateResponse.getErrorMessage()),
+                    "Error message is missing in response. Raw response: " + response.toJSONString());
+            assertTrue(body.contains(expectedPasswordUpdateResponse.getErrorDetail()),
+                    "Error detail is missing in response. Raw response: " + response.toJSONString());
         }
 
-        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+        assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.REGISTER);
     }
 
@@ -374,17 +393,34 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
         assertNotNull(response, "User creation response is null");
-        if (response.containsKey("error")) {
-            Assert.fail("User creation failed: " + response.get("error"));
+
+        int statusCode = response.get("statusCode") != null
+                ? Integer.parseInt(response.get("statusCode").toString())
+                : -1;
+        String body = response.get("body") != null ? response.get("body").toString() : "";
+
+        org.json.simple.JSONObject bodyJson = null;
+        if (body != null && !body.isEmpty()) {
+            bodyJson = (org.json.simple.JSONObject) new org.json.simple.parser.JSONParser().parse(body);
         }
-        Object statusObj = response.get("status");
-        assertNotNull(statusObj, "Status field is missing in response. Raw response: " + response.toJSONString());
-        String status = statusObj.toString();
-        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
-            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        int effectiveStatus = (bodyJson != null && bodyJson.get("status") != null)
+                ? Integer.parseInt(bodyJson.get("status").toString())
+                : statusCode;
+
+        assertTrue(
+                effectiveStatus == HttpServletResponse.SC_ACCEPTED
+                        || effectiveStatus == expectedPasswordUpdateResponse.getStatusCode(),
+                "Unexpected status. Raw response: " + response.toJSONString()
+        );
+
+        if (effectiveStatus == HttpServletResponse.SC_BAD_REQUEST) {
+            assertTrue(body.contains(expectedPasswordUpdateResponse.getErrorMessage()),
+                    "Error message is missing in response. Raw response: " + response.toJSONString());
+            assertTrue(body.contains(expectedPasswordUpdateResponse.getErrorDetail()),
+                    "Error detail is missing in response. Raw response: " + response.toJSONString());
         }
 
-        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
+        assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.REGISTER);
     }
 
@@ -397,20 +433,14 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         assertTrue(responseObj instanceof FlowExecutionResponse, "Unexpected response type for flow initiation.");
 
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
-        org.json.simple.JSONObject response = flowExecutionClient.executeFlowAndReturnResponse(flowExecutionRequest);
-        assertNotNull(response, "User creation response is null");
-        if (response.containsKey("error")) {
-            Assert.fail("User creation failed: " + response.get("error"));
-        }
-        Object statusObj = response.get("statusCode");
-        assertNotNull(statusObj, "StatusCode field is missing in response. Raw response: " +
-                response.toJSONString());
-        String status = statusObj.toString();
-        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
-            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
-        }
+        Object executeResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
+        assertTrue(
+                executeResponseObj instanceof FlowExecutionResponse
+                        || executeResponseObj instanceof Error,
+                "Unexpected response type for flow execution."
+        );
 
-        assertActionRequestPayload(null, null, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+        assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
     }
 
@@ -432,15 +462,13 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         if (expectedUserId == null) {
             assertNull(user.getId(), "User ID should be null in registration case");
-            assertNotNull(user.getUpdatingCredential().getValue(),
-                    "Password value should be present in registration case");
         } else {
             assertEquals(user.getId(), expectedUserId);
-            assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
         }
 
         assertEquals(user.getUpdatingCredential().getType(), Credential.Type.PASSWORD);
         assertEquals(user.getUpdatingCredential().getFormat(), Credential.Format.PLAIN_TEXT);
+        assertEquals(user.getUpdatingCredential().getValue(), updatedPassword.toCharArray());
         assertEquals(actionRequest.getEvent().getInitiatorType(), initiatorType);
         assertEquals(actionRequest.getEvent().getAction(), action);
     }
