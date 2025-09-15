@@ -26,7 +26,6 @@ import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
