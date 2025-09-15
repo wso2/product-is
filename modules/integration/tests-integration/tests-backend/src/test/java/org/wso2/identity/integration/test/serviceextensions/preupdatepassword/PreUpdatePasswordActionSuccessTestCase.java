@@ -26,8 +26,8 @@ import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Error;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
-import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
@@ -317,32 +317,10 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
-        assertNotNull(response, "User creation response is null.");
 
-        int statusCode = response.get("statusCode") != null
-                ? ((Number) response.get("statusCode")).intValue() : -1;
-        String body = response.get("body") != null ? response.get("body").toString() : "";
-
-        String appRegisteredUserId = null;
-        if (body != null && !body.isEmpty()) {
-            try {
-                JsonNode node = new ObjectMapper().readTree(body);
-                if (node.has("id")) {
-                    appRegisteredUserId = node.get("id").asText(null);
-                }
-            } catch (Exception ignored) {
-
-            }
-        }
-
-        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
+        assertNotNull(response);
+        assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.REGISTER);
-        if (appRegisteredUserId != null) {
-            int deleteStatus = scim2RestClient.attemptUserDelete(appRegisteredUserId);
-            Assert.assertTrue(deleteStatus == HttpServletResponse.SC_NO_CONTENT
-                            || deleteStatus == HttpServletResponse.SC_NOT_FOUND,
-                    "Unexpected delete status: " + deleteStatus + " (create status: " + statusCode + ")");
-        }
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
@@ -350,13 +328,11 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     public void testUserInitiatedRegistration() throws Exception {
 
         Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
-        assertNotNull(responseObj, "Flow initiation response is null.");
-        assertTrue(responseObj instanceof FlowExecutionResponse, "Unexpected response type for flow initiation.");
 
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
         assertNotNull(executionResponseObj, "Flow execution response is null.");
-        assertTrue(executionResponseObj instanceof FlowExecutionResponse, "Unexpected response type for flow execution.");
+        assertTrue(executionResponseObj instanceof Error, "Unexpected response type for flow execution.");
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);

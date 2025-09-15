@@ -121,13 +121,11 @@ public class SCIM2RestClient extends RestBaseClient {
         Header[] headers = (bearerToken != null) ? getHeadersWithBearerToken(bearerToken) : getHeaders();
         String usersPath = getUsersPath();
         try (CloseableHttpResponse response = getResponseOfHttpPost(usersPath, jsonRequest, headers)) {
-
             String responseString = EntityUtils.toString(response.getEntity());
             JSONObject responseObject = new JSONObject();
             responseObject.put("statusCode", response.getStatusLine().getStatusCode());
             responseObject.put("body", responseString);
             return responseObject;
-
         } catch (Exception e) {
             throw new RuntimeException("Error while creating the user.", e);
         }
