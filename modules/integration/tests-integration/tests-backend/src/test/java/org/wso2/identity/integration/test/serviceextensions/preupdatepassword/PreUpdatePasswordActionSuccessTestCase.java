@@ -46,7 +46,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
@@ -298,7 +298,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .password(TEST_USER_PASSWORD)
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
-
         String adminRegisteredUserId = scim2RestClient.createUser(adminRegisteredUserInfo);
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
@@ -318,21 +317,35 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
 
-        assertNotNull(response);
-        assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
-                PreUpdatePasswordEvent.Action.REGISTER);
+        int statusCode = Integer.parseInt(response.get("statusCode").toString());
+        assertEquals(statusCode, HttpServletResponse.SC_CREATED,
+                "Expected user creation status code 201 but got " + statusCode);
+
+        String createdUserId = null;
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode body = mapper.readTree(response.get("body").toString());
+        if (body.has("id")) {
+            createdUserId = body.get("id").asText();
+        }
+
+        try {
+            assertActionRequestPayload(null, TEST_USER_PASSWORD,
+                    PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION, PreUpdatePasswordEvent.Action.REGISTER);
+        } finally {
+            scim2RestClient.deleteUser(createdUserId);
+        }
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
             description = "Verify the user initiated registration with pre update password action")
     public void testUserInitiatedRegistration() throws Exception {
 
-        Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
-
+        flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
         assertNotNull(executionResponseObj, "Flow execution response is null.");
-        assertTrue(executionResponseObj instanceof Error, "Unexpected response type for flow execution.");
+        assertFalse(executionResponseObj instanceof Error,
+                "Unexpected response type for flow execution.");
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
