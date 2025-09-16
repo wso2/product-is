@@ -324,16 +324,11 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         String createdUserId = null;
         ObjectMapper mapper = new ObjectMapper();
         JsonNode body = mapper.readTree(response.get("body").toString());
-        if (body.has("id")) {
-            createdUserId = body.get("id").asText();
-        }
+        createdUserId = body.get("id").asText();
 
-        try {
-            assertActionRequestPayload(null, TEST_USER_PASSWORD,
-                    PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION, PreUpdatePasswordEvent.Action.REGISTER);
-        } finally {
-            scim2RestClient.deleteUser(createdUserId);
-        }
+        assertActionRequestPayload(null, TEST_USER_PASSWORD,
+                PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION, PreUpdatePasswordEvent.Action.REGISTER);
+        scim2RestClient.deleteUser(createdUserId);
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
@@ -349,6 +344,11 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
+        JsonNode node = new ObjectMapper().valueToTree(executionResponseObj);
+        String createdUserId = node.path("id").asText();
+        if (createdUserId != null && !createdUserId.isEmpty()) {
+            scim2RestClient.deleteUser(createdUserId);
+        }
     }
 
     private void assertActionRequestPayload(String userId, String updatedPassword,

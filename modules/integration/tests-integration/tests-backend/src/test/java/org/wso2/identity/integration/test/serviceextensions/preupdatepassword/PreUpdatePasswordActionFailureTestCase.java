@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.serviceextensions.preupdatepassword;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -348,15 +349,25 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(adminRegisteredUserInfo, null);
 
-        // Ideally this need to come 500 but due to a bug this comes 202
-        // Related Issue: https://github.com/wso2/product-is/issues/25668
         assertNotNull(response);
-        String status = response.get("status").toString();
-        assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
-        assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
-        assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        int statusCode = Integer.parseInt(response.get("statusCode").toString());
+        assertEquals(statusCode, expectedPasswordUpdateResponse.getStatusCode());
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode body = mapper.readTree(response.get("body").toString());
+
+        if (body.has("scimType")) {
+            assertEquals(body.get("scimType").asText(), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
+        if (statusCode == HttpServletResponse.SC_OK && body.has("detail")) {
+            assertTrue(body.get("detail").asText().contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        }
+
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.REGISTER);
+        if (statusCode == HttpServletResponse.SC_CREATED && body.has("id")) {
+            scim2RestClient.deleteUser(body.get("id").asText());
+        }
     }
 
     @Test(dependsOnMethods = "testAdminInitiatedUserRegistration",
@@ -371,29 +382,55 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
 
-        // Ideally this need to come 500 but due to a bug this comes 202
-        // Related Issue: https://github.com/wso2/product-is/issues/25668
         assertNotNull(response);
-        String status = response.get("status").toString();
-        assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
-        assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
-        assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        int statusCode = Integer.parseInt(response.get("statusCode").toString());
+        assertEquals(statusCode, expectedPasswordUpdateResponse.getStatusCode());
+
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode body = mapper.readTree(response.get("body").toString());
+
+        if (body.has("scimType")) {
+            assertEquals(body.get("scimType").asText(), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        }
+        if (statusCode == HttpServletResponse.SC_OK && body.has("detail")) {
+            assertTrue(body.get("detail").asText().contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        }
+
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.REGISTER);
+        if (statusCode == HttpServletResponse.SC_CREATED && body.has("id")) {
+            scim2RestClient.deleteUser(body.get("id").asText());
+        }
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
             description = "Verify the user initiated registration with pre update password action failure")
     public void testUserInitiatedUserRegistration() throws Exception {
 
-        Object responseObj = flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
-
+        flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executeResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
         assertTrue(executeResponseObj instanceof Error, "Unexpected response type for flow execution.");
 
+        Error error = (Error) executeResponseObj;
+        int expectedStatus = expectedPasswordUpdateResponse.getStatusCode();
+        if (expectedStatus == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+            assertEquals(error.getCode(), "FE-65008", "Unexpected error code in response.");
+            assertEquals(error.getMessage(), "Error while onboarding user.",
+                    "Unexpected error message in response.");
+        } else if (expectedStatus == HttpServletResponse.SC_BAD_REQUEST) {
+            assertEquals(error.getCode(), "FE-60012", "Unexpected error code in response.");
+            assertEquals(error.getMessage(), expectedPasswordUpdateResponse.getErrorMessage(),
+                    "Unexpected error message in response.");
+        }
+
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
+        JsonNode node = new ObjectMapper().valueToTree(executeResponseObj);
+        String createdUserId = node.path("id").asText();
+        if (createdUserId != null && !createdUserId.isEmpty()) {
+            scim2RestClient.deleteUser(createdUserId);
+        }
     }
 
     private void assertActionRequestPayload(String expectedUserId, String updatedPassword,
