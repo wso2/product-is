@@ -25,3 +25,9 @@ target
 
 # Ignore version backup files.
 *pom.xml.versionsBackup
+
+# Migration temporary files
+migration-backup/
+migration-logs/
+*.migration.log
+migration-config-local.yaml

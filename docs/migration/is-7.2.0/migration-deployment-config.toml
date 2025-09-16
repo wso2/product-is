@@ -1,0 +1,195 @@
+# WSO2 Identity Server 7.2.0 - Migration-specific Deployment Configuration
+# This template addresses the deployment.toml configurations needed during migration
+
+# ========================================
+# MIGRATION-SPECIFIC CONFIGURATIONS
+# ========================================
+# These configurations should be added to your existing deployment.toml
+# during the migration process and removed after migration completion
+
+[migration]
+# Enable migration mode
+migration_mode = true
+
+# Disable certain organizational improvements during migration to prevent conflicts
+disable_organization_improvements = true
+
+# Disable event listeners during bulk data migration to improve performance
+disable_event_listeners = true
+
+# Increase timeout for long-running migration operations (5 minutes)
+operation_timeout = 300000
+
+# Migration batch processing settings
+[migration.batch_processing]
+# Optimize batch sizes for your environment - adjust based on your data volume
+batch_size = 1000
+
+# Thread pool size for parallel processing - adjust based on your server capacity
+thread_pool_size = 10
+
+# Maximum retry attempts for failed migration operations
+max_retry_attempts = 3
+
+# ========================================
+# DATABASE CONFIGURATIONS FOR MIGRATION
+# ========================================
+[database.identity_db.pool_options]
+# Increase connection pool size during migration
+maxActive = "200"
+maxIdle = "50"
+minIdle = "10"
+
+# Increase wait time for connections during heavy migration operations
+maxWait = "60000"
+
+# Connection validation settings
+testOnBorrow = true
+validationQuery = "SELECT 1"
+validationInterval = "30000"
+testWhileIdle = true
+timeBetweenEvictionRunsMillis = "30000"
+
+# Connection timeout settings
+removeAbandoned = true
+removeAbandonedTimeout = "300"
+logAbandoned = true
+
+# ========================================
+# CACHE CONFIGURATIONS FOR MIGRATION
+# ========================================
+[cache_config]
+# Temporarily disable certain caches during migration to prevent memory issues
+# and ensure consistent data during migration process
+
+[cache_config.authorization_cache]
+# Disable authorization cache during migration
+enable = false
+
+[cache_config.authentication_cache] 
+# Disable authentication cache during migration
+enable = false
+
+[cache_config.organization_cache]
+# Disable organization cache during OrganizationVersionMigrator execution
+enable = false
+
+[cache_config.user_store_cache]
+# Keep user store cache enabled but with reduced size
+enable = true
+timeout = "300"
+capacity = "1000"
+
+# ========================================
+# LOGGING CONFIGURATIONS FOR MIGRATION
+# ========================================
+[logs]
+# Enable detailed logging for migration operations
+migration_log_level = "DEBUG"
+
+# Increase log file size limits during migration
+max_log_file_size = "100MB"
+max_backup_files = "20"
+
+# Enable specific loggers for migration components
+[[logs.loggers]]
+name = "org.wso2.carbon.identity.migration"
+level = "DEBUG"
+additivity = false
+appenders = ["CARBON_LOGFILE", "CARBON_CONSOLE"]
+
+[[logs.loggers]]
+name = "org.wso2.carbon.identity.organization.migration"
+level = "DEBUG"
+additivity = false
+appenders = ["CARBON_LOGFILE"]
+
+[[logs.loggers]]
+name = "org.wso2.carbon.challenge.question.migration"
+level = "INFO"
+additivity = false
+appenders = ["CARBON_LOGFILE"]
+
+# ========================================
+# JVM AND PERFORMANCE CONFIGURATIONS
+# ========================================
+[jvm]
+# Increase memory settings for migration
+# Add these to your startup script or set as environment variables:
+# -Xms2048m -Xmx4096m -XX:MaxMetaspaceSize=512m
+
+# Garbage collection optimization for migration
+# -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+
+# ========================================
+# ORGANIZATION MANAGEMENT CONFIGURATIONS  
+# ========================================
+[organization_management]
+# Temporarily disable certain organization features during migration
+enable_organization_user_invitation = false
+enable_organization_discovery = false
+
+# Organization cache settings during migration
+[organization_management.cache]
+enable = false
+
+# ========================================
+# CHALLENGE QUESTIONS CONFIGURATIONS
+# ========================================
+[challenge_questions]
+# Ensure challenge questions are enabled for migration
+enable = true
+
+# Migration-specific challenge questions settings
+[challenge_questions.migration]
+# Preserve existing challenge questions during migration
+preserve_existing_questions = true
+
+# Migrate user challenge question answers
+migrate_user_answers = true
+
+# ========================================
+# POST-MIGRATION CLEANUP INSTRUCTIONS
+# ========================================
+# IMPORTANT: After migration completion, perform the following cleanup:
+#
+# 1. Remove or comment out the [migration] section entirely
+# 2. Reset cache configurations:
+#    [cache_config.authorization_cache]
+#    enable = true
+#    
+#    [cache_config.authentication_cache]
+#    enable = true
+#    
+#    [cache_config.organization_cache] 
+#    enable = true
+#
+# 3. Reset logging to production levels:
+#    [logs]
+#    migration_log_level = "INFO"
+#
+# 4. Re-enable organization features:
+#    [organization_management]
+#    enable_organization_user_invitation = true
+#    enable_organization_discovery = true
+#
+# 5. Optimize database connection pool for normal operations:
+#    [database.identity_db.pool_options]
+#    maxActive = "80"
+#    maxIdle = "20"
+#    minIdle = "5"
+#
+# 6. Restart the WSO2 Identity Server after cleanup
+
+# ========================================
+# ADDITIONAL MIGRATION VERIFICATION
+# ========================================
+[migration.verification]
+# Enable post-migration verification
+enable_verification = true
+
+# Verification timeout (2 minutes)
+verification_timeout = 120000
+
+# Components to verify after migration
+verify_components = ["organizations", "challenge_questions", "user_stores", "applications"]

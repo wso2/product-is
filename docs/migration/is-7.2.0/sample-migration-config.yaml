@@ -1,0 +1,126 @@
+# WSO2 Identity Server 7.2.0 Migration Configuration
+# This is a sample migration-config.yaml file that addresses the issues mentioned in the documentation
+
+migrationEnable: true
+currentVersion: "7.2.0"
+migrateVersion: "7.0.0"  # Source version - adjust based on your current installation
+
+datasource:
+  name: "WSO2_IDENTITY_DB"
+  
+# Define migration steps with correct order numbers
+migrationSteps:
+  # Step 1: Schema Migration (Initial)
+  - name: "SchemaMigrator" 
+    order: 1
+    parameters:
+      enable: "true"
+      location: "step1"
+      
+  # Step 2: Identity Data Migration
+  - name: "IdentityDataMigrator"
+    order: 2
+    parameters:
+      enable: "true"
+      
+  # Step 3: User Management Data Migration  
+  - name: "UMDataMigrator"
+    order: 3
+    parameters:
+      enable: "true"
+      
+  # Step 4: Schema Migration (Identity - Step 2)
+  - name: "SchemaMigrator"
+    order: 4
+    parameters:
+      enable: "true"
+      location: "step2"
+      schema: "identity"
+      
+  # Step 5: Organization Version Migration for IS 7.2.0
+  # IMPORTANT: This migrator is specific to IS 7.2.0 upgrades
+  # Use order: 5 to avoid conflict with SchemaMigrator order: 4
+  - name: "OrganizationVersionMigrator"
+    order: 5
+    parameters:
+      enable: "true"
+    # This migrator applies when migrating TO IS 7.2.0 FROM these versions:
+    applicableVersions: ["7.0.0", "7.1.0"]
+    targetVersion: "7.2.0"
+    description: "Applies login and registration configuration inheritance for existing organizations"
+    
+  # Additional optional migrators can be added with order: 6, 7, etc.
+  # Example:
+  # - name: "CustomDataMigrator" 
+  #   order: 6
+  #   parameters:
+  #     enable: "false"
+
+# Migration execution options
+migrationOptions:
+  # Enable dry run mode to test configuration without actual migration
+  dryRun: false
+  
+  # Batch processing configuration
+  batchSize: 1000
+  
+  # Thread pool configuration for parallel processing
+  threadPoolSize: 5
+  
+  # Enable detailed logging
+  debugMode: false
+  
+  # Continue on errors (not recommended for production)
+  continueOnError: false
+
+# Database connection settings for migration
+databaseConfig:
+  # Connection pool settings optimized for migration
+  maxActiveConnections: 50
+  maxIdleConnections: 10
+  connectionTimeout: 60000
+  validationQuery: "SELECT 1"
+  
+# Backup settings
+backupConfig:
+  # Enable automatic backup before migration
+  enableBackup: true
+  backupLocation: "./backup"
+  
+# Version-specific configurations
+versionConfig:
+  "7.2.0":
+    # Features enabled in this version
+    enabledFeatures:
+      - "OrganizationManagement"
+      - "ChallengeQuestions"
+      - "AdvancedAuthentication"
+      
+    # Required connectors and their versions
+    requiredConnectors:
+      - name: "ChallengeQuestionsConnector"
+        version: "3.0.3+"
+        downloadUrl: "https://github.com/wso2-extensions/esb-connector-challengequestions/releases"
+        description: "Required for challenge questions functionality during migration"
+        
+    # Deployment configurations
+    deploymentConfig:
+      # Temporary settings for migration performance
+      migration:
+        disable_organization_improvements: true
+        disable_event_listeners: true
+        operation_timeout: "300000"
+        batch_size: "1000"
+        thread_pool_size: "10"
+      
+      # Cache settings during migration
+      cache:
+        disable_authorization_cache: true
+        disable_authentication_cache: true
+        
+      # Database pool settings
+      database:
+        maxActive: "200"
+        maxWait: "60000"
+        testOnBorrow: true
+        validationInterval: "30000"
