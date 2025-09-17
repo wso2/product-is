@@ -350,7 +350,10 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         assertEquals(statusCode, expectedPasswordUpdateResponse.getStatusCode());
 
         org.json.simple.JSONObject body = (org.json.simple.JSONObject) response.get("body");
-        if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+        if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_BAD_REQUEST) {
+            assertEquals(body.get("scimType"), expectedPasswordUpdateResponse.getErrorMessage());
+            assertTrue(body.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        } else if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
             assertTrue(body.get("detail").toString().contains("Error in adding the user"));
         }
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
@@ -374,7 +377,10 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         assertEquals(statusCode, expectedPasswordUpdateResponse.getStatusCode());
 
         org.json.simple.JSONObject body = (org.json.simple.JSONObject) response.get("body");
-        if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+        if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_BAD_REQUEST) {
+            assertEquals(body.get("scimType"), expectedPasswordUpdateResponse.getErrorMessage());
+            assertTrue(body.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
+        } else if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
             assertTrue(body.get("detail").toString().contains("Error in adding the user"));
         }
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
