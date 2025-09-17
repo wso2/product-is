@@ -135,6 +135,8 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 .setDefaultCookieStore(cookieStore)
                 .build();
 
+        flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
+        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
     }
 

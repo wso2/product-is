@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.serviceextensions.preupdatepassword;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
@@ -125,9 +124,6 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         usersRestClient = new UsersRestClient(serverURL, tenantInfo);
-        flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
-        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
-        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -199,7 +195,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         assertNotNull(response);
         String status = response.get("status").toString();
         assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
-        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+        if (status.equals(String.valueOf(HttpServletResponse.SC_BAD_REQUEST))) {
             assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
         }
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
@@ -222,7 +218,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         assertNotNull(response);
         String status = response.get("status").toString();
         assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
-        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+        if (status.equals(String.valueOf(HttpServletResponse.SC_BAD_REQUEST))) {
             assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
         }
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
@@ -302,7 +298,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         assertNotNull(response);
         String status = response.get("status").toString();
         assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
-        if (status.equals(String.valueOf(HttpServletResponse.SC_OK))) {
+        if (status.equals(String.valueOf(HttpServletResponse.SC_BAD_REQUEST))) {
             assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
         }
         assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
@@ -353,21 +349,12 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         int statusCode = Integer.parseInt(response.get("statusCode").toString());
         assertEquals(statusCode, expectedPasswordUpdateResponse.getStatusCode());
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode body = mapper.readTree(response.get("body").toString());
-
-        if (body.has("scimType")) {
-            assertEquals(body.get("scimType").asText(), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        org.json.simple.JSONObject body = (org.json.simple.JSONObject) response.get("body");
+        if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+            assertTrue(body.get("detail").toString().contains("Error in adding the user"));
         }
-        if (statusCode == HttpServletResponse.SC_OK && body.has("detail")) {
-            assertTrue(body.get("detail").asText().contains(expectedPasswordUpdateResponse.getErrorDetail()));
-        }
-
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.REGISTER);
-        if (statusCode == HttpServletResponse.SC_CREATED && body.has("id")) {
-            scim2RestClient.deleteUser(body.get("id").asText());
-        }
     }
 
     @Test(dependsOnMethods = "testAdminInitiatedUserRegistration",
@@ -386,21 +373,12 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         int statusCode = Integer.parseInt(response.get("statusCode").toString());
         assertEquals(statusCode, expectedPasswordUpdateResponse.getStatusCode());
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode body = mapper.readTree(response.get("body").toString());
-
-        if (body.has("scimType")) {
-            assertEquals(body.get("scimType").asText(), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        org.json.simple.JSONObject body = (org.json.simple.JSONObject) response.get("body");
+        if (expectedPasswordUpdateResponse.getStatusCode() == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+            assertTrue(body.get("detail").toString().contains("Error in adding the user"));
         }
-        if (statusCode == HttpServletResponse.SC_OK && body.has("detail")) {
-            assertTrue(body.get("detail").asText().contains(expectedPasswordUpdateResponse.getErrorDetail()));
-        }
-
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION,
                 PreUpdatePasswordEvent.Action.REGISTER);
-        if (statusCode == HttpServletResponse.SC_CREATED && body.has("id")) {
-            scim2RestClient.deleteUser(body.get("id").asText());
-        }
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
@@ -423,14 +401,8 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             assertEquals(error.getMessage(), expectedPasswordUpdateResponse.getErrorMessage(),
                     "Unexpected error message in response.");
         }
-
         assertActionRequestPayload(null, TEST_USER_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
-        JsonNode node = new ObjectMapper().valueToTree(executeResponseObj);
-        String createdUserId = node.path("id").asText();
-        if (createdUserId != null && !createdUserId.isEmpty()) {
-            scim2RestClient.deleteUser(createdUserId);
-        }
     }
 
     private void assertActionRequestPayload(String expectedUserId, String updatedPassword,

@@ -121,10 +121,10 @@ public class SCIM2RestClient extends RestBaseClient {
         Header[] headers = (bearerToken != null) ? getHeadersWithBearerToken(bearerToken) : getHeaders();
         String usersPath = getUsersPath();
         try (CloseableHttpResponse response = getResponseOfHttpPost(usersPath, jsonRequest, headers)) {
-            String responseString = EntityUtils.toString(response.getEntity());
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
             JSONObject responseObject = new JSONObject();
             responseObject.put("statusCode", response.getStatusLine().getStatusCode());
-            responseObject.put("body", responseString);
+            responseObject.put("body", jsonResponse);
             return responseObject;
         } catch (Exception e) {
             throw new RuntimeException("Error while creating the user.", e);
@@ -419,6 +419,25 @@ public class SCIM2RestClient extends RestBaseClient {
                 getHeadersWithBearerToken(switchedM2MToken))) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "User deletion failed.");
+        }
+    }
+
+    /**
+     * Get the details of a user by filtering with the given filter.
+     *
+     * @param filter filter string.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while getting a user.
+     */
+    public JSONObject filterUsers(String filter) throws Exception {
+
+        String endPointUrl = getUsersPath();
+        if (StringUtils.isNotEmpty(filter)) {
+            endPointUrl += "?filter=" + filter;
+        }
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
         }
     }
 

@@ -19,15 +19,15 @@
 package org.wso2.identity.integration.test.serviceextensions.preupdatepassword;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Error;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
@@ -46,7 +46,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
@@ -93,9 +93,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         usersRestClient = new UsersRestClient(serverURL, tenantInfo);
-        flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
-        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
-        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
         application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
@@ -321,14 +318,10 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         assertEquals(statusCode, HttpServletResponse.SC_CREATED,
                 "Expected user creation status code 201 but got " + statusCode);
 
-        String createdUserId = null;
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode body = mapper.readTree(response.get("body").toString());
-        createdUserId = body.get("id").asText();
-
         assertActionRequestPayload(null, TEST_USER_PASSWORD,
                 PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION, PreUpdatePasswordEvent.Action.REGISTER);
-        scim2RestClient.deleteUser(createdUserId);
+        org.json.simple.JSONObject responseBody = (org.json.simple.JSONObject) response.get("body");
+        scim2RestClient.deleteUser(responseBody.get("id").toString());
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
@@ -339,16 +332,15 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
         assertNotNull(executionResponseObj, "Flow execution response is null.");
-        assertFalse(executionResponseObj instanceof Error,
+        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
                 "Unexpected response type for flow execution.");
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
-        JsonNode node = new ObjectMapper().valueToTree(executionResponseObj);
-        String createdUserId = node.path("id").asText();
-        if (createdUserId != null && !createdUserId.isEmpty()) {
-            scim2RestClient.deleteUser(createdUserId);
-        }
+        org.json.simple.JSONObject response = scim2RestClient.filterUsers("userName+eq+" + TEST_USER2_USERNAME);
+        JSONArray resources = (JSONArray) response.get("Resources");
+        String userId = ((org.json.simple.JSONObject) resources.get(0)).get("id").toString();
+        scim2RestClient.deleteUser(userId);
     }
 
     private void assertActionRequestPayload(String userId, String updatedPassword,
