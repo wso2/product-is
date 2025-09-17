@@ -19,19 +19,29 @@
 package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.validation.constraints.*;
 
+/**
+ * Flow configurations for a flow type
+ **/
+
+import io.swagger.annotations.*;
 import java.util.Objects;
-
 import javax.validation.Valid;
-
+import javax.xml.bind.annotation.*;
 @ApiModel(description = "Flow configurations for a flow type")
-public class FlowConfig {
+public class FlowConfig  {
 
     private String flowType;
     private Boolean isEnabled;
-    private Boolean isAutoLoginEnabled;
+    private Map<String, String> flowCompletionConfigs = null;
+
 
     /**
      * Flow type
@@ -46,12 +56,9 @@ public class FlowConfig {
     @JsonProperty("flowType")
     @Valid
     public String getFlowType() {
-
         return flowType;
     }
-
     public void setFlowType(String flowType) {
-
         this.flowType = flowType;
     }
 
@@ -68,36 +75,40 @@ public class FlowConfig {
     @JsonProperty("isEnabled")
     @Valid
     public Boolean getIsEnabled() {
-
         return isEnabled;
     }
-
     public void setIsEnabled(Boolean isEnabled) {
-
         this.isEnabled = isEnabled;
     }
 
     /**
-     * Indicate whether the auto login is enabled for the flow
+     * Flow Completion Configs.
      **/
-    public FlowConfig isAutoLoginEnabled(Boolean isAutoLoginEnabled) {
+    public FlowConfig flowCompletionConfigs(Map<String, String> flowCompletionConfigs) {
 
-        this.isAutoLoginEnabled = isAutoLoginEnabled;
+        this.flowCompletionConfigs = flowCompletionConfigs;
         return this;
     }
 
-    @ApiModelProperty(example = "true", value = "Indicate whether the auto login is enabled for the flow")
-    @JsonProperty("isAutoLoginEnabled")
+    @ApiModelProperty(value = "Flow Completion Configs.")
+    @JsonProperty("flowCompletionConfigs")
     @Valid
-    public Boolean getIsAutoLoginEnabled() {
-
-        return isAutoLoginEnabled;
+    public Map<String, String> getFlowCompletionConfigs() {
+        return flowCompletionConfigs;
+    }
+    public void setFlowCompletionConfigs(Map<String, String> flowCompletionConfigs) {
+        this.flowCompletionConfigs = flowCompletionConfigs;
     }
 
-    public void setIsAutoLoginEnabled(Boolean isAutoLoginEnabled) {
 
-        this.isAutoLoginEnabled = isAutoLoginEnabled;
+    public FlowConfig putFlowCompletionConfigsItem(String key, String flowCompletionConfigsItem) {
+        if (this.flowCompletionConfigs == null) {
+            this.flowCompletionConfigs = new HashMap<String, String>();
+        }
+        this.flowCompletionConfigs.put(key, flowCompletionConfigsItem);
+        return this;
     }
+
 
 
     @Override
@@ -112,13 +123,12 @@ public class FlowConfig {
         FlowConfig flowConfig = (FlowConfig) o;
         return Objects.equals(this.flowType, flowConfig.flowType) &&
                 Objects.equals(this.isEnabled, flowConfig.isEnabled) &&
-                Objects.equals(this.isAutoLoginEnabled, flowConfig.isAutoLoginEnabled);
+                Objects.equals(this.flowCompletionConfigs, flowConfig.flowCompletionConfigs);
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(flowType, isEnabled, isAutoLoginEnabled);
+        return Objects.hash(flowType, isEnabled, flowCompletionConfigs);
     }
 
     @Override
@@ -129,7 +139,7 @@ public class FlowConfig {
 
         sb.append("    flowType: ").append(toIndentedString(flowType)).append("\n");
         sb.append("    isEnabled: ").append(toIndentedString(isEnabled)).append("\n");
-        sb.append("    isAutoLoginEnabled: ").append(toIndentedString(isAutoLoginEnabled)).append("\n");
+        sb.append("    flowCompletionConfigs: ").append(toIndentedString(flowCompletionConfigs)).append("\n");
         sb.append("}");
         return sb.toString();
     }
