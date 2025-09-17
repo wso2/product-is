@@ -314,6 +314,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
+        assertNotNull(response);
 
         int statusCode = Integer.parseInt(response.get("statusCode").toString());
         assertEquals(statusCode, HttpServletResponse.SC_CREATED,
