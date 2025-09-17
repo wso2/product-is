@@ -296,6 +296,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         String adminRegisteredUserId = scim2RestClient.createUser(adminRegisteredUserInfo);
+        assertNotNull(adminRegisteredUserId);
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
                 PreUpdatePasswordEvent.Action.REGISTER);
@@ -331,7 +332,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
-        assertNotNull(executionResponseObj, "Flow execution response is null.");
         assertTrue(executionResponseObj instanceof FlowExecutionResponse,
                 "Unexpected response type for flow execution.");
 
