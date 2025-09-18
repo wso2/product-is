@@ -22,9 +22,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
 import org.wso2.identity.integration.test.serviceextensions.model.*;
@@ -42,6 +46,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
@@ -113,6 +118,8 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 FileUtils.readFileInClassPathAsString("actions/response/pre-update-password-response.json"));
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
+        addRegistrationFlow(flowManagementClient);
     }
 
     @BeforeMethod
@@ -135,10 +142,12 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         identityGovernanceRestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         actionsRestClient.closeHttpClient();
+        flowExecutionClient.closeHttpClient();
         client.close();
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, false);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -275,6 +284,64 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         assertActionRequestPayload(offlineInvitingUserId, RESET_PASSWORD,
                 PreUpdatePasswordEvent.FlowInitiatorType.ADMIN, PreUpdatePasswordEvent.Action.INVITE);
         scim2RestClient.deleteUser(offlineInvitingUserId);
+    }
+
+    @Test(dependsOnMethods = "testUserSetPasswordViaOfflineInviteLink",
+            description = "Verify the admin initiated user registration with pre update password action")
+    public void testAdminInitiatedUserRegistration() throws Exception {
+
+        UserObject adminRegisteredUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL));
+        String adminRegisteredUserId = scim2RestClient.createUser(adminRegisteredUserInfo);
+        assertNotNull(adminRegisteredUserId);
+
+        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.ADMIN,
+                PreUpdatePasswordEvent.Action.REGISTER);
+        scim2RestClient.deleteUser(adminRegisteredUserId);
+    }
+
+    @Test(dependsOnMethods = "testAdminInitiatedUserRegistration",
+            description = "Verify the application initiated user registration with pre update password action")
+    public void testApplicationInitiatedUserRegistration() throws Exception {
+
+        String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
+        UserObject appRegisteredUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL));
+        org.json.simple.JSONObject response = scim2RestClient.createUser(appRegisteredUserInfo, token);
+        assertNotNull(response);
+
+        int statusCode = Integer.parseInt(response.get("statusCode").toString());
+        assertEquals(statusCode, HttpServletResponse.SC_CREATED,
+                "Expected user creation status code 201 but got " + statusCode);
+
+        assertActionRequestPayload(null, TEST_USER_PASSWORD,
+                PreUpdatePasswordEvent.FlowInitiatorType.APPLICATION, PreUpdatePasswordEvent.Action.REGISTER);
+        org.json.simple.JSONObject responseBody = (org.json.simple.JSONObject) response.get("body");
+        scim2RestClient.deleteUser(responseBody.get("id").toString());
+    }
+
+    @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
+            description = "Verify the user initiated registration with pre update password action")
+    public void testUserInitiatedRegistration() throws Exception {
+
+        flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
+        FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
+        Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
+        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
+                "Unexpected response type for flow execution.");
+
+        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.REGISTER);
+        org.json.simple.JSONObject response = scim2RestClient.filterUsers("userName+eq+" + TEST_USER2_USERNAME);
+        JSONArray resources = (JSONArray) response.get("Resources");
+        String userId = ((org.json.simple.JSONObject) resources.get(0)).get("id").toString();
+        scim2RestClient.deleteUser(userId);
     }
 
     private void assertActionRequestPayload(String userId, String updatedPassword,
