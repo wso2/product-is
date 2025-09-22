@@ -2690,7 +2690,7 @@
 	<identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.32</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	<identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.30</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.27</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.83</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.84</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.77.50</identity.apps.console.version>
