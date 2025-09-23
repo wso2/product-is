@@ -2568,7 +2568,7 @@
         <carbon.consent.mgt.version>2.6.9</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.135</identity.governance.version>
+        <identity.governance.version>1.11.136</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
@@ -2599,7 +2599,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.71</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.72</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.393</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.38</org.wso2.identity.event.publishers.version>
@@ -2695,7 +2695,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.77.50</identity.apps.console.version>
         <identity.apps.myaccount.version>2.23.18</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.3.5</identity.apps.core.version>
+        <identity.apps.core.version>3.3.6</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
