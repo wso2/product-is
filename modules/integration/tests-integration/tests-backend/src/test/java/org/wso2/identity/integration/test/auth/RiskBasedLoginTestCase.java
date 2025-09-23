@@ -53,7 +53,6 @@ import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
-import org.wso2.identity.integration.common.clients.webappmgt.WebAppAdminClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.common.utils.MicroserviceServer;
 import org.wso2.identity.integration.common.utils.MicroserviceUtil;
@@ -92,7 +91,6 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
     private AuthenticatorClient logManger;
     private OauthAdminClient oauthAdminClient;
     private ApplicationManagementServiceClient applicationManagementServiceClient;
-    private WebAppAdminClient webAppAdminClient;
     private CookieStore cookieStore = new BasicCookieStore();
     private HttpClient client;
     private HttpResponse response;
@@ -163,7 +161,6 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 .createConfigurationContextFromFileSystem(null, null);
         applicationManagementServiceClient = new ApplicationManagementServiceClient(sessionCookie, backendURL,
                 configContext);
-        webAppAdminClient = new WebAppAdminClient(backendURL, sessionCookie);
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -287,10 +284,6 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
      * @throws Exception for any unhandled exceptions in this test utility
      */
     private boolean deleteWebApp(String webappName) throws Exception {
-
-        List<String> webAppList = new ArrayList<>();
-        webAppList.add(webappName);
-        webAppAdminClient.deleteWebAppList(webAppList, isServer.getDefaultInstance().getHosts().get("default"));
 
         File warDestFile = new File(Utils.getResidentCarbonHome()
                 + File.separator + File.separator + "repository"
