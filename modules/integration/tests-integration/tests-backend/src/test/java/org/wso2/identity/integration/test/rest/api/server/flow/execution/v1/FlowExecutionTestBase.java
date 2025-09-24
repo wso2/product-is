@@ -29,6 +29,9 @@ import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.mode
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This class contains the test cases for Registration Execution API.
  */
@@ -83,6 +86,10 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
 
         FlowConfig flowConfigDTO = new FlowConfig();
         flowConfigDTO.setIsEnabled(true);
+        Map<String, String> flowCompletionConfigs = new HashMap<>();
+        flowCompletionConfigs.put("isEmailVerificationEnabled", "true");
+        flowCompletionConfigs.put("isAccountLockOnCreationEnabled", "true");
+        flowConfigDTO.setFlowCompletionConfigs(flowCompletionConfigs);
         flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
         client.updateFlowConfig(flowConfigDTO);
     }
