@@ -483,6 +483,22 @@
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint.war" />
 
+                                <!-- Ensure correct HTML lang attribute in authenticationendpoint pages -->
+                                <!-- Remove existing lang attribute on <html ...> to avoid duplicates -->
+                                <replaceregexp byline="false" flags="i" match="(\&lt;html)([^\&gt;]*?)\s+lang=\&quot;[^\&quot;]*\&quot;([^\&gt;]*?\&gt;)" replace="\1\2\3">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint">
+                                        <include name="**/*.jsp" />
+                                        <include name="**/*.html" />
+                                    </fileset>
+                                </replaceregexp>
+                                <!-- Inject dynamic lang using ui_locales (if present) or request locale -->
+                                <replaceregexp byline="false" flags="i" match="(\&lt;html)([^\&gt;]*?)\&gt;" replace="\1\2 lang=\&quot;\&lt;%=(request.getParameter(\&quot;ui_locales\&quot;)!=null?request.getParameter(\&quot;ui_locales\&quot;):request.getLocale().toLanguageTag())%\&gt;\&quot;\&gt;">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint">
+                                        <include name="**/*.jsp" />
+                                        <include name="**/*.html" />
+                                    </fileset>
+                                </replaceregexp>
+
                                 <!-- Explode the accounts.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accounts">
                                     <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
@@ -498,6 +514,22 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accountrecoveryendpoint.war" />
+
+                                <!-- Ensure correct HTML lang attribute in accountrecoveryendpoint pages -->
+                                <!-- Remove existing lang attribute on <html ...> to avoid duplicates -->
+                                <replaceregexp byline="false" flags="i" match="(\&lt;html)([^\&gt;]*?)\s+lang=\&quot;[^\&quot;]*\&quot;([^\&gt;]*?\&gt;)" replace="\1\2\3">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accountrecoveryendpoint">
+                                        <include name="**/*.jsp" />
+                                        <include name="**/*.html" />
+                                    </fileset>
+                                </replaceregexp>
+                                <!-- Inject dynamic lang using ui_locales (if present) or request locale -->
+                                <replaceregexp byline="false" flags="i" match="(\&lt;html)([^\&gt;]*?)\&gt;" replace="\1\2 lang=\&quot;\&lt;%=(request.getParameter(\&quot;ui_locales\&quot;)!=null?request.getParameter(\&quot;ui_locales\&quot;):request.getLocale().toLanguageTag())%\&gt;\&quot;\&gt;">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/accountrecoveryendpoint">
+                                        <include name="**/*.jsp" />
+                                        <include name="**/*.html" />
+                                    </fileset>
+                                </replaceregexp>
 
                                 <!-- Explode the x509certificateauthenticationendpoint.war -->
                                 <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/x509certificateauthenticationendpoint">
