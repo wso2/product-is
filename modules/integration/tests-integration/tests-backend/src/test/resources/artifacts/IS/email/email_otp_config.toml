@@ -3,7 +3,7 @@ hostname = "localhost"
 node_ip = "127.0.0.1"
 base_path = "https://$ref{server.hostname}:${carbon.management.port}"
 disable_addressing = true
-disable_admin_services = false
+enable_admin_services = true
 
 [super_admin]
 username = "admin"
