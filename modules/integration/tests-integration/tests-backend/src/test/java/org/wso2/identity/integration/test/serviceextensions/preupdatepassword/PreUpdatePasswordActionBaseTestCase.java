@@ -243,43 +243,35 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     protected String retrievePasswordResetURL(ApplicationResponseModel application) throws Exception {
 
-        List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-        urlParameters.add(new BasicNameValuePair("client_id", application.getClientId()));
-        urlParameters.add(new BasicNameValuePair("redirect_uri", APP_CALLBACK_URL));
-        urlParameters.add(new BasicNameValuePair("scope", "openid email profile"));
-        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
-
-        Header authorizeRequestURL = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        EntityUtils.consume(response.getEntity());
-
-        response = sendGetRequest(client, authorizeRequestURL.getValue());
-        String htmlContent = EntityUtils.toString(response.getEntity());
-        Document doc = Jsoup.parse(htmlContent);
-        Element link = doc.selectFirst("#passwordRecoverLink");
-        Assert.assertNotNull(link, "Password recovery link not found in the response.");
-        return link.attr("href");
+        return retrieveLinkFromAuthorizeFlow(application, "#passwordRecoverLink",
+                "Password recovery link not found in the response.");
     }
 
     protected String retrieveUserRegistrationURL(ApplicationResponseModel application) throws Exception {
 
+        return retrieveLinkFromAuthorizeFlow(application, "#registerLink",
+                "User registration link not found in the response.");
+    }
+
+    protected String retrieveLinkFromAuthorizeFlow(ApplicationResponseModel application, String cssSelector,
+                                                 String assertMessage) throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("client_id", application.getClientId()));
         urlParameters.add(new BasicNameValuePair("redirect_uri", APP_CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("scope", "openid email profile"));
+
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
-
         Header authorizeRequestURL = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         EntityUtils.consume(response.getEntity());
-
         response = sendGetRequest(client, authorizeRequestURL.getValue());
         String htmlContent = EntityUtils.toString(response.getEntity());
         Document doc = Jsoup.parse(htmlContent);
-        Element link = doc.selectFirst("#registerLink");
-        Assert.assertNotNull(link, "User registration link not found in the response.");
+        Element link = doc.selectFirst(cssSelector);
+        Assert.assertNotNull(link, assertMessage);
+
         return link.attr("href");
     }
 
