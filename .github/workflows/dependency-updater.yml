@@ -79,7 +79,7 @@ jobs:
           echo ""
           echo 'Updating dependencies'
           echo "=========================================================="
-          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*,org.wso2.carbon.multitenancy:*,org.wso2.carbon.registry:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
           echo ""
           echo 'Available updates'
           echo "=========================================================="
