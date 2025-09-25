@@ -2669,7 +2669,7 @@
         <authenticator.auth.otp.commons.version>1.0.22</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.0.35</identity.org.mgt.version>
-        <identity.org.mgt.core.version>1.1.56</identity.org.mgt.core.version>
+        <identity.org.mgt.core.version>1.1.57</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.52</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.31</identity.oauth2.grant.organizationswitch.version>
 
