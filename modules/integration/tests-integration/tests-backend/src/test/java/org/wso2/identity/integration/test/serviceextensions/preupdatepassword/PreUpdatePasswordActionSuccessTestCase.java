@@ -107,6 +107,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         userId = scim2RestClient.createUser(userInfo);
 
         updatePasswordRecoveryFeatureStatus(true);
+        updateSelfRegistrationStatus(true);
         enableAdminPasswordResetRecoveryEmailLink();
         updateAdminInitiatedPasswordResetEmailFeatureStatus(true);
 
@@ -118,8 +119,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
                 FileUtils.readFileInClassPathAsString("actions/response/pre-update-password-response.json"));
-        updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
-        addRegistrationFlow(flowManagementClient);
     }
 
     @BeforeMethod
@@ -133,6 +132,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     public void atEnd() throws Exception {
 
         updatePasswordRecoveryFeatureStatus(false);
+        updateSelfRegistrationStatus(false);
         updateAdminInitiatedPasswordResetEmailFeatureStatus(false);
 
         deleteAction(PRE_UPDATE_PASSWORD_API_PATH, actionId);
@@ -147,7 +147,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         serviceExtensionMockServer.stopServer();
         serviceExtensionMockServer = null;
-        updateFlowStatus(REGISTRATION_FLOW_TYPE, false);
     }
 
     @Test(description = "Verify the password update in self service portal with pre update password action")
@@ -330,11 +329,29 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
             description = "Verify the user initiated registration with pre update password action")
     public void testUserInitiatedRegistration() throws Exception {
 
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
+        addRegistrationFlow(flowManagementClient);
         flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
         assertTrue(executionResponseObj instanceof FlowExecutionResponse,
                 "Unexpected response type for flow execution.");
+
+        assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.REGISTER);
+        org.json.simple.JSONObject response = scim2RestClient.filterUsers("userName+eq+" + TEST_USER2_USERNAME);
+        JSONArray resources = (JSONArray) response.get("Resources");
+        String userId = ((org.json.simple.JSONObject) resources.get(0)).get("id").toString();
+        scim2RestClient.deleteUser(userId);
+        updateFlowStatus(REGISTRATION_FLOW_TYPE, false);
+    }
+
+    @Test(dependsOnMethods = "testUserInitiatedRegistration",
+            description = "Verify the user initiated self registration with pre update password action")
+    public void testUserInitiatedSelfRegistration() throws Exception {
+
+        String userRegistrationFormURL = retrieveUserRegistrationURL(application);
+        submitUserRegistrationForm(userRegistrationFormURL, TEST_USER2_USERNAME, TEST_USER_PASSWORD);
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
