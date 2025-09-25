@@ -326,8 +326,8 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     }
 
     @Test(dependsOnMethods = "testApplicationInitiatedUserRegistration",
-            description = "Verify the user initiated registration with pre update password action")
-    public void testUserInitiatedRegistration() throws Exception {
+            description = "Verify the user initiated self registration flow with pre update password action")
+    public void testUserRegistrationWithSelfRegistrationFlow() throws Exception {
 
         updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
         addRegistrationFlow(flowManagementClient);
@@ -346,7 +346,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         updateFlowStatus(REGISTRATION_FLOW_TYPE, false);
     }
 
-    @Test(dependsOnMethods = "testUserInitiatedRegistration",
+    @Test(dependsOnMethods = "testUserRegistrationWithSelfRegistrationFlow",
             description = "Verify the user initiated self registration with pre update password action")
     public void testUserInitiatedSelfRegistration() throws Exception {
 
