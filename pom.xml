@@ -2550,7 +2550,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.519</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.520</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2578,7 +2578,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.369</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.370</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.61</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.2</identity.inbound.auth.sts.version>
@@ -2619,7 +2619,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.2.22</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.21</social.authenticator.google.version>
+        <social.authenticator.google.version>5.2.22</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.5</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.0.9</social.authenticator.apple.version>
         <social.authenticator.github.version>1.1.17</social.authenticator.github.version>
@@ -2687,15 +2687,15 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.13</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
-	<identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.32</identity.oauth.addons.token.handler.clientauth.jwt.version>
+	<identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.33</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	<identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.30</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.27</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.84</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.79.12</identity.apps.console.version>
+        <identity.apps.console.version>2.79.16</identity.apps.console.version>
         <identity.apps.myaccount.version>2.25.5</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.3.10</identity.apps.core.version>
+        <identity.apps.core.version>3.3.12</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
