@@ -2659,7 +2659,7 @@
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.39</authenticator.smsotp.version>
-        <authenticator.magiclink.version>1.1.43</authenticator.magiclink.version>
+        <authenticator.magiclink.version>1.1.44</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.33</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.50</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.39</authenticator.local.auth.smsotp.version>
