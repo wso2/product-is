@@ -152,6 +152,18 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 "YWNjb3VudC1yZWNvdmVyeQ", connectorsPatchReq);
     }
 
+    protected void updateSelfRegistrationStatus(boolean enable) throws IOException {
+
+        ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
+        connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        PropertyReq propertyReq = new PropertyReq();
+        propertyReq.setName("SelfRegistration.Enable");
+        propertyReq.setValue(enable ? "true" : "false");
+        connectorsPatchReq.addProperties(propertyReq);
+        identityGovernanceRestClient.updateConnectors("VXNlciBPbmJvYXJkaW5n",
+                "c2VsZi1zaWduLXVw", connectorsPatchReq);
+    }
+
     protected void enableAdminPasswordResetRecoveryEmailLink() throws IOException {
 
         ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
@@ -231,22 +243,35 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     protected String retrievePasswordResetURL(ApplicationResponseModel application) throws Exception {
 
+        return retrieveLinkFromAuthorizeFlow(application, "#passwordRecoverLink",
+                "Password recovery link not found in the response.");
+    }
+
+    protected String retrieveUserRegistrationURL(ApplicationResponseModel application) throws Exception {
+
+        return retrieveLinkFromAuthorizeFlow(application, "#registerLink",
+                "User registration link not found in the response.");
+    }
+
+    protected String retrieveLinkFromAuthorizeFlow(ApplicationResponseModel application, String cssSelector,
+                                                 String assertMessage) throws Exception {
+
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("client_id", application.getClientId()));
         urlParameters.add(new BasicNameValuePair("redirect_uri", APP_CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("scope", "openid email profile"));
+
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
-
         Header authorizeRequestURL = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         EntityUtils.consume(response.getEntity());
-
         response = sendGetRequest(client, authorizeRequestURL.getValue());
         String htmlContent = EntityUtils.toString(response.getEntity());
         Document doc = Jsoup.parse(htmlContent);
-        Element link = doc.selectFirst("#passwordRecoverLink");
-        Assert.assertNotNull(link, "Password recovery link not found in the response.");
+        Element link = doc.selectFirst(cssSelector);
+        Assert.assertNotNull(link, assertMessage);
+
         return link.attr("href");
     }
 
@@ -279,6 +304,43 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
             throw new Exception("Error occurred while submitting the password reset form.");
         }
         EntityUtils.consume(postResponse.getEntity());
+    }
+
+    protected HttpResponse submitUserRegistrationForm(String url, String testUserName, String testUserPassword)
+            throws Exception {
+
+        HttpResponse response = sendGetRequest(client, url);
+        String htmlContent = EntityUtils.toString(response.getEntity());
+        Document doc = Jsoup.parse(htmlContent);
+
+        Element form = doc.selectFirst("#register");
+        String baseURL = url.substring(0, url.lastIndexOf('/') + 1);
+        Assert.assertNotNull(form, "User registration form not found in the response.");
+        String actionURL = null;
+        try {
+            actionURL = new URL(new URL(baseURL), form.attr("action")).toString();
+        } catch (Exception e) {
+            Assert.fail("Error while constructing action URL.", e);
+        }
+
+        List<NameValuePair> formParams = new ArrayList<>();
+        for (Element input : form.select("input")) {
+            String name = input.attr("name");
+            String value = input.attr("value");
+                if ("username".equals(name)) {
+                    value = testUserName;
+                }
+                if ("password".equals(name)) {
+                    value = testUserPassword;
+                }
+            formParams.add(new BasicNameValuePair(name, value));
+        }
+
+        HttpResponse postResponse = sendPostRequestWithParameters(client, formParams, actionURL);
+        if (postResponse.getStatusLine().getStatusCode() != 200) {
+            Assert.fail("Error occurred while submitting the user registration form.");
+        }
+        return postResponse;
     }
 
     protected String createPreUpdatePasswordAction(String actionName, String actionDescription) throws IOException {
