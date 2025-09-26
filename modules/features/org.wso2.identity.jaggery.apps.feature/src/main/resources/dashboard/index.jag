@@ -50,6 +50,7 @@
     <script src="<%=proxyContextPath%>/portal/themes/portal/js/shindig.js"></script>
     <script src="js/UESContainer.js"></script>
     <script src="js/portal-dashboard-designer.js"></script>
+    <script src="js/multi-attribute-enhancement.js"></script>
 
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
