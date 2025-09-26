@@ -400,11 +400,11 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         Error error = (Error) executeResponseObj;
         int expectedStatus = expectedPasswordUpdateResponse.getStatusCode();
         if (expectedStatus == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
-            assertEquals(error.getCode(), "FE-65008", "Unexpected error code in response.");
+            assertEquals(error.getCode(), "FEE-65001", "Unexpected error code in response.");
             assertEquals(error.getMessage(), "Error while onboarding user.",
                     "Unexpected error message in response.");
         } else if (expectedStatus == HttpServletResponse.SC_BAD_REQUEST) {
-            assertEquals(error.getCode(), "FE-60012", "Unexpected error code in response.");
+            assertEquals(error.getCode(), "FEE-60003", "Unexpected error code in response.");
             assertEquals(error.getMessage(), expectedPasswordUpdateResponse.getErrorMessage(),
                     "Unexpected error message in response.");
         }
