@@ -2722,7 +2722,7 @@
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
-        <securevault.wso2.version>1.1.12</securevault.wso2.version>
+        <securevault.wso2.version>1.1.13</securevault.wso2.version>
 
         <!-- Feature dependency Versions -->
         <stratos.version.221>2.2.1</stratos.version.221>
