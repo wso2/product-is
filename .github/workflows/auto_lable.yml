@@ -1,0 +1,90 @@
+name: Claude Code • Auto Label Issues
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  auto-label:
+    runs-on: ubuntu-latest
+    name: Auto-label issues for Claude processing
+    steps:        
+      - name: Install GitHub & Claude CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gh
+          npm install -g @anthropic-ai/claude-code
+    
+      - name: Classify issue via Claude API
+        env:
+            ANTHROPIC_API_KEY: ${{ secrets.DOC_FIXING_AGENT_ANTHROPIC_API_KEY }}
+            GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
+            ISSUE_NUMBER: ${{ github.event.issue.number }}
+            
+            ISSUE_TITLE: ${{ github.event.issue.title }}
+            ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+           # First check if the issue has the Type/Docs label
+           echo "Checking if issue has Type/Docs label..."
+           
+           LABELS=$(gh issue view $ISSUE_NUMBER --repo ${{ github.repository }} --json labels --jq '.labels[].name')
+           echo "Issue labels: $LABELS"
+           
+           # Check if Type/Docs label exists
+           if ! echo "$LABELS" | grep -q "Type/Docs"; then
+             echo "Issue does not have Type/Docs label. Skipping Claude classification."
+             exit 0
+           fi
+           
+           echo "Issue has Type/Docs label. Sending issue to Claude for classification..."
+
+            # Build JSON payload safely with jq to escape newlines/quotes
+            PROMPT="You are a GitHub issue classifier for documentation fixes. IMPORTANT: You can fix these specific types of issues:
+
+            1. broken-links - Links that are broken, dead, or pointing to wrong locations
+            2. spelling-mistakes - Spelling errors in documentation text
+            3. grammatical-errors - Grammar mistakes in documentation text  
+            4. formatting-issues - Documentation formatting problems like indentation errors, markdown formatting issues
+            5. suggestions - Documentation suggestions and improvements that include specific references or can be verified against project documentation for accuracy and validity
+
+            CRITICAL RULES:
+            - Read the issue title and body VERY carefully
+            - For suggestions/improvements: Look for specific references, links, or documentation sources provided
+            - Verify any provided references and cross-check against official project documentation
+            - Implement solutions with high accuracy based on verified references
+            - If suggestions include invalid references or contradict existing documentation, they will be labeled as AI-Agent/Cannot-Fix
+            - If the issue is requesting to add completely new documentation sections without clear basis, return 'none'
+            - If the issue is about functionality, code changes, or feature requests, return 'none'
+            - ONLY return a category name if the issue is EXACTLY about fixing one of the 5 specific problems listed above
+            - When in doubt, return 'none'
+
+            Return ONLY the category name (broken-links, spelling-mistakes, grammatical-errors, formatting-issues, suggestions) or 'none'.
+    
+            Title: $ISSUE_TITLE
+            Body: $ISSUE_BODY"
+
+                DATA=$(jq -n --arg prompt "$PROMPT" '{
+                model: "claude-3-5-sonnet-20240620",
+                max_tokens: 50,
+                messages: [{role: "user", content: $prompt}]
+                }')
+
+                # Call Claude API with required anthropic-version header
+                RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+                -H "Content-Type: application/json" \
+                -H "x-api-key: $ANTHROPIC_API_KEY" \
+                -H "anthropic-version: 2023-06-01" \
+                -d "$DATA")
+
+                echo "Claude response: $RESPONSE"
+
+                CATEGORY=$(echo "$RESPONSE" | jq -r '.content[0].text' | tr -d '\n' | tr '[:upper:]' '[:lower:]')
+                echo "Claude classified the issue as: $CATEGORY"
+
+                # Add claude:queue label if a valid category is returned
+                if [[ "$CATEGORY" != "" && "$CATEGORY" != "null" && "$CATEGORY" != "none" ]]; then
+                echo "Adding claude:queue label"
+                gh issue edit $ISSUE_NUMBER --add-label "AI-Agent/Queued" --repo ${{ github.repository }}
+                else
+                echo "No valid category returned. Not adding label."
+                fi
