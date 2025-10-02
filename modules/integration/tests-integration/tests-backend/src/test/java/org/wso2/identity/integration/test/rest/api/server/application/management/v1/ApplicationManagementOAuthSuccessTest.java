@@ -254,7 +254,7 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("idToken.idTokenSignedResponseAlg", equalTo("ES256"))
+                .body("idToken.idTokenSignedResponseAlg", equalTo("SHA256withRSA"))
                 .body("clientAuthentication.tokenEndpointAuthMethod", equalTo("tls_client_auth"))
                 .body("clientAuthentication.tlsClientAuthSubjectDn",
                         equalTo("CN=John Doe,OU=OrgUnit,O=Organization,L=Colombo,ST=Western,C=LK"))

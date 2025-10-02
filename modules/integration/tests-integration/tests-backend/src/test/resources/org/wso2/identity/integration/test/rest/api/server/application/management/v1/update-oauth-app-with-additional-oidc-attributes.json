@@ -23,7 +23,7 @@
     "audience": [
       "valid_audience_value"
     ],
-    "idTokenSignedResponseAlg": "ES256",
+    "idTokenSignedResponseAlg": "SHA256withRSA",
     "encryption": {
       "enabled": true,
       "algorithm": "RSA-OAEP",

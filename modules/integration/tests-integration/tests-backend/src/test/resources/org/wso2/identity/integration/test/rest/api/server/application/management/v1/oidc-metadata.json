@@ -146,7 +146,6 @@
     "options": [
       "Select Option",
       "PS256",
-      "ES256",
       "SHA256withRSA"
     ]
   },
