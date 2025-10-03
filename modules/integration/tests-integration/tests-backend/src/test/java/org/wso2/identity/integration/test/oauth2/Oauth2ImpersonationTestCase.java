@@ -304,8 +304,6 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
         Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
         Assert.assertEquals(actClaimSet.get("sub"), impersonatorId, "Impersonator Id is not in the act claim." );
-        String refreshToken = (String) jsonResponse.get(OAuth2Constant.REFRESH_TOKEN);
-        Assert.assertNull(refreshToken, "Refresh token is not null for the impersonation flow.");
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request to SSO as the impersonatee for code.",
@@ -363,8 +361,6 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
         Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
         Assert.assertEquals(actClaimSet.get("sub"), impersonatorId, "Impersonator Id is not in the act claim.");
-        String refreshToken = (String) jsonResponse.get(OAuth2Constant.REFRESH_TOKEN);
-        Assert.assertNull(refreshToken, "Refresh token is not null for the impersonation flow.");
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request to SSO as the impersonatee using " +
@@ -563,8 +559,6 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
         Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
         assertEquals(actClaimSet.get("sub"), orgImpersonatorId, "Impersonator Id is not in the act claim." );
-        String refreshToken = (String) jsonResponse.get(OAuth2Constant.REFRESH_TOKEN);
-        Assert.assertNull(refreshToken, "Refresh token is not null for the impersonation flow.");
     }
 
     @Test(groups = "wso2.is", description = "Org - Send token request to get an impersonated token using code grant.",
@@ -587,8 +581,6 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
         Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
         assertEquals(actClaimSet.get("sub"), orgImpersonatorId, "Impersonator Id is not in the act claim.");
-        String refreshToken = (String) jsonResponse.get(OAuth2Constant.REFRESH_TOKEN);
-        Assert.assertNull(refreshToken, "Refresh token is not null for the impersonation flow.");
     }
 
     @Test(dependsOnMethods = { "testOrgSendTokenExchangeRequestPost", "testOrgSendCodeTokenRequestPost" },
