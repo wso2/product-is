@@ -51,3 +51,6 @@ enable_authentication= true
 
 [identity_mgt.username_recovery.non_unique_user]
 enabled = true
+
+[encryption]
+key = "b6c063a725a668e6c24d60c99a12998c27bf5bf9ff065fd22f8888f482401a7b"

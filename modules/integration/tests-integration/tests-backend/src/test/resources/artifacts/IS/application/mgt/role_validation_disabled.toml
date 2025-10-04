@@ -41,3 +41,6 @@ app_password= "dashboard"
 
 [application_mgt]
 enable_role_validation = false
+
+[encryption]
+key = "b6c063a725a668e6c24d60c99a12998c27bf5bf9ff065fd22f8888f482401a7b"
