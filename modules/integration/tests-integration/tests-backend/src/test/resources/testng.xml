@@ -464,6 +464,10 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2TokenRenewalPerRequestTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.revocationvalidators.RevocationValidatorsSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.revocationvalidators.RevocationValidatorsFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.cacertificates.CACertificatesSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.cacertificates.CACertificatesFailureTest"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.ChallengeQuestionsUITestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>
