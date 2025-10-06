@@ -257,6 +257,33 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 //     }
 
     @Test(dependsOnMethods = "testApplicationUpdatePassword",
+            description = "Verify the user password recovery flow with pre update password action")
+    public void testUserResetPasswordWithPasswordRecoveryFlow() throws Exception {
+
+        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, true);
+        addPasswordRecoveryFlow(flowManagementClient);
+        flowExecutionClient.initiateFlowExecution(PASSWORD_RECOVERY_FLOW_TYPE);
+
+        FlowExecutionRequest step1Request = buildPasswordRecoveryFlowRequest();
+        FlowExecutionResponse step1Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step1Request);
+
+        String otpCode = getOTPFromEmail();
+        FlowExecutionRequest step2Request = buildOTPVerificationRequest(step1Response.getFlowId(), otpCode);
+        FlowExecutionResponse step2Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step2Request);
+
+        FlowExecutionRequest step3Request = buildPasswordResetRequest(step2Response.getFlowId());
+        Object step3ResponseObj = flowExecutionClient.executeFlow(step3Request);
+        assertTrue(step3ResponseObj instanceof FlowExecutionResponse,
+                "Unexpected response type for flow execution.");
+
+        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.RESET);
+        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
+    }
+
+    @Test(dependsOnMethods = "testUserResetPasswordWithPasswordRecoveryFlow",
             description = "Verify the user password set with pre update password action via offline invite link")
     public void testUserSetPasswordViaOfflineInviteLink() throws Exception {
 
@@ -286,6 +313,41 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     }
 
     @Test(dependsOnMethods = "testUserSetPasswordViaOfflineInviteLink",
+            description = "Verify admin invited user registration flow with pre update password action")
+    public void testAdminInvitedUserRegistrationFlow() throws Exception {
+
+        updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, true);
+        addInvitedUserRegistrationFlow(flowManagementClient);
+
+        UserObject adminInvitedUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL))
+                .scimSchemaExtensionSystem(new ScimSchemaExtensionSystem().askPassword(true));
+        String adminInvitedUserId = scim2RestClient.createUser(adminInvitedUserInfo);
+
+        Object initiationResponseObj = flowExecutionClient.initiateFlowExecution(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        FlowExecutionResponse initiationResponse = (FlowExecutionResponse) initiationResponseObj;
+        String flowId = initiationResponse.getFlowId();
+        String recoveryLink = getRecoveryURLFromEmail();
+        String confirmationCode = extractConfirmationCode(recoveryLink);
+
+        FlowExecutionRequest confirmationRequest = buildConfirmationRequest(flowId, confirmationCode);
+        flowExecutionClient.executeFlow(confirmationRequest);
+
+        FlowExecutionRequest passwordRequest = buildAdminInvitedUserRegistrationFlowRequest(flowId);
+        Object executionResponseObj = flowExecutionClient.executeFlow(passwordRequest);
+        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
+                "Unexpected response type for flow execution.");
+
+        assertActionRequestPayload(adminInvitedUserId, RESET_PASSWORD,
+                PreUpdatePasswordEvent.FlowInitiatorType.ADMIN, PreUpdatePasswordEvent.Action.INVITE);
+        scim2RestClient.deleteUser(adminInvitedUserId);
+        updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, false);
+    }
+
+    @Test(dependsOnMethods = "testAdminInvitedUserRegistrationFlow",
             description = "Verify the admin initiated user registration with pre update password action")
     public void testAdminInitiatedUserRegistration() throws Exception {
 
