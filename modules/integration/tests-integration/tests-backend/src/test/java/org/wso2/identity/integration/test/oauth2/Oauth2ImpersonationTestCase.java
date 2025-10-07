@@ -305,6 +305,39 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         Map<String, String>  actClaimSet = (Map) jwtClaimsSet.getClaim("act");
         Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
         Assert.assertEquals(actClaimSet.get("sub"), impersonatorId, "Impersonator Id is not in the act claim." );
+        String refreshToken = (String) jsonResponse.get(OAuth2Constant.REFRESH_TOKEN);
+        Assert.assertNotNull(jsonResponse.get(OAuth2Constant.REFRESH_TOKEN), "Refresh token is null.");
+        urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(GRANT_TYPE_KEY, OAUTH2_GRANT_TYPE_REFRESH_TOKEN));
+        urlParameters.add(new BasicNameValuePair(OAUTH2_GRANT_TYPE_REFRESH_TOKEN, refreshToken));
+
+        jsonResponse = responseObject(url, urlParameters, consumerKey, consumerSecret);
+        Assert.assertNotNull(jsonResponse.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
+        accessToken = (String) jsonResponse.get(OAuth2Constant.ACCESS_TOKEN);
+        jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
+        Assert.assertEquals(jwtClaimsSet.getSubject(), endUserId,
+                "Subject Id is not end user Id in the impersonation flow." );
+
+        actClaimSet = (Map) jwtClaimsSet.getClaim("act");
+        Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
+        Assert.assertEquals(actClaimSet.get("sub"), impersonatorId, "Impersonator Id is not in the act claim.");
+
+        refreshToken = (String) jsonResponse.get(OAuth2Constant.REFRESH_TOKEN);
+        Assert.assertNotNull(jsonResponse.get(OAuth2Constant.REFRESH_TOKEN), "Refresh token is null.");
+        urlParameters = new ArrayList<>();
+        urlParameters.add(new BasicNameValuePair(GRANT_TYPE_KEY, OAUTH2_GRANT_TYPE_REFRESH_TOKEN));
+        urlParameters.add(new BasicNameValuePair(OAUTH2_GRANT_TYPE_REFRESH_TOKEN, refreshToken));
+
+        jsonResponse = responseObject(url, urlParameters, consumerKey, consumerSecret);
+        Assert.assertNotNull(jsonResponse.get(OAuth2Constant.ACCESS_TOKEN), "Access token is null.");
+        accessToken = (String) jsonResponse.get(OAuth2Constant.ACCESS_TOKEN);
+        jwtClaimsSet = SignedJWT.parse(accessToken).getJWTClaimsSet();
+        Assert.assertEquals(jwtClaimsSet.getSubject(), endUserId,
+                "Subject Id is not end user Id in the impersonation flow." );
+
+        actClaimSet = (Map) jwtClaimsSet.getClaim("act");
+        Assert.assertNotNull(actClaimSet, "Act claim of impersonated access token is empty");
+        Assert.assertEquals(actClaimSet.get("sub"), impersonatorId, "Impersonator Id is not in the act claim.");
     }
 
     @Test(groups = "wso2.is", description = "Send authorize user request to SSO as the impersonatee for code.",
