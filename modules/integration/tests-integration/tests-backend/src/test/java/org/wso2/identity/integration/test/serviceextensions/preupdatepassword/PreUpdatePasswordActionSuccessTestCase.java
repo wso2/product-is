@@ -28,7 +28,6 @@ import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
-import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
 import org.wso2.identity.integration.test.serviceextensions.model.*;
@@ -257,6 +256,24 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 //     }
 
     @Test(dependsOnMethods = "testApplicationUpdatePassword",
+            description = "Verify the user password recovery flow with pre update password action")
+    public void testUserResetPasswordWithPasswordRecoveryFlow() throws Exception {
+
+        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, true);
+        addPasswordRecoveryFlow();
+
+        Object executionResponseObj = executePasswordRecoveryFlow();
+        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
+                "Expected FlowExecutionResponse for success flow.");
+        FlowExecutionResponse flowExecutionResponse = (FlowExecutionResponse) executionResponseObj;
+        assertNotNull(flowExecutionResponse, "Flow execution response cannot be null.");
+
+        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.RESET);
+        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
+    }
+
+    @Test(dependsOnMethods = "testUserResetPasswordWithPasswordRecoveryFlow",
             description = "Verify the user password set with pre update password action via offline invite link")
     public void testUserSetPasswordViaOfflineInviteLink() throws Exception {
 
@@ -286,6 +303,33 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     }
 
     @Test(dependsOnMethods = "testUserSetPasswordViaOfflineInviteLink",
+            description = "Verify admin invited user registration flow with pre update password action")
+    public void testSetPasswordWithInvitedUserRegistrationFlow() throws Exception {
+
+        updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, true);
+        addInvitedUserRegistrationFlow();
+
+        UserObject adminInvitedUserInfo = new UserObject()
+                .userName(TEST_USER2_USERNAME)
+                .password(TEST_USER_PASSWORD)
+                .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
+                .addEmail(new Email().value(TEST_USER_EMAIL))
+                .scimSchemaExtensionSystem(new ScimSchemaExtensionSystem().askPassword(true));
+        String adminInvitedUserId = scim2RestClient.createUser(adminInvitedUserInfo);
+
+        Object executionResponseObj = executeAdminInvitedUserRegistrationFlow();
+        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
+                "Expected FlowExecutionResponse for success flow.");
+        FlowExecutionResponse executionResponse = (FlowExecutionResponse) executionResponseObj;
+        assertNotNull(executionResponse, "Flow execution response cannot be null.");
+
+        assertActionRequestPayload(adminInvitedUserId, RESET_PASSWORD,
+                PreUpdatePasswordEvent.FlowInitiatorType.ADMIN, PreUpdatePasswordEvent.Action.INVITE);
+        scim2RestClient.deleteUser(adminInvitedUserId);
+        updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, false);
+    }
+
+    @Test(dependsOnMethods = "testSetPasswordWithInvitedUserRegistrationFlow",
             description = "Verify the admin initiated user registration with pre update password action")
     public void testAdminInitiatedUserRegistration() throws Exception {
 
@@ -330,7 +374,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     public void testUserRegistrationWithSelfRegistrationFlow() throws Exception {
 
         updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
-        addRegistrationFlow(flowManagementClient);
+        addRegistrationFlow();
         flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);

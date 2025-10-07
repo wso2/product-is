@@ -45,6 +45,7 @@ import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
@@ -67,6 +68,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
@@ -104,7 +107,12 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     protected static final String REGISTRATION_FLOW =
             "/org/wso2/identity/integration/test/rest/api/server/flow/execution/v1/registration-flow.json";
+    protected static final String PASSWORD_RECOVERY_FLOW = "/actions/flowexecution/password-recovery-flow.json";
+    protected static final String INVITED_USER_REGISTRATION_FLOW =
+            "/actions/flowexecution/invited-user-registration-flow.json";
     protected static final String REGISTRATION_FLOW_TYPE = "REGISTRATION";
+    protected static final String PASSWORD_RECOVERY_FLOW_TYPE = "PASSWORD_RECOVERY";
+    protected static final String INVITED_USER_REGISTRATION_FLOW_TYPE = "INVITED_USER_REGISTRATION";
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -239,6 +247,21 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         Document doc = Jsoup.parse(body);
 
         return doc.selectFirst("#bodyCell").selectFirst("a").attr("href");
+    }
+
+    protected String getOTPFromEmail() {
+
+        Assert.assertTrue(org.wso2.identity.integration.test.util.Utils.getMailServer().waitForIncomingEmail(10000, 1));
+        Message[] messages = org.wso2.identity.integration.test.util.Utils.getMailServer().getReceivedMessages();
+        String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
+        String otpPattern = "\\s*<b>(\\d+)</b>";
+        Pattern pattern = Pattern.compile(otpPattern);
+        Matcher matcher = pattern.matcher(body);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
     }
 
     protected String retrievePasswordResetURL(ApplicationResponseModel application) throws Exception {
@@ -401,12 +424,26 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         flowManagementClient.updateFlowConfig(flowConfigDTO);
     }
 
-    protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
+    private void addFlow(String flowResourcePath) throws Exception {
 
-        String registrationFlowRequestJson = readResource(REGISTRATION_FLOW, this.getClass());
-        FlowRequest flowRequest = new ObjectMapper()
-                .readValue(registrationFlowRequestJson, FlowRequest.class);
-        client.putFlow(flowRequest);
+        String flowRequestJson = readResource(flowResourcePath, this.getClass());
+        FlowRequest flowRequest = new ObjectMapper().readValue(flowRequestJson, FlowRequest.class);
+        flowManagementClient.putFlow(flowRequest);
+    }
+
+    protected void addRegistrationFlow() throws Exception {
+
+        addFlow(REGISTRATION_FLOW);
+    }
+
+    protected void addPasswordRecoveryFlow() throws Exception {
+
+        addFlow(PASSWORD_RECOVERY_FLOW);
+    }
+
+    protected void addInvitedUserRegistrationFlow() throws Exception {
+
+        addFlow(INVITED_USER_REGISTRATION_FLOW);
     }
 
     protected FlowExecutionRequest buildUserRegistrationFlowRequest() {
@@ -424,5 +461,117 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
         flowExecutionRequest.setInputs(inputs);
         return flowExecutionRequest;
+    }
+
+    protected Object executePasswordRecoveryFlow() throws Exception {
+
+        flowExecutionClient.initiateFlowExecution(PASSWORD_RECOVERY_FLOW_TYPE);
+        FlowExecutionRequest step1Request = buildPasswordRecoveryFlowRequest();
+        FlowExecutionResponse step1Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step1Request);
+
+        String otpCode = getOTPFromEmail();
+        FlowExecutionRequest step2Request = buildOTPVerificationRequest(step1Response.getFlowId(), otpCode);
+        FlowExecutionResponse step2Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step2Request);
+
+        FlowExecutionRequest step3Request = buildPasswordResetRequest(step2Response.getFlowId());
+
+        return flowExecutionClient.executeFlow(step3Request);
+    }
+
+    private FlowExecutionRequest buildPasswordRecoveryFlowRequest() {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_1ov4");
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("http://wso2.org/claims/username", TEST_USER1_USERNAME);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    private FlowExecutionRequest buildOTPVerificationRequest(String flowId, String otpCode) {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_yzph");
+        flowExecutionRequest.setFlowId(flowId);
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("otp", otpCode);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    private FlowExecutionRequest buildPasswordResetRequest(String flowId) {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_x19f");
+        flowExecutionRequest.setFlowId(flowId);
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("password", RESET_PASSWORD);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    protected Object executeAdminInvitedUserRegistrationFlow() throws Exception {
+
+        Object initiationResponseObj = flowExecutionClient.initiateFlowExecution(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        FlowExecutionResponse initiationResponse = (FlowExecutionResponse) initiationResponseObj;
+        String flowId = initiationResponse.getFlowId();
+
+        String recoveryLink = getRecoveryURLFromEmail();
+        String confirmationCode = extractConfirmationCode(recoveryLink);
+
+        FlowExecutionRequest confirmationRequest = buildConfirmationRequest(flowId, confirmationCode);
+        flowExecutionClient.executeFlow(confirmationRequest);
+
+        FlowExecutionRequest passwordRequest = buildAdminInvitedUserRegistrationFlowRequest(flowId);
+
+        return flowExecutionClient.executeFlow(passwordRequest);
+    }
+
+    private FlowExecutionRequest buildAdminInvitedUserRegistrationFlowRequest(String flowId) {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(INVITED_USER_REGISTRATION_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_72ry");
+        flowExecutionRequest.setFlowId(flowId);
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("password", RESET_PASSWORD);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    private FlowExecutionRequest buildConfirmationRequest(String flowId, String confirmationCode) {
+
+        FlowExecutionRequest confirmationRequest = new FlowExecutionRequest();
+        confirmationRequest.setFlowType(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        confirmationRequest.setFlowId(flowId);
+
+        Map<String, String> confirmationInputs = new HashMap<>();
+        confirmationInputs.put("confirmationCode", confirmationCode);
+        confirmationRequest.setInputs(confirmationInputs);
+
+        return confirmationRequest;
+    }
+
+    private String extractConfirmationCode(String recoveryLink) {
+
+        Pattern pattern = Pattern.compile("confirmation=([^&]+)");
+        Matcher matcher = pattern.matcher(recoveryLink);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        throw new IllegalArgumentException("Confirmation code not found in recovery link.");
     }
 }
