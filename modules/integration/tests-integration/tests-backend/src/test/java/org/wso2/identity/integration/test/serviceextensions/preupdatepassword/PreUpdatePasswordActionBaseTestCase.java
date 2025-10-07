@@ -480,7 +480,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return flowExecutionClient.executeFlow(step3Request);
     }
 
-    protected FlowExecutionRequest buildPasswordRecoveryFlowRequest() {
+    private FlowExecutionRequest buildPasswordRecoveryFlowRequest() {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
@@ -493,7 +493,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return flowExecutionRequest;
     }
 
-    protected FlowExecutionRequest buildOTPVerificationRequest(String flowId, String otpCode) {
+    private FlowExecutionRequest buildOTPVerificationRequest(String flowId, String otpCode) {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
@@ -507,7 +507,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return flowExecutionRequest;
     }
 
-    protected FlowExecutionRequest buildPasswordResetRequest(String flowId) {
+    private FlowExecutionRequest buildPasswordResetRequest(String flowId) {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
@@ -538,7 +538,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return flowExecutionClient.executeFlow(passwordRequest);
     }
 
-    protected FlowExecutionRequest buildAdminInvitedUserRegistrationFlowRequest(String flowId) {
+    private FlowExecutionRequest buildAdminInvitedUserRegistrationFlowRequest(String flowId) {
 
         FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
         flowExecutionRequest.setFlowType(INVITED_USER_REGISTRATION_FLOW_TYPE);
@@ -552,7 +552,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return flowExecutionRequest;
     }
 
-    protected FlowExecutionRequest buildConfirmationRequest(String flowId, String confirmationCode) {
+    private FlowExecutionRequest buildConfirmationRequest(String flowId, String confirmationCode) {
 
         FlowExecutionRequest confirmationRequest = new FlowExecutionRequest();
         confirmationRequest.setFlowType(INVITED_USER_REGISTRATION_FLOW_TYPE);
@@ -565,7 +565,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return confirmationRequest;
     }
 
-    protected String extractConfirmationCode(String recoveryLink) {
+    private String extractConfirmationCode(String recoveryLink) {
 
         Pattern pattern = Pattern.compile("confirmation=([^&]+)");
         Matcher matcher = pattern.matcher(recoveryLink);

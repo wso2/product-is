@@ -28,7 +28,6 @@ import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
-import org.wso2.identity.integration.test.restclients.*;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
 import org.wso2.identity.integration.test.serviceextensions.model.*;
@@ -266,8 +265,8 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         Object executionResponseObj = executePasswordRecoveryFlow();
         assertTrue(executionResponseObj instanceof FlowExecutionResponse,
                 "Expected FlowExecutionResponse for success flow.");
-        FlowExecutionResponse step3Response = (FlowExecutionResponse) executionResponseObj;
-        assertNotNull(step3Response, "Flow execution response cannot be null.");
+        FlowExecutionResponse flowExecutionResponse = (FlowExecutionResponse) executionResponseObj;
+        assertNotNull(flowExecutionResponse, "Flow execution response cannot be null.");
 
         assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.RESET);
@@ -305,7 +304,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 
     @Test(dependsOnMethods = "testUserSetPasswordViaOfflineInviteLink",
             description = "Verify admin invited user registration flow with pre update password action")
-    public void testAdminInvitedUserRegistrationFlow() throws Exception {
+    public void testSetPasswordWithInvitedUserRegistrationFlow() throws Exception {
 
         updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, true);
         addInvitedUserRegistrationFlow();
@@ -330,7 +329,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, false);
     }
 
-    @Test(dependsOnMethods = "testAdminInvitedUserRegistrationFlow",
+    @Test(dependsOnMethods = "testSetPasswordWithInvitedUserRegistrationFlow",
             description = "Verify the admin initiated user registration with pre update password action")
     public void testAdminInitiatedUserRegistration() throws Exception {
 
