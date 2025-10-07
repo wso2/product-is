@@ -45,6 +45,7 @@ import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
@@ -423,26 +424,26 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         flowManagementClient.updateFlowConfig(flowConfigDTO);
     }
 
-    protected void addFlow(FlowManagementClient client, String flowResourcePath) throws Exception {
+    private void addFlow(String flowResourcePath) throws Exception {
 
         String flowRequestJson = readResource(flowResourcePath, this.getClass());
         FlowRequest flowRequest = new ObjectMapper().readValue(flowRequestJson, FlowRequest.class);
-        client.putFlow(flowRequest);
+        flowManagementClient.putFlow(flowRequest);
     }
 
-    protected void addRegistrationFlow(FlowManagementClient client) throws Exception {
+    protected void addRegistrationFlow() throws Exception {
 
-        addFlow(client, REGISTRATION_FLOW);
+        addFlow(REGISTRATION_FLOW);
     }
 
-    protected void addPasswordRecoveryFlow(FlowManagementClient client) throws Exception {
+    protected void addPasswordRecoveryFlow() throws Exception {
 
-        addFlow(client, PASSWORD_RECOVERY_FLOW);
+        addFlow(PASSWORD_RECOVERY_FLOW);
     }
 
-    protected void addInvitedUserRegistrationFlow(FlowManagementClient client) throws Exception {
+    protected void addInvitedUserRegistrationFlow() throws Exception {
 
-        addFlow(client, INVITED_USER_REGISTRATION_FLOW);
+        addFlow(INVITED_USER_REGISTRATION_FLOW);
     }
 
     protected FlowExecutionRequest buildUserRegistrationFlowRequest() {
@@ -460,6 +461,23 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
         flowExecutionRequest.setInputs(inputs);
         return flowExecutionRequest;
+    }
+
+    protected Object executePasswordRecoveryFlow() throws Exception {
+
+        flowExecutionClient.initiateFlowExecution(PASSWORD_RECOVERY_FLOW_TYPE);
+        FlowExecutionRequest step1Request = buildPasswordRecoveryFlowRequest();
+        FlowExecutionResponse step1Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step1Request);
+
+        String otpCode = getOTPFromEmail();
+        FlowExecutionRequest step2Request = buildOTPVerificationRequest(step1Response.getFlowId(), otpCode);
+        FlowExecutionResponse step2Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step2Request);
+
+        FlowExecutionRequest step3Request = buildPasswordResetRequest(step2Response.getFlowId());
+
+        return flowExecutionClient.executeFlow(step3Request);
     }
 
     protected FlowExecutionRequest buildPasswordRecoveryFlowRequest() {
@@ -501,6 +519,23 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         flowExecutionRequest.setInputs(inputs);
 
         return flowExecutionRequest;
+    }
+
+    protected Object executeAdminInvitedUserRegistrationFlow() throws Exception {
+
+        Object initiationResponseObj = flowExecutionClient.initiateFlowExecution(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        FlowExecutionResponse initiationResponse = (FlowExecutionResponse) initiationResponseObj;
+        String flowId = initiationResponse.getFlowId();
+
+        String recoveryLink = getRecoveryURLFromEmail();
+        String confirmationCode = extractConfirmationCode(recoveryLink);
+
+        FlowExecutionRequest confirmationRequest = buildConfirmationRequest(flowId, confirmationCode);
+        flowExecutionClient.executeFlow(confirmationRequest);
+
+        FlowExecutionRequest passwordRequest = buildAdminInvitedUserRegistrationFlowRequest(flowId);
+
+        return flowExecutionClient.executeFlow(passwordRequest);
     }
 
     protected FlowExecutionRequest buildAdminInvitedUserRegistrationFlowRequest(String flowId) {

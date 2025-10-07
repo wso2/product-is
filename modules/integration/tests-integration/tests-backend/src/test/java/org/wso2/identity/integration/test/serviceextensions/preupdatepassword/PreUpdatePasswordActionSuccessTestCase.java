@@ -261,22 +261,13 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     public void testUserResetPasswordWithPasswordRecoveryFlow() throws Exception {
 
         updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, true);
-        addPasswordRecoveryFlow(flowManagementClient);
-        flowExecutionClient.initiateFlowExecution(PASSWORD_RECOVERY_FLOW_TYPE);
+        addPasswordRecoveryFlow();
 
-        FlowExecutionRequest step1Request = buildPasswordRecoveryFlowRequest();
-        FlowExecutionResponse step1Response =
-                (FlowExecutionResponse) flowExecutionClient.executeFlow(step1Request);
-
-        String otpCode = getOTPFromEmail();
-        FlowExecutionRequest step2Request = buildOTPVerificationRequest(step1Response.getFlowId(), otpCode);
-        FlowExecutionResponse step2Response =
-                (FlowExecutionResponse) flowExecutionClient.executeFlow(step2Request);
-
-        FlowExecutionRequest step3Request = buildPasswordResetRequest(step2Response.getFlowId());
-        Object step3ResponseObj = flowExecutionClient.executeFlow(step3Request);
-        assertTrue(step3ResponseObj instanceof FlowExecutionResponse,
-                "Unexpected response type for flow execution.");
+        Object executionResponseObj = executePasswordRecoveryFlow();
+        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
+                "Expected FlowExecutionResponse for success flow.");
+        FlowExecutionResponse step3Response = (FlowExecutionResponse) executionResponseObj;
+        assertNotNull(step3Response, "Flow execution response cannot be null.");
 
         assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.RESET);
@@ -317,7 +308,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     public void testAdminInvitedUserRegistrationFlow() throws Exception {
 
         updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, true);
-        addInvitedUserRegistrationFlow(flowManagementClient);
+        addInvitedUserRegistrationFlow();
 
         UserObject adminInvitedUserInfo = new UserObject()
                 .userName(TEST_USER2_USERNAME)
@@ -327,19 +318,11 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 .scimSchemaExtensionSystem(new ScimSchemaExtensionSystem().askPassword(true));
         String adminInvitedUserId = scim2RestClient.createUser(adminInvitedUserInfo);
 
-        Object initiationResponseObj = flowExecutionClient.initiateFlowExecution(INVITED_USER_REGISTRATION_FLOW_TYPE);
-        FlowExecutionResponse initiationResponse = (FlowExecutionResponse) initiationResponseObj;
-        String flowId = initiationResponse.getFlowId();
-        String recoveryLink = getRecoveryURLFromEmail();
-        String confirmationCode = extractConfirmationCode(recoveryLink);
-
-        FlowExecutionRequest confirmationRequest = buildConfirmationRequest(flowId, confirmationCode);
-        flowExecutionClient.executeFlow(confirmationRequest);
-
-        FlowExecutionRequest passwordRequest = buildAdminInvitedUserRegistrationFlowRequest(flowId);
-        Object executionResponseObj = flowExecutionClient.executeFlow(passwordRequest);
+        Object executionResponseObj = executeAdminInvitedUserRegistrationFlow();
         assertTrue(executionResponseObj instanceof FlowExecutionResponse,
-                "Unexpected response type for flow execution.");
+                "Expected FlowExecutionResponse for success flow.");
+        FlowExecutionResponse executionResponse = (FlowExecutionResponse) executionResponseObj;
+        assertNotNull(executionResponse, "Flow execution response cannot be null.");
 
         assertActionRequestPayload(adminInvitedUserId, RESET_PASSWORD,
                 PreUpdatePasswordEvent.FlowInitiatorType.ADMIN, PreUpdatePasswordEvent.Action.INVITE);
@@ -392,7 +375,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
     public void testUserRegistrationWithSelfRegistrationFlow() throws Exception {
 
         updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
-        addRegistrationFlow(flowManagementClient);
+        addRegistrationFlow();
         flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
         FlowExecutionRequest flowExecutionRequest = buildUserRegistrationFlowRequest();
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
