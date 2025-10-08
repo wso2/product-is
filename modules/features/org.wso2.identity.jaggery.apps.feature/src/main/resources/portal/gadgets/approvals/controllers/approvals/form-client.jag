@@ -24,6 +24,28 @@ var cookie = request.getParameter("cookie");
 var id = request.getParameter("id");
 var user = request.getParameter("user");
 var endPoint = request.getParameter("endPoint");
+
+function formatISODate(isoDateString) {
+    if (!isoDateString) {
+        return "";
+    }
+    var date = new Date(isoDateString);
+    if (isNaN(date.getTime())) {
+        return isoDateString; // Return original string if it's not a valid date
+    }
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var year = date.getFullYear();
+    var month = months[date.getMonth()];
+    var day = date.getDate();
+    var hour = date.getHours();
+    var min = date.getMinutes();
+    var ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12;
+    hour = hour ? hour : 12; // the hour '0' should be '12'
+    min = min < 10 ? '0' + min : min;
+    return month + ' ' + day + ', ' + year + ' ' + hour + ':' + min + ' ' + ampm;
+}
+
 accessService();
 function accessService() {
     session.put('auth-cookie', cookie);
@@ -43,6 +65,23 @@ function accessService() {
             version.send(payload);
             result = E4XtoJSON(version.responseE4X);
             result = new XML(result.taskData);
+
+            var ht_ns = new Namespace("http://ht.bpel.mgt.workflow.identity.carbon.wso2.org/wsdl/schema");
+            var nodes = result.*::["xsd-complex-type-wrapper"];
+
+            for (var i = 0; i < nodes.length(); i++) {
+                var node = nodes[i];
+                var itemName = node.attribute(ht_ns::itemName).toString();
+
+                if (itemName === "Created Time" || itemName === "Last Modified Time") {
+                    var timestamp = node.toString();
+                    if (timestamp) {
+                        var formattedDate = formatISODate(timestamp);
+                        node.setChildren(formattedDate);
+                    }
+                }
+            }
+
         } catch (e) {
             log.error(e.toString());
             return e.toString();
