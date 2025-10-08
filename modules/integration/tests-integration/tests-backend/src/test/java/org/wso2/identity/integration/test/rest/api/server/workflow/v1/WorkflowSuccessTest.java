@@ -63,7 +63,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     private String createdRoleName;
     private String createdRoleId;
 
-    private static final String APPROVAL_API_PATH = "/api/users/v1/me/approval-tasks";
+    private static final String APPROVAL_API_PATH = "/api/users/v2/me/approval-tasks";
     private static final String USER_SEARCH_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:SearchRequest";
 
 
