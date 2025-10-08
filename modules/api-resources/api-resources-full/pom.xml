@@ -478,7 +478,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
-            <artifactId>org.wso2.carbon.identity.rest.api.user.approval.v1</artifactId>
+            <artifactId>org.wso2.carbon.identity.rest.api.user.approval.v2</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.user.api</groupId>
