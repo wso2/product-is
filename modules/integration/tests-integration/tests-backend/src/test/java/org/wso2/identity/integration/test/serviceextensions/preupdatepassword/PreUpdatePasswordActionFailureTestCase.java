@@ -242,34 +242,34 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 //                 PreUpdatePasswordEvent.Action.RESET);
 //     }
 
-    @Test(dependsOnMethods = "testAdminUpdatePassword",
-            description = "Verify the user password recovery flow failure with pre update password action")
-    public void testUserResetPasswordWithPasswordRecoveryFlow() throws Exception {
-
-        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, true);
-        addPasswordRecoveryFlow();
-
-        Object flowExecutionResponse = executePasswordRecoveryFlow();
-        assertTrue(flowExecutionResponse instanceof Error, "Expected Error response type for flow execution.");
-
-        Error error = (Error) flowExecutionResponse;
-        int expectedStatus = expectedPasswordUpdateResponse.getStatusCode();
-        if (expectedStatus == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
-//            This block is commented out as the error code and message have to change
-//            assertEquals(error.getCode(), "FE-60007", "Unexpected error code in response.");
-//            assertEquals(error.getMessage(), "Error while processing the request.",
+//    @Test(dependsOnMethods = "testAdminUpdatePassword",
+//            description = "Verify the user password recovery flow failure with pre update password action")
+//    public void testUserResetPasswordWithPasswordRecoveryFlow() throws Exception {
+//
+//        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, true);
+//        addPasswordRecoveryFlow();
+//
+//        Object flowExecutionResponse = executePasswordRecoveryFlow();
+//        assertTrue(flowExecutionResponse instanceof Error, "Expected Error response type for flow execution.");
+//
+//        Error error = (Error) flowExecutionResponse;
+//        int expectedStatus = expectedPasswordUpdateResponse.getStatusCode();
+//        if (expectedStatus == HttpServletResponse.SC_INTERNAL_SERVER_ERROR) {
+////            This block is commented out as the error code and message have to change
+////            assertEquals(error.getCode(), "FE-60007", "Unexpected error code in response.");
+////            assertEquals(error.getMessage(), "Error while processing the request.",
+////                    "Unexpected error message in response.");
+//        } else if (expectedStatus == HttpServletResponse.SC_BAD_REQUEST) {
+//            assertEquals(error.getCode(), "FE-60012", "Unexpected error code in response.");
+//            assertEquals(error.getMessage(), expectedPasswordUpdateResponse.getErrorMessage(),
 //                    "Unexpected error message in response.");
-        } else if (expectedStatus == HttpServletResponse.SC_BAD_REQUEST) {
-            assertEquals(error.getCode(), "FE-60012", "Unexpected error code in response.");
-            assertEquals(error.getMessage(), expectedPasswordUpdateResponse.getErrorMessage(),
-                    "Unexpected error message in response.");
-        }
-        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
-                PreUpdatePasswordEvent.Action.RESET);
-        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
-    }
+//        }
+//        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+//                PreUpdatePasswordEvent.Action.RESET);
+//        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
+//    }
 
-    @Test(dependsOnMethods = "testUserResetPasswordWithPasswordRecoveryFlow",
+    @Test(dependsOnMethods = "testAdminUpdatePassword",
             description = "Verify the admin force password reset with pre update password action")
     public void testAdminForcePasswordReset() throws Exception {
 

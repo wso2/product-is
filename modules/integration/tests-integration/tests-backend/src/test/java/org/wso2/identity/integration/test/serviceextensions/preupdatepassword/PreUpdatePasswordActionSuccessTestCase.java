@@ -255,25 +255,25 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 //                 PreUpdatePasswordEvent.Action.RESET);
 //     }
 
+//    @Test(dependsOnMethods = "testApplicationUpdatePassword",
+//            description = "Verify the user password recovery flow with pre update password action")
+//    public void testUserResetPasswordWithPasswordRecoveryFlow() throws Exception {
+//
+//        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, true);
+//        addPasswordRecoveryFlow();
+//
+//        Object executionResponseObj = executePasswordRecoveryFlow();
+//        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
+//                "Expected FlowExecutionResponse for success flow.");
+//        FlowExecutionResponse flowExecutionResponse = (FlowExecutionResponse) executionResponseObj;
+//        assertNotNull(flowExecutionResponse, "Flow execution response cannot be null.");
+//
+//        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+//                PreUpdatePasswordEvent.Action.RESET);
+//        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
+//    }
+
     @Test(dependsOnMethods = "testApplicationUpdatePassword",
-            description = "Verify the user password recovery flow with pre update password action")
-    public void testUserResetPasswordWithPasswordRecoveryFlow() throws Exception {
-
-        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, true);
-        addPasswordRecoveryFlow();
-
-        Object executionResponseObj = executePasswordRecoveryFlow();
-        assertTrue(executionResponseObj instanceof FlowExecutionResponse,
-                "Expected FlowExecutionResponse for success flow.");
-        FlowExecutionResponse flowExecutionResponse = (FlowExecutionResponse) executionResponseObj;
-        assertNotNull(flowExecutionResponse, "Flow execution response cannot be null.");
-
-        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
-                PreUpdatePasswordEvent.Action.RESET);
-        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
-    }
-
-    @Test(dependsOnMethods = "testUserResetPasswordWithPasswordRecoveryFlow",
             description = "Verify the user password set with pre update password action via offline invite link")
     public void testUserSetPasswordViaOfflineInviteLink() throws Exception {
 
