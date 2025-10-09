@@ -274,6 +274,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.PreUpdateProfileActionSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.PreUpdateProfileActionFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.WebhookManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.WebhookManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
