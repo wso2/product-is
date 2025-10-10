@@ -2550,7 +2550,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.559</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.562</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2593,7 +2593,7 @@
         <identity.userstore.remote.version>5.2.5</identity.userstore.remote.version>
 
         <!-- Identity Data Publisher Versions -->
-        <identity.data.publisher.authentication.version>5.7.7</identity.data.publisher.authentication.version>
+        <identity.data.publisher.authentication.version>5.7.8</identity.data.publisher.authentication.version>
         <identity.data.publisher.oauth.version>1.7.4</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.8</identity.data.publisher.audit.version>
 
