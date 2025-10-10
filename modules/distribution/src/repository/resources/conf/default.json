@@ -74,7 +74,7 @@
   "legacy_authz_runtime.enable": false,
   "management_console_deprecation_banner.enable": true,
 
-  "console.doc_site_path": "https://is.docs.wso2.com/en/latest",
+  "console.doc_site_path": "https://is.docs.wso2.com/en/7.2.0",
 
   "admin_service.deny_list": [
     "CarbonAppUploader",
