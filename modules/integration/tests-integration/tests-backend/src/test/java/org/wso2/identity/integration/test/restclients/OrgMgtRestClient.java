@@ -361,7 +361,8 @@ public class OrgMgtRestClient extends RestBaseClient {
 
             String apiUUID;
             try (CloseableHttpResponse apiResourceResponse = getResponseOfHttpGet(
-                    apiResourceManagementApiBasePath + "?filter=identifier+eq+" + apiName,
+                    apiResourceManagementApiBasePath + "?filter=identifier+eq+" + 
+                            URLEncoder.encode(apiName, "UTF-8"),
                     getHeaders())) {
                 JSONObject apiResourceResponseBody =
                         new JSONObject(EntityUtils.toString(apiResourceResponse.getEntity()));

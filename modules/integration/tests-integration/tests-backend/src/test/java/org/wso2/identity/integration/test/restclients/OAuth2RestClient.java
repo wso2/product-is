@@ -26,6 +26,7 @@ import io.restassured.http.ContentType;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -241,8 +242,8 @@ public class OAuth2RestClient extends RestBaseClient {
      */
     public List<ApplicationListItem> getApplicationsByClientId(String clientId) throws IOException {
 
-        String endPointUrl = applicationManagementApiBasePath + "?filter=clientId eq " + clientId;
-        endPointUrl = endPointUrl.replace(" ", "%20");
+        String endPointUrl = applicationManagementApiBasePath + "?filter=clientId+eq+" + 
+                URLEncoder.encode(clientId, StandardCharsets.UTF_8);
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
@@ -277,8 +278,7 @@ public class OAuth2RestClient extends RestBaseClient {
 
         String endPointUrl = (switchedM2MToken != null
                 ? subOrgApplicationManagementApiBasePath : applicationManagementApiBasePath) +
-                "?filter=name eq " + appName;
-        endPointUrl = endPointUrl.replace(" ", "%20");
+                "?filter=name+eq+" + URLEncoder.encode(appName, StandardCharsets.UTF_8);
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
                 switchedM2MToken != null ? getHeadersWithBearerToken(switchedM2MToken) : getHeaders())) {
@@ -998,19 +998,19 @@ public class OAuth2RestClient extends RestBaseClient {
 
         StringBuilder filter = new StringBuilder(roleV2ApiBasePath + "?");
         if (StringUtils.isNotBlank(roleName)) {
-            filter.append("filter=displayName+eq+").append(roleName);
+            filter.append("filter=displayName+eq+").append(URLEncoder.encode(roleName, StandardCharsets.UTF_8));
         }
         if (StringUtils.isNotBlank(audienceType)) {
             if (filter.length() > 0) {
                 filter.append("+and+");
             }
-            filter.append("audience.type+eq+").append(audienceType);
+            filter.append("audience.type+eq+").append(URLEncoder.encode(audienceType, StandardCharsets.UTF_8));
         }
         if (StringUtils.isNotBlank(audienceId)) {
             if (filter.length() > 0) {
                 filter.append("+and+");
             }
-            filter.append("audience.id+eq+").append(audienceId);
+            filter.append("audience.id+eq+").append(URLEncoder.encode(audienceId, StandardCharsets.UTF_8));
         }
         // If no parameters were provided, return the base URL.
         if (filter.toString().equals(roleV2ApiBasePath + "?")) {
