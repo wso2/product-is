@@ -537,6 +537,10 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.hash.provider.pbkdf2:org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature:${hashprovider.pbkdf2.version}
                                 </featureArtifactDef>
+                                <!-- BCRYPT feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.hash.provider.bcrypt:org.wso2.carbon.identity.hash.provider.bcrypt.server.feature:${hashprovider.bcrypt.version}
+                                </featureArtifactDef>
                                 <!-- Central Logger (osgi service impl)feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.central.log.mgt.server.feature:${carbon.identity.framework.version}
@@ -1163,6 +1167,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.hash.provider.pbkdf2.server.feature.group</id>
                                     <version>${hashprovider.pbkdf2.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.hash.provider.bcrypt.server.feature.group</id>
+                                    <version>${hashprovider.bcrypt.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.branding.preference.management.core.server.feature.group</id>
