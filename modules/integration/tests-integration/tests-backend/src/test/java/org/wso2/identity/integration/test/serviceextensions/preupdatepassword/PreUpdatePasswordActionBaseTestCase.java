@@ -576,12 +576,17 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         throw new IllegalArgumentException("Confirmation code not found in recovery link.");
     }
 
-    protected void enableRuleConfig(String condition) {
+    protected void enableRuleConfig(String condition, String actionId) throws Exception {
 
-        new ORRule()
+        ORRule orRule = new ORRule()
                 .condition(ORRule.ConditionEnum.OR)
                 .addRulesItem(new ANDRule().condition(ANDRule.ConditionEnum.AND)
-                        .addExpressionsItem(new Expression().field("flow").operator("equals")
+                        .addExpressionsItem(new Expression()
+                                .field("flow")
+                                .operator("equals")
                                 .value(condition)));
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel().rule(orRule);
+        boolean updateSuccess = updateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId, actionUpdateModel);
+        Assert.assertTrue(updateSuccess, "Failed to update pre-update password action with rule.");
     }
 }
