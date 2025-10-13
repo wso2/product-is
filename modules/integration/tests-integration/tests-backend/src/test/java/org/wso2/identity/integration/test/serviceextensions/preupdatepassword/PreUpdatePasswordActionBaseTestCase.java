@@ -43,6 +43,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.*;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
@@ -573,5 +574,14 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
             return matcher.group(1);
         }
         throw new IllegalArgumentException("Confirmation code not found in recovery link.");
+    }
+
+    protected void enableRuleConfig(String condition) {
+
+        new ORRule()
+                .condition(ORRule.ConditionEnum.OR)
+                .addRulesItem(new ANDRule().condition(ANDRule.ConditionEnum.AND)
+                        .addExpressionsItem(new Expression().field("flow").operator("equals")
+                                .value(condition)));
     }
 }
