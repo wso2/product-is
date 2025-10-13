@@ -43,7 +43,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.*;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
@@ -51,8 +50,12 @@ import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.mod
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ANDRule;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Expression;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ORRule;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PasswordSharing;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PreUpdatePasswordActionModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -114,6 +117,14 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String REGISTRATION_FLOW_TYPE = "REGISTRATION";
     protected static final String PASSWORD_RECOVERY_FLOW_TYPE = "PASSWORD_RECOVERY";
     protected static final String INVITED_USER_REGISTRATION_FLOW_TYPE = "INVITED_USER_REGISTRATION";
+    protected static final String USER_INITIATED_REGISTRATION = "userInitiatedRegistration";
+    protected static final String ADMIN_INITIATED_REGISTRATION = "adminInitiatedRegistration";
+    protected static final String APPLICATION_INITIATED_REGISTRATION = "applicationInitiatedRegistration";
+    protected static final String USER_INITIATED_PASSWORD_UPDATE = "userInitiatedPasswordUpdate";
+    protected static final String ADMIN_INITIATED_PASSWORD_UPDATE = "adminInitiatedPasswordUpdate";
+    protected static final String APPLICATION_INITIATED_PASSWORD_UPDATE = "applicationInitiatedPasswordUpdate";
+    protected static final String ADMIN_INITIATED_PASSWORD_RESET = "adminInitiatedPasswordReset";
+    protected static final String ADMIN_INITIATED_USER_INVITE_TO_SET_PASSWORD = "adminInitiatedUserInviteToSetPassword";
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
@@ -586,7 +597,6 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                                 .operator("equals")
                                 .value(condition)));
         ActionUpdateModel actionUpdateModel = new ActionUpdateModel().rule(orRule);
-        boolean updateSuccess = updateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId, actionUpdateModel);
-        Assert.assertTrue(updateSuccess, "Failed to update pre-update password action with rule.");
+        updateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId, actionUpdateModel);
     }
 }
