@@ -405,7 +405,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
             description = "Verify the user initiated self registration with pre update password action")
     public void testUserInitiatedSelfRegistration() throws Exception {
 
-        enableRuleConfig("userInitiatedRegistration", actionId);
+        enableRuleConfig(USER_INITIATED_REGISTRATION, actionId);
         String userRegistrationFormURL = retrieveUserRegistrationURL(application);
         submitUserRegistrationForm(userRegistrationFormURL, TEST_USER2_USERNAME, TEST_USER_PASSWORD);
 
