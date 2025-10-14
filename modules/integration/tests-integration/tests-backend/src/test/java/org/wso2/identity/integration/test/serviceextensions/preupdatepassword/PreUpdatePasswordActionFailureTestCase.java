@@ -183,6 +183,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     @Test(description = "Verify the password update in self service portal with pre update password action")
     public void testUserUpdatePassword() throws Exception {
 
+        enableRuleConfig(USER_INITIATED_PASSWORD_UPDATE, actionId);
         Map<String, String> passwordValue = new HashMap<>();
         passwordValue.put(PASSWORD_PROPERTY, TEST_USER_UPDATED_PASSWORD);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
@@ -207,6 +208,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the admin update password with pre update password action")
     public void testAdminUpdatePassword() throws Exception {
 
+        enableRuleConfig(ADMIN_INITIATED_PASSWORD_UPDATE, actionId);
         Map<String, String> passwordValue = new HashMap<>();
         passwordValue.put(PASSWORD_PROPERTY, TEST_USER_PASSWORD);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
@@ -273,6 +275,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the admin force password reset with pre update password action")
     public void testAdminForcePasswordReset() throws Exception {
 
+        enableRuleConfig(ADMIN_INITIATED_PASSWORD_RESET, actionId);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(new UserItemAddGroupobj()
                         .op(UserItemAddGroupobj.OpEnum.REPLACE)
@@ -293,6 +296,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the admin invite user to set password with pre update password action")
     public void testAdminInviteUserToSetPassword() throws Exception {
 
+        enableRuleConfig(ADMIN_INITIATED_USER_INVITE_TO_SET_PASSWORD, actionId);
         UserObject adminInvitedUserInfo = new UserObject()
                 .userName(TEST_USER2_USERNAME)
                 .password(TEST_USER_PASSWORD)
@@ -315,6 +319,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the password update by an authorized application with pre update password action")
     public void testApplicationUpdatePassword() throws Exception {
 
+        enableRuleConfig(APPLICATION_INITIATED_PASSWORD_UPDATE, actionId);
         String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         Map<String, String> passwordValue = new HashMap<>();
         passwordValue.put(PASSWORD_PROPERTY, TEST_USER_PASSWORD);
@@ -337,6 +342,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the user password set with pre update password action via offline invite link")
     public void testUserSetPasswordViaOfflineInviteLink() throws Exception {
 
+        enableRuleConfig(ADMIN_INITIATED_USER_INVITE_TO_SET_PASSWORD, actionId);
         // Deactivating action to stop action execution at user creation, which is not required for this test.
         deactivateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId);
         UserObject offlineInvitingUserInfo = new UserObject()
@@ -365,6 +371,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify admin invited user registration flow failure with pre update password action")
     public void testSetPasswordWithInvitedUserRegistrationFlow() throws Exception {
 
+        enableRuleConfig(ADMIN_INITIATED_USER_INVITE_TO_SET_PASSWORD, actionId);
         updateFlowStatus(INVITED_USER_REGISTRATION_FLOW_TYPE, true);
         addInvitedUserRegistrationFlow();
 
@@ -401,6 +408,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the admin initiated user registration with pre update password action failure")
     public void testAdminInitiatedUserRegistration() throws Exception {
 
+        enableRuleConfig(ADMIN_INITIATED_REGISTRATION, actionId);
         UserObject adminRegisteredUserInfo = new UserObject()
                 .userName(TEST_USER2_USERNAME)
                 .password(TEST_USER_PASSWORD)
@@ -427,6 +435,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the application initiated user registration with pre update password action failure")
     public void testApplicationInitiatedUserRegistration() throws Exception {
 
+        enableRuleConfig(APPLICATION_INITIATED_REGISTRATION, actionId);
         String token = getTokenWithClientCredentialsGrant(application.getId(), clientId, clientSecret);
         UserObject appRegisteredUserInfo = new UserObject()
                 .userName(TEST_USER2_USERNAME)
@@ -454,6 +463,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the user initiated self registration flow with pre update password action failure")
     public void testUserRegistrationWithSelfRegistrationFlow() throws Exception {
 
+        enableRuleConfig(USER_INITIATED_REGISTRATION, actionId);
         updateFlowStatus(REGISTRATION_FLOW_TYPE, true);
         addRegistrationFlow();
         flowExecutionClient.initiateFlowExecution(REGISTRATION_FLOW_TYPE);
@@ -481,6 +491,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
             description = "Verify the user initiated self registration with pre update password action failure")
     public void testUserInitiatedSelfRegistration() throws Exception {
 
+        enableRuleConfig(USER_INITIATED_REGISTRATION, actionId);
         String userRegistrationFormURL = retrieveUserRegistrationURL(application);
         HttpResponse httpResponse = submitUserRegistrationForm(userRegistrationFormURL, TEST_USER2_USERNAME,
                 TEST_USER_PASSWORD);
