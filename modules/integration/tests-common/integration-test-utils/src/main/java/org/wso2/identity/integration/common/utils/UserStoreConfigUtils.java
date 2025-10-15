@@ -264,7 +264,3 @@ public class UserStoreConfigUtils {
         return propertyDTOs;
     }
 }
-
-
-
-

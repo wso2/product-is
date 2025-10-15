@@ -130,3 +130,4 @@ public class BcryptHashProviderTestCase extends ISIntegrationTest {
         log.info("User store " + USER_STORE_DOMAIN_NAME + " deleted successfully.");
     }
 }
+
