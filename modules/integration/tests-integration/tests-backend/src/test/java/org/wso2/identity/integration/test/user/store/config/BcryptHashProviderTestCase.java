@@ -96,7 +96,7 @@ public class BcryptHashProviderTestCase extends ISIntegrationTest {
                     false
             );
             log.info("User " + fullUsername + " added successfully. Password should be Bcrypt hashed.");
-        } catch (RemoteUserStoreManagerServiceUserStoreExceptionException | RemoteException e) {
+        } catch (Exception e) {
             log.error("Failed to add user: " + fullUsername, e);
             Assert.fail("Failed to add user to Bcrypt configured store: " + e.getMessage());
         }
@@ -130,15 +130,3 @@ public class BcryptHashProviderTestCase extends ISIntegrationTest {
         log.info("User store " + USER_STORE_DOMAIN_NAME + " deleted successfully.");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
