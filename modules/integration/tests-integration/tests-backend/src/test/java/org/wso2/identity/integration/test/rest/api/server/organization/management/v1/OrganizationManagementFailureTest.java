@@ -147,7 +147,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @DataProvider(name = "organizationRequestBodies")
     public Object[][] organizationRequestBodyFilePaths() {
 
-        return new Object[][] {
+        return new Object[][]{
                 {ADD_GREATER_HOSPITAL_ORGANIZATION_REQUEST_BODY},
                 {ADD_SMALLER_HOSPITAL_ORGANIZATION_REQUEST_BODY}
         };
@@ -158,9 +158,9 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
 
         String apiAuthorizations = readResource(ORGANIZATION_SELF_SERVICE_APIS);
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT,
-                                tenantInfo.getDomain()));
+                tenantInfo.getDomain()));
         applicationID = OAuth2Util.createOIDCApplication(oAuth2RestClient, apiAuthorizations, authenticatingUserName,
-                                                    authenticatingCredential);
+                authenticatingCredential);
         m2mToken = OAuth2Util.getM2MAccessToken(oAuth2RestClient, applicationID, tokenEndpoint);
     }
 
@@ -411,7 +411,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testGetDiscoveryAttributesOfNonExistingOrganization() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfGetWithOAuth2(endpointURL, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, OrganizationManagementConstants.ErrorMessages
                 .ERROR_CODE_INVALID_ORGANIZATION.getCode(), invalidOrganizationID);
@@ -421,7 +421,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testGetDiscoveryAttributesToOrganizationUnauthorized() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfGetWithOAuth2(endpointURL, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
@@ -430,7 +430,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testDeleteDiscoveryAttributesOfNonExistingOrganization() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfDeleteWithOAuth2(endpointURL, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, OrganizationManagementConstants.ErrorMessages
                 .ERROR_CODE_INVALID_ORGANIZATION.getCode(), invalidOrganizationID);
@@ -440,7 +440,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testDeleteDiscoveryAttributesUnauthorized() {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         Response response = getResponseOfDeleteWithOAuth2(endpointURL, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
@@ -449,9 +449,9 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testUpdateWithUnavailableDiscoveryAttributes() throws IOException {
 
         String firstEndpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         String secondEndpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(1)
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource(UPDATE_DISCOVERY_ATTRIBUTES_REQUEST_BODY);
         Response firstResponse = getResponseOfPutWithOAuth2(firstEndpointURL, requestBody, m2mToken);
         validateHttpStatusCode(firstResponse, HttpStatus.SC_OK);
@@ -464,7 +464,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testUpdateDiscoveryAttributesOfNonExistingOrganization() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + invalidOrganizationID
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource(UPDATE_DISCOVERY_ATTRIBUTES_REQUEST_BODY);
         Response response = getResponseOfPutWithOAuth2(endpointURL, requestBody, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND,
@@ -476,7 +476,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testUpdateDiscoveryAttributesUnauthorized() throws IOException {
 
         String endpointURL = ORGANIZATION_MANAGEMENT_API_BASE_PATH + PATH_SEPARATOR + organizationIDs.get(0)
-                        + ORGANIZATION_DISCOVERY_API_PATH;
+                + ORGANIZATION_DISCOVERY_API_PATH;
         String requestBody = readResource(UPDATE_DISCOVERY_ATTRIBUTES_REQUEST_BODY);
         Response response = getResponseOfPutWithOAuth2(endpointURL, requestBody, invalidM2MToken);
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
@@ -557,8 +557,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     public void testGetPaginatedMetaAttributesWithInvalidLimit() {
 
         String invalidLimitUrl =
-                ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH + QUESTION_MARK +
-                        LIMIT_QUERY_PARAM + EQUAL + LIMIT_MINUS_1_QUERY_PARAM;
+                ORGANIZATION_META_ATTRIBUTES_API_PATH_WITH_LIMIT + LIMIT_MINUS_1_QUERY_PARAM;
         Response response = getResponseOfGetWithOAuth2(invalidLimitUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_BAD_REQUEST);
     }
@@ -566,9 +565,9 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testGetPaginatedMetaAttributesWithInvalidLimit")
     public void testGetPaginatedMetaAttributesWithInvalidAfterCursor() {
 
-        String invalidAfterCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
-                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + LIMIT_10_QUERY_PARAM + AMPERSAND + AFTER_QUERY_PARAM
-                + EQUAL + INVALID_CURSOR;
+        String invalidAfterCursorUrl =
+                ORGANIZATION_META_ATTRIBUTES_API_PATH_WITH_LIMIT + LIMIT_10_QUERY_PARAM + AMPERSAND +
+                        AFTER_QUERY_PARAM + EQUAL + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidAfterCursorUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST,
                 OrganizationManagementConstants.ErrorMessages.ERROR_CODE_INVALID_CURSOR_FOR_PAGINATION.getCode());
@@ -577,9 +576,9 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @Test(dependsOnMethods = "testGetPaginatedMetaAttributesWithInvalidAfterCursor")
     public void testGetPaginatedMetaAttributesWithInvalidBeforeCursor() {
 
-        String invalidBeforeCursorUrl = ORGANIZATION_MANAGEMENT_API_BASE_PATH + ORGANIZATION_META_ATTRIBUTES_API_PATH +
-                QUESTION_MARK + LIMIT_QUERY_PARAM + EQUAL + LIMIT_10_QUERY_PARAM + AMPERSAND + BEFORE_QUERY_PARAM
-                + EQUAL + INVALID_CURSOR;
+        String invalidBeforeCursorUrl =
+                ORGANIZATION_META_ATTRIBUTES_API_PATH_WITH_LIMIT + LIMIT_10_QUERY_PARAM + AMPERSAND +
+                        BEFORE_QUERY_PARAM + EQUAL + INVALID_CURSOR;
         Response response = getResponseOfGetWithOAuth2(invalidBeforeCursorUrl, m2mToken);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST,
                 OrganizationManagementConstants.ErrorMessages.ERROR_CODE_INVALID_CURSOR_FOR_PAGINATION.getCode());

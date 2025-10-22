@@ -59,6 +59,8 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
     private static final String API_DEFINITION_NAME = "org.wso2.carbon.identity.organization.management.yaml";
     static final String API_VERSION = "v1";
 
+    static final String ORGANIZATION_META_ATTRIBUTES_API_PATH_WITH_LIMIT =  "/organization/meta-attributes?limit=";
+
     static final String ORGANIZATION_MANAGEMENT_API_BASE_PATH = "/organizations";
     static final String ORGANIZATION_CONFIGS_API_BASE_PATH = "/organization-configs";
     static final String ORGANIZATION_DISCOVERY_API_PATH = "/discovery";
