@@ -1,9 +1,0 @@
-{
-  "client_name": "9.1.1-dcr-app-implicit-grant",
-  "grant_types": [
-    "implicit"
-  ],
-  "redirect_uris": [
-    "http://localhost"
-  ]
-}

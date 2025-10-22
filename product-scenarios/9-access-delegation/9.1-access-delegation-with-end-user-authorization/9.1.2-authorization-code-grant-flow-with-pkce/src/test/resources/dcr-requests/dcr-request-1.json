@@ -1,9 +1,0 @@
-{
-  "client_name": "9.1.2-dcr-app-code-grant-with-pkce-s256",
-  "grant_types": [
-    "authorization_code"
-  ],
-  "redirect_uris": [
-    "http://localhost"
-  ]
-}
