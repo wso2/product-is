@@ -56,6 +56,7 @@
             <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
             <!--<class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>-->
 
+            <class name="org.wso2.identity.integration.test.user.store.config.BcryptHashProviderTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
