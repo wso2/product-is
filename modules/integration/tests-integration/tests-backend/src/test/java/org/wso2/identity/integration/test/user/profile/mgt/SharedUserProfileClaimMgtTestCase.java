@@ -553,7 +553,8 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
     private void assertRolesInToken(JWTClaimsSet jwtClaimsSet, int expectedRoleCount, String[] expectedRoles) {
 
-        net.minidev.json.JSONArray rolesInToken = (net.minidev.json.JSONArray) jwtClaimsSet.getClaims().get("roles");
+        net.minidev.json.JSONArray rolesInToken = new net.minidev.json.JSONArray();
+        rolesInToken.addAll((List<?>) jwtClaimsSet.getClaims().get("roles"));
         Assert.assertEquals(rolesInToken.size(), expectedRoleCount, "Incorrect roles count in token.");
 
         for (String expectedRole : expectedRoles) {
@@ -570,7 +571,8 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
     private void assertGroupsInToken(JWTClaimsSet jwtClaimsSet, int expectedGroupCount, String[] expectedGroups) {
 
-        net.minidev.json.JSONArray groupsInToken = (net.minidev.json.JSONArray) jwtClaimsSet.getClaims().get("groups");
+        net.minidev.json.JSONArray groupsInToken = new net.minidev.json.JSONArray();
+        groupsInToken.addAll((List<?>)  jwtClaimsSet.getClaims().get("groups"));
         Assert.assertEquals(groupsInToken.size(), expectedGroupCount, "Incorrect groups count in token.");
 
         for (String expectedGroup : expectedGroups) {
