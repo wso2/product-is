@@ -1,0 +1,12 @@
+{
+  "applicationId": "${applicationId}",
+  "organizations": [
+    {
+      "orgId": "${organizationId}",
+      "policy": "${policy}",
+      "roleSharing": {
+        "mode": "ALL"
+      }
+    }
+  ]
+}
