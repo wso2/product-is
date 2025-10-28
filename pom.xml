@@ -2555,7 +2555,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.591</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.593</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2579,16 +2579,16 @@
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.2</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.9.50</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.9.51</identity.carbon.auth.rest.version>
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.387</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.388</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.63</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.2</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.14</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.213</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.214</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.12</identity.user.account.association.version>
@@ -2663,7 +2663,7 @@
         <authenticator.totp.version>3.3.42</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
-        <authenticator.smsotp.version>3.3.41</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.3.42</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.35</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.52</authenticator.local.auth.emailotp.version>
@@ -2695,8 +2695,8 @@
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
 	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.33</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.30</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
-        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.28</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.84</conditional.authentication.functions.version>
+        <org.wso2.carbon.extension.identity.x509certificate.version>1.1.29</org.wso2.carbon.extension.identity.x509certificate.version>
+        <conditional.authentication.functions.version>1.2.85</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.81.17</identity.apps.console.version>
