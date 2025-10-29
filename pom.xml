@@ -2583,7 +2583,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.388</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.389</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.63</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.2</identity.inbound.auth.sts.version>
@@ -2663,7 +2663,7 @@
         <authenticator.totp.version>3.3.42</authenticator.totp.version>
         <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
-        <authenticator.smsotp.version>3.3.42</authenticator.smsotp.version>
+        <authenticator.smsotp.version>3.3.43</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.35</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.52</authenticator.local.auth.emailotp.version>
