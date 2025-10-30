@@ -21,13 +21,15 @@ To build the WSO2 Identity Server distribution from source, follow these steps:
 2. Install **Apache Maven 3.x.x** ([Download Maven](https://maven.apache.org/download.cgi#)).
 3. Clone the repository: `https://github.com/wso2/product-is.git` or download the source.
 4. From the `product-is` directory, run one of the following Maven commands:
-    - `export JAVA_TOOL_OPTIONS="-Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true"`  
+    - `export JAVA_TOOL_OPTIONS="-Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true"` (Linux/macOS)
+      
+      `set JAVA_TOOL_OPTIONS="-Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true"` (Windows)
       _(To avoid the zip64 error)_
     - `mvn clean install`  
       _(Builds the binary and source distributions with tests)_
     - `mvn clean install -Dmaven.test.skip=true`  
       _(Builds the binary and source distributions without running any unit/integration tests)_
-5. The binary distribution will be available in the `product-is/modules/distribution/target` directory.
+6. The binary distribution will be available in the `product-is/modules/distribution/target` directory.
 
 ## Installation and Running/Debugging
 
