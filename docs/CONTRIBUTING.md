@@ -29,7 +29,7 @@ To build the WSO2 Identity Server distribution from source, follow these steps:
       _(Builds the binary and source distributions with tests)_
     - `mvn clean install -Dmaven.test.skip=true`  
       _(Builds the binary and source distributions without running any unit/integration tests)_
-6. The binary distribution will be available in the `product-is/modules/distribution/target` directory.
+5. The binary distribution will be available in the `product-is/modules/distribution/target` directory.
 
 ## Installation and Running/Debugging
 
