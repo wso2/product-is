@@ -1,0 +1,7 @@
+{
+  "applicationId": "${applicationId}",
+  "policy": "${policy}",
+  "roleSharing": {
+    "mode": "ALL"
+  }
+}
