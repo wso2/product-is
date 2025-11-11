@@ -1,0 +1,1065 @@
+/*
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.wso2.identity.integration.test.claim.metadata.mgt;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.AttributeMappingDTO;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ClaimDialectReqDTO;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.restclients.UserStoreMgtRestClient;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Integration test class for testing selective storage of local claims.
+ * This test creates custom claims with SCIM mappings and validates claim property updates.
+ */
+public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
+
+    private static final Log log = LogFactory.getLog(ClaimSelectiveStorageTestCase.class);
+
+    private ClaimManagementRestClient claimManagementRestClient;
+    private SCIM2RestClient scim2RestClient;
+    private UserStoreMgtRestClient userStoreMgtRestClient;
+
+    private static final String LOCAL_CLAIM_URI_PREFIX = "http://wso2.org/claims/";
+    private static final String CUSTOM_CLAIM_1 = "custom1";
+    private static final String CUSTOM_CLAIM_2 = "custom2";
+    private static final String CUSTOM_CLAIM_3 = "custom3";
+
+    private static final String EXISTING_IDENTITY_CLAIM_1 = "identity/userSourceId";
+    private static final String EXISTING_IDENTITY_CLAIM_2 = "identity/preferredMFAOption";
+    private static final String COUNTRY_CLAIM = "country";
+
+    // SCIM attribute names for existing WSO2 claims
+    private static final String SCIM_USER_SOURCE_ID = "userSourceId";
+    private static final String SCIM_PREFERRED_MFA_OPTION = "preferredMFAOption";
+    private static final String SCIM_COUNTRY = "country";
+
+    // Custom SCIM schema dialect URI for testing
+    private static final String CUSTOM_SCHEMA_URI = "urn:scim:schemas:extension:custom:User";
+    // WSO2 SCIM schema dialect URI for identity claims
+    private static final String WSO2_SCHEMA_URI = "urn:scim:wso2:schema";
+
+    // User store domains
+    private static final String PRIMARY_DOMAIN = "PRIMARY";
+    private static final String SECONDARY_DOMAIN = "JDBC-SELECTIVE";
+    private static final String SECONDARY_USER_STORE_TYPE_ID = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
+    private static final String SECONDARY_DB_NAME = "JDBC_SELECTIVE_STORAGE_DB";
+
+    // Storage for claim IDs (only for custom claims we create)
+    private String customClaim1Id;
+    private String customClaim2Id;
+    private String customClaim3Id;
+
+    // Storage for external claim IDs (custom claims)
+    private String scimCustomClaim1Id;
+    private String scimCustomClaim2Id;
+    private String scimCustomClaim3Id;
+
+    // Custom schema dialect ID (will be created and deleted during test)
+    private String customSchemaDialectId;
+
+    // Test user constants
+    private static final String TEST_USER_1_USERNAME = "selectiveuser1";
+    private static final String TEST_USER_2_USERNAME = "selectiveuser2";
+    private static final String TEST_USER_3_USERNAME = "selectiveuser3";
+    private static final String TEST_USER_PASSWORD = "Test@123";
+    private static final String TEST_USER_GIVEN_NAME = "Test";
+    private static final String TEST_USER_FAMILY_NAME = "User";
+    private static final String TEST_USER_EMAIL_DOMAIN = "@test.com";
+
+    // Storage for user IDs (primary user store).
+    private String user1Id;
+    private String user2Id;
+    private String user3Id;
+
+    // Storage for secondary user store.
+    private String sec1UserStoreDomainId;
+    private String sec1User1Id;
+    private String sec1User2Id;
+
+    // Test user constants for secondary user store.
+    private static final String SECONDARY_TEST_USER_1_USERNAME = "sec1user1";
+    private static final String SECONDARY_TEST_USER_2_USERNAME = "sec1user2";
+
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+
+        super.init();
+        claimManagementRestClient = new ClaimManagementRestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        userStoreMgtRestClient = new UserStoreMgtRestClient(serverURL, tenantInfo);
+
+        // Get or create the custom schema dialect for testing.
+        customSchemaDialectId = getDialectIdByURI(CUSTOM_SCHEMA_URI);
+        Assert.assertNotNull(customSchemaDialectId, "Custom schema dialect should be created");
+        log.info("Custom schema dialect ID: " + customSchemaDialectId);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
+
+        log.info("Starting cleanup...");
+
+        // Delete secondary user store users first.
+        try {
+            if (sec1User2Id != null) {
+                scim2RestClient.deleteUser(sec1User2Id);
+                log.info("Deleted secondary test user 2");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete secondary test user 2", e);
+        }
+
+        try {
+            if (sec1User1Id != null) {
+                scim2RestClient.deleteUser(sec1User1Id);
+                log.info("Deleted secondary test user 1");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete secondary test user 1", e);
+        }
+
+        // Delete primary user store users.
+        try {
+            if (user3Id != null) {
+                scim2RestClient.deleteUser(user3Id);
+                log.info("Deleted test user 3");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete test user 3", e);
+        }
+
+        try {
+            if (user2Id != null) {
+                scim2RestClient.deleteUser(user2Id);
+                log.info("Deleted test user 2");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete test user 2", e);
+        }
+
+        try {
+            if (user1Id != null) {
+                scim2RestClient.deleteUser(user1Id);
+                log.info("Deleted test user 1");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete test user 1", e);
+        }
+
+        // Delete secondary user store.
+        try {
+            if (sec1UserStoreDomainId != null) {
+                userStoreMgtRestClient.deleteUserStore(sec1UserStoreDomainId);
+                userStoreMgtRestClient.waitForUserStoreUnDeployment(sec1UserStoreDomainId);
+                log.info("Deleted secondary user store: " + SECONDARY_DOMAIN);
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete secondary user store", e);
+        }
+
+        // Delete external SCIM claims from custom schema dialect (due to dependencies).
+        try {
+            if (scimCustomClaim3Id != null && customSchemaDialectId != null) {
+                claimManagementRestClient.deleteExternalClaim(customSchemaDialectId, scimCustomClaim3Id);
+                log.info("Deleted SCIM external claim: custom3");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete SCIM external claim custom3", e);
+        }
+
+        try {
+            if (scimCustomClaim2Id != null && customSchemaDialectId != null) {
+                claimManagementRestClient.deleteExternalClaim(customSchemaDialectId, scimCustomClaim2Id);
+                log.info("Deleted SCIM external claim: custom2");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete SCIM external claim custom2", e);
+        }
+
+        try {
+            if (scimCustomClaim1Id != null && customSchemaDialectId != null) {
+                claimManagementRestClient.deleteExternalClaim(customSchemaDialectId, scimCustomClaim1Id);
+                log.info("Deleted SCIM external claim: custom1");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete SCIM external claim custom1", e);
+        }
+
+        // Delete the custom schema dialect.
+        try {
+            if (customSchemaDialectId != null) {
+                claimManagementRestClient.deleteExternalDialect(customSchemaDialectId);
+                log.info("Deleted custom schema dialect: " + CUSTOM_SCHEMA_URI);
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete custom schema dialect", e);
+        }
+
+        // Delete local claims.
+        try {
+            if (customClaim3Id != null) {
+                claimManagementRestClient.deleteLocalClaim(customClaim3Id);
+                log.info("Deleted local claim: custom3");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete local claim custom3", e);
+        }
+
+        try {
+            if (customClaim2Id != null) {
+                claimManagementRestClient.deleteLocalClaim(customClaim2Id);
+                log.info("Deleted local claim: custom2");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete local claim custom2", e);
+        }
+
+        try {
+            if (customClaim1Id != null) {
+                claimManagementRestClient.deleteLocalClaim(customClaim1Id);
+                log.info("Deleted local claim: custom1");
+            }
+        } catch (Exception e) {
+            log.error("Failed to delete local claim custom1", e);
+        }
+
+        claimManagementRestClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
+        userStoreMgtRestClient.closeHttpClient();
+        log.info("Cleanup completed");
+    }
+
+    @Test(groups = "wso2.is", priority = 1, description = "Create custom claims")
+    public void testCreateCustomClaims() throws Exception {
+
+        log.info("Creating custom local claims");
+
+        // Create custom claims (non-identity claims).
+        customClaim1Id = createAndVerifyLocalClaim(CUSTOM_CLAIM_1, "Custom Claim 1",
+                "This is custom claim 1 for testing selective storage", "string");
+
+        customClaim2Id = createAndVerifyLocalClaim(CUSTOM_CLAIM_2, "Custom Claim 2",
+                "This is custom claim 2 for testing selective storage", "string");
+
+        customClaim3Id = createAndVerifyLocalClaim(CUSTOM_CLAIM_3, "Custom Claim 3",
+                "This is custom claim 3 for testing selective storage", "string");
+        
+        log.info("Successfully created all custom local claims");
+
+        log.info("Creating SCIM2 external claim mappings for custom claims in custom schema");
+
+        scimCustomClaim1Id = createExternalClaimMapping(CUSTOM_CLAIM_1, customSchemaDialectId, CUSTOM_SCHEMA_URI);
+        scimCustomClaim2Id = createExternalClaimMapping(CUSTOM_CLAIM_2, customSchemaDialectId, CUSTOM_SCHEMA_URI);
+        scimCustomClaim3Id = createExternalClaimMapping(CUSTOM_CLAIM_3, customSchemaDialectId, CUSTOM_SCHEMA_URI);
+
+        log.info("Successfully created all SCIM2 external claim mappings for custom claims");
+    }
+
+    @Test(groups = "wso2.is", priority = 7, dependsOnMethods = {"testCreateCustomClaims"},
+            description = "Update custom claim 1 properties")
+    public void testUpdateCustomClaim1Properties() throws Exception {
+
+        log.info("Updating custom claim 1 properties");
+
+        // Get the existing claim
+        JSONObject existingClaim = claimManagementRestClient.getLocalClaim(customClaim1Id);
+
+        // Create update request with modified properties
+        LocalClaimReq updateReq = new LocalClaimReq();
+        updateReq.setClaimURI((String) existingClaim.get("claimURI"));
+        updateReq.setDisplayName("Custom Claim 1 - Updated");
+        updateReq.setDescription("This is updated custom claim 1 description");
+        updateReq.setDisplayOrder(10);
+        updateReq.setReadOnly(true);
+        updateReq.setRequired(false);
+        updateReq.setSupportedByDefault(true);
+
+        // Convert JSONArray to List for attribute mapping
+        updateReq.setAttributeMapping(convertJsonArrayToAttributeMappings(
+                (org.json.simple.JSONArray) existingClaim.get("attributeMapping")));
+
+        // TODO: Add managedInUserStore property here when available
+        // updateReq.setManagedInUserStore(true);
+
+        // Update the claim
+        claimManagementRestClient.updateLocalClaim(customClaim1Id, updateReq);
+        log.info("Successfully updated custom claim 1 properties");
+
+        // Verify the update
+        JSONObject updatedClaim = claimManagementRestClient.getLocalClaim(customClaim1Id);
+        Assert.assertEquals(updatedClaim.get("supportedByDefault"), true);
+
+        log.info("Verified custom claim 1 property updates");
+    }
+
+    @Test(groups = "wso2.is", priority = 9, dependsOnMethods = {"testCreateCustomClaims"},
+            description = "Create secondary user store for selective storage testing")
+    public void testCreateSecondaryUserStore() throws Exception {
+
+        log.info("Creating secondary user store: " + SECONDARY_DOMAIN);
+
+        // Create H2 database for secondary user store
+        log.info("Creating H2 database: " + SECONDARY_DB_NAME);
+        H2DataBaseManager dbManager = new H2DataBaseManager(
+                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/"
+                        + SECONDARY_DB_NAME,
+                "wso2automation",
+                "wso2automation");
+        dbManager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbManager.disconnect();
+        log.info("H2 database created successfully");
+
+        // Build user store request
+        UserStoreReq userStoreReq = buildSecondaryUserStoreReq();
+
+        // Create the user store
+        sec1UserStoreDomainId = userStoreMgtRestClient.addUserStore(userStoreReq);
+        Assert.assertNotNull(sec1UserStoreDomainId, "Secondary user store ID should not be null");
+        log.info("User store creation initiated with ID: " + sec1UserStoreDomainId);
+
+        // Wait for user store deployment
+        boolean isDeployed = userStoreMgtRestClient.waitForUserStoreDeployment(SECONDARY_DOMAIN);
+        Assert.assertTrue(isDeployed, "Secondary user store deployment failed");
+        log.info("Successfully created and deployed secondary user store: " + SECONDARY_DOMAIN);
+    }
+
+    @Test(groups = "wso2.is", priority = 10, dependsOnMethods = {"testCreateCustomClaims"},
+            description = "Create users in primary user store with custom claims and existing WSO2 claims")
+    public void testCreateUsersWithCustomClaims() throws Exception {
+
+        log.info("Creating users in primary user store with custom claims and existing WSO2 claims");
+
+        // Create user1 with custom1 claim and userSourceId.
+        Map<String, String> customClaims1 = new HashMap<>();
+        customClaims1.put(CUSTOM_CLAIM_1, "custom1_value_user1");
+        Map<String, Object> wso2Claims1 = new HashMap<>();
+        wso2Claims1.put(SCIM_USER_SOURCE_ID, "user1_source");
+        user1Id = createUserFromJsonTemplate(TEST_USER_1_USERNAME, TEST_USER_PASSWORD,
+                TEST_USER_1_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims1, wso2Claims1);
+        log.info("Created user1 with ID: " + user1Id);
+
+        // Create user2 with custom2 claim and preferredMFAOption
+        Map<String, String> customClaims2 = new HashMap<>();
+        customClaims2.put(CUSTOM_CLAIM_2, "custom2_value_user2");
+        Map<String, Object> wso2Claims2 = new HashMap<>();
+        wso2Claims2.put(SCIM_PREFERRED_MFA_OPTION, "TOTP");
+        user2Id = createUserFromJsonTemplate(TEST_USER_2_USERNAME, TEST_USER_PASSWORD,
+                TEST_USER_2_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims2, wso2Claims2);
+        log.info("Created user2 with ID: " + user2Id);
+
+        // Create user3 with custom3 claim and country
+        Map<String, String> customClaims3 = new HashMap<>();
+        customClaims3.put(CUSTOM_CLAIM_3, "custom3_value_user3");
+        Map<String, Object> wso2Claims3 = new HashMap<>();
+        wso2Claims3.put(SCIM_COUNTRY, "United States");
+        user3Id = createUserFromJsonTemplate(TEST_USER_3_USERNAME, TEST_USER_PASSWORD,
+                TEST_USER_3_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims3, wso2Claims3);
+        log.info("Created user3 with ID: " + user3Id);
+
+        log.info("Successfully created all users with custom claims and existing WSO2 claims");
+    }
+
+    @Test(groups = "wso2.is", priority = 13, dependsOnMethods = {"testCreateSecondaryUserStore"},
+            description = "Create users in secondary user store with custom claims and existing WSO2 claims")
+    public void testCreateSecondaryUsers() throws Exception {
+
+        log.info("Creating users in secondary user store with custom claims and existing WSO2 claims");
+
+        // Create secondary user1 with custom1 claim and userSourceId
+        String qualifiedUsername1 = SECONDARY_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
+        Map<String, String> customClaims1 = new HashMap<>();
+        customClaims1.put(CUSTOM_CLAIM_1, "secondary_custom1_value");
+        Map<String, Object> wso2Claims1 = new HashMap<>();
+        wso2Claims1.put(SCIM_USER_SOURCE_ID, "secondary_user1_source");
+        sec1User1Id = createUserFromJsonTemplate(qualifiedUsername1, TEST_USER_PASSWORD,
+                SECONDARY_TEST_USER_1_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims1, wso2Claims1);
+        Assert.assertNotNull(sec1User1Id, "Secondary user1 ID should not be null");
+        log.info("Created secondary user1 with ID: " + sec1User1Id);
+
+        // Create secondary user2 with custom2 claim and country
+        String qualifiedUsername2 = SECONDARY_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
+        Map<String, String> customClaims2 = new HashMap<>();
+        customClaims2.put(CUSTOM_CLAIM_2, "secondary_custom2_value");
+        Map<String, Object> wso2Claims2 = new HashMap<>();
+        wso2Claims2.put(SCIM_COUNTRY, "Sri Lanka");
+        sec1User2Id = createUserFromJsonTemplate(qualifiedUsername2, TEST_USER_PASSWORD,
+                SECONDARY_TEST_USER_2_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims2, wso2Claims2);
+        Assert.assertNotNull(sec1User2Id, "Secondary user2 ID should not be null");
+        log.info("Created secondary user2 with ID: " + sec1User2Id);
+
+        log.info("Successfully created all users in secondary user store with custom claims and existing WSO2 claims");
+    }
+
+    @Test(groups = "wso2.is", priority = 15, dependsOnMethods = {"testCreateUsersWithCustomClaims"},
+            description = "Test PATCH replace operation to add custom2 claim to user1")
+    public void testPatchAddCustomClaimToUser() throws Exception {
+
+        log.info("Testing PATCH replace operation to add custom2 to user1");
+
+        // Build PATCH request to add custom2 claim using REPLACE
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
+        replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
+        replaceOperation.setPath(CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2);
+        replaceOperation.setValue("custom2_added_to_user1");
+        patchRequest.addOperations(replaceOperation);
+
+        // Update user1 and get response
+        JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, user1Id);
+        log.info("Successfully executed PATCH replace operation to add custom2");
+
+        // Verify the claim was added in the response
+        JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
+        Assert.assertNotNull(customSchema, "Custom schema should be present in response");
+        Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_2), "custom2_added_to_user1");
+        // Verify original claim is still there
+        Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_1), "custom1_value_user1");
+        log.info("Verified PATCH replace operation to add custom2");
+    }
+
+    @Test(groups = "wso2.is", priority = 16, dependsOnMethods = {"testCreateUsersWithCustomClaims"},
+            description = "Test PATCH replace operation to update custom2 claim value")
+    public void testPatchReplaceCustomClaim() throws Exception {
+
+        log.info("Testing PATCH replace operation on user2 custom2 claim");
+
+        // Build PATCH request to replace custom2 claim value
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
+        replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
+        replaceOperation.setPath(CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2);
+        replaceOperation.setValue("custom2_value_replaced");
+        patchRequest.addOperations(replaceOperation);
+
+        // Update user2 and get response
+        JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, user2Id);
+        log.info("Successfully executed PATCH replace operation");
+
+        // Verify the claim was updated in the response
+        JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
+        Assert.assertNotNull(customSchema, "Custom schema should be present in response");
+        Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_2), "custom2_value_replaced");
+        log.info("Verified PATCH replace operation");
+    }
+
+    @Test(groups = "wso2.is", priority = 17, dependsOnMethods = {"testCreateUsersWithCustomClaims"},
+            description = "Test PATCH remove operation to remove custom3 claim")
+    public void testPatchRemoveCustomClaim() throws Exception {
+
+        log.info("Testing PATCH remove operation on user3 custom3 claim");
+
+        // Build PATCH request to remove custom3 claim
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj removeOperation = new UserItemAddGroupobj();
+        removeOperation.setOp(UserItemAddGroupobj.OpEnum.REMOVE);
+        removeOperation.setPath(CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3);
+        patchRequest.addOperations(removeOperation);
+
+        // Update user3 and get response
+        JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, user3Id);
+        log.info("Successfully executed PATCH remove operation");
+
+        // Verify the claim was removed in the response
+        JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
+        if (customSchema != null) {
+            // Claim should be removed or null
+            Object custom3Value = customSchema.get(CUSTOM_CLAIM_3);
+            Assert.assertTrue(custom3Value == null || custom3Value.toString().isEmpty(),
+                    "Custom3 claim should be removed in response");
+        }
+        log.info("Verified PATCH remove operation");
+    }
+
+    @Test(groups = "wso2.is", priority = 18, dependsOnMethods = {"testCreateUsersWithCustomClaims"},
+            description = "Test filtering users by single custom claim")
+    public void testFilterUsersBySingleCustomClaim() throws Exception {
+
+        log.info("Testing user filtering by single custom claim");
+
+        // Filter by custom1 claim
+        String filter = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_1 + " eq \"custom1_value_user1\"";
+        String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
+        JSONObject result = scim2RestClient.filterUsers(encodedFilter);
+
+        Assert.assertNotNull(result, "Filter result should not be null");
+        Long totalResults = (Long) result.get("totalResults");
+        Assert.assertTrue(totalResults >= 1, "Should find at least 1 user with custom1 claim");
+
+        JSONArray resources = (JSONArray) result.get("Resources");
+        Assert.assertNotNull(resources, "Resources should not be null");
+
+        // Verify user1 is in the results
+        boolean foundUser1 = false;
+        for (Object resource : resources) {
+            JSONObject user = (JSONObject) resource;
+            if (TEST_USER_1_USERNAME.equals(user.get("userName"))) {
+                foundUser1 = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundUser1, "User1 should be found in filter results");
+        log.info("Successfully filtered users by single custom claim");
+    }
+
+    @Test(groups = "wso2.is", priority = 19, dependsOnMethods = {"testCreateUsersWithCustomClaims", "testPatchAddCustomClaimToUser"},
+            description = "Test filtering users by multiple custom claims with AND operator")
+    public void testFilterUsersByMultipleClaims() throws Exception {
+
+        log.info("Testing user filtering by multiple custom claims");
+
+        // Filter by custom2 claim (added to user1 in PATCH test)
+        String filter = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " eq \"custom2_added_to_user1\"";
+        String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
+        JSONObject result = scim2RestClient.filterUsers(encodedFilter);
+
+        Assert.assertNotNull(result, "Filter result should not be null");
+        Long totalResults = (Long) result.get("totalResults");
+        Assert.assertTrue(totalResults >= 1, "Should find at least 1 user with custom2 claim");
+
+        JSONArray resources = (JSONArray) result.get("Resources");
+        Assert.assertNotNull(resources, "Resources should not be null");
+
+        // Verify user1 is in the results
+        boolean foundUser1 = false;
+        for (Object resource : resources) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (TEST_USER_1_USERNAME.equals(username)) {
+                foundUser1 = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundUser1, "User1 should be found in filter results");
+        log.info("Successfully filtered users by custom claim");
+    }
+
+    @Test(groups = "wso2.is", priority = 20, dependsOnMethods = {"testCreateSecondaryUsers"},
+            description = "Test PATCH replace operation to update custom claim on secondary user")
+    public void testPatchAddToSecondaryUser() throws Exception {
+
+        log.info("Testing PATCH replace operation on secondary user1 to update custom1 claim");
+
+        // Build PATCH request to update custom1 claim using REPLACE
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
+        replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
+        replaceOperation.setPath(CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_1);
+        replaceOperation.setValue("secondary_custom1_value_updated");
+        patchRequest.addOperations(replaceOperation);
+
+        // Update secondary user1 and get response
+        JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, sec1User1Id);
+        log.info("Successfully executed PATCH replace operation on secondary user1");
+
+        // Verify the claim was updated in the response
+        JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
+        Assert.assertNotNull(customSchema, "Custom schema should be present in response");
+        Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_1), "secondary_custom1_value_updated");
+        log.info("Verified PATCH replace operation on secondary user1");
+    }
+
+    @Test(groups = "wso2.is", priority = 21, dependsOnMethods = {"testCreateSecondaryUsers"},
+            description = "Test PATCH replace operation to update custom claim on secondary user")
+    public void testPatchReplaceSecondaryUser() throws Exception {
+
+        log.info("Testing PATCH replace operation on secondary user2 to update custom2 claim");
+
+        // Update custom2 claim using REPLACE operation
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
+        UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
+        replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
+        replaceOperation.setPath(CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2);
+        replaceOperation.setValue("secondary_custom2_value_updated");
+        patchRequest.addOperations(replaceOperation);
+
+        JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, sec1User2Id);
+        log.info("Successfully executed PATCH replace operation on secondary user2");
+
+        // Verify the claim was updated in the response
+        JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
+        Assert.assertNotNull(customSchema, "Custom schema should be present in response");
+        Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_2), "secondary_custom2_value_updated");
+        log.info("Verified PATCH replace operation on secondary user2");
+    }
+
+    @Test(groups = "wso2.is", priority = 22, dependsOnMethods = {"testCreateSecondaryUsers"},
+            description = "Test filtering users from secondary user store")
+    public void testFilterSecondaryUserStoreClaims() throws Exception {
+
+        log.info("Testing user filtering for secondary user store");
+
+        // Filter by username to get secondary users
+        String qualifiedUsername1 = SECONDARY_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
+        String filter = "userName eq \"" + qualifiedUsername1 + "\"";
+        String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
+        JSONObject result = scim2RestClient.filterUsers(encodedFilter);
+
+        Assert.assertNotNull(result, "Filter result should not be null");
+        Long totalResults = (Long) result.get("totalResults");
+        Assert.assertTrue(totalResults >= 1, "Should find at least 1 secondary user");
+
+        JSONArray resources = (JSONArray) result.get("Resources");
+        Assert.assertNotNull(resources, "Resources should not be null");
+
+        // Verify secondary user1 is in the results with correct domain prefix
+        boolean foundSecondaryUser1 = false;
+        for (Object resource : resources) {
+            JSONObject user = (JSONObject) resource;
+            if (qualifiedUsername1.equals(user.get("userName"))) {
+                foundSecondaryUser1 = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundSecondaryUser1, "Secondary user1 should be found in filter results");
+        log.info("Successfully filtered users from secondary user store");
+    }
+
+    /**
+     * Create a user from JSON template with custom claims and existing WSO2 schema claims.
+     *
+     * @param username     Username for the user.
+     * @param password     Password for the user.
+     * @param email        Email address for the user.
+     * @param customClaims Map of custom claim names to values.
+     * @param wso2Claims   Map of existing WSO2 SCIM attribute names to values
+     *                     (e.g., userSourceId, preferredMFAOption, country).
+     * @return User ID of the created user.
+     * @throws Exception If user creation fails.
+     */
+    private String createUserFromJsonTemplate(String username, String password, String email,
+            Map<String, String> customClaims, Map<String, Object> wso2Claims) throws Exception {
+
+        // Read and modify JSON template
+        JSONObject userJson = readAndModifyUserTemplate(username, password, email, customClaims, wso2Claims);
+
+        // Convert JSON to string for SCIM2RestClient
+        String jsonRequest = userJson.toJSONString();
+        log.info("Creating user with JSON: " + jsonRequest);
+
+        // Create user using raw JSON
+        String userId = scim2RestClient.createUserWithRawJSON(jsonRequest);
+        Assert.assertNotNull(userId, "User ID should not be null for " + username);
+
+        // Verify user was created with custom claims
+        JSONObject createdUser = scim2RestClient.getUser(userId, null);
+        Assert.assertEquals(createdUser.get("userName"), username);
+
+        // Verify custom claims if provided
+        if (customClaims != null && !customClaims.isEmpty()) {
+            JSONObject customSchema = (JSONObject) createdUser.get(CUSTOM_SCHEMA_URI);
+            Assert.assertNotNull(customSchema, "Custom schema should be present in created user");
+            for (Map.Entry<String, String> entry : customClaims.entrySet()) {
+                Assert.assertEquals(customSchema.get(entry.getKey()), entry.getValue(),
+                        "Custom claim " + entry.getKey() + " should match expected value");
+            }
+        }
+
+        // Verify WSO2 schema claims if provided
+        if (wso2Claims != null && !wso2Claims.isEmpty()) {
+            JSONObject wso2Schema = (JSONObject) createdUser.get(WSO2_SCHEMA_URI);
+            Assert.assertNotNull(wso2Schema, "WSO2 schema should be present in created user");
+            for (Map.Entry<String, Object> entry : wso2Claims.entrySet()) {
+                Assert.assertEquals(wso2Schema.get(entry.getKey()), entry.getValue(),
+                        "WSO2 claim " + entry.getKey() + " should match expected value");
+            }
+        }
+
+        return userId;
+    }
+
+    /**
+     * Read the user creation JSON template and modify it with provided values.
+     *
+     * @param username     Username for the user.
+     * @param password     Password for the user.
+     * @param email        Email address for the user.
+     * @param customClaims Map of custom claim names to values.
+     * @param wso2Claims   Map of existing WSO2 SCIM attribute names to values.
+     * @return Modified JSON object.
+     * @throws Exception If reading or parsing fails.
+     */
+    private JSONObject readAndModifyUserTemplate(String username, String password, String email,
+            Map<String, String> customClaims, Map<String, Object> wso2Claims) throws Exception {
+
+        // Read JSON template from resources
+        String templateContent = readResource("claim-selective-storage-test-user.json");
+        JSONParser parser = new JSONParser();
+        JSONObject userJson = (JSONObject) parser.parse(templateContent);
+
+        // Update basic user info
+        userJson.put("userName", username);
+        userJson.put("password", password);
+
+        // Update email
+        JSONArray emails = (JSONArray) userJson.get("emails");
+        if (emails != null && !emails.isEmpty()) {
+            JSONObject emailObj = (JSONObject) emails.get(0);
+            emailObj.put("value", email);
+        }
+
+        // Update custom claims
+        if (customClaims != null && !customClaims.isEmpty()) {
+            JSONObject customSchemaObj = new JSONObject();
+            for (Map.Entry<String, String> entry : customClaims.entrySet()) {
+                customSchemaObj.put(entry.getKey(), entry.getValue());
+            }
+            userJson.put(CUSTOM_SCHEMA_URI, customSchemaObj);
+        }
+
+        // Update existing WSO2 schema claims
+        if (wso2Claims != null && !wso2Claims.isEmpty()) {
+            JSONObject wso2SchemaObj = new JSONObject();
+            for (Map.Entry<String, Object> entry : wso2Claims.entrySet()) {
+                wso2SchemaObj.put(entry.getKey(), entry.getValue());
+            }
+            userJson.put(WSO2_SCHEMA_URI, wso2SchemaObj);
+        }
+
+        return userJson;
+    }
+
+    /**
+     * Read a resource file from the classpath.
+     *
+     * @param fileName Name of the resource file (relative to the test resources directory).
+     * @return File content as string.
+     * @throws IOException If file reading fails.
+     */
+    private String readResource(String fileName) throws IOException {
+
+        try (InputStream resourceAsStream = getClass().getResourceAsStream("/" + fileName);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(resourceAsStream)) {
+
+            byte[] buffer = new byte[bufferedInputStream.available()];
+            bufferedInputStream.read(buffer);
+            return new String(buffer, StandardCharsets.UTF_8);
+        }
+    }
+
+    /**
+     * Build a LocalClaimReq object with the given parameters.
+     *
+     * @param claimName   Claim name (will be appended to the claim URI prefix).
+     * @param displayName Display name for the claim.
+     * @param description Description for the claim.
+     * @param dataType    Data type of the claim (string, boolean, integer, etc.).
+     * @return LocalClaimReq object.
+     */
+    private LocalClaimReq buildLocalClaimReq(String claimName, String displayName, String description,
+            String dataType) {
+
+        LocalClaimReq claimReq = new LocalClaimReq();
+        claimReq.setClaimURI(LOCAL_CLAIM_URI_PREFIX + claimName);
+        claimReq.setDisplayName(displayName);
+        claimReq.setDescription(description);
+        claimReq.setDataType(dataType);
+        claimReq.setSupportedByDefault(true);
+        claimReq.setRequired(false);
+        claimReq.setReadOnly(false);
+
+        // Create attribute mapping for PRIMARY userstore
+        // For identity claims (identity/*), use only the part after "identity/"
+        String mappedAttributeName = claimName.contains("/") ?
+                claimName.substring(claimName.lastIndexOf("/") + 1) : claimName;
+        AttributeMappingDTO mapping = new AttributeMappingDTO();
+        mapping.setMappedAttribute(mappedAttributeName);
+        mapping.setUserstore(PRIMARY_DOMAIN);
+        claimReq.setAttributeMapping(Collections.singletonList(mapping));
+
+        return claimReq;
+    }
+
+    /**
+     * Create a local claim and verify it was created successfully.
+     *
+     * @param claimName   Claim name (will be appended to URI prefix).
+     * @param displayName Display name for the claim.
+     * @param description Description for the claim.
+     * @param dataType    Data type of the claim.
+     * @return The created claim ID.
+     * @throws Exception If claim creation fails.
+     */
+    private String createAndVerifyLocalClaim(String claimName, String displayName,
+            String description, String dataType) throws Exception {
+
+        log.info("Creating claim: " + claimName);
+
+        LocalClaimReq claimReq = buildLocalClaimReq(claimName, displayName, description, dataType);
+        String claimId = claimManagementRestClient.addLocalClaim(claimReq);
+        Assert.assertNotNull(claimId, claimName + " ID should not be null");
+        log.info("Successfully created " + claimName + " with ID: " + claimId);
+
+        // Verify the claim was created
+        JSONObject retrievedClaim = claimManagementRestClient.getLocalClaim(claimId);
+        Assert.assertEquals(retrievedClaim.get("claimURI"), LOCAL_CLAIM_URI_PREFIX + claimName);
+        Assert.assertEquals(retrievedClaim.get("displayName"), displayName);
+        // TODO: Add more property verifications - managedInUserStore and excluded user stores.
+
+        return claimId;
+    }
+
+    /**
+     * Create an external SCIM claim mapping to a local claim.
+     *
+     * @param claimName   The local claim name to map.
+     * @param dialectId   The encoded dialect ID.
+     * @param dialectURI  The dialect URI.
+     * @return The created external claim ID.
+     * @throws Exception If external claim creation fails.
+     */
+    private String createExternalClaimMapping(String claimName, String dialectId, String dialectURI) throws Exception {
+
+        log.info("Creating SCIM external claim mapping for: " + claimName);
+        log.info("Using dialect ID: " + dialectId);
+        log.info("Using dialect URI: " + dialectURI);
+
+        ExternalClaimReq externalClaim = new ExternalClaimReq();
+        String externalClaimURI = dialectURI + ":" + claimName;
+        externalClaim.setClaimURI(externalClaimURI);
+        externalClaim.setMappedLocalClaimURI(LOCAL_CLAIM_URI_PREFIX + claimName);
+
+        log.info("External claim URI: " + externalClaimURI);
+        log.info("Mapped to local claim: " + LOCAL_CLAIM_URI_PREFIX + claimName);
+
+        String externalClaimId = null;
+        try {
+            externalClaimId = claimManagementRestClient.addExternalClaim(dialectId, externalClaim);
+        } catch (Exception e) {
+            log.error("Failed to create external claim mapping for " + claimName, e);
+            throw new Exception("External claim creation failed for " + claimName +
+                    ". Dialect ID: " + dialectId + ". Error: " + e.getMessage(), e);
+        }
+
+        Assert.assertNotNull(externalClaimId,
+                "SCIM external claim for " + claimName + " should not be null");
+        log.info("Successfully created SCIM external claim mapping for " + claimName +
+                " with ID: " + externalClaimId);
+
+        return externalClaimId;
+    }
+
+    /**
+     * Convert JSONArray of attribute mappings to List of AttributeMappingDTO.
+     *
+     * @param mappingsArray JSONArray containing attribute mapping objects.
+     * @return List of AttributeMappingDTO objects.
+     */
+    private List<AttributeMappingDTO> convertJsonArrayToAttributeMappings(
+            org.json.simple.JSONArray mappingsArray) {
+
+        List<AttributeMappingDTO> mappings = new ArrayList<>();
+        for (Object obj : mappingsArray) {
+            JSONObject mappingObj = (JSONObject) obj;
+            AttributeMappingDTO mapping = new AttributeMappingDTO();
+            mapping.setMappedAttribute((String) mappingObj.get("mappedAttribute"));
+            mapping.setUserstore((String) mappingObj.get("userstore"));
+            mappings.add(mapping);
+        }
+        return mappings;
+    }
+
+    /**
+     * Get the dialect ID by dialect URI.
+     * This method checks if the dialect exists, creates it if it doesn't, and returns the encoded dialect ID.
+     *
+     * @param dialectURI The dialect URI to search for.
+     * @return The encoded dialect ID.
+     * @throws Exception If an error occurs during the search or creation.
+     */
+    private String getDialectIdByURI(String dialectURI) throws Exception {
+
+        // The dialect ID is the Base64 URL-encoded version of the URI
+        String encodedDialectId = java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(dialectURI.getBytes());
+
+        log.info("Checking if dialect exists: " + dialectURI);
+        log.info("Encoded dialect ID: " + encodedDialectId);
+
+        // Try to get the dialect to see if it exists
+        JSONObject dialectResponse = null;
+        try {
+            dialectResponse = claimManagementRestClient.getExternalDialect(encodedDialectId);
+        } catch (Exception e) {
+            log.info("Dialect not found or error occurred, will attempt to create it");
+        }
+
+        boolean dialectExists = isExistingDialect(dialectResponse);
+
+        if (!dialectExists) {
+            log.info("Dialect does not exist, creating it: " + dialectURI);
+            ClaimDialectReqDTO claimDialectReqDTO = new ClaimDialectReqDTO();
+            claimDialectReqDTO.setDialectURI(dialectURI);
+            try {
+                claimManagementRestClient.addExternalDialect(claimDialectReqDTO);
+                log.info("Successfully created dialect: " + dialectURI);
+            } catch (Exception e) {
+                // Dialect might have been created by another process, continue
+                log.warn("Failed to create dialect (might already exist): " + e.getMessage());
+            }
+        } else {
+            log.info("Dialect already exists: " + dialectURI);
+        }
+
+        return encodedDialectId;
+    }
+
+    /**
+     * Check if a dialect exists based on the response from getExternalDialect.
+     *
+     * @param dialectResponse The JSON response from getExternalDialect.
+     * @return true if the dialect exists, false otherwise.
+     */
+    private boolean isExistingDialect(JSONObject dialectResponse) {
+
+        if (dialectResponse == null) {
+            return false;
+        }
+
+        // Check for error code CMT-50016 (dialect not found)
+        if (dialectResponse.get("code") != null && "CMT-50016".equals(dialectResponse.get("code"))) {
+            return false;
+        }
+
+        // If it has an ID, the dialect exists
+        return dialectResponse.get("id") != null;
+    }
+
+    /**
+     * Build a secondary user store request for JDBC user store.
+     *
+     * @return UserStoreReq object configured for JDBC secondary user store.
+     */
+    private UserStoreReq buildSecondaryUserStoreReq() {
+
+        UserStoreReq userStoreReq = new UserStoreReq();
+        userStoreReq.setTypeId(SECONDARY_USER_STORE_TYPE_ID);
+        userStoreReq.setName(SECONDARY_DOMAIN);
+        userStoreReq.setDescription("JDBC secondary user store for selective storage testing");
+
+        // Add user store properties
+        List<UserStoreReq.Property> properties = new ArrayList<>();
+
+        properties.add(new UserStoreReq.Property()
+                .name("driverName")
+                .value("org.h2.Driver"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("url")
+                .value("jdbc:h2:./repository/database/" + SECONDARY_DB_NAME));
+
+        properties.add(new UserStoreReq.Property()
+                .name("userName")
+                .value("wso2automation"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("password")
+                .value("wso2automation"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("disabled")
+                .value("false"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("PasswordDigest")
+                .value("SHA-256"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("StoreSaltedPassword")
+                .value("true"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("SCIMEnabled")
+                .value("true"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("UserIDEnabled")
+                .value("true"));
+
+        properties.add(new UserStoreReq.Property()
+                .name("GroupIDEnabled")
+                .value("true"));
+
+        userStoreReq.setProperties(properties);
+
+        // Add claim attribute mappings for custom claims in secondary user store
+        List<UserStoreReq.ClaimAttributeMapping> claimMappings = new ArrayList<>();
+
+        claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
+                .claimURI(LOCAL_CLAIM_URI_PREFIX + CUSTOM_CLAIM_1)
+                .mappedAttribute(CUSTOM_CLAIM_1));
+
+        claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
+                .claimURI(LOCAL_CLAIM_URI_PREFIX + CUSTOM_CLAIM_2)
+                .mappedAttribute(CUSTOM_CLAIM_2));
+
+        claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
+                .claimURI(LOCAL_CLAIM_URI_PREFIX + CUSTOM_CLAIM_3)
+                .mappedAttribute(CUSTOM_CLAIM_3));
+
+        // Add mappings for existing WSO2 claims used in the test
+        claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
+                .claimURI(LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_1)
+                .mappedAttribute(EXISTING_IDENTITY_CLAIM_1.replace("/", "_")));
+
+        claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
+                .claimURI(LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_2)
+                .mappedAttribute(EXISTING_IDENTITY_CLAIM_2.replace("/", "_")));
+
+        claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
+                .claimURI(LOCAL_CLAIM_URI_PREFIX + COUNTRY_CLAIM)
+                .mappedAttribute(COUNTRY_CLAIM));
+
+        userStoreReq.setClaimAttributeMappings(claimMappings);
+
+        return userStoreReq;
+    }
+}
