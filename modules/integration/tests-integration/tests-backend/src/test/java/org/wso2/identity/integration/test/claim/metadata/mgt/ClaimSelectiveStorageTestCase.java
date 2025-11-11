@@ -74,7 +74,9 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
     private static final String CUSTOM_CLAIM_3 = "custom3";
 
     private static final String EXISTING_IDENTITY_CLAIM_1 = "identity/userSourceId";
+    private static final String USER_SOURCE_ID_ATTRIBUTE = "userSourceId";
     private static final String EXISTING_IDENTITY_CLAIM_2 = "identity/preferredMFAOption";
+    private static final String PREFERRED_MFA_OPTION_ATTRIBUTE = "preferredMFAOption";
     private static final String COUNTRY_CLAIM = "country";
 
     // SCIM attribute names for existing WSO2 claims
@@ -89,7 +91,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
     // User store domains
     private static final String PRIMARY_DOMAIN = "PRIMARY";
-    private static final String SECONDARY_DOMAIN = "JDBC-SELECTIVE";
+    private static final String SEC1_DOMAIN = "SEC1DOMAIN";
     private static final String SECONDARY_USER_STORE_TYPE_ID = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final String SECONDARY_DB_NAME = "JDBC_SELECTIVE_STORAGE_DB";
 
@@ -200,7 +202,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             if (sec1UserStoreDomainId != null) {
                 userStoreMgtRestClient.deleteUserStore(sec1UserStoreDomainId);
                 userStoreMgtRestClient.waitForUserStoreUnDeployment(sec1UserStoreDomainId);
-                log.info("Deleted secondary user store: " + SECONDARY_DOMAIN);
+                log.info("Deleted secondary user store: " + SEC1_DOMAIN);
             }
         } catch (Exception e) {
             log.error("Failed to delete secondary user store", e);
@@ -345,7 +347,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             description = "Create secondary user store for selective storage testing")
     public void testCreateSecondaryUserStore() throws Exception {
 
-        log.info("Creating secondary user store: " + SECONDARY_DOMAIN);
+        log.info("Creating secondary user store: " + SEC1_DOMAIN);
 
         // Create H2 database for secondary user store
         log.info("Creating H2 database: " + SECONDARY_DB_NAME);
@@ -367,9 +369,9 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         log.info("User store creation initiated with ID: " + sec1UserStoreDomainId);
 
         // Wait for user store deployment
-        boolean isDeployed = userStoreMgtRestClient.waitForUserStoreDeployment(SECONDARY_DOMAIN);
+        boolean isDeployed = userStoreMgtRestClient.waitForUserStoreDeployment(SEC1_DOMAIN);
         Assert.assertTrue(isDeployed, "Secondary user store deployment failed");
-        log.info("Successfully created and deployed secondary user store: " + SECONDARY_DOMAIN);
+        log.info("Successfully created and deployed secondary user store: " + SEC1_DOMAIN);
     }
 
     @Test(groups = "wso2.is", priority = 10, dependsOnMethods = {"testCreateCustomClaims"},
@@ -378,28 +380,32 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Creating users in primary user store with custom claims and existing WSO2 claims");
 
-        // Create user1 with custom1 claim and userSourceId.
+        // Create user1.
         Map<String, String> customClaims1 = new HashMap<>();
         customClaims1.put(CUSTOM_CLAIM_1, "custom1_value_user1");
         Map<String, Object> wso2Claims1 = new HashMap<>();
         wso2Claims1.put(SCIM_USER_SOURCE_ID, "user1_source");
+        wso2Claims1.put(SCIM_PREFERRED_MFA_OPTION, "TOTP");
+        wso2Claims1.put(SCIM_COUNTRY, "United States");
         user1Id = createUserFromJsonTemplate(TEST_USER_1_USERNAME, TEST_USER_PASSWORD,
                 TEST_USER_1_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims1, wso2Claims1);
         log.info("Created user1 with ID: " + user1Id);
 
-        // Create user2 with custom2 claim and preferredMFAOption
+        // Create user2.
         Map<String, String> customClaims2 = new HashMap<>();
         customClaims2.put(CUSTOM_CLAIM_2, "custom2_value_user2");
         Map<String, Object> wso2Claims2 = new HashMap<>();
         wso2Claims2.put(SCIM_PREFERRED_MFA_OPTION, "TOTP");
+        wso2Claims2.put(SCIM_COUNTRY, "Sri Lanka");
         user2Id = createUserFromJsonTemplate(TEST_USER_2_USERNAME, TEST_USER_PASSWORD,
                 TEST_USER_2_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims2, wso2Claims2);
         log.info("Created user2 with ID: " + user2Id);
 
-        // Create user3 with custom3 claim and country
+        // Create user3.
         Map<String, String> customClaims3 = new HashMap<>();
         customClaims3.put(CUSTOM_CLAIM_3, "custom3_value_user3");
         Map<String, Object> wso2Claims3 = new HashMap<>();
+        wso2Claims3.put(SCIM_PREFERRED_MFA_OPTION, "SMS");
         wso2Claims3.put(SCIM_COUNTRY, "United States");
         user3Id = createUserFromJsonTemplate(TEST_USER_3_USERNAME, TEST_USER_PASSWORD,
                 TEST_USER_3_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims3, wso2Claims3);
@@ -414,22 +420,27 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Creating users in secondary user store with custom claims and existing WSO2 claims");
 
-        // Create secondary user1 with custom1 claim and userSourceId
-        String qualifiedUsername1 = SECONDARY_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
+        // Create secondary user1 with custom claims and TOTP MFA.
+        String qualifiedUsername1 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
         Map<String, String> customClaims1 = new HashMap<>();
         customClaims1.put(CUSTOM_CLAIM_1, "secondary_custom1_value");
+        customClaims1.put(CUSTOM_CLAIM_2, "secondary_custom2_value");
+        customClaims1.put(CUSTOM_CLAIM_3, "custom3_value_user3");
         Map<String, Object> wso2Claims1 = new HashMap<>();
         wso2Claims1.put(SCIM_USER_SOURCE_ID, "secondary_user1_source");
+        wso2Claims1.put(SCIM_PREFERRED_MFA_OPTION, "TOTP");
+        wso2Claims1.put(SCIM_COUNTRY, "United States");
         sec1User1Id = createUserFromJsonTemplate(qualifiedUsername1, TEST_USER_PASSWORD,
                 SECONDARY_TEST_USER_1_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims1, wso2Claims1);
         Assert.assertNotNull(sec1User1Id, "Secondary user1 ID should not be null");
         log.info("Created secondary user1 with ID: " + sec1User1Id);
 
-        // Create secondary user2 with custom2 claim and country
-        String qualifiedUsername2 = SECONDARY_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
+        // Create secondary user2 with custom2 claim and SMS MFA.
+        String qualifiedUsername2 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
         Map<String, String> customClaims2 = new HashMap<>();
         customClaims2.put(CUSTOM_CLAIM_2, "secondary_custom2_value");
         Map<String, Object> wso2Claims2 = new HashMap<>();
+        wso2Claims2.put(SCIM_PREFERRED_MFA_OPTION, "SMS");
         wso2Claims2.put(SCIM_COUNTRY, "Sri Lanka");
         sec1User2Id = createUserFromJsonTemplate(qualifiedUsername2, TEST_USER_PASSWORD,
                 SECONDARY_TEST_USER_2_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims2, wso2Claims2);
@@ -445,7 +456,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing PATCH replace operation to add custom2 to user1");
 
-        // Build PATCH request to add custom2 claim using REPLACE
+        // Build PATCH request to add custom2 claim using REPLACE.
         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
         UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
         replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
@@ -453,15 +464,15 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         replaceOperation.setValue("custom2_added_to_user1");
         patchRequest.addOperations(replaceOperation);
 
-        // Update user1 and get response
+        // Update user1 and get response.
         JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, user1Id);
         log.info("Successfully executed PATCH replace operation to add custom2");
 
-        // Verify the claim was added in the response
+        // Verify the claim was added in the response.
         JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
         Assert.assertNotNull(customSchema, "Custom schema should be present in response");
         Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_2), "custom2_added_to_user1");
-        // Verify original claim is still there
+        // Verify original claim is still there.
         Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_1), "custom1_value_user1");
         log.info("Verified PATCH replace operation to add custom2");
     }
@@ -497,7 +508,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing PATCH remove operation on user3 custom3 claim");
 
-        // Build PATCH request to remove custom3 claim
+        // Build PATCH request to remove custom3 claim.
         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
         UserItemAddGroupobj removeOperation = new UserItemAddGroupobj();
         removeOperation.setOp(UserItemAddGroupobj.OpEnum.REMOVE);
@@ -519,27 +530,28 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         log.info("Verified PATCH remove operation");
     }
 
-    @Test(groups = "wso2.is", priority = 18, dependsOnMethods = {"testCreateUsersWithCustomClaims"},
-            description = "Test filtering users by single custom claim")
+    @Test(groups = "wso2.is", priority = 18, dependsOnMethods = {"testCreateUsersWithCustomClaims", "testCreateSecondaryUsers"},
+            description = "Test filtering users by single custom claim and identity claims")
     public void testFilterUsersBySingleCustomClaim() throws Exception {
 
-        log.info("Testing user filtering by single custom claim");
+        log.info("Testing user filtering by single custom claim and identity claims");
 
-        // Filter by custom1 claim
-        String filter = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_1 + " eq \"custom1_value_user1\"";
-        String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
-        JSONObject result = scim2RestClient.filterUsers(encodedFilter);
+        // Test 1: Filter by custom1 claim (should find user1)
+        log.info("Test 1: Filtering by custom1 claim");
+        String filter1 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_1 + " eq \"custom1_value_user1\"";
+        String encodedFilter1 = URLEncoder.encode(filter1, StandardCharsets.UTF_8.toString());
+        JSONObject result1 = scim2RestClient.filterUsers(encodedFilter1);
 
-        Assert.assertNotNull(result, "Filter result should not be null");
-        Long totalResults = (Long) result.get("totalResults");
-        Assert.assertTrue(totalResults >= 1, "Should find at least 1 user with custom1 claim");
+        Assert.assertNotNull(result1, "Filter result for custom1 should not be null");
+        Long totalResults1 = (Long) result1.get("totalResults");
+        Assert.assertTrue(totalResults1 >= 1, "Should find at least 1 user with custom1 claim");
 
-        JSONArray resources = (JSONArray) result.get("Resources");
-        Assert.assertNotNull(resources, "Resources should not be null");
+        JSONArray resources1 = (JSONArray) result1.get("Resources");
+        Assert.assertNotNull(resources1, "Resources for custom1 should not be null");
 
         // Verify user1 is in the results
         boolean foundUser1 = false;
-        for (Object resource : resources) {
+        for (Object resource : resources1) {
             JSONObject user = (JSONObject) resource;
             if (TEST_USER_1_USERNAME.equals(user.get("userName"))) {
                 foundUser1 = true;
@@ -547,30 +559,152 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             }
         }
         Assert.assertTrue(foundUser1, "User1 should be found in filter results");
-        log.info("Successfully filtered users by single custom claim");
+        log.info("Test 1 passed: Successfully filtered users by custom1 claim");
+
+        // Test 2: Filter by custom2 claim (should find user2)
+        log.info("Test 2: Filtering by custom2 claim");
+        String filter2 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " eq \"custom2_value_user2\"";
+        String encodedFilter2 = URLEncoder.encode(filter2, StandardCharsets.UTF_8.toString());
+        JSONObject result2 = scim2RestClient.filterUsers(encodedFilter2);
+
+        Assert.assertNotNull(result2, "Filter result for custom2 should not be null");
+        Long totalResults2 = (Long) result2.get("totalResults");
+        Assert.assertTrue(totalResults2 >= 1, "Should find at least 1 user with custom2 claim");
+
+        JSONArray resources2 = (JSONArray) result2.get("Resources");
+        Assert.assertNotNull(resources2, "Resources for custom2 should not be null");
+
+        // Verify user2 is in the results
+        boolean foundUser2 = false;
+        for (Object resource : resources2) {
+            JSONObject user = (JSONObject) resource;
+            if (TEST_USER_2_USERNAME.equals(user.get("userName"))) {
+                foundUser2 = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundUser2, "User2 should be found in filter results");
+        log.info("Test 2 passed: Successfully filtered users by custom2 claim");
+
+        // Test 3: Filter by custom3 claim - Cross-store test (should find user3 from primary and sec1User1 from secondary)
+        log.info("Test 3: Filtering by custom3 claim across primary and secondary user stores");
+        String filter3 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\"";
+        String encodedFilter3 = URLEncoder.encode(filter3, StandardCharsets.UTF_8.toString());
+        JSONObject result3 = scim2RestClient.filterUsers(encodedFilter3);
+
+        Assert.assertNotNull(result3, "Filter result for custom3 should not be null");
+        Long totalResults3 = (Long) result3.get("totalResults");
+        Assert.assertTrue(totalResults3 >= 2, "Should find at least 2 users with custom3 claim (from both stores)");
+
+        JSONArray resources3 = (JSONArray) result3.get("Resources");
+        Assert.assertNotNull(resources3, "Resources for custom3 should not be null");
+
+        // Verify user3 (primary) and sec1User1 (secondary) are in the results
+        boolean foundUser3 = false;
+        boolean foundSecondaryUser1 = false;
+        String qualifiedSecondaryUsername = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
+        for (Object resource : resources3) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (TEST_USER_3_USERNAME.equals(username)) {
+                foundUser3 = true;
+            } else if (qualifiedSecondaryUsername.equals(username)) {
+                foundSecondaryUser1 = true;
+            }
+        }
+        Assert.assertTrue(foundUser3, "User3 (primary store) should be found in custom3 filter results");
+        Assert.assertTrue(foundSecondaryUser1, "Sec1User1 (secondary store) should be found in custom3 filter results");
+        log.info("Test 3 passed: Successfully filtered users by custom3 claim across stores");
+
+        // Test 4: Filter by preferredMFAOption=TOTP - Cross-store test (should find user1, user2, and sec1User1)
+        log.info("Test 4: Filtering by preferredMFAOption=TOTP across primary and secondary user stores");
+        String filter4 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+        String encodedFilter4 = URLEncoder.encode(filter4, StandardCharsets.UTF_8.toString());
+        JSONObject result4 = scim2RestClient.filterUsers(encodedFilter4);
+
+        Assert.assertNotNull(result4, "Filter result for preferredMFAOption should not be null");
+        Long totalResults4 = (Long) result4.get("totalResults");
+        Assert.assertTrue(totalResults4 >= 3, "Should find at least 3 users with preferredMFAOption=TOTP (from both stores)");
+
+        JSONArray resources4 = (JSONArray) result4.get("Resources");
+        Assert.assertNotNull(resources4, "Resources for preferredMFAOption should not be null");
+
+        // Verify user1, user2 (primary) and sec1User1 (secondary) are in the results
+        boolean foundUser1InMFA = false;
+        boolean foundUser2InMFA = false;
+        boolean foundSecondaryUser1InMFA = false;
+        for (Object resource : resources4) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (TEST_USER_1_USERNAME.equals(username)) {
+                foundUser1InMFA = true;
+            } else if (TEST_USER_2_USERNAME.equals(username)) {
+                foundUser2InMFA = true;
+            } else if (qualifiedSecondaryUsername.equals(username)) {
+                foundSecondaryUser1InMFA = true;
+            }
+        }
+        Assert.assertTrue(foundUser1InMFA, "User1 (primary store) should be found in preferredMFAOption filter results");
+        Assert.assertTrue(foundUser2InMFA, "User2 (primary store) should be found in preferredMFAOption filter results");
+        Assert.assertTrue(foundSecondaryUser1InMFA, "Sec1User1 (secondary store) should be found in preferredMFAOption filter results");
+        log.info("Test 4 passed: Successfully filtered users by preferredMFAOption=TOTP across stores");
+
+        // Test 5: Filter by preferredMFAOption=SMS - Cross-store test (should find user3 and sec1User2)
+        log.info("Test 5: Filtering by preferredMFAOption=SMS across primary and secondary user stores");
+        String filter5 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
+        String encodedFilter5 = URLEncoder.encode(filter5, StandardCharsets.UTF_8.toString());
+        JSONObject result5 = scim2RestClient.filterUsers(encodedFilter5);
+
+        Assert.assertNotNull(result5, "Filter result for preferredMFAOption=SMS should not be null");
+        Long totalResults5 = (Long) result5.get("totalResults");
+        Assert.assertTrue(totalResults5 >= 2, "Should find at least 2 users with preferredMFAOption=SMS (from both stores)");
+
+        JSONArray resources5 = (JSONArray) result5.get("Resources");
+        Assert.assertNotNull(resources5, "Resources for preferredMFAOption=SMS should not be null");
+
+        // Verify user3 (primary) and sec1User2 (secondary) are in the results
+        boolean foundUser3InMFA = false;
+        boolean foundSecondaryUser2InMFA = false;
+        String qualifiedSecondaryUsername2 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
+        for (Object resource : resources5) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (TEST_USER_3_USERNAME.equals(username)) {
+                foundUser3InMFA = true;
+            } else if (qualifiedSecondaryUsername2.equals(username)) {
+                foundSecondaryUser2InMFA = true;
+            }
+        }
+        Assert.assertTrue(foundUser3InMFA, "User3 (primary store) should be found in preferredMFAOption=SMS filter results");
+        Assert.assertTrue(foundSecondaryUser2InMFA, "Sec1User2 (secondary store) should be found in preferredMFAOption=SMS filter results");
+        log.info("Test 5 passed: Successfully filtered users by preferredMFAOption=SMS across stores");
+
+        log.info("All filtering tests passed successfully (including cross-store filtering)");
     }
 
-    @Test(groups = "wso2.is", priority = 19, dependsOnMethods = {"testCreateUsersWithCustomClaims", "testPatchAddCustomClaimToUser"},
-            description = "Test filtering users by multiple custom claims with AND operator")
+    @Test(groups = "wso2.is", priority = 19, dependsOnMethods = {"testCreateUsersWithCustomClaims", "testPatchAddCustomClaimToUser", "testCreateSecondaryUsers"},
+            description = "Test filtering users by multiple claims with AND operator (custom claims + identity claims)")
     public void testFilterUsersByMultipleClaims() throws Exception {
 
-        log.info("Testing user filtering by multiple custom claims");
+        log.info("Testing user filtering by multiple claims with AND operator");
 
-        // Filter by custom2 claim (added to user1 in PATCH test)
-        String filter = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " eq \"custom2_added_to_user1\"";
-        String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
-        JSONObject result = scim2RestClient.filterUsers(encodedFilter);
+        // Test 1: Filter by custom2 contains "custom2_added" AND preferredMFAOption eq "TOTP" (should find user1 from primary)
+        log.info("Test 1: Filtering by custom2 co 'custom2_added' AND preferredMFAOption eq 'TOTP'");
+        String filter1 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"custom2_added\" and " +
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+        String encodedFilter1 = URLEncoder.encode(filter1, StandardCharsets.UTF_8.toString());
+        JSONObject result1 = scim2RestClient.filterUsers(encodedFilter1);
 
-        Assert.assertNotNull(result, "Filter result should not be null");
-        Long totalResults = (Long) result.get("totalResults");
-        Assert.assertTrue(totalResults >= 1, "Should find at least 1 user with custom2 claim");
+        Assert.assertNotNull(result1, "Filter result 1 should not be null");
+        Long totalResults1 = (Long) result1.get("totalResults");
+        Assert.assertTrue(totalResults1 >= 1, "Should find at least 1 user with custom2 containing 'custom2_added' AND TOTP");
 
-        JSONArray resources = (JSONArray) result.get("Resources");
-        Assert.assertNotNull(resources, "Resources should not be null");
+        JSONArray resources1 = (JSONArray) result1.get("Resources");
+        Assert.assertNotNull(resources1, "Resources 1 should not be null");
 
         // Verify user1 is in the results
         boolean foundUser1 = false;
-        for (Object resource : resources) {
+        for (Object resource : resources1) {
             JSONObject user = (JSONObject) resource;
             String username = (String) user.get("userName");
             if (TEST_USER_1_USERNAME.equals(username)) {
@@ -578,8 +712,128 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
                 break;
             }
         }
-        Assert.assertTrue(foundUser1, "User1 should be found in filter results");
-        log.info("Successfully filtered users by custom claim");
+        Assert.assertTrue(foundUser1, "User1 (primary store) should be found with combined filter");
+        log.info("Test 1 passed: Successfully filtered by custom2 + preferredMFAOption");
+
+        // Test 2: Filter by custom2 contains "secondary" AND preferredMFAOption eq "SMS"
+        // (should find sec1User2 from secondary).
+        log.info("Test 2: Filtering by custom2 co 'secondary' AND preferredMFAOption eq 'SMS'");
+        String filter2 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"secondary\" and " +
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
+        String encodedFilter2 = URLEncoder.encode(filter2, StandardCharsets.UTF_8.toString());
+        JSONObject result2 = scim2RestClient.filterUsers(encodedFilter2);
+
+        Assert.assertNotNull(result2, "Filter result 2 should not be null");
+        Long totalResults2 = (Long) result2.get("totalResults");
+        Assert.assertTrue(totalResults2 >= 1, "Should find at least 1 user with custom2 containing 'secondary' AND SMS");
+
+        JSONArray resources2 = (JSONArray) result2.get("Resources");
+        Assert.assertNotNull(resources2, "Resources 2 should not be null");
+
+        // Verify sec1User2 is in the results
+        boolean foundSecUser2 = false;
+        String qualifiedSecondaryUsername2 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
+        for (Object resource : resources2) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (qualifiedSecondaryUsername2.equals(username)) {
+                foundSecUser2 = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundSecUser2, "Sec1User2 (secondary store) should be found with combined filter");
+        log.info("Test 2 passed: Successfully filtered by custom2 + preferredMFAOption (secondary store)");
+
+        // Test 3: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "SMS" (should find user3 from primary)
+        log.info("Test 3: Filtering by custom3 eq 'custom3_value_user3' AND preferredMFAOption eq 'SMS'");
+        String filter3 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\" and " +
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
+        String encodedFilter3 = URLEncoder.encode(filter3, StandardCharsets.UTF_8.toString());
+        JSONObject result3 = scim2RestClient.filterUsers(encodedFilter3);
+
+        Assert.assertNotNull(result3, "Filter result 3 should not be null");
+        Long totalResults3 = (Long) result3.get("totalResults");
+        Assert.assertTrue(totalResults3 >= 1, "Should find at least 1 user with custom3 AND SMS");
+
+        JSONArray resources3 = (JSONArray) result3.get("Resources");
+        Assert.assertNotNull(resources3, "Resources 3 should not be null");
+
+        // Verify user3 is in the results (should NOT find sec1User1 because it has TOTP, not SMS)
+        boolean foundUser3 = false;
+        for (Object resource : resources3) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (TEST_USER_3_USERNAME.equals(username)) {
+                foundUser3 = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundUser3, "User3 (primary store) should be found with combined filter");
+        log.info("Test 3 passed: Successfully filtered by custom3 + preferredMFAOption=SMS");
+
+        // Test 4: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "TOTP" (should find sec1User1 from secondary)
+        log.info("Test 4: Filtering by custom3 eq 'custom3_value_user3' AND preferredMFAOption eq 'TOTP'");
+        String filter4 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\" and " +
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+        String encodedFilter4 = URLEncoder.encode(filter4, StandardCharsets.UTF_8.toString());
+        JSONObject result4 = scim2RestClient.filterUsers(encodedFilter4);
+
+        Assert.assertNotNull(result4, "Filter result 4 should not be null");
+        Long totalResults4 = (Long) result4.get("totalResults");
+        Assert.assertTrue(totalResults4 >= 1, "Should find at least 1 user with custom3 AND TOTP");
+
+        JSONArray resources4 = (JSONArray) result4.get("Resources");
+        Assert.assertNotNull(resources4, "Resources 4 should not be null");
+
+        // Verify sec1User1 is in the results (should NOT find user3 because it has SMS, not TOTP)
+        boolean foundSecUser1 = false;
+        String qualifiedSecondaryUsername1 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
+        for (Object resource : resources4) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (qualifiedSecondaryUsername1.equals(username)) {
+                foundSecUser1 = true;
+                break;
+            }
+        }
+        Assert.assertTrue(foundSecUser1, "Sec1User1 (secondary store) should be found with combined filter");
+        log.info("Test 4 passed: Successfully filtered by custom3 + preferredMFAOption=TOTP");
+
+        // Test 5: Filter by custom2 contains "custom2" AND preferredMFAOption eq "TOTP" (should find user1, user2, sec1User1)
+        log.info("Test 5: Filtering by custom2 co 'custom2' AND preferredMFAOption eq 'TOTP' (cross-store)");
+        String filter5 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"custom2\" and " +
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+        String encodedFilter5 = URLEncoder.encode(filter5, StandardCharsets.UTF_8.toString());
+        JSONObject result5 = scim2RestClient.filterUsers(encodedFilter5);
+
+        Assert.assertNotNull(result5, "Filter result 5 should not be null");
+        Long totalResults5 = (Long) result5.get("totalResults");
+        Assert.assertTrue(totalResults5 >= 3, "Should find at least 3 users with custom2 containing 'custom2' AND TOTP");
+
+        JSONArray resources5 = (JSONArray) result5.get("Resources");
+        Assert.assertNotNull(resources5, "Resources 5 should not be null");
+
+        // Verify user1, user2 (primary) and sec1User1 (secondary) are in the results
+        boolean foundUser1InTest5 = false;
+        boolean foundUser2InTest5 = false;
+        boolean foundSecUser1InTest5 = false;
+        for (Object resource : resources5) {
+            JSONObject user = (JSONObject) resource;
+            String username = (String) user.get("userName");
+            if (TEST_USER_1_USERNAME.equals(username)) {
+                foundUser1InTest5 = true;
+            } else if (TEST_USER_2_USERNAME.equals(username)) {
+                foundUser2InTest5 = true;
+            } else if (qualifiedSecondaryUsername1.equals(username)) {
+                foundSecUser1InTest5 = true;
+            }
+        }
+        Assert.assertTrue(foundUser1InTest5, "User1 (primary) should be found in cross-store combined filter");
+        Assert.assertTrue(foundUser2InTest5, "User2 (primary) should be found in cross-store combined filter");
+        Assert.assertTrue(foundSecUser1InTest5, "Sec1User1 (secondary) should be found in cross-store combined filter");
+        log.info("Test 5 passed: Successfully filtered by custom2 + preferredMFAOption=TOTP across stores");
+
+        log.info("All multiple claim filtering tests passed successfully");
     }
 
     @Test(groups = "wso2.is", priority = 20, dependsOnMethods = {"testCreateSecondaryUsers"},
@@ -638,7 +892,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         log.info("Testing user filtering for secondary user store");
 
         // Filter by username to get secondary users
-        String qualifiedUsername1 = SECONDARY_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
+        String qualifiedUsername1 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
         String filter = "userName eq \"" + qualifiedUsername1 + "\"";
         String encodedFilter = URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
         JSONObject result = scim2RestClient.filterUsers(encodedFilter);
@@ -678,22 +932,22 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
     private String createUserFromJsonTemplate(String username, String password, String email,
             Map<String, String> customClaims, Map<String, Object> wso2Claims) throws Exception {
 
-        // Read and modify JSON template
+        // Read and modify JSON template.
         JSONObject userJson = readAndModifyUserTemplate(username, password, email, customClaims, wso2Claims);
 
-        // Convert JSON to string for SCIM2RestClient
+        // Convert JSON to string for SCIM2RestClient.
         String jsonRequest = userJson.toJSONString();
         log.info("Creating user with JSON: " + jsonRequest);
 
-        // Create user using raw JSON
+        // Create user using raw JSON.
         String userId = scim2RestClient.createUserWithRawJSON(jsonRequest);
         Assert.assertNotNull(userId, "User ID should not be null for " + username);
 
-        // Verify user was created with custom claims
+        // Verify user was created with custom claims.
         JSONObject createdUser = scim2RestClient.getUser(userId, null);
         Assert.assertEquals(createdUser.get("userName"), username);
 
-        // Verify custom claims if provided
+        // Verify custom claims if provided.
         if (customClaims != null && !customClaims.isEmpty()) {
             JSONObject customSchema = (JSONObject) createdUser.get(CUSTOM_SCHEMA_URI);
             Assert.assertNotNull(customSchema, "Custom schema should be present in created user");
@@ -982,7 +1236,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         UserStoreReq userStoreReq = new UserStoreReq();
         userStoreReq.setTypeId(SECONDARY_USER_STORE_TYPE_ID);
-        userStoreReq.setName(SECONDARY_DOMAIN);
+        userStoreReq.setName(SEC1_DOMAIN);
         userStoreReq.setDescription("JDBC secondary user store for selective storage testing");
 
         // Add user store properties
@@ -1048,11 +1302,11 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         // Add mappings for existing WSO2 claims used in the test
         claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
                 .claimURI(LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_1)
-                .mappedAttribute(EXISTING_IDENTITY_CLAIM_1.replace("/", "_")));
+                .mappedAttribute(USER_SOURCE_ID_ATTRIBUTE));
 
         claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
                 .claimURI(LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_2)
-                .mappedAttribute(EXISTING_IDENTITY_CLAIM_2.replace("/", "_")));
+                .mappedAttribute(PREFERRED_MFA_OPTION_ATTRIBUTE));
 
         claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
                 .claimURI(LOCAL_CLAIM_URI_PREFIX + COUNTRY_CLAIM)
