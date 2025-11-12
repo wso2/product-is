@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.claim.metadata.mgt;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -28,6 +29,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.AttributeMappingDTO;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.ExternalClaimReq;
 import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.PropertyDTO;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
@@ -76,36 +78,36 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
     private static final String PREFERRED_MFA_OPTION_ATTRIBUTE = "preferredMFAOption";
     private static final String COUNTRY_CLAIM = "country";
 
-    // SCIM attribute names for existing WSO2 claims
+    // SCIM attribute names for existing WSO2 claims.
     private static final String SCIM_USER_SOURCE_ID = "userSourceId";
     private static final String SCIM_PREFERRED_MFA_OPTION = "preferredMFAOption";
     private static final String SCIM_COUNTRY = "country";
 
-    // Custom SCIM schema dialect URI for testing
+    // Custom SCIM schema dialect URI for testing.
     private static final String CUSTOM_SCHEMA_URI = "urn:scim:schemas:extension:custom:User";
-    // WSO2 SCIM schema dialect URI for identity claims
+    // WSO2 SCIM schema dialect URI for identity claims.
     private static final String WSO2_SCHEMA_URI = "urn:scim:wso2:schema";
 
-    // User store domains
+    // User store domains.
     private static final String PRIMARY_DOMAIN = "PRIMARY";
     private static final String SEC1_DOMAIN = "SEC1DOMAIN";
     private static final String SECONDARY_USER_STORE_TYPE_ID = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final String SECONDARY_DB_NAME = "JDBC_SELECTIVE_STORAGE_DB";
 
-    // Storage for claim IDs (only for custom claims we create)
+    // Storage for claim IDs (only for custom claims we create).
     private String customClaim1Id;
     private String customClaim2Id;
     private String customClaim3Id;
 
-    // Storage for external claim IDs (custom claims)
+    // Storage for external claim IDs (custom claims).
     private String scimCustomClaim1Id;
     private String scimCustomClaim2Id;
     private String scimCustomClaim3Id;
 
-    // Custom schema dialect ID (will be created and deleted during test)
+    // Custom schema dialect ID (will be created and deleted during test).
     private String customSchemaDialectId;
 
-    // Test user constants
+    // Test user constants.
     private static final String TEST_USER_1_USERNAME = "selectiveuser1";
     private static final String TEST_USER_2_USERNAME = "selectiveuser2";
     private static final String TEST_USER_3_USERNAME = "selectiveuser3";
@@ -199,7 +201,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
                 userStoreMgtRestClient.waitForUserStoreUnDeployment(sec1UserStoreDomainId);
                 log.info("Deleted secondary user store: " + SEC1_DOMAIN);
 
-                // Clean up the H2 database files to prevent locks
+                // Clean up the H2 database files to prevent locks.
                 try {
                     String dbPath = ServerConfigurationManager.getCarbonHome() + "/repository/database/"
                             + SECONDARY_DB_NAME;
@@ -315,7 +317,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         
         log.info("Successfully created all custom local claims");
 
-        log.info("Creating SCIM2 external claim mappings for custom claims in custom schema");
+        log.info("Creating SCIM2 external claim mappings for custom claims in custom schema.");
 
         scimCustomClaim1Id = createExternalClaimMapping(CUSTOM_CLAIM_1, customSchemaDialectId, CUSTOM_SCHEMA_URI);
         scimCustomClaim2Id = createExternalClaimMapping(CUSTOM_CLAIM_2, customSchemaDialectId, CUSTOM_SCHEMA_URI);
@@ -324,50 +326,104 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         log.info("Successfully created all SCIM2 external claim mappings for custom claims");
     }
 
-    @Test(groups = "wso2.is", priority = 7, dependsOnMethods = {"testCreateCustomClaims"},
-            description = "Update custom claim 1 properties")
-    public void testUpdateCustomClaim1Properties() throws Exception {
+    @Test(groups = "wso2.is", priority = 2, dependsOnMethods = {"testCreateCustomClaims"},
+            description = "Verify default managedInUserStore is true for non-identity custom claims")
+    public void testVerifyDefaultManagedInUserStore() throws Exception {
 
-        log.info("Updating custom claim 1 properties");
+        log.info("Verifying default managedInUserStore value for custom claims");
 
-        // Get the existing claim
-        JSONObject existingClaim = claimManagementRestClient.getLocalClaim(customClaim1Id);
+        // Verify that custom claims (non-identity claims) have managedInUserStore = true by default.
+        verifyManagedInUserStore(customClaim1Id, true);
+        verifyManagedInUserStore(customClaim2Id, true);
+        verifyManagedInUserStore(customClaim3Id, true);
 
-        // Create update request with modified properties
-        LocalClaimReq updateReq = new LocalClaimReq();
-        updateReq.setClaimURI((String) existingClaim.get("claimURI"));
-        updateReq.setDisplayName("Custom Claim 1 - Updated");
-        updateReq.setDescription("This is updated custom claim 1 description");
-        updateReq.setDisplayOrder(10);
-        updateReq.setReadOnly(true);
-        updateReq.setRequired(false);
-        updateReq.setSupportedByDefault(true);
+        // Verify no ExcludedUserStores property is set by default.
+        verifyExcludedUserStores(customClaim1Id, StringUtils.EMPTY);
+        verifyExcludedUserStores(customClaim2Id, StringUtils.EMPTY);
+        verifyExcludedUserStores(customClaim3Id, StringUtils.EMPTY);
 
-        // Convert JSONArray to List for attribute mapping
-        updateReq.setAttributeMapping(convertJsonArrayToAttributeMappings(
-                (org.json.simple.JSONArray) existingClaim.get("attributeMapping")));
-
-        // TODO: Add managedInUserStore property here when available
-        // updateReq.setManagedInUserStore(true);
-
-        // Update the claim
-        claimManagementRestClient.updateLocalClaim(customClaim1Id, updateReq);
-        log.info("Successfully updated custom claim 1 properties");
-
-        // Verify the update
-        JSONObject updatedClaim = claimManagementRestClient.getLocalClaim(customClaim1Id);
-        Assert.assertEquals(updatedClaim.get("supportedByDefault"), true);
-
-        log.info("Verified custom claim 1 property updates");
+        log.info("Successfully verified default managedInUserStore=true for all custom claims");
     }
 
-    @Test(groups = "wso2.is", priority = 9, dependsOnMethods = {"testCreateCustomClaims"},
+    @Test(groups = "wso2.is", priority = 6, dependsOnMethods = {"testVerifyDefaultManagedInUserStore"},
+            description = "Update claims to final configuration with managedInUserStore and ExcludedUserStores")
+    public void testUpdateClaimsToFinalConfiguration() throws Exception {
+
+        log.info("Updating claims to final selective storage configuration");
+
+        // Get the country claim ID (existing claim).
+        String countryClaimUri = LOCAL_CLAIM_URI_PREFIX + COUNTRY_CLAIM;
+        String countryClaimId = java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(countryClaimUri.getBytes());
+
+        // Get existing identity claim IDs.
+        String identityClaim1Uri = LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_1;
+        String identityClaim1Id = java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(identityClaim1Uri.getBytes());
+
+        String identityClaim2Uri = LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_2;
+        String identityClaim2Id = java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(identityClaim2Uri.getBytes());
+
+        // Final configuration updates.
+
+        // COUNTRY: managedInUserStore = true (already true, but let's be explicit).
+        updateClaimStorageProperties(countryClaimId, true, null);
+        log.info("Updated COUNTRY claim with managedInUserStore=true");
+
+        // CUSTOM_CLAIM_1: managedInUserStore = true, ExcludedUserStores = "PRIMARY".
+        updateClaimStorageProperties(customClaim1Id, true, PRIMARY_DOMAIN);
+        log.info("Updated CUSTOM_CLAIM_1 with managedInUserStore=true, ExcludedUserStores=PRIMARY");
+
+        // CUSTOM_CLAIM_2: managedInUserStore = false.
+        updateClaimStorageProperties(customClaim2Id, false, null);
+        log.info("Updated CUSTOM_CLAIM_2 with managedInUserStore=false");
+
+        // CUSTOM_CLAIM_3: managedInUserStore = true, ExcludedUserStores = "SEC1DOMAIN".
+        updateClaimStorageProperties(customClaim3Id, true, SEC1_DOMAIN);
+        log.info("Updated CUSTOM_CLAIM_3 with managedInUserStore=true, ExcludedUserStores=SEC1DOMAIN");
+
+        // EXISTING_IDENTITY_CLAIM_1: managedInUserStore = false.
+        updateClaimStorageProperties(identityClaim1Id, false, null);
+        log.info("Updated EXISTING_IDENTITY_CLAIM_1 with managedInUserStore=false");
+
+        // EXISTING_IDENTITY_CLAIM_2: managedInUserStore = true, ExcludedUserStores = "SEC1DOMAIN".
+        updateClaimStorageProperties(identityClaim2Id, true, SEC1_DOMAIN);
+        log.info("Updated EXISTING_IDENTITY_CLAIM_2 with managedInUserStore=true, ExcludedUserStores=SEC1DOMAIN");
+
+        log.info("Successfully updated all claims to final configuration");
+
+        // Verify all updates.
+        log.info("Verifying final claim configurations");
+
+        verifyManagedInUserStore(countryClaimId, true);
+        verifyExcludedUserStores(countryClaimId, StringUtils.EMPTY);
+
+        verifyManagedInUserStore(customClaim1Id, true);
+        verifyExcludedUserStores(customClaim1Id, PRIMARY_DOMAIN);
+
+        verifyManagedInUserStore(customClaim2Id, false);
+        verifyExcludedUserStores(customClaim2Id, null);
+
+        verifyManagedInUserStore(customClaim3Id, true);
+        verifyExcludedUserStores(customClaim3Id, SEC1_DOMAIN);
+
+        verifyManagedInUserStore(identityClaim1Id, false);
+        verifyExcludedUserStores(identityClaim1Id, null);
+
+        verifyManagedInUserStore(identityClaim2Id, true);
+        verifyExcludedUserStores(identityClaim2Id, SEC1_DOMAIN);
+
+        log.info("Successfully verified all final claim configurations");
+    }
+
+    @Test(groups = "wso2.is", priority = 9, dependsOnMethods = {"testUpdateClaimsToFinalConfiguration"},
             description = "Create secondary user store for selective storage testing")
     public void testCreateSecondaryUserStore() throws Exception {
 
         log.info("Creating secondary user store: " + SEC1_DOMAIN);
 
-        // Create H2 database for secondary user store
+        // Create H2 database for secondary user store.
         log.info("Creating H2 database: " + SECONDARY_DB_NAME);
         H2DataBaseManager dbManager = new H2DataBaseManager(
                 "jdbc:h2:" + ServerConfigurationManager.getCarbonHome() + "/repository/database/"
@@ -378,21 +434,21 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         dbManager.disconnect();
         log.info("H2 database created successfully");
 
-        // Build user store request
+        // Build user store request.
         UserStoreReq userStoreReq = buildSecondaryUserStoreReq();
 
-        // Create the user store
+        // Create the user store.
         sec1UserStoreDomainId = userStoreMgtRestClient.addUserStore(userStoreReq);
         Assert.assertNotNull(sec1UserStoreDomainId, "Secondary user store ID should not be null");
         log.info("User store creation initiated with ID: " + sec1UserStoreDomainId);
 
-        // Wait for user store deployment
+        // Wait for user store deployment.
         boolean isDeployed = userStoreMgtRestClient.waitForUserStoreDeployment(SEC1_DOMAIN);
         Assert.assertTrue(isDeployed, "Secondary user store deployment failed");
         log.info("Successfully created and deployed secondary user store: " + SEC1_DOMAIN);
     }
 
-    @Test(groups = "wso2.is", priority = 10, dependsOnMethods = {"testCreateCustomClaims"},
+    @Test(groups = "wso2.is", priority = 10, dependsOnMethods = {"testUpdateClaimsToFinalConfiguration"},
             description = "Create users in primary user store with custom claims and existing WSO2 claims")
     public void testCreateUsersWithCustomClaims() throws Exception {
 
@@ -501,7 +557,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing PATCH replace operation on user2 custom2 claim");
 
-        // Build PATCH request to replace custom2 claim value
+        // Build PATCH request to replace custom2 claim value.
         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
         UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
         replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
@@ -509,11 +565,11 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         replaceOperation.setValue("custom2_value_replaced");
         patchRequest.addOperations(replaceOperation);
 
-        // Update user2 and get response
+        // Update user2 and get response.
         JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, user2Id);
         log.info("Successfully executed PATCH replace operation");
 
-        // Verify the claim was updated in the response
+        // Verify the claim was updated in the response.
         JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
         Assert.assertNotNull(customSchema, "Custom schema should be present in response");
         Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_2), "custom2_value_replaced");
@@ -533,14 +589,14 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         removeOperation.setPath(CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3);
         patchRequest.addOperations(removeOperation);
 
-        // Update user3 and get response
+        // Update user3 and get response.
         JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, user3Id);
         log.info("Successfully executed PATCH remove operation");
 
-        // Verify the claim was removed in the response
+        // Verify the claim was removed in the response.
         JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
         if (customSchema != null) {
-            // Claim should be removed or null
+            // Claim should be removed or null.
             Object custom3Value = customSchema.get(CUSTOM_CLAIM_3);
             Assert.assertTrue(custom3Value == null || custom3Value.toString().isEmpty(),
                     "Custom3 claim should be removed in response");
@@ -554,32 +610,32 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing user filtering by single custom claim and identity claims");
 
-        // Test 1: Filter by custom1 claim (should find user1)
+        // Test 1: Filter by custom1 claim (should find user1).
         log.info("Test 1: Filtering by custom1 claim");
         String filter1 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_1 + " eq \"custom1_value_user1\"";
         filterAndVerifyUsers(filter1, 1, TEST_USER_1_USERNAME);
         log.info("Test 1 passed: Successfully filtered users by custom1 claim");
 
-        // Test 2: Filter by custom2 claim (should find user2)
+        // Test 2: Filter by custom2 claim (should find user2).
         log.info("Test 2: Filtering by custom2 claim");
         String filter2 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " eq \"custom2_value_user2\"";
         filterAndVerifyUsers(filter2, 1, TEST_USER_2_USERNAME);
         log.info("Test 2 passed: Successfully filtered users by custom2 claim");
 
-        // Test 3: Filter by custom3 claim - Cross-store test (should find user3 from primary and sec1User1 from secondary)
+        // Test 3: Filter by custom3 claim - Cross-store test (should find user3 from primary and sec1User1 from secondary).
         log.info("Test 3: Filtering by custom3 claim across primary and secondary user stores");
         String filter3 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\"";
         String qualifiedSecondaryUsername = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
         filterAndVerifyUsers(filter3, 2, TEST_USER_3_USERNAME, qualifiedSecondaryUsername);
         log.info("Test 3 passed: Successfully filtered users by custom3 claim across stores");
 
-        // Test 4: Filter by preferredMFAOption=TOTP - Cross-store test (should find user1, user2, and sec1User1)
+        // Test 4: Filter by preferredMFAOption=TOTP - Cross-store test (should find user1, user2, and sec1User1).
         log.info("Test 4: Filtering by preferredMFAOption=TOTP across primary and secondary user stores");
         String filter4 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
         filterAndVerifyUsers(filter4, 3, TEST_USER_1_USERNAME, TEST_USER_2_USERNAME, qualifiedSecondaryUsername);
         log.info("Test 4 passed: Successfully filtered users by preferredMFAOption=TOTP across stores");
 
-        // Test 5: Filter by preferredMFAOption=SMS - Cross-store test (should find user3 and sec1User2)
+        // Test 5: Filter by preferredMFAOption=SMS - Cross-store test (should find user3 and sec1User2).
         log.info("Test 5: Filtering by preferredMFAOption=SMS across primary and secondary user stores");
         String filter5 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
         String qualifiedSecondaryUsername2 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
@@ -595,14 +651,14 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing user filtering by multiple claims with AND operator");
 
-        // Test 1: Filter by custom2 contains "custom2_added" AND preferredMFAOption eq "TOTP" (should find user1 from primary)
+        // Test 1: Filter by custom2 contains "custom2_added" AND preferredMFAOption eq "TOTP" (should find user1 from primary).
         log.info("Test 1: Filtering by custom2 co 'custom2_added' AND preferredMFAOption eq 'TOTP'");
         String filter1 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"custom2_added\" and " +
                 WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
         filterAndVerifyUsers(filter1, 1, TEST_USER_1_USERNAME);
         log.info("Test 1 passed: Successfully filtered by custom2 + preferredMFAOption");
 
-        // Test 2: Filter by custom2 contains "secondary" AND preferredMFAOption eq "SMS"
+        // Test 2: Filter by custom2 contains "secondary" AND preferredMFAOption eq "SMS".
         // (should find sec1User2 from secondary).
         log.info("Test 2: Filtering by custom2 co 'secondary' AND preferredMFAOption eq 'SMS'");
         String filter2 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"secondary\" and " +
@@ -611,14 +667,14 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         filterAndVerifyUsers(filter2, 1, qualifiedSecondaryUsername2);
         log.info("Test 2 passed: Successfully filtered by custom2 + preferredMFAOption (secondary store)");
 
-        // Test 3: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "SMS" (should find user3 from primary)
+        // Test 3: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "SMS" (should find user3 from primary).
         log.info("Test 3: Filtering by custom3 eq 'custom3_value_user3' AND preferredMFAOption eq 'SMS'");
         String filter3 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\" and " +
                 WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
         filterAndVerifyUsers(filter3, 1, TEST_USER_3_USERNAME);
         log.info("Test 3 passed: Successfully filtered by custom3 + preferredMFAOption=SMS");
 
-        // Test 4: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "TOTP" (should find sec1User1 from secondary)
+        // Test 4: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "TOTP" (should find sec1User1 from secondary).
         log.info("Test 4: Filtering by custom3 eq 'custom3_value_user3' AND preferredMFAOption eq 'TOTP'");
         String filter4 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\" and " +
                 WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
@@ -626,7 +682,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         filterAndVerifyUsers(filter4, 1, qualifiedSecondaryUsername1);
         log.info("Test 4 passed: Successfully filtered by custom3 + preferredMFAOption=TOTP");
 
-        // Test 5: Filter by custom2 contains "custom2" AND preferredMFAOption eq "TOTP" (should find user1, user2, sec1User1)
+        // Test 5: Filter by custom2 contains "custom2" AND preferredMFAOption eq "TOTP" (should find user1, user2, sec1User1).
         log.info("Test 5: Filtering by custom2 co 'custom2' AND preferredMFAOption eq 'TOTP' (cross-store)");
         String filter5 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"custom2\" and " +
                 WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
@@ -642,7 +698,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing PATCH replace operation on secondary user1 to update custom1 claim");
 
-        // Build PATCH request to update custom1 claim using REPLACE
+        // Build PATCH request to update custom1 claim using REPLACE.
         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
         UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
         replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
@@ -650,11 +706,11 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         replaceOperation.setValue("secondary_custom1_value_updated");
         patchRequest.addOperations(replaceOperation);
 
-        // Update secondary user1 and get response
+        // Update secondary user1 and get response.
         JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, sec1User1Id);
         log.info("Successfully executed PATCH replace operation on secondary user1");
 
-        // Verify the claim was updated in the response
+        // Verify the claim was updated in the response.
         JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
         Assert.assertNotNull(customSchema, "Custom schema should be present in response");
         Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_1), "secondary_custom1_value_updated");
@@ -667,7 +723,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing PATCH replace operation on secondary user2 to update custom2 claim");
 
-        // Update custom2 claim using REPLACE operation
+        // Update custom2 claim using REPLACE operation.
         PatchOperationRequestObject patchRequest = new PatchOperationRequestObject();
         UserItemAddGroupobj replaceOperation = new UserItemAddGroupobj();
         replaceOperation.setOp(UserItemAddGroupobj.OpEnum.REPLACE);
@@ -678,7 +734,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         JSONObject updateResponse = scim2RestClient.updateUserAndReturnResponse(patchRequest, sec1User2Id);
         log.info("Successfully executed PATCH replace operation on secondary user2");
 
-        // Verify the claim was updated in the response
+        // Verify the claim was updated in the response.
         JSONObject customSchema = (JSONObject) updateResponse.get(CUSTOM_SCHEMA_URI);
         Assert.assertNotNull(customSchema, "Custom schema should be present in response");
         Assert.assertEquals(customSchema.get(CUSTOM_CLAIM_2), "secondary_custom2_value_updated");
@@ -691,7 +747,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing user filtering for secondary user store");
 
-        // Filter by username to get secondary users
+        // Filter by username to get secondary users.
         String qualifiedUsername1 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
         String filter = "userName eq \"" + qualifiedUsername1 + "\"";
 
@@ -740,7 +796,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             }
         }
 
-        // Verify WSO2 schema claims if provided
+        // Verify WSO2 schema claims if provided.
         if (wso2Claims != null && !wso2Claims.isEmpty()) {
             JSONObject wso2Schema = (JSONObject) createdUser.get(WSO2_SCHEMA_URI);
             Assert.assertNotNull(wso2Schema, "WSO2 schema should be present in created user");
@@ -767,23 +823,23 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
     private JSONObject readAndModifyUserTemplate(String username, String password, String email,
             Map<String, String> customClaims, Map<String, Object> wso2Claims) throws Exception {
 
-        // Read JSON template from resources
+        // Read JSON template from resources.
         String templateContent = readResource("claim-selective-storage-test-user.json");
         JSONParser parser = new JSONParser();
         JSONObject userJson = (JSONObject) parser.parse(templateContent);
 
-        // Update basic user info
+        // Update basic user info.
         userJson.put("userName", username);
         userJson.put("password", password);
 
-        // Update email
+        // Update email.
         JSONArray emails = (JSONArray) userJson.get("emails");
         if (emails != null && !emails.isEmpty()) {
             JSONObject emailObj = (JSONObject) emails.get(0);
             emailObj.put("value", email);
         }
 
-        // Update custom claims
+        // Update custom claims.
         if (customClaims != null && !customClaims.isEmpty()) {
             JSONObject customSchemaObj = new JSONObject();
             for (Map.Entry<String, String> entry : customClaims.entrySet()) {
@@ -792,7 +848,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             userJson.put(CUSTOM_SCHEMA_URI, customSchemaObj);
         }
 
-        // Update existing WSO2 schema claims
+        // Update existing WSO2 schema claims.
         if (wso2Claims != null && !wso2Claims.isEmpty()) {
             JSONObject wso2SchemaObj = new JSONObject();
             for (Map.Entry<String, Object> entry : wso2Claims.entrySet()) {
@@ -846,8 +902,8 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         claimReq.setRequired(false);
         claimReq.setReadOnly(false);
 
-        // Create attribute mapping for PRIMARY userstore
-        // For identity claims (identity/*), use only the part after "identity/"
+        // Create attribute mapping for PRIMARY userstore.
+        // For identity claims (identity/*), use only the part after "identity/".
         String mappedAttributeName = claimName.contains("/") ?
                 claimName.substring(claimName.lastIndexOf("/") + 1) : claimName;
         AttributeMappingDTO mapping = new AttributeMappingDTO();
@@ -878,7 +934,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         Assert.assertNotNull(claimId, claimName + " ID should not be null");
         log.info("Successfully created " + claimName + " with ID: " + claimId);
 
-        // Verify the claim was created
+        // Verify the claim was created.
         JSONObject retrievedClaim = claimManagementRestClient.getLocalClaim(claimId);
         Assert.assertEquals(retrievedClaim.get("claimURI"), LOCAL_CLAIM_URI_PREFIX + claimName);
         Assert.assertEquals(retrievedClaim.get("displayName"), displayName);
@@ -957,14 +1013,14 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
      */
     private String getDialectIdByURI(String dialectURI) throws Exception {
 
-        // The dialect ID is the Base64 URL-encoded version of the URI
+        // The dialect ID is the Base64 URL-encoded version of the URI.
         String encodedDialectId = java.util.Base64.getUrlEncoder().withoutPadding()
                 .encodeToString(dialectURI.getBytes());
 
         log.info("Checking if dialect exists: " + dialectURI);
         log.info("Encoded dialect ID: " + encodedDialectId);
 
-        // Try to get the dialect to see if it exists
+        // Try to get the dialect to see if it exists.
         JSONObject dialectResponse = null;
         try {
             dialectResponse = claimManagementRestClient.getExternalDialect(encodedDialectId);
@@ -982,7 +1038,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
                 claimManagementRestClient.addExternalDialect(claimDialectReqDTO);
                 log.info("Successfully created dialect: " + dialectURI);
             } catch (Exception e) {
-                // Dialect might have been created by another process, continue
+                // Dialect might have been created by another process, continue.
                 log.warn("Failed to create dialect: " + e.getMessage());
             }
         } else {
@@ -1004,12 +1060,12 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             return false;
         }
 
-        // Check for error code CMT-50016 (dialect not found)
+        // Check for error code CMT-50016 (dialect not found).
         if (dialectResponse.get("code") != null && "CMT-50016".equals(dialectResponse.get("code"))) {
             return false;
         }
 
-        // If it has an ID, the dialect exists
+        // If it has an ID, the dialect exists.
         return dialectResponse.get("id") != null;
     }
 
@@ -1025,7 +1081,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         userStoreReq.setName(SEC1_DOMAIN);
         userStoreReq.setDescription("JDBC secondary user store for selective storage testing");
 
-        // Add user store properties
+        // Add user store properties.
         List<UserStoreReq.Property> properties = new ArrayList<>();
 
         properties.add(new UserStoreReq.Property()
@@ -1070,7 +1126,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         userStoreReq.setProperties(properties);
 
-        // Add claim attribute mappings for custom claims in secondary user store
+        // Add claim attribute mappings for custom claims in secondary user store.
         List<UserStoreReq.ClaimAttributeMapping> claimMappings = new ArrayList<>();
 
         claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
@@ -1085,7 +1141,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
                 .claimURI(LOCAL_CLAIM_URI_PREFIX + CUSTOM_CLAIM_3)
                 .mappedAttribute(CUSTOM_CLAIM_3));
 
-        // Add mappings for existing WSO2 claims used in the test
+        // Add mappings for existing WSO2 claims used in the test.
         claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
                 .claimURI(LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_1)
                 .mappedAttribute(USER_SOURCE_ID_ATTRIBUTE));
@@ -1126,7 +1182,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         JSONArray resources = (JSONArray) result.get("Resources");
         Assert.assertNotNull(resources, "Resources should not be null");
 
-        // Verify all expected users are present in the results
+        // Verify all expected users are present in the results.
         for (String expectedUsername : expectedUsernames) {
             boolean found = false;
             for (Object resource : resources) {
@@ -1138,5 +1194,135 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             }
             Assert.assertTrue(found, "Expected user '" + expectedUsername + "' not found in filter results");
         }
+    }
+
+    /**
+     * Helper method to verify managedInUserStore value for a claim.
+     *
+     * @param claimId                     The claim ID to check.
+     * @param expectedManagedInUserStore  Expected value of managedInUserStore.
+     * @throws Exception If verification fails.
+     */
+    private void verifyManagedInUserStore(String claimId, Boolean expectedManagedInUserStore) throws Exception {
+
+        JSONObject claim = claimManagementRestClient.getLocalClaim(claimId);
+        Assert.assertNotNull(claim, "Claim should not be null");
+
+        Object managedInUserStoreValue = claim.get("managedInUserStore");
+        if (expectedManagedInUserStore == null) {
+            Assert.assertNull(managedInUserStoreValue,
+                    "managedInUserStore should be null but was: " + managedInUserStoreValue);
+        } else {
+            Assert.assertNotNull(managedInUserStoreValue,
+                    "managedInUserStore should not be null");
+            Assert.assertEquals(managedInUserStoreValue, expectedManagedInUserStore,
+                    "managedInUserStore value mismatch");
+        }
+        log.info("Verified managedInUserStore for claim " + claimId + ": " + expectedManagedInUserStore);
+    }
+
+    /**
+     * Helper method to verify ExcludedUserStores property for a claim.
+     *
+     * @param claimId                  The claim ID to check.
+     * @param expectedExcludedStores   Expected comma-separated list of excluded stores (null if not set).
+     * @throws Exception If verification fails.
+     */
+    private void verifyExcludedUserStores(String claimId, String expectedExcludedStores) throws Exception {
+
+        JSONObject claim = claimManagementRestClient.getLocalClaim(claimId);
+        Assert.assertNotNull(claim, "Claim should not be null");
+
+        JSONArray properties = (JSONArray) claim.get("properties");
+        String actualExcludedStores = null;
+
+        if (properties != null) {
+            for (Object propObj : properties) {
+                JSONObject property = (JSONObject) propObj;
+                if ("ExcludedUserStores".equals(property.get("key"))) {
+                    actualExcludedStores = (String) property.get("value");
+                    break;
+                }
+            }
+        }
+
+        if (expectedExcludedStores == null) {
+            Assert.assertNull(actualExcludedStores,
+                    "ExcludedUserStores should be null but was: " + actualExcludedStores);
+        } else {
+            Assert.assertEquals(actualExcludedStores, expectedExcludedStores,
+                    "ExcludedUserStores value mismatch");
+        }
+        log.info("Verified ExcludedUserStores for claim " + claimId + ": " + expectedExcludedStores);
+    }
+
+    /**
+     * Helper method to update a claim with managedInUserStore and optionally ExcludedUserStores.
+     *
+     * @param claimId                   The claim ID to update.
+     * @param managedInUserStore        Value for managedInUserStore.
+     * @param excludedUserStores        Comma-separated list of excluded user stores (null to not set).
+     * @throws Exception If update fails.
+     */
+    private void updateClaimStorageProperties(String claimId, Boolean managedInUserStore,
+            String excludedUserStores) throws Exception {
+
+        // Get the existing claim.
+        JSONObject existingClaim = claimManagementRestClient.getLocalClaim(claimId);
+
+        // Create update request preserving existing values.
+        LocalClaimReq updateReq = new LocalClaimReq();
+        updateReq.setClaimURI((String) existingClaim.get("claimURI"));
+        updateReq.setDisplayName((String) existingClaim.get("displayName"));
+        updateReq.setDescription((String) existingClaim.get("description"));
+
+        // Set other properties.
+        if (existingClaim.get("displayOrder") != null) {
+            updateReq.setDisplayOrder(((Long) existingClaim.get("displayOrder")).intValue());
+        }
+        updateReq.setReadOnly((Boolean) existingClaim.get("readOnly"));
+        updateReq.setRequired((Boolean) existingClaim.get("required"));
+        updateReq.setSupportedByDefault((Boolean) existingClaim.get("supportedByDefault"));
+        updateReq.setDataType((String) existingClaim.get("dataType"));
+
+        // Set managedInUserStore.
+        updateReq.setManagedInUserStore(managedInUserStore);
+
+        // Convert JSONArray to List for attribute mapping.
+        updateReq.setAttributeMapping(convertJsonArrayToAttributeMappings(
+                (JSONArray) existingClaim.get("attributeMapping")));
+
+        // Handle properties (including ExcludedUserStores).
+        List<PropertyDTO> properties = new ArrayList<>();
+
+        // Copy existing properties except ExcludedUserStores.
+        JSONArray existingProperties = (JSONArray) existingClaim.get("properties");
+        if (existingProperties != null) {
+            for (Object propObj : existingProperties) {
+                JSONObject property = (JSONObject) propObj;
+                String key = (String) property.get("key");
+                if (!"ExcludedUserStores".equals(key)) {
+                    PropertyDTO prop = new PropertyDTO();
+                    prop.setKey(key);
+                    prop.setValue((String) property.get("value"));
+                    properties.add(prop);
+                }
+            }
+        }
+
+        // Add ExcludedUserStores if provided.
+        if (excludedUserStores != null) {
+            PropertyDTO excludedProp = new PropertyDTO();
+            excludedProp.setKey("ExcludedUserStores");
+            excludedProp.setValue(excludedUserStores);
+            properties.add(excludedProp);
+        }
+
+        updateReq.setProperties(properties);
+
+        // Update the claim.
+        claimManagementRestClient.updateLocalClaim(claimId, updateReq);
+        log.info("Updated claim " + claimId + " with managedInUserStore=" + managedInUserStore +
+                ", ExcludedUserStores=" + excludedUserStores);
     }
 }
