@@ -2588,7 +2588,7 @@
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.2</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.14</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.216</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.217</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.5.12</identity.user.account.association.version>
