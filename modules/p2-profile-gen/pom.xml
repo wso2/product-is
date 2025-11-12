@@ -637,6 +637,26 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.agent:org.wso2.carbon.identity.agent.manager.server.feature:${carbon.identity.agent.version}
                                 </featureArtifactDef>
+                                <!-- VC Configuration Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.vc.config.management.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <!-- VC Issuance Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vci:org.wso2.carbon.identity.openid4vci.common.server.feature:${carbon.identity.openid4vci.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vci:org.wso2.carbon.identity.openid4vci.metadata.server.feature:${carbon.identity.openid4vci.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vci:org.wso2.carbon.identity.openid4vci.credential.server.feature:${carbon.identity.openid4vci.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vci:org.wso2.carbon.identity.openid4vci.endpoint.server.feature:${carbon.identity.openid4vci.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vci:org.wso2.carbon.identity.openid4vci.offer.server.feature:${carbon.identity.openid4vci.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -1316,6 +1336,30 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.agent.manager.server.feature.group</id>
                                     <version>${carbon.identity.agent.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.vc.config.management.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vci.common.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vci.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vci.metadata.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vci.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vci.credential.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vci.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vci.endpoint.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vci.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vci.offer.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vci.version}</version>
                                 </feature>
                             </features>
                         </configuration>

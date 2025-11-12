@@ -596,5 +596,13 @@
             <groupId>org.wso2.carbon.identity.server.api</groupId>
             <artifactId>org.wso2.carbon.identity.api.server.workflow.common</artifactId>
         </dependency>
+            <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.vc.config.management.v1</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.vc.config.management.common</artifactId>
+        </dependency>
     </dependencies>
 </project>
