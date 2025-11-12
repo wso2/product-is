@@ -522,6 +522,7 @@
                 <include>mex/</include>
                 <include>mexut/</include>
                 <include>oauth2/</include>
+                <include>oid4vci/</include>
                 <include>scim2/</include>
                 <include>wso2/</include>
                 <include>api#health-check#v1.0/</include>

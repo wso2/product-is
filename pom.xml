@@ -2504,6 +2504,61 @@
                 <version>${carbon.identity.agent.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.common</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.metadata</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.credential</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.endpoint</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.offer</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.common.server.feature</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+                <type>zip</type>                
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.metadata.server.feature</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+                <type>zip</type>                
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.credential.server.feature</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+                <type>zip</type>                
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.endpoint.server.feature</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vci</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vci.offer.server.feature</artifactId>
+                <version>${carbon.identity.openid4vci.version}</version>
+                <type>zip</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -2735,6 +2790,9 @@
 
         <!-- agent-identity -->
         <carbon.identity.agent.version>1.0.9</carbon.identity.agent.version>
+
+        <!-- VC Issuance -->
+        <carbon.identity.openid4vci.version>1.0.0-SNAPSHOT</carbon.identity.openid4vci.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
