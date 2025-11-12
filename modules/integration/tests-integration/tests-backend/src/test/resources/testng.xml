@@ -167,6 +167,7 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.SharedUserProfileClaimMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.notification.template.mgt.OrganizationNotificationOrgTemplatesTestCase"/>
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimUniquenessValidationTestCase"/>
+            <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimSelectiveStorageTestCase"/>
             <class name="org.wso2.identity.integration.test.apiAuthorization.APIResourceInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowFailureTest"/>

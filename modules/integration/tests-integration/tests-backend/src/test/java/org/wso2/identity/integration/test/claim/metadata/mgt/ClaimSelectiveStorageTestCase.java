@@ -74,13 +74,13 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
     private static final String EXISTING_IDENTITY_CLAIM_1 = "identity/userSourceId";
     private static final String USER_SOURCE_ID_ATTRIBUTE = "userSourceId";
-    private static final String EXISTING_IDENTITY_CLAIM_2 = "identity/preferredMFAOption";
-    private static final String PREFERRED_MFA_OPTION_ATTRIBUTE = "preferredMFAOption";
+    private static final String EXISTING_IDENTITY_CLAIM_2 = "identity/preferredChannel";
+    private static final String PREFERRED_CHANNEL_ATTRIBUTE = "preferredChannel";
     private static final String COUNTRY_CLAIM = "country";
 
     // SCIM attribute names for existing WSO2 claims.
     private static final String SCIM_USER_SOURCE_ID = "userSourceId";
-    private static final String SCIM_PREFERRED_MFA_OPTION = "preferredMFAOption";
+    private static final String SCIM_PREFERRED_CHANNEL = "preferredChannel";
     private static final String SCIM_COUNTRY = "country";
 
     // Custom SCIM schema dialect URI for testing.
@@ -459,7 +459,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         customClaims1.put(CUSTOM_CLAIM_1, "custom1_value_user1");
         Map<String, Object> wso2Claims1 = new HashMap<>();
         wso2Claims1.put(SCIM_USER_SOURCE_ID, "user1_source");
-        wso2Claims1.put(SCIM_PREFERRED_MFA_OPTION, "TOTP");
+        wso2Claims1.put(SCIM_PREFERRED_CHANNEL, "EMAIL");
         wso2Claims1.put(SCIM_COUNTRY, "United States");
         user1Id = createUserFromJsonTemplate(TEST_USER_1_USERNAME, TEST_USER_PASSWORD,
                 TEST_USER_1_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims1, wso2Claims1);
@@ -469,7 +469,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         Map<String, String> customClaims2 = new HashMap<>();
         customClaims2.put(CUSTOM_CLAIM_2, "custom2_value_user2");
         Map<String, Object> wso2Claims2 = new HashMap<>();
-        wso2Claims2.put(SCIM_PREFERRED_MFA_OPTION, "TOTP");
+        wso2Claims2.put(SCIM_PREFERRED_CHANNEL, "EMAIL");
         wso2Claims2.put(SCIM_COUNTRY, "Sri Lanka");
         user2Id = createUserFromJsonTemplate(TEST_USER_2_USERNAME, TEST_USER_PASSWORD,
                 TEST_USER_2_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims2, wso2Claims2);
@@ -479,7 +479,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         Map<String, String> customClaims3 = new HashMap<>();
         customClaims3.put(CUSTOM_CLAIM_3, "custom3_value_user3");
         Map<String, Object> wso2Claims3 = new HashMap<>();
-        wso2Claims3.put(SCIM_PREFERRED_MFA_OPTION, "SMS");
+        wso2Claims3.put(SCIM_PREFERRED_CHANNEL, "SMS");
         wso2Claims3.put(SCIM_COUNTRY, "United States");
         user3Id = createUserFromJsonTemplate(TEST_USER_3_USERNAME, TEST_USER_PASSWORD,
                 TEST_USER_3_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims3, wso2Claims3);
@@ -494,7 +494,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Creating users in secondary user store with custom claims and existing WSO2 claims");
 
-        // Create secondary user1 with custom claims and TOTP MFA.
+        // Create secondary user1 with custom claims and EMAIL channel.
         String qualifiedUsername1 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
         Map<String, String> customClaims1 = new HashMap<>();
         customClaims1.put(CUSTOM_CLAIM_1, "secondary_custom1_value");
@@ -502,19 +502,19 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         customClaims1.put(CUSTOM_CLAIM_3, "custom3_value_user3");
         Map<String, Object> wso2Claims1 = new HashMap<>();
         wso2Claims1.put(SCIM_USER_SOURCE_ID, "secondary_user1_source");
-        wso2Claims1.put(SCIM_PREFERRED_MFA_OPTION, "TOTP");
+        wso2Claims1.put(SCIM_PREFERRED_CHANNEL, "EMAIL");
         wso2Claims1.put(SCIM_COUNTRY, "United States");
         sec1User1Id = createUserFromJsonTemplate(qualifiedUsername1, TEST_USER_PASSWORD,
                 SECONDARY_TEST_USER_1_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims1, wso2Claims1);
         Assert.assertNotNull(sec1User1Id, "Secondary user1 ID should not be null");
         log.info("Created secondary user1 with ID: " + sec1User1Id);
 
-        // Create secondary user2 with custom2 claim and SMS MFA.
+        // Create secondary user2 with custom2 claim and SMS channel.
         String qualifiedUsername2 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
         Map<String, String> customClaims2 = new HashMap<>();
         customClaims2.put(CUSTOM_CLAIM_2, "secondary_custom2_value");
         Map<String, Object> wso2Claims2 = new HashMap<>();
-        wso2Claims2.put(SCIM_PREFERRED_MFA_OPTION, "SMS");
+        wso2Claims2.put(SCIM_PREFERRED_CHANNEL, "SMS");
         wso2Claims2.put(SCIM_COUNTRY, "Sri Lanka");
         sec1User2Id = createUserFromJsonTemplate(qualifiedUsername2, TEST_USER_PASSWORD,
                 SECONDARY_TEST_USER_2_USERNAME + TEST_USER_EMAIL_DOMAIN, customClaims2, wso2Claims2);
@@ -629,18 +629,18 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         filterAndVerifyUsers(filter3, 2, TEST_USER_3_USERNAME, qualifiedSecondaryUsername);
         log.info("Test 3 passed: Successfully filtered users by custom3 claim across stores");
 
-        // Test 4: Filter by preferredMFAOption=TOTP - Cross-store test (should find user1, user2, and sec1User1).
-        log.info("Test 4: Filtering by preferredMFAOption=TOTP across primary and secondary user stores");
-        String filter4 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+        // Test 4: Filter by preferredChannel=EMAIL - Cross-store test (should find user1, user2, and sec1User1).
+        log.info("Test 4: Filtering by preferredChannel=EMAIL across primary and secondary user stores");
+        String filter4 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_CHANNEL + " eq \"EMAIL\"";
         filterAndVerifyUsers(filter4, 3, TEST_USER_1_USERNAME, TEST_USER_2_USERNAME, qualifiedSecondaryUsername);
-        log.info("Test 4 passed: Successfully filtered users by preferredMFAOption=TOTP across stores");
+        log.info("Test 4 passed: Successfully filtered users by preferredChannel=EMAIL across stores");
 
-        // Test 5: Filter by preferredMFAOption=SMS - Cross-store test (should find user3 and sec1User2).
-        log.info("Test 5: Filtering by preferredMFAOption=SMS across primary and secondary user stores");
-        String filter5 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
+        // Test 5: Filter by preferredChannel=SMS - Cross-store test (should find user3 and sec1User2).
+        log.info("Test 5: Filtering by preferredChannel=SMS across primary and secondary user stores");
+        String filter5 = WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_CHANNEL + " eq \"SMS\"";
         String qualifiedSecondaryUsername2 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
         filterAndVerifyUsers(filter5, 2, TEST_USER_3_USERNAME, qualifiedSecondaryUsername2);
-        log.info("Test 5 passed: Successfully filtered users by preferredMFAOption=SMS across stores");
+        log.info("Test 5 passed: Successfully filtered users by preferredChannel=SMS across stores");
 
         log.info("All filtering tests passed successfully (including cross-store filtering)");
     }
@@ -651,43 +651,43 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         log.info("Testing user filtering by multiple claims with AND operator");
 
-        // Test 1: Filter by custom2 contains "custom2_added" AND preferredMFAOption eq "TOTP" (should find user1 from primary).
-        log.info("Test 1: Filtering by custom2 co 'custom2_added' AND preferredMFAOption eq 'TOTP'");
+        // Test 1: Filter by custom2 contains "custom2_added" AND preferredChannel eq "EMAIL" (should find user1 from primary).
+        log.info("Test 1: Filtering by custom2 co 'custom2_added' AND preferredChannel eq 'EMAIL'");
         String filter1 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"custom2_added\" and " +
-                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_CHANNEL + " eq \"EMAIL\"";
         filterAndVerifyUsers(filter1, 1, TEST_USER_1_USERNAME);
-        log.info("Test 1 passed: Successfully filtered by custom2 + preferredMFAOption");
+        log.info("Test 1 passed: Successfully filtered by custom2 + preferredChannel");
 
-        // Test 2: Filter by custom2 contains "secondary" AND preferredMFAOption eq "SMS".
+        // Test 2: Filter by custom2 contains "secondary" AND preferredChannel eq "SMS".
         // (should find sec1User2 from secondary).
-        log.info("Test 2: Filtering by custom2 co 'secondary' AND preferredMFAOption eq 'SMS'");
+        log.info("Test 2: Filtering by custom2 co 'secondary' AND preferredChannel eq 'SMS'");
         String filter2 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"secondary\" and " +
-                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_CHANNEL + " eq \"SMS\"";
         String qualifiedSecondaryUsername2 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_2_USERNAME;
         filterAndVerifyUsers(filter2, 1, qualifiedSecondaryUsername2);
-        log.info("Test 2 passed: Successfully filtered by custom2 + preferredMFAOption (secondary store)");
+        log.info("Test 2 passed: Successfully filtered by custom2 + preferredChannel (secondary store)");
 
-        // Test 3: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "SMS" (should find user3 from primary).
-        log.info("Test 3: Filtering by custom3 eq 'custom3_value_user3' AND preferredMFAOption eq 'SMS'");
+        // Test 3: Filter by custom3 eq "custom3_value_user3" AND preferredChannel eq "SMS" (should find user3 from primary).
+        log.info("Test 3: Filtering by custom3 eq 'custom3_value_user3' AND preferredChannel eq 'SMS'");
         String filter3 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\" and " +
-                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"SMS\"";
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_CHANNEL + " eq \"SMS\"";
         filterAndVerifyUsers(filter3, 1, TEST_USER_3_USERNAME);
-        log.info("Test 3 passed: Successfully filtered by custom3 + preferredMFAOption=SMS");
+        log.info("Test 3 passed: Successfully filtered by custom3 + preferredChannel=SMS");
 
-        // Test 4: Filter by custom3 eq "custom3_value_user3" AND preferredMFAOption eq "TOTP" (should find sec1User1 from secondary).
-        log.info("Test 4: Filtering by custom3 eq 'custom3_value_user3' AND preferredMFAOption eq 'TOTP'");
+        // Test 4: Filter by custom3 eq "custom3_value_user3" AND preferredChannel eq "EMAIL" (should find sec1User1 from secondary).
+        log.info("Test 4: Filtering by custom3 eq 'custom3_value_user3' AND preferredChannel eq 'EMAIL'");
         String filter4 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_3 + " eq \"custom3_value_user3\" and " +
-                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_CHANNEL + " eq \"EMAIL\"";
         String qualifiedSecondaryUsername1 = SEC1_DOMAIN + "/" + SECONDARY_TEST_USER_1_USERNAME;
         filterAndVerifyUsers(filter4, 1, qualifiedSecondaryUsername1);
-        log.info("Test 4 passed: Successfully filtered by custom3 + preferredMFAOption=TOTP");
+        log.info("Test 4 passed: Successfully filtered by custom3 + preferredChannel=EMAIL");
 
-        // Test 5: Filter by custom2 contains "custom2" AND preferredMFAOption eq "TOTP" (should find user1, user2, sec1User1).
-        log.info("Test 5: Filtering by custom2 co 'custom2' AND preferredMFAOption eq 'TOTP' (cross-store)");
+        // Test 5: Filter by custom2 contains "custom2" AND preferredChannel eq "EMAIL" (should find user1, user2, sec1User1).
+        log.info("Test 5: Filtering by custom2 co 'custom2' AND preferredChannel eq 'EMAIL' (cross-store)");
         String filter5 = CUSTOM_SCHEMA_URI + ":" + CUSTOM_CLAIM_2 + " co \"custom2\" and " +
-                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_MFA_OPTION + " eq \"TOTP\"";
+                WSO2_SCHEMA_URI + ":" + SCIM_PREFERRED_CHANNEL + " eq \"EMAIL\"";
         filterAndVerifyUsers(filter5, 3, TEST_USER_1_USERNAME, TEST_USER_2_USERNAME, qualifiedSecondaryUsername1);
-        log.info("Test 5 passed: Successfully filtered by custom2 + preferredMFAOption=TOTP across stores");
+        log.info("Test 5 passed: Successfully filtered by custom2 + preferredChannel=EMAIL across stores");
 
         log.info("All multiple claim filtering tests passed successfully");
     }
@@ -764,7 +764,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
      * @param email        Email address for the user.
      * @param customClaims Map of custom claim names to values.
      * @param wso2Claims   Map of existing WSO2 SCIM attribute names to values
-     *                     (e.g., userSourceId, preferredMFAOption, country).
+     *                     (e.g., userSourceId, preferredChannel, country).
      * @return User ID of the created user.
      * @throws Exception If user creation fails.
      */
@@ -1148,7 +1148,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
                 .claimURI(LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_2)
-                .mappedAttribute(PREFERRED_MFA_OPTION_ATTRIBUTE));
+                .mappedAttribute(PREFERRED_CHANNEL_ATTRIBUTE));
 
         claimMappings.add(new UserStoreReq.ClaimAttributeMapping()
                 .claimURI(LOCAL_CLAIM_URI_PREFIX + COUNTRY_CLAIM)
