@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -28,6 +29,7 @@ import java.util.List;
 /**
  * Local claim response.
  **/
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LocalClaimRes {
 
     private String id = null;
