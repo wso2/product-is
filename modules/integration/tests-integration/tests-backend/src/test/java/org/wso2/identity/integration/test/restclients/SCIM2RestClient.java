@@ -102,6 +102,23 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create a user with raw JSON request.
+     *
+     * @param jsonRequest JSON string with user creation details.
+     * @return Id of the created user.
+     * @throws Exception If an error occurred while creating a user.
+     */
+    public String createUserWithRawJSON(String jsonRequest) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "User creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
      * Create a user with bearer token.
      *
      * @param userInfo    Object with user creation details.
