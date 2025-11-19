@@ -94,6 +94,22 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
     private static final String SECONDARY_USER_STORE_TYPE_ID = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final String SECONDARY_DB_NAME = "JDBC_SELECTIVE_STORAGE_DB";
 
+    // Claim property keys and JSON response field names.
+    private static final String EXCLUDED_USER_STORES_PROPERTY = "ExcludedUserStores";
+    private static final String MANAGED_IN_USER_STORE_PROPERTY = "managedInUserStore";
+    private static final String CLAIM_URI_PROPERTY = "claimURI";
+    private static final String DISPLAY_NAME_PROPERTY = "displayName";
+    private static final String DESCRIPTION_PROPERTY = "description";
+    private static final String DISPLAY_ORDER_PROPERTY = "displayOrder";
+    private static final String READ_ONLY_PROPERTY = "readOnly";
+    private static final String REQUIRED_PROPERTY = "required";
+    private static final String SUPPORTED_BY_DEFAULT_PROPERTY = "supportedByDefault";
+    private static final String DATA_TYPE_PROPERTY = "dataType";
+    private static final String ATTRIBUTE_MAPPING_PROPERTY = "attributeMapping";
+    private static final String PROPERTIES_PROPERTY = "properties";
+    private static final String KEY_PROPERTY = "key";
+    private static final String VALUE_PROPERTY = "value";
+
     // Storage for claim IDs (only for custom claims we create).
     private String customClaim1Id;
     private String customClaim2Id;
@@ -314,7 +330,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         customClaim3Id = createAndVerifyLocalClaim(CUSTOM_CLAIM_3, "Custom Claim 3",
                 "This is custom claim 3 for testing selective storage", "string");
-        
+
         log.info("Successfully created all custom local claims");
 
         log.info("Creating SCIM2 external claim mappings for custom claims in custom schema.");
@@ -326,93 +342,38 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         log.info("Successfully created all SCIM2 external claim mappings for custom claims");
     }
 
-    @Test(groups = "wso2.is", priority = 2, dependsOnMethods = {"testCreateCustomClaims"},
-            description = "Verify default managedInUserStore is true for non-identity custom claims")
-    public void testVerifyDefaultManagedInUserStore() throws Exception {
-
-        log.info("Verifying default managedInUserStore value for custom claims");
-
-        // Verify that custom claims (non-identity claims) have managedInUserStore = true by default.
-        verifyManagedInUserStore(customClaim1Id, true);
-        verifyManagedInUserStore(customClaim2Id, true);
-        verifyManagedInUserStore(customClaim3Id, true);
-
-        // Verify no ExcludedUserStores property is set by default.
-        verifyExcludedUserStores(customClaim1Id, StringUtils.EMPTY);
-        verifyExcludedUserStores(customClaim2Id, StringUtils.EMPTY);
-        verifyExcludedUserStores(customClaim3Id, StringUtils.EMPTY);
-
-        log.info("Successfully verified default managedInUserStore=true for all custom claims");
-    }
-
-    @Test(groups = "wso2.is", priority = 6, dependsOnMethods = {"testVerifyDefaultManagedInUserStore"},
+    @Test(groups = "wso2.is", priority = 6, dependsOnMethods = {"testCreateCustomClaims"},
             description = "Update claims to final configuration with managedInUserStore and ExcludedUserStores")
     public void testUpdateClaimsToFinalConfiguration() throws Exception {
 
         log.info("Updating claims to final selective storage configuration");
 
         // Get the country claim ID (existing claim).
-        String countryClaimUri = LOCAL_CLAIM_URI_PREFIX + COUNTRY_CLAIM;
-        String countryClaimId = java.util.Base64.getUrlEncoder().withoutPadding()
-                .encodeToString(countryClaimUri.getBytes());
+        String countryClaimId = encodeClaimId(COUNTRY_CLAIM);
 
         // Get existing identity claim IDs.
-        String identityClaim1Uri = LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_1;
-        String identityClaim1Id = java.util.Base64.getUrlEncoder().withoutPadding()
-                .encodeToString(identityClaim1Uri.getBytes());
-
-        String identityClaim2Uri = LOCAL_CLAIM_URI_PREFIX + EXISTING_IDENTITY_CLAIM_2;
-        String identityClaim2Id = java.util.Base64.getUrlEncoder().withoutPadding()
-                .encodeToString(identityClaim2Uri.getBytes());
+        String identityClaim1Id = encodeClaimId(EXISTING_IDENTITY_CLAIM_1);
+        String identityClaim2Id = encodeClaimId(EXISTING_IDENTITY_CLAIM_2);
 
         // Final configuration updates.
-
-        // COUNTRY: managedInUserStore = true (already true, but let's be explicit).
         updateClaimStorageProperties(countryClaimId, true, null);
-        log.info("Updated COUNTRY claim with managedInUserStore=true");
-
-        // CUSTOM_CLAIM_1: managedInUserStore = true, ExcludedUserStores = "PRIMARY".
         updateClaimStorageProperties(customClaim1Id, true, PRIMARY_DOMAIN);
-        log.info("Updated CUSTOM_CLAIM_1 with managedInUserStore=true, ExcludedUserStores=PRIMARY");
-
-        // CUSTOM_CLAIM_2: managedInUserStore = false.
         updateClaimStorageProperties(customClaim2Id, false, null);
-        log.info("Updated CUSTOM_CLAIM_2 with managedInUserStore=false");
-
-        // CUSTOM_CLAIM_3: managedInUserStore = true, ExcludedUserStores = "SEC1DOMAIN".
         updateClaimStorageProperties(customClaim3Id, true, SEC1_DOMAIN);
-        log.info("Updated CUSTOM_CLAIM_3 with managedInUserStore=true, ExcludedUserStores=SEC1DOMAIN");
-
-        // EXISTING_IDENTITY_CLAIM_1: managedInUserStore = false.
         updateClaimStorageProperties(identityClaim1Id, false, null);
-        log.info("Updated EXISTING_IDENTITY_CLAIM_1 with managedInUserStore=false");
-
-        // EXISTING_IDENTITY_CLAIM_2: managedInUserStore = true, ExcludedUserStores = "SEC1DOMAIN".
         updateClaimStorageProperties(identityClaim2Id, true, SEC1_DOMAIN);
-        log.info("Updated EXISTING_IDENTITY_CLAIM_2 with managedInUserStore=true, ExcludedUserStores=SEC1DOMAIN");
 
         log.info("Successfully updated all claims to final configuration");
 
         // Verify all updates.
         log.info("Verifying final claim configurations");
 
-        verifyManagedInUserStore(countryClaimId, true);
-        verifyExcludedUserStores(countryClaimId, StringUtils.EMPTY);
-
-        verifyManagedInUserStore(customClaim1Id, true);
-        verifyExcludedUserStores(customClaim1Id, PRIMARY_DOMAIN);
-
-        verifyManagedInUserStore(customClaim2Id, false);
-        verifyExcludedUserStores(customClaim2Id, null);
-
-        verifyManagedInUserStore(customClaim3Id, true);
-        verifyExcludedUserStores(customClaim3Id, SEC1_DOMAIN);
-
-        verifyManagedInUserStore(identityClaim1Id, false);
-        verifyExcludedUserStores(identityClaim1Id, null);
-
-        verifyManagedInUserStore(identityClaim2Id, true);
-        verifyExcludedUserStores(identityClaim2Id, SEC1_DOMAIN);
+        verifyClaimStorageProperties(countryClaimId, true, StringUtils.EMPTY);
+        verifyClaimStorageProperties(customClaim1Id, true, PRIMARY_DOMAIN);
+        verifyClaimStorageProperties(customClaim2Id, false, null);
+        verifyClaimStorageProperties(customClaim3Id, true, SEC1_DOMAIN);
+        verifyClaimStorageProperties(identityClaim1Id, false, null);
+        verifyClaimStorageProperties(identityClaim2Id, true, SEC1_DOMAIN);
 
         log.info("Successfully verified all final claim configurations");
     }
@@ -934,11 +895,14 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         Assert.assertNotNull(claimId, claimName + " ID should not be null");
         log.info("Successfully created " + claimName + " with ID: " + claimId);
 
-        // Verify the claim was created.
+        // Verify the claim was created with correct basic properties.
         JSONObject retrievedClaim = claimManagementRestClient.getLocalClaim(claimId);
-        Assert.assertEquals(retrievedClaim.get("claimURI"), LOCAL_CLAIM_URI_PREFIX + claimName);
-        Assert.assertEquals(retrievedClaim.get("displayName"), displayName);
-        // TODO: Add more property verifications - managedInUserStore and excluded user stores.
+        Assert.assertEquals(retrievedClaim.get(CLAIM_URI_PROPERTY), LOCAL_CLAIM_URI_PREFIX + claimName);
+        Assert.assertEquals(retrievedClaim.get(DISPLAY_NAME_PROPERTY), displayName);
+
+        // Verify default storage properties: managedInUserStore=true for non-identity claims,
+        // and no ExcludedUserStores by default.
+        verifyClaimStorageProperties(claimId, retrievedClaim, true, StringUtils.EMPTY);
 
         return claimId;
     }
@@ -1197,18 +1161,58 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
     }
 
     /**
-     * Helper method to verify managedInUserStore value for a claim.
+     * Helper method to encode claim URI to claim ID (Base64 URL encoding).
+     *
+     * @param claimName The claim name to encode (will be appended to LOCAL_CLAIM_URI_PREFIX).
+     * @return The Base64 URL-encoded claim ID.
+     */
+    private String encodeClaimId(String claimName) {
+
+        String claimUri = LOCAL_CLAIM_URI_PREFIX + claimName;
+        return java.util.Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(claimUri.getBytes());
+    }
+
+    /**
+     * Helper method to extract ExcludedUserStores property value from claim properties.
+     *
+     * @param properties JSONArray of claim properties.
+     * @return The value of ExcludedUserStores property, or null if not found.
+     */
+    private String getExcludedUserStoresFromProperties(JSONArray properties) {
+
+        if (properties != null) {
+            for (Object propObj : properties) {
+                JSONObject property = (JSONObject) propObj;
+                if (EXCLUDED_USER_STORES_PROPERTY.equals(property.get("value"))) {
+                    return (String) property.get("value");
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Helper method to verify both managedInUserStore and ExcludedUserStores for a claim.
+     * If claim object is not provided, it will fetch it via API.
      *
      * @param claimId                     The claim ID to check.
+     * @param claim                       Optional: Pre-fetched claim object (null to fetch via API).
      * @param expectedManagedInUserStore  Expected value of managedInUserStore.
+     * @param expectedExcludedStores      Expected comma-separated list of excluded stores (null if not set).
      * @throws Exception If verification fails.
      */
-    private void verifyManagedInUserStore(String claimId, Boolean expectedManagedInUserStore) throws Exception {
+    private void verifyClaimStorageProperties(String claimId, JSONObject claim,
+            Boolean expectedManagedInUserStore, String expectedExcludedStores) throws Exception {
 
-        JSONObject claim = claimManagementRestClient.getLocalClaim(claimId);
+        // Fetch claim if not provided
+        if (claim == null) {
+            claim = claimManagementRestClient.getLocalClaim(claimId);
+        }
         Assert.assertNotNull(claim, "Claim should not be null");
 
-        Object managedInUserStoreValue = claim.get("managedInUserStore");
+        // Verify managedInUserStore
+        Object managedInUserStoreValue = claim.get(MANAGED_IN_USER_STORE_PROPERTY);
         if (expectedManagedInUserStore == null) {
             Assert.assertNull(managedInUserStoreValue,
                     "managedInUserStore should be null but was: " + managedInUserStoreValue);
@@ -1218,33 +1222,10 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             Assert.assertEquals(managedInUserStoreValue, expectedManagedInUserStore,
                     "managedInUserStore value mismatch");
         }
-        log.info("Verified managedInUserStore for claim " + claimId + ": " + expectedManagedInUserStore);
-    }
 
-    /**
-     * Helper method to verify ExcludedUserStores property for a claim.
-     *
-     * @param claimId                  The claim ID to check.
-     * @param expectedExcludedStores   Expected comma-separated list of excluded stores (null if not set).
-     * @throws Exception If verification fails.
-     */
-    private void verifyExcludedUserStores(String claimId, String expectedExcludedStores) throws Exception {
-
-        JSONObject claim = claimManagementRestClient.getLocalClaim(claimId);
-        Assert.assertNotNull(claim, "Claim should not be null");
-
-        JSONArray properties = (JSONArray) claim.get("properties");
-        String actualExcludedStores = null;
-
-        if (properties != null) {
-            for (Object propObj : properties) {
-                JSONObject property = (JSONObject) propObj;
-                if ("ExcludedUserStores".equals(property.get("key"))) {
-                    actualExcludedStores = (String) property.get("value");
-                    break;
-                }
-            }
-        }
+        // Verify ExcludedUserStores
+        String actualExcludedStores = getExcludedUserStoresFromProperties(
+                (JSONArray) claim.get(PROPERTIES_PROPERTY));
 
         if (expectedExcludedStores == null) {
             Assert.assertNull(actualExcludedStores,
@@ -1253,7 +1234,22 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             Assert.assertEquals(actualExcludedStores, expectedExcludedStores,
                     "ExcludedUserStores value mismatch");
         }
-        log.info("Verified ExcludedUserStores for claim " + claimId + ": " + expectedExcludedStores);
+
+        log.info("Verified claim " + claimId + " - managedInUserStore: " + expectedManagedInUserStore +
+                ", ExcludedUserStores: " + expectedExcludedStores);
+    }
+
+    /**
+     * Overloaded method for backward compatibility - fetches claim via API.
+     *
+     * @param claimId                     The claim ID to check.
+     * @param expectedManagedInUserStore  Expected value of managedInUserStore.
+     * @param expectedExcludedStores      Expected comma-separated list of excluded stores (null if not set).
+     * @throws Exception If verification fails.
+     */
+    private void verifyClaimStorageProperties(String claimId, Boolean expectedManagedInUserStore,
+            String expectedExcludedStores) throws Exception {
+        verifyClaimStorageProperties(claimId, null, expectedManagedInUserStore, expectedExcludedStores);
     }
 
     /**
@@ -1272,39 +1268,39 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
 
         // Create update request preserving existing values.
         LocalClaimReq updateReq = new LocalClaimReq();
-        updateReq.setClaimURI((String) existingClaim.get("claimURI"));
-        updateReq.setDisplayName((String) existingClaim.get("displayName"));
-        updateReq.setDescription((String) existingClaim.get("description"));
+        updateReq.setClaimURI((String) existingClaim.get(CLAIM_URI_PROPERTY));
+        updateReq.setDisplayName((String) existingClaim.get(DISPLAY_NAME_PROPERTY));
+        updateReq.setDescription((String) existingClaim.get(DESCRIPTION_PROPERTY));
 
         // Set other properties.
-        if (existingClaim.get("displayOrder") != null) {
-            updateReq.setDisplayOrder(((Long) existingClaim.get("displayOrder")).intValue());
+        if (existingClaim.get(DISPLAY_ORDER_PROPERTY) != null) {
+            updateReq.setDisplayOrder(((Long) existingClaim.get(DISPLAY_ORDER_PROPERTY)).intValue());
         }
-        updateReq.setReadOnly((Boolean) existingClaim.get("readOnly"));
-        updateReq.setRequired((Boolean) existingClaim.get("required"));
-        updateReq.setSupportedByDefault((Boolean) existingClaim.get("supportedByDefault"));
-        updateReq.setDataType((String) existingClaim.get("dataType"));
+        updateReq.setReadOnly((Boolean) existingClaim.get(READ_ONLY_PROPERTY));
+        updateReq.setRequired((Boolean) existingClaim.get(REQUIRED_PROPERTY));
+        updateReq.setSupportedByDefault((Boolean) existingClaim.get(SUPPORTED_BY_DEFAULT_PROPERTY));
+        updateReq.setDataType((String) existingClaim.get(DATA_TYPE_PROPERTY));
 
         // Set managedInUserStore.
         updateReq.setManagedInUserStore(managedInUserStore);
 
         // Convert JSONArray to List for attribute mapping.
         updateReq.setAttributeMapping(convertJsonArrayToAttributeMappings(
-                (JSONArray) existingClaim.get("attributeMapping")));
+                (JSONArray) existingClaim.get(ATTRIBUTE_MAPPING_PROPERTY)));
 
         // Handle properties (including ExcludedUserStores).
         List<PropertyDTO> properties = new ArrayList<>();
 
         // Copy existing properties except ExcludedUserStores.
-        JSONArray existingProperties = (JSONArray) existingClaim.get("properties");
+        JSONArray existingProperties = (JSONArray) existingClaim.get(PROPERTIES_PROPERTY);
         if (existingProperties != null) {
             for (Object propObj : existingProperties) {
                 JSONObject property = (JSONObject) propObj;
-                String key = (String) property.get("key");
-                if (!"ExcludedUserStores".equals(key)) {
+                String key = (String) property.get(KEY_PROPERTY);
+                if (!EXCLUDED_USER_STORES_PROPERTY.equals(key)) {
                     PropertyDTO prop = new PropertyDTO();
                     prop.setKey(key);
-                    prop.setValue((String) property.get("value"));
+                    prop.setValue((String) property.get(VALUE_PROPERTY));
                     properties.add(prop);
                 }
             }
@@ -1313,7 +1309,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         // Add ExcludedUserStores if provided.
         if (excludedUserStores != null) {
             PropertyDTO excludedProp = new PropertyDTO();
-            excludedProp.setKey("ExcludedUserStores");
+            excludedProp.setKey(EXCLUDED_USER_STORES_PROPERTY);
             excludedProp.setValue(excludedUserStores);
             properties.add(excludedProp);
         }
