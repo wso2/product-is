@@ -186,6 +186,9 @@
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.action.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.external.api.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.user.registration.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -756,6 +759,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.user.action.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.external.api.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
                                 <feature>
