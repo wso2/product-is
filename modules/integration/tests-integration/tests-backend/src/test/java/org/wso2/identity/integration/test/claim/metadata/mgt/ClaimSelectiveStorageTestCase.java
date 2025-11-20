@@ -266,6 +266,13 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
             log.error("Failed to delete SCIM external claim custom1", e);
         }
 
+        try {
+            updateClaimStorageProperties(encodeClaimId(EXISTING_IDENTITY_CLAIM_2),
+                    false, null);
+        } catch (Exception e) {
+            log.error("Failed to update identity/preferredChannel", e);
+        }
+
         // Delete the custom schema dialect.
         try {
             if (customSchemaDialectId != null) {
