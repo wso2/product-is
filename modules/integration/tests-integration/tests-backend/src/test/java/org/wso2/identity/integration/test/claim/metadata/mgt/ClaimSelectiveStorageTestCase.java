@@ -107,8 +107,6 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
     private static final String DATA_TYPE_PROPERTY = "dataType";
     private static final String ATTRIBUTE_MAPPING_PROPERTY = "attributeMapping";
     private static final String PROPERTIES_PROPERTY = "properties";
-    private static final String KEY_PROPERTY = "key";
-    private static final String VALUE_PROPERTY = "value";
 
     // Storage for claim IDs (only for custom claims we create).
     private String customClaim1Id;
@@ -1184,7 +1182,7 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         if (properties != null) {
             for (Object propObj : properties) {
                 JSONObject property = (JSONObject) propObj;
-                if (EXCLUDED_USER_STORES_PROPERTY.equals(property.get("value"))) {
+                if (EXCLUDED_USER_STORES_PROPERTY.equals(property.get("key"))) {
                     return (String) property.get("value");
                 }
             }
@@ -1296,11 +1294,11 @@ public class ClaimSelectiveStorageTestCase extends ISIntegrationTest {
         if (existingProperties != null) {
             for (Object propObj : existingProperties) {
                 JSONObject property = (JSONObject) propObj;
-                String key = (String) property.get(KEY_PROPERTY);
+                String key = (String) property.get("key");
                 if (!EXCLUDED_USER_STORES_PROPERTY.equals(key)) {
                     PropertyDTO prop = new PropertyDTO();
                     prop.setKey(key);
-                    prop.setValue((String) property.get(VALUE_PROPERTY));
+                    prop.setValue((String) property.get("value"));
                     properties.add(prop);
                 }
             }
