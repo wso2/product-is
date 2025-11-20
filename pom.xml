@@ -2555,7 +2555,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.615</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.617</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2667,11 +2667,11 @@
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.35</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.0.52</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.0.41</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.0.42</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.34</authenticator.x509.version>
         <identity.extension.utils>1.0.22</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.0.25</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.0.26</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.0.37</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.60</identity.org.mgt.core.version>
@@ -2699,8 +2699,8 @@
         <conditional.authentication.functions.version>1.2.85</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.81.28</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.25.17</identity.apps.myaccount.version>
+        <identity.apps.console.version>2.81.29</identity.apps.console.version>
+        <identity.apps.myaccount.version>2.25.19</identity.apps.myaccount.version>
         <identity.apps.core.version>3.3.26</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
