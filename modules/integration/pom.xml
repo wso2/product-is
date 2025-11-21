@@ -30,9 +30,6 @@
     <modules>
         <module>tests-common</module>
         <module>tests-integration</module>
-        <!--<module>tests-cypress-integration</module>-->
-        <!--<module>tests-ui-integration</module>-->
-        <!--<module>tests</module>-->
     </modules>
     <build>
         <plugins>
