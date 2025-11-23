@@ -17,6 +17,7 @@
  */
 package org.wso2.identity.integration.test.identity.governance;
 
+import com.google.gson.Gson;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +27,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.governance.stub.bean.Property;
 import org.wso2.carbon.identity.user.profile.stub.UserProfileMgtServiceUserProfileExceptionException;
@@ -42,6 +44,9 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.model.Properties;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.model.SMSSender;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.SMSSenderTestBase;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.Authentication;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.util.SMSSenderRequestBuilder;
 import org.wso2.identity.integration.test.restclients.NotificationSenderRestClient;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -82,6 +87,11 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     private MockSMSProvider mockSMSProvider;
     private NotificationSenderRestClient notificationSenderRestClient;
 
+    @DataProvider(name = "apiVersionProvider")
+    public Object[][] apiVersionProvider() {
+        return new Object[][]{{"v1"}, {"v2"}};
+    }
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
@@ -89,14 +99,13 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
+        
         setUpUser();
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
         // Adding custom sms sender.
         notificationSenderRestClient = new NotificationSenderRestClient(
                 serverURL, tenantInfo);
-        SMSSender smsSender = initSMSSender();
-        notificationSenderRestClient.createSMSProvider(smsSender);
     }
 
     @BeforeMethod
@@ -104,6 +113,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         mockSMSProvider.clearSmsContent();
+        mockSMSProvider.clearHeaders();
     }
 
     @AfterMethod
@@ -118,7 +128,6 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
         userMgtClient.deleteUser(TEST_USER_USERNAME);
         mockSMSProvider.stop();
-        notificationSenderRestClient.deleteSMSProvider();
     }
 
     @Test(groups = "wso2.is.governance")
@@ -164,8 +173,15 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
         assertTrue(StringUtils.isNotBlank(emailLink));
     }
 
-    @Test(groups = "wso2.is.governance")
-    public void testAdminForcedPasswordResetSMSOTP() throws Exception {
+    @Test(groups = "wso2.is.governance", dataProvider = "apiVersionProvider")
+    public void testAdminForcedPasswordResetSMSOTP(String apiVersion) throws Exception {
+
+        if ("v2".equals(apiVersion)) {
+            notificationSenderRestClient.createSMSProviderV2(initSMSSenderV2());
+        } else {
+            SMSSender smsSender = initSMSSender();
+            notificationSenderRestClient.createSMSProvider(smsSender);
+        }
 
         enableAdminForcedPasswordResetOption(PasswordResetOption.SMS_OTP);
         setUserClaim(ADMIN_FORCED_PASSWORD_RESET_CLAIM, TRUE_STRING);
@@ -177,6 +193,15 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
         Thread.sleep(5000);
         String smsOTP = mockSMSProvider.getSmsContent();
         assertTrue(StringUtils.isNotBlank(smsOTP), "SMS OTP is not received.");
+
+        if ("v2".equals(apiVersion)) {
+            // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
+            String authorizationHeader = mockSMSProvider.getHeader("Authorization");
+            assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer access_token_"), 
+                    "Authorization header should contain Bearer token");
+        }
+
+        notificationSenderRestClient.deleteSMSProvider();
     }
 
     private void enableAdminForcedPasswordResetOption(PasswordResetOption option) throws Exception {
@@ -260,6 +285,18 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
         properties.add(new Properties().key("body").value(SMS_SENDER_REQUEST_FORMAT));
         smsSender.setProperties(properties);
         return smsSender;
+    }
+
+    private static String initSMSSenderV2() throws Exception {
+
+        org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.SMSSender smsSender =
+                SMSSenderRequestBuilder.createAddSMSSenderJSON(
+                        Authentication.TypeEnum.BEARER, SMSSenderTestBase.class);
+        
+        // Override provider URL to use MockSMSProvider
+        smsSender.setProviderURL(MockSMSProvider.SMS_SENDER_URL);
+        
+        return new Gson().toJson(smsSender);
     }
 
     private enum PasswordResetOption {

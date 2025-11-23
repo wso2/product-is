@@ -145,12 +145,6 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
-        // Adding custom sms sender.
-        notificationSenderRestClient = new NotificationSenderRestClient(
-                serverURL, tenantInfo);
-        SMSSender smsSender = initSMSSender();
-        notificationSenderRestClient.createSMSProvider(smsSender);
-
         oidcApplication = initApplication();
         createApplication(oidcApplication);
 
@@ -175,7 +169,6 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         mockSMSProvider.stop();
         mockApplicationServer.stop();
         userStoreMgtRestClient.deleteUserStore(userStoreId);
-        notificationSenderRestClient.deleteSMSProvider();
         client.close();
         scim2RestClient.closeHttpClient();
         restClient.closeHttpClient();
@@ -186,7 +179,13 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
     }
 
     @Test(dataProvider = "userProvider")
-    public void testUsernameRecoveryForEmailOnly(UserObject user) throws Exception {
+    public void testUsernameRecoveryForEmailOnly(UserObject user, String apiVersion) throws Exception {
+
+        // Adding custom sms sender.
+        notificationSenderRestClient = new NotificationSenderRestClient(
+                serverURL, tenantInfo, apiVersion);
+        SMSSender smsSender = initSMSSender();
+        notificationSenderRestClient.createSMSProvider(smsSender);
 
         updateUsernameRecoveryFeature(ChannelType.EMAIL, true);
         updateUsernameRecoveryFeature(ChannelType.SMS, false);
@@ -203,10 +202,20 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Clearing the user.
         deleteUser(user);
+        
+        // Cleanup notification sender.
+        notificationSenderRestClient.deleteSMSProvider();
+        notificationSenderRestClient.closeHttpClient();
     }
 
     @Test(dataProvider = "userProvider")
-    public void testUsernameRecoveryForSmsOnly(UserObject user) throws Exception {
+    public void testUsernameRecoveryForSMSOnly(UserObject user, String apiVersion) throws Exception {
+
+        // Adding custom sms sender.
+        notificationSenderRestClient = new NotificationSenderRestClient(
+                serverURL, tenantInfo, apiVersion);
+        SMSSender smsSender = initSMSSender();
+        notificationSenderRestClient.createSMSProvider(smsSender);
 
         // Disabling the email channel & enabling sms channel.
         updateUsernameRecoveryFeature(ChannelType.EMAIL, false);
@@ -224,10 +233,21 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Clearing the user.
         deleteUser(user);
+        
+        // Cleanup notification sender.
+        notificationSenderRestClient.deleteSMSProvider();
+        notificationSenderRestClient.closeHttpClient();
     }
 
     @Test(dataProvider = "userProviderWithChannel")
-    public void testUsernameRecoveryWithBothChannels(UserObject user, ChannelType channelType) throws Exception {
+    public void testUsernameRecoveryWithBothChannels(UserObject user, ChannelType channelType,
+                                                      String apiVersion) throws Exception {
+
+        // Adding custom sms sender.
+        notificationSenderRestClient = new NotificationSenderRestClient(
+                serverURL, tenantInfo, apiVersion);
+        SMSSender smsSender = initSMSSender();
+        notificationSenderRestClient.createSMSProvider(smsSender);
 
         // Enabling the both username recovery channels.
         updateUsernameRecoveryFeature(ChannelType.EMAIL, true);
@@ -253,6 +273,10 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Delete the user.
         deleteUser(user);
+        
+        // Cleanup notification sender.
+        notificationSenderRestClient.deleteSMSProvider();
+        notificationSenderRestClient.closeHttpClient();
     }
 
     @Test
@@ -387,7 +411,12 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         // Secondary user store user.
         UserObject userObject2 = initUser(SECONDARY_DOMAIN_ID, USERNAME);
 
-        return new Object[][]{{userObject1}, {userObject2}};
+        return new Object[][]{
+                {userObject1, "v1"},
+                {userObject1, "v2"},
+                {userObject2, "v1"},
+                {userObject2, "v2"}
+        };
     }
 
     @DataProvider(name = "userProviderWithChannel")
@@ -400,10 +429,14 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         UserObject userObject2 = initUser(SECONDARY_DOMAIN_ID, USERNAME);
 
         return new Object[][]{
-                {userObject1, ChannelType.EMAIL},
-                {userObject1, ChannelType.SMS},
-                {userObject2, ChannelType.EMAIL},
-                {userObject2, ChannelType.SMS}
+                {userObject1, ChannelType.EMAIL, "v1"},
+                {userObject1, ChannelType.EMAIL, "v2"},
+                {userObject1, ChannelType.SMS, "v1"},
+                {userObject1, ChannelType.SMS, "v2"},
+                {userObject2, ChannelType.EMAIL, "v1"},
+                {userObject2, ChannelType.EMAIL, "v2"},
+                {userObject2, ChannelType.SMS, "v1"},
+                {userObject2, ChannelType.SMS, "v2"}
         };
     }
 

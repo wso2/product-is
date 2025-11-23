@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.auth;
 
+import com.google.gson.Gson;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -40,6 +41,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.base.MockApplicationServer;
+import org.wso2.identity.integration.test.base.MockOAuth2TokenEndpoint;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
@@ -50,6 +52,9 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.model.Properties;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.model.SMSSender;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.SMSSenderTestBase;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.Authentication;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.util.SMSSenderRequestBuilder;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PhoneNumbers;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
@@ -65,6 +70,7 @@ import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
@@ -90,22 +96,27 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     private String authorizationCode;
 
     private MockSMSProvider mockSMSProvider;
+    private MockOAuth2TokenEndpoint mockOAuth2TokenEndpoint;
     private MockApplicationServer mockApplicationServer;
 
     private TestUserMode userMode;
+    private String apiVersion;
 
     @Factory(dataProvider = "testExecutionContextProvider")
-    public PasswordlessSMSOTPAuthTestCase(TestUserMode userMode) {
+    public PasswordlessSMSOTPAuthTestCase(TestUserMode userMode, String apiVersion) {
 
         this.userMode = userMode;
+        this.apiVersion = apiVersion;
     }
 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER},
-                {TestUserMode.TENANT_USER},
+                {TestUserMode.SUPER_TENANT_USER, "v1"},
+                {TestUserMode.SUPER_TENANT_USER, "v2"},
+                {TestUserMode.TENANT_USER, "v1"},
+                {TestUserMode.TENANT_USER, "v2"},
         };
     }
 
@@ -116,9 +127,11 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
 
+        mockOAuth2TokenEndpoint = new MockOAuth2TokenEndpoint();
+        mockOAuth2TokenEndpoint.start();
+
         mockApplicationServer = new MockApplicationServer();
         mockApplicationServer.start();
-
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -142,8 +155,12 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         createUser(userObject);
 
         notificationSenderRestClient = new NotificationSenderRestClient(backendURL, tenantInfo);
-        SMSSender smsSender = initSMSSender();
-        notificationSenderRestClient.createSMSProvider(smsSender);
+        if ("v2".equals(apiVersion)) {
+            notificationSenderRestClient.createSMSProviderV2(initSMSSenderV2());
+        } else {
+            SMSSender smsSender = initSMSSender();
+            notificationSenderRestClient.createSMSProvider(smsSender);
+        }
     }
 
     private static SMSSender initSMSSender() {
@@ -158,6 +175,24 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         return smsSender;
     }
 
+    private static String initSMSSenderV2() throws IOException {
+
+        org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.SMSSender smsSender =
+                SMSSenderRequestBuilder.createAddSMSSenderJSON(
+                        Authentication.TypeEnum.CLIENT_CREDENTIAL, SMSSenderTestBase.class);
+
+        // Override provider URL to use MockSMSProvider
+        smsSender.setProviderURL(MockSMSProvider.SMS_SENDER_URL);
+
+        // Update authentication to use MockOAuth2TokenEndpoint
+        Authentication auth = smsSender.getAuthentication();
+        if (auth != null && auth.getProperties() != null) {
+            auth.getProperties().put("tokenEndpoint", MockOAuth2TokenEndpoint.TOKEN_ENDPOINT_URL);
+        }
+
+        return new Gson().toJson(smsSender);
+    }
+
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
@@ -170,6 +205,9 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         mockSMSProvider.stop();
         mockApplicationServer.stop();
+
+        mockOAuth2TokenEndpoint.clearData();
+        mockOAuth2TokenEndpoint.stop();
     }
 
     @Test(groups = "wso2.is", description = "Test passwordless authentication with SMS OTP")
@@ -181,6 +219,14 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         assertNotNull(response);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
+
+        if ("v2".equals(apiVersion)) {
+
+            // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
+            String authorizationHeader = mockSMSProvider.getHeader("Authorization");
+            assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer access_token_"), 
+                    "Authorization header should contain Bearer token");
+        }
     }
 
     private void sendAuthorizeRequest() throws Exception {
