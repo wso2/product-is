@@ -1,0 +1,30 @@
+{
+  "schemas": [
+    "urn:ietf:params:scim:schemas:core:2.0:User",
+    "urn:scim:schemas:extension:custom:User",
+    "urn:scim:wso2:schema"
+  ],
+  "userName": "test-user",
+  "password": "TestPassword@123",
+  "name": {
+    "givenName": "Test",
+    "familyName": "User"
+  },
+  "emails": [
+    {
+      "type": "work",
+      "value": "testuser@example.com",
+      "primary": true
+    }
+  ],
+  "urn:scim:schemas:extension:custom:User": {
+    "custom1": "custom1_value",
+    "custom2": "custom2_value",
+    "custom3": "custom3_value"
+  },
+  "urn:scim:wso2:schema": {
+    "userSourceId": "placeholder",
+    "preferredMFAOption": "placeholder",
+    "country": "placeholder"
+  }
+}

@@ -185,7 +185,7 @@ First need to understand what the issue is related to by reading the issue very 
   - First verify the image exists in the repository
   - Check if the image is accessible and properly displays in the documentation
   - If needed images don't exist in the current version branch but exist in another version branch:
-    1. Identify which branch contains the image (check branches in this order: 5.9.0, 5.10.0, 5.11.0, 6.0.0, 6.1.0, 7.0.0, 7.1.0 and next version)
+    1. Identify which branch contains the image (check branches in this order: 5.9.0, 5.10.0, 5.11.0, 6.0.0, 6.1.0, 7.0.0, 7.1.0, 7.2.0 and next version)
     2. Remember your current branch: `CURRENT_BRANCH=$(git branch --show-current)`
     3. Fetch the branch with the image: `git fetch origin {BRANCH_WITH_IMAGE}`
     4. Save the target directory path for the image (same relative path in your branch)

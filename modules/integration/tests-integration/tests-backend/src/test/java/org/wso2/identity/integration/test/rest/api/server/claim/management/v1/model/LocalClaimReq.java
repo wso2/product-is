@@ -40,6 +40,7 @@ public class LocalClaimReq {
     private String regEx = null;
     private Boolean required = null;
     private Boolean supportedByDefault = null;
+    private Boolean managedInUserStore = null;
     private String dataType = null;
     private String[] subAttributes = null;
     private LabelValueDTO[] canonicalValues = null;
@@ -182,6 +183,21 @@ public class LocalClaimReq {
     public void setSupportedByDefault(Boolean supportedByDefault) {
 
         this.supportedByDefault = supportedByDefault;
+    }
+
+    /**
+     * Specifies if the claim value is managed in the user store.
+     **/
+    @ApiModelProperty(value = "Specifies if the claim value is managed in the user store.")
+    @JsonProperty("managedInUserStore")
+    public Boolean getManagedInUserStore() {
+
+        return managedInUserStore;
+    }
+
+    public void setManagedInUserStore(Boolean managedInUserStore) {
+
+        this.managedInUserStore = managedInUserStore;
     }
 
     /**
@@ -334,6 +350,7 @@ public class LocalClaimReq {
                 Objects.equals(this.regEx, localClaimReq.regEx) &&
                 Objects.equals(this.required, localClaimReq.required) &&
                 Objects.equals(this.supportedByDefault, localClaimReq.supportedByDefault) &&
+                Objects.equals(this.managedInUserStore, localClaimReq.managedInUserStore) &&
                 Objects.equals(this.dataType, localClaimReq.dataType) &&
                 Arrays.equals(this.subAttributes, localClaimReq.subAttributes) &&
                 Arrays.equals(this.canonicalValues, localClaimReq.canonicalValues) &&
@@ -348,8 +365,8 @@ public class LocalClaimReq {
     public int hashCode() {
 
         return Objects.hash(claimURI, description, displayOrder, displayName, readOnly, regEx, required,
-                supportedByDefault, uniquenessScope, sharedProfileValueResolvingMethod, attributeMapping, properties,
-                profiles, dataType, subAttributes, canonicalValues);
+                supportedByDefault, managedInUserStore, uniquenessScope, sharedProfileValueResolvingMethod,
+                attributeMapping, properties, profiles, dataType, subAttributes, canonicalValues);
     }
 
     @Override
@@ -364,6 +381,7 @@ public class LocalClaimReq {
                 "    regEx: " + toIndentedString(regEx) + "\n" +
                 "    required: " + toIndentedString(required) + "\n" +
                 "    supportedByDefault: " + toIndentedString(supportedByDefault) + "\n" +
+                "    managedInUserStore: " + toIndentedString(managedInUserStore) + "\n" +
                 "    dataType: " + toIndentedString(dataType) + "\n" +
                 "    subAttributes: " + toIndentedString(subAttributes) + "\n" +
                 "    canonicalValues: " + toIndentedString(canonicalValues) + "\n" +
