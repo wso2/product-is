@@ -91,7 +91,7 @@ public class MockOAuth2TokenEndpoint {
     private final AtomicReference<Map<String, String>> lastRequestBodyContent = new AtomicReference<>(new HashMap<>());
     private final Map<String, String> tokenStore = new HashMap<>();
 
-    public void start() {
+    public void start() throws InterruptedException {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
                 .httpsPort(TOKEN_ENDPOINT_PORT)
@@ -106,6 +106,7 @@ public class MockOAuth2TokenEndpoint {
 
         wireMockServer.start();
         configureMockEndpoints();
+        Thread.sleep(2000);
     }
 
     public void stop() {
@@ -122,7 +123,9 @@ public class MockOAuth2TokenEndpoint {
                     .willReturn(aResponse()
                             .withTransformers("response-template", TRANSFORMER_NAME)
                             .withStatus(200)
-                            .withHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)));
+                            .withHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
+                            .withHeader("Connection", "keep-alive")
+                            .withHeader("Keep-Alive", "timeout=60, max=1000")));
         } catch (Exception e) {
             throw new RuntimeException("Failed to configure mock OAuth2 token endpoint", e);
         }

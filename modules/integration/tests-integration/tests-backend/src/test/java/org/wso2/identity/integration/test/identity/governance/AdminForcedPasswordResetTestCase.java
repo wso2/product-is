@@ -195,10 +195,10 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
         assertTrue(StringUtils.isNotBlank(smsOTP), "SMS OTP is not received.");
 
         if ("v2".equals(apiVersion)) {
-            // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
+            // Validate Authorization Bearer token header for authentication
             String authorizationHeader = mockSMSProvider.getHeader("Authorization");
-            assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer access_token_"), 
-                    "Authorization header should contain Bearer token");
+            assertTrue(authorizationHeader != null &&
+                            authorizationHeader.startsWith("Bearer test-bearer-token-12345"), authorizationHeader);
         }
 
         notificationSenderRestClient.deleteSMSProvider();

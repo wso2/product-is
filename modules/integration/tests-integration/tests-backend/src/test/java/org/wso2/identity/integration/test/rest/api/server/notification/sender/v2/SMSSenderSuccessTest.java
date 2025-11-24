@@ -43,6 +43,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.testng.Assert.assertNotNull;
 
 /**
@@ -63,7 +64,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws IOException {
+    public void init() throws IOException, InterruptedException {
 
         mockOAuth2TokenEndpoint = new MockOAuth2TokenEndpoint();
         mockOAuth2TokenEndpoint.start();
@@ -136,7 +137,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .body("contentType", equalTo("JSON"))
                 .body("authentication.type", equalTo("BASIC"))
                 .body("authentication.properties.username", equalTo("testuser"))
-                .body("authentication.properties.password", equalTo("testpass"))
+                .body("authentication.properties.password", nullValue())
                 .body("properties", notNullValue());
     }
 
@@ -176,7 +177,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .body("contentType", equalTo("JSON"))
                 .body("authentication.type", equalTo("API_KEY"))
                 .body("authentication.properties.header", equalTo("test-api-header"))
-                .body("authentication.properties.value", equalTo("test-api-key-12345"))
+                .body("authentication.properties.value", nullValue())
                 .body("properties", notNullValue());
     }
 
@@ -196,7 +197,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .body("contentType", equalTo("JSON"))
                 .body("authentication.type", equalTo("API_KEY"))
                 .body("authentication.properties.header", equalTo("test-api-header"))
-                .body("authentication.properties.value", equalTo("test-api-key-12345"));
+                .body("authentication.properties.value", nullValue());
 
         testDeleteSmsSender();
     }
@@ -230,14 +231,15 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("authentication.type", equalTo("BEARER"))
-                .body("authentication.properties.accessToken", equalTo("test-bearer-token-12345"));
+                .body("authentication.properties.accessToken", nullValue());
 
         testDeleteSmsSender();
     }
 
     @Test(dependsOnMethods = {"testGetSMSSenderWithBearerAuth"})
-    public void testAddSmsSenderWithClientCredentialAuth() throws IOException {
+    public void testAddSmsSenderWithClientCredentialAuth() throws IOException, InterruptedException {
 
+        Thread.sleep(2000);
         String body = new Gson().toJson(SMSSenderRequestBuilder.createAddSMSSenderJSON(
                 Authentication.TypeEnum.CLIENT_CREDENTIAL, this.getClass()));
         Response response =
@@ -265,7 +267,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .statusCode(HttpStatus.SC_OK)
                 .body("authentication.type", equalTo("CLIENT_CREDENTIAL"))
                 .body("authentication.properties.clientId", equalTo("testClientId"))
-                .body("authentication.properties.clientSecret", equalTo("testClientSecret"))
+                .body("authentication.properties.clientSecret", nullValue())
                 .body("authentication.properties.tokenEndpoint", equalTo(MockOAuth2TokenEndpoint.TOKEN_ENDPOINT_URL))
                 .body("authentication.properties.scopes", equalTo("read write"));
 

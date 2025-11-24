@@ -143,17 +143,6 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
     }
 
-    //@Test
-    public void testUpdateSmsSenderByInvalidName() throws IOException {
-
-        String body = new Gson().toJson(SMSSenderRequestBuilder.createUpdateSMSSenderJSON(
-                Authentication.TypeEnum.API_KEY, this.getClass()));
-        Response response = getResponseOfPut(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH +
-                PATH_SEPARATOR + "randomName", body);
-
-        validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "NSM-60006");
-    }
-
     @Test
     public void testAddSmsSenderWithMissingBasicAuthUsername() throws IOException {
 
