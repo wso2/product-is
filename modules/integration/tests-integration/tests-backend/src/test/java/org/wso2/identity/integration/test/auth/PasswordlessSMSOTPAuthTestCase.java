@@ -41,7 +41,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.base.MockApplicationServer;
-import org.wso2.identity.integration.test.base.MockOAuth2TokenEndpoint;
+import org.wso2.identity.integration.test.base.MockOAuth2TokenServer;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.OIDCUtilTest;
@@ -54,6 +54,7 @@ import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.model.SMSSender;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.SMSSenderTestBase;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.Authentication;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.util.AuthenticationBuilder;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.util.SMSSenderRequestBuilder;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PhoneNumbers;
@@ -96,7 +97,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     private String authorizationCode;
 
     private MockSMSProvider mockSMSProvider;
-    private MockOAuth2TokenEndpoint mockOAuth2TokenEndpoint;
+    private MockOAuth2TokenServer mockOAuth2TokenServer;
     private MockApplicationServer mockApplicationServer;
 
     private TestUserMode userMode;
@@ -127,8 +128,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
 
-        mockOAuth2TokenEndpoint = new MockOAuth2TokenEndpoint();
-        mockOAuth2TokenEndpoint.start();
+        mockOAuth2TokenServer = new MockOAuth2TokenServer();
+        mockOAuth2TokenServer.start();
 
         mockApplicationServer = new MockApplicationServer();
         mockApplicationServer.start();
@@ -184,10 +185,10 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         // Override provider URL to use MockSMSProvider
         smsSender.setProviderURL(MockSMSProvider.SMS_SENDER_URL);
 
-        // Update authentication to use MockOAuth2TokenEndpoint
+        // Update authentication to use MockOAuth2TokenServer
         Authentication auth = smsSender.getAuthentication();
         if (auth != null && auth.getProperties() != null) {
-            auth.getProperties().put("tokenEndpoint", MockOAuth2TokenEndpoint.TOKEN_ENDPOINT_URL);
+            auth.getProperties().put("tokenEndpoint", MockOAuth2TokenServer.TOKEN_ENDPOINT_URL);
         }
 
         return new Gson().toJson(smsSender);
@@ -206,8 +207,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         mockSMSProvider.stop();
         mockApplicationServer.stop();
 
-        mockOAuth2TokenEndpoint.clearData();
-        mockOAuth2TokenEndpoint.stop();
+        mockOAuth2TokenServer.clearData();
+        mockOAuth2TokenServer.stop();
     }
 
     @Test(groups = "wso2.is", description = "Test passwordless authentication with SMS OTP")
@@ -219,14 +220,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         assertNotNull(response);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
-
-        if ("v2".equals(apiVersion)) {
-
-            // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
-            String authorizationHeader = mockSMSProvider.getHeader("Authorization");
-            assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer access_token_"), 
-                    "Authorization header should contain Bearer token");
-        }
+        validateTokenRequest();
     }
 
     private void sendAuthorizeRequest() throws Exception {
@@ -334,5 +328,31 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         user.setName(new Name().givenName(OIDCUtilTest.firstName).familyName(OIDCUtilTest.lastName));
         user.addPhoneNumbers(new PhoneNumbers().value(MOBILE).type("mobile"));
         return user;
+    }
+
+    private void validateTokenRequest() {
+
+        if (!"v2".equals(apiVersion)) {
+            // No OAuth2 token validation for SMS sender v1
+            return;
+        }
+
+        // Validate OAuth2 token request to MockOAuth2TokenServer for CLIENT_CREDENTIAL authentication
+        String accessToken = mockOAuth2TokenServer.getLastAccessToken();
+        Map<String, String> requestHeaders = mockOAuth2TokenServer.getLastRequestHeaders();
+        Map<String, String> requestParams = mockOAuth2TokenServer.getLastRequestBodyContent();
+
+        assertEquals(requestHeaders.get("Authorization"), "Basic " + AuthenticationBuilder.ENCODED_CREDENTIAL);
+
+        assertEquals(requestParams.get("grant_type"), "client_credentials");
+        assertEquals(requestParams.get("client_id"), AuthenticationBuilder.CLIENT_CREDENTIAL_CLIENT_ID);
+        assertEquals(requestParams.get("client_secret"), AuthenticationBuilder.CLIENT_CREDENTIAL_CLIENT_SECRET);
+        assertEquals(requestParams.get("scope"), AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES);
+
+        // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
+        String authorizationHeader = mockSMSProvider.getHeader("Authorization");
+        assertNotNull(accessToken, "Access token should not be null");
+        assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + accessToken),
+                "Authorization header should contain Bearer token");
     }
 }

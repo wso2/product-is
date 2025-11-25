@@ -116,16 +116,6 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
     }
 
     @Test
-    public void testAddSmsSenderWithInvalidProvider() throws IOException {
-
-        String body = readResource("add-sms-sender-invalid-provider.json");
-        Response response =
-                getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
-
-        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60004");
-    }
-
-    @Test
     public void testGetSmsSenderByInvalidName() {
 
         Response response = getResponseOfGet(

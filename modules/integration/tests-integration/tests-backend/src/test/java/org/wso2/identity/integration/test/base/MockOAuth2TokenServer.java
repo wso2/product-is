@@ -46,7 +46,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
  * Mock OAuth2 Token Endpoint for testing OAuth2 flows.
  * Supports client_credentials and refresh_token grant types.
  */
-public class MockOAuth2TokenEndpoint {
+public class MockOAuth2TokenServer {
 
     public static final String TOKEN_ENDPOINT_URL = "https://localhost:8093/oauth2/token";
     public static final String TOKEN_ENDPOINT_PATH = "/oauth2/token";
@@ -91,6 +91,11 @@ public class MockOAuth2TokenEndpoint {
     private final AtomicReference<Map<String, String>> lastRequestBodyContent = new AtomicReference<>(new HashMap<>());
     private final Map<String, String> tokenStore = new HashMap<>();
 
+    /**
+     * Start the mock OAuth2 token server.
+     *
+     * @throws InterruptedException If the thread is interrupted while starting the server
+     */
     public void start() throws InterruptedException {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
@@ -109,25 +114,13 @@ public class MockOAuth2TokenEndpoint {
         Thread.sleep(2000);
     }
 
+    /**
+     * Stop the mock OAuth2 token server.
+     */
     public void stop() {
 
         if (wireMockServer != null) {
             wireMockServer.stop();
-        }
-    }
-
-    private void configureMockEndpoints() {
-
-        try {
-            wireMockServer.stubFor(post(urlEqualTo(TOKEN_ENDPOINT_PATH))
-                    .willReturn(aResponse()
-                            .withTransformers("response-template", TRANSFORMER_NAME)
-                            .withStatus(200)
-                            .withHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
-                            .withHeader("Connection", "keep-alive")
-                            .withHeader("Keep-Alive", "timeout=60, max=1000")));
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to configure mock OAuth2 token endpoint", e);
         }
     }
 
@@ -202,6 +195,22 @@ public class MockOAuth2TokenEndpoint {
         lastRefreshToken.set(null);
         lastRequestHeaders.set(new HashMap<>());
         lastRequestBodyContent.set(new HashMap<>());
+        tokenStore.clear();
+    }
+
+    private void configureMockEndpoints() {
+
+        try {
+            wireMockServer.stubFor(post(urlEqualTo(TOKEN_ENDPOINT_PATH))
+                    .willReturn(aResponse()
+                            .withTransformers("response-template", TRANSFORMER_NAME)
+                            .withStatus(200)
+                            .withHeader(HEADER_CONTENT_TYPE, CONTENT_TYPE_JSON)
+                            .withHeader("Connection", "keep-alive")
+                            .withHeader("Keep-Alive", "timeout=60, max=1000")));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to configure mock OAuth2 token endpoint", e);
+        }
     }
 
     /**

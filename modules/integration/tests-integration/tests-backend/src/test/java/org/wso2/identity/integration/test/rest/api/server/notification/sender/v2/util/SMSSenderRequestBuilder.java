@@ -70,24 +70,4 @@ public class SMSSenderRequestBuilder {
         
         return smsSender;
     }
-
-    /**
-     * Creates an SMS sender object with the specified authentication type.
-     *
-     * @param authType the authentication type to use
-     * @param testClass the test class to use for resource loading
-     * @return SMSSender object
-     * @throws IOException if resource file cannot be read
-     */
-    public static SMSSender createSMSSender(Authentication.TypeEnum authType, Class<?> testClass) 
-            throws IOException {
-
-        String basicJson = readResource("add-sms-sender-basic.json", testClass);
-        SMSSender smsSender = new Gson().fromJson(basicJson, SMSSender.class);
-
-        Authentication authentication = AuthenticationBuilder.createSampleAuth(authType);
-        smsSender.setAuthentication(authentication);
-        
-        return smsSender;
-    }
 }

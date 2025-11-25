@@ -257,6 +257,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.SMSSenderSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.SMSSenderFailureTest"/>
             <!-- Disabling the SecretManagement api tests as the api is removed from the access control -->
             <!--<class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementSuccessTest"/>-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementFailureTest"/>-->

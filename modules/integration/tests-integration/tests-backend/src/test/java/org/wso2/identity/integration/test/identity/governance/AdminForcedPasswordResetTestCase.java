@@ -89,7 +89,11 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "apiVersionProvider")
     public Object[][] apiVersionProvider() {
-        return new Object[][]{{"v1"}, {"v2"}};
+
+        return new Object[][]{
+                {"v1"},
+                {"v2"}
+        };
     }
 
     @BeforeClass(alwaysRun = true)
@@ -99,7 +103,6 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
-        
         setUpUser();
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 
