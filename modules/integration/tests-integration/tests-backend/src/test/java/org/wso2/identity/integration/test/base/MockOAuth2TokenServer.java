@@ -46,7 +46,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
  * Mock OAuth2 Token Endpoint for testing OAuth2 flows.
  * Supports client_credentials and refresh_token grant types.
  */
-public class MockOAuth2TokenEndpoint {
+public class MockOAuth2TokenServer {
 
     public static final String TOKEN_ENDPOINT_URL = "https://localhost:8093/oauth2/token";
     public static final String TOKEN_ENDPOINT_PATH = "/oauth2/token";

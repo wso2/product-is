@@ -18,13 +18,30 @@
 
 package org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.util;
 
-import org.wso2.identity.integration.test.base.MockOAuth2TokenEndpoint;
+import org.wso2.identity.integration.test.base.MockOAuth2TokenServer;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.Authentication;
 
 /**
  * Helper class to create Authentication objects for SMS senders
  */
 public class AuthenticationBuilder {
+
+    // Basic Auth constants
+    public static final String BASIC_AUTH_USERNAME = "testuser";
+    public static final String BASIC_AUTH_PASSWORD = "testpass";
+
+    // Client Credential Auth constants
+    public static final String CLIENT_CREDENTIAL_CLIENT_ID = "testClientId";
+    public static final String CLIENT_CREDENTIAL_CLIENT_SECRET = "testClientSecret";
+    public static final String ENCODED_CREDENTIAL = "dGVzdENsaWVudElkOnRlc3RDbGllbnRTZWNyZXQ=";
+    public static final String CLIENT_CREDENTIAL_SCOPES = "read write";
+
+    // API Key Auth constants
+    public static final String API_KEY_HEADER = "test-api-header";
+    public static final String API_KEY_VALUE = "test-api-key-12345";
+
+    // Bearer Auth constants
+    public static final String BEARER_TOKEN = "test-bearer-token-12345";
 
     /**
      * Creates a sample Authentication object based on the specified authentication type.
@@ -35,14 +52,14 @@ public class AuthenticationBuilder {
     public static Authentication createSampleAuth(Authentication.TypeEnum authType) {
         switch (authType) {
             case BASIC:
-                return createBasicAuth("testuser", "testpass");
+                return createBasicAuth(BASIC_AUTH_USERNAME, BASIC_AUTH_PASSWORD);
             case CLIENT_CREDENTIAL:
-                return createClientCredentialAuth("testClientId", "testClientSecret",
-                        MockOAuth2TokenEndpoint.TOKEN_ENDPOINT_URL, "read write");
+                return createClientCredentialAuth(CLIENT_CREDENTIAL_CLIENT_ID, CLIENT_CREDENTIAL_CLIENT_SECRET,
+                        MockOAuth2TokenServer.TOKEN_ENDPOINT_URL, CLIENT_CREDENTIAL_SCOPES);
             case API_KEY:
-                return createApiKeyAuth( "test-api-header", "test-api-key-12345");
+                return createApiKeyAuth(API_KEY_HEADER, API_KEY_VALUE);
             case BEARER:
-                return createBearerAuth("test-bearer-token-12345");
+                return createBearerAuth(BEARER_TOKEN);
             case NONE:
                 return createNoAuth();
             default:

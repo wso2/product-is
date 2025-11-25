@@ -99,7 +99,6 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
-        
         setUpUser();
         usmClient = new RemoteUserStoreManagerServiceClient(backendURL, sessionCookie);
 

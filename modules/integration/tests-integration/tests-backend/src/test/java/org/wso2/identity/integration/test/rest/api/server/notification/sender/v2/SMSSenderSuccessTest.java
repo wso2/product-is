@@ -32,8 +32,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.base.MockOAuth2TokenEndpoint;
+import org.wso2.identity.integration.test.base.MockOAuth2TokenServer;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.Authentication;
+import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.util.AuthenticationBuilder;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.util.SMSSenderRequestBuilder;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ import static org.testng.Assert.assertNotNull;
  */
 public class SMSSenderSuccessTest extends SMSSenderTestBase {
 
-    private MockOAuth2TokenEndpoint mockOAuth2TokenEndpoint;
+    private MockOAuth2TokenServer mockOAuth2TokenServer;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public SMSSenderSuccessTest(TestUserMode userMode) throws Exception {
@@ -66,8 +67,8 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
     @BeforeClass(alwaysRun = true)
     public void init() throws IOException, InterruptedException {
 
-        mockOAuth2TokenEndpoint = new MockOAuth2TokenEndpoint();
-        mockOAuth2TokenEndpoint.start();
+        mockOAuth2TokenServer = new MockOAuth2TokenServer();
+        mockOAuth2TokenServer.start();
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
     }
@@ -77,8 +78,8 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
 
         super.conclude();
 
-        mockOAuth2TokenEndpoint.clearData();
-        mockOAuth2TokenEndpoint.stop();
+        mockOAuth2TokenServer.clearData();
+        mockOAuth2TokenServer.stop();
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -136,7 +137,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .body("providerURL", equalTo("https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184"))
                 .body("contentType", equalTo("JSON"))
                 .body("authentication.type", equalTo("BASIC"))
-                .body("authentication.properties.username", equalTo("testuser"))
+                .body("authentication.properties.username", equalTo(AuthenticationBuilder.BASIC_AUTH_USERNAME))
                 .body("authentication.properties.password", nullValue())
                 .body("properties", notNullValue());
     }
@@ -176,7 +177,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .body("sender", equalTo("0773923902"))
                 .body("contentType", equalTo("JSON"))
                 .body("authentication.type", equalTo("API_KEY"))
-                .body("authentication.properties.header", equalTo("test-api-header"))
+                .body("authentication.properties.header", equalTo(AuthenticationBuilder.API_KEY_HEADER))
                 .body("authentication.properties.value", nullValue())
                 .body("properties", notNullValue());
     }
@@ -196,7 +197,7 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .body("sender", equalTo("0773923902"))
                 .body("contentType", equalTo("JSON"))
                 .body("authentication.type", equalTo("API_KEY"))
-                .body("authentication.properties.header", equalTo("test-api-header"))
+                .body("authentication.properties.header", equalTo(AuthenticationBuilder.API_KEY_HEADER))
                 .body("authentication.properties.value", nullValue());
 
         testDeleteSmsSender();
@@ -239,7 +240,6 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
     @Test(dependsOnMethods = {"testGetSMSSenderWithBearerAuth"})
     public void testAddSmsSenderWithClientCredentialAuth() throws IOException, InterruptedException {
 
-        Thread.sleep(2000);
         String body = new Gson().toJson(SMSSenderRequestBuilder.createAddSMSSenderJSON(
                 Authentication.TypeEnum.CLIENT_CREDENTIAL, this.getClass()));
         Response response =
@@ -266,10 +266,10 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("authentication.type", equalTo("CLIENT_CREDENTIAL"))
-                .body("authentication.properties.clientId", equalTo("testClientId"))
+                .body("authentication.properties.clientId", equalTo(AuthenticationBuilder.CLIENT_CREDENTIAL_CLIENT_ID))
                 .body("authentication.properties.clientSecret", nullValue())
-                .body("authentication.properties.tokenEndpoint", equalTo(MockOAuth2TokenEndpoint.TOKEN_ENDPOINT_URL))
-                .body("authentication.properties.scopes", equalTo("read write"));
+                .body("authentication.properties.tokenEndpoint", equalTo(MockOAuth2TokenServer.TOKEN_ENDPOINT_URL))
+                .body("authentication.properties.scopes", equalTo(AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES));
 
         testDeleteSmsSender();
     }
