@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.recovery;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.icegreen.greenmail.store.FolderException;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
@@ -145,12 +147,6 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
 
-        // Adding custom sms sender.
-        notificationSenderRestClient = new NotificationSenderRestClient(
-                serverURL, tenantInfo);
-        SMSSender smsSender = initSMSSender();
-        notificationSenderRestClient.createSMSProvider(smsSender);
-
         oidcApplication = initApplication();
         createApplication(oidcApplication);
 
@@ -175,7 +171,6 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         mockSMSProvider.stop();
         mockApplicationServer.stop();
         userStoreMgtRestClient.deleteUserStore(userStoreId);
-        notificationSenderRestClient.deleteSMSProvider();
         client.close();
         scim2RestClient.closeHttpClient();
         restClient.closeHttpClient();
@@ -185,8 +180,13 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         serverConfigurationManager.restoreToLastConfiguration(false);
     }
 
-    @Test(dataProvider = "userProvider")
+    @Test(dataProvider = "userProviderForEmail")
     public void testUsernameRecoveryForEmailOnly(UserObject user) throws Exception {
+
+        // Adding custom sms sender (using default v2).
+        notificationSenderRestClient = new NotificationSenderRestClient(serverURL, tenantInfo);
+        SMSSender smsSender = initSMSSender();
+        notificationSenderRestClient.createSMSProviderV2(toJSONString(smsSender));
 
         updateUsernameRecoveryFeature(ChannelType.EMAIL, true);
         updateUsernameRecoveryFeature(ChannelType.SMS, false);
@@ -203,10 +203,25 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Clearing the user.
         deleteUser(user);
+        
+        // Cleanup notification sender.
+        notificationSenderRestClient.deleteSMSProvider();
+        notificationSenderRestClient.closeHttpClient();
     }
 
-    @Test(dataProvider = "userProvider")
-    public void testUsernameRecoveryForSmsOnly(UserObject user) throws Exception {
+    @Test(dataProvider = "userProviderForSMS")
+    public void testUsernameRecoveryForSMSOnly(UserObject user, String apiVersion) throws Exception {
+
+        // Adding custom sms sender.
+        notificationSenderRestClient = new NotificationSenderRestClient(
+                serverURL, tenantInfo, apiVersion);
+        SMSSender smsSender = initSMSSender();
+        
+        if ("v1".equals(apiVersion)) {
+            notificationSenderRestClient.createSMSProvider(smsSender);
+        } else {
+            notificationSenderRestClient.createSMSProviderV2(toJSONString(smsSender));
+        }
 
         // Disabling the email channel & enabling sms channel.
         updateUsernameRecoveryFeature(ChannelType.EMAIL, false);
@@ -224,10 +239,26 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Clearing the user.
         deleteUser(user);
+        
+        // Cleanup notification sender.
+        notificationSenderRestClient.deleteSMSProvider();
+        notificationSenderRestClient.closeHttpClient();
     }
 
     @Test(dataProvider = "userProviderWithChannel")
-    public void testUsernameRecoveryWithBothChannels(UserObject user, ChannelType channelType) throws Exception {
+    public void testUsernameRecoveryWithBothChannels(UserObject user, ChannelType channelType,
+                                                      String apiVersion) throws Exception {
+
+        // Adding custom sms sender.
+        notificationSenderRestClient = new NotificationSenderRestClient(
+                serverURL, tenantInfo, apiVersion);
+        SMSSender smsSender = initSMSSender();
+        
+        if ("v1".equals(apiVersion)) {
+            notificationSenderRestClient.createSMSProvider(smsSender);
+        } else {
+            notificationSenderRestClient.createSMSProviderV2(toJSONString(smsSender));
+        }
 
         // Enabling the both username recovery channels.
         updateUsernameRecoveryFeature(ChannelType.EMAIL, true);
@@ -253,6 +284,10 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
 
         // Delete the user.
         deleteUser(user);
+        
+        // Cleanup notification sender.
+        notificationSenderRestClient.deleteSMSProvider();
+        notificationSenderRestClient.closeHttpClient();
     }
 
     @Test
@@ -378,8 +413,8 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         identityGovernanceRestClient.updateConnectors(CATEGORY_ID, CONNECTOR_ID, connectorsPatchReq);
     }
 
-    @DataProvider(name = "userProvider")
-    private Object[][] userProvider() {
+    @DataProvider(name = "userProviderForEmail")
+    private Object[][] userProviderForEmail() {
 
         // Primary user store user.
         UserObject userObject1 = initUser(PRIMARY_DOMAIN_ID, USERNAME);
@@ -387,7 +422,27 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         // Secondary user store user.
         UserObject userObject2 = initUser(SECONDARY_DOMAIN_ID, USERNAME);
 
-        return new Object[][]{{userObject1}, {userObject2}};
+        return new Object[][]{
+                {userObject1},
+                {userObject2}
+        };
+    }
+
+    @DataProvider(name = "userProviderForSMS")
+    private Object[][] userProviderForSMS() {
+
+        // Primary user store user.
+        UserObject userObject1 = initUser(PRIMARY_DOMAIN_ID, USERNAME);
+
+        // Secondary user store user.
+        UserObject userObject2 = initUser(SECONDARY_DOMAIN_ID, USERNAME);
+
+        return new Object[][]{
+                {userObject1, "v1"},
+                {userObject1, "v2"},
+                {userObject2, "v1"},
+                {userObject2, "v2"}
+        };
     }
 
     @DataProvider(name = "userProviderWithChannel")
@@ -400,10 +455,12 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         UserObject userObject2 = initUser(SECONDARY_DOMAIN_ID, USERNAME);
 
         return new Object[][]{
-                {userObject1, ChannelType.EMAIL},
-                {userObject1, ChannelType.SMS},
-                {userObject2, ChannelType.EMAIL},
-                {userObject2, ChannelType.SMS}
+                {userObject1, ChannelType.EMAIL, "v2"},
+                {userObject1, ChannelType.SMS, "v1"},
+                {userObject1, ChannelType.SMS, "v2"},
+                {userObject2, ChannelType.EMAIL, "v2"},
+                {userObject2, ChannelType.SMS, "v1"},
+                {userObject2, ChannelType.SMS, "v2"}
         };
     }
 
@@ -602,6 +659,18 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
         properties.add(new Properties().key("body").value(SMS_SENDER_REQUEST_FORMAT));
         smsSender.setProperties(properties);
         return smsSender;
+    }
+
+    /**
+     * Convert object to JSON string.
+     *
+     * @param object Object to convert.
+     * @return JSON string representation.
+     */
+    private String toJSONString(Object object) {
+
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(object);
     }
 
 }

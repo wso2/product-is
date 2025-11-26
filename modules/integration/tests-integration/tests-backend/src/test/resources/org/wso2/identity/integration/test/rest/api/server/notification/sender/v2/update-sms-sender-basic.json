@@ -1,0 +1,16 @@
+{
+  "provider": "Custom",
+  "providerURL": "https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa185",
+  "sender": "0773923902",
+  "contentType": "JSON",
+  "properties": [
+    {
+        "key": "body",
+        "value": "{\"content\": {{body}}, \"to\": {{mobile}} }"
+    },
+    {
+      "key" : "http.headers",
+      "value": "X-Version: 1, Accept: application/json ,Content-Type: application/json"
+    }
+  ]
+}
