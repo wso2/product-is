@@ -2555,7 +2555,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.628</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.629</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2637,7 +2637,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.50</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.29</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.30</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
@@ -2661,7 +2661,7 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.43</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
+        <authenticator.backupcode.version>0.0.21</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.43</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
@@ -2687,7 +2687,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.222</identity.server.api.version>
+        <identity.server.api.version>1.3.223</identity.server.api.version>
         <identity.user.api.version>1.3.71</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
