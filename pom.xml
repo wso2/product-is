@@ -2637,7 +2637,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.50</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.4.29</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.4.30</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
@@ -2661,7 +2661,7 @@
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.3.43</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.20</authenticator.backupcode.version>
+        <authenticator.backupcode.version>0.0.21</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.43</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
