@@ -1219,6 +1219,43 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		});
 	}
 
+	/**
+	 * Authorize list of SYSTEM APIs to an application registered in sub organization.
+	 *
+	 * @param applicationId  Application id.
+	 * @param apiIdentifiers API identifiers to authorize.
+	 * @throws Exception Error occured while authorizing APIs.
+	 */
+	public void authorizeSystemAPIsToSubOrganizationApp(String applicationId, List<String> apiIdentifiers,
+														String switchedM2MToken) {
+
+		apiIdentifiers.stream().forEach(apiIdentifier -> {
+			try {
+				List<APIResourceListItem> filteredAPIResource =
+						restClient.getAPIResourcesWithFilteringFromSubOrganization("identifier+eq+" + apiIdentifier,
+								switchedM2MToken);
+				if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
+					return;
+				}
+				String apiId = filteredAPIResource.get(0).getId();
+				// Get API scopes.
+				List<ScopeGetModel> apiResourceScopes = restClient.getAPIResourceScopesInSubOrganization(apiId,
+						switchedM2MToken);
+				AuthorizedAPICreationModel authorizedAPICreationModel = new AuthorizedAPICreationModel();
+				authorizedAPICreationModel.setId(apiId);
+				authorizedAPICreationModel.setPolicyIdentifier("RBAC");
+				apiResourceScopes.forEach(scope -> {
+					authorizedAPICreationModel.addScopesItem(scope.getName());
+				});
+				restClient.addAPIAuthorizationToSubOrgApplication(applicationId, authorizedAPICreationModel,
+						switchedM2MToken);
+			} catch (Exception e) {
+				throw new RuntimeException("Error while authorizing system API " + apiIdentifier + " to application "
+						+ applicationId, e);
+			}
+		});
+	}
+
 	public String getRoleV2ResourceId(String roleName, String audienceType, String OrganizationId) throws Exception {
 
 		List<String> roles = restClient.getRoles(roleName, audienceType, OrganizationId);

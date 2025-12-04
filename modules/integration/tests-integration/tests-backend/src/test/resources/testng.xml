@@ -245,6 +245,7 @@
             <!--Disabling the test until the application templates are restructured.-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementSuccessTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.OrganizationOAuth2ApplicationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibraryFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.oidc.scope.management.v1.OIDCScopeManagementSuccessTest"/>
