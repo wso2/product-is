@@ -1,6 +1,6 @@
 {
     "provider": "Custom",
-    "providerURL": "https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184",
+    "providerURL": "https://example.sms.sender",
     "contentType": "JSON",
     "properties": [
         {

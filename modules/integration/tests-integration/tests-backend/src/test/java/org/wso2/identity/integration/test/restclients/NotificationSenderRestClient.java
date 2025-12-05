@@ -36,6 +36,8 @@ import java.io.IOException;
  */
 public class NotificationSenderRestClient extends RestBaseClient {
 
+    public static final String VERSION_2 = "v2";
+
     private static final String NOTIFICATION_SENDER_SMS_ENDPOINT_TEMPLATE = "api/server/%s/notification-senders/sms";
     private final String serverUrl;
     private final String tenantDomain;

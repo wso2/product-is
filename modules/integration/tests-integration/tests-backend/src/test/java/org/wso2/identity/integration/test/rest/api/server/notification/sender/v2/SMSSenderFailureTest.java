@@ -139,7 +139,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with BASIC auth but missing username
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"BASIC\","
@@ -163,7 +163,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with BASIC auth but missing password
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"BASIC\","
@@ -187,7 +187,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with API_KEY auth but missing header
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"API_KEY\","
@@ -211,7 +211,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with API_KEY auth but missing value
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"API_KEY\","
@@ -235,7 +235,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with BEARER auth but missing accessToken
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"BEARER\","
@@ -257,7 +257,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with CLIENT_CREDENTIAL auth but missing clientId
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"CLIENT_CREDENTIAL\","
@@ -282,7 +282,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with CLIENT_CREDENTIAL auth but missing clientSecret
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"CLIENT_CREDENTIAL\","
@@ -307,7 +307,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Create SMS sender with CLIENT_CREDENTIAL auth but missing tokenEndpoint
         String body = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa184\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"CLIENT_CREDENTIAL\","
@@ -347,7 +347,7 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
         // Try to update with invalid authentication (missing required fields)
         String updateBody = "{"
                 + "\"provider\": \"Custom\","
-                + "\"providerURL\": \"https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa185\","
+                + "\"providerURL\": \"https://example.sms.sender\","
                 + "\"contentType\": \"JSON\","
                 + "\"authentication\": {"
                 + "  \"type\": \"BASIC\","
