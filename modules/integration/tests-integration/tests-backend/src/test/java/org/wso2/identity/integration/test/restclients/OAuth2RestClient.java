@@ -118,6 +118,7 @@ public class OAuth2RestClient extends RestBaseClient {
     private final String subOrgApplicationManagementApiBasePath;
     private final String apiResourceManagementApiBasePath;
     private final String roleV2ApiBasePath;
+    private final String organizationRoleV2ApiBasePath;
     private final String username;
     private final String password;
     private final String authorizeEndpoint;
@@ -135,6 +136,7 @@ public class OAuth2RestClient extends RestBaseClient {
         subOrgApplicationManagementApiBasePath = getSubOrgApplicationsPath(backendUrl, tenantDomain);
         apiResourceManagementApiBasePath = getAPIResourcesPath(backendUrl, tenantDomain);
         roleV2ApiBasePath = getSCIM2RoleV2Path(backendUrl, tenantDomain);
+        organizationRoleV2ApiBasePath = getOrganizationSCIM2RoleV2Path(backendUrl, tenantDomain);
         authorizeEndpoint = getAuthorizeEndpoint(backendUrl, tenantDomain);
         commonAuthURL = getCommonAuthURL(backendUrl, tenantDomain);
         subOrgCommonAuthURL = getSubOrgCommonAuthURL(backendUrl);
@@ -166,6 +168,30 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create an application in the organization.
+     *
+     * @param application Application Model with application creation details.
+     * @param accessToken Authorized token to create an application in an organization.
+     * @return ID of the created application.
+     * @throws IOException If an error occurred while creating an application.
+     */
+    public String createOrganizationApplication(ApplicationModel application, String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(application);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(subOrgApplicationManagementApiBasePath, jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                throw new RuntimeException("Error occurred while creating the application. Response: " + responseBody);
+            }
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
      * To create V2 roles.
      *
      * @param role an instance of RoleV2
@@ -177,6 +203,28 @@ public class OAuth2RestClient extends RestBaseClient {
         String jsonRequest = toJSONString(role);
         try (CloseableHttpResponse response = getResponseOfHttpPost(roleV2ApiBasePath, jsonRequest,
                 getHeaders())) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Create a V2 role in the organization.
+     *
+     * @param role an instance of RoleV2.
+     * @param accessToken Authorized token to create V2 roles in an organization.
+     * @return the role ID.
+     * @throws IOException throws if an error occurs while creating the role.
+     */
+    public String createOrganizationV2Roles(RoleV2 role, String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(role);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(organizationRoleV2ApiBasePath, jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                throw new RuntimeException("Error occurred while creating the role. Response: " + responseBody);
+            }
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
         }
@@ -225,6 +273,28 @@ public class OAuth2RestClient extends RestBaseClient {
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ApplicationResponseModel.class);
+        }
+    }
+
+    /**
+     * Get application details of an organization.
+     *
+     * @param appId Application id.
+     * @param accessToken Authorized token to get the application.
+     * @return ApplicationResponseModel object.
+     * @throws IOException If an error occurred while getting an application.
+     */
+    public ApplicationResponseModel getOrganizationApplication(String appId, String accessToken)
+            throws IOException {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(accessToken))) {
             String responseBody = EntityUtils.toString(response.getEntity());
 
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
@@ -422,6 +492,22 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Get OIDC inbound configuration details of an application in an organization.
+     *
+     * @param appId Application id.
+     * @param accessToken Authorized token to get the inbound configurations of the application.
+     * @return OpenIDConnectConfiguration object with oidc configuration details.
+     * @throws Exception If an error occurred while getting OIDC inbound configuration details.
+     */
+    public OpenIDConnectConfiguration getOIDCInboundDetailsOfOrganizationApp(String appId, String accessToken)
+            throws Exception {
+
+        String responseBody = getConfigOfOrganizationApp(appId, OIDC, accessToken);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
+    }
+
+    /**
      * Get SAML inbound configuration details of an application.
      *
      * @param appId Application id.
@@ -442,6 +528,18 @@ public class OAuth2RestClient extends RestBaseClient {
                 PATH_SEPARATOR + inboundType;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return EntityUtils.toString(response.getEntity());
+        }
+    }
+
+    private String getConfigOfOrganizationApp(String appId, String inboundType,
+                                              String accessToken) throws Exception {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + inboundType;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(accessToken))) {
             return EntityUtils.toString(response.getEntity());
         }
     }
@@ -791,6 +889,15 @@ public class OAuth2RestClient extends RestBaseClient {
             return serverUrl + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
+        }
+    }
+
+    private String getOrganizationSCIM2RoleV2Path(String serverUrl, String tenantDomain) {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + ORGANIZATION_PATH + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + SCIM_BASE_PATH + ROLE_V2_BASE_PATH;
         }
     }
 
