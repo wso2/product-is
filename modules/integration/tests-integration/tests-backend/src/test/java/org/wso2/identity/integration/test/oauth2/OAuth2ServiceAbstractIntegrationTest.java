@@ -657,7 +657,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			IOException {
 
 		List<NameValuePair> urlParameters = new ArrayList<>();
-		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
+		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserNameWithoutDomain()));
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);

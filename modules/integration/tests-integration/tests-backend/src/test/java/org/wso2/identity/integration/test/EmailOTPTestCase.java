@@ -180,8 +180,10 @@ public class EmailOTPTestCase extends ISIntegrationTest {
             EntityUtils.consume(response.getEntity());
             response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getSpEntityId(), httpClient);
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config.getSpEntityId(),
-                    config.getUsername(), config.getPassword(), httpClient);
+            response = Utils.sendPOSTMessage(sessionKey, getTenantQualifiedURL(SAML_SSO_URL,
+                            config.getTenantDomain()), USER_AGENT, ACS_URL, config.getSpEntityId(),
+                    config.getTenantAwareUsername(), config.getPassword(), httpClient,
+                    getTenantQualifiedURL(SAML_SSO_URL, config.getTenantDomain()));
 
             if (Utils.requestMissingClaims(response)) {
                 String pastrCookie = Utils.getPastreCookie(response);
@@ -193,7 +195,8 @@ public class EmailOTPTestCase extends ISIntegrationTest {
             }
 
             String redirectUrl = Utils.getRedirectUrl(response);
-            Assert.assertTrue(redirectUrl.contains(EMAIL_OTP_AUTHENTICATION_ENDPOINT_URL),
+            Assert.assertTrue(redirectUrl.contains(getTenantQualifiedURL(
+                    EMAIL_OTP_AUTHENTICATION_ENDPOINT_URL, config.getTenantDomain())),
                     "Error in redirection to email OTP authentication page for user: " + config.getUsername());
         } catch (Exception e) {
             Assert.fail("Authentication failed for user: " + config.getUsername(), e);
