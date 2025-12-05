@@ -36,22 +36,37 @@ import java.io.IOException;
  */
 public class NotificationSenderRestClient extends RestBaseClient {
 
-    private static final String NOTIFICATION_SENDER_SMS_ENDPOINT = "api/server/v1/notification-senders/sms";
+    public static final String VERSION_2 = "v2";
+
+    private static final String NOTIFICATION_SENDER_SMS_ENDPOINT_TEMPLATE = "api/server/%s/notification-senders/sms";
     private final String serverUrl;
     private final String tenantDomain;
     private final String username;
     private final String password;
+    private final String version;
 
-    public NotificationSenderRestClient(String serverUrl, Tenant tenantInfo) {
+    public NotificationSenderRestClient(String serverUrl, Tenant tenantInfo, String version) {
 
         this.serverUrl = serverUrl;
         this.tenantDomain = tenantInfo.getContextUser().getUserDomain();
         this.username = tenantInfo.getContextUser().getUserName();
         this.password = tenantInfo.getContextUser().getPassword();
+        this.version = version;
     }
 
     /**
-     * Create SMS Sender.
+     * Constructor with default version v1.
+     *
+     * @param serverUrl Server URL.
+     * @param tenantInfo Tenant information.
+     */
+    public NotificationSenderRestClient(String serverUrl, Tenant tenantInfo) {
+
+        this(serverUrl, tenantInfo, "v2");
+    }
+
+    /**
+     * Create SMS Sender (v1).
      *
      * @param smsSender SMS sender details.
      * @throws Exception If an error occurred while creating the SMS sender.
@@ -59,6 +74,20 @@ public class NotificationSenderRestClient extends RestBaseClient {
     public void createSMSProvider(SMSSender smsSender) throws Exception {
 
         String jsonRequest = toJSONString(smsSender);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getSMSSenderPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Notification sender creation failed");
+        }
+    }
+
+    /**
+     * Create SMS Sender (v2).
+     *
+     * @param jsonRequest SMS sender details.
+     * @throws Exception If an error occurred while creating the SMS sender.
+     */
+    public void createSMSProviderV2(String jsonRequest) throws Exception {
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(getSMSSenderPath(), jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
@@ -94,9 +123,10 @@ public class NotificationSenderRestClient extends RestBaseClient {
     private String getSMSSenderPath() {
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return serverUrl + NOTIFICATION_SENDER_SMS_ENDPOINT;
+            return serverUrl + String.format(NOTIFICATION_SENDER_SMS_ENDPOINT_TEMPLATE, version);
         } else {
-            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + NOTIFICATION_SENDER_SMS_ENDPOINT;
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR +
+                    String.format(NOTIFICATION_SENDER_SMS_ENDPOINT_TEMPLATE, version);
         }
     }
 
