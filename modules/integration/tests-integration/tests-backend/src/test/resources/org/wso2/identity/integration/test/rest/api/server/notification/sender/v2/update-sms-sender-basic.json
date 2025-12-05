@@ -1,7 +1,7 @@
 {
   "provider": "Custom",
-  "providerURL": "https://webhook.site/9b79bebd-445a-4dec-ad5e-622b856fa185",
-  "sender": "0773923902",
+  "providerURL": "https://example.sms.sender",
+  "sender": "0123456789",
   "contentType": "JSON",
   "properties": [
     {

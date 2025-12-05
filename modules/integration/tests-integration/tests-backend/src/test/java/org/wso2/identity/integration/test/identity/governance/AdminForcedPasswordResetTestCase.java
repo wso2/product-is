@@ -54,6 +54,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import static org.testng.Assert.assertTrue;
+import static org.wso2.identity.integration.test.restclients.NotificationSenderRestClient.VERSION_2;
 
 public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
 
@@ -179,7 +180,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
     @Test(groups = "wso2.is.governance", dataProvider = "apiVersionProvider")
     public void testAdminForcedPasswordResetSMSOTP(String apiVersion) throws Exception {
 
-        if ("v2".equals(apiVersion)) {
+        if (VERSION_2.equals(apiVersion)) {
             notificationSenderRestClient.createSMSProviderV2(initSMSSenderV2());
         } else {
             SMSSender smsSender = initSMSSender();
@@ -197,7 +198,7 @@ public class AdminForcedPasswordResetTestCase extends ISIntegrationTest {
         String smsOTP = mockSMSProvider.getSmsContent();
         assertTrue(StringUtils.isNotBlank(smsOTP), "SMS OTP is not received.");
 
-        if ("v2".equals(apiVersion)) {
+        if (VERSION_2.equals(apiVersion)) {
             // Validate Authorization Bearer token header for authentication
             String authorizationHeader = mockSMSProvider.getHeader("Authorization");
             assertTrue(authorizationHeader != null &&
