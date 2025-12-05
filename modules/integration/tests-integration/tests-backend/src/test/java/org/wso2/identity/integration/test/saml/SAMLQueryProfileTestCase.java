@@ -198,8 +198,8 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
             response = Utils.sendPOSTMessage(sessionKey, tenantedSamlSSOUrl, USER_AGENT, ACS_URL, config.getApp()
-                            .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient,
-                    tenantedSamlSSOUrl);
+                            .getArtifact(), config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
+                    httpClient, tenantedSamlSSOUrl);
 
 
             if (requestMissingClaims(response)) {

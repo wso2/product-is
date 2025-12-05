@@ -35,6 +35,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisionin
 import org.wso2.carbon.identity.application.common.model.xsd.Property;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
@@ -224,9 +225,9 @@ public class TestPassiveSTS extends ISIntegrationTest {
     public void testSendLoginRequestPost() throws Exception {
 
         cookieStore.clear();
-        HttpPost request = new HttpPost(COMMON_AUTH_URL);
+        HttpPost request = new HttpPost(getTenantQualifiedURL(COMMON_AUTH_URL, tenantDomain));
         List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-        urlParameters.add(new BasicNameValuePair("username", username));
+        urlParameters.add(new BasicNameValuePair("username", MultitenantUtils.getTenantAwareUsername(username)));
         urlParameters.add(new BasicNameValuePair("password", userPassword));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
