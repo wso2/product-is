@@ -2555,7 +2555,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.630</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.631</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2573,7 +2573,7 @@
         <carbon.consent.mgt.version>2.6.10</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.153</identity.governance.version>
+        <identity.governance.version>1.11.154</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
@@ -2583,7 +2583,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.400</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.401</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.63</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.2</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.2</identity.inbound.auth.sts.version>
@@ -2693,7 +2693,7 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.13</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
-	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.33</identity.oauth.addons.token.handler.clientauth.jwt.version>
+	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.34</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.30</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.29</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.85</conditional.authentication.functions.version>
