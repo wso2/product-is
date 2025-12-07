@@ -227,7 +227,7 @@ public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2Ser
         validateBasicAuthenticationResponseBody(extractableResponse);
     }
 
-    @Test(groups = "wso2.is", description = "Send token post request", dependsOnMethods = "testSendInitAuthRequestPost")
+    @Test(groups = "wso2.is", description = "Send token post request", dependsOnMethods = "testSendBasicAuthRequestPost")
     public void testTokenRequest() throws Exception {
 
         // Wait 5 seconds because of the token polling interval.
@@ -369,7 +369,9 @@ public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2Ser
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = client.execute(request);
 
-        BufferedReader responseBuffer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        return (JSONObject) JSONValue.parse(responseBuffer);
+        try (BufferedReader responseBuffer =
+                     new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+            return (JSONObject) JSONValue.parse(responseBuffer);
+        }
     }
 }
