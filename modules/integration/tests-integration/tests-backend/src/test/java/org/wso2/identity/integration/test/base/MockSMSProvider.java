@@ -29,6 +29,8 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,6 +51,7 @@ public class MockSMSProvider {
     private WireMockServer wireMockServer;
     private final AtomicReference<String> otp = new AtomicReference<>();
     private final AtomicReference<String> smsContent = new AtomicReference<>();
+    private final AtomicReference<Map<String, String>> headers = new AtomicReference<>(new HashMap<>());
 
     public void start() {
 
@@ -71,6 +74,14 @@ public class MockSMSProvider {
 
                                 // Store the content value for later use.
                                 smsContent.set(content);
+
+                                // Capture headers from the request.
+                                clearHeaders();
+                                Map<String, String> requestHeaders = new HashMap<>();
+                                serveEvent.getRequest().getHeaders().all().forEach(header -> {
+                                    requestHeaders.put(header.key(), header.firstValue());
+                                });
+                                headers.set(requestHeaders);
 
                                 String regex = "\\b\\d{6}\\b";
 
@@ -136,5 +147,34 @@ public class MockSMSProvider {
     public void clearSmsContent() {
 
         smsContent.set(null);
+    }
+
+    /**
+     * Get all headers received from the last SMS request.
+     *
+     * @return Map of header names to header values
+     */
+    public Map<String, String> getHeaders() {
+
+        return headers.get();
+    }
+
+    /**
+     * Get a specific header value from the last SMS request.
+     *
+     * @param headerName The name of the header to retrieve
+     * @return The header value, or null if not found
+     */
+    public String getHeader(String headerName) {
+
+        return headers.get().get(headerName);
+    }
+
+    /**
+     * Clear stored headers.
+     */
+    public void clearHeaders() {
+
+        headers.set(new HashMap<>());
     }
 }
