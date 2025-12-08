@@ -195,11 +195,12 @@ public class RegistryMountTestCase extends ISIntegrationTest {
 
     private HttpResponse sendPOSTMessage(String sessionKey) throws Exception {
 
-        HttpPost post = new HttpPost(COMMON_AUTH_URL);
+        HttpPost post = new HttpPost(getTenantQualifiedURL(COMMON_AUTH_URL, TENANT_DOMAIN));
         post.setHeader("User-Agent", USER_AGENT);
         post.addHeader("Referer", String.format(ACS_URL, artifact));
         List<NameValuePair> urlParameters = new ArrayList<>();
-        urlParameters.add(new BasicNameValuePair("username", TENANT_ADMIN_USERNAME));
+        urlParameters.add(new BasicNameValuePair("username",
+                MultitenantUtils.getTenantAwareUsername(TENANT_ADMIN_USERNAME)));
         urlParameters.add(new BasicNameValuePair("password", TENANT_ADMIN_PASSWORD));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionKey));
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
