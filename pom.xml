@@ -2555,7 +2555,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.633</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.634</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2573,7 +2573,7 @@
         <carbon.consent.mgt.version>2.6.10</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.154</identity.governance.version>
+        <identity.governance.version>1.11.155</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
@@ -2604,7 +2604,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.76</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.77</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.394</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.38</org.wso2.identity.event.publishers.version>
@@ -2619,7 +2619,7 @@
         <identity.outbound.auth.oauth2.version>1.0.12</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.10</identity.outbound.auth.samlsso.version>
-        <identity.outbound.auth.requestpath.basicauth.version>5.5.7</identity.outbound.auth.requestpath.basicauth.version>
+        <identity.outbound.auth.requestpath.basicauth.version>5.5.8</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.5.8</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
@@ -2666,7 +2666,7 @@
         <authenticator.smsotp.version>3.3.43</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.36</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.52</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.53</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.44</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.36</authenticator.x509.version>
