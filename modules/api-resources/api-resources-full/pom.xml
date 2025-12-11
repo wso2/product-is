@@ -598,11 +598,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
-            <artifactId>org.wso2.carbon.identity.api.server.user.credential.management.v1</artifactId>
+            <artifactId>org.wso2.carbon.identity.api.server.credential.management.v1</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
-            <artifactId>org.wso2.carbon.identity.api.server.user.credential.management.common</artifactId>
+            <artifactId>org.wso2.carbon.identity.api.server.credential.management.common</artifactId>
         </dependency>
             <dependency>
             <groupId>org.wso2.carbon.identity.server.api</groupId>
