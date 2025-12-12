@@ -46,6 +46,10 @@ hash= "66cd9688a2ae068244ea01e70f0e230f5623b7fa4cdecb65070a09ec06452262"
 [identity.auth_framework.endpoint]
 app_password= "dashboard"
 
+# Replace the below key with a random 64 bit hex key.
+[encryption]
+key = "b6c063a725a668e6c24d60c99a12998c27bf5bf9ff065fd22f8888f482401a7b"
+
 # The KeyStore which is used for encrypting/decrypting internal data. By default the primary keystore is used as the internal keystore.
 
 #[keystore.internal]
