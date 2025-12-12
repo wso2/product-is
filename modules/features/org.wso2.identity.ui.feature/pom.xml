@@ -32,11 +32,12 @@
     <description>This feature contains the bundles required for Cloud Identity login UI and dashboard</description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.wso2.identity</groupId>
-            <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
-        </dependency>
-    </dependencies>
+    <dependency>
+        <groupId>org.wso2.identity</groupId>
+        <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+</dependencies>
 
     <build>
         <plugins>
