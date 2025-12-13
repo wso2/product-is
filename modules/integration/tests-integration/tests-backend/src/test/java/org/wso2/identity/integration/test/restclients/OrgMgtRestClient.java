@@ -46,6 +46,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
@@ -69,11 +71,13 @@ import static org.testng.Assert.assertEquals;
 public class OrgMgtRestClient extends RestBaseClient {
 
     private static final String API_SERVER_BASE_PATH = "api/server/v1";
+    private static final String SCIM2_BASE_PATH = "scim2";
     private static final String APPLICATION_MANAGEMENT_PATH = "/applications";
     private static final String ORGANIZATION_MANAGEMENT_PATH = "/organizations";
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
     private static final String SELF_PATH = "/self";
     private static final String AUTHORIZED_APIS_PATH = "/authorized-apis";
+    private static final String SCIM2_USERS_PATH = "/Users";
     private static final String B2B_APP_NAME = "b2b-app";
     private static final String API_RESOURCES = "apiResources";
     private static final String ID = "id";
@@ -88,6 +92,7 @@ public class OrgMgtRestClient extends RestBaseClient {
     private final String organizationManagementApiBasePath;
     private final String subOrganizationManagementApiBasePath;
     private final String apiResourceManagementApiBasePath;
+    private final String subOrgSCIM2UsersAPIBasePath;
     private final String authenticatingUserName;
     private final String authenticatingCredential;
 
@@ -112,6 +117,7 @@ public class OrgMgtRestClient extends RestBaseClient {
                 buildPath(baseUrl, tenantInfo.getDomain(), API_RESOURCE_MANAGEMENT_PATH);
         this.subOrganizationManagementApiBasePath =
                 buildSubOrgPath(baseUrl, tenantInfo.getDomain(), ORGANIZATION_MANAGEMENT_PATH);
+        this.subOrgSCIM2UsersAPIBasePath = buildSubOrgSCIM2Path(baseUrl, tenantInfo.getDomain(), SCIM2_USERS_PATH);
 
         createB2BApplication(authorizedAPIs);
     }
@@ -478,6 +484,15 @@ public class OrgMgtRestClient extends RestBaseClient {
                 endpointURL;
     }
 
+    private String buildSubOrgSCIM2Path(String serverUrl, String tenantDomain, String endpoint) {
+
+//        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+//            return serverUrl + ORGANIZATION_PATH + SCIM2_BASE_PATH + endpoint;
+//        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + SCIM2_BASE_PATH +
+                endpoint;
+    }
+
     /**
      * Close the HTTP client.
      *
@@ -488,5 +503,63 @@ public class OrgMgtRestClient extends RestBaseClient {
         oAuth2RestClient.deleteApplication(b2bAppId);
         oAuth2RestClient.closeHttpClient();
         client.close();
+    }
+
+    /**
+     * Add a user inside a sub organization.
+     *
+     * @param username Name of the organization.
+     * @return password of the created organization.
+     * @throws Exception If an error occurs while creating the organization.
+     */
+    public String addOrganizationUser(String username, String password) throws Exception {
+
+        String m2mToken = getM2MAccessToken();
+        String body = buildOrgUserCreationRequestBody(username, password);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(subOrgSCIM2UsersAPIBasePath, body,
+                getHeadersWithBearerToken(m2mToken))) {
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                String responseBody = EntityUtils.toString(response.getEntity());
+                throw new RuntimeException("Error occurred while creating the role. Response: " + responseBody);
+            }
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    private String buildOrgUserCreationRequestBody(String username, String password) throws JSONException {
+
+        JSONObject userPayload = new JSONObject();
+        userPayload.put("schemas", new JSONArray());
+
+        JSONObject name = new JSONObject();
+        name.put("givenName", "Kim05");
+        name.put("familyName", "Berry05");
+        userPayload.put("name", name);
+
+        userPayload.put("userName", username);
+        userPayload.put("password", password);
+
+        JSONArray emails = new JSONArray();
+        JSONObject email1 = new JSONObject();
+        email1.put("value", "kim05@gmail.com");
+        emails.put(email1);
+
+        JSONObject email2 = new JSONObject();
+        email2.put("type", "work");
+        email2.put("value", "kim05@wso2.com");
+        emails.put(email2);
+
+        userPayload.put("emails", emails);
+
+        JSONObject enterpriseUser = new JSONObject();
+        enterpriseUser.put("employeeNumber", "1234A03");
+
+        JSONObject manager = new JSONObject();
+        manager.put("value", "Taylor");
+        enterpriseUser.put("manager", manager);
+
+        userPayload.put("urn:ietf:params:scim:schemas:extension:enterprise:2.0:User", enterpriseUser);
+        return userPayload.toString();
     }
 }

@@ -30,9 +30,12 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
@@ -212,9 +215,23 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
         return oidcConfig.getClientId();
     }
 
+    protected String getSubOrgAppClientId(String applicationId, String switchedToken) throws Exception {
+
+        OpenIDConnectConfiguration oidcConfig = oAuth2RestClient.getOIDCInboundDetailsForSubOrgApplications(
+                applicationId, switchedToken);
+        return oidcConfig.getClientId();
+    }
+
     protected String getAppClientSecret(String applicationId) throws Exception {
 
         OpenIDConnectConfiguration oidcConfig = oAuth2RestClient.getOIDCInboundDetails(applicationId);
+        return oidcConfig.getClientSecret();
+    }
+
+    protected String getSubOrgAppClientSecret(String applicationId, String switchedM2MToken) throws Exception {
+
+        OpenIDConnectConfiguration oidcConfig = oAuth2RestClient.getOIDCInboundDetailsForSubOrgApplications(
+                applicationId, switchedM2MToken);
         return oidcConfig.getClientSecret();
     }
 
@@ -297,5 +314,42 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
         String b2bUserID = scim2RestClient.createSubOrgUser(userInfo, switchedM2MToken);
         Assert.assertNotNull(b2bUserID, "B2B user creation failed.");
         return b2bUserID;
+    }
+
+    /**
+     * Authorize list of SYSTEM APIs to an application registered in sub organization.
+     *
+     * @param applicationId  Application id.
+     * @param apiIdentifiers API identifiers to authorize.
+     * @throws Exception Error occured while authorizing APIs.
+     */
+    public void authorizeSystemAPIsToSubOrganizationApp(OAuth2RestClient restClient, String applicationId, List<String> apiIdentifiers,
+                                                        String switchedM2MToken) {
+
+        apiIdentifiers.stream().forEach(apiIdentifier -> {
+            try {
+                List<APIResourceListItem> filteredAPIResource =
+                        restClient.getAPIResourcesWithFilteringFromSubOrganization("identifier+eq+" + apiIdentifier,
+                                switchedM2MToken);
+                if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
+                    return;
+                }
+                String apiId = filteredAPIResource.get(0).getId();
+                // Get API scopes.
+                List<ScopeGetModel> apiResourceScopes = restClient.getAPIResourceScopesInSubOrganization(apiId,
+                        switchedM2MToken);
+                AuthorizedAPICreationModel authorizedAPICreationModel = new AuthorizedAPICreationModel();
+                authorizedAPICreationModel.setId(apiId);
+                authorizedAPICreationModel.setPolicyIdentifier("RBAC");
+                apiResourceScopes.forEach(scope -> {
+                    authorizedAPICreationModel.addScopesItem(scope.getName());
+                });
+                restClient.addAPIAuthorizationToSubOrgApplication(applicationId, authorizedAPICreationModel,
+                        switchedM2MToken);
+            } catch (Exception e) {
+                throw new RuntimeException("Error while authorizing system API " + apiIdentifier + " to application "
+                        + applicationId, e);
+            }
+        });
     }
 }
