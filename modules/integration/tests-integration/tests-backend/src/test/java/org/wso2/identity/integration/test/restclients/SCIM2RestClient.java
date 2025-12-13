@@ -520,6 +520,27 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update an existing role of an organization.
+     *
+     * @param patchRoleInfo Role patch request object.
+     * @param roleId        Role id.
+     * @param accessToken   Authorized token to update the role in an organization.
+     * @throws IOException If an error occurred while updating a role.
+     */
+    public void updateOrganizationUserRole(PatchOperationRequestObject patchRoleInfo, String roleId,
+                                           String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(patchRoleInfo);
+        String endPointUrl = getSubOrgRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role update failed");
+        }
+    }
+
+    /**
      * Search and get the id of a role by the name.
      *
      * @param roleName Role name.
