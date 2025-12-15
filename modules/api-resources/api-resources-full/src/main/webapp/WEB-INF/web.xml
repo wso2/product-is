@@ -80,7 +80,8 @@
                 org.wso2.carbon.identity.api.server.flow.execution.v1.FlowApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowsApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi,
-                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi
+                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi,
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -172,7 +173,8 @@
                 org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
                 org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
-                org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi
+                org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi,
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi
             </param-value>
         </init-param>
         <init-param>
