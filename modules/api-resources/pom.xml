@@ -630,6 +630,16 @@
                 <artifactId>org.wso2.carbon.identity.api.server.workflow.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.vc.template.management.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.vc.template.management.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
 
             <!-- Legacy API dependencies -->
             <dependency>
