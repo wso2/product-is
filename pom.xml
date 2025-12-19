@@ -2506,11 +2506,16 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.template.management</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.common</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.identity.openid4vc.issuance</groupId>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.metadata</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
             </dependency>
@@ -2528,6 +2533,12 @@
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.offer</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.template.management.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>

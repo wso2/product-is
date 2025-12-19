@@ -636,6 +636,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.server.feature:${identity.user.workflow.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.fraud.detection.core.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
                                 <!-- AI Agent Identity Management Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.agent:org.wso2.carbon.identity.agent.manager.server.feature:${carbon.identity.agent.version}
@@ -659,13 +662,6 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature:${carbon.identity.openid4vc.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.fraud.detection.core.server.feature:${carbon.identity.framework.version}
-                                </featureArtifactDef>
-                                <!-- AI Agent Identity Management Feature -->
-                                <featureArtifactDef>
-                                    org.wso2.carbon.identity.agent:org.wso2.carbon.identity.agent.manager.server.feature:${carbon.identity.agent.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
