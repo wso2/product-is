@@ -636,6 +636,30 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.workflow.user:org.wso2.carbon.user.mgt.workflow.server.feature:${identity.user.workflow.version}
                                 </featureArtifactDef>
+                                <!-- AI Agent Identity Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.agent:org.wso2.carbon.identity.agent.manager.server.feature:${carbon.identity.agent.version}
+                                </featureArtifactDef>
+                                <!-- VC Configuration Management Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.template.management.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <!-- VC Issuance Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.common.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.metadata.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.credential.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.endpoint.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.fraud.detection.core.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
@@ -1326,6 +1350,30 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.agent.manager.server.feature.group</id>
                                     <version>${carbon.identity.agent.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.template.management.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.issuance.common.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.issuance.metadata.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.issuance.credential.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.issuance.endpoint.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.fraud.detection.core.server.feature.group</id>
