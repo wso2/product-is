@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2019-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -28,6 +28,7 @@ public final class OAuth2Constant {
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     public static final String OAUTH2_GRANT_TYPE_RESOURCE_OWNER = "password";
     public static final String OAUTH2_GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
+    public static final String OAUTH2_GRANT_TYPE_ORGANIZATION_SWITCH = "organization_switch";
     public static final String OAUTH2_RESPONSE_TYPE_TOKEN = "token";
 
     public static final String OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
