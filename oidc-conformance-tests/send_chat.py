@@ -34,7 +34,21 @@ warnings_count = 0
 total_tests_count = 0
 
 warnings.filterwarnings("ignore")
-plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
+
+# Try to fetch plans; mark failure and include error if unreachable
+unreachable_error = None
+try:
+    resp = requests.get(
+        url=conformance_suite_url + "/api/plan?length=50",
+        verify=False,
+        timeout=5
+    )
+    resp.raise_for_status()
+    plan_list = json.loads(resp.content)
+except Exception as e:
+    unreachable_error = f"Conformance Suite is unreachable at {conformance_suite_url}. Error: {type(e).__name__}"
+    plan_list = {"data": []}
+    workflow_status = "failure"
 
 # loop through all test plans and count fails, warnings and total test cases
 for test_plan in plan_list['data']:
@@ -53,6 +67,7 @@ if workflow_status == 'failure':
     font_color = '#ff0000'
 
 message_headers = {'Content-Type': 'application/json; charset=UTF-8'}
+error_line = f"\nError: {unreachable_error}" if unreachable_error else ""
 message = {
     "cards": [
         {
@@ -75,6 +90,7 @@ message = {
                                         f"</font></b></br>\nTotal test cases: {str(total_tests_count)}" 
                                         f"\nFailed test cases: {str(failed_count)}" 
                                         f"\nTest cases with warnings: {str(warnings_count)}"
+                                        f"{error_line}"
                             }
                         },
                         {
