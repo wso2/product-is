@@ -2749,7 +2749,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.28</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.43</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.44</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.60</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.53</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.31</identity.oauth2.grant.organizationswitch.version>
@@ -2777,7 +2777,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.84.0</identity.apps.console.version>
         <identity.apps.myaccount.version>2.25.19</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.3.31</identity.apps.core.version>
+        <identity.apps.core.version>3.3.32</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
@@ -2803,7 +2803,7 @@
         <carbon.identity.agent.version>1.0.9</carbon.identity.agent.version>
 
         <!-- VC Issuance -->
-        <carbon.identity.openid4vc.version>1.0.0</carbon.identity.openid4vc.version>
+        <carbon.identity.openid4vc.version>1.0.1</carbon.identity.openid4vc.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
@@ -2926,7 +2926,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.28</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.29</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
