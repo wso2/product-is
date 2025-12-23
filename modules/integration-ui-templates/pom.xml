@@ -146,12 +146,12 @@
                         <configuration>
                             <target>
                                 <mkdir dir="${project.build.directory}/templates" />
-                                <copy todir="${project.build.directory}/templates" overwrite="true">
+                               <copy todir="${project.build.directory}/templates" overwrite="true">
                                     <fileset dir="${project.build.directory}/unpacked-resources">
-                                        <include name="**/*" />
+                                          <include name="**/*" />
                                     </fileset>
-                                    <cutdirsmapper dirs="1" />
-                                </copy>
+                                    <cutdirs dirs="1"/>
+                              </copy>
                             </target>
                         </configuration>
                     </execution>
