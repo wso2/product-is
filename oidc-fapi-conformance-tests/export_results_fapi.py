@@ -19,7 +19,7 @@ def get_failed_tests(plan):
     test_fails = []
     test_warnings = []
     test_others = []
-    test_log = json.loads(requests.get(url=conformance_suite_url + "/api/log?length=100&search=" + plan['_id'], verify=False).content)
+    test_log = json.loads(requests.get(url=conformance_suite_url + "/api/log?length=1000&search=" + plan['_id'], verify=False).content)
     for test in test_log['data']:
         if "result" in test and test['result'] == "FAILED":
             test_fails.append('Test Name: ' + test['testName'] + '  id: ' + test['testId'])
