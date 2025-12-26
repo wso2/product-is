@@ -2631,7 +2631,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.646</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.647</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2749,7 +2749,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.28</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.44</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.45</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.60</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.53</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.31</identity.oauth2.grant.organizationswitch.version>
@@ -2926,7 +2926,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.28</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.29</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
