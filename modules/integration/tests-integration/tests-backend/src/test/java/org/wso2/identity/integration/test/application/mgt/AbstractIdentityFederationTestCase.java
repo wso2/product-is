@@ -101,6 +101,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     public void startCarbonServer(int portOffset, AutomationContext context, Map<String, String> startupParameters)
             throws Exception {
 
+        startupParameters.put("-Doptimize", String.valueOf(false));
         automationContextMap.put(portOffset, context);
         CarbonTestServerManager server = new CarbonTestServerManager(context, System.getProperty("carbon.zip"),
                 startupParameters);
