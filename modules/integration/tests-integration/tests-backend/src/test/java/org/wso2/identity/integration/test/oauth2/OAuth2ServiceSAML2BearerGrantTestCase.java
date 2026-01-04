@@ -292,8 +292,9 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "HTTP 200 expected for request login page.");
         String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
         Assert.assertTrue(StringUtils.isNotBlank(sessionKey), "Session Key can't be empty.");
-        response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, "travelocity.com",
-                userInfo.getUserName(), userInfo.getPassword(), client);
+        response = Utils.sendPOSTMessage(sessionKey, getTenantQualifiedURL(COMMON_AUTH_URL, userInfo.getUserDomain()),
+                USER_AGENT, ACS_URL, "travelocity.com", userInfo.getUserNameWithoutDomain(),
+                userInfo.getPassword(), client);
         EntityUtils.consume(response.getEntity());
 
         if (requestMissingClaims(response)) {

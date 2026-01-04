@@ -59,6 +59,7 @@ public class Constants {
     public static final String CODE = "code";
     public static final String SUCCESS_COMPLETED = "SUCCESS_COMPLETED";
     public static final String AUTH_DATA_CODE = "authData.code";
+    public static final String AUTH_DATA_APP_NAME = "authData.app_name";
     public static final String AUTH_DATA_SESSION_STATE = "authData.session_state";
     public static final String PARAM = "param";
     public static final String TYPE = "type";

@@ -143,8 +143,10 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
             }
 
             String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-            response = Utils.sendPOSTMessage(sessionKey, SAML_SSO_URL, USER_AGENT, ACS_URL, config.getApp()
-                    .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
+            response = Utils.sendPOSTMessage(sessionKey, getTenantQualifiedURL(SAML_SSO_URL,
+                    config.getUser().getTenantDomain()), USER_AGENT, ACS_URL, config.getApp()
+                    .getArtifact(), config.getUser().getTenantAwareUsername(), config.getUser().getPassword(),
+                    httpClient, getTenantQualifiedURL(SAML_SSO_URL, config.getUser().getTenantDomain()));
 
 
             if (requestMissingClaims(response)) {
@@ -243,8 +245,8 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
                         httpClient);
 
                 String sessionKey = Utils.extractDataFromResponse(response, CommonConstants.SESSION_DATA_KEY, 1);
-                response = Utils.sendPOSTMessage(sessionKey, COMMON_AUTH_URL, USER_AGENT, ACS_URL, config.getApp()
-                        .getArtifact(), config.getUser().getUsername(), config.getUser().getPassword(), httpClient);
+                response = Utils.sendPOSTMessage(sessionKey, getTenantQualifiedURL(COMMON_AUTH_URL, config.getUser().getTenantDomain()), USER_AGENT, ACS_URL, config.getApp()
+                        .getArtifact(), config.getUser().getTenantAwareUsername(), config.getUser().getPassword(), httpClient);
                 EntityUtils.consume(response.getEntity());
 
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
