@@ -2631,7 +2631,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.647</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.650</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2649,7 +2649,7 @@
         <carbon.consent.mgt.version>2.6.10</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.156</identity.governance.version>
+        <identity.governance.version>1.11.157</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
@@ -2714,7 +2714,7 @@
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.52</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.30</identity.local.auth.fido.version>
-        <identity.local.auth.iwa.version>5.4.8</identity.local.auth.iwa.version>
+        <identity.local.auth.iwa.version>5.4.9</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
         <identity.outbound.auth.adapter.version>1.0.24</identity.outbound.auth.adapter.version>
@@ -2775,7 +2775,7 @@
         <conditional.authentication.functions.version>1.2.87</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>2.85.3</identity.apps.console.version>
+        <identity.apps.console.version>2.85.4</identity.apps.console.version>
         <identity.apps.myaccount.version>2.25.19</identity.apps.myaccount.version>
         <identity.apps.core.version>3.3.32</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
@@ -2926,7 +2926,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.29</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.30</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
