@@ -214,6 +214,28 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <!--Download privileged user authenticator jar from nexus and copy to the authenticatorCopied/jar folder-->
+                    <execution>
+                        <id>download_privilegeduser_authenticator</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
+                                    <artifactId>org.wso2.carbon.identity.oauth2.clientauth.privilegeduser</artifactId>
+                                    <version>${identity.oauth.addons.clientauth.privilegeduser.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
