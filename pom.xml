@@ -2643,7 +2643,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.652</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.653</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2783,6 +2783,7 @@
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
 	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.34</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.30</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
+        <identity.oauth.addons.clientauth.privilegeduser.version>2.5.25</identity.oauth.addons.clientauth.privilegeduser.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.29</org.wso2.carbon.extension.identity.x509certificate.version>
         <conditional.authentication.functions.version>1.2.87</conditional.authentication.functions.version>
 
