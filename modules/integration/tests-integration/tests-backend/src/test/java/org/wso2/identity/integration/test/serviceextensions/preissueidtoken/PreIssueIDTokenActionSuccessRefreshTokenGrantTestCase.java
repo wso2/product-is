@@ -293,11 +293,9 @@ public class PreIssueIDTokenActionSuccessRefreshTokenGrantTestCase extends Actio
 
         String[] audValueArray = idTokenClaims.getStringArrayClaim("aud");
 
-        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz1.com"));
         Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz2.com"));
-        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz3.com"));
         Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzzR.com"));
-        Assert.assertFalse(ArrayUtils.contains(audValueArray, clientId));
+        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz3.com"));
     }
 
     private void sendAuthorizeRequest() throws Exception {

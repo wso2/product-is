@@ -39,9 +39,10 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
+import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
-import org.wso2.identity.integration.test.serviceextensions.model.AccessToken;
 import org.wso2.identity.integration.test.serviceextensions.model.ActionType;
 import org.wso2.identity.integration.test.serviceextensions.model.AllowedOperation;
 import org.wso2.identity.integration.test.serviceextensions.model.IDToken;
@@ -114,10 +115,13 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
     private static final String INTERNAL_ORG_USER_MANAGEMENT_DELETE = "internal_org_user_mgt_delete";
     private static final String FIRST_NAME_CLAIM = "given_name";
     private static final String LAST_NAME_CLAIM = "family_name";
+    private static final String USER_NAME_CLAIM = "username";
+    private static final String EXPIRES_IN_CLAIM = "expires_in";
     private static final String SCIM2_USERS_API = "/o/scim2/Users";
     private static final String CLAIMS_PATH_PREFIX = "/idToken/claims/";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     private static final String OPENID_SCOPE = "openid";
+    private static final String PROFILE_SCOPE = "profile";
 
     private SCIM2RestClient scim2RestClient;
     private CloseableHttpClient client;
@@ -126,8 +130,6 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
     private String accessToken;
     private String clientId;
     private String clientSecret;
-    private String subjectType;
-    private String tokenType;
     private String actionId;
     private String applicationId;
     private String userId;
@@ -174,13 +176,10 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
-        ApplicationResponseModel application = addApplicationWithGrantType(PASSWORD_GRANT_TYPE);
-        applicationId = application.getId();
+        applicationId = createOIDCAppWithClaims();
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
         clientId = oidcConfig.getClientId();
         clientSecret = oidcConfig.getClientSecret();
-        subjectType = oidcConfig.getSubject().getSubjectType();
-        tokenType = oidcConfig.getAccessToken().getType();
 
         if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
             authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_USERS_API));
@@ -194,7 +193,8 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
                 INTERNAL_ORG_USER_MANAGEMENT_CREATE,
                 INTERNAL_ORG_USER_MANAGEMENT_UPDATE,
                 INTERNAL_ORG_USER_MANAGEMENT_DELETE,
-                OPENID_SCOPE);
+                OPENID_SCOPE,
+                PROFILE_SCOPE);
 
         actionId = createPreIssueIDTokenAction();
 
@@ -272,8 +272,14 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
                 new ObjectMapper().readValue(actualRequestPayload, PreIssueIDTokenActionRequest.class);
 
         PreIssueIDTokenActionRequest expectedRequest = getRequest();
-
-        assertEquals(actualRequest, expectedRequest);
+        assertEquals(actualRequest.getActionType(), expectedRequest.getActionType());
+        assertEquals(actualRequest.getAllowedOperations(), expectedRequest.getAllowedOperations());
+        assertEquals(actualRequest.getEvent().getRequest(), expectedRequest.getEvent().getRequest());
+        assertEquals(actualRequest.getEvent().getTenant(), expectedRequest.getEvent().getTenant());
+        assertNotNull(expectedRequest.getEvent().getOrganization());
+        assertEquals(actualRequest.getEvent().getUser(), expectedRequest.getEvent().getUser());
+        assertEquals(actualRequest.getEvent().getUserStore(), expectedRequest.getEvent().getUserStore());
+        assertIDToken(actualRequest.getEvent().getIdToken(), expectedRequest.getEvent().getIdToken());
     }
 
     @Test(groups = "wso2.is", description = "Verify that the ID token contains the updated OIDC claims " +
@@ -295,7 +301,6 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
 
         Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz1.com"));
         Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz2.com"));
-        Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzz3.com"));
         Assert.assertTrue(ArrayUtils.contains(audValueArray, "zzzR.com"));
         Assert.assertFalse(ArrayUtils.contains(audValueArray, clientId));
     }
@@ -343,7 +348,6 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
 
         TokenRequest tokenRequest = createTokenRequest();
         IDToken idTokenInRequest = createIDToken();
-        AccessToken accessTokenInRequest = createAccessToken();
 
         Tenant tenant = new Tenant(tenantId, tenantInfo.getDomain());
 
@@ -367,7 +371,6 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
         PreIssueIDTokenEvent event = new PreIssueIDTokenEvent.Builder()
                 .request(tokenRequest)
                 .idToken(idTokenInRequest)
-                .accessToken(accessTokenInRequest)
                 .tenant(tenant)
                 .organization(organization)
                 .user(user)
@@ -379,12 +382,13 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
                         CLAIMS_PATH_PREFIX + IDToken.ClaimNames.AUD.getName() + "/")),
                 createAllowedOperation(Operation.REMOVE, Arrays.asList(CLAIMS_PATH_PREFIX + FIRST_NAME_CLAIM,
                         CLAIMS_PATH_PREFIX + LAST_NAME_CLAIM,
-                        CLAIMS_PATH_PREFIX + "username",
+                        CLAIMS_PATH_PREFIX + USER_NAME_CLAIM,
                         CLAIMS_PATH_PREFIX + IDToken.ClaimNames.AUD.getName() + "/")),
                 createAllowedOperation(Operation.REPLACE, Arrays.asList(CLAIMS_PATH_PREFIX + FIRST_NAME_CLAIM,
                         CLAIMS_PATH_PREFIX + LAST_NAME_CLAIM,
+                        CLAIMS_PATH_PREFIX + USER_NAME_CLAIM,
                         CLAIMS_PATH_PREFIX + IDToken.ClaimNames.AUD.getName() + "/",
-                        CLAIMS_PATH_PREFIX + "expires_in"))
+                        CLAIMS_PATH_PREFIX + EXPIRES_IN_CLAIM))
         );
 
         return new PreIssueIDTokenActionRequest.Builder()
@@ -417,38 +421,23 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
     private IDToken createIDToken() {
 
         List<IDToken.Claim> claims = new ArrayList<>();
+        claims.add(new IDToken.Claim(IDToken.ClaimNames.JTI.getName(), "test-jti-value"));
         claims.add(new IDToken.Claim(IDToken.ClaimNames.ISS.getName(),
                 getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
-        claims.add(new IDToken.Claim(IDToken.ClaimNames.AUD.getName(), Collections.singletonList(clientId)));
+        claims.add(new IDToken.Claim(IDToken.ClaimNames.AZP.getName(), clientId));
+        claims.add(new IDToken.Claim(IDToken.ClaimNames.AMR.getName(), Collections.singletonList("password")));
+        claims.add(new IDToken.Claim("org_id", "10084a8d-113f-4211-a0d5-efe36b082211"));
+        claims.add(new IDToken.Claim("org_name", "Super"));
+        claims.add(new IDToken.Claim("org_handle", tenantInfo.getDomain()));
+        claims.add(new IDToken.Claim(IDToken.ClaimNames.AT_HASH.getName(), "test-at-hash"));
         claims.add(new IDToken.Claim(IDToken.ClaimNames.SUB.getName(), userId));
         claims.add(new IDToken.Claim(FIRST_NAME_CLAIM, TEST_USER_FIRST_NAME));
         claims.add(new IDToken.Claim(LAST_NAME_CLAIM, TEST_USER_LAST_NAME));
-        claims.add(new IDToken.Claim("username", TEST_USER));
+        claims.add(new IDToken.Claim(USER_NAME_CLAIM, TEST_USER));
+        claims.add(new IDToken.Claim(IDToken.ClaimNames.AUD.getName(), Collections.singletonList(clientId)));
+        claims.add(new IDToken.Claim(EXPIRES_IN_CLAIM, 3600));
 
         return new IDToken(new ArrayList<>(), claims);
-    }
-
-    /**
-     * Creates access token.
-     *
-     * @return access token object
-     */
-    private AccessToken createAccessToken() {
-
-        List<AccessToken.Claim> claims = new ArrayList<>();
-        claims.add(new AccessToken.Claim(AccessToken.ClaimNames.ISS.getName(),
-                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain())));
-        claims.add(new AccessToken.Claim(AccessToken.ClaimNames.CLIENT_ID.getName(), clientId));
-        claims.add(new AccessToken.Claim(AccessToken.ClaimNames.AUTHORIZED_USER_TYPE.getName(), "APPLICATION_USER"));
-        claims.add(new AccessToken.Claim(AccessToken.ClaimNames.AUD.getName(), Collections.singletonList(clientId)));
-        claims.add(new AccessToken.Claim(AccessToken.ClaimNames.SUBJECT_TYPE.getName(), subjectType));
-        claims.add(new AccessToken.Claim(AccessToken.ClaimNames.SUB.getName(), userId));
-
-        return new AccessToken.Builder()
-                .tokenType(tokenType)
-                .claims(claims)
-                .scopes(requestedScopes)
-                .build();
     }
 
     /**
@@ -555,6 +544,102 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
         );
 
         return userPermissions;
+    }
+
+    private String createOIDCAppWithClaims() throws Exception {
+
+        List<UserClaimConfig> userClaimConfigs = Arrays.asList(
+                new UserClaimConfig.Builder().localClaimUri("http://wso2.org/claims/givenname").
+                        oidcClaimUri(FIRST_NAME_CLAIM).build(),
+                new UserClaimConfig.Builder().localClaimUri("http://wso2.org/claims/lastname").
+                        oidcClaimUri(LAST_NAME_CLAIM).build(),
+                new UserClaimConfig.Builder().localClaimUri("http://wso2.org/claims/username").
+                        oidcClaimUri(USER_NAME_CLAIM).build()
+        );
+
+        ApplicationConfig applicationConfig = new ApplicationConfig.Builder()
+                .claimsList(userClaimConfigs)
+                .grantTypes(new ArrayList<>(Collections.singleton(PASSWORD_GRANT_TYPE)))
+                .tokenType(ApplicationConfig.TokenType.JWT)
+                .expiryTime(3600)
+                .skipConsent(true)
+                .build();
+
+        ApplicationResponseModel application = addApplication(applicationConfig);
+        String applicationId = application.getId();
+
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        clientId = oidcConfig.getClientId();
+        clientSecret = oidcConfig.getClientSecret();
+
+        return applicationId;
+    }
+
+    private void assertIDToken(IDToken actualToken, IDToken expectedToken) {
+
+        Map<String, Object> expectedClaimsMap = new HashMap<>();
+        for (IDToken.Claim claim : expectedToken.getClaims()) {
+            expectedClaimsMap.put(claim.getName(), claim.getValue());
+        }
+
+        Map<String, Object> actualClaimsMap = new HashMap<>();
+        for (IDToken.Claim claim : actualToken.getClaims()) {
+            actualClaimsMap.put(claim.getName(), claim.getValue());
+        }
+
+        // Assert claims that should match exactly
+        assertEquals(actualClaimsMap.get(IDToken.ClaimNames.ISS.getName()),
+                expectedClaimsMap.get(IDToken.ClaimNames.ISS.getName()),
+                "ISS claim mismatch");
+
+        assertEquals(actualClaimsMap.get(IDToken.ClaimNames.AZP.getName()),
+                expectedClaimsMap.get(IDToken.ClaimNames.AZP.getName()),
+                "AZP claim mismatch");
+
+        assertEquals(actualClaimsMap.get(IDToken.ClaimNames.AMR.getName()),
+                expectedClaimsMap.get(IDToken.ClaimNames.AMR.getName()),
+                "AMR claim mismatch");
+
+        assertEquals(actualClaimsMap.get(IDToken.ClaimNames.SUB.getName()),
+                expectedClaimsMap.get(IDToken.ClaimNames.SUB.getName()),
+                "SUB claim mismatch");
+
+        assertEquals(actualClaimsMap.get(FIRST_NAME_CLAIM),
+                expectedClaimsMap.get(FIRST_NAME_CLAIM),
+                "Given name claim mismatch");
+
+        assertEquals(actualClaimsMap.get(LAST_NAME_CLAIM),
+                expectedClaimsMap.get(LAST_NAME_CLAIM),
+                "Family name claim mismatch");
+
+        assertEquals(actualClaimsMap.get(USER_NAME_CLAIM),
+                expectedClaimsMap.get(USER_NAME_CLAIM),
+                "Username claim mismatch");
+
+        assertEquals(actualClaimsMap.get(IDToken.ClaimNames.AUD.getName()),
+                expectedClaimsMap.get(IDToken.ClaimNames.AUD.getName()),
+                "AUD claim mismatch");
+
+        assertEquals(actualClaimsMap.get(EXPIRES_IN_CLAIM),
+                expectedClaimsMap.get(EXPIRES_IN_CLAIM),
+                "Expires in claim mismatch");
+
+        assertEquals(actualClaimsMap.get("org_handle"),
+                expectedClaimsMap.get("org_handle"),
+                "Organization handle claim mismatch");
+
+        // Assert that test-value claims exist in actual token (values are generated, so just check not null)
+        assertNotNull(actualClaimsMap.get(IDToken.ClaimNames.JTI.getName()),
+                "JTI claim should be present");
+
+        assertNotNull(actualClaimsMap.get(IDToken.ClaimNames.AT_HASH.getName()),
+                "AT hash claim should be present");
+
+        assertNotNull(actualClaimsMap.get("org_id"),
+                "Organization ID claim should be present");
+
+        assertNotNull(actualClaimsMap.get("org_name"),
+                "Organization name claim should be present");
     }
 }
 

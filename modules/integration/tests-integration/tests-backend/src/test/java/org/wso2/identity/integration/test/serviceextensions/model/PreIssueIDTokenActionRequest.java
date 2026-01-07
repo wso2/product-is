@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.serviceextensions.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,17 @@ public class PreIssueIDTokenActionRequest extends Request {
     public static Builder builder() {
 
         return new Builder();
+    }
+
+    @JsonProperty("requestId")
+    public String getRequestId() {
+
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+
+        this.requestId = requestId;
     }
 
     @JsonProperty("actionType")
@@ -89,6 +101,7 @@ public class PreIssueIDTokenActionRequest extends Request {
     /**
      * Builder for PreIssueIDTokenActionRequest.
      */
+    @JsonPOJOBuilder(withPrefix = "")
     public static class Builder {
 
         private String requestId;
@@ -96,24 +109,28 @@ public class PreIssueIDTokenActionRequest extends Request {
         private PreIssueIDTokenEvent event;
         private List<AllowedOperation> allowedOperations;
 
+        @JsonProperty("requestId")
         public Builder requestId(String requestId) {
 
             this.requestId = requestId;
             return this;
         }
 
+        @JsonProperty("actionType")
         public Builder actionType(ActionType actionType) {
 
             this.actionType = actionType;
             return this;
         }
 
+        @JsonProperty("event")
         public Builder event(PreIssueIDTokenEvent event) {
 
             this.event = event;
             return this;
         }
 
+        @JsonProperty("allowedOperations")
         public Builder allowedOperations(List<AllowedOperation> allowedOperations) {
 
             this.allowedOperations = allowedOperations;
@@ -136,7 +153,8 @@ public class PreIssueIDTokenActionRequest extends Request {
             return false;
         }
         PreIssueIDTokenActionRequest that = (PreIssueIDTokenActionRequest) o;
-        return Objects.equals(actionType, that.actionType) &&
+        return Objects.equals(requestId, that.requestId) &&
+                Objects.equals(actionType, that.actionType) &&
                 Objects.equals(event, that.event) &&
                 Objects.equals(allowedOperations, that.allowedOperations);
     }
@@ -144,7 +162,7 @@ public class PreIssueIDTokenActionRequest extends Request {
     @Override
     public int hashCode() {
 
-        return Objects.hash(actionType, event, allowedOperations);
+        return Objects.hash(requestId, actionType, event, allowedOperations);
     }
 }
 

@@ -87,11 +87,27 @@ public class IDToken {
      * Enum for ID token claim names.
      */
     public enum ClaimNames {
-        AUD("aud"),
-        SUB("sub"),
+
         ISS("iss"),
+        AT_HASH("at_hash"),
+        C_HASH("c_hash"),
+        S_HASH("s_hash"),
+        SESSION_ID_CLAIM("sid"),
+        EXPIRES_IN("expires_in"),
+        REALM("realm"),
+        TENANT("tenant"),
+        USERSTORE("userstore"),
+        IDP_SESSION_KEY("isk"),
+        SUB("sub"),
+        AUD("aud"),
         EXP("exp"),
-        IAT("iat");
+        IAT("iat"),
+        AUTH_TIME("auth_time"),
+        NONCE("nonce"),
+        ACR("acr"),
+        AMR("amr"),
+        AZP("azp"),
+        JTI("jti");
 
         private final String name;
 

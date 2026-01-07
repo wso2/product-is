@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.serviceextensions.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.util.Objects;
 
@@ -32,7 +33,6 @@ public class PreIssueIDTokenEvent extends Event {
 
     private TokenRequest request;
     private IDToken idToken;
-    private AccessToken accessToken;
     private Tenant tenant;
     private Organization organization;
     private User user;
@@ -42,7 +42,6 @@ public class PreIssueIDTokenEvent extends Event {
 
         this.request = builder.request;
         this.idToken = builder.idToken;
-        this.accessToken = builder.accessToken;
         this.tenant = builder.tenant;
         this.organization = builder.organization;
         this.user = builder.user;
@@ -63,12 +62,6 @@ public class PreIssueIDTokenEvent extends Event {
     public IDToken getIdToken() {
 
         return idToken;
-    }
-
-    @JsonProperty("accessToken")
-    public AccessToken getAccessToken() {
-
-        return accessToken;
     }
 
     @JsonProperty("tenant")
@@ -107,7 +100,6 @@ public class PreIssueIDTokenEvent extends Event {
         PreIssueIDTokenEvent that = (PreIssueIDTokenEvent) o;
         return Objects.equals(request, that.request) &&
                 Objects.equals(idToken, that.idToken) &&
-                Objects.equals(accessToken, that.accessToken) &&
                 Objects.equals(tenant, that.tenant) &&
                 Objects.equals(organization, that.organization) &&
                 Objects.equals(user, that.user) &&
@@ -117,58 +109,58 @@ public class PreIssueIDTokenEvent extends Event {
     @Override
     public int hashCode() {
 
-        return Objects.hash(request, idToken, accessToken, tenant, organization, user, userStore);
+        return Objects.hash(request, idToken, tenant, organization, user, userStore);
     }
 
     /**
      * Builder class for PreIssueIDTokenEvent.
      */
+    @JsonPOJOBuilder(withPrefix = "")
     public static class Builder {
 
         private TokenRequest request;
         private IDToken idToken;
-        private AccessToken accessToken;
         private Tenant tenant;
         private Organization organization;
         private User user;
         private UserStore userStore;
 
+        @JsonProperty("request")
         public Builder request(TokenRequest request) {
 
             this.request = request;
             return this;
         }
 
+        @JsonProperty("idToken")
         public Builder idToken(IDToken idToken) {
 
             this.idToken = idToken;
             return this;
         }
 
-        public Builder accessToken(AccessToken accessToken) {
-
-            this.accessToken = accessToken;
-            return this;
-        }
-
+        @JsonProperty("tenant")
         public Builder tenant(Tenant tenant) {
 
             this.tenant = tenant;
             return this;
         }
 
+        @JsonProperty("organization")
         public Builder organization(Organization organization) {
 
             this.organization = organization;
             return this;
         }
 
+        @JsonProperty("user")
         public Builder user(User user) {
 
             this.user = user;
             return this;
         }
 
+        @JsonProperty("userStore")
         public Builder userStore(UserStore userStore) {
 
             this.userStore = userStore;
