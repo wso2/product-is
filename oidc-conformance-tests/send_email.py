@@ -33,21 +33,16 @@ wso2_is_version = str(sys.argv[9])
 
 
 failed_count = 0
-warnings_count = 0
-total_tests_count = 0
+errors_count = 0
 warnings.filterwarnings("ignore")
 plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
-# loop through all test plans and count fails, warnings and total test cases
+# loop through all test plans and count fails and errors
 for test_plan in plan_list['data']:
     failed_tests_list = export_results.get_failed_tests(test_plan)
     if len(failed_tests_list['fails']) > 0:
         failed_count += len(failed_tests_list['fails'])
-        total_tests_count += len(failed_tests_list['fails'])
-    if len(failed_tests_list['warnings']) > 0:
-        warnings_count += len(failed_tests_list['warnings'])
-        total_tests_count += len(failed_tests_list['warnings'])
-    if len(failed_tests_list['others']) > 0:
-        total_tests_count += len(failed_tests_list['others'])
+    if len(failed_tests_list['errors']) > 0:
+        errors_count += len(failed_tests_list['errors'])
 
 port = constants.SMTP_SERVER_PORT
 smtp_server = constants.SMTP_SERVER
@@ -58,9 +53,8 @@ To: """ + sys.argv[8] + """
 
 OIDC conformance  test run # """ + github_run_number + """ completed with status: """ + workflow_status + """
 Identity Server Version: """ + wso2_is_version + """
-Total test cases:""" + str(total_tests_count) + """
 Failed test cases: """ + str(failed_count) + """
-Test cases with warnings: """ + str(warnings_count) + """
+Test cases with errors: """ + str(errors_count) + """
 https://github.com/""" + github_repository_name + """/actions/runs/""" + github_run_id
 
 context = ssl.create_default_context()
