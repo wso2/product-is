@@ -59,9 +59,7 @@ representative at an online or offline event.
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-geethika@wso2.com.
+Any behaviour inconsistent with this Code of Conduct will be reported to the community leaders responsible for enforcement at [legal@wso2.com](mailto:legal@wso2.com).```
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the
