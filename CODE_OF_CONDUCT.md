@@ -27,6 +27,7 @@ community include:
 
 Examples of unacceptable behavior include:
 
+* Any illegal actions
 * The use of sexualized language or imagery, and sexual attention or
   advances of any kind
 * Trolling, insulting or derogatory comments, and personal or political attacks
