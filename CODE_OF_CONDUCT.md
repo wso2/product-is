@@ -14,8 +14,7 @@ diverse, inclusive, and healthy community.
 
 ## Our Standards
 
-Examples of behavior that contributes to a positive environment for our
-community include:
+To uphold pledges we make concerning our community, we expect and promote behavior that contributes to a positive environment for our community, such as:
 
 * Demonstrating empathy and kindness toward other people
 * Being respectful of differing opinions, viewpoints, and experiences
