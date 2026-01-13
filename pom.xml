@@ -2735,8 +2735,8 @@
         <identity.local.auth.api.version>3.0.8</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>2.3.9</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.21</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>2.3.10</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.22</identity.oauth2.token.exchange.grant.version>
 
         <identity.oauth.dpop.version>2.0.8</identity.oauth.dpop.version>
 
@@ -2865,7 +2865,7 @@
         <opensaml3.version>3.3.1</opensaml3.version>
         <shibboleth.version>7.3.0</shibboleth.version>
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
-        <wss4j.wso2.version>1.6.0-wso2v7</wss4j.wso2.version>
+        <wss4j.wso2.version>1.6.0-wso2v8</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
         <xalan.version>2.7.2</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
