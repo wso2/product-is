@@ -32,6 +32,14 @@
     <property name="openid.properties.default" location="${oauth.properties}/playground2"/>
 
     <target name="default">
+        <!-- Remove old servlet-api JARs to prevent conflicts with Tomcat 9.0.113 -->
+        <delete>
+            <fileset dir="${playground2.webapp.lib}">
+                <include name="servlet-api-*.jar"/>
+                <include name="javax.servlet-api-*.jar"/>
+            </fileset>
+        </delete>
+        
         <delete
                 file="${playground2.webapp.webinf}/web.xml"/>
         <copy file="${openid.properties.default}/web.xml"

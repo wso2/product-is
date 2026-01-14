@@ -160,7 +160,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
             }
 
             String redirectUrl = Utils.getRedirectUrl(response);
-            if(StringUtils.isNotBlank(redirectUrl)) {
+            if (StringUtils.isNotBlank(redirectUrl)) {
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
             }
