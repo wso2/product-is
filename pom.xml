@@ -701,12 +701,12 @@
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>
-                <artifactId>servlet-api</artifactId>
+                <artifactId>javax.servlet-api</artifactId>
                 <version>${sevlet.api.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>jsp-api</artifactId>
+                <groupId>javax.servlet.jsp</groupId>
+                <artifactId>javax.servlet.jsp-api</artifactId>
                 <version>${jsp.api.version}</version>
             </dependency>
             <dependency>
@@ -1330,9 +1330,14 @@
                 <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.tomcat.wso2</groupId>
-                <artifactId>tomcat</artifactId>
-                <version>${org.apache.tomcat.wso2.version}</version>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${org.apache.tomcat.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-jasper</artifactId>
+                <version>${org.apache.tomcat.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.opensaml</groupId>
@@ -2649,7 +2654,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.643-SNAPSHOT</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.658-SNAPSHO</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2747,7 +2752,7 @@
         <identity.oauth.dpop.version>2.0.8-SNAPSHOT</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.8.6-SNAPSHOT</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.8.7-SNAPSHOT</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.22</identity.workflow.version>
@@ -2857,9 +2862,9 @@
         <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
 
         <!-- Sample dependency Versions -->
-        <samples.is.version>4.3.14</samples.is.version>
-        <sevlet.api.version>2.5</sevlet.api.version>
-        <jsp.api.version>2.0</jsp.api.version>
+        <samples.is.version>4.3.13</samples.is.version>
+        <sevlet.api.version>4.0.1</sevlet.api.version>
+        <jsp.api.version>2.3.3</jsp.api.version>
         <neethi.wso2.version>2.0.4.wso2v5</neethi.wso2.version>
         <axiom.impl.version>1.2.12</axiom.impl.version>
         <axiom.version>1.2.11-wso2v6</axiom.version>
@@ -2910,12 +2915,12 @@
         <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
 
         <!--  Test dependencies -->
-        <carbon.automation.version>4.4.15</carbon.automation.version>
+        <carbon.automation.version>4.4.16-SNAPSHOT</carbon.automation.version>
         <carbon.automationutils.version>4.5.4</carbon.automationutils.version>
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
         <junit.version>4.13.1</junit.version>
-        <org.apache.tomcat.wso2.version>7.0.52.wso2v5</org.apache.tomcat.wso2.version>
+        <org.apache.tomcat.version>9.0.113</org.apache.tomcat.version>
         <msf4j.version>2.6.2</msf4j.version>
         <jacoco.agent.version>0.8.12</jacoco.agent.version>
         <xml.apis.version>1.4.01</xml.apis.version>
@@ -2987,7 +2992,7 @@
             <url>https://maven.wso2.org/nexus/content/repositories/snapshots/</url>
             <snapshots>
                 <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
+                <updatePolicy>never</updatePolicy>
             </snapshots>
             <releases>
                 <enabled>false</enabled>
