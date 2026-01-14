@@ -124,6 +124,12 @@
                                 </IDENTITY_DATABASE_URL>
                                 <IDENTITY_DATABASE_USERNAME>wso2carbon</IDENTITY_DATABASE_USERNAME>
                                 <IDENTITY_DATABASE_PASSWORD>wso2carbon</IDENTITY_DATABASE_PASSWORD>
+                                <AGENTIDENTITY_DATABASE_DRIVER>org.h2.Driver</AGENTIDENTITY_DATABASE_DRIVER>
+                                <AGENTIDENTITY_DATABASE_URL>
+                                    jdbc:h2:./repository/database/WSO2AGENTIDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000
+                                </AGENTIDENTITY_DATABASE_URL>
+                                <AGENTIDENTITY_DATABASE_USERNAME>wso2carbon</AGENTIDENTITY_DATABASE_USERNAME>
+                                <AGENTIDENTITY_DATABASE_PASSWORD>wso2carbon</AGENTIDENTITY_DATABASE_PASSWORD>
                             </environmentVariables>
                             <workingDirectory>${basedir}/target</workingDirectory>
                         </configuration>
@@ -659,6 +665,14 @@
             <version>${emma.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>SecVerifier</artifactId>
             <type>aar</type>
@@ -674,6 +688,10 @@
                 <exclusion>
                     <groupId>org.wso2.orbit.org.bouncycastle</groupId>
                     <artifactId>bcprov-jdk15on</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.equinox</groupId>
+                    <artifactId>javax.servlet</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -692,6 +710,14 @@
                 <exclusion>
                     <groupId>org.wso2.carbon</groupId>
                     <artifactId>org.wso2.carbon.ui</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -719,6 +745,10 @@
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bcprov-jdk15</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -749,6 +779,14 @@
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -847,6 +885,14 @@
                 <exclusion>
                     <groupId>org.wso2.carbon.identity</groupId>
                     <artifactId>org.wso2.carbon.identity.user.profile.stub</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -1082,6 +1128,11 @@
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

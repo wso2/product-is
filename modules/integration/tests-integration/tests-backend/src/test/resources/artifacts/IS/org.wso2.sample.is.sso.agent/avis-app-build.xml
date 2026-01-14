@@ -37,6 +37,8 @@
                 <include name="log4j-over-slf4j-*.jar"/>
                 <include name="jcl-over-slf4j-*.jar"/>
                 <include name="slf4j-api-*.jar"/>
+                <include name="servlet-api-*.jar"/>
+                <include name="javax.servlet-api-*.jar"/>
             </fileset>
         </delete>
 
