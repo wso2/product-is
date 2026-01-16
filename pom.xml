@@ -2692,7 +2692,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.9.19</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.9.78</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.9.79</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.394</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.0.38</org.wso2.identity.event.publishers.version>
