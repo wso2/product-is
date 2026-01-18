@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.c
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ORRule;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -62,24 +63,13 @@ public class PreIssueIDTokenActionSuccessTest extends PreIssueIDTokenTestBase {
         this.tenant = context.getContextTenant().getDomain();
     }
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws IOException {
-
-        super.testInit(API_VERSION, swaggerDefinition, tenant);
-    }
-
     @AfterClass(alwaysRun = true)
+    @Override
     public void testConclude() throws Exception {
 
         action = null;
         testActionId = null;
         super.conclude();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() {
-
-        RestAssured.basePath = basePath;
     }
 
     @Test
@@ -311,6 +301,34 @@ public class PreIssueIDTokenActionSuccessTest extends PreIssueIDTokenTestBase {
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAuthenticationProperties"})
+    public void testUpdateActionUpdatingAllowedHeadersAndParameters() {
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .allowedHeaders(Arrays.asList("user-agent", "host"))
+                        .allowedParameters(Arrays.asList("redirect_uri", "scope")));
+
+        String body = toJSONString(actionUpdateModel);
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ID_TOKEN_PATH + "/" + testActionId, body);
+
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(testActionId))
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_UPDATED_DESCRIPTION))
+                .body("version", equalTo(TEST_ACTION_VERSION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
+                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.allowedHeaders", equalTo(Arrays.asList("user-agent", "host")))
+                .body("endpoint.allowedParameters", equalTo(Arrays.asList("redirect_uri", "scope")));
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionUpdatingAllowedHeadersAndParameters"})
     public void testUpdateActionUpdatingEndpointUriAndAuthentication() {
 
         ActionUpdateModel actionUpdateModel = new ActionUpdateModel()

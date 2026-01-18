@@ -24,6 +24,5 @@ public class PreIssueIDTokenTestBase extends ActionTestBase {
 
     protected static final String PRE_ISSUE_ID_TOKEN_PATH = "/preIssueIdToken";
     protected static final String PRE_ISSUE_ID_TOKEN_ACTION_TYPE = "PRE_ISSUE_ID_TOKEN";
-
 }
 

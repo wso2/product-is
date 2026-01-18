@@ -69,6 +69,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.HybridFlowConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
@@ -222,6 +223,15 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		if (applicationConfig.getAudienceList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
 			oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
 		}
+
+        if (applicationConfig.isEnableHybridFlow()) {
+            HybridFlowConfiguration hybridFlow = new HybridFlowConfiguration();
+            hybridFlow.setEnable(true);
+            // Setting the first response type as currently only one response type is supported in the test cases.
+            // This should be improved to support multiple response types in future if needed.
+            hybridFlow.setResponseType(applicationConfig.getResponseTypes().get(0));
+            oidcConfig.setHybridFlow(hybridFlow);
+        }
 
 		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
 		inboundProtocolsConfig.setOidc(oidcConfig);

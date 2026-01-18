@@ -147,9 +147,11 @@
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessPasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessOIDCHybridFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailureCodeGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailurePasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailureRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailureOIDCHybridFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSuccessTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionFailureTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSmsOtpFailureTestCase"/>

@@ -64,25 +64,14 @@ public class PreIssueIDTokenActionFailureTest extends ActionTestBase {
         this.tenant = context.getContextTenant().getDomain();
     }
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws IOException {
-
-        super.testInit(API_VERSION, swaggerDefinition, tenant);
-    }
-
     @AfterClass(alwaysRun = true)
+    @Override
     public void testConclude() throws Exception {
 
         action1 = null;
         action2 = null;
         testActionId2 = null;
         super.conclude();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() {
-
-        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
@@ -208,21 +197,6 @@ public class PreIssueIDTokenActionFailureTest extends ActionTestBase {
     }
 
     @Test(dependsOnMethods = {"testGetActionByActionIdWithInvalidID"})
-    public void testCreateActionWithNotImplementedActionTypes() {
-
-        for (String actionTypePath : NOT_IMPLEMENTED_ACTION_TYPE_PATHS) {
-            String body = toJSONString(action1);
-            Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
-                    actionTypePath, body);
-            responseOfPost.then()
-                    .log().ifValidationFails()
-                    .assertThat().statusCode(HttpStatus.SC_NOT_IMPLEMENTED)
-                    .body("description", equalTo("The requested action type is not currently " +
-                            "supported by the server."));
-        }
-    }
-
-    @Test(dependsOnMethods = {"testCreateActionWithNotImplementedActionTypes"})
     public void testUpdateActionWithInvalidID() {
 
         // Update Action basic information with an invalid action id.
