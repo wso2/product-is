@@ -351,7 +351,7 @@ public class PreIssueIDTokenActionSuccessCodeGrantTestCase extends ActionsBaseTe
         assertEquals(actualRequest.getAllowedOperations(), expectedRequest.getAllowedOperations());
         assertEquals(actualRequest.getEvent().getRequest(), expectedRequest.getEvent().getRequest());
         assertEquals(actualRequest.getEvent().getTenant(), expectedRequest.getEvent().getTenant());
-        assertNotNull(expectedRequest.getEvent().getOrganization());
+        assertNotNull(actualRequest.getEvent().getOrganization());
         assertEquals(actualRequest.getEvent().getUser(), expectedRequest.getEvent().getUser());
         assertEquals(actualRequest.getEvent().getUserStore(), expectedRequest.getEvent().getUserStore());
         assertIDToken(actualRequest.getEvent().getIdToken(), expectedRequest.getEvent().getIdToken());

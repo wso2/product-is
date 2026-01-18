@@ -225,11 +225,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		}
 
         if (applicationConfig.isEnableHybridFlow()) {
-            HybridFlowConfiguration hybridFlow = new HybridFlowConfiguration();
-            hybridFlow.setEnable(true);
-            // Setting the first response type as currently only one response type is supported in the test cases.
-            // This should be improved to support multiple response types in future if needed.
-            hybridFlow.setResponseType(applicationConfig.getResponseTypes().get(0));
+            HybridFlowConfiguration hybridFlow = getHybridFlowConfiguration(applicationConfig);
             oidcConfig.setHybridFlow(hybridFlow);
         }
 
@@ -249,6 +245,19 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		String appId = restClient.createApplication(application);
 		return restClient.getApplication(appId);
 	}
+
+    private static HybridFlowConfiguration getHybridFlowConfiguration(ApplicationConfig applicationConfig) {
+
+        HybridFlowConfiguration hybridFlow = new HybridFlowConfiguration();
+        hybridFlow.setEnable(true);
+        // Setting the first response type as currently only one response type is supported in the test cases.
+        // This should be improved to support multiple response types in future if needed.
+        if (applicationConfig.getResponseTypes() != null &&
+                !applicationConfig.getResponseTypes().isEmpty()) {
+            hybridFlow.setResponseType(applicationConfig.getResponseTypes().get(0));
+        }
+        return hybridFlow;
+    }
 
     public ApplicationResponseModel addApplication() throws Exception {
 
