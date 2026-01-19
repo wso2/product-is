@@ -39,6 +39,14 @@ public class Organization {
         this.name = name;
     }
 
+    public Organization(String id, String name, String orgHandle, int depth) {
+
+        this.id = id;
+        this.name = name;
+        this.orgHandle = orgHandle;
+        this.depth = depth;
+    }
+
     public Organization() {
 
     }
@@ -89,12 +97,15 @@ public class Organization {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+        return depth == that.depth &&
+                Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(orgHandle, that.orgHandle);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, name);
+        return Objects.hash(id, name, orgHandle, depth);
     }
 }
