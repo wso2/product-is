@@ -119,6 +119,13 @@ public class PreIssueIDTokenActionFailureOIDCHybridFlowTestCase extends ActionsB
     public static Object[][] getTestExecutionContext() throws Exception {
 
         return new Object[][]{
+
+                // Both server and client error scenarios are currently handled identically in the /authz endpoint.
+                // As a result, incomplete and failure responses return the same error response.
+                // This behavior should be improved by introducing distinct error handling
+                // for different failure scenarios.
+                // TODO: Improve error handling in the /authz endpoint.
+                // Ref: https://github.com/wso2/product-is/issues/26555
                 {TestUserMode.SUPER_TENANT_USER, RESPONSE_TYPE_CODE_ID_TOKEN, new ActionResponse(200,
                         FileUtils.readFileInClassPathAsString("actions/response/incomplete-response.json")),
                         new ExpectedTokenResponse(500, "server_error",
