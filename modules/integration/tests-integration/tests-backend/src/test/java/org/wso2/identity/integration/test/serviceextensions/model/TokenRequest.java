@@ -35,6 +35,7 @@ public class TokenRequest extends Request {
 
     private final String clientId;
     private final String grantType;
+    private final String responseType;
     private final String redirectUri;
     private final List<String> scopes;
 
@@ -43,6 +44,7 @@ public class TokenRequest extends Request {
         this.clientId = builder.clientId;
         this.grantType = builder.grantType;
         this.redirectUri = builder.redirectUri;
+        this.responseType = builder.responseType;
         this.scopes = builder.scopes;
         this.additionalHeaders = builder.additionalHeaders;
         this.additionalParams = builder.additionalParams;
@@ -66,6 +68,11 @@ public class TokenRequest extends Request {
     public List<String> getScopes() {
 
         return scopes;
+    }
+
+    public String getResponseType() {
+
+        return responseType;
     }
 
     @Override
@@ -96,6 +103,7 @@ public class TokenRequest extends Request {
         private final Map<String, String[]> additionalParams = new HashMap<>();
         private String clientId;
         private String grantType;
+        private String responseType;
         private String redirectUri;
         private List<String> scopes = new ArrayList<>();
 
@@ -132,6 +140,12 @@ public class TokenRequest extends Request {
         public Builder addAdditionalParam(String key, String[] value) {
 
             this.additionalParams.put(key, value);
+            return this;
+        }
+
+        public Builder responseType(String responseType) {
+
+            this.responseType = responseType;
             return this;
         }
 

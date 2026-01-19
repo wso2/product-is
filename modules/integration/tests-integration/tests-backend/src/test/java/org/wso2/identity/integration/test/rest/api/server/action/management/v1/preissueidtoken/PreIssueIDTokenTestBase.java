@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -16,15 +16,13 @@
  * under the License.
  */
 
-package org.wso2.identity.integration.test.serviceextensions.model;
+package org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueidtoken;
 
-/**
- * This class models the Action Type.
- */
-public enum ActionType {
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.ActionTestBase;
 
-    PRE_ISSUE_ACCESS_TOKEN,
-    PRE_ISSUE_ID_TOKEN,
-    PRE_UPDATE_PASSWORD,
-    PRE_UPDATE_PROFILE
+public class PreIssueIDTokenTestBase extends ActionTestBase {
+
+    protected static final String PRE_ISSUE_ID_TOKEN_PATH = "/preIssueIdToken";
+    protected static final String PRE_ISSUE_ID_TOKEN_ACTION_TYPE = "PRE_ISSUE_ID_TOKEN";
 }
+
