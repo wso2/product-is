@@ -2643,7 +2643,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.662</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.663</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2661,7 +2661,7 @@
         <carbon.consent.mgt.version>2.6.10</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.11.158</identity.governance.version>
+        <identity.governance.version>1.11.159</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.9.14</identity.carbon.auth.saml2.version>
