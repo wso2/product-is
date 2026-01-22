@@ -100,6 +100,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.NEXT_STEP;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.PROMPT_TYPE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.REQUIRED_PARAMS;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.STATE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.STEP_TYPE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.SUCCESS_COMPLETED;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.UTF_8;
@@ -237,18 +238,6 @@ public class CustomAuthenticatorNativeAuthenticationTestCase extends OAuth2Servi
                 "API Based Authentication expected to true but set as false.");
     }
 
-    private String setupCustomAuthenticator() throws Exception {
-
-         authenticatorId = customAuthenticatorMgtClient.createCustomInternalUserAuthenticator(
-                CUSTOM_AUTHENTICATOR_NAME, 
-                CUSTOM_AUTHENTICATOR_DISPLAY_NAME, 
-                mockCustomAuthenticatorService.getCustomAuthenticatorURL() + API_AUTHENTICATE_ENDPOINT,
-                CUSTOM_AUTHENTICATOR_USERNAME, 
-                CUSTOM_AUTHENTICATOR_PASSWORD);
-        Assert.assertNotNull(authenticatorId, "Failed to setup custom authenticator.");
-        return authenticatorId;
-    }
-
     @Test(groups = "wso2.is", description = "Send initialize native auth request with custom authenticator",
             dependsOnMethods = "testRegisterApplication")
     public void testSendInitAuthRequestPost() throws Exception {
@@ -264,6 +253,7 @@ public class CustomAuthenticatorNativeAuthenticationTestCase extends OAuth2Servi
         Assert.assertNotNull(json, "Client Native Authentication Init response is null.");
         validInitClientNativeAuthnResponse(json);
 
+        // User authentication with custom authenticator based on the endpointUrl received in the init response.
         authenticateWithCustomAuthenticator(endpointUrl);
     }
 
@@ -379,6 +369,7 @@ public class CustomAuthenticatorNativeAuthenticationTestCase extends OAuth2Servi
                         authenticatorIdFromAuthnResponse = (String) authenticator.get(AUTHENTICATOR_ID);
 
                         JSONObject metadataNode = (JSONObject) authenticator.get(METADATA);
+                        // Prompt type must be INTERNAL_PROMPT and requiredParams must not be present.
                         if (!INTERNAL_PROMPT.equals(metadataNode.get(PROMPT_TYPE).toString())) {
                             Assert.fail("The promptType must be INTERNAL_PROMPT " +
                                     "in Client native authentication JSON Response.");
@@ -389,10 +380,15 @@ public class CustomAuthenticatorNativeAuthenticationTestCase extends OAuth2Servi
                         }
                         if (metadataNode.containsKey(ADDITIONAL_DATA)) {
                             JSONObject additionalDataNode = (JSONObject) metadataNode.get(ADDITIONAL_DATA);
+                            // In the additionalData, endpointUrl and state id must be present for custom authenticator.
                             if (additionalDataNode.containsKey(ENDPOINT_URL)) {
                                 endpointUrl = (String) additionalDataNode.get(ENDPOINT_URL);
                             } else {
-                                Assert.fail("endpointUrl is not available in additionalData in " +
+                                Assert.fail("The endpointUrl is not available in additionalData in " +
+                                        "Client native authentication JSON Response.");
+                            }
+                            if (!additionalDataNode.containsKey(STATE)) {
+                                Assert.fail("The state is not available in additionalData in " +
                                         "Client native authentication JSON Response.");
                             }
                         } else {
@@ -581,5 +577,17 @@ public class CustomAuthenticatorNativeAuthenticationTestCase extends OAuth2Servi
 
         customAuthenticatorLoginRequest.setEntity(new StringEntity(jsonBody));
         return customAuthenticatorLoginRequest;
+    }
+
+    private String setupCustomAuthenticator() throws Exception {
+
+        authenticatorId = customAuthenticatorMgtClient.createCustomInternalUserAuthenticator(
+                CUSTOM_AUTHENTICATOR_NAME,
+                CUSTOM_AUTHENTICATOR_DISPLAY_NAME,
+                mockCustomAuthenticatorService.getCustomAuthenticatorURL() + API_AUTHENTICATE_ENDPOINT,
+                CUSTOM_AUTHENTICATOR_USERNAME,
+                CUSTOM_AUTHENTICATOR_PASSWORD);
+        Assert.assertNotNull(authenticatorId, "Failed to setup custom authenticator.");
+        return authenticatorId;
     }
 }

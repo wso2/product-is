@@ -2671,7 +2671,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.416</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.417</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.63</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.2</identity.inbound.auth.sts.version>
@@ -2729,7 +2729,7 @@
         <identity.local.auth.iwa.version>5.4.10</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.24</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.25</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.9</identity.local.auth.api.version>
