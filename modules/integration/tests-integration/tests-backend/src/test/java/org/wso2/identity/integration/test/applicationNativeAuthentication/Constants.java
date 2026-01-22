@@ -50,9 +50,11 @@ public class Constants {
     public static final String METADATA = "metadata";
     public static final String REQUIRED_PARAMS = "requiredParams";
     public static final String PROMPT_TYPE = "promptType";
+    public static final String INTERNAL_PROMPT = "INTERNAL_PROMPT";
     public static final String PARAMS = "params";
     public static final String ADDITIONAL_DATA = "additionalData";
     public static final String REDIRECT_URL = "redirectUrl";
+    public static final String ENDPOINT_URL = "endpointUrl";
     public static final String STATE ="state";
     public static final String HREF = "href";
     public static final String TRACE_ID = "traceId";
