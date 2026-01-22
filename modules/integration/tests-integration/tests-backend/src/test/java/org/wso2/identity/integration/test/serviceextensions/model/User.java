@@ -36,6 +36,7 @@ public class User {
     private List<String> groups;
     private List<String> roles;
     private Organization organization;
+    private String userType;
 
     public User(String id) {
 
@@ -49,6 +50,7 @@ public class User {
         this.groups = builder.groups;
         this.roles = builder.roles;
         this.organization = builder.organization;
+        this.userType = builder.userType;
     }
 
     public String getId() {
@@ -76,6 +78,11 @@ public class User {
         return organization;
     }
 
+    public String getUserType() {
+
+        return userType;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -96,6 +103,7 @@ public class User {
         private List<String> groups;
         private List<String> roles;
         private Organization organization;
+        private String userType;
 
         public Builder id(String id) {
 
@@ -124,6 +132,12 @@ public class User {
         public Builder organization(Organization organization) {
 
             this.organization = organization;
+            return this;
+        }
+
+        public Builder userType(String userType) {
+
+            this.userType = userType;
             return this;
         }
 

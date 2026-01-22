@@ -29,6 +29,8 @@ public class ApplicationConfig {
     private List<String> grantTypes;
     private boolean skipConsent;
     private long refreshTokenExpiryTime;
+    private boolean enableHybridFlow;
+    private List<String> responseTypes;
 
     private ApplicationConfig(Builder builder) {
 
@@ -39,6 +41,8 @@ public class ApplicationConfig {
         this.grantTypes = builder.grantTypes;
         this.skipConsent = builder.skipConsent;
         this.refreshTokenExpiryTime = builder.refreshTokenExpiryTime;
+        this.enableHybridFlow = builder.enableHybridFlow;
+        this.responseTypes = builder.responseTypes;
     }
 
     public TokenType getTokenType() {
@@ -76,6 +80,16 @@ public class ApplicationConfig {
         return refreshTokenExpiryTime;
     }
 
+    public boolean isEnableHybridFlow() {
+
+        return enableHybridFlow;
+    }
+
+    public List<String> getResponseTypes() {
+
+        return responseTypes;
+    }
+
     public enum TokenType {
         JWT("JWT"), OPAQUE("Default");
 
@@ -101,6 +115,8 @@ public class ApplicationConfig {
         private List<String> grantTypes;
         private boolean skipConsent;
         private long refreshTokenExpiryTime;
+        private boolean enableHybridFlow;
+        private List<String> responseTypes;
 
         public Builder tokenType(TokenType tokenType) {
 
@@ -147,6 +163,18 @@ public class ApplicationConfig {
         public ApplicationConfig build() {
 
             return new ApplicationConfig(this);
+        }
+
+        public Builder enableHybridFlow(boolean enableHybridFlow) {
+
+            this.enableHybridFlow = enableHybridFlow;
+            return this;
+        }
+
+        public Builder responseTypes(List<String> responseTypes) {
+
+            this.responseTypes = responseTypes;
+            return this;
         }
     }
 }

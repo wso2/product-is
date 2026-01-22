@@ -69,6 +69,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.HybridFlowConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
@@ -223,6 +224,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
 		}
 
+        if (applicationConfig.isEnableHybridFlow()) {
+            HybridFlowConfiguration hybridFlow = getHybridFlowConfiguration(applicationConfig);
+            oidcConfig.setHybridFlow(hybridFlow);
+        }
+
 		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
 		inboundProtocolsConfig.setOidc(oidcConfig);
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
@@ -239,6 +245,19 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		String appId = restClient.createApplication(application);
 		return restClient.getApplication(appId);
 	}
+
+    private static HybridFlowConfiguration getHybridFlowConfiguration(ApplicationConfig applicationConfig) {
+
+        HybridFlowConfiguration hybridFlow = new HybridFlowConfiguration();
+        hybridFlow.setEnable(true);
+        // Setting the first response type as currently only one response type is supported in the test cases.
+        // This should be improved to support multiple response types in future if needed.
+        if (applicationConfig.getResponseTypes() != null &&
+                !applicationConfig.getResponseTypes().isEmpty()) {
+            hybridFlow.setResponseType(applicationConfig.getResponseTypes().get(0));
+        }
+        return hybridFlow;
+    }
 
     public ApplicationResponseModel addApplication() throws Exception {
 
