@@ -2748,8 +2748,8 @@
         <identity.user.workflow.version>6.0.2</identity.user.workflow.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.44</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.21</authenticator.backupcode.version>
+        <authenticator.totp.version>3.3.45</authenticator.totp.version>
+        <authenticator.backupcode.version>0.0.22</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.43</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
@@ -2790,7 +2790,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.85.10</identity.apps.console.version>
         <identity.apps.myaccount.version>2.25.19</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.3.33</identity.apps.core.version>
+        <identity.apps.core.version>3.3.34</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
