@@ -14,10 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'product-is tag name'
-        required: false
-      download-url:
-        description: 'URL to download product-is'
+        description: 'Product-is release tag (Ex: v7.0.0-alpha2). If not provided, latest release tag is used.'
         required: false
       conformance-suite-version:
         description: 'Conformance suite branch to clone in https://gitlab.com/openid/conformance-suite.git (Ex: release-v5.1.10). If not provided, latest release tag branch is used.'
@@ -242,8 +239,10 @@ jobs:
           echo "Sending Email"
           echo "============="
           CONFORMANCE_SUITE_URL=https://localhost:8443
-          RESOURCE=${{github.event.inputs.download-url}}
-          if [[ -z "${RESOURCE}" ]]; then
+          INPUT_TAG=${{github.event.inputs.tag}}
+          if [[ -z "${INPUT_TAG}" ]]; then
+            RESOURCE="built-from-latest-source"
+          else
             RESOURCE=${{github.event.inputs.tag}}
           fi
           python3 ./product-is/oidc-conformance-tests/send_email.py $CONFORMANCE_SUITE_URL $GITHUB_RUN_NUMBER ${{job.status}} ${{github.repository}} ${{github.run_id}} ${{secrets.SENDER_EMAIL}} ${{secrets.PASSWORD}} ${{secrets.RECEIVER_LIST}} $RESOURCE
@@ -261,13 +260,17 @@ jobs:
       if: always()
       run: |
         INPUT=${{github.event.inputs.send-chat}}
-        RESOURCE=${{github.event.inputs.download-url}}
-        if [[ -z "${RESOURCE}" ]]; then
-          RESOURCE=${{github.event.inputs.tag}}
-        fi
         if [[ -z "${INPUT}" ]]; then
           INPUT="yes"
         fi
+        
+        INPUT_TAG=${{github.event.inputs.tag}}
+        if [[ -z "${INPUT_TAG}" ]]; then
+          RESOURCE="built from latest source"
+        else
+          RESOURCE=${{github.event.inputs.tag}}
+        fi
+
         SEND_CHAT=${INPUT^^}
         if [ $SEND_CHAT == "YES" ]; then
           echo "==========================="

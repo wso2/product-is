@@ -82,7 +82,7 @@ message = {
                         {
                             "textParagraph": {
                                 "text": f"Status: <b><font color= {font_color}> {workflow_status}"
-                                        f"\nFailed test cases: {str(failed_count)}" 
+                                        f"</font></b></br>\nFailed test cases: {str(failed_count)}" 
                                         f"\nTest cases with errors: {str(errors_count)}"
                                         f"{error_line}"
                             }
