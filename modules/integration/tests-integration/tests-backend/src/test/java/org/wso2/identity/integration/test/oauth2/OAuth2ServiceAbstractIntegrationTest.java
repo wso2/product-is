@@ -288,6 +288,68 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		return getApplication(appId);
 	}
 
+    /**
+     * Add an application to an organization.
+     *
+     * @param applicationName Name of the application.
+     * @param applicationConfig Configurations of the application.
+     * @param switchedAccessToken Authorized token to create an application in an organization.
+     * @return Created application details
+     * @throws Exception If an exception occurred in the application add process.
+     */
+    public ApplicationResponseModel addOrganizationApplication(String applicationName,
+                                                               ApplicationConfig applicationConfig,
+                                                               String switchedAccessToken) throws Exception {
+
+        if (applicationConfig == null) {
+            return getBasicOAuthApplication(CALLBACK_URL);
+        }
+
+        ApplicationModel application = new ApplicationModel();
+        application.setName(applicationName);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(applicationConfig.getGrantTypes());
+        oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+
+        AccessTokenConfiguration accessTokenConfiguration = new AccessTokenConfiguration();
+        accessTokenConfiguration.type(applicationConfig.getTokenType().getTokenTypeProperty());
+        accessTokenConfiguration.applicationAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+        accessTokenConfiguration.userAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+        // Add access token claim list.
+        List<String> accessTokenClaimList = applicationConfig.getRequestedClaimList().stream()
+                .map(UserClaimConfig::getOidcClaimUri).collect(Collectors.toList());
+        accessTokenConfiguration.accessTokenAttributes(accessTokenClaimList);
+        oidcConfig.accessToken(accessTokenConfiguration);
+
+        if (applicationConfig.getRefreshTokenExpiryTime() > 0) {
+            RefreshTokenConfiguration refreshTokenConfiguration = new RefreshTokenConfiguration();
+            refreshTokenConfiguration.expiryInSeconds(applicationConfig.getRefreshTokenExpiryTime())
+                    .renewRefreshToken(false);
+            oidcConfig.refreshToken(refreshTokenConfiguration);
+        }
+
+        if (applicationConfig.getAudienceList() != null && !applicationConfig.getAudienceList().isEmpty()) {
+            oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
+        }
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+
+        if (applicationConfig.getRequestedClaimList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
+            application.setClaimConfiguration(
+                    buildClaimConfigurationForRequestedClaims(applicationConfig.getRequestedClaimList()));
+        }
+
+        application.advancedConfigurations(
+                new AdvancedApplicationConfiguration().skipLoginConsent(applicationConfig.isSkipConsent())
+                        .skipLogoutConsent(applicationConfig.isSkipConsent()));
+
+        String appId = restClient.createOrganizationApplication(application, switchedAccessToken);
+        return restClient.getOrganizationApplication(appId, switchedAccessToken);
+    }
+
 	public ApplicationResponseModel addApplicationWithGrantType(String grantType) throws Exception {
 
 		ApplicationModel application = new ApplicationModel();
@@ -426,6 +488,21 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		return restClient.getOIDCInboundDetails(appId);
 	}
+
+    /**
+     * Get Application oidc inbound configuration details with a given application id of an organization.
+     *
+     * @param appId Application ID.
+     * @param switchedAccessToken Authorized token to get the OIDC inbound configurations of an application.
+     * @return OIDC configurations of the given application.
+     * @throws Exception If an exception occurred during the OIDC inbound config retrieval.
+     */
+    public OpenIDConnectConfiguration getOIDCInboundDetailsOfOrganizationApplication(String appId,
+                                                                                     String switchedAccessToken)
+            throws Exception {
+
+        return restClient.getOIDCInboundDetailsOfOrganizationApp(appId,  switchedAccessToken);
+    }
 
 	/**
 	 * Get Application saml inbound configuration details with a given id.
