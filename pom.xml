@@ -2556,19 +2556,19 @@
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.common.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
-                <type>zip</type>                
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.metadata.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
-                <type>zip</type>                
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.credential.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
-                <type>zip</type>                
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
