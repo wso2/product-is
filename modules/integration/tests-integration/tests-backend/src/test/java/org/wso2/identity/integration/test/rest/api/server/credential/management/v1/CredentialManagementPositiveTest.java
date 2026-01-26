@@ -138,7 +138,6 @@ public class CredentialManagementPositiveTest extends CredentialManagementTestBa
     public void testDeletePushAuthCredentialForSubOrgUser() throws Exception {
 
         RestAssured.basePath = convertToOrgBasePath(this.basePath);
-        RestAssured.basePath = convertToOrgBasePath(this.basePath);
         credentialManagementRestClient.deleteUserCredential(SUB_ORG_USER_ID, TYPE_PASSKEY,
                 SUB_ORG_USER_PUSH_AUTH_CREDENTIAL_ID);
     }
