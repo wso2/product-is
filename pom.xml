@@ -2556,19 +2556,19 @@
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.common.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
-                <type>zip</type>                
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.metadata.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
-                <type>zip</type>                
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.credential.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
-                <type>zip</type>                
+                <type>zip</type>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
@@ -2643,7 +2643,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.663</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.665</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2695,7 +2695,7 @@
         <identity.event.handler.notification.version>1.9.79</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.0.394</org.wso2.identity.webhook.event.handlers.version>
-        <org.wso2.identity.event.publishers.version>1.0.38</org.wso2.identity.event.publishers.version>
+        <org.wso2.identity.event.publishers.version>1.0.39</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2748,8 +2748,8 @@
         <identity.user.workflow.version>6.0.2</identity.user.workflow.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.3.44</authenticator.totp.version>
-        <authenticator.backupcode.version>0.0.21</authenticator.backupcode.version>
+        <authenticator.totp.version>3.3.45</authenticator.totp.version>
+        <authenticator.backupcode.version>0.0.22</authenticator.backupcode.version>
         <authenticator.office365.version>2.1.9</authenticator.office365.version>
         <authenticator.smsotp.version>3.3.43</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
@@ -2790,14 +2790,14 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.85.10</identity.apps.console.version>
         <identity.apps.myaccount.version>2.25.19</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.3.33</identity.apps.core.version>
+        <identity.apps.core.version>3.3.34</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.115</carbon.kernel.version>
+        <carbon.kernel.version>4.10.118</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>

@@ -47,6 +47,41 @@ LOGIN_BASIC = {
     ]
 }
 
+LOGIN_WITH_DELAY = {
+    "task": "Login",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "sleep",
+            "20000"
+        ],
+        [
+            "text",
+            "id",
+            "usernameUserInput",
+            "admin"
+        ],
+        [
+            "text",
+            "id",
+            "password",
+            "admin"
+        ],
+        [
+            "click",
+            "xpath",
+            "//*[@id=\"loginForm\"]/div[8]/div[1]/button"
+        ],
+        [
+            "wait",
+            "contains",
+            "fapi-wso2is/callback",
+            10
+        ]
+    ]
+}
+
 LOGIN_BEFORE_CONSENT = {
     "task": "Login",
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
@@ -73,6 +108,20 @@ LOGIN_BEFORE_CONSENT = {
             "wait",
             "contains",
             "/authenticationendpoint/oauth2_consent",
+            10
+        ]
+    ]
+}
+
+JUST_SCREENSHOT = {
+    "task": "Screenshot",
+    "match": constants.BASE_URL + "/authenticationendpoint/login*",
+    "optional": True,
+    "commands": [
+        [
+            "wait",
+            "id",
+            "usernameUserInput",
             10
         ]
     ]
@@ -234,6 +283,25 @@ CONFIG = {
                         "match": constants.BASE_URL + "/oauth2/authorize*",
                         "tasks": [
                             VERIFY_ERROR
+                        ]
+                    }
+                ]
+            },
+            "fapi1-advanced-final-par-ensure-reused-request-uri-prior-to-auth-completion-succeeds": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "match-limit": 1,
+                        "tasks": [
+                            JUST_SCREENSHOT
+                        ]
+                    },
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BEFORE_CONSENT,
+                            CONSENT_APPROVE,
+                            VERIFY_COMPLETE
                         ]
                     }
                 ]
