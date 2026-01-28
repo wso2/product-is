@@ -2703,7 +2703,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.38</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.39</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.13</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.10</identity.outbound.auth.samlsso.version>
@@ -2736,7 +2736,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.11</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.24</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.25</identity.oauth2.token.exchange.grant.version>
 
         <identity.oauth.dpop.version>2.0.9</identity.oauth.dpop.version>
 
