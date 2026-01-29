@@ -1381,10 +1381,6 @@
                                     <id>org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group</id>
                                     <version>${identity.local.auth.basicauth.version}</version>
                                 </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.external.api.server.feature.group</id>
-                                    <version>${carbon.identity.framework.version}</version>
-                                </feature>
                             </features>
                         </configuration>
                     </execution>
