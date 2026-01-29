@@ -158,8 +158,7 @@ public class QueryClientUtils {
         signature.setSigningCredential(cred);
         signature.setSignatureAlgorithm(signatureAlgorithm);
         signature.setCanonicalizationAlgorithm(Canonicalizer.ALGO_ID_C14N_EXCL_OMIT_COMMENTS);
-
-
+        
         try {
             KeyInfo keyInfo = (KeyInfo) buildXMLObject(KeyInfo.DEFAULT_ELEMENT_NAME);
             X509Data data = (X509Data) buildXMLObject(X509Data.DEFAULT_ELEMENT_NAME);
@@ -176,13 +175,13 @@ public class QueryClientUtils {
         signableXMLObject.setSignature(signature);
         ((SAMLObjectContentReference) signature.getContentReferences().get(0)).setDigestAlgorithm(digestAlgorithm);
 
-        List<Signature> signatureList = new ArrayList<Signature>();
+        List<Signature> signatureList = new ArrayList<>();
         signatureList.add(signature);
 
         MarshallerFactory marshallerFactory = XMLObjectProviderRegistrySupport.getMarshallerFactory();
         Marshaller marshaller = marshallerFactory.getMarshaller(signableXMLObject);
 
-        if(marshaller != null) {
+        if (marshaller != null) {
             try {
                 marshaller.marshall(signableXMLObject);
             } catch (MarshallingException e) {
