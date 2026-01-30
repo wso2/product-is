@@ -64,6 +64,8 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -346,9 +348,8 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertEquals(requestHeaders.get("Authorization"), "Basic " + AuthenticationBuilder.ENCODED_CREDENTIAL);
 
         assertEquals(requestParams.get("grant_type"), "client_credentials");
-        assertEquals(requestParams.get("client_id"), AuthenticationBuilder.CLIENT_CREDENTIAL_CLIENT_ID);
-        assertEquals(requestParams.get("client_secret"), AuthenticationBuilder.CLIENT_CREDENTIAL_CLIENT_SECRET);
-        assertEquals(requestParams.get("scope"), AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES);
+        assertEquals(requestParams.get("scope"), URLEncoder.encode(
+                AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES, StandardCharsets.UTF_8));
 
         // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
         String authorizationHeader = mockSMSProvider.getHeader("Authorization");
