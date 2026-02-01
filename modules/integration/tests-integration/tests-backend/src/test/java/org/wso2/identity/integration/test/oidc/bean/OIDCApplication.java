@@ -29,6 +29,7 @@ public class OIDCApplication {
     private String clientSecret;
     private String callBackURL;
     private String subjectClaimURI;
+    private String fclogoutURI;
     private List<String> requiredClaims = null;
 
     public OIDCApplication() {
@@ -86,6 +87,14 @@ public class OIDCApplication {
 
     public void setSubjectClaimURI(String subjectClaimURI) {
         this.subjectClaimURI = subjectClaimURI;
+    }
+
+    public String getFclogoutURI() {
+        return fclogoutURI;
+    }
+
+    public void setFclogoutURI(String fclogoutURI) {
+        this.fclogoutURI = fclogoutURI;
     }
 
     public List<String> getRequiredClaims() {
