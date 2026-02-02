@@ -34,6 +34,9 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.util.UserDefinedLocalAuthenticatorPayload;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -120,6 +123,7 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
             put("username", username);
             put("password", password);
         }});
+        endpointConfig.allowedParameters((new ArrayList<>(Collections.singletonList("testParam"))));
         config.setEndpointConfig(endpointConfig.build());
 
         return config;
