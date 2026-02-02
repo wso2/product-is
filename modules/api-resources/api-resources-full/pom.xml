@@ -561,6 +561,10 @@
             <artifactId>org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon.identity.server.api</groupId>
+            <artifactId>org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.identity.framework</groupId>
             <artifactId>org.wso2.carbon.identity.servlet.mgt</artifactId>
         </dependency>
