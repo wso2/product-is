@@ -200,8 +200,9 @@ public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2Ser
 
     @Test(groups = "wso2.is", description = "Send Basic authentication POST request.",
             dependsOnMethods = "testSendInitAuthRequestPost")
-    public void testSendBasicAuthRequestPost() {
+    public void testSendBasicAuthRequestPost() throws Exception {
 
+        Thread.sleep(2000);
         String body = "{\n" +
                 "    \"flowId\": \"" + flowId + "\",\n" +
                 "    \"selectedAuthenticator\": {\n" +
