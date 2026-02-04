@@ -40,12 +40,15 @@ import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
-import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -58,15 +61,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
 /**
  * This test class tests OIDC SSO functionality for two replying party applications.
  */
 public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
+
+    private TestUserMode userMode;
+
+    @DataProvider(name = "oidcConfigProvider")
+    public static Object[][] oidcConfigProvider() {
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "oidcConfigProvider")
+    public OIDCFrontChannelLogout(TestUserMode userMode) {
+
+        this.userMode = userMode;
+    }
 
     private UserObject user;
     private Map<String, OIDCApplication> applications = new HashMap<>(2);
@@ -91,7 +107,7 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
+        super.init(userMode);
 
         initUser();
         createUser(user);
@@ -125,10 +141,10 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
     }
 
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
-    public void testAuthzRequestWithoutValidSessionForIDENTITY5581() throws Exception {
+    public void testAuthzRequestWithoutValidSession() throws Exception {
 
         OIDCApplication application = applications.get(OIDCUtilTest.playgroundAppOneAppName);
-        URI uri = new URIBuilder(OAuth2Constant.APPROVAL_URL)
+        URI uri = new URIBuilder(getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()))
                 .addParameter("client_id", application.getClientId())
                 .addParameter("scope", "openid")
                 .addParameter("response_type", "code")
@@ -142,7 +158,7 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
     }
 
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone",
-            dependsOnMethods = "testAuthzRequestWithoutValidSessionForIDENTITY5581")
+            dependsOnMethods = "testAuthzRequestWithoutValidSession")
     public void testSendAuthenticationRequestFromRP1() throws Exception {
 
         testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppOneAppName),
@@ -372,9 +388,10 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
     private void testOIDCLogout(OIDCApplication application, BasicNameValuePair... parameters) {
 
         try {
+
+            String oidcURL = getTenantQualifiedURL(OIDC_LOGOUT_ENDPOINT, tenantInfo.getDomain());
             StringBuilder oidcLogoutUrl =
-                    new StringBuilder(identityContextUrls.getWebAppURLHttps() + "/oidc/logout?post_logout_redirect_uri="
-                            + application.getCallBackURL());
+                    new StringBuilder(oidcURL + "?post_logout_redirect_uri=" + application.getCallBackURL());
 
             for (BasicNameValuePair parameter : parameters) {
                 oidcLogoutUrl.append("&").append(parameter.getName()).append("=").append(parameter.getValue());
@@ -430,7 +447,7 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
 
     private void testUserClaims() throws Exception {
 
-        HttpGet request = new HttpGet(OAuth2Constant.USER_INFO_ENDPOINT);
+        HttpGet request = new HttpGet(getTenantQualifiedURL(OAuth2Constant.USER_INFO_ENDPOINT, tenantInfo.getDomain()));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Bearer " + accessToken);
