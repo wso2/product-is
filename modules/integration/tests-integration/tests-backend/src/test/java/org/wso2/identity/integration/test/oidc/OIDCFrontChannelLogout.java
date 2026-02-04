@@ -1,21 +1,22 @@
-package org.wso2.identity.integration.test.oidc;/*
- * Copyright (c) 2016, WSO2 LLC. (https://www.wso2.com).
+/*
+ * Copyright (c) 2026, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
+package org.wso2.identity.integration.test.oidc;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -67,24 +68,25 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
  */
 public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
 
-    protected UserObject user;
-    protected Map<String, OIDCApplication> applications = new HashMap<>(2);
+    private UserObject user;
+    private Map<String, OIDCApplication> applications = new HashMap<>(2);
 
-    protected String accessToken;
-    protected String sessionDataKeyConsent;
-    protected String sessionDataKey;
-    protected String authorizationCode;
-    protected String sessionDataKeyLogout;
+    private String accessToken;
+    private String sessionDataKeyConsent;
+    private String sessionDataKey;
+    private String authorizationCode;
+    private String sessionDataKeyLogout;
 
     CookieStore cookieStore = new BasicCookieStore();
 
-    protected Lookup<CookieSpecProvider> cookieSpecRegistry;
-    protected RequestConfig requestConfig;
-    protected HttpClient client;
-    protected List<NameValuePair> consentParameters = new ArrayList<>();
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private HttpClient client;
+    private List<NameValuePair> consentParameters = new ArrayList<>();
     private MockApplicationServer mockApplicationServer;
     private String idToken1;
     private String idToken2;
+
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -111,7 +113,6 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
 
         mockApplicationServer = new MockApplicationServer();
         mockApplicationServer.start();
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -126,7 +127,6 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
     public void testAuthzRequestWithoutValidSessionForIDENTITY5581() throws Exception {
 
-        //When accessing the below endpoint from with invalid session it should provide a message with login_required
         OIDCApplication application = applications.get(OIDCUtilTest.playgroundAppOneAppName);
         URI uri = new URIBuilder(OAuth2Constant.APPROVAL_URL)
                 .addParameter("client_id", application.getClientId())
@@ -137,14 +137,16 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
         HttpResponse httpResponse = sendGetRequest(client, uri.toString());
 
         EntityUtils.consume(httpResponse.getEntity());
-        Assert.assertTrue(mockApplicationServer.getErrorCode(application.getApplicationName()).contains("login_required"));
+        Assert.assertTrue(mockApplicationServer.getErrorCode(application.getApplicationName())
+                .contains("login_required"));
     }
 
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone",
             dependsOnMethods = "testAuthzRequestWithoutValidSessionForIDENTITY5581")
     public void testSendAuthenticationRequestFromRP1() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppOneAppName), true, client, cookieStore);
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppOneAppName),
+                true, client, cookieStore);
     }
 
     @Test(groups = "wso2.is", description = "Authenticate for playground.appone", dependsOnMethods =
@@ -178,8 +180,8 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.apptwo")
     public void testSendAuthenticationRequestFromRP2() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppTwoAppName), false, client,
-                cookieStore);
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppTwoAppName),
+                false, client, cookieStore);
     }
 
     @Test(groups = "wso2.is", description = "Approve consent for playground.apptwo", dependsOnMethods =
@@ -248,10 +250,12 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
             keyPositionMap.put("name=\"sessionDataKey\"", 1);
             List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                     keyPositionMap);
-            Assert.assertNotNull(keyValues, "sessionDataKey key value is null for " + application.getApplicationName());
+            Assert.assertNotNull(keyValues, "sessionDataKey key value is null for " +
+                    application.getApplicationName());
 
             sessionDataKey = keyValues.get(0).getValue();
-            Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " + application.getApplicationName());
+            Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " +
+                    application.getApplicationName());
 
         } else {
 
@@ -287,11 +291,12 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
 
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, user.getUserName(),
                 user.getPassword());
-        Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
-                + "is null.");
+        Assert.assertNotNull(response, "Login request failed for " +
+                application.getApplicationName() + ". response is null.");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Login response header is null for " + application.getApplicationName());
+        Assert.assertNotNull(locationHeader, "Login response header is null for "
+                + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
@@ -357,7 +362,8 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
         String[] tokenParts = idToken.split("\\.");
         String payload = new String(java.util.Base64.getUrlDecoder().decode(tokenParts[1]));
         Map<String, Object> parsedIdToken = (Map<String, Object>) JSONValue.parse(payload);
-        Assert.assertNotNull(parsedIdToken.get("sub"), "No user logged in for " + application.getApplicationName());
+        Assert.assertNotNull(parsedIdToken.get("sub"), "No user logged in for " +
+                application.getApplicationName());
 
         EntityUtils.consume(response.getEntity());
         return idToken;
@@ -404,8 +410,8 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
             }
 
             // Verify both apps' front-channel logout URLs are present in iframes
-            String appOneFcLogoutUrl = MockApplicationServer.Constants.APP1.FCLOGOUT_URL_PATH;
-            String appTwoFcLogoutUrl = MockApplicationServer.Constants.APP2.FCLOGOUT_URL_PATH;
+            String appOneFcLogoutUrl = MockApplicationServer.Constants.APP1.FRONTCHANNEL_LOGOUT_PATH;
+            String appTwoFcLogoutUrl = MockApplicationServer.Constants.APP2.FRONTCHANNEL_LOGOUT_PATH;
 
             boolean containsAppOne = iframeSrcUrls.stream().anyMatch(src -> src.contains(appOneFcLogoutUrl));
             boolean containsAppTwo = iframeSrcUrls.stream().anyMatch(src -> src.contains(appTwoFcLogoutUrl));
@@ -457,7 +463,7 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
         // Configure front-channel logout URL for app one
-        playgroundApp.setFclogoutURI(MockApplicationServer.Constants.APP1.FCLOGOUT_URL_PATH);
+        playgroundApp.setFrontChannelLogoutURI(MockApplicationServer.Constants.APP1.FRONTCHANNEL_LOGOUT_PATH);
         applications.put(OIDCUtilTest.playgroundAppOneAppName, playgroundApp);
 
 
@@ -467,7 +473,7 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
         // Configure front-channel logout URL for app two
-        playgroundApp.setFclogoutURI(MockApplicationServer.Constants.APP2.FCLOGOUT_URL_PATH);
+        playgroundApp.setFrontChannelLogoutURI(MockApplicationServer.Constants.APP2.FRONTCHANNEL_LOGOUT_PATH);
         applications.put(OIDCUtilTest.playgroundAppTwoAppName, playgroundApp);
     }
 

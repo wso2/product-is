@@ -89,11 +89,13 @@ public class OIDCApplication {
         this.subjectClaimURI = subjectClaimURI;
     }
 
-    public String getFclogoutURI() {
+    public String getFrontChannellogoutURI() {
+
         return fclogoutURI;
     }
 
-    public void setFclogoutURI(String fclogoutURI) {
+    public void setFrontChannelLogoutURI(String fclogoutURI) {
+
         this.fclogoutURI = fclogoutURI;
     }
 

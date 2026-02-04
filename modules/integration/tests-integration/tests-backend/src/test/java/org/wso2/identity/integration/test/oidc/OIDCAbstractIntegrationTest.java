@@ -29,8 +29,15 @@ import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OIDCLogoutConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
@@ -133,7 +140,7 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
         oidcConfig.setGrantTypes(grantTypes);
         oidcConfig.addCallbackURLsItem(application.getCallBackURL());
         OIDCLogoutConfiguration logoutConfig = new OIDCLogoutConfiguration();
-        logoutConfig.setFrontChannelLogoutUrl(application.getFclogoutURI());
+        logoutConfig.setFrontChannelLogoutUrl(application.getFrontChannellogoutURI());
         oidcConfig.setLogout(logoutConfig);
 
         ClaimConfiguration applicationClaimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
