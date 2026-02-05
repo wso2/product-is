@@ -67,8 +67,8 @@
     <!--  Configs to add in deployment.toml at startup to enable admin/SOAP services. -->
     <enableAdminServices>
         <expectedParentKey>server</expectedParentKey>
-        <expectedKey>disable_admin_services</expectedKey>
-        <expectedValue>false</expectedValue>
+        <expectedKey>enable_admin_services</expectedKey>
+        <expectedValue>true</expectedValue>
     </enableAdminServices>
 
     <!--  SMTP Server configs to be added to the deployment.toml during the initial server startup  -->

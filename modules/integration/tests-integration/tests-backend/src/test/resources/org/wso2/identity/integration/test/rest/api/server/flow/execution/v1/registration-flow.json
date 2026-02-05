@@ -98,9 +98,9 @@
                 "action": {
                   "type": "EXECUTOR",
                   "executor": {
-                    "name": "PasswordOnboardExecutor"
+                    "name": "PasswordProvisioningExecutor"
                   },
-                  "next": "USER_ONBOARD"
+                  "next": "END"
                 },
                 "config": {
                   "type": "submit",
@@ -122,15 +122,22 @@
       }
     },
     {
-      "id": "USER_ONBOARD",
-      "type": "USER_ONBOARD",
-      "data": {},
+      "id": "END",
+      "type": "END",
+      "data": {
+        "action": {
+          "type": "EXECUTOR",
+          "executor": {
+            "name": "UserProvisioningExecutor"
+          }
+        }
+      },
       "size": {
-        "height": 56.0,
-        "width": 56.0
+        "height": 277.0,
+        "width": 350.0
       },
       "position": {
-        "x": 880.0,
+        "x": 1200.0,
         "y": 408.0
       }
     }

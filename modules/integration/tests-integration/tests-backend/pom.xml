@@ -18,7 +18,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-integration-tests</artifactId>
-        <version>7.2.0-beta-SNAPSHOT</version>
+        <version>7.2.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -65,6 +65,7 @@
                                 <!--<suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>-->
                                 <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>
+                            <failIfNoTests>true</failIfNoTests>
 
                             <classpathDependencyExcludes>
                                 <classpathDependencyExclude>org.wso2.org.ops4j.pax.logging:pax-logging-api
@@ -154,6 +155,7 @@
                                 <!--<suiteXmlFile>src/test/resources/testng-server-mgt.xml</suiteXmlFile>-->
                                 <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
                             </suiteXmlFiles>
+                            <failIfNoTests>true</failIfNoTests>
 
                             <classpathDependencyExcludes>
                                 <classpathDependencyExclude>org.wso2.org.ops4j.pax.logging:pax-logging-api

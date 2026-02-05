@@ -318,11 +318,11 @@ jobs:
         fi
 
         INPUT_TAG=${{github.event.inputs.tag}}
-          if [[ -z "${INPUT_TAG}" ]]; then
-            RESOURCE="built from latest source"
-          else
-            RESOURCE=${{github.event.inputs.tag}}
-          fi
+        if [[ -z "${INPUT_TAG}" ]]; then
+          RESOURCE="built from latest source"
+        else
+          RESOURCE=${{github.event.inputs.tag}}
+        fi
         
         SEND_CHAT=${INPUT^^}
         if [ $SEND_CHAT == "YES" ]; then

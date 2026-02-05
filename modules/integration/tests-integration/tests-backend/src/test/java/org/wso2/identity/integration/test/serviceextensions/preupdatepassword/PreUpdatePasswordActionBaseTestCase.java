@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.serviceextensions.preupdatepassword;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
 import org.apache.http.Header;
@@ -42,9 +43,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
+import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ANDRule;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Expression;
+import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ORRule;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PasswordSharing;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PreUpdatePasswordActionModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -58,15 +69,21 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.testng.Assert.assertTrue;
+import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
 public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
+    private static final String INTERNAL_USER_MANAGEMENT_CREATE = "internal_user_mgt_create";
     private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_OFFLINE = "Recovery.AdminPasswordReset.Offline";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_OTP = "Recovery.AdminPasswordReset.OTP";
@@ -92,10 +109,27 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String ACTION_DESCRIPTION = "This is a test for pre update password action type";
     protected static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
-
+    protected static final String REGISTRATION_FLOW =
+            "/org/wso2/identity/integration/test/rest/api/server/flow/execution/v1/registration-flow.json";
+    protected static final String PASSWORD_RECOVERY_FLOW = "/actions/flowexecution/password-recovery-flow.json";
+    protected static final String INVITED_USER_REGISTRATION_FLOW =
+            "/actions/flowexecution/invited-user-registration-flow.json";
+    protected static final String REGISTRATION_FLOW_TYPE = "REGISTRATION";
+    protected static final String PASSWORD_RECOVERY_FLOW_TYPE = "PASSWORD_RECOVERY";
+    protected static final String INVITED_USER_REGISTRATION_FLOW_TYPE = "INVITED_USER_REGISTRATION";
+    protected static final String USER_INITIATED_REGISTRATION = "userInitiatedRegistration";
+    protected static final String ADMIN_INITIATED_REGISTRATION = "adminInitiatedRegistration";
+    protected static final String APPLICATION_INITIATED_REGISTRATION = "applicationInitiatedRegistration";
+    protected static final String USER_INITIATED_PASSWORD_UPDATE = "userInitiatedPasswordUpdate";
+    protected static final String ADMIN_INITIATED_PASSWORD_UPDATE = "adminInitiatedPasswordUpdate";
+    protected static final String APPLICATION_INITIATED_PASSWORD_UPDATE = "applicationInitiatedPasswordUpdate";
+    protected static final String ADMIN_INITIATED_PASSWORD_RESET = "adminInitiatedPasswordReset";
+    protected static final String ADMIN_INITIATED_USER_INVITE_TO_SET_PASSWORD = "adminInitiatedUserInviteToSetPassword";
 
     protected CloseableHttpClient client;
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
+    protected FlowExecutionClient flowExecutionClient;
+    protected FlowManagementClient flowManagementClient;
 
     private final CookieStore cookieStore = new BasicCookieStore();
 
@@ -121,6 +155,8 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
                 .setDefaultCookieStore(cookieStore)
                 .build();
 
+        flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
+        flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
     }
 
@@ -134,6 +170,18 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         connectorsPatchReq.addProperties(propertyReq);
         identityGovernanceRestClient.updateConnectors("QWNjb3VudCBNYW5hZ2VtZW50",
                 "YWNjb3VudC1yZWNvdmVyeQ", connectorsPatchReq);
+    }
+
+    protected void updateSelfRegistrationStatus(boolean enable) throws IOException {
+
+        ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
+        connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        PropertyReq propertyReq = new PropertyReq();
+        propertyReq.setName("SelfRegistration.Enable");
+        propertyReq.setValue(enable ? "true" : "false");
+        connectorsPatchReq.addProperties(propertyReq);
+        identityGovernanceRestClient.updateConnectors("VXNlciBPbmJvYXJkaW5n",
+                "c2VsZi1zaWduLXVw", connectorsPatchReq);
     }
 
     protected void enableAdminPasswordResetRecoveryEmailLink() throws IOException {
@@ -213,24 +261,52 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return doc.selectFirst("#bodyCell").selectFirst("a").attr("href");
     }
 
+    protected String getOTPFromEmail() {
+
+        Assert.assertTrue(org.wso2.identity.integration.test.util.Utils.getMailServer().waitForIncomingEmail(10000, 1));
+        Message[] messages = org.wso2.identity.integration.test.util.Utils.getMailServer().getReceivedMessages();
+        String body = GreenMailUtil.getBody(messages[0]).replaceAll("=\r?\n", "");
+        String otpPattern = "\\s*<b>(\\d+)</b>";
+        Pattern pattern = Pattern.compile(otpPattern);
+        Matcher matcher = pattern.matcher(body);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
     protected String retrievePasswordResetURL(ApplicationResponseModel application) throws Exception {
+
+        return retrieveLinkFromAuthorizeFlow(application, "#passwordRecoverLink",
+                "Password recovery link not found in the response.");
+    }
+
+    protected String retrieveUserRegistrationURL(ApplicationResponseModel application) throws Exception {
+
+        return retrieveLinkFromAuthorizeFlow(application, "#registerLink",
+                "User registration link not found in the response.");
+    }
+
+    protected String retrieveLinkFromAuthorizeFlow(ApplicationResponseModel application, String cssSelector,
+                                                 String assertMessage) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
         urlParameters.add(new BasicNameValuePair("client_id", application.getClientId()));
         urlParameters.add(new BasicNameValuePair("redirect_uri", APP_CALLBACK_URL));
         urlParameters.add(new BasicNameValuePair("scope", "openid email profile"));
+
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
-
         Header authorizeRequestURL = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         EntityUtils.consume(response.getEntity());
-
         response = sendGetRequest(client, authorizeRequestURL.getValue());
         String htmlContent = EntityUtils.toString(response.getEntity());
         Document doc = Jsoup.parse(htmlContent);
-        Element link = doc.selectFirst("#passwordRecoverLink");
-        Assert.assertNotNull(link, "Password recovery link not found in the response.");
+        Element link = doc.selectFirst(cssSelector);
+        Assert.assertNotNull(link, assertMessage);
+
         return link.attr("href");
     }
 
@@ -265,6 +341,43 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         EntityUtils.consume(postResponse.getEntity());
     }
 
+    protected HttpResponse submitUserRegistrationForm(String url, String testUserName, String testUserPassword)
+            throws Exception {
+
+        HttpResponse response = sendGetRequest(client, url);
+        String htmlContent = EntityUtils.toString(response.getEntity());
+        Document doc = Jsoup.parse(htmlContent);
+
+        Element form = doc.selectFirst("#register");
+        String baseURL = url.substring(0, url.lastIndexOf('/') + 1);
+        Assert.assertNotNull(form, "User registration form not found in the response.");
+        String actionURL = null;
+        try {
+            actionURL = new URL(new URL(baseURL), form.attr("action")).toString();
+        } catch (Exception e) {
+            Assert.fail("Error while constructing action URL.", e);
+        }
+
+        List<NameValuePair> formParams = new ArrayList<>();
+        for (Element input : form.select("input")) {
+            String name = input.attr("name");
+            String value = input.attr("value");
+                if ("username".equals(name)) {
+                    value = testUserName;
+                }
+                if ("password".equals(name)) {
+                    value = testUserPassword;
+                }
+            formParams.add(new BasicNameValuePair(name, value));
+        }
+
+        HttpResponse postResponse = sendPostRequestWithParameters(client, formParams, actionURL);
+        if (postResponse.getStatusLine().getStatusCode() != 200) {
+            Assert.fail("Error occurred while submitting the user registration form.");
+        }
+        return postResponse;
+    }
+
     protected String createPreUpdatePasswordAction(String actionName, String actionDescription) throws IOException {
 
         AuthenticationType authentication = new AuthenticationType()
@@ -292,7 +405,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         }
 
         List<String> requestedScopes = new ArrayList<>();
-        Collections.addAll(requestedScopes,INTERNAL_USER_MANAGEMENT_UPDATE);
+        Collections.addAll(requestedScopes, INTERNAL_USER_MANAGEMENT_UPDATE, INTERNAL_USER_MANAGEMENT_CREATE);
         String scopes = String.join(" ", requestedScopes);
 
         List<NameValuePair> parameters = new ArrayList<>();
@@ -313,5 +426,177 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
         assertTrue(jsonResponse.has("access_token"));
         return jsonResponse.getString("access_token");
+    }
+
+    protected void updateFlowStatus(String flowType, boolean enable) throws Exception {
+
+        FlowConfig flowConfigDTO = new FlowConfig();
+        flowConfigDTO.setIsEnabled(enable);
+        flowConfigDTO.setFlowType(flowType);
+        flowManagementClient.updateFlowConfig(flowConfigDTO);
+    }
+
+    private void addFlow(String flowResourcePath) throws Exception {
+
+        String flowRequestJson = readResource(flowResourcePath, this.getClass());
+        FlowRequest flowRequest = new ObjectMapper().readValue(flowRequestJson, FlowRequest.class);
+        flowManagementClient.putFlow(flowRequest);
+    }
+
+    protected void addRegistrationFlow() throws Exception {
+
+        addFlow(REGISTRATION_FLOW);
+    }
+
+    protected void addPasswordRecoveryFlow() throws Exception {
+
+        addFlow(PASSWORD_RECOVERY_FLOW);
+    }
+
+    protected void addInvitedUserRegistrationFlow() throws Exception {
+
+        addFlow(INVITED_USER_REGISTRATION_FLOW);
+    }
+
+    protected FlowExecutionRequest buildUserRegistrationFlowRequest() {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(REGISTRATION_FLOW_TYPE);
+        flowExecutionRequest.setActionId("button_5zqc");
+
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("http://wso2.org/claims/username", TEST_USER2_USERNAME);
+        inputs.put("password", TEST_USER_PASSWORD);
+        inputs.put("http://wso2.org/claims/emailaddress", TEST_USER_EMAIL);
+        inputs.put("http://wso2.org/claims/givenname", TEST_USER_GIVEN_NAME);
+        inputs.put("http://wso2.org/claims/lastname", TEST_USER_LASTNAME);
+
+        flowExecutionRequest.setInputs(inputs);
+        return flowExecutionRequest;
+    }
+
+    protected Object executePasswordRecoveryFlow() throws Exception {
+
+        flowExecutionClient.initiateFlowExecution(PASSWORD_RECOVERY_FLOW_TYPE);
+        FlowExecutionRequest step1Request = buildPasswordRecoveryFlowRequest();
+        FlowExecutionResponse step1Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step1Request);
+
+        String otpCode = getOTPFromEmail();
+        FlowExecutionRequest step2Request = buildOTPVerificationRequest(step1Response.getFlowId(), otpCode);
+        FlowExecutionResponse step2Response =
+                (FlowExecutionResponse) flowExecutionClient.executeFlow(step2Request);
+
+        FlowExecutionRequest step3Request = buildPasswordResetRequest(step2Response.getFlowId());
+
+        return flowExecutionClient.executeFlow(step3Request);
+    }
+
+    private FlowExecutionRequest buildPasswordRecoveryFlowRequest() {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_1ov4");
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("http://wso2.org/claims/username", TEST_USER1_USERNAME);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    private FlowExecutionRequest buildOTPVerificationRequest(String flowId, String otpCode) {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_yzph");
+        flowExecutionRequest.setFlowId(flowId);
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("otp", otpCode);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    private FlowExecutionRequest buildPasswordResetRequest(String flowId) {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(PASSWORD_RECOVERY_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_x19f");
+        flowExecutionRequest.setFlowId(flowId);
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("password", RESET_PASSWORD);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    protected Object executeAdminInvitedUserRegistrationFlow() throws Exception {
+
+        Object initiationResponseObj = flowExecutionClient.initiateFlowExecution(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        FlowExecutionResponse initiationResponse = (FlowExecutionResponse) initiationResponseObj;
+        String flowId = initiationResponse.getFlowId();
+
+        String recoveryLink = getRecoveryURLFromEmail();
+        String confirmationCode = extractConfirmationCode(recoveryLink);
+
+        FlowExecutionRequest confirmationRequest = buildConfirmationRequest(flowId, confirmationCode);
+        flowExecutionClient.executeFlow(confirmationRequest);
+
+        FlowExecutionRequest passwordRequest = buildAdminInvitedUserRegistrationFlowRequest(flowId);
+
+        return flowExecutionClient.executeFlow(passwordRequest);
+    }
+
+    private FlowExecutionRequest buildAdminInvitedUserRegistrationFlowRequest(String flowId) {
+
+        FlowExecutionRequest flowExecutionRequest = new FlowExecutionRequest();
+        flowExecutionRequest.setFlowType(INVITED_USER_REGISTRATION_FLOW_TYPE);
+
+        flowExecutionRequest.setActionId("button_72ry");
+        flowExecutionRequest.setFlowId(flowId);
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("password", RESET_PASSWORD);
+        flowExecutionRequest.setInputs(inputs);
+
+        return flowExecutionRequest;
+    }
+
+    private FlowExecutionRequest buildConfirmationRequest(String flowId, String confirmationCode) {
+
+        FlowExecutionRequest confirmationRequest = new FlowExecutionRequest();
+        confirmationRequest.setFlowType(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        confirmationRequest.setFlowId(flowId);
+
+        Map<String, String> confirmationInputs = new HashMap<>();
+        confirmationInputs.put("confirmationCode", confirmationCode);
+        confirmationRequest.setInputs(confirmationInputs);
+
+        return confirmationRequest;
+    }
+
+    private String extractConfirmationCode(String recoveryLink) {
+
+        Pattern pattern = Pattern.compile("confirmation=([^&]+)");
+        Matcher matcher = pattern.matcher(recoveryLink);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+        throw new IllegalArgumentException("Confirmation code not found in recovery link.");
+    }
+
+    protected void enableRuleConfig(String condition, String actionId) throws Exception {
+
+        ORRule orRule = new ORRule()
+                .condition(ORRule.ConditionEnum.OR)
+                .addRulesItem(new ANDRule().condition(ANDRule.ConditionEnum.AND)
+                        .addExpressionsItem(new Expression()
+                                .field("flow")
+                                .operator("equals")
+                                .value(condition)));
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel().rule(orRule);
+        updateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId, actionUpdateModel);
     }
 }

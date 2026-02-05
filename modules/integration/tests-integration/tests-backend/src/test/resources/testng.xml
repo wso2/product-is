@@ -56,6 +56,7 @@
             <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
             <!--<class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>-->
 
+            <class name="org.wso2.identity.integration.test.user.store.config.BcryptHashProviderTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreDeployerTestCase"/>
@@ -102,6 +103,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCSubAttributeTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSSOConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCRPInitiatedLogoutTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCFrontChannelLogout"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSODifferentSubjectIDTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCCustomScopesLoginTest"/>
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest"/>
@@ -130,6 +132,8 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithMultipleSessionTerminationTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthentication2FATestCase"/>
+            <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationDeviceFlowTestCase"/>
+            <!-- <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.CustomAuthenticatorNativeAuthenticationTestCase"/> -->
             <class name="org.wso2.identity.integration.test.apiAuthorization.RBACWithAPIAuthorizationTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessPasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase"/>
@@ -142,6 +146,14 @@
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionFailureRefreshTokenGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionWithRulesAtPasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionWithRulesAtAuthorizationCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessPasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionSuccessOIDCHybridFlowTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailureCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailurePasswordGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailureRefreshTokenGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueidtoken.PreIssueIDTokenActionFailureOIDCHybridFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSuccessTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionFailureTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preupdatepassword.PreUpdatePasswordActionSmsOtpFailureTestCase"/>
@@ -166,6 +178,7 @@
             <class name="org.wso2.identity.integration.test.user.profile.mgt.SharedUserProfileClaimMgtTestCase"/>
             <class name="org.wso2.identity.integration.test.notification.template.mgt.OrganizationNotificationOrgTemplatesTestCase"/>
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimUniquenessValidationTestCase"/>
+            <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimSelectiveStorageTestCase"/>
             <class name="org.wso2.identity.integration.test.apiAuthorization.APIResourceInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowFailureTest"/>
@@ -255,6 +268,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.TenantFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.NotificationSenderFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.SMSSenderSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.SMSSenderFailureTest"/>
             <!-- Disabling the SecretManagement api tests as the api is removed from the access control -->
             <!--<class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementSuccessTest"/>-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.server.secret.management.v1.SecretManagementFailureTest"/>-->
@@ -272,8 +287,14 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken.PreIssueAccessTokenActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.PreUpdatePasswordActionFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueidtoken.PreIssueIDTokenActionSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueidtoken.PreIssueIDTokenActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.PreUpdateProfileActionSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.PreUpdateProfileActionFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.WebhookManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.WebhookManagementFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.webhook.metadata.v1.WebhookMetadataSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.webhook.metadata.v1.WebhookMetadataFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
@@ -283,6 +304,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementPositiveTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionPositiveTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementPositiveTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementNegativeTest"/>
             <!--            <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionNegativeTest"/>-->
         </classes>
     </test>
@@ -464,6 +487,10 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2TokenRenewalPerRequestTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.revocationvalidators.RevocationValidatorsSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.revocationvalidators.RevocationValidatorsFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.cacertificates.CACertificatesSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.cacertificates.CACertificatesFailureTest"/>
             <class name="org.wso2.identity.integration.test.idp.mgt.ChallengeQuestionsUITestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockWhileCaseInsensitiveUserFalseTestCase"/>
             <class name="org.wso2.identity.integration.test.EmailOTPTestCase"/>

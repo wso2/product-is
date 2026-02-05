@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.0-beta-SNAPSHOT</version>
+        <version>7.2.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -570,6 +570,14 @@
                                     </fileset>
                                 </unzip>
                                 <delete file="../connectors/target/authenticatorCopied/war/x509certificateauthenticationendpoint.war" />
+
+                                <!-- Explode the oid4vci.war -->
+                                <unzip dest="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/oid4vci">
+                                    <fileset dir="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps">
+                                        <include name="oid4vci.war" />
+                                    </fileset>
+                                </unzip>
+                                <delete file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/oid4vci.war" />
                             </tasks>
                         </configuration>
                     </execution>

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.0-beta-SNAPSHOT</version>
+        <version>7.2.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -205,6 +205,28 @@
                                         org.wso2.identity.event.http.publisher
                                     </artifactId>
                                     <version>${org.wso2.identity.event.publishers.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar
+                                    </outputDirectory>
+                                    <includes>**/*.jar</includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                    <!--Download privileged user authenticator jar from nexus and copy to the authenticatorCopied/jar folder-->
+                    <execution>
+                        <id>download_privilegeduser_authenticator</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.carbon.extension.identity.oauth.addons</groupId>
+                                    <artifactId>org.wso2.carbon.identity.oauth2.clientauth.privilegeduser</artifactId>
+                                    <version>${identity.oauth.addons.clientauth.privilegeduser.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/authenticatorCopied/jar
