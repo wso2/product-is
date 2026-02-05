@@ -2658,7 +2658,7 @@
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
-        <identity.notification.push.version>1.0.9-SNAPSHOT</identity.notification.push.version>
+        <identity.notification.push.version>1.0.11-SNAPSHOT</identity.notification.push.version>
         <identity.notification.push.version.range>[1.0.0,2.0.0)</identity.notification.push.version.range>
 
         <identity.local.auth.push.version>1.0.12-SNAPSHOT</identity.local.auth.push.version>
@@ -2678,7 +2678,7 @@
         <identity.carbon.auth.saml2.version>5.9.15-SNAPSHOT</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.5.3-SNAPSHOT</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.9.53-SNAPSHOT</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.9.59-SNAPSHOT</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.oauth.version>7.0.419-SNAPSHOT</identity.inbound.auth.oauth.version>
@@ -2713,7 +2713,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.38-SNAPSHOT</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.40-SNAPSHOT</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.14-SNAPSHOT</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.4-SNAPSHOT</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.11-SNAPSHOT</identity.outbound.auth.samlsso.version>
@@ -2721,10 +2721,10 @@
         <identity.outbound.auth.requestpath.oauth.version>5.5.9-SNAPSHOT</identity.outbound.auth.requestpath.oauth.version>
 
         <!-- Social Authenticator Versions -->
-        <social.authenticator.facebook.version>5.2.23-SNAPSHOT</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.2.23-SNAPSHOT</social.authenticator.google.version>
+        <social.authenticator.facebook.version>5.2.24-SNAPSHOT</social.authenticator.facebook.version>
+        <social.authenticator.google.version>5.2.24-SNAPSHOT</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.2.6-SNAPSHOT</social.authenticator.windowslive.version>
-        <social.authenticator.apple.version>1.0.10-SNAPSHOT</social.authenticator.apple.version>
+        <social.authenticator.apple.version>1.0.11-SNAPSHOT</social.authenticator.apple.version>
         <social.authenticator.github.version>1.1.21-SNAPSHOT</social.authenticator.github.version>
 
         <!-- Provisioning connector Versions -->
@@ -2734,21 +2734,21 @@
         <provisioning.connector.scim2.version>2.0.13-SNAPSHOT</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.8.53-SNAPSHOT</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.8.54-SNAPSHOT</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.4.31-SNAPSHOT</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.4.10-SNAPSHOT</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
-        <identity.outbound.auth.adapter.version>1.0.25-SNAPSHOT</identity.outbound.auth.adapter.version>
+        <identity.outbound.auth.adapter.version>1.0.26-SNAPSHOT</identity.outbound.auth.adapter.version>
 
         <!-- Local Authentication API Connector Version -->
         <identity.local.auth.api.version>3.0.9</identity.local.auth.api.version>
 
         <!-- OAuth2 Grant Type extensions -->
-        <identity.oauth2.jwt.bearer.grant.version>2.3.9</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.22-SNAPSHOT</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.jwt.bearer.grant.version>2.3.11</identity.oauth2.jwt.bearer.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.26-SNAPSHOT</identity.oauth2.token.exchange.grant.version>
 
-        <identity.oauth.dpop.version>2.0.8-SNAPSHOT</identity.oauth.dpop.version>
+        <identity.oauth.dpop.version>2.0.10-SNAPSHOT</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.8.7-SNAPSHOT</identity.metadata.saml.version>
@@ -2771,10 +2771,10 @@
         <identity.extension.utils>1.0.23-SNAPSHOT</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.27-SNAPSHOT</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.38-SNAPSHOT</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.49-SNAPSHOT</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.61-SNAPSHOT</identity.org.mgt.core.version>
-        <identity.organization.login.version>1.1.54-SNAPSHOT</identity.organization.login.version>
-        <identity.oauth2.grant.organizationswitch.version>1.1.31</identity.oauth2.grant.organizationswitch.version>
+        <identity.organization.login.version>1.1.55-SNAPSHOT</identity.organization.login.version>
+        <identity.oauth2.grant.organizationswitch.version>1.1.32</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.1.7</hashprovider.pbkdf2.version>
@@ -2791,11 +2791,11 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.13</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
-	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.33</identity.oauth.addons.token.handler.clientauth.jwt.version>
-	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.31-SNAPSHOT</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
+	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.35</identity.oauth.addons.token.handler.clientauth.jwt.version>
+	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.32-SNAPSHOT</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <identity.oauth.addons.clientauth.privilegeduser.version>2.5.26-SNAPSHOT</identity.oauth.addons.clientauth.privilegeduser.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.29</org.wso2.carbon.extension.identity.x509certificate.version>
-        <conditional.authentication.functions.version>1.2.88-SNAPSHOT</conditional.authentication.functions.version>
+        <conditional.authentication.functions.version>1.2.89-SNAPSHOT</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.87.1</identity.apps.console.version>
@@ -2826,7 +2826,7 @@
         <carbon.identity.agent.version>1.0.9</carbon.identity.agent.version>
 
         <!-- VC Issuance -->
-        <carbon.identity.openid4vc.version>1.0.2-SNAPSHOT</carbon.identity.openid4vc.version>
+        <carbon.identity.openid4vc.version>1.0.3-SNAPSHOT</carbon.identity.openid4vc.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
@@ -2855,7 +2855,7 @@
 
         <!-- Build dependency Versions -->
         <wso2.json.merge.plugin.version>5.2.5</wso2.json.merge.plugin.version>
-        <carbon.p2.plugin.version>5.4.12-SNAPSHOT</carbon.p2.plugin.version>
+        <carbon.p2.plugin.version>5.5.1</carbon.p2.plugin.version>
         <ds-annotations.version>1.2.10</ds-annotations.version>
         <maven.war.plugin.version>3.2.0</maven.war.plugin.version>
         <maven.checkstyle.plugin.version>3.1.1</maven.checkstyle.plugin.version>
@@ -2955,6 +2955,8 @@
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
         <jsoup.version>1.15.3</jsoup.version>
         <nimbus-jose-jwt.version>9.41.2</nimbus-jose-jwt.version>
+        
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
     </properties>
 
     <repositories>
