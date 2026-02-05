@@ -103,6 +103,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCSubAttributeTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSSOConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCRPInitiatedLogoutTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCFrontChannelLogout"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSODifferentSubjectIDTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCCustomScopesLoginTest"/>
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest"/>
