@@ -2548,6 +2548,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.sdjwt</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.template.management.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
                 <type>zip</type>
@@ -2579,6 +2584,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.sdjwt.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
                 <type>zip</type>
             </dependency>
@@ -2816,7 +2827,7 @@
         <carbon.identity.agent.version>1.0.9</carbon.identity.agent.version>
 
         <!-- VC Issuance -->
-        <carbon.identity.openid4vc.version>1.0.2</carbon.identity.openid4vc.version>
+        <carbon.identity.openid4vc.version>1.0.3</carbon.identity.openid4vc.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
