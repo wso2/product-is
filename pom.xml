@@ -2682,7 +2682,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.423</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.424</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.65</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.3</identity.inbound.auth.sts.version>
@@ -2714,7 +2714,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.40</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.41</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.13</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.10</identity.outbound.auth.samlsso.version>
@@ -2747,7 +2747,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.11</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.25</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.26</identity.oauth2.token.exchange.grant.version>
 
         <identity.oauth.dpop.version>2.0.9</identity.oauth.dpop.version>
 
@@ -2792,7 +2792,7 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.13</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
-	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.35</identity.oauth.addons.token.handler.clientauth.jwt.version>
+	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.36</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.31</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <identity.oauth.addons.clientauth.privilegeduser.version>2.5.25</identity.oauth.addons.clientauth.privilegeduser.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.29</org.wso2.carbon.extension.identity.x509certificate.version>
