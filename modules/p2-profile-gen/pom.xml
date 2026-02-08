@@ -666,6 +666,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature:${carbon.identity.openid4vc.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.sdjwt.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -1381,6 +1384,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.compatibility.settings.management.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.sdjwt.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
                                 </feature>
                             </features>
                         </configuration>

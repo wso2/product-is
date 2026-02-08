@@ -42,6 +42,7 @@ public final class OAuth2Constant {
     public final static String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
     public final static String ACCESS_TOKEN_ENDPOINT = "https://localhost:9853/oauth2/token";
     public final static String TOKEN_REVOKE_ENDPOINT = "https://localhost:9853/oauth2/revoke";
+    public final static String OIDC_LOGOUT_ENDPOINT = "https://localhost:9853/oidc/logout";
     public final static String PAR_ENDPOINT = "https://localhost:9853/oauth2/par";
     public final static String OAUTH2_DEFAULT_ERROR_URL = "https://localhost:9853/authenticationendpoint/" +
             "oauth2_error.do";

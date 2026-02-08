@@ -230,7 +230,7 @@ public class MockOAuth2TokenServer {
             lastRequestHeaders.set(requestHeaders);
 
             String requestBody = request.getBodyAsString();
-            Map<String, String> params = parseJsonBody(requestBody);
+            Map<String, String> params = resolveParam(requestBody);
             lastRequestBodyContent.set(params);
 
             String grantType = params.get(PARAM_GRANT_TYPE);
@@ -366,24 +366,17 @@ public class MockOAuth2TokenServer {
             return TOKEN_PREFIX_REFRESH + UUID.randomUUID().toString().replace("-", "");
         }
 
-        private Map<String, String> parseJsonBody(String body) {
+        private Map<String, String> resolveParam(String body) {
 
             Map<String, String> params = new HashMap<>();
             if (body == null || body.isEmpty()) {
                 return params;
             }
 
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                @SuppressWarnings("unchecked")
-                java.util.Iterator<String> keys = jsonObject.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    Object value = jsonObject.get(key);
-                    params.put(key, value != null ? value.toString() : null);
-                }
-            } catch (JSONException e) {
-                throw new RuntimeException("Failed to parse JSON body: " + body, e);
+            String[] keyValuePair = body.split("&");
+            for (String pair : keyValuePair) {
+                String[] keyValue = pair.split("=");
+                params.put(keyValue[0], keyValue[1]);
             }
             return params;
         }

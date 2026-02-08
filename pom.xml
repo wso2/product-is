@@ -2548,6 +2548,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.sdjwt</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.template.management.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
                 <type>zip</type>
@@ -2579,6 +2584,12 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.sdjwt.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
                 <type>zip</type>
             </dependency>
@@ -2643,7 +2654,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.672</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.677</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2671,7 +2682,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.422</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.424</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.65</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.3</identity.inbound.auth.sts.version>
@@ -2703,7 +2714,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.12.40</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.12.41</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.0.13</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.5.3</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.9.10</identity.outbound.auth.samlsso.version>
@@ -2721,7 +2732,7 @@
         <provisioning.connector.google.version>5.2.8</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.10</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.5</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>2.0.14</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>2.0.15</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.8.53</identity.local.auth.basicauth.version>
@@ -2736,7 +2747,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.11</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.1.25</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.1.26</identity.oauth2.token.exchange.grant.version>
 
         <identity.oauth.dpop.version>2.0.9</identity.oauth.dpop.version>
 
@@ -2761,7 +2772,7 @@
         <identity.extension.utils>1.0.22</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.0.28</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.0.48</identity.org.mgt.version>
+        <identity.org.mgt.version>2.0.49</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.1.60</identity.org.mgt.core.version>
         <identity.organization.login.version>1.1.54</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.1.32</identity.oauth2.grant.organizationswitch.version>
@@ -2781,7 +2792,7 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.13</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.5.24</identity.oauth.addons.version>
-	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.35</identity.oauth.addons.token.handler.clientauth.jwt.version>
+	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.36</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.5.31</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <identity.oauth.addons.clientauth.privilegeduser.version>2.5.25</identity.oauth.addons.clientauth.privilegeduser.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.29</org.wso2.carbon.extension.identity.x509certificate.version>
@@ -2797,7 +2808,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.10.118</carbon.kernel.version>
+        <carbon.kernel.version>4.10.123</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.0.16</identity.verification.version>
@@ -2816,7 +2827,7 @@
         <carbon.identity.agent.version>1.0.9</carbon.identity.agent.version>
 
         <!-- VC Issuance -->
-        <carbon.identity.openid4vc.version>1.0.2</carbon.identity.openid4vc.version>
+        <carbon.identity.openid4vc.version>1.0.4</carbon.identity.openid4vc.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
@@ -2939,7 +2950,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.30</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.31</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
