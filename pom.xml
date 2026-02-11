@@ -2654,7 +2654,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.8.677</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.8.680</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2669,7 +2669,7 @@
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
-        <carbon.consent.mgt.version>2.6.10</carbon.consent.mgt.version>
+        <carbon.consent.mgt.version>2.6.11</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
         <identity.governance.version>1.11.160</identity.governance.version>
@@ -2682,7 +2682,7 @@
 
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.0.424</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.0.425</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.11.65</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.10.3</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.13.3</identity.inbound.auth.sts.version>
@@ -2765,7 +2765,7 @@
         <authenticator.smsotp.version>3.3.43</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.1.45</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.1.37</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.0.55</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.0.56</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.0.44</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.1.2</authenticator.twitter.version>
         <authenticator.x509.version>3.1.36</authenticator.x509.version>
@@ -2786,7 +2786,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.3.232</identity.server.api.version>
+        <identity.server.api.version>1.3.234</identity.server.api.version>
         <identity.user.api.version>1.3.71</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2827,7 +2827,7 @@
         <carbon.identity.agent.version>1.0.9</carbon.identity.agent.version>
 
         <!-- VC Issuance -->
-        <carbon.identity.openid4vc.version>1.0.4</carbon.identity.openid4vc.version>
+        <carbon.identity.openid4vc.version>1.0.6</carbon.identity.openid4vc.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>

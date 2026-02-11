@@ -42,6 +42,8 @@ import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -94,13 +96,27 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
     private String switchedM2MToken;
     private String domainAPIId;
 
+    @DataProvider(name = "userModeConfigProvider")
+    public static Object[][] userModeConfigProvider() {
+
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "userModeConfigProvider")
+    public JwtAccessTokenScopeAsArrayTestCase(TestUserMode userMode) throws Exception {
+
+        super.init(userMode);
+        this.context = new AutomationContext("IDENTITY", userMode);
+        this.username = context.getContextTenant().getTenantAdmin().getUserName();
+        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
+    }
+
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(TestUserMode.TENANT_ADMIN);
-        context = new AutomationContext("IDENTITY", TestUserMode.TENANT_ADMIN);
-        this.username = context.getContextTenant().getTenantAdmin().getUserName();
-        this.userPassword = context.getContextTenant().getTenantAdmin().getPassword();
         tenantInfo = context.getContextTenant();
 
         restClient = new org.wso2.identity.integration.test.restclients.OAuth2RestClient(serverURL, tenantInfo);
