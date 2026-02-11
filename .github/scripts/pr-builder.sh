@@ -47,8 +47,15 @@ disable_tests() {
 }
 
 # Main execution starts here.
-BUILDER_NUMBER=$1
+MODE=$1
+BUILDER_NUMBER="build"
 ENABLED_TESTS=$2
+
+# For build-only mode, ignore test configuration
+if [ "$MODE" != "build-only" ]; then
+    BUILDER_NUMBER=$1
+    ENABLED_TESTS=$2
+fi
 
 echo ""
 echo "=========================================================="
@@ -56,6 +63,7 @@ PR_LINK=${PR_LINK%/}
 JDK_VERSION=${JDK_VERSION%/}
 JAVA_8_HOME=${JAVA_8_HOME%/}
 JAVA_11_HOME=${JAVA_11_HOME%/}
+echo "    Mode: $MODE"
 echo "    PR_LINK: $PR_LINK"
 echo "    JAVA 8 Home: $JAVA_8_HOME"
 echo "    JAVA 11 Home: $JAVA_11_HOME"
@@ -76,7 +84,10 @@ echo "=========================================================="
 
 git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
-disable_tests "$ENABLED_TESTS"
+# Skip test configuration for build-only mode
+if [ "$MODE" != "build-only" ]; then
+    disable_tests "$ENABLED_TESTS"
+fi
 
 if [ "$REPO" = "product-is" ]; then
 
@@ -107,7 +118,13 @@ if [ "$REPO" = "product-is" ]; then
 
   cat pom.xml
   export JAVA_HOME=$JAVA_11_HOME
-  mvn clean install --batch-mode | tee mvn-build.log
+  
+  # For build-only mode, skip tests
+  if [ "$MODE" = "build-only" ]; then
+    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+  else
+    mvn clean install --batch-mode | tee mvn-build.log
+  fi
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
   PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
@@ -409,7 +426,13 @@ else
 
   export JAVA_HOME=$JAVA_11_HOME
   cat pom.xml
-  mvn clean install --batch-mode | tee mvn-build.log
+  
+  # For build-only mode, skip tests
+  if [ "$MODE" = "build-only" ]; then
+    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+  else
+    mvn clean install --batch-mode | tee mvn-build.log
+  fi
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
   PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
