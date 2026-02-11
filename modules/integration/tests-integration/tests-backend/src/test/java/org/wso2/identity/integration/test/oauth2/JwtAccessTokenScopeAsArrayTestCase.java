@@ -156,9 +156,15 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
             orgMgtRestClient.deleteOrganization(subOrgId);
         }
 
-        restClient.closeHttpClient();
-        orgMgtRestClient.closeHttpClient();
-        configRestClient.client.close();
+        if (restClient != null) {
+            restClient.closeHttpClient();
+        }
+        if (orgMgtRestClient != null) {
+            orgMgtRestClient.closeHttpClient();
+        }
+        if (configRestClient != null && configRestClient.client != null) {
+            configRestClient.client.close();
+        }
     }
 
     // ========== Organization-Level Configuration & Inheritance Tests ==========
