@@ -1,0 +1,11 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_delete"
+  ],
+  "/o/api/server/v1/configs": [
+    "internal_org_config_view",
+    "internal_org_config_update"
+  ]
+}
