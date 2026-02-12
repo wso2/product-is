@@ -617,61 +617,6 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>com.google.code.maven-config-processor-plugin</groupId>-->
-<!--                <artifactId>config-processor-maven-plugin</artifactId>-->
-<!--                <version>2.7</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>add-missing-registry-configs</id>-->
-<!--                        <phase>prepare-package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>process</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <failOnMissingXpath>false</failOnMissingXpath>-->
-<!--                            <transformations>-->
-<!--                                <transformation>-->
-<!--                                    <input>-->
-<!--                                        ${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/registry.xml.j2-->
-<!--                                    </input>-->
-<!--                                    <output>-->
-<!--                                        ../../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/registry.xml.j2-->
-<!--                                    </output>-->
-<!--                                    <config>registry_config_change.xml.j2</config>-->
-<!--                                </transformation>-->
-<!--                            </transformations>-->
-<!--                            <namespaceContexts>-->
-<!--                                <sv>http://org.wso2.securevault/configuration</sv>-->
-<!--                            </namespaceContexts>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>add-missing-axis2-configs</id>-->
-<!--                        <phase>prepare-package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>process</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <failOnMissingXpath>false</failOnMissingXpath>-->
-<!--                            <transformations>-->
-<!--                                <transformation>-->
-<!--                                    <input>-->
-<!--                                        ${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/axis2/axis2.xml.j2-->
-<!--                                    </input>-->
-<!--                                    <output>-->
-<!--                                        ../../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/conf/templates/repository/conf/axis2/axis2.xml.j2-->
-<!--                                    </output>-->
-<!--                                    <config>axis2_config_change.xml.j2</config>-->
-<!--                                </transformation>-->
-<!--                            </transformations>-->
-<!--                            <namespaceContexts>-->
-<!--                                <sv>http://org.wso2.securevault/configuration</sv>-->
-<!--                            </namespaceContexts>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>xml-maven-plugin</artifactId>
