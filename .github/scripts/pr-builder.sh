@@ -53,13 +53,9 @@ ENABLED_TESTS=$2
 echo ""
 echo "=========================================================="
 PR_LINK=${PR_LINK%/}
-JDK_VERSION=${JDK_VERSION%/}
-JAVA_8_HOME=${JAVA_8_HOME%/}
-JAVA_11_HOME=${JAVA_11_HOME%/}
+JAVA_21_HOME=${JAVA_21_HOME%/}
 echo "    PR_LINK: $PR_LINK"
-echo "    JAVA 8 Home: $JAVA_8_HOME"
-echo "    JAVA 11 Home: $JAVA_11_HOME"
-echo "    User Input: $JDK_VERSION"
+echo "    JAVA 21 Home: $JAVA_21_HOME"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
@@ -106,7 +102,7 @@ if [ "$REPO" = "product-is" ]; then
   echo "$COMMIT3"
 
   cat pom.xml
-  export JAVA_HOME=$JAVA_11_HOME
+  export JAVA_HOME=$JAVA_21_HOME
   mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -198,12 +194,7 @@ else
   echo "Building dependency repo $REPO..."
   echo "=========================================================="
 
-  if [ "$JDK_VERSION" = "11" ]; then
-    export JAVA_HOME=$JAVA_11_HOME
-  else
-    export JAVA_HOME=$JAVA_8_HOME
-  fi
-
+  export JAVA_HOME=$JAVA_21_HOME
 
   mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
@@ -308,7 +299,7 @@ else
     echo "=========================================================="
 
 
-    export JAVA_HOME=$JAVA_11_HOME
+    export JAVA_HOME=$JAVA_21_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $OUTBOUND_AUTH_OIDC_REPO build complete."
@@ -362,7 +353,7 @@ else
     echo "Building $SCIM2_REPO repo..."
     echo "=========================================================="
 
-    export JAVA_HOME=$JAVA_8_HOME
+    export JAVA_HOME=$JAVA_21_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $SCIM2_REPO build complete."
@@ -407,7 +398,7 @@ else
     fi
   fi
 
-  export JAVA_HOME=$JAVA_11_HOME
+  export JAVA_HOME=$JAVA_21_HOME
   cat pom.xml
   mvn clean install --batch-mode | tee mvn-build.log
 
