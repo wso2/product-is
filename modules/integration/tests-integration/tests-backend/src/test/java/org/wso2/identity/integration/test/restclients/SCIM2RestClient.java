@@ -119,6 +119,25 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update a user with raw JSON PATCH request.
+     *
+     * @param jsonRequest JSON string with SCIM2 patch operations.
+     * @param userId      Id of the user to update.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while updating the user.
+     */
+    public JSONObject patchUserWithRawJSON(String jsonRequest, String userId) throws Exception {
+
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "User patch failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
      * Create a user with bearer token.
      *
      * @param userInfo    Object with user creation details.

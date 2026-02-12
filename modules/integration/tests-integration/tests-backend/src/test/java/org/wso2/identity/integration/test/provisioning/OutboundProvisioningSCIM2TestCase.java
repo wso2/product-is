@@ -67,15 +67,20 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     private static final String SCIM2_USER_ENDPOINT_PATH = "scim2/Users";
     private static final String SCIM2_GROUP_ENDPOINT_PATH = "scim2/Groups";
 
-    private static final String TEST_USER_NAME = "user1";
+    private static final String TEST_USER_NAME = "john.doe";
     private static final String TEST_USER_PASSWORD = "Wso2@test";
-    private static final String TEST_USER_GIVEN_NAME = "User";
-    private static final String TEST_USER_FAMILY_NAME = "Test1";
-    private static final String TEST_USER_PRIMARY_EMAIL = "kim@gmail.com";
-    private static final String TEST_USER_WORK_EMAIL = "work@gmail.com";
-    private static final String TEST_USER_MOBILE = "022222221";
-    private static final String TEST_USER_DEPARTMENT = "test1";
-    private static final String TEST_USER_MANAGER_DISPLAY_NAME = "john1";
+    private static final String TEST_USER_GIVEN_NAME = "John";
+    private static final String TEST_USER_FAMILY_NAME = "Doe";
+    private static final String TEST_USER_PRIMARY_EMAIL = "john.doe@example.com";
+    private static final String TEST_USER_WORK_EMAIL = "john.doe@workplace.com";
+    private static final String TEST_USER_MOBILE = "0222222222";
+    private static final String TEST_USER_DEPARTMENT = "Engineering";
+    private static final String TEST_USER_MANAGER_DISPLAY_NAME = "Jane Smith";
+
+    private static final String PATCHED_USER_GIVEN_NAME = "Jonathan";
+    private static final String PATCHED_USER_MOBILE = "0333333333";
+    private static final String PATCHED_USER_DEPARTMENT = "Product Development";
+    private static final String PATCHED_USER_MANAGER_DISPLAY_NAME = "Robert Johnson";
 
     private IdpMgtRestClient idpMgtRestClient;
     private ApplicationManagementServiceClient appMgtClient;
@@ -218,8 +223,6 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
                 "Username mismatch on primary IS");
 
         // Verify the user was provisioned to the secondary IS via outbound provisioning.
-        // Blocking provisioning is enabled, so the user should be available immediately.
-        Thread.sleep(2000);
         JSONObject secondaryUsers = secondaryScim2RestClient.filterUsers(buildEncodedUserNameFilter(TEST_USER_NAME));
         Assert.assertNotNull(secondaryUsers, "Failed to query users on secondary IS");
 
@@ -249,6 +252,164 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         JSONArray emails = (JSONArray) provisionedUser.get("emails");
         Assert.assertNotNull(emails, "Emails not found on provisioned user");
         Assert.assertTrue(emails.size() >= 1, "Expected at least 1 email on provisioned user");
+    }
+
+    @Test(alwaysRun = true, dependsOnMethods = "testOutboundProvisioningUserCreation",
+            description = "Test outbound provisioning of user PATCH via SCIM2")
+    public void testOutboundProvisioningUserPatch() throws Exception {
+
+        String patchPayload = buildPatchUserPayload();
+        primaryScim2RestClient.patchUserWithRawJSON(patchPayload, primaryUserId);
+
+        // Verify the patch was applied on the primary IS.
+        JSONObject primaryUser = primaryScim2RestClient.getUser(primaryUserId, null);
+        Assert.assertNotNull(primaryUser, "Failed to retrieve patched user from primary IS");
+
+        // Verify patched attributes on primary IS.
+        JSONObject primaryName = (JSONObject) primaryUser.get("name");
+        Assert.assertEquals(primaryName.get("givenName"), PATCHED_USER_GIVEN_NAME,
+                "Given name not patched on primary IS");
+        // Verify familyName remains unchanged.
+        Assert.assertEquals(primaryName.get("familyName"), TEST_USER_FAMILY_NAME,
+                "Family name should remain unchanged on primary IS after patch");
+
+        // Verify the patch was provisioned to the secondary IS.
+        JSONObject secondaryUser = secondaryScim2RestClient.getUser(secondaryUserId, null);
+        Assert.assertNotNull(secondaryUser, "Failed to retrieve user from secondary IS after patch");
+
+        // Verify patched attributes on secondary IS.
+        JSONObject secondaryName = (JSONObject) secondaryUser.get("name");
+        Assert.assertNotNull(secondaryName, "Name not found on secondary IS after patch");
+        Assert.assertEquals(secondaryName.get("givenName"), PATCHED_USER_GIVEN_NAME,
+                "Given name not patched on secondary IS");
+        Assert.assertEquals(secondaryName.get("familyName"), TEST_USER_FAMILY_NAME,
+                "Family name should remain unchanged on secondary IS after patch");
+
+        // Verify patched phone number on secondary IS.
+        JSONArray secondaryPhones = (JSONArray) secondaryUser.get("phoneNumbers");
+        Assert.assertNotNull(secondaryPhones, "Phone numbers not found on secondary IS after patch");
+        String mobileValue = getAttributeValueByType(secondaryPhones, "mobile");
+        Assert.assertEquals(mobileValue, PATCHED_USER_MOBILE,
+                "Mobile number not patched on secondary IS");
+
+        // Verify patched enterprise extension attributes on secondary IS.
+        JSONObject secondaryEnterprise = (JSONObject) secondaryUser.get(
+                "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User");
+        Assert.assertNotNull(secondaryEnterprise,
+                "Enterprise extension not found on secondary IS after patch");
+        Assert.assertEquals(secondaryEnterprise.get("department"), PATCHED_USER_DEPARTMENT,
+                "Department not patched on secondary IS");
+        JSONObject secondaryManager = (JSONObject) secondaryEnterprise.get("manager");
+        Assert.assertNotNull(secondaryManager, "Manager not found on secondary IS after patch");
+        Assert.assertEquals(secondaryManager.get("displayName"), PATCHED_USER_MANAGER_DISPLAY_NAME,
+                "Manager displayName not patched on secondary IS");
+
+        // Verify unchanged attributes on secondary IS.
+        Assert.assertEquals(secondaryUser.get("userName"), TEST_USER_NAME,
+                "Username should remain unchanged on secondary IS after patch");
+
+        JSONArray secondaryEmails = (JSONArray) secondaryUser.get("emails");
+        Assert.assertNotNull(secondaryEmails, "Emails should remain on secondary IS after patch");
+        Assert.assertTrue(secondaryEmails.size() >= 1,
+                "Expected at least 1 email on secondary IS after patch");
+    }
+
+    @Test(alwaysRun = true, dependsOnMethods = "testOutboundProvisioningUserPatch",
+            description = "Test outbound provisioning of user DELETE via SCIM2")
+    public void testOutboundProvisioningUserDeletion() throws Exception {
+
+        // Delete the user on the primary IS.
+        primaryScim2RestClient.deleteUser(primaryUserId);
+
+        // Verify the user is deleted from the primary IS.
+        JSONObject primaryUser = primaryScim2RestClient.getUser(primaryUserId, null);
+        // A GET on a deleted user should return an error response with a non-null detail or status.
+        Assert.assertNotNull(primaryUser, "Expected a response when querying deleted user on primary IS");
+        // The response should not contain the userName of the deleted user (indicating it's gone).
+        Assert.assertNotEquals(primaryUser.get("userName"), TEST_USER_NAME,
+                "User should no longer exist on primary IS after deletion");
+
+        // Verify the user was de-provisioned from the secondary IS.
+        JSONObject secondaryUsers = secondaryScim2RestClient.filterUsers(
+                buildEncodedUserNameFilter(TEST_USER_NAME));
+        Assert.assertNotNull(secondaryUsers, "Failed to query users on secondary IS after deletion");
+
+        long totalResults = (long) secondaryUsers.get("totalResults");
+        Assert.assertEquals(totalResults, 0L,
+                "User should be de-provisioned from secondary IS after deletion, but found: " + totalResults);
+
+        // Set to null so cleanup in @AfterClass doesn't try to delete again.
+        primaryUserId = null;
+    }
+
+    private String buildPatchUserPayload() {
+
+        JSONObject payload = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
+        payload.put("schemas", schemas);
+
+        JSONArray operations = new JSONArray();
+
+        // Operation 1: Replace givenName and mobile phone.
+        JSONObject op1 = new JSONObject();
+        op1.put("op", "replace");
+
+        JSONObject op1Value = new JSONObject();
+
+        JSONObject nameUpdate = new JSONObject();
+        nameUpdate.put("givenName", PATCHED_USER_GIVEN_NAME);
+        op1Value.put("name", nameUpdate);
+
+        JSONObject mobilePhone = new JSONObject();
+        mobilePhone.put("type", "mobile");
+        mobilePhone.put("value", PATCHED_USER_MOBILE);
+        JSONArray phoneNumbers = new JSONArray();
+        phoneNumbers.add(mobilePhone);
+        op1Value.put("phoneNumbers", phoneNumbers);
+
+        op1.put("value", op1Value);
+        operations.add(op1);
+
+        // Operation 2: Replace enterprise extension attributes.
+        JSONObject op2 = new JSONObject();
+        op2.put("op", "replace");
+
+        JSONObject op2Value = new JSONObject();
+        JSONObject enterpriseExtension = new JSONObject();
+        enterpriseExtension.put("department", PATCHED_USER_DEPARTMENT);
+
+        JSONObject manager = new JSONObject();
+        manager.put("displayName", PATCHED_USER_MANAGER_DISPLAY_NAME);
+        enterpriseExtension.put("manager", manager);
+
+        op2Value.put("urn:ietf:params:scim:schemas:extension:enterprise:2.0:User", enterpriseExtension);
+
+        op2.put("value", op2Value);
+        operations.add(op2);
+
+        payload.put("Operations", operations);
+
+        return payload.toJSONString();
+    }
+
+    /**
+     * Get the value of a multi-valued attribute entry by its type.
+     *
+     * @param multiValuedAttr JSON array of multi-valued attribute entries.
+     * @param type            the type to look for (e.g., "mobile", "work").
+     * @return the value string, or null if not found.
+     */
+    private String getAttributeValueByType(JSONArray multiValuedAttr, String type) {
+
+        for (Object item : multiValuedAttr) {
+            JSONObject entry = (JSONObject) item;
+            if (type.equals(entry.get("type"))) {
+                return (String) entry.get("value");
+            }
+        }
+        return null;
     }
 
     private String buildTestUserPayload() {
