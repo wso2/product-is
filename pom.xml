@@ -2686,7 +2686,7 @@
         <identity.inbound.auth.openid.version>5.11.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.0</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.14</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.5.9</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.4.223</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.6.0</identity.user.account.association.version>
@@ -2895,7 +2895,7 @@
         <commons-collections.version>3.2.2</commons-collections.version>
         <axis2.client.version>${axis2.wso2.version}</axis2.client.version>
         <axis2.wso2.version>1.6.1-wso2v120</axis2.wso2.version>
-        <nimbusds.version>7.3.0.wso2v1</nimbusds.version>
+        <nimbusds.version>10.3.0.wso2v1</nimbusds.version>
         <commons-codec.version>1.14.0.wso2v1</commons-codec.version>
         <eclipse.microprofile.version>1.2</eclipse.microprofile.version>
         <xmltooling.version>1.3.1</xmltooling.version>
