@@ -23,6 +23,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -41,6 +42,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.RoleRequestObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
@@ -98,6 +100,19 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_4 = "scim2_user4@wso2.com";
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_4 = "scim2_user4@gmail.com";
     private static final String USERNAME_4 = "scim2_user4";
+
+    private static final String ROLES_ATTRIBUTE = "roles";
+    private static final String GROUPS_ATTRIBUTE = "groups";
+    private static final String SCHEMAS_PARAM = "schemas";
+    private static final String OPERATIONS_PARAM = "Operations";
+    private static final String OP_PARAM = "op";
+    private static final String OP_ADD = "add";
+
+    private static final String GROUP_ASSIGNMENT_ROLE_NAME = "GroupAssignmentRole";
+    private static final String GROUP_FOR_ROLE_ASSIGNMENT_NAME = "GroupForRoleAssignment";
+    private static final String SCIM2_ROLE_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:Role";
+    private static final String SCIM2_PATCH_OP_SCHEMA = "urn:ietf:params:scim:api:messages:2.0:PatchOp";
+    private static final String EXCLUDED_ATTRIBUTES_ROLES_QUERY = "?excludedAttributes=roles";
 
     private static final String EQUAL = "+Eq+";
     private static final String STARTWITH = "+Sw+";
@@ -494,6 +509,171 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         }
     }
 
+    @Test
+    public void testAssignGroupToRole() throws Exception {
+
+        // Create a role.
+        RoleRequestObject role = new RoleRequestObject();
+        role.setDisplayName(GROUP_ASSIGNMENT_ROLE_NAME);
+        role.addSchemas(SCIM2_ROLE_SCHEMA);
+        SCIM2RestClient.RoleCreateResponse roleCreateResponse = scim2RestClient.attemptRoleV2Creation(role);
+        assertNotNull(roleCreateResponse.getRoleId(), "Role creation failed");
+
+        // Create a group with a member
+        HttpPost createGroupRequest = new HttpPost(getPath());
+        createGroupRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        createGroupRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        JSONObject groupObject = new JSONObject();
+        groupObject.put(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, GROUP_FOR_ROLE_ASSIGNMENT_NAME);
+        JSONObject member = new JSONObject();
+        member.put(SCIM2BaseTestCase.DISPLAY_ATTRIBUTE, USERNAME_1);
+        member.put(VALUE_PARAM, userId1);
+        JSONArray members = new JSONArray();
+        members.add(member);
+        groupObject.put(SCIM2BaseTestCase.MEMBERS_ATTRIBUTE, members);
+        StringEntity groupEntity = new StringEntity(groupObject.toString());
+        createGroupRequest.setEntity(groupEntity);
+
+        HttpResponse createGroupResponse = client.execute(createGroupRequest);
+        assertEquals(createGroupResponse.getStatusLine().getStatusCode(), 201, "Group has not been created successfully");
+
+        Object createGroupResponseObj = JSONValue.parse(EntityUtils.toString(createGroupResponse.getEntity()));
+        EntityUtils.consume(createGroupResponse.getEntity());
+
+        String groupIdForRoleAssignment = ((JSONObject) createGroupResponseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(groupIdForRoleAssignment);
+
+        // Assign the group to the role using PATCH operation
+        String rolesPath = getRolesPath();
+        HttpPatch assignGroupToRoleRequest = new HttpPatch(rolesPath + "/" + roleCreateResponse.getRoleId());
+        assignGroupToRoleRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        assignGroupToRoleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        JSONObject patchObject = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        schemas.add(SCIM2_PATCH_OP_SCHEMA);
+        patchObject.put(SCHEMAS_PARAM, schemas);
+
+        JSONArray operations = new JSONArray();
+        JSONObject addOperation = new JSONObject();
+        addOperation.put(OP_PARAM, OP_ADD);
+
+        JSONObject value = new JSONObject();
+        JSONArray groupsArray = new JSONArray();
+        JSONObject groupObj = new JSONObject();
+        groupObj.put(VALUE_PARAM, groupIdForRoleAssignment);
+        groupsArray.add(groupObj);
+        value.put(GROUPS_ATTRIBUTE, groupsArray);
+
+        addOperation.put(VALUE_PARAM, value);
+        operations.add(addOperation);
+
+        patchObject.put(OPERATIONS_PARAM, operations);
+
+        StringEntity patchEntity = new StringEntity(patchObject.toString());
+        assignGroupToRoleRequest.setEntity(patchEntity);
+
+        HttpResponse assignGroupToRoleResponse = client.execute(assignGroupToRoleRequest);
+        assertEquals(assignGroupToRoleResponse.getStatusLine().getStatusCode(), 200,
+                "Group has not been assigned to role successfully");
+        EntityUtils.consume(assignGroupToRoleResponse.getEntity());
+
+        // Verify the group assignment by retrieving the role
+        HttpGet getRoleRequest = new HttpGet(rolesPath + "/" + roleCreateResponse.getRoleId());
+        getRoleRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        getRoleRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse getRoleResponse = client.execute(getRoleRequest);
+        assertEquals(getRoleResponse.getStatusLine().getStatusCode(), 200, "Role has not been " +
+                "retrieved successfully");
+
+        Object getRoleResponseObj = JSONValue.parse(EntityUtils.toString(getRoleResponse.getEntity()));
+        EntityUtils.consume(getRoleResponse.getEntity());
+
+        JSONArray assignedGroups = (JSONArray) ((JSONObject) getRoleResponseObj).get(GROUPS_ATTRIBUTE);
+        assertNotNull(assignedGroups, "Groups attribute should be present in role response");
+        assertEquals(assignedGroups.size(), 1, "Role should have 1 group assigned");
+
+        JSONObject assignedGroup = (JSONObject) assignedGroups.get(0);
+        String assignedGroupId = assignedGroup.get(VALUE_PARAM).toString();
+        assertEquals(assignedGroupId, groupIdForRoleAssignment, "Assigned group ID should match");
+
+        // Very the role assignment by listing the groups.
+        String userResourcePath = getPath() + "?filter=displayName+eq+" + GROUP_FOR_ROLE_ASSIGNMENT_NAME;
+        HttpGet request = new HttpGet(userResourcePath);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse response = client.execute(request);
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "Groups listed successfully");
+        Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
+        EntityUtils.consume(response.getEntity());
+        String roleId = ((JSONObject)((JSONArray)((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0))
+                .get(SCIM2BaseTestCase.ROLE_ATTRIBUTE)).get(0)).get("value").toString();
+        assertEquals(roleId, roleCreateResponse.getRoleId(), "Role ID in group response should match the " +
+                "created role ID");
+
+        // Test excludedAttributes parameter - verify roles are excluded from group response
+        String groupPathWithExcludedRoles = getPath() + "/" + groupIdForRoleAssignment + EXCLUDED_ATTRIBUTES_ROLES_QUERY;
+        HttpGet getGroupWithExcludedRolesRequest = new HttpGet(groupPathWithExcludedRoles);
+        getGroupWithExcludedRolesRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        getGroupWithExcludedRolesRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse getGroupWithExcludedRolesResponse = client.execute(getGroupWithExcludedRolesRequest);
+        assertEquals(getGroupWithExcludedRolesResponse.getStatusLine().getStatusCode(), 200,
+                "Group has not been retrieved successfully");
+
+        Object getGroupWithExcludedRolesResponseObj = JSONValue.parse(EntityUtils.toString(getGroupWithExcludedRolesResponse.getEntity()));
+        EntityUtils.consume(getGroupWithExcludedRolesResponse.getEntity());
+
+        JSONObject groupWithExcludedRoles = (JSONObject) getGroupWithExcludedRolesResponseObj;
+
+        // Verify roles are NOT present when excluded
+        Object rolesInExcludedResponse = groupWithExcludedRoles.get(ROLES_ATTRIBUTE);
+        assertTrue(rolesInExcludedResponse == null, "Roles attribute should not be present when excludedAttributes=roles is used");
+
+        // Verify other attributes are still present
+        assertNotNull(groupWithExcludedRoles.get(ID_ATTRIBUTE), "ID should be present");
+        assertNotNull(groupWithExcludedRoles.get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE), "DisplayName should be present");
+
+        // Retrieve group without excludedAttributes - verify roles are included
+        String groupPath = getPath() + "/" + groupIdForRoleAssignment;
+        HttpGet getGroupRequest = new HttpGet(groupPath);
+        getGroupRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        getGroupRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse getGroupResponse = client.execute(getGroupRequest);
+        assertEquals(getGroupResponse.getStatusLine().getStatusCode(), 200,
+                "Group has not been retrieved successfully");
+
+        Object getGroupResponseObj = JSONValue.parse(EntityUtils.toString(getGroupResponse.getEntity()));
+        EntityUtils.consume(getGroupResponse.getEntity());
+
+        JSONObject groupWithRoles = (JSONObject) getGroupResponseObj;
+
+        // Verify roles ARE present when not excluded
+        Object rolesInNormalResponse = groupWithRoles.get(ROLES_ATTRIBUTE);
+        assertNotNull(rolesInNormalResponse, "Roles attribute should be present");
+
+        // Verify other attributes are still present
+        assertNotNull(groupWithRoles.get(ID_ATTRIBUTE), "ID should be present");
+        assertNotNull(groupWithRoles.get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE), "DisplayName should be present");
+
+        // Cleanup - Delete the group
+        HttpDelete deleteGroupRequest = new HttpDelete(groupPath);
+        deleteGroupRequest.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        deleteGroupRequest.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+
+        HttpResponse deleteGroupResponse = client.execute(deleteGroupRequest);
+        assertEquals(deleteGroupResponse.getStatusLine().getStatusCode(), 204,
+                "Group has not been deleted successfully");
+        EntityUtils.consume(deleteGroupResponse.getEntity());
+
+        // Delete the role
+        scim2RestClient.deleteRole(roleCreateResponse.getRoleId());
+    }
+
     private void validateGroupsFromGetWithPagination(String filter, Integer startIndex, Integer count,
                                                      Integer itemsPerPage, Integer totalResult) throws IOException {
 
@@ -537,6 +717,14 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
             return SERVER_URL + SCIM2_USERS_ENDPOINT;
         } else {
             return SERVER_URL + "/t/" + tenant + SCIM2_USERS_ENDPOINT;
+        }
+    }
+
+    private String getRolesPath() {
+        if (tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return SERVER_URL + "/scim2/v2/Roles";
+        } else {
+            return SERVER_URL + "/t/" + tenant + "/scim2/v2/Roles";
         }
     }
 
