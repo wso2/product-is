@@ -82,14 +82,36 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     private static final String PATCHED_USER_DEPARTMENT = "Product Development";
     private static final String PATCHED_USER_MANAGER_DISPLAY_NAME = "Robert Johnson";
 
+    private static final String TEST_USER2_NAME = "alice.smith";
+    private static final String TEST_USER2_PASSWORD = "Wso2@test";
+    private static final String TEST_USER2_GIVEN_NAME = "Alice";
+    private static final String TEST_USER2_FAMILY_NAME = "Smith";
+    private static final String TEST_USER2_EMAIL = "alice.smith@example.com";
+
+    private static final String TEST_USER3_NAME = "bob.jones";
+    private static final String TEST_USER3_PASSWORD = "Wso2@test";
+    private static final String TEST_USER3_GIVEN_NAME = "Bob";
+    private static final String TEST_USER3_FAMILY_NAME = "Jones";
+    private static final String TEST_USER3_EMAIL = "bob.jones@example.com";
+
+    private static final String TEST_GROUP_DISPLAY_NAME = "EngineeringTeam";
+    private static final String PATCHED_GROUP_DISPLAY_NAME = "ProductEngineeringTeam";
+
     private IdpMgtRestClient idpMgtRestClient;
     private ApplicationManagementServiceClient appMgtClient;
     private SCIM2RestClient primaryScim2RestClient;
     private SCIM2RestClient secondaryScim2RestClient;
     private TestDataHolder testDataHolder;
+
     private String idpId;
     private String primaryUserId;
     private String secondaryUserId;
+    private String primaryUser2Id;
+    private String secondaryUser2Id;
+    private String primaryUser3Id;
+    private String secondaryUser3Id;
+    private String primaryGroupId;
+    private String secondaryGroupId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -110,9 +132,20 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        // Clean up the created user on the primary IS.
+        // Clean up the created group on the primary IS.
+        if (primaryGroupId != null) {
+            primaryScim2RestClient.deleteGroup(primaryGroupId);
+        }
+
+        // Clean up the created users on the primary IS.
         if (primaryUserId != null) {
             primaryScim2RestClient.deleteUser(primaryUserId);
+        }
+        if (primaryUser2Id != null) {
+            primaryScim2RestClient.deleteUser(primaryUser2Id);
+        }
+        if (primaryUser3Id != null) {
+            primaryScim2RestClient.deleteUser(primaryUser3Id);
         }
 
         // Remove outbound provisioning from resident application before deleting the IdP.
@@ -340,6 +373,184 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
 
         // Set to null so cleanup in @AfterClass doesn't try to delete again.
         primaryUserId = null;
+    }
+
+    @Test(alwaysRun = true, dependsOnMethods = "testOutboundProvisioningUserDeletion",
+            description = "Test outbound provisioning of group creation via SCIM2")
+    public void testOutboundProvisioningGroupCreation() throws Exception {
+
+        // Create two users that will be members of the group.
+        primaryUser2Id = primaryScim2RestClient.createUserWithRawJSON(buildUserPayload(
+                TEST_USER2_NAME, TEST_USER2_PASSWORD, TEST_USER2_GIVEN_NAME, TEST_USER2_FAMILY_NAME,
+                TEST_USER2_EMAIL));
+        Assert.assertNotNull(primaryUser2Id, "User2 creation on primary IS failed");
+
+        primaryUser3Id = primaryScim2RestClient.createUserWithRawJSON(buildUserPayload(
+                TEST_USER3_NAME, TEST_USER3_PASSWORD, TEST_USER3_GIVEN_NAME, TEST_USER3_FAMILY_NAME,
+                TEST_USER3_EMAIL));
+        Assert.assertNotNull(primaryUser3Id, "User3 creation on primary IS failed");
+
+        // Look up the provisioned user IDs on the secondary IS.
+        secondaryUser2Id = getProvisionedUserId(TEST_USER2_NAME);
+        Assert.assertNotNull(secondaryUser2Id, "User2 was not provisioned to secondary IS");
+
+        secondaryUser3Id = getProvisionedUserId(TEST_USER3_NAME);
+        Assert.assertNotNull(secondaryUser3Id, "User3 was not provisioned to secondary IS");
+
+        // Create the group with user2 as the initial member.
+        String groupPayload = buildGroupPayload(TEST_GROUP_DISPLAY_NAME, primaryUser2Id, TEST_USER2_NAME);
+        primaryGroupId = primaryScim2RestClient.createGroupWithRawJSON(groupPayload);
+        Assert.assertNotNull(primaryGroupId, "Group creation on primary IS failed");
+
+        // Verify the group was provisioned to the secondary IS.
+        JSONObject secondaryGroups = secondaryScim2RestClient.filterGroups(
+                buildEncodedDisplayNameFilter(TEST_GROUP_DISPLAY_NAME));
+        Assert.assertNotNull(secondaryGroups, "Failed to query groups on secondary IS");
+
+        long totalResults = (long) secondaryGroups.get("totalResults");
+        Assert.assertEquals(totalResults, 1L,
+                "Expected exactly 1 provisioned group on secondary IS, found: " + totalResults);
+
+        JSONArray resources = (JSONArray) secondaryGroups.get("Resources");
+        Assert.assertNotNull(resources, "Resources array not found in secondary IS group response");
+        JSONObject provisionedGroup = (JSONObject) resources.get(0);
+
+        secondaryGroupId = (String) provisionedGroup.get("id");
+        Assert.assertNotNull(secondaryGroupId, "Provisioned group ID is null on secondary IS");
+
+        // Verify group displayName.
+        String actualDisplayName = (String) provisionedGroup.get("displayName");
+        Assert.assertTrue(actualDisplayName.contains(TEST_GROUP_DISPLAY_NAME),
+                "Group displayName mismatch on secondary IS. Expected to contain: " + TEST_GROUP_DISPLAY_NAME +
+                        ", Actual: " + actualDisplayName);
+
+        // Verify member was provisioned.
+        JSONArray members = (JSONArray) provisionedGroup.get("members");
+        Assert.assertNotNull(members, "Members not found on provisioned group");
+        Assert.assertEquals(members.size(), 1, "Expected 1 member in provisioned group, found: " + members.size());
+
+        List<String> memberDisplayNames = extractMemberDisplayNames(members);
+        Assert.assertTrue(memberDisplayNames.contains(TEST_USER2_NAME),
+                "Member '" + TEST_USER2_NAME + "' not found in provisioned group. Members: " + memberDisplayNames);
+    }
+
+    @Test(alwaysRun = true, dependsOnMethods = "testOutboundProvisioningGroupCreation",
+            description = "Test outbound provisioning of group PATCH (add member) via SCIM2")
+    public void testOutboundProvisioningGroupPatchAddMember() throws Exception {
+
+        String patchPayload = buildGroupPatchAddMemberPayload(primaryUser3Id, TEST_USER3_NAME);
+        primaryScim2RestClient.patchGroupWithRawJSON(patchPayload, primaryGroupId);
+
+        // Verify the member addition was provisioned to the secondary IS.
+        JSONObject secondaryGroups = secondaryScim2RestClient.filterGroups(
+                buildEncodedDisplayNameFilter(TEST_GROUP_DISPLAY_NAME));
+        Assert.assertNotNull(secondaryGroups, "Failed to query groups on secondary IS after adding member");
+
+        long totalResults = (long) secondaryGroups.get("totalResults");
+        Assert.assertEquals(totalResults, 1L,
+                "Group should exist on secondary IS after adding member");
+
+        JSONArray resources = (JSONArray) secondaryGroups.get("Resources");
+        JSONObject patchedGroup = (JSONObject) resources.get(0);
+
+        // Verify both members are now present.
+        JSONArray members = (JSONArray) patchedGroup.get("members");
+        Assert.assertNotNull(members, "Members not found after adding member");
+        Assert.assertEquals(members.size(), 2,
+                "Expected 2 members after adding a member, found: " + members.size());
+
+        List<String> memberDisplayNames = extractMemberDisplayNames(members);
+        Assert.assertTrue(memberDisplayNames.contains(TEST_USER2_NAME),
+                "Original member '" + TEST_USER2_NAME + "' not found. Members: " + memberDisplayNames);
+        Assert.assertTrue(memberDisplayNames.contains(TEST_USER3_NAME),
+                "Added member '" + TEST_USER3_NAME + "' not found. Members: " + memberDisplayNames);
+    }
+
+    @Test(alwaysRun = true, dependsOnMethods = "testOutboundProvisioningGroupPatchAddMember",
+            description = "Test outbound provisioning of group PATCH (remove member) via SCIM2")
+    public void testOutboundProvisioningGroupPatchRemoveMember() throws Exception {
+
+        String patchPayload = buildGroupPatchRemoveMemberPayload(primaryUser3Id);
+        primaryScim2RestClient.patchGroupWithRawJSON(patchPayload, primaryGroupId);
+
+        // Verify the member removal was provisioned to the secondary IS.
+        JSONObject secondaryGroups = secondaryScim2RestClient.filterGroups(
+                buildEncodedDisplayNameFilter(TEST_GROUP_DISPLAY_NAME));
+        Assert.assertNotNull(secondaryGroups, "Failed to query groups on secondary IS after member removal");
+
+        long totalResults = (long) secondaryGroups.get("totalResults");
+        Assert.assertEquals(totalResults, 1L,
+                "Group should still exist on secondary IS after member removal");
+
+        JSONArray resources = (JSONArray) secondaryGroups.get("Resources");
+        JSONObject patchedGroup = (JSONObject) resources.get(0);
+
+        // Verify only one member remains.
+        JSONArray members = (JSONArray) patchedGroup.get("members");
+        Assert.assertNotNull(members, "Members should not be null after removing one member");
+        Assert.assertEquals(members.size(), 1,
+                "Expected 1 member after removing a member, found: " + members.size());
+
+        List<String> memberDisplayNames = extractMemberDisplayNames(members);
+        Assert.assertTrue(memberDisplayNames.contains(TEST_USER2_NAME),
+                "Remaining member should be '" + TEST_USER2_NAME + "'. Members: " + memberDisplayNames);
+        Assert.assertFalse(memberDisplayNames.contains(TEST_USER3_NAME),
+                "Removed member '" + TEST_USER3_NAME + "' should not be in group. Members: " + memberDisplayNames);
+    }
+
+    @Test(alwaysRun = true, dependsOnMethods = "testOutboundProvisioningGroupPatchRemoveMember",
+            description = "Test outbound provisioning of group PATCH (display name change) via SCIM2")
+    public void testOutboundProvisioningGroupPatchDisplayName() throws Exception {
+
+        String patchPayload = buildGroupPatchDisplayNamePayload(PATCHED_GROUP_DISPLAY_NAME);
+        primaryScim2RestClient.patchGroupWithRawJSON(patchPayload, primaryGroupId);
+
+        // Verify the patch was provisioned to the secondary IS.
+        // The old display name should no longer match.
+        JSONObject oldNameResult = secondaryScim2RestClient.filterGroups(
+                buildEncodedDisplayNameFilter(TEST_GROUP_DISPLAY_NAME));
+        long oldCount = (long) oldNameResult.get("totalResults");
+        Assert.assertEquals(oldCount, 0L,
+                "Old group name should not exist on secondary IS after display name patch");
+
+        // The new display name should exist.
+        JSONObject newNameResult = secondaryScim2RestClient.filterGroups(
+                buildEncodedDisplayNameFilter(PATCHED_GROUP_DISPLAY_NAME));
+        long newCount = (long) newNameResult.get("totalResults");
+        Assert.assertEquals(newCount, 1L,
+                "Patched group not found on secondary IS with new display name");
+
+        JSONArray resources = (JSONArray) newNameResult.get("Resources");
+        JSONObject patchedGroup = (JSONObject) resources.get(0);
+
+        // Update the secondary group ID since the group may have been re-created.
+        secondaryGroupId = (String) patchedGroup.get("id");
+
+        // Verify members are still present after display name change.
+        JSONArray members = (JSONArray) patchedGroup.get("members");
+        Assert.assertNotNull(members, "Members lost after group display name patch");
+        Assert.assertEquals(members.size(), 1,
+                "Expected 1 member after display name patch, found: " + members.size());
+    }
+
+    @Test(alwaysRun = true, dependsOnMethods = "testOutboundProvisioningGroupPatchDisplayName",
+            description = "Test outbound provisioning of group DELETE via SCIM2")
+    public void testOutboundProvisioningGroupDeletion() throws Exception {
+
+        // Delete the group on the primary IS.
+        primaryScim2RestClient.deleteGroup(primaryGroupId);
+
+        // Verify the group was de-provisioned from the secondary IS.
+        JSONObject secondaryGroups = secondaryScim2RestClient.filterGroups(
+                buildEncodedDisplayNameFilter(PATCHED_GROUP_DISPLAY_NAME));
+        Assert.assertNotNull(secondaryGroups, "Failed to query groups on secondary IS after deletion");
+
+        long totalResults = (long) secondaryGroups.get("totalResults");
+        Assert.assertEquals(totalResults, 0L,
+                "Group should be de-provisioned from secondary IS after deletion, but found: " + totalResults);
+
+        // Set to null so cleanup in @AfterClass doesn't try to delete again.
+        primaryGroupId = null;
     }
 
     private String buildPatchUserPayload() {
@@ -576,6 +787,162 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
 
         String filter = String.format("userName eq \"%s\"", username);
         return URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
+    }
+
+    private String buildEncodedDisplayNameFilter(String displayName) throws UnsupportedEncodingException {
+
+        String filter = String.format("displayName eq \"%s\"", displayName);
+        return URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
+    }
+
+    private String buildUserPayload(String userName, String password, String givenName, String familyName,
+                                    String email) {
+
+        JSONObject payload = new JSONObject();
+
+        JSONObject name = new JSONObject();
+        name.put("familyName", familyName);
+        name.put("givenName", givenName);
+        payload.put("name", name);
+
+        payload.put("userName", userName);
+        payload.put("password", password);
+
+        JSONObject primaryEmail = new JSONObject();
+        primaryEmail.put("value", email);
+        primaryEmail.put("primary", true);
+
+        JSONArray emails = new JSONArray();
+        emails.add(primaryEmail);
+        payload.put("emails", emails);
+
+        return payload.toJSONString();
+    }
+
+    private String buildGroupPayload(String displayName, String memberId, String memberDisplay) {
+
+        JSONObject payload = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:Group");
+        payload.put("schemas", schemas);
+
+        payload.put("displayName", displayName);
+
+        JSONArray members = new JSONArray();
+
+        JSONObject member = new JSONObject();
+        member.put("value", memberId);
+        member.put("display", memberDisplay);
+        members.add(member);
+
+        payload.put("members", members);
+
+        return payload.toJSONString();
+    }
+
+    private String buildGroupPatchDisplayNamePayload(String newDisplayName) {
+
+        JSONObject payload = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
+        payload.put("schemas", schemas);
+
+        JSONArray operations = new JSONArray();
+
+        JSONObject op = new JSONObject();
+        op.put("op", "replace");
+        op.put("path", "displayName");
+        op.put("value", newDisplayName);
+        operations.add(op);
+
+        payload.put("Operations", operations);
+
+        return payload.toJSONString();
+    }
+
+    private String buildGroupPatchAddMemberPayload(String memberId, String memberDisplay) {
+
+        JSONObject payload = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
+        payload.put("schemas", schemas);
+
+        JSONArray operations = new JSONArray();
+
+        JSONObject op = new JSONObject();
+        op.put("op", "add");
+
+        JSONObject opValue = new JSONObject();
+        JSONArray members = new JSONArray();
+        JSONObject member = new JSONObject();
+        member.put("display", memberDisplay);
+        member.put("value", memberId);
+        members.add(member);
+        opValue.put("members", members);
+
+        op.put("value", opValue);
+        operations.add(op);
+
+        payload.put("Operations", operations);
+
+        return payload.toJSONString();
+    }
+
+    private String buildGroupPatchRemoveMemberPayload(String memberIdToRemove) {
+
+        JSONObject payload = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
+        payload.put("schemas", schemas);
+
+        JSONArray operations = new JSONArray();
+
+        JSONObject op = new JSONObject();
+        op.put("op", "remove");
+        op.put("path", "members[value eq " + memberIdToRemove + "]");
+        operations.add(op);
+
+        payload.put("Operations", operations);
+
+        return payload.toJSONString();
+    }
+
+    private String getProvisionedUserId(String userName) throws Exception {
+
+        JSONObject secondaryUsers = secondaryScim2RestClient.filterUsers(buildEncodedUserNameFilter(userName));
+        if (secondaryUsers == null) {
+            return null;
+        }
+
+        long totalResults = (long) secondaryUsers.get("totalResults");
+        if (totalResults == 0) {
+            return null;
+        }
+
+        JSONArray resources = (JSONArray) secondaryUsers.get("Resources");
+        if (resources == null || resources.size() == 0) {
+            return null;
+        }
+
+        JSONObject user = (JSONObject) resources.get(0);
+        return (String) user.get("id");
+    }
+
+    private List<String> extractMemberDisplayNames(JSONArray members) {
+
+        List<String> displayNames = new ArrayList<>();
+        for (Object item : members) {
+            JSONObject member = (JSONObject) item;
+            String display = (String) member.get("display");
+            if (display != null) {
+                displayNames.add(display);
+            }
+        }
+        return displayNames;
     }
 
     /**

@@ -865,6 +865,61 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create a group with raw JSON request.
+     *
+     * @param jsonRequest JSON string with group creation details.
+     * @return Id of the created group.
+     * @throws Exception If an error occurred while creating a group.
+     */
+    public String createGroupWithRawJSON(String jsonRequest) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getGroupsPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Group creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Update a group with raw JSON PATCH request.
+     *
+     * @param jsonRequest JSON string with SCIM2 patch operations.
+     * @param groupId     Id of the group to update.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while updating the group.
+     */
+    public JSONObject patchGroupWithRawJSON(String jsonRequest, String groupId) throws Exception {
+
+        String endPointUrl = getGroupsPath() + PATH_SEPARATOR + groupId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Group patch failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Get the details of groups by filtering with the given filter.
+     *
+     * @param filter filter string.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while getting groups.
+     */
+    public JSONObject filterGroups(String filter) throws Exception {
+
+        String endPointUrl = getGroupsPath();
+        if (StringUtils.isNotEmpty(filter)) {
+            endPointUrl += "?filter=" + filter;
+        }
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
      * Delete an existing group of a sub organization.
      *
      * @param groupId          Group id.
