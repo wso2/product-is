@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.provisioning;
 
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContextFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
@@ -25,20 +27,25 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.User;
+import org.wso2.carbon.identity.application.common.model.xsd.InboundProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.JustInTimeProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ProvisioningConnectorConfig;
+import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
+import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.ProvisioningRequest;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OutboundProvisioningConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ProvisioningConfiguration;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
-import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,18 +59,32 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     private static final String IDP_IMAGE = "assets/images/logos/outbound-provisioning.svg";
     private static final String SCIM2_CONNECTOR_ID = "U0NJTTI";
     private static final String SCIM2_CONNECTOR_NAME = "SCIM2";
-    private static final String RESIDENT_APP_ID = "resident";
+    private static final String RESIDENT_SP_NAME = "wso2carbon-local-sp";
 
     private static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
     private static final int PORT_OFFSET_1 = 1;
-    private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s";
-    private static final String SCIM2_USER_ENDPOINT_PATH = "/scim2/Users";
-    private static final String SCIM2_GROUP_ENDPOINT_PATH = "/scim2/Groups";
+    private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
+    private static final String SCIM2_USER_ENDPOINT_PATH = "scim2/Users";
+    private static final String SCIM2_GROUP_ENDPOINT_PATH = "scim2/Groups";
+
+    private static final String TEST_USER_NAME = "user1";
+    private static final String TEST_USER_PASSWORD = "Wso2@test";
+    private static final String TEST_USER_GIVEN_NAME = "User";
+    private static final String TEST_USER_FAMILY_NAME = "Test1";
+    private static final String TEST_USER_PRIMARY_EMAIL = "kim@gmail.com";
+    private static final String TEST_USER_WORK_EMAIL = "work@gmail.com";
+    private static final String TEST_USER_MOBILE = "022222221";
+    private static final String TEST_USER_DEPARTMENT = "test1";
+    private static final String TEST_USER_MANAGER_DISPLAY_NAME = "john1";
 
     private IdpMgtRestClient idpMgtRestClient;
-    private OAuth2RestClient oAuth2RestClient;
+    private ApplicationManagementServiceClient appMgtClient;
+    private SCIM2RestClient primaryScim2RestClient;
+    private SCIM2RestClient secondaryScim2RestClient;
     private TestDataHolder testDataHolder;
     private String idpId;
+    private String primaryUserId;
+    private String secondaryUserId;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -72,13 +93,22 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
 
         testDataHolder = TestDataHolder.getInstance();
 
-        // Initialize IdP management REST client for server 0 (primary IS instance)
         idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
-        oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+        primaryScim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        secondaryScim2RestClient = new SCIM2RestClient(getSecondaryISURI(), tenantInfo);
+
+        ConfigurationContext configContext = ConfigurationContextFactory
+                .createConfigurationContextFromFileSystem(null, null);
+        appMgtClient = new ApplicationManagementServiceClient(sessionCookie, backendURL, configContext);
     }
 
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
+
+        // Clean up the created user on the primary IS.
+        if (primaryUserId != null) {
+            primaryScim2RestClient.deleteUser(primaryUserId);
+        }
 
         // Remove outbound provisioning from resident application before deleting the IdP.
         clearResidentAppOutboundProvisioning();
@@ -88,9 +118,6 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         }
         if (idpMgtRestClient != null) {
             idpMgtRestClient.closeHttpClient();
-        }
-        if (oAuth2RestClient != null) {
-            oAuth2RestClient.closeHttpClient();
         }
     }
 
@@ -176,33 +203,150 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         enableResidentAppOutboundProvisioning();
     }
 
+    @Test(alwaysRun = true, dependsOnMethods = "testEnableOutboundProvisioningOnResidentApp",
+            description = "Test outbound provisioning of user creation via SCIM2")
+    public void testOutboundProvisioningUserCreation() throws Exception {
+
+        String userPayload = buildTestUserPayload();
+        primaryUserId = primaryScim2RestClient.createUserWithRawJSON(userPayload);
+        Assert.assertNotNull(primaryUserId, "User creation on primary IS failed");
+
+        // Verify user was created on the primary IS.
+        JSONObject primaryUser = primaryScim2RestClient.getUser(primaryUserId, null);
+        Assert.assertNotNull(primaryUser, "Failed to retrieve created user from primary IS");
+        Assert.assertEquals(primaryUser.get("userName"), TEST_USER_NAME,
+                "Username mismatch on primary IS");
+
+        // Verify the user was provisioned to the secondary IS via outbound provisioning.
+        // Blocking provisioning is enabled, so the user should be available immediately.
+        Thread.sleep(2000);
+        JSONObject secondaryUsers = secondaryScim2RestClient.filterUsers(buildEncodedUserNameFilter(TEST_USER_NAME));
+        Assert.assertNotNull(secondaryUsers, "Failed to query users on secondary IS");
+
+        long totalResults = (long) secondaryUsers.get("totalResults");
+        Assert.assertEquals(totalResults, 1L,
+                "Expected exactly 1 provisioned user on secondary IS, found: " + totalResults);
+
+        JSONArray resources = (JSONArray) secondaryUsers.get("Resources");
+        Assert.assertNotNull(resources, "Resources array not found in secondary IS response");
+        JSONObject provisionedUser = (JSONObject) resources.get(0);
+
+        secondaryUserId = (String) provisionedUser.get("id");
+        Assert.assertNotNull(secondaryUserId, "Provisioned user ID is null on secondary IS");
+
+        Assert.assertEquals(provisionedUser.get("userName"), TEST_USER_NAME,
+                "Username mismatch on secondary IS");
+
+        // Verify name attributes were provisioned.
+        JSONObject name = (JSONObject) provisionedUser.get("name");
+        Assert.assertNotNull(name, "Name not found on provisioned user");
+        Assert.assertEquals(name.get("givenName"), TEST_USER_GIVEN_NAME,
+                "Given name mismatch on secondary IS");
+        Assert.assertEquals(name.get("familyName"), TEST_USER_FAMILY_NAME,
+                "Family name mismatch on secondary IS");
+
+        // Verify emails were provisioned.
+        JSONArray emails = (JSONArray) provisionedUser.get("emails");
+        Assert.assertNotNull(emails, "Emails not found on provisioned user");
+        Assert.assertTrue(emails.size() >= 1, "Expected at least 1 email on provisioned user");
+    }
+
+    private String buildTestUserPayload() {
+
+        JSONObject payload = new JSONObject();
+
+        // Name
+        JSONObject name = new JSONObject();
+        name.put("familyName", TEST_USER_FAMILY_NAME);
+        name.put("givenName", TEST_USER_GIVEN_NAME);
+        payload.put("name", name);
+
+        payload.put("userName", TEST_USER_NAME);
+        payload.put("password", TEST_USER_PASSWORD);
+
+        // Emails (primary + work)
+        JSONObject primaryEmail = new JSONObject();
+        primaryEmail.put("value", TEST_USER_PRIMARY_EMAIL);
+        primaryEmail.put("primary", true);
+
+        JSONObject workEmail = new JSONObject();
+        workEmail.put("type", "work");
+        workEmail.put("value", TEST_USER_WORK_EMAIL);
+
+        JSONArray emails = new JSONArray();
+        emails.add(primaryEmail);
+        emails.add(workEmail);
+        payload.put("emails", emails);
+
+        // Phone numbers
+        JSONObject mobilePhone = new JSONObject();
+        mobilePhone.put("type", "mobile");
+        mobilePhone.put("value", TEST_USER_MOBILE);
+
+        JSONArray phoneNumbers = new JSONArray();
+        phoneNumbers.add(mobilePhone);
+        payload.put("phoneNumbers", phoneNumbers);
+
+        // Enterprise extension
+        JSONObject manager = new JSONObject();
+        manager.put("displayName", TEST_USER_MANAGER_DISPLAY_NAME);
+
+        JSONObject enterpriseExtension = new JSONObject();
+        enterpriseExtension.put("department", TEST_USER_DEPARTMENT);
+        enterpriseExtension.put("manager", manager);
+        payload.put("urn:ietf:params:scim:schemas:extension:enterprise:2.0:User", enterpriseExtension);
+
+        return payload.toJSONString();
+    }
+
     private void enableResidentAppOutboundProvisioning() throws Exception {
 
-        OutboundProvisioningConfiguration outboundConfig = new OutboundProvisioningConfiguration();
-        outboundConfig.setIdp(IDP_NAME);
-        outboundConfig.setConnector(SCIM2_CONNECTOR_NAME);
-        outboundConfig.setBlocking(false);
-        outboundConfig.setJit(true);
-        outboundConfig.setRules(false);
+        ServiceProvider serviceProvider = appMgtClient.getApplication(RESIDENT_SP_NAME);
+        if (serviceProvider == null) {
+            serviceProvider = new ServiceProvider();
+            serviceProvider.setApplicationName(RESIDENT_SP_NAME);
+            try {
+                appMgtClient.createApplication(serviceProvider);
+                serviceProvider = appMgtClient.getApplication(RESIDENT_SP_NAME);
+            } catch (Exception error) {
+                throw new Exception("Error occurred during obtaining applicationManagementServiceClients", error);
+            }
 
-        ProvisioningConfiguration provisioningConfig = new ProvisioningConfiguration();
-        provisioningConfig.setOutboundProvisioningIdps(Collections.singletonList(outboundConfig));
+        }
+        Assert.assertNotNull(serviceProvider, "Resident service provider not found");
 
-        ApplicationPatchModel appPatch = new ApplicationPatchModel();
-        appPatch.setProvisioningConfigurations(provisioningConfig);
+        InboundProvisioningConfig inboundProConfig = new InboundProvisioningConfig();
+        inboundProConfig.setProvisioningUserStore("");
+        serviceProvider.setInboundProvisioningConfig(inboundProConfig);
 
-        oAuth2RestClient.updateApplication(RESIDENT_APP_ID, appPatch);
+        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider proIdp =
+                new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
+        proIdp.setIdentityProviderName(IDP_NAME);
+
+        JustInTimeProvisioningConfig jitConfig = new JustInTimeProvisioningConfig();
+        jitConfig.setProvisioningEnabled(true);
+        proIdp.setJustInTimeProvisioningConfig(jitConfig);
+
+        ProvisioningConnectorConfig proCon = new ProvisioningConnectorConfig();
+        proCon.setName(SCIM2_CONNECTOR_NAME);
+        proCon.setBlocking(true);
+        proIdp.setDefaultProvisioningConnectorConfig(proCon);
+
+        OutboundProvisioningConfig outboundProConfig = new OutboundProvisioningConfig();
+        outboundProConfig.setProvisioningIdentityProviders(
+                new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{proIdp});
+        serviceProvider.setOutboundProvisioningConfig(outboundProConfig);
+
+        appMgtClient.updateApplicationData(serviceProvider);
     }
 
     private void clearResidentAppOutboundProvisioning() throws Exception {
 
-        ProvisioningConfiguration provisioningConfig = new ProvisioningConfiguration();
-        provisioningConfig.setOutboundProvisioningIdps(new ArrayList<>());
-
-        ApplicationPatchModel appPatch = new ApplicationPatchModel();
-        appPatch.setProvisioningConfigurations(provisioningConfig);
-
-        oAuth2RestClient.updateApplication(RESIDENT_APP_ID, appPatch);
+        ServiceProvider serviceProvider = appMgtClient.getApplication(RESIDENT_SP_NAME);
+        if (serviceProvider != null) {
+            serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+            appMgtClient.updateApplicationData(serviceProvider);
+        }
     }
 
     private String createOutboundProvisioningIdP() throws Exception {
@@ -262,7 +406,19 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     }
 
     /**
-     * Get the base URI of the target server (second IS instance) for provisioning.
+     * Builds SCIM filter query parameter value for filtering by username and encodes it for use in a URL.
+     * @param username the username to filter by.
+     * @return the encoded filter query parameter value.
+     * @throws UnsupportedEncodingException if UTF-8 encoding is not supported.
+     */
+    private String buildEncodedUserNameFilter(String username) throws UnsupportedEncodingException {
+
+        String filter = String.format("userName eq \"%s\"", username);
+        return URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
+    }
+
+    /**
+     * Get the base URI of the target server for provisioning.
      */
     private String getSecondaryISURI() {
 
@@ -270,7 +426,7 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     }
 
     /**
-     * Get the admin username of the target server (second IS instance) for provisioning.
+     * Get the admin username of the target server for provisioning.
      */
     private User getSecondaryISAdmin() throws XPathExpressionException {
 
@@ -278,7 +434,7 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     }
 
     /**
-     * Get the SCIM2 Users endpoint of the target server (second IS instance).
+     * Get the SCIM2 Users endpoint of the target server.
      */
     private String getTargetScim2UserEndpoint() {
 
@@ -286,7 +442,7 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     }
 
     /**
-     * Get the SCIM2 Groups endpoint of the target server (second IS instance).
+     * Get the SCIM2 Groups endpoint of the target server.
      */
     private String getTargetScim2GroupEndpoint() {
 
