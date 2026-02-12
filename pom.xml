@@ -2801,7 +2801,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.87.1</identity.apps.console.version>
         <identity.apps.myaccount.version>2.25.21</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.3.34</identity.apps.core.version>
+        <identity.apps.core.version>3.3.36</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
