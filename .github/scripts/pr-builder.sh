@@ -46,6 +46,17 @@ disable_tests() {
     done
 }
 
+# Function to get expected BUILD SUCCESS count based on enabled tests.
+get_expected_build_success_count() {
+    local enabled_tests=$1
+    # If is-test-adaptive-authentication-nashorn is enabled, expect 17 BUILD SUCCESS messages.
+    if [[ "$enabled_tests" == *"is-test-adaptive-authentication-nashorn"* ]]; then
+        echo "17"
+    else
+        echo "1"
+    fi
+}
+
 # Main execution starts here.
 BUILDER_NUMBER=$1
 ENABLED_TESTS=$2
@@ -121,7 +132,8 @@ if [ "$REPO" = "product-is" ]; then
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
@@ -418,7 +430,8 @@ else
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
