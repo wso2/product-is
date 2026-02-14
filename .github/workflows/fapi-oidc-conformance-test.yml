@@ -29,6 +29,9 @@ on:
 
 jobs:
   build:
+    
+    env:
+      JAVA_TOOL_OPTIONS: -Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true
 
     runs-on: ubuntu-latest
     steps:
