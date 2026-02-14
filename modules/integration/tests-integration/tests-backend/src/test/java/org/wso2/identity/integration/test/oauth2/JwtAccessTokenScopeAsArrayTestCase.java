@@ -194,6 +194,7 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
 
         subOrgId = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
         switchedM2MToken = orgMgtRestClient.switchM2MToken(subOrgId);
+        System.out.println("Switched m2m token " + switchedM2MToken.toString());
 
         JSONObject subOrgConfig = getSubOrgOAuth2InboundConfig(switchedM2MToken);
         Assert.assertTrue(subOrgConfig.getBoolean(ENABLE_JWT_SCOPE_AS_ARRAY),
