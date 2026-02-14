@@ -195,8 +195,17 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
         subOrgId = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
         switchedM2MToken = orgMgtRestClient.switchM2MToken(subOrgId);
 
-        JSONObject subOrgConfig = getSubOrgOAuth2InboundConfig(switchedM2MToken);
-        Assert.assertTrue(subOrgConfig.getBoolean(ENABLE_JWT_SCOPE_AS_ARRAY),
+        // Retry mechanism to handle propagation delay in CI environments.
+        boolean inherited = waitForCondition(() -> {
+            try {
+                JSONObject config = getSubOrgOAuth2InboundConfig(switchedM2MToken);
+                return config.getBoolean(ENABLE_JWT_SCOPE_AS_ARRAY);
+            } catch (Exception e) {
+                return false;
+            }
+        }, 10, 1000);
+
+        Assert.assertTrue(inherited,
                 "Sub-org should inherit enableJwtScopeAsArray=true from parent tenant.");
     }
 
@@ -449,5 +458,30 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
         headerList[2] = new BasicHeader(RestBaseClient.CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
 
         return headerList;
+    }
+
+    /**
+     * Waits for a condition to become true, with retry mechanism.
+     *
+     * @param condition       The condition to check.
+     * @param maxRetries      Maximum number of retry attempts.
+     * @param intervalMillis  Interval between retries in milliseconds.
+     * @return true if condition becomes true within retries, false otherwise.
+     */
+    private boolean waitForCondition(java.util.function.Supplier<Boolean> condition, int maxRetries,
+                                     long intervalMillis) {
+
+        for (int i = 0; i < maxRetries; i++) {
+            if (condition.get()) {
+                return true;
+            }
+            try {
+                Thread.sleep(intervalMillis);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+        }
+        return false;
     }
 }
