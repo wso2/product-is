@@ -191,12 +191,6 @@ jobs:
         echo "PRODUCT_IS_DIR=${PRODUCT_IS_ZIP%.zip}" >> $GITHUB_ENV
         cd ./product-is/oidc-fapi-conformance-tests
         python3 ./configure_is_fapi.py ../../$PRODUCT_IS_ZIP
-        
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: 17
-        distribution: temurin
 
     - name: Install Docker Compose
       run: |
