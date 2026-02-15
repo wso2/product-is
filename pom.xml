@@ -2714,7 +2714,7 @@
         <identity.event.handler.notification.version>1.10.0</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.2.0</org.wso2.identity.webhook.event.handlers.version>
-        <org.wso2.identity.event.publishers.version>1.1.7</org.wso2.identity.event.publishers.version>
+        <org.wso2.identity.event.publishers.version>1.2.1</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
