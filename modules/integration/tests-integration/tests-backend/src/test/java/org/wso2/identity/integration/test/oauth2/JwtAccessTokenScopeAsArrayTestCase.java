@@ -137,6 +137,9 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
         // Initialize OrgMgtRestClient for sub-org testing.
         orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(AUTHORIZED_APIS_JSON, this.getClass())));
+
+        // Set organization version to v1.0.0 to enable inheritance for inheritance tests.
+        orgMgtRestClient.updateOrganizationVersion("v1.0.0");
     }
 
     @AfterClass(alwaysRun = true)
