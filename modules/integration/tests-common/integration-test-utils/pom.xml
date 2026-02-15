@@ -30,8 +30,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.tomcat.wso2</groupId>
-            <artifactId>tomcat</artifactId>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
@@ -45,6 +45,14 @@
                 <exclusion>
                     <groupId>com.saucelabs.selenium</groupId> <!-- Exclude Project-E from Project-B -->
                     <artifactId>selenium-client-factory</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -72,6 +80,14 @@
                 <exclusion>
                     <groupId>org.eclipse.jetty.websocket</groupId>
                     <artifactId>websocket-server</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

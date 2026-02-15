@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2016, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2026, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied. See the License for the
+ * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -40,7 +40,10 @@ import org.json.simple.JSONValue;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -58,36 +61,53 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
 /**
  * This test class tests OIDC SSO functionality for two replying party applications.
  */
-public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
+public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
 
-    protected UserObject user;
-    protected Map<String, OIDCApplication> applications = new HashMap<>(2);
+    private TestUserMode userMode;
 
-    protected String accessToken;
-    protected String sessionDataKeyConsent;
-    protected String sessionDataKey;
-    protected String authorizationCode;
+    @DataProvider(name = "oidcConfigProvider")
+    public static Object[][] oidcConfigProvider() {
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.TENANT_ADMIN}
+        };
+    }
+
+    @Factory(dataProvider = "oidcConfigProvider")
+    public OIDCFrontChannelLogout(TestUserMode userMode) {
+
+        this.userMode = userMode;
+    }
+
+    private UserObject user;
+    private Map<String, OIDCApplication> applications = new HashMap<>(2);
+
+    private String accessToken;
+    private String sessionDataKeyConsent;
+    private String sessionDataKey;
+    private String authorizationCode;
+    private String sessionDataKeyLogout;
 
     CookieStore cookieStore = new BasicCookieStore();
 
-    protected Lookup<CookieSpecProvider> cookieSpecRegistry;
-    protected RequestConfig requestConfig;
-    protected HttpClient client;
-    protected List<NameValuePair> consentParameters = new ArrayList<>();
+    private Lookup<CookieSpecProvider> cookieSpecRegistry;
+    private RequestConfig requestConfig;
+    private HttpClient client;
+    private List<NameValuePair> consentParameters = new ArrayList<>();
     private MockApplicationServer mockApplicationServer;
+    private String idToken1;
+    private String idToken2;
+
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
+        super.init(userMode);
 
         initUser();
         createUser(user);
@@ -109,7 +129,6 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         mockApplicationServer = new MockApplicationServer();
         mockApplicationServer.start();
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -122,11 +141,10 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     }
 
     @Test(groups = "wso2.is", description = "Test authz endpoint before creating a valid session")
-    public void testAuthzRequestWithoutValidSessionForIDENTITY5581() throws Exception {
+    public void testAuthzRequestWithoutValidSession() throws Exception {
 
-        //When accessing the below endpoint from with invalid session it should provide a message with login_required
         OIDCApplication application = applications.get(OIDCUtilTest.playgroundAppOneAppName);
-        URI uri = new URIBuilder(OAuth2Constant.APPROVAL_URL)
+        URI uri = new URIBuilder(getTenantQualifiedURL(OAuth2Constant.APPROVAL_URL, tenantInfo.getDomain()))
                 .addParameter("client_id", application.getClientId())
                 .addParameter("scope", "openid")
                 .addParameter("response_type", "code")
@@ -135,14 +153,16 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         HttpResponse httpResponse = sendGetRequest(client, uri.toString());
 
         EntityUtils.consume(httpResponse.getEntity());
-        Assert.assertTrue(mockApplicationServer.getErrorCode(application.getApplicationName()).contains("login_required"));
+        Assert.assertTrue(mockApplicationServer.getErrorCode(application.getApplicationName())
+                .contains("login_required"));
     }
 
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.appone",
-            dependsOnMethods = "testAuthzRequestWithoutValidSessionForIDENTITY5581")
+            dependsOnMethods = "testAuthzRequestWithoutValidSession")
     public void testSendAuthenticationRequestFromRP1() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppOneAppName), true, client, cookieStore);
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppOneAppName),
+                true, client, cookieStore);
     }
 
     @Test(groups = "wso2.is", description = "Authenticate for playground.appone", dependsOnMethods =
@@ -163,7 +183,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
             "testConsentApprovalFromRP1")
     public void testGetAccessTokenFromRP1() throws Exception {
 
-        testGetAccessToken(applications.get(OIDCUtilTest.playgroundAppOneAppName));
+        idToken1 = testGetIdToken(applications.get(OIDCUtilTest.playgroundAppOneAppName));
     }
 
     @Test(groups = "wso2.is", description = "Get user claim values for playground.appone", dependsOnMethods =
@@ -176,8 +196,8 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
     @Test(groups = "wso2.is", description = "Initiate authentication request from playground.apptwo")
     public void testSendAuthenticationRequestFromRP2() throws Exception {
 
-        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppTwoAppName), false, client,
-                cookieStore);
+        testSendAuthenticationRequest(applications.get(OIDCUtilTest.playgroundAppTwoAppName),
+                false, client, cookieStore);
     }
 
     @Test(groups = "wso2.is", description = "Approve consent for playground.apptwo", dependsOnMethods =
@@ -191,7 +211,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
             "testConsentApprovalFromRP2")
     public void testGetAccessTokenFromRP2() throws Exception {
 
-        testGetAccessToken(applications.get(OIDCUtilTest.playgroundAppTwoAppName));
+        idToken2 = testGetIdToken(applications.get(OIDCUtilTest.playgroundAppTwoAppName));
     }
 
     @Test(groups = "wso2.is", description = "Get user claim values for playground.apptwo", dependsOnMethods =
@@ -200,6 +220,15 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         testUserClaims();
     }
+
+    @Test(groups = "wso2.is", description = "Test front-channel logout initiation", dependsOnMethods =
+            "testUserClaimsFromRP2")
+    public void testFrontChannelLogoutRequestForRP1() throws Exception {
+
+        testOIDCLogout(applications.get(OIDCUtilTest.playgroundAppOneAppName),
+                new BasicNameValuePair("id_token_hint", idToken1));
+    }
+
 
     public void testSendAuthenticationRequest(OIDCApplication application, boolean isFirstAuthenticationRequest,
                                               HttpClient client, CookieStore cookieStore) throws Exception {
@@ -237,10 +266,12 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
             keyPositionMap.put("name=\"sessionDataKey\"", 1);
             List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
                     keyPositionMap);
-            Assert.assertNotNull(keyValues, "sessionDataKey key value is null for " + application.getApplicationName());
+            Assert.assertNotNull(keyValues, "sessionDataKey key value is null for " +
+                    application.getApplicationName());
 
             sessionDataKey = keyValues.get(0).getValue();
-            Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " + application.getApplicationName());
+            Assert.assertNotNull(sessionDataKey, "Invalid sessionDataKey for " +
+                    application.getApplicationName());
 
         } else {
 
@@ -276,11 +307,12 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
 
         HttpResponse response = sendLoginPostForCustomUsers(client, sessionDataKey, user.getUserName(),
                 user.getPassword());
-        Assert.assertNotNull(response, "Login request failed for " + application.getApplicationName() + ". response "
-                + "is null.");
+        Assert.assertNotNull(response, "Login request failed for " +
+                application.getApplicationName() + ". response is null.");
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
-        Assert.assertNotNull(locationHeader, "Login response header is null for " + application.getApplicationName());
+        Assert.assertNotNull(locationHeader, "Login response header is null for "
+                + application.getApplicationName());
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
@@ -319,7 +351,7 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         EntityUtils.consume(response.getEntity());
     }
 
-    private void testGetAccessToken(OIDCApplication application) throws Exception {
+    private String testGetIdToken(OIDCApplication application) throws Exception {
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("code", authorizationCode));
@@ -346,14 +378,76 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         String[] tokenParts = idToken.split("\\.");
         String payload = new String(java.util.Base64.getUrlDecoder().decode(tokenParts[1]));
         Map<String, Object> parsedIdToken = (Map<String, Object>) JSONValue.parse(payload);
-        Assert.assertNotNull(parsedIdToken.get("sub"), "No user logged in for " + application.getApplicationName());
+        Assert.assertNotNull(parsedIdToken.get("sub"), "No user logged in for " +
+                application.getApplicationName());
 
         EntityUtils.consume(response.getEntity());
+        return idToken;
+    }
+
+    private void testOIDCLogout(OIDCApplication application, BasicNameValuePair... parameters) {
+
+        try {
+
+            String oidcURL = getTenantQualifiedURL(OIDC_LOGOUT_ENDPOINT, tenantInfo.getDomain());
+            StringBuilder oidcLogoutUrl =
+                    new StringBuilder(oidcURL + "?post_logout_redirect_uri=" + application.getCallBackURL());
+
+            for (BasicNameValuePair parameter : parameters) {
+                oidcLogoutUrl.append("&").append(parameter.getName()).append("=").append(parameter.getValue());
+            }
+            HttpResponse response = sendGetRequest(client, oidcLogoutUrl.toString());
+            EntityUtils.consume(response.getEntity());
+
+            List<NameValuePair> urlParameters = new ArrayList<>();
+            urlParameters.add(new BasicNameValuePair("consent", "approve"));
+            response = sendPostRequestWithParameters(client, urlParameters, oidcLogoutUrl.toString());
+            Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            String logoutResponseBody = EntityUtils.toString(response.getEntity());
+
+            // Verify iframe elements are present (front-channel logout)
+            Assert.assertTrue(logoutResponseBody.contains("<iframe"),
+                    "Front-channel logout response should contain iframe elements");
+            int iframeCount = logoutResponseBody.split("<iframe").length - 1;
+            Assert.assertEquals(iframeCount, 2);
+
+            // Extract and verify iframe src URLs contain front-channel logout URLs
+            List<String> iframeSrcUrls = new ArrayList<>();
+            String[] iframeParts = logoutResponseBody.split("<iframe");
+            for (int i = 1; i < iframeParts.length; i++) {
+                String iframePart = iframeParts[i];
+                int srcStart = iframePart.indexOf("src=\"");
+                if (srcStart != -1) {
+                    int srcEnd = iframePart.indexOf("\"", srcStart + 5);
+                    if (srcEnd != -1) {
+                        String src = iframePart.substring(srcStart + 5, srcEnd);
+                        iframeSrcUrls.add(src);
+                    }
+                }
+            }
+
+            // Verify both apps' front-channel logout URLs are present in iframes
+            String appOneFcLogoutUrl = MockApplicationServer.Constants.APP1.FRONTCHANNEL_LOGOUT_PATH;
+            String appTwoFcLogoutUrl = MockApplicationServer.Constants.APP2.FRONTCHANNEL_LOGOUT_PATH;
+
+            boolean containsAppOne = iframeSrcUrls.stream().anyMatch(src -> src.contains(appOneFcLogoutUrl));
+            boolean containsAppTwo = iframeSrcUrls.stream().anyMatch(src -> src.contains(appTwoFcLogoutUrl));
+
+            Assert.assertTrue(containsAppOne,
+                    "Front-channel logout response should contain iframe with app one logout URL: " +
+                            appOneFcLogoutUrl);
+            Assert.assertTrue(containsAppTwo,
+                    "Front-channel logout response should contain iframe with app two logout URL: " +
+                            appTwoFcLogoutUrl);
+
+        } catch (Exception e) {
+            Assert.fail("OIDC Logout failed.", e);
+        }
     }
 
     private void testUserClaims() throws Exception {
 
-        HttpGet request = new HttpGet(OAuth2Constant.USER_INFO_ENDPOINT);
+        HttpGet request = new HttpGet(getTenantQualifiedURL(OAuth2Constant.USER_INFO_ENDPOINT, tenantInfo.getDomain()));
 
         request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
         request.setHeader("Authorization", "Bearer " + accessToken);
@@ -385,13 +479,18 @@ public class OIDCAuthCodeGrantSSOTestCase extends OIDCAbstractIntegrationTest {
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        // Configure front-channel logout URL for app one
+        playgroundApp.setFrontChannelLogoutURI(MockApplicationServer.Constants.APP1.FRONTCHANNEL_LOGOUT_PATH);
         applications.put(OIDCUtilTest.playgroundAppOneAppName, playgroundApp);
+
 
         playgroundApp = new OIDCApplication(OIDCUtilTest.playgroundAppTwoAppName,
                 OIDCUtilTest.playgroundAppTwoAppCallBackUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.emailClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.firstNameClaimUri);
         playgroundApp.addRequiredClaim(OIDCUtilTest.lastNameClaimUri);
+        // Configure front-channel logout URL for app two
+        playgroundApp.setFrontChannelLogoutURI(MockApplicationServer.Constants.APP2.FRONTCHANNEL_LOGOUT_PATH);
         applications.put(OIDCUtilTest.playgroundAppTwoAppName, playgroundApp);
     }
 

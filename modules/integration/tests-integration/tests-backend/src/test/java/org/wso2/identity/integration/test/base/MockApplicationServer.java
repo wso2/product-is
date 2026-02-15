@@ -63,12 +63,14 @@ public class MockApplicationServer {
             public static final String CALLBACK_URL = "https://localhost:8091/dummyApp/oauth2client";
             public static final String NAME = "playground.appone";
             public static final String CALLBACK_URL_PATH = "/dummyApp/oauth2client";
+            public static final String FRONTCHANNEL_LOGOUT_PATH = "/dummyApp/fclogout";
         }
 
         public static class APP2 {
             public static final String CALLBACK_URL = "https://localhost:8091/dummyApp2/oauth2client";
             public static final String NAME = "playground.apptwo";
             public static final String CALLBACK_URL_PATH = "/dummyApp2/oauth2client";
+            public static final String FRONTCHANNEL_LOGOUT_PATH = "/dummyApp/fclogout";
         }
     }
 
