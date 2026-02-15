@@ -137,6 +137,12 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
         // Initialize OrgMgtRestClient for sub-org testing.
         orgMgtRestClient = new OrgMgtRestClient(context, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(AUTHORIZED_APIS_JSON, this.getClass())));
+
+        // Wait for M2M application infrastructure to be fully ready before setting org version.
+        Thread.sleep(2000);
+
+        // Set organization version to v1.0.0 to enable inheritance for inheritance tests.
+        orgMgtRestClient.updateOrganizationVersion("v1.0.0");
     }
 
     @AfterClass(alwaysRun = true)
@@ -186,6 +192,7 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
         JSONObject config = getOAuth2InboundConfig();
         Assert.assertTrue(config.getBoolean(ENABLE_JWT_SCOPE_AS_ARRAY),
                 "enableJwtScopeAsArray should be true after update.");
+        Thread.sleep(2000);
     }
 
     @Test(groups = "wso2.is", description = "Verify sub-org inherits enableJwtScopeAsArray from parent tenant.",
@@ -196,6 +203,9 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
         switchedM2MToken = orgMgtRestClient.switchM2MToken(subOrgId);
 
         JSONObject subOrgConfig = getSubOrgOAuth2InboundConfig(switchedM2MToken);
+
+        Thread.sleep(2000);
+        
         Assert.assertTrue(subOrgConfig.getBoolean(ENABLE_JWT_SCOPE_AS_ARRAY),
                 "Sub-org should inherit enableJwtScopeAsArray=true from parent tenant.");
     }
