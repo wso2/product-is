@@ -308,6 +308,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementPositiveTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementNegativeTest"/>
             <!--            <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionNegativeTest"/>-->
+            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtFailureTest"/>
         </classes>
     </test>
 
