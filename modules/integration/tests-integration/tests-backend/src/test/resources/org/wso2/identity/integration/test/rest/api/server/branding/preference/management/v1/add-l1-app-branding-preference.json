@@ -6,11 +6,11 @@
     "organizationDetails": {
       "siteTitle": "IAM L1 App by WSO2",
       "copyrightText": "© 2021 WSO2 Inc. All Rights Reserved",
-      "supportEmail" : "iam-help@asgardeo.io"
+      "supportEmail" : "iam-help@wso2.com"
     },
     "images": {
       "logo": {
-        "imgURL": "https://accounts.iam/asgardeo-logo.svg",
+        "imgURL": "https://accounts.iam/wso2is-logo.svg",
         "altText": "IAM Logo"
       },
       "favicon": {
