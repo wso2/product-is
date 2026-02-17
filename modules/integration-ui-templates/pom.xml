@@ -54,6 +54,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.vc-client-application</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mobile-application</artifactId>
             <type>zip</type>
         </dependency>
