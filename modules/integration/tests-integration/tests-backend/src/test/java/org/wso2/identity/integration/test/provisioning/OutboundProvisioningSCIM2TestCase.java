@@ -157,6 +157,12 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         if (idpMgtRestClient != null) {
             idpMgtRestClient.closeHttpClient();
         }
+        if (primaryScim2RestClient != null) {
+            primaryScim2RestClient.closeHttpClient();
+        }
+        if (secondaryScim2RestClient != null) {
+            secondaryScim2RestClient.closeHttpClient();
+        }
     }
 
     @Test(alwaysRun = true, description = "Verify outbound provisioning IdP was created correctly")
@@ -903,7 +909,7 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
 
         JSONObject op = new JSONObject();
         op.put("op", "remove");
-        op.put("path", "members[value eq " + memberIdToRemove + "]");
+        op.put("path", "members[value eq \"" + memberIdToRemove + "\"]");
         operations.add(op);
 
         payload.put("Operations", operations);
