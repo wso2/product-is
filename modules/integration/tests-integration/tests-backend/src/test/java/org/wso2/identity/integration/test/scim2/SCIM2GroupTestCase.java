@@ -650,7 +650,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
         JSONObject groupWithRoles = (JSONObject) getGroupResponseObj;
 
-        // Verify roles ARE present when not excluded
+        // Verify roles are present when not excluded
         Object rolesInNormalResponse = groupWithRoles.get(SCIM2BaseTestCase.ROLE_ATTRIBUTE);
         assertNotNull(rolesInNormalResponse, "Roles attribute should be present");
 
