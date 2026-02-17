@@ -18,14 +18,9 @@
 
 package org.wso2.identity.integration.test.rest.api.server.session;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -66,24 +61,6 @@ public class SessionMgtFailureTest extends SessionMgtTestBase {
     public void init() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void testConclude() throws Exception {
-
-        super.conclude();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() {
-
-        RestAssured.basePath = basePath;
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void testFinish() {
-
-        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     /**

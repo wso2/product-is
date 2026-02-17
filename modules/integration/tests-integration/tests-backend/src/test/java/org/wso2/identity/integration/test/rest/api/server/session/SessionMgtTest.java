@@ -85,7 +85,7 @@ public class SessionMgtTest extends SessionMgtTestBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() throws Exception {
+    public void finish() throws Exception {
 
         super.conclude();
 
@@ -94,18 +94,6 @@ public class SessionMgtTest extends SessionMgtTestBase {
             restClient.deleteApplication(appId);
         }
         restClient.closeHttpClient();
-    }
-
-    @BeforeMethod(alwaysRun = true)
-    public void testInit() {
-
-        RestAssured.basePath = basePath;
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void testFinish() {
-
-        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     /**
