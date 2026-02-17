@@ -2800,7 +2800,7 @@
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.13</identity.tool.samlsso.validator.version>
         <identity.oauth.addons.version>2.6.0</identity.oauth.addons.version>
-	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.5.36</identity.oauth.addons.token.handler.clientauth.jwt.version>
+	    <identity.oauth.addons.token.handler.clientauth.jwt.version>2.8.0</identity.oauth.addons.token.handler.clientauth.jwt.version>
 	    <identity.oauth.addons.token.handler.clientauth.mutualtls.version>2.6.1</identity.oauth.addons.token.handler.clientauth.mutualtls.version>
         <identity.oauth.addons.clientauth.privilegeduser.version>2.6.0</identity.oauth.addons.clientauth.privilegeduser.version>
         <org.wso2.carbon.extension.identity.x509certificate.version>1.1.29</org.wso2.carbon.extension.identity.x509certificate.version>
