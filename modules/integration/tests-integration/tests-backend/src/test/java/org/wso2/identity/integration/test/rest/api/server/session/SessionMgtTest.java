@@ -69,7 +69,7 @@ public class SessionMgtTest extends SessionMgtTestBase {
     public static Object[][] restAPIUserConfigProvider() {
 
         return new Object[][]{
-                //{TestUserMode.SUPER_TENANT_ADMIN},
+                {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
         };
     }
