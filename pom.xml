@@ -2760,7 +2760,7 @@
         <identity.oauth.dpop.version>2.1.0</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.9.0</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.11.0</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.22</identity.workflow.version>
