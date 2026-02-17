@@ -604,7 +604,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
         HttpResponse response = client.execute(request);
-        assertEquals(response.getStatusLine().getStatusCode(), 200, "Groups listed successfully");
+        assertEquals(response.getStatusLine().getStatusCode(), 200, "Error while listing groups.");
         Object responseObj = JSONValue.parse(EntityUtils.toString(response.getEntity()));
         EntityUtils.consume(response.getEntity());
         String roleId = ((JSONObject)((JSONArray)((JSONObject) ((JSONArray) ((JSONObject) responseObj).get("Resources")).get(0))
