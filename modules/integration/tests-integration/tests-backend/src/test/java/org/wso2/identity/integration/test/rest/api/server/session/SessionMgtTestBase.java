@@ -403,7 +403,7 @@ public class SessionMgtTestBase extends RESTAPIServerTestBase {
      */
     private String removeTenantDomain(String username) {
 
-        if (username != null && username.contains("@" + tenant)) {
+        if (username != null && username.endsWith("@" + tenant)) {
             return username.substring(0, username.indexOf("@"));
         }
         return username;
