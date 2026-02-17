@@ -101,9 +101,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_4 = "scim2_user4@gmail.com";
     private static final String USERNAME_4 = "scim2_user4";
 
-    private static final String ROLES_ATTRIBUTE = "roles";
     private static final String GROUPS_ATTRIBUTE = "groups";
-    private static final String SCHEMAS_PARAM = "schemas";
     private static final String OPERATIONS_PARAM = "Operations";
     private static final String OP_PARAM = "op";
     private static final String OP_ADD = "add";
@@ -553,7 +551,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
         JSONArray schemas = new JSONArray();
         schemas.add(SCIM2_PATCH_OP_SCHEMA);
-        patchObject.put(SCHEMAS_PARAM, schemas);
+        patchObject.put(SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE, schemas);
 
         JSONArray operations = new JSONArray();
         JSONObject addOperation = new JSONObject();
@@ -599,7 +597,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         String assignedGroupId = assignedGroup.get(VALUE_PARAM).toString();
         assertEquals(assignedGroupId, groupIdForRoleAssignment, "Assigned group ID should match");
 
-        // Very the role assignment by listing the groups.
+        // Verify the role assignment by listing the groups.
         String userResourcePath = getPath() + "?filter=displayName+eq+" + GROUP_FOR_ROLE_ASSIGNMENT_NAME;
         HttpGet request = new HttpGet(userResourcePath);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
@@ -630,7 +628,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         JSONObject groupWithExcludedRoles = (JSONObject) getGroupWithExcludedRolesResponseObj;
 
         // Verify roles are NOT present when excluded
-        Object rolesInExcludedResponse = groupWithExcludedRoles.get(ROLES_ATTRIBUTE);
+        Object rolesInExcludedResponse = groupWithExcludedRoles.get(SCIM2BaseTestCase.ROLE_ATTRIBUTE);
         assertTrue(rolesInExcludedResponse == null, "Roles attribute should not be present when excludedAttributes=roles is used");
 
         // Verify other attributes are still present
@@ -653,7 +651,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         JSONObject groupWithRoles = (JSONObject) getGroupResponseObj;
 
         // Verify roles ARE present when not excluded
-        Object rolesInNormalResponse = groupWithRoles.get(ROLES_ATTRIBUTE);
+        Object rolesInNormalResponse = groupWithRoles.get(SCIM2BaseTestCase.ROLE_ATTRIBUTE);
         assertNotNull(rolesInNormalResponse, "Roles attribute should be present");
 
         // Verify other attributes are still present
