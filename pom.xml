@@ -2699,7 +2699,7 @@
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.6.0</identity.user.account.association.version>
-        <identity.user.ws.version>5.9.0</identity.user.ws.version>
+        <identity.user.ws.version>5.11.0</identity.user.ws.version>
 
         <!-- Identity Userstore Versions -->
         <identity.userstore.remote.version>5.4.0</identity.userstore.remote.version>
