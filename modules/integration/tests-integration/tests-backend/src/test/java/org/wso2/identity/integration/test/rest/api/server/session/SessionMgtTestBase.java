@@ -95,7 +95,7 @@ public class SessionMgtTestBase extends RESTAPIServerTestBase {
     public static final String MAX_TIMEOUT_KEY = "maximumSessionTimeoutPeriod";
     
     // Default configuration values.
-    public static final String DEFAULT_ENABLE_MAX_TIMEOUT = "false";
+    public static final boolean DEFAULT_ENABLE_MAX_TIMEOUT = false;
     public static final String DEFAULT_MAX_TIMEOUT = "43200";
     
     // Patch operations.
