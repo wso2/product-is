@@ -2755,7 +2755,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.3.11</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.2.0</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.4.0</identity.oauth2.token.exchange.grant.version>
 
         <identity.oauth.dpop.version>2.1.0</identity.oauth.dpop.version>
 
