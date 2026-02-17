@@ -2914,7 +2914,7 @@
         <wsdl4j.version>1.6.2.wso2v2</wsdl4j.version>
         <commons.pool.wso2.version>1.5.6.wso2v1</commons.pool.wso2.version>
         <liberty.maven.plugin.version>2.2</liberty.maven.plugin.version>
-        <pax.logging.api.version>2.1.0-wso2v4</pax.logging.api.version>
+        <pax.logging.api.version>2.2.9-wso2v2</pax.logging.api.version>
         <org.wso2.orbit.org.apache.velocity.version>1.7.0.wso2v1</org.wso2.orbit.org.apache.velocity.version>
 
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
@@ -2952,7 +2952,7 @@
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
         <org.xmlunit.version>2.6.3</org.xmlunit.version>
-        <org.apache.logging.log4j.version>2.17.1</org.apache.logging.log4j.version>
+        <org.apache.logging.log4j.version>2.25.3</org.apache.logging.log4j.version>
         <org.apache.log4j.wso2.version>1.2.17.wso2v1</org.apache.log4j.wso2.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
