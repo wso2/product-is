@@ -2680,7 +2680,7 @@
         <identity.local.auth.push.version.range>[1.0.0,2.0.0)</identity.local.auth.push.version.range>
 
         <!--SAML Common Utils Version-->
-        <saml.common.util.version>1.4.3</saml.common.util.version>
+        <saml.common.util.version>1.6.0</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
