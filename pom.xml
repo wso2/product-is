@@ -2796,7 +2796,7 @@
         <hashprovider.bcrypt.version>1.0.2</hashprovider.bcrypt.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.2.0</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.4.0</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
