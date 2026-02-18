@@ -169,24 +169,19 @@ else
   cd $REPO
   if [ "$REPO" = "carbon-kernel" ]; then
     echo ""
-    echo "Checking out for 4.10.x branch..."
+    echo "Checking out for 4.12.x branch..."
     echo "=========================================================="
-    git checkout 4.10.x
+    git checkout 4.12.x
   elif [ "$REPO" = "carbon-deployment" ]; then
     echo ""
-    echo "Checking out for 4.x.x branch in carbon-deployment..."
+    echo "Checking out for 4.14.x branch in carbon-deployment..."
     echo "=========================================================="
-    git checkout 4.x.x
+    git checkout 4.14.x
   elif [ "$REPO" = "carbon-analytics-common" ]; then
       echo ""
-      echo "Checking out for 5.2.x branch in carbon-analytics-common..."
+      echo "Checking out for 5.4.x branch in carbon-analytics-common..."
       echo "=========================================================="
-      git checkout 5.2.x
-  elif [ "$REPO" = "identity-extension-utils" ]; then
-      echo ""
-      echo "Checking out for 1.0.x branch in identity-extension-utils..."
-      echo "=========================================================="
-      git checkout 1.0.x
+      git checkout 5.4.x
   fi
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
