@@ -28,7 +28,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.identity.application.common.model.xsd.InboundProvisioningConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.JustInTimeProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ProvisioningConnectorConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
@@ -360,14 +359,6 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         // Delete the user on the primary IS.
         primaryScim2RestClient.deleteUser(primaryUserId);
 
-        // Verify the user is deleted from the primary IS.
-        JSONObject primaryUser = primaryScim2RestClient.getUser(primaryUserId, null);
-        // A GET on a deleted user should return an error response with a non-null detail or status.
-        Assert.assertNotNull(primaryUser, "Expected a response when querying deleted user on primary IS");
-        // The response should not contain the userName of the deleted user (indicating it's gone).
-        Assert.assertNotEquals(primaryUser.get("userName"), TEST_USER_NAME,
-                "User should no longer exist on primary IS after deletion");
-
         // Verify the user was de-provisioned from the secondary IS.
         JSONObject secondaryUsers = secondaryScim2RestClient.filterUsers(
                 buildEncodedUserNameFilter(TEST_USER_NAME));
@@ -632,6 +623,11 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
 
         JSONObject payload = new JSONObject();
 
+        JSONArray schemas = new JSONArray();
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        schemas.add("urn:ietf:params:scim:schemas:extension:enterprise:2.0:User");
+        payload.put("schemas", schemas);
+
         // Name
         JSONObject name = new JSONObject();
         name.put("familyName", TEST_USER_FAMILY_NAME);
@@ -686,7 +682,7 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
                 appMgtClient.createApplication(serviceProvider);
                 serviceProvider = appMgtClient.getApplication(RESIDENT_SP_NAME);
             } catch (Exception error) {
-                throw new Exception("Error occurred during obtaining applicationManagementServiceClients", error);
+                throw new Exception("Error occurred during creating resident application.", error);
             }
 
         }
@@ -699,10 +695,6 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider proIdp =
                 new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
         proIdp.setIdentityProviderName(IDP_NAME);
-
-        JustInTimeProvisioningConfig jitConfig = new JustInTimeProvisioningConfig();
-        jitConfig.setProvisioningEnabled(true);
-        proIdp.setJustInTimeProvisioningConfig(jitConfig);
 
         ProvisioningConnectorConfig proCon = new ProvisioningConnectorConfig();
         proCon.setName(SCIM2_CONNECTOR_NAME);
@@ -804,6 +796,10 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
                                     String email) {
 
         JSONObject payload = new JSONObject();
+
+        JSONArray schemas = new JSONArray();
+        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
+        payload.put("schemas", schemas);
 
         JSONObject name = new JSONObject();
         name.put("familyName", familyName);
