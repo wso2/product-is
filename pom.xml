@@ -2712,7 +2712,7 @@
 
         <!-- Identity Data Publisher Versions -->
         <identity.data.publisher.authentication.version>5.10.1</identity.data.publisher.authentication.version>
-        <identity.data.publisher.oauth.version>1.8.0</identity.data.publisher.oauth.version>
+        <identity.data.publisher.oauth.version>1.10.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.8</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
