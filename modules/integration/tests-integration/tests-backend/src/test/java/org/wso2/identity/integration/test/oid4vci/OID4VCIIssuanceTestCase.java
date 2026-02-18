@@ -52,7 +52,7 @@ public class OID4VCIIssuanceTestCase extends OAuth2ServiceAbstractIntegrationTes
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String VC_IDENTIFIER = "employee_badge";
     private static final String VC_DISPLAY_NAME = "EmployeeBadge";
-    private static final String VC_TEMPLATE_FORMAT = "vc+sd-jwt";
+    private static final String VC_TEMPLATE_FORMAT = "dc+sd-jwt";
     private static final String VC_CLAIM_GIVEN_NAME = "given_name";
     private static final String VC_CLAIM_EMAIL = "email";
     private static final String VC_POLICY_IDENTIFIER = "No Policy";
