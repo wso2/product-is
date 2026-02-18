@@ -401,7 +401,7 @@ else
       echo ""
       KERNEL_DEPENDENCY_VERSION=$(echo $DEPENDENCY_VERSION | sed -e "s/-/./g")
       echo "Dependency version for carbon.product : $KERNEL_DEPENDENCY_VERSION"
-      sed -i "s/version=\"4.10.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
+      sed -i "s/version=\"4.12.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
     fi
   fi
 
