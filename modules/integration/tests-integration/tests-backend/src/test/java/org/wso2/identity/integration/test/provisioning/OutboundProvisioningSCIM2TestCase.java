@@ -426,9 +426,8 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
 
         // Verify group displayName.
         String actualDisplayName = (String) provisionedGroup.get("displayName");
-        Assert.assertTrue(actualDisplayName.contains(TEST_GROUP_DISPLAY_NAME),
-                "Group displayName mismatch on secondary IS. Expected to contain: " + TEST_GROUP_DISPLAY_NAME +
-                        ", Actual: " + actualDisplayName);
+        Assert.assertEquals(actualDisplayName, TEST_GROUP_DISPLAY_NAME,
+                "Group displayName mismatch on secondary IS");
 
         // Verify member was provisioned.
         JSONArray members = (JSONArray) provisionedGroup.get("members");
