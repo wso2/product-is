@@ -180,9 +180,9 @@ else
     git checkout 4.14.x
   elif [ "$REPO" = "carbon-analytics-common" ]; then
       echo ""
-      echo "Checking out for 5.4.x branch in carbon-analytics-common..."
+      echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
-      git checkout 5.4.x
+      git checkout 5.5.x
   fi
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
