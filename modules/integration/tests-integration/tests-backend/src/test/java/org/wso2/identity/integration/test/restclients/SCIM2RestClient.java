@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -539,6 +539,27 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update an existing role of an organization.
+     *
+     * @param patchRoleInfo Role patch request object.
+     * @param roleId        Role id.
+     * @param accessToken   Authorized token to update the role in an organization.
+     * @throws IOException If an error occurred while updating a role.
+     */
+    public void updateOrganizationUserRole(PatchOperationRequestObject patchRoleInfo, String roleId,
+                                           String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(patchRoleInfo);
+        String endPointUrl = getSubOrgRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role update failed");
+        }
+    }
+
+    /**
      * Search and get the id of a role by the name.
      *
      * @param roleName Role name.
@@ -687,6 +708,28 @@ public class SCIM2RestClient extends RestBaseClient {
                 getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Create a V2 role in the organization.
+     *
+     * @param role an instance of RoleV2.
+     * @param accessToken Authorized token to create V2 roles in an organization.
+     * @return the role ID.
+     * @throws IOException throws if an error occurs while creating the role.
+     */
+    public String addOrganizationV2Roles(RoleV2 role, String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(role);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getSubOrgRolesV2Path(), jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            if (response.getStatusLine().getStatusCode() == 201) {
+                String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+                return locationElements[locationElements.length - 1];
+            }
+            String responseBody = EntityUtils.toString(response.getEntity());
+            throw new RuntimeException("Error occurred while creating the role. Response: " + responseBody);
         }
     }
 
