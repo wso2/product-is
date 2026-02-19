@@ -82,11 +82,6 @@ public class SessionMgtTest extends SessionMgtTestBase {
         
         // Create test application.
         createTestApplication();
-
-        // Set base URI for REST Assured for restoring default configuration.
-        testInit();
-        restoreDefaultConfiguration();
-        testFinish();
     }
 
     @AfterClass(alwaysRun = true)
