@@ -26,45 +26,23 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.identity.application.common.model.xsd.InboundProvisioningConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ProvisioningConnectorConfig;
-import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.base.TestDataHolder;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property;
-import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.ProvisioningRequest;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
-import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.xpath.XPathExpressionException;
+import static org.wso2.identity.integration.test.provisioning.OutboundProvisioningTestUtils.*;
 
-public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
+public class OutboundProvisioningSCIM2Test extends ISIntegrationTest {
 
     private static final String IDP_NAME = "outbound-provisioning-connection";
     private static final String IDP_DESCRIPTION = "SCIM outbound provisioning connection";
     private static final String IDP_IMAGE = "assets/images/logos/outbound-provisioning.svg";
-    private static final String SCIM2_CONNECTOR_ID = "U0NJTTI";
-    private static final String SCIM2_CONNECTOR_NAME = "SCIM2";
-    private static final String RESIDENT_SP_NAME = "wso2carbon-local-sp";
-
-    private static final int DEFAULT_PORT = CommonConstants.IS_DEFAULT_HTTPS_PORT;
-    private static final int PORT_OFFSET_1 = 1;
-    private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
-    private static final String SCIM2_USER_ENDPOINT_PATH = "scim2/Users";
-    private static final String SCIM2_GROUP_ENDPOINT_PATH = "scim2/Groups";
 
     private static final String TEST_USER_NAME = "john.doe";
     private static final String TEST_USER_PASSWORD = "Wso2@test";
@@ -148,7 +126,7 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         }
 
         // Remove outbound provisioning from resident application before deleting the IdP.
-        clearResidentAppOutboundProvisioning();
+        clearResidentAppOutboundProvisioning(appMgtClient);
 
         if (idpId != null) {
             idpMgtRestClient.deleteIdp(idpId);
@@ -167,8 +145,9 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
     @Test(alwaysRun = true, description = "Verify outbound provisioning IdP was created correctly")
     public void testVerifyIdPCreation() throws Exception {
 
-        // Create the outbound provisioning IdP connection
-        idpId = createOutboundProvisioningIdP();
+        // Create the outbound provisioning IdP connection (no outbound provisioning roles).
+        idpId = createOutboundProvisioningIdP(idpMgtRestClient, IDP_NAME, IDP_DESCRIPTION, IDP_IMAGE,
+                testDataHolder.getAutomationContext().getSuperTenant().getTenantAdmin(), null);
         Assert.assertNotNull(idpId, "Identity Provider creation failed - returned null ID");
 
         JSONObject idpResponse = idpMgtRestClient.getIdentityProvider(idpId);
@@ -227,13 +206,13 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
             propertyMap.put((String) property.get("key"), (String) property.get("value"));
         }
 
-        Assert.assertEquals(propertyMap.get("scim2-user-ep"), getTargetScim2UserEndpoint(),
+        Assert.assertEquals(propertyMap.get("scim2-user-ep"), getSecondaryISURI() + "scim2/Users",
                 "User endpoint mismatch");
-        Assert.assertEquals(propertyMap.get("scim2-group-ep"), getTargetScim2GroupEndpoint(),
+        Assert.assertEquals(propertyMap.get("scim2-group-ep"), getSecondaryISURI() + "scim2/Groups",
                 "Group endpoint mismatch");
         Assert.assertEquals(propertyMap.get("scim2-user-store-domain"), "PRIMARY",
                 "User store domain mismatch");
-        Assert.assertEquals(propertyMap.get("scim2-enable-pwd-provisioning"), "true",
+        Assert.assertEquals(propertyMap.get("scim2-enable-pwd-provisioning"), "false",
                 "Password provisioning mismatch");
         Assert.assertEquals(propertyMap.get("scim2-authentication-mode"), "basic",
                 "Authentication mode mismatch");
@@ -243,7 +222,7 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
             description = "Enable outbound provisioning on the resident application")
     public void testEnableOutboundProvisioningOnResidentApp() throws Exception {
 
-        enableResidentAppOutboundProvisioning();
+        enableResidentAppOutboundProvisioning(appMgtClient, IDP_NAME);
     }
 
     @Test(alwaysRun = true, dependsOnMethods = "testEnableOutboundProvisioningOnResidentApp",
@@ -388,10 +367,10 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         Assert.assertNotNull(primaryUser3Id, "User3 creation on primary IS failed");
 
         // Look up the provisioned user IDs on the secondary IS.
-        secondaryUser2Id = getProvisionedUserId(TEST_USER2_NAME);
+        secondaryUser2Id = getProvisionedUserId(secondaryScim2RestClient, TEST_USER2_NAME);
         Assert.assertNotNull(secondaryUser2Id, "User2 was not provisioned to secondary IS");
 
-        secondaryUser3Id = getProvisionedUserId(TEST_USER3_NAME);
+        secondaryUser3Id = getProvisionedUserId(secondaryScim2RestClient, TEST_USER3_NAME);
         Assert.assertNotNull(secondaryUser3Id, "User3 was not provisioned to secondary IS");
 
         // Create the group with user2 as the initial member.
@@ -601,24 +580,6 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         return payload.toJSONString();
     }
 
-    /**
-     * Get the value of a multi-valued attribute entry by its type.
-     *
-     * @param multiValuedAttr JSON array of multi-valued attribute entries.
-     * @param type            the type to look for (e.g., "mobile", "work").
-     * @return the value string, or null if not found.
-     */
-    private String getAttributeValueByType(JSONArray multiValuedAttr, String type) {
-
-        for (Object item : multiValuedAttr) {
-            JSONObject entry = (JSONObject) item;
-            if (type.equals(entry.get("type"))) {
-                return (String) entry.get("value");
-            }
-        }
-        return null;
-    }
-
     private String buildTestUserPayload() {
 
         JSONObject payload = new JSONObject();
@@ -661,321 +622,25 @@ public class OutboundProvisioningSCIM2TestCase extends ISIntegrationTest {
         payload.put("phoneNumbers", phoneNumbers);
 
         // Enterprise extension
-        JSONObject manager = new JSONObject();
-        manager.put("displayName", TEST_USER_MANAGER_DISPLAY_NAME);
+        JSONObject managerObj = new JSONObject();
+        managerObj.put("displayName", TEST_USER_MANAGER_DISPLAY_NAME);
 
         JSONObject enterpriseExtension = new JSONObject();
         enterpriseExtension.put("department", TEST_USER_DEPARTMENT);
-        enterpriseExtension.put("manager", manager);
+        enterpriseExtension.put("manager", managerObj);
         payload.put("urn:ietf:params:scim:schemas:extension:enterprise:2.0:User", enterpriseExtension);
 
         return payload.toJSONString();
     }
 
-    private void enableResidentAppOutboundProvisioning() throws Exception {
-
-        ServiceProvider serviceProvider = appMgtClient.getApplication(RESIDENT_SP_NAME);
-        if (serviceProvider == null) {
-            serviceProvider = new ServiceProvider();
-            serviceProvider.setApplicationName(RESIDENT_SP_NAME);
-            try {
-                appMgtClient.createApplication(serviceProvider);
-                serviceProvider = appMgtClient.getApplication(RESIDENT_SP_NAME);
-            } catch (Exception error) {
-                throw new Exception("Error occurred during creating resident application.", error);
-            }
-
-        }
-        Assert.assertNotNull(serviceProvider, "Resident service provider not found");
-
-        InboundProvisioningConfig inboundProConfig = new InboundProvisioningConfig();
-        inboundProConfig.setProvisioningUserStore("");
-        serviceProvider.setInboundProvisioningConfig(inboundProConfig);
-
-        org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider proIdp =
-                new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider();
-        proIdp.setIdentityProviderName(IDP_NAME);
-
-        ProvisioningConnectorConfig proCon = new ProvisioningConnectorConfig();
-        proCon.setName(SCIM2_CONNECTOR_NAME);
-        proCon.setBlocking(true);
-        proIdp.setDefaultProvisioningConnectorConfig(proCon);
-
-        OutboundProvisioningConfig outboundProConfig = new OutboundProvisioningConfig();
-        outboundProConfig.setProvisioningIdentityProviders(
-                new org.wso2.carbon.identity.application.common.model.xsd.IdentityProvider[]{proIdp});
-        serviceProvider.setOutboundProvisioningConfig(outboundProConfig);
-
-        appMgtClient.updateApplicationData(serviceProvider);
-    }
-
-    private void clearResidentAppOutboundProvisioning() throws Exception {
-
-        ServiceProvider serviceProvider = appMgtClient.getApplication(RESIDENT_SP_NAME);
-        if (serviceProvider != null) {
-            serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-            appMgtClient.updateApplicationData(serviceProvider);
-        }
-    }
-
-    private String createOutboundProvisioningIdP() throws Exception {
-
-        IdentityProviderPOSTRequest idpRequest = new IdentityProviderPOSTRequest();
-        idpRequest.setName(IDP_NAME);
-        idpRequest.setDescription(IDP_DESCRIPTION);
-        idpRequest.setImage(IDP_IMAGE);
-        idpRequest.setIsPrimary(false);
-        idpRequest.setIsFederationHub(false);
-        idpRequest.setHomeRealmIdentifier("");
-        idpRequest.setIdpIssuerName("");
-        idpRequest.setAlias("");
-
-        // Build outbound provisioning connector properties
-        List<Property> connectorProperties = new ArrayList<>();
-        connectorProperties.add(createProperty("scim2-authentication-mode", "basic"));
-        connectorProperties.add(createProperty("scim2-username", getSecondaryISAdmin().getUserName()));
-        connectorProperties.add(createProperty("scim2-password", getSecondaryISAdmin().getPassword()));
-        connectorProperties.add(createProperty("scim2-user-ep", getTargetScim2UserEndpoint()));
-        connectorProperties.add(createProperty("scim2-group-ep", getTargetScim2GroupEndpoint()));
-        connectorProperties.add(createProperty("scim2-user-store-domain", "PRIMARY"));
-        connectorProperties.add(createProperty("scim2-enable-pwd-provisioning", "true"));
-
-        // Build outbound connector
-        ProvisioningRequest.OutboundProvisioningRequest.OutboundConnector scim2Connector =
-                new ProvisioningRequest.OutboundProvisioningRequest.OutboundConnector();
-        scim2Connector.setConnectorId(SCIM2_CONNECTOR_ID);
-        scim2Connector.setName(SCIM2_CONNECTOR_NAME);
-        scim2Connector.setIsEnabled(true);
-        scim2Connector.setProperties(connectorProperties);
-
-        List<ProvisioningRequest.OutboundProvisioningRequest.OutboundConnector> connectorList = new ArrayList<>();
-        connectorList.add(scim2Connector);
-
-        // Build outbound provisioning request
-        ProvisioningRequest.OutboundProvisioningRequest outboundRequest =
-                new ProvisioningRequest.OutboundProvisioningRequest();
-        outboundRequest.setDefaultConnectorId(SCIM2_CONNECTOR_ID);
-        outboundRequest.setConnectors(connectorList);
-
-        // Build provisioning request
-        ProvisioningRequest provisioningRequest = new ProvisioningRequest();
-        provisioningRequest.setOutboundConnectors(outboundRequest);
-
-        idpRequest.setProvisioning(provisioningRequest);
-
-        return idpMgtRestClient.createIdentityProvider(idpRequest);
-    }
-
-    private Property createProperty(String key, String value) {
-
-        Property property = new Property();
-        property.setKey(key);
-        property.setValue(value);
-        return property;
-    }
-
-    /**
-     * Builds SCIM filter query parameter value for filtering by username and encodes it for use in a URL.
-     * @param username the username to filter by.
-     * @return the encoded filter query parameter value.
-     * @throws UnsupportedEncodingException if UTF-8 encoding is not supported.
-     */
-    private String buildEncodedUserNameFilter(String username) throws UnsupportedEncodingException {
-
-        String filter = String.format("userName eq \"%s\"", username);
-        return URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
-    }
-
-    private String buildEncodedDisplayNameFilter(String displayName) throws UnsupportedEncodingException {
-
-        String filter = String.format("displayName eq \"%s\"", displayName);
-        return URLEncoder.encode(filter, StandardCharsets.UTF_8.toString());
-    }
-
-    private String buildUserPayload(String userName, String password, String givenName, String familyName,
-                                    String email) {
-
-        JSONObject payload = new JSONObject();
-
-        JSONArray schemas = new JSONArray();
-        schemas.add("urn:ietf:params:scim:schemas:core:2.0:User");
-        payload.put("schemas", schemas);
-
-        JSONObject name = new JSONObject();
-        name.put("familyName", familyName);
-        name.put("givenName", givenName);
-        payload.put("name", name);
-
-        payload.put("userName", userName);
-        payload.put("password", password);
-
-        JSONObject primaryEmail = new JSONObject();
-        primaryEmail.put("value", email);
-        primaryEmail.put("primary", true);
-
-        JSONArray emails = new JSONArray();
-        emails.add(primaryEmail);
-        payload.put("emails", emails);
-
-        return payload.toJSONString();
-    }
-
-    private String buildGroupPayload(String displayName, String memberId, String memberDisplay) {
-
-        JSONObject payload = new JSONObject();
-
-        JSONArray schemas = new JSONArray();
-        schemas.add("urn:ietf:params:scim:schemas:core:2.0:Group");
-        payload.put("schemas", schemas);
-
-        payload.put("displayName", displayName);
-
-        JSONArray members = new JSONArray();
-
-        JSONObject member = new JSONObject();
-        member.put("value", memberId);
-        member.put("display", memberDisplay);
-        members.add(member);
-
-        payload.put("members", members);
-
-        return payload.toJSONString();
-    }
-
-    private String buildGroupPatchDisplayNamePayload(String newDisplayName) {
-
-        JSONObject payload = new JSONObject();
-
-        JSONArray schemas = new JSONArray();
-        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
-        payload.put("schemas", schemas);
-
-        JSONArray operations = new JSONArray();
-
-        JSONObject op = new JSONObject();
-        op.put("op", "replace");
-        op.put("path", "displayName");
-        op.put("value", newDisplayName);
-        operations.add(op);
-
-        payload.put("Operations", operations);
-
-        return payload.toJSONString();
-    }
-
-    private String buildGroupPatchAddMemberPayload(String memberId, String memberDisplay) {
-
-        JSONObject payload = new JSONObject();
-
-        JSONArray schemas = new JSONArray();
-        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
-        payload.put("schemas", schemas);
-
-        JSONArray operations = new JSONArray();
-
-        JSONObject op = new JSONObject();
-        op.put("op", "add");
-
-        JSONObject opValue = new JSONObject();
-        JSONArray members = new JSONArray();
-        JSONObject member = new JSONObject();
-        member.put("display", memberDisplay);
-        member.put("value", memberId);
-        members.add(member);
-        opValue.put("members", members);
-
-        op.put("value", opValue);
-        operations.add(op);
-
-        payload.put("Operations", operations);
-
-        return payload.toJSONString();
-    }
-
-    private String buildGroupPatchRemoveMemberPayload(String memberIdToRemove) {
-
-        JSONObject payload = new JSONObject();
-
-        JSONArray schemas = new JSONArray();
-        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
-        payload.put("schemas", schemas);
-
-        JSONArray operations = new JSONArray();
-
-        JSONObject op = new JSONObject();
-        op.put("op", "remove");
-        op.put("path", "members[value eq \"" + memberIdToRemove + "\"]");
-        operations.add(op);
-
-        payload.put("Operations", operations);
-
-        return payload.toJSONString();
-    }
-
-    private String getProvisionedUserId(String userName) throws Exception {
-
-        JSONObject secondaryUsers = secondaryScim2RestClient.filterUsers(buildEncodedUserNameFilter(userName));
-        if (secondaryUsers == null) {
-            return null;
-        }
-
-        long totalResults = (long) secondaryUsers.get("totalResults");
-        if (totalResults == 0) {
-            return null;
-        }
-
-        JSONArray resources = (JSONArray) secondaryUsers.get("Resources");
-        if (resources == null || resources.size() == 0) {
-            return null;
-        }
-
-        JSONObject user = (JSONObject) resources.get(0);
-        return (String) user.get("id");
-    }
-
-    private List<String> extractMemberDisplayNames(JSONArray members) {
-
-        List<String> displayNames = new ArrayList<>();
-        for (Object item : members) {
-            JSONObject member = (JSONObject) item;
-            String display = (String) member.get("display");
-            if (display != null) {
-                displayNames.add(display);
+    private String getAttributeValueByType(JSONArray multiValuedAttr, String type) {
+
+        for (Object item : multiValuedAttr) {
+            JSONObject entry = (JSONObject) item;
+            if (type.equals(entry.get("type"))) {
+                return (String) entry.get("value");
             }
         }
-        return displayNames;
+        return null;
     }
-
-    /**
-     * Get the base URI of the target server for provisioning.
-     */
-    private String getSecondaryISURI() {
-
-        return String.format(HTTPS_LOCALHOST_SERVICES, DEFAULT_PORT + PORT_OFFSET_1);
-    }
-
-    /**
-     * Get the admin username of the target server for provisioning.
-     */
-    private User getSecondaryISAdmin() throws XPathExpressionException {
-
-        return testDataHolder.getAutomationContext().getSuperTenant().getTenantAdmin();
-    }
-
-    /**
-     * Get the SCIM2 Users endpoint of the target server.
-     */
-    private String getTargetScim2UserEndpoint() {
-
-        return getSecondaryISURI() + SCIM2_USER_ENDPOINT_PATH;
-    }
-
-    /**
-     * Get the SCIM2 Groups endpoint of the target server.
-     */
-    private String getTargetScim2GroupEndpoint() {
-
-        return getSecondaryISURI() + SCIM2_GROUP_ENDPOINT_PATH;
-    }
-
 }

@@ -425,7 +425,8 @@
             <!--TODO: Temporary disabled ConditionalAuthenticationTestCase. Enable after fixing the issues. -->
             <!--<class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />-->
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
-            <!-- <class name="org.wso2.identity.integration.test.provisioning.OutboundProvisioningSCIM2TestCase"/> -->
+            <class name="org.wso2.identity.integration.test.provisioning.OutboundProvisioningSCIM2Test"/>
+            <class name="org.wso2.identity.integration.test.provisioning.GroupBasedSCIM2OutboundProvisioningTest"/>
             <!--Disabling since the workflow is provided as a connector and it does not exist in the product by default.-->
             <!--<class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>-->
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
