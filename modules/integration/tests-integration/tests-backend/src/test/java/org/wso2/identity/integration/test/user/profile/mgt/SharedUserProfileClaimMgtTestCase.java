@@ -600,7 +600,14 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
         org.json.simple.JSONObject sharedUser = scim2RestClient.getSubOrgUser(sharedUserId, null, switchedM2MToken);
         String givenNameOfSharedUser = (String) ((org.json.simple.JSONObject) sharedUser.get("name")).get("givenName");
-        String emailOfSharedUser = (String) ((org.json.simple.JSONArray) sharedUser.get("emails")).get(0);
+        org.json.simple.JSONArray emails = (org.json.simple.JSONArray) sharedUser.get("emails");
+        String emailOfSharedUser = "";
+        for (org.json.simple.JSONObject email : (Iterable<org.json.simple.JSONObject>) emails) {
+            if ((Boolean) email.get("primary")) {
+                emailOfSharedUser = (String) email.get("value");
+                break;
+            }
+        }
         Assert.assertEquals(givenNameOfSharedUser, ROOT_ORG_USER_GIVEN_NAME, "Unexpected given name.");
         Assert.assertEquals(emailOfSharedUser, ROOT_ORG_USER_EMAIL, "Unexpected email.");
     }
