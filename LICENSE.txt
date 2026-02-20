@@ -649,7 +649,6 @@ org.wso2.carbon.mex2_5.14.0.jar                                                 
 com.google.guava.failureaccess_1.0.2.jar                                                            bundle         apache2             
 org.wso2.carbon.crypto.api_1.1.16.jar                                                               bundle         apache2             
 org.wso2.carbon.identity.subscription.management_7.10.11.jar                                        bundle         apache2             
-org.wso2.stratos.identity.dashboard.ui_2.2.1.jar                                                    bundle         apache2             
 commons-cli_1.2.0.wso2v1.jar                                                                        bundle         apache2             
 vertx-json-schema_4.5.11.wso2v1.jar                                                                 bundle         apache2 + epl1      
 nimbus-jose-jwt_10.3.0.wso2v1.jar                                                                   bundle         apache2             
