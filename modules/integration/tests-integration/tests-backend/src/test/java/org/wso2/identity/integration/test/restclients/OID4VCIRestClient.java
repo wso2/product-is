@@ -111,7 +111,7 @@ public class OID4VCIRestClient extends RestBaseClient {
                 "nonce_endpoint is not present in OID4VCI metadata.");
 
         try (CloseableHttpResponse response = getResponseOfHttpPost(
-                nonceEndpoint, "{}", getHeadersWithBearerToken(accessToken))) {
+                nonceEndpoint, "{}", getHeaders())) {
             int statusCode = response.getStatusLine().getStatusCode();
             String responseBody = EntityUtils.toString(response.getEntity());
             Assert.assertEquals(statusCode, HttpStatus.SC_OK,
