@@ -30,6 +30,7 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Roles;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
@@ -144,6 +145,25 @@ public class IdpMgtRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "Idp claim configurations update, failed");
+        }
+    }
+
+    /**
+     * Update an Identity Provider's roles configuration (outbound provisioning roles).
+     *
+     * @param idpId    Identity Provider Id.
+     * @param idpRoles Roles configuration to set.
+     * @throws IOException If an error occurred while updating idp roles.
+     */
+    public void updateIdpRoles(String idpId, Roles idpRoles) throws IOException {
+
+        String jsonRequest = toJSONString(idpRoles);
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId + "/roles";
+
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "IdP roles update failed");
         }
     }
 
