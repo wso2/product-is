@@ -2258,7 +2258,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${com.fasterxml.jackson.version}</version>
+                <version>${com.fasterxml.jackson.annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -2750,7 +2750,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.11.0</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>5.5.0</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>5.5.1-SNAPSHOT</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.5.0</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
@@ -2952,8 +2952,9 @@
         <swagger-core-version>1.5.22</swagger-core-version>
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
         <!--UI Cypress test -->
-        <com.fasterxml.jackson.version>2.16.1</com.fasterxml.jackson.version>
-        <com.fasterxml.jackson.databind.version>2.16.1</com.fasterxml.jackson.databind.version>
+        <com.fasterxml.jackson.version>2.18.3</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.databind.version>2.18.3</com.fasterxml.jackson.databind.version>
+        <com.fasterxml.jackson.annotations.version>2.18.3</com.fasterxml.jackson.annotations.version>
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
