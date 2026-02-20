@@ -18,6 +18,9 @@
 
 package org.wso2.identity.integration.test.oid4vci;
 
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
@@ -38,10 +41,12 @@ import org.wso2.identity.integration.test.restclients.OID4VCIRestClient;
 import org.wso2.identity.integration.test.restclients.VCTemplateManagementRestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.utils.OID4VCIProofJWTGenerator;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -118,6 +123,53 @@ public class OID4VCIIssuanceTestCase extends OAuth2ServiceAbstractIntegrationTes
         JSONObject issuanceResponse = oid4VCIRestClient.requestCredential(accessToken, vcTemplate.getIdentifier());
         String issuedCredential = (String) issuanceResponse.get("credential");
         Assert.assertTrue(StringUtils.isNotBlank(issuedCredential), "Issued credential should not be empty.");
+    }
+
+    @Test(groups = "wso2.is",
+            description = "Test verifiable credential issuance with nonce and JWT key binding (OID4VCI Draft 16).",
+            dependsOnMethods = "testVCCredentialIssuanceFlow")
+    public void testVCCredentialIssuanceWithKeyBinding() throws Exception {
+
+        // Retrieve credential issuer URL from metadata (used as JWT audience per Draft 16 §7.2.1.1).
+        JSONObject metadata = oid4VCIRestClient.getCredentialIssuerMetadata();
+        String credentialIssuerUrl = (String) metadata.get("credential_issuer");
+        Assert.assertTrue(StringUtils.isNotBlank(credentialIssuerUrl),
+                "credential_issuer is not present in OID4VCI metadata.");
+
+        // Obtain a fresh access token for VC issuance.
+        String tokenEndpoint = getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain());
+        String accessToken = requestAccessToken(consumerKey, consumerSecret, tokenEndpoint,
+                tokenUserName, tokenUserPassword,
+                Collections.singletonList(new Permission(VC_IDENTIFIER)));
+        Assert.assertTrue(StringUtils.isNotBlank(accessToken), "Access token should not be empty.");
+
+        // Obtain a c_nonce from the nonce endpoint.
+        String cNonce = oid4VCIRestClient.getNonce(accessToken);
+
+        // Generate a holder key pair and create a proof JWT bound to the nonce.
+        ECKey holderKey = OID4VCIProofJWTGenerator.generateECKeyPair();
+        String proofJwt = OID4VCIProofJWTGenerator.generateProofJWT(holderKey, credentialIssuerUrl,
+                consumerKey, cNonce);
+
+        // Request credential with key-bound proof.
+        JSONObject issuanceResponse = oid4VCIRestClient.requestCredential(accessToken, VC_IDENTIFIER, proofJwt);
+        String issuedCredential = (String) issuanceResponse.get("credential");
+        Assert.assertTrue(StringUtils.isNotBlank(issuedCredential),
+                "Issued credential with key binding should not be empty.");
+
+        // Validate that the issued credential contains the cnf claim with the holder's public key.
+        // For dc+sd-jwt format, the credential is <Issuer-JWT>~<disclosure1>~... — take the JWT part.
+        String credentialJwt = issuedCredential.split("~")[0];
+        SignedJWT credentialSignedJwt = SignedJWT.parse(credentialJwt);
+        Map<String, Object> cnfClaim = credentialSignedJwt.getJWTClaimsSet().getJSONObjectClaim("cnf");
+        Assert.assertNotNull(cnfClaim, "cnf claim should be present in the issued credential.");
+
+        Map<String, Object> cnfJwk = (Map<String, Object>) cnfClaim.get("jwk");
+        Assert.assertNotNull(cnfJwk, "cnf.jwk should be present in the issued credential.");
+
+        JWK embeddedJwk = JWK.parse(cnfJwk);
+        Assert.assertEquals(embeddedJwk.getKeyID(), holderKey.getKeyID(),
+                "cnf.jwk key ID should match the holder's public key thumbprint.");
     }
 
     private VCTemplate createVCTemplate() throws Exception {
