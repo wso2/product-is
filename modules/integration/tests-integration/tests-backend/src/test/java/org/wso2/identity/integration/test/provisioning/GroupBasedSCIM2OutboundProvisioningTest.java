@@ -122,9 +122,6 @@ public class GroupBasedSCIM2OutboundProvisioningTest extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        clearResidentAppOutboundProvisioning(appMgtClient);
-
-        // Clean up users on primary IS.
         if (primaryUser1Id != null) {
             primaryScim2RestClient.deleteUser(primaryUser1Id);
         }
@@ -135,7 +132,6 @@ public class GroupBasedSCIM2OutboundProvisioningTest extends ISIntegrationTest {
             primaryScim2RestClient.deleteUser(secondaryDomainUserId);
         }
 
-        // Clean up groups on primary IS.
         if (outboundProvisioningGroupId != null) {
             primaryScim2RestClient.deleteGroup(outboundProvisioningGroupId);
         }
@@ -145,6 +141,8 @@ public class GroupBasedSCIM2OutboundProvisioningTest extends ISIntegrationTest {
         if (secondaryOutboundProvisioningGroupId != null) {
             primaryScim2RestClient.deleteGroup(secondaryOutboundProvisioningGroupId);
         }
+
+        clearResidentAppOutboundProvisioning(appMgtClient);
 
         // Clean up the secondary user store.
         if (userStoreId != null) {
@@ -160,6 +158,12 @@ public class GroupBasedSCIM2OutboundProvisioningTest extends ISIntegrationTest {
         }
         if (userStoreMgtRestClient != null) {
             userStoreMgtRestClient.closeHttpClient();
+        }
+        if (primaryScim2RestClient != null) {
+            primaryScim2RestClient.closeHttpClient();
+        }
+        if (secondaryScim2RestClient != null) {
+            secondaryScim2RestClient.closeHttpClient();
         }
     }
 

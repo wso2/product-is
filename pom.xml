@@ -31,7 +31,7 @@
     <artifactId>identity-server-parent</artifactId>
     <packaging>pom</packaging>
     <description>WSO2 Identity Server</description>
-    <version>7.2.1-SNAPSHOT</version>
+    <version>7.3.0-m2-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
 
@@ -2680,7 +2680,7 @@
         <identity.local.auth.push.version.range>[1.0.0,2.0.0)</identity.local.auth.push.version.range>
 
         <!--SAML Common Utils Version-->
-        <saml.common.util.version>1.4.3</saml.common.util.version>
+        <saml.common.util.version>1.6.0</saml.common.util.version>
         <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
 
         <!--Carbon Consent Version-->
@@ -2690,14 +2690,14 @@
         <identity.governance.version>1.15.0</identity.governance.version>
 
         <!--Identity Carbon Versions-->
-        <identity.carbon.auth.saml2.version>5.12.0</identity.carbon.auth.saml2.version>
+        <identity.carbon.auth.saml2.version>5.12.2</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.6.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
         <identity.carbon.auth.rest.version>1.12.0</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.4.5</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.12.0</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.oauth.version>7.4.7</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.saml.version>5.12.2</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.0</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.7.14</identity.inbound.provisioning.scim.version>
@@ -2712,7 +2712,7 @@
 
         <!-- Identity Data Publisher Versions -->
         <identity.data.publisher.authentication.version>5.10.1</identity.data.publisher.authentication.version>
-        <identity.data.publisher.oauth.version>1.8.0</identity.data.publisher.oauth.version>
+        <identity.data.publisher.oauth.version>1.10.0</identity.data.publisher.oauth.version>
         <identity.data.publisher.audit.version>1.4.8</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
@@ -2766,7 +2766,7 @@
         <identity.oauth.dpop.version>2.1.0</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
-        <identity.metadata.saml.version>1.11.0</identity.metadata.saml.version>
+        <identity.metadata.saml.version>1.11.1</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.22</identity.workflow.version>
@@ -2796,7 +2796,7 @@
         <hashprovider.bcrypt.version>1.0.2</hashprovider.bcrypt.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.2.0</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.4.0</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>

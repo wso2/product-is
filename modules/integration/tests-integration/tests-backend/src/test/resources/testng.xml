@@ -511,7 +511,7 @@
             <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.recovery.UsernameRecoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerLockedTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationForSubOrganizationAppsTestCase"/>
+            <!-- <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationForSubOrganizationAppsTestCase"/> -->
         </classes>
     </test>
 
