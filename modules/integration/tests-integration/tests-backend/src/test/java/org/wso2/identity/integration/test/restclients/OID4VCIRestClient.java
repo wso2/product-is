@@ -103,7 +103,7 @@ public class OID4VCIRestClient extends RestBaseClient {
      * @return The c_nonce value returned by the server.
      * @throws Exception If the request fails or the response is invalid.
      */
-    public String getNonce(String accessToken) throws Exception {
+    public String getNonce() throws Exception {
 
         JSONObject metadata = getCredentialIssuerMetadata();
         String nonceEndpoint = (String) metadata.get("nonce_endpoint");

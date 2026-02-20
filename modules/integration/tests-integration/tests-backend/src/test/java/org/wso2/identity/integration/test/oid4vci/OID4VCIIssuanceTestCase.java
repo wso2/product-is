@@ -144,7 +144,7 @@ public class OID4VCIIssuanceTestCase extends OAuth2ServiceAbstractIntegrationTes
         Assert.assertTrue(StringUtils.isNotBlank(accessToken), "Access token should not be empty.");
 
         // Obtain a c_nonce from the nonce endpoint.
-        String cNonce = oid4VCIRestClient.getNonce(accessToken);
+        String cNonce = oid4VCIRestClient.getNonce();
 
         // Generate a holder key pair and create a proof JWT bound to the nonce.
         ECKey holderKey = OID4VCIProofJWTGenerator.generateECKeyPair();
