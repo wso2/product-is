@@ -96,6 +96,69 @@ public class OID4VCIRestClient extends RestBaseClient {
         }
     }
 
+    /**
+     * Obtain a fresh c_nonce from the nonce endpoint (OID4VCI Draft 16).
+     *
+     * @param accessToken Bearer access token with VC scope.
+     * @return The c_nonce value returned by the server.
+     * @throws Exception If the request fails or the response is invalid.
+     */
+    public String getNonce() throws Exception {
+
+        JSONObject metadata = getCredentialIssuerMetadata();
+        String nonceEndpoint = (String) metadata.get("nonce_endpoint");
+        Assert.assertTrue(StringUtils.isNotBlank(nonceEndpoint),
+                "nonce_endpoint is not present in OID4VCI metadata.");
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(
+                nonceEndpoint, "{}", getHeaders())) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseBody = EntityUtils.toString(response.getEntity());
+            Assert.assertEquals(statusCode, HttpStatus.SC_OK,
+                    "Nonce endpoint request failed. Response: " + responseBody);
+            JSONObject nonceResponse = getJSONObject(responseBody);
+            String cNonce = (String) nonceResponse.get("c_nonce");
+            Assert.assertTrue(StringUtils.isNotBlank(cNonce),
+                    "c_nonce is not present in nonce endpoint response.");
+            return cNonce;
+        }
+    }
+
+    /**
+     * Request VC issuance with a JWT proof of key possession (OID4VCI Draft 16 §7.2).
+     *
+     * @param accessToken             Access token with VC scope.
+     * @param credentialConfigurationId Credential configuration identifier.
+     * @param proofJwt                Serialized proof JWT.
+     * @return Issuance response payload.
+     * @throws Exception If request fails.
+     */
+    public JSONObject requestCredential(String accessToken, String credentialConfigurationId, String proofJwt)
+            throws Exception {
+
+        JSONObject metadata = getCredentialIssuerMetadata();
+        String credentialEndpoint = (String) metadata.get("credential_endpoint");
+        Assert.assertTrue(StringUtils.isNotBlank(credentialEndpoint),
+                "credential_endpoint is not present in OID4VCI metadata.");
+
+        JSONObject proofObject = new JSONObject();
+        proofObject.put("proof_type", "jwt");
+        proofObject.put("jwt", proofJwt);
+
+        JSONObject requestPayload = new JSONObject();
+        requestPayload.put("credential_configuration_id", credentialConfigurationId);
+        requestPayload.put("proof", proofObject);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(credentialEndpoint, requestPayload.toJSONString(),
+                getHeadersWithBearerToken(accessToken))) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String responseBody = EntityUtils.toString(response.getEntity());
+            Assert.assertEquals(statusCode, HttpStatus.SC_OK,
+                    "VC issuance with proof failed. Response: " + responseBody);
+            return getJSONObject(responseBody);
+        }
+    }
+
     public void closeHttpClient() throws IOException {
 
         client.close();
