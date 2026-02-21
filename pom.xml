@@ -2669,7 +2669,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.16</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.17</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2696,7 +2696,7 @@
         <identity.carbon.auth.rest.version>1.12.0</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.4.9</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.4.10</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.2</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.0</identity.inbound.auth.sts.version>
@@ -2749,7 +2749,7 @@
         <provisioning.connector.scim2.version>2.1.0</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.11.0</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.11.1</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>5.5.0</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.5.0</identity.local.auth.iwa.version>
 
@@ -2814,8 +2814,8 @@
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>2.93.0</identity.apps.console.version>
-        <identity.apps.myaccount.version>2.25.21</identity.apps.myaccount.version>
-        <identity.apps.core.version>3.3.36</identity.apps.core.version>
+        <identity.apps.myaccount.version>2.25.22</identity.apps.myaccount.version>
+        <identity.apps.core.version>3.3.37</identity.apps.core.version>
         <identity.apps.tests.version>1.6.383</identity.apps.tests.version>
 
         <!-- Charon -->
