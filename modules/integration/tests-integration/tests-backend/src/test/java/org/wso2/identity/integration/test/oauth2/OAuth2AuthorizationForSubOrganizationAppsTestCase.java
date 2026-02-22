@@ -46,7 +46,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -196,7 +195,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
 
 
     @BeforeClass(alwaysRun = true)
-    public void initTestSuite() throws Exception {
+    public void initTestClass() throws Exception {
 
         // Configure deployment.toml only once before all tests
         synchronized (OAuth2AuthorizationForSubOrganizationAppsTestCase.class) {
@@ -521,8 +520,8 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         }
     }
 
-    @AfterSuite(alwaysRun = true)
-    public void cleanupSuite() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupClass() throws Exception {
 
         // Restore original deployment.toml configuration after all tests complete
         synchronized (OAuth2AuthorizationForSubOrganizationAppsTestCase.class) {
