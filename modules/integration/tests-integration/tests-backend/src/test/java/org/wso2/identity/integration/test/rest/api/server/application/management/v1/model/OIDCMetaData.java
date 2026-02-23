@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2023-2026, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1.model;
@@ -45,6 +47,7 @@ public class OIDCMetaData  {
     private MetadataProperty requestObjectEncryptionMethod;
     private MetadataProperty subjectType;
     private FapiMetadata fapiMetadata;
+    private CIBAMetadata cibaMetadata;
 
     /**
      **/
@@ -391,6 +394,24 @@ public class OIDCMetaData  {
         this.fapiMetadata = fapiMetadata;
     }
 
+    /**
+     **/
+    public OIDCMetaData cibaMetadata(CIBAMetadata cibaMetadata) {
+
+        this.cibaMetadata = cibaMetadata;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("cibaMetadata")
+    @Valid
+    public CIBAMetadata getCibaMetadata() {
+        return cibaMetadata;
+    }
+    public void setCibaMetadata(CIBAMetadata cibaMetadata) {
+        this.cibaMetadata = cibaMetadata;
+    }
+
 
 
     @Override
@@ -421,7 +442,8 @@ public class OIDCMetaData  {
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionAlgorithm) &&
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionMethod) &&
                 Objects.equals(this.subjectType, oiDCMetaData.subjectType) &&
-                Objects.equals(this.fapiMetadata, oiDCMetaData.fapiMetadata);
+                Objects.equals(this.fapiMetadata, oiDCMetaData.fapiMetadata) &&
+                Objects.equals(this.cibaMetadata, oiDCMetaData.cibaMetadata);
     }
 
     @Override
@@ -431,7 +453,8 @@ public class OIDCMetaData  {
                 idTokenEncryptionAlgorithm, idTokenEncryptionMethod, scopeValidators, accessTokenType,
                 accessTokenBindingType, tokenEndpointAuthMethod, tokenEndpointAllowReusePvtKeyJwt,
                 tokenEndpointSignatureAlgorithm, idTokenSignatureAlgorithm, requestObjectSignatureAlgorithm,
-                requestObjectEncryptionAlgorithm, requestObjectEncryptionMethod, subjectType, fapiMetadata);
+                requestObjectEncryptionAlgorithm, requestObjectEncryptionMethod, subjectType, fapiMetadata,
+                cibaMetadata);
     }
 
     @Override
@@ -461,6 +484,7 @@ public class OIDCMetaData  {
         sb.append("    requestObjectEncryptionMethod: ").append(toIndentedString(requestObjectEncryptionMethod)).append("\n");
         sb.append("    subjectType: ").append(toIndentedString(subjectType)).append("\n");
         sb.append("    fapiMetadata: ").append(toIndentedString(fapiMetadata)).append("\n");
+        sb.append("    cibaMetadata: ").append(toIndentedString(cibaMetadata)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -498,5 +522,8 @@ public class OIDCMetaData  {
         Collections.sort(subjectType.getOptions());
         Collections.sort(fapiMetadata.getAllowedSignatureAlgorithms().getOptions());
         Collections.sort(fapiMetadata.getAllowedEncryptionAlgorithms().getOptions());
+        Comparator<CIBANotificationChannel> cibaNotificationChannelComparator = Comparator.comparing(
+                CIBANotificationChannel::getName);
+        cibaMetadata.getSupportedNotificationChannels().sort(cibaNotificationChannelComparator);
     }
 }
