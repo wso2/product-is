@@ -32,6 +32,24 @@
     <property name="openid.properties.default" location="${oauth.properties}/playground2"/>
 
     <target name="default">
+        <!-- Remove old servlet-api JARs to prevent conflicts with Tomcat 9.0.113 -->
+        <delete>
+            <fileset dir="${playground2.webapp.lib}">
+                <include name="servlet-api-*.jar"/>
+                <include name="javax.servlet-api-*.jar"/>
+            </fileset>
+        </delete>
+
+        <!-- Remove conflicting axiom JARs to prevent AbstractMethodError.
+             Keep only axiom-1.2.11.wso2v10.jar which has compatible API and implementation.
+             axiom-api-1.2.12.jar and axiom-impl-1.2.11.jar are incompatible with each other. -->
+        <delete>
+            <fileset dir="${playground2.webapp.lib}">
+                <include name="axiom-api-*.jar"/>
+                <include name="axiom-impl-*.jar"/>
+            </fileset>
+        </delete>
+
         <delete
                 file="${playground2.webapp.webinf}/web.xml"/>
         <copy file="${openid.properties.default}/web.xml"

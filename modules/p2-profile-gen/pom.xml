@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.1-SNAPSHOT</version>
+        <version>7.3.0-m2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -80,6 +80,7 @@
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
                 <version>${carbon.p2.plugin.version}</version>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
                         <id>2-p2-repo-generation</id>
@@ -88,7 +89,6 @@
                             <goal>p2-repo-gen</goal>
                         </goals>
                         <configuration>
-                            <p2AgentLocation>${basedir}/target/p2-agent</p2AgentLocation>
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
                             <publishArtifacts>true</publishArtifacts>
@@ -407,9 +407,6 @@
 
                                 <!-- SAML Request/Response Validator Toolkit Feature -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.identity.tool.validator.sso.saml2:org.wso2.carbon.identity.tools.saml.validator.feature:${identity.tool.samlsso.validator.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.identity.metadata.saml2:org.wso2.carbon.identity.idp.metadata.saml2.server.feature:${identity.metadata.saml.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -639,9 +636,15 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.fraud.detection.core.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.framework:org.wso2.carbon.identity.compatibility.settings.management.server.feature:${carbon.identity.framework.version}
+                                </featureArtifactDef>
                                 <!-- AI Agent Identity Management Feature -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.agent:org.wso2.carbon.identity.agent.manager.server.feature:${carbon.identity.agent.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.application.auth.basic:org.wso2.carbon.identity.application.authenticator.basicauth.server.feature:${identity.local.auth.basicauth.version}
                                 </featureArtifactDef>
                                 <!-- VC Configuration Management Feature -->
                                 <featureArtifactDef>
@@ -663,6 +666,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature:${carbon.identity.openid4vc.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.sdjwt.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -676,7 +682,6 @@
                         </goals>
                         <configuration>
                             <profile>default</profile>
-                            <p2AgentLocation>${basedir}/target/p2-agent</p2AgentLocation>
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
                             <destination>
@@ -1099,11 +1104,7 @@
                                     <id>org.wso2.carbon.identity.provisioning.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
-                              
-                                <feature>
-                                    <id>org.wso2.carbon.identity.tools.saml.validator.feature.group</id>
-                                    <version>${identity.tool.samlsso.validator.version}</version>
-                                </feature>
+                                
                                 <feature>
                                     <id>org.wso2.carbon.identity.thrift.authentication.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
@@ -1375,6 +1376,22 @@
                                     <id>org.wso2.carbon.identity.fraud.detection.core.server.feature.group</id>
                                     <version>${carbon.identity.framework.version}</version>
                                 </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.application.authenticator.basicauth.server.feature.group</id>
+                                    <version>${identity.local.auth.basicauth.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.external.api.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.compatibility.settings.management.server.feature.group</id>
+                                    <version>${carbon.identity.framework.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.sdjwt.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -1387,9 +1404,6 @@
                         <configuration>
                             <productConfigurationFile>${basedir}/carbon.product
                             </productConfigurationFile>
-                            <executable>
-                                ${basedir}/target/org.eclipse.equinox.executable_3.5.0.v20110530-7P7NFUFFLWUl76mart
-                            </executable>
                             <metadataRepository>file:${basedir}/target/p2-repo</metadataRepository>
                             <artifactRepository>file:${basedir}/target/p2-repo</artifactRepository>
                         </configuration>

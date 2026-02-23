@@ -93,6 +93,7 @@
 
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceSAML2BearerGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceClientCredentialTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.JwtAccessTokenScopeAsArrayTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceImplicitGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceIntrospectionTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ApplicationAccessTokenIntrospectionTestCase"/>
@@ -103,6 +104,7 @@
             <class name="org.wso2.identity.integration.test.oidc.OIDCSubAttributeTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCSSOConsentTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCRPInitiatedLogoutTestCase"/>
+            <class name="org.wso2.identity.integration.test.oidc.OIDCFrontChannelLogout"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCAuthCodeGrantSSODifferentSubjectIDTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OIDCCustomScopesLoginTest"/>
             <class name="org.wso2.identity.integration.test.requestPathAuthenticator.SAMLWithRequestPathAuthenticationTest"/>
@@ -132,7 +134,9 @@
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthentication2FATestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationDeviceFlowTestCase"/>
+            <!-- <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.CustomAuthenticatorNativeAuthenticationTestCase"/> -->
             <class name="org.wso2.identity.integration.test.apiAuthorization.RBACWithAPIAuthorizationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vci.OID4VCIIssuanceTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessPasswordGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessCodeGrantTestCase"/>
@@ -308,6 +312,13 @@
         </classes>
     </test>
 
+<!--    <test name="is-test-session-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
+<!--        <classes>-->
+<!--            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtTest"/>-->
+<!--            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtFailureTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
     <test name="is-test-webhooks" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.webhooks.credentials.CredentialsEventTestCase"/>
@@ -414,6 +425,8 @@
             <!--TODO: Temporary disabled ConditionalAuthenticationTestCase. Enable after fixing the issues. -->
             <!--<class name="org.wso2.identity.integration.test.auth.ConditionalAuthenticationTestCase" />-->
             <class name="org.wso2.identity.integration.test.provisioning.ProvisioningTestCase"/>
+            <class name="org.wso2.identity.integration.test.provisioning.OutboundProvisioningSCIM2Test"/>
+            <class name="org.wso2.identity.integration.test.provisioning.GroupBasedSCIM2OutboundProvisioningTest"/>
             <!--Disabling since the workflow is provided as a connector and it does not exist in the product by default.-->
             <!--<class name="org.wso2.identity.integration.test.workflow.mgt.WorkflowManagementTestCase"/>-->
             <class name="org.wso2.identity.integration.test.provisioning.JustInTimeProvisioningTestCase"/>
@@ -498,6 +511,7 @@
             <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.recovery.UsernameRecoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerLockedTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationForSubOrganizationAppsTestCase"/>
         </classes>
     </test>
 

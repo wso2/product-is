@@ -26,8 +26,9 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 
-import java.io.File;
+import java.net.Socket;
 import java.net.URL;
 
 /**
@@ -73,9 +74,20 @@ public class TomcatInitializerTestCase extends ISIntegrationTest {
         }
         try {
             tomcat.start();
+            LOG.info("Tomcat LocalPort: " + tomcat.getConnector().getLocalPort());
+            for (int i = 0; i < 50; i++) {
+                try (Socket s = new Socket("localhost", CommonConstants.DEFAULT_TOMCAT_PORT)) {
+                    break;
+                } catch (Exception e) {
+                    //ignore
+                    Thread.sleep(1000);
+                }
+            }
         } catch (LifecycleException e) {
             LOG.error("Error while starting tomcat server ", e);
             throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
         LOG.info("Tomcat server started.");
     }
