@@ -206,5 +206,21 @@
           }
         ]
       }
+  },
+  "cibaMetadata": {
+    "supportedNotificationChannels": [
+      {
+        "name": "external",
+        "displayName": "External"
+      },
+      {
+        "name": "email",
+        "displayName": "Email"
+      },
+      {
+        "name": "sms",
+        "displayName": "SMS"
+      }
+    ]
   }
 }
