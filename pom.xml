@@ -2822,7 +2822,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.2</carbon.kernel.version>
+        <carbon.kernel.version>4.12.3</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.0</identity.verification.version>
