@@ -21,9 +21,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Objects;
+import java.util.*;
 import javax.validation.Valid;
 
 public class OIDCMetaData  {
@@ -48,6 +46,7 @@ public class OIDCMetaData  {
     private MetadataProperty subjectType;
     private FapiMetadata fapiMetadata;
     private CIBAMetadata cibaMetadata;
+    private List<AllowedIssuer> allowedIssuers = null;
 
     /**
      **/
@@ -412,7 +411,29 @@ public class OIDCMetaData  {
         this.cibaMetadata = cibaMetadata;
     }
 
+    public OIDCMetaData allowedIssuers(List<AllowedIssuer> allowedIssuers) {
 
+        this.allowedIssuers = allowedIssuers;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("allowedIssuers")
+    @Valid
+    public List<AllowedIssuer> getAllowedIssuers() {
+        return allowedIssuers;
+    }
+    public void setAllowedIssuers(List<AllowedIssuer> allowedIssuers) {
+        this.allowedIssuers = allowedIssuers;
+    }
+
+    public OIDCMetaData addAllowedIssuersItem(AllowedIssuer allowedIssuersItem) {
+        if (this.allowedIssuers == null) {
+            this.allowedIssuers = new ArrayList<>();
+        }
+        this.allowedIssuers.add(allowedIssuersItem);
+        return this;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -443,7 +464,8 @@ public class OIDCMetaData  {
                 Objects.equals(this.tokenEndpointSignatureAlgorithm, oiDCMetaData.requestObjectEncryptionMethod) &&
                 Objects.equals(this.subjectType, oiDCMetaData.subjectType) &&
                 Objects.equals(this.fapiMetadata, oiDCMetaData.fapiMetadata) &&
-                Objects.equals(this.cibaMetadata, oiDCMetaData.cibaMetadata);
+                Objects.equals(this.cibaMetadata, oiDCMetaData.cibaMetadata) &&
+                Objects.equals(this.allowedIssuers, oiDCMetaData.allowedIssuers);
     }
 
     @Override
@@ -454,7 +476,7 @@ public class OIDCMetaData  {
                 accessTokenBindingType, tokenEndpointAuthMethod, tokenEndpointAllowReusePvtKeyJwt,
                 tokenEndpointSignatureAlgorithm, idTokenSignatureAlgorithm, requestObjectSignatureAlgorithm,
                 requestObjectEncryptionAlgorithm, requestObjectEncryptionMethod, subjectType, fapiMetadata,
-                cibaMetadata);
+                cibaMetadata, allowedIssuers);
     }
 
     @Override
@@ -485,6 +507,7 @@ public class OIDCMetaData  {
         sb.append("    subjectType: ").append(toIndentedString(subjectType)).append("\n");
         sb.append("    fapiMetadata: ").append(toIndentedString(fapiMetadata)).append("\n");
         sb.append("    cibaMetadata: ").append(toIndentedString(cibaMetadata)).append("\n");
+        sb.append("    allowedIssuers: ").append(toIndentedString(allowedIssuers)).append("\n");
         sb.append("}");
         return sb.toString();
     }
