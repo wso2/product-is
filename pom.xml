@@ -2770,7 +2770,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.0.22</identity.workflow.version>
-        <identity.user.workflow.version>6.0.2</identity.user.workflow.version>
+        <identity.user.workflow.version>6.1.0</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.4.1</authenticator.totp.version>
