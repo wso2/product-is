@@ -1,4 +1,4 @@
-name: Integration Test Runner JDK21
+name: Integration Test Runner JDK25
 
 on:
   workflow_dispatch:
@@ -21,12 +21,12 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
-      - name: Set up Adopt JDK 21
+      - name: Set up Adopt JDK 25
         uses: actions/setup-java@v4
         with:
-          java-version: "21"
+          java-version: "25"
           distribution: "adopt"
-      - name: Product-IS build with JDK 21 with Integration Tests
+      - name: Product-IS build with JDK 25 with Integration Tests
         run: |
           mvn clean install --batch-mode | tee mvn-build.log
           
