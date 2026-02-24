@@ -1,0 +1,45 @@
+[server]
+hostname = "localhost"
+node_ip = "127.0.0.1"
+base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+enable_admin_services = true
+
+[super_admin]
+username = "admin"
+password = "admin"
+create_admin_account = true
+
+[user_store]
+type = "database_unique_id"
+
+[database.identity_db]
+driver = "$env{IDENTITY_DATABASE_DRIVER}"
+url = "$env{IDENTITY_DATABASE_URL}"
+username = "$env{IDENTITY_DATABASE_USERNAME}"
+password = "$env{IDENTITY_DATABASE_PASSWORD}"
+
+[database.shared_db]
+driver = "$env{SHARED_DATABASE_DRIVER}"
+url = "$env{SHARED_DATABASE_URL}"
+username = "$env{SHARED_DATABASE_USERNAME}"
+password = "$env{SHARED_DATABASE_PASSWORD}"
+
+[keystore.primary]
+file_name = "wso2carbon.p12"
+password = "wso2carbon"
+
+# Configuration for OAuth2 introspection endpoint with BasicClientAuthentication
+[[resource.access_control]]
+context = "(.*)/t/(.*)/o/(.*)/oauth2/introspect(.*)"
+secure = true
+http_method = "all"
+allowed_auth_handlers = ["BasicClientAuthentication"]
+scopes = ["internal_org_oauth2_introspect"]
+
+[[resource.access_control]]
+context = "(.*)/oauth2/introspect(.*)"
+secure = true
+http_method = "all"
+allowed_auth_handlers = ["BasicClientAuthentication"]
+scopes = ["internal_oauth2_introspect"]
+

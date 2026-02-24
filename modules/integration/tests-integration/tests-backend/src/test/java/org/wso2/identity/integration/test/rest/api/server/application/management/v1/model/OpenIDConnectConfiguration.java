@@ -88,6 +88,7 @@ public enum StateEnum {
     private SubjectConfiguration subject;
     private Boolean isFAPIApplication = false;
     private FapiMetadata fapiMetadata;
+    private CIBAAuthenticationRequestConfiguration cibaAuthenticationRequest;
 
     /**
     **/
@@ -518,6 +519,16 @@ public enum StateEnum {
     }
     public void setFapiMetadata(FapiMetadata fapiMetadata) {
         this.fapiMetadata = fapiMetadata;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("cibaAuthenticationRequest")
+    @Valid
+    public CIBAAuthenticationRequestConfiguration getCibaAuthenticationRequest() {
+        return cibaAuthenticationRequest;
+    }
+    public void setCibaAuthenticationRequest(CIBAAuthenticationRequestConfiguration cibaAuthenticationRequest) {
+        this.cibaAuthenticationRequest = cibaAuthenticationRequest;
     }
 
     @Override

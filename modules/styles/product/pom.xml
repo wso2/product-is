@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
     	<artifactId>identity-server-styles-parent</artifactId>
-        <version>7.2.1-SNAPSHOT</version>
+        <version>7.3.0-m2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -36,8 +36,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>21</source>
+                    <target>21</target>
                 </configuration>
             </plugin>
 

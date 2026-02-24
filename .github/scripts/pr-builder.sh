@@ -24,6 +24,7 @@ declare -a ALL_TESTS=(
     "is-tests-with-individual-configuration-changes"
     "is-tests-saml-query-profile"
     "is-tests-default-encryption"
+    "is-test-session-mgt"
 )
 
 # Function to disable tests not in the enabled list.
@@ -46,6 +47,17 @@ disable_tests() {
     done
 }
 
+# Function to get expected BUILD SUCCESS count based on enabled tests.
+get_expected_build_success_count() {
+    local enabled_tests=$1
+    # If is-test-adaptive-authentication-nashorn is enabled, expect 17 BUILD SUCCESS messages.
+    if [[ "$enabled_tests" == *"is-test-adaptive-authentication-nashorn"* ]]; then
+        echo "17"
+    else
+        echo "1"
+    fi
+}
+
 # Main execution starts here.
 BUILDER_NUMBER=$1
 ENABLED_TESTS=$2
@@ -53,13 +65,9 @@ ENABLED_TESTS=$2
 echo ""
 echo "=========================================================="
 PR_LINK=${PR_LINK%/}
-JDK_VERSION=${JDK_VERSION%/}
-JAVA_8_HOME=${JAVA_8_HOME%/}
-JAVA_11_HOME=${JAVA_11_HOME%/}
+JAVA_21_HOME=${JAVA_21_HOME%/}
 echo "    PR_LINK: $PR_LINK"
-echo "    JAVA 8 Home: $JAVA_8_HOME"
-echo "    JAVA 11 Home: $JAVA_11_HOME"
-echo "    User Input: $JDK_VERSION"
+echo "    JAVA 21 Home: $JAVA_21_HOME"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
@@ -106,7 +114,7 @@ if [ "$REPO" = "product-is" ]; then
   echo "$COMMIT3"
 
   cat pom.xml
-  export JAVA_HOME=$JAVA_11_HOME
+  export JAVA_HOME=$JAVA_21_HOME
   mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -125,7 +133,8 @@ if [ "$REPO" = "product-is" ]; then
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
@@ -161,24 +170,19 @@ else
   cd $REPO
   if [ "$REPO" = "carbon-kernel" ]; then
     echo ""
-    echo "Checking out for 4.10.x branch..."
+    echo "Checking out for 4.12.x branch..."
     echo "=========================================================="
-    git checkout 4.10.x
+    git checkout 4.12.x
   elif [ "$REPO" = "carbon-deployment" ]; then
     echo ""
-    echo "Checking out for 4.x.x branch in carbon-deployment..."
+    echo "Checking out for 4.14.x branch in carbon-deployment..."
     echo "=========================================================="
-    git checkout 4.x.x
+    git checkout 4.14.x
   elif [ "$REPO" = "carbon-analytics-common" ]; then
       echo ""
-      echo "Checking out for 5.2.x branch in carbon-analytics-common..."
+      echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
-      git checkout 5.2.x
-  elif [ "$REPO" = "identity-extension-utils" ]; then
-      echo ""
-      echo "Checking out for 1.0.x branch in identity-extension-utils..."
-      echo "=========================================================="
-      git checkout 1.0.x
+      git checkout 5.5.x
   fi
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
@@ -198,12 +202,7 @@ else
   echo "Building dependency repo $REPO..."
   echo "=========================================================="
 
-  if [ "$JDK_VERSION" = "11" ]; then
-    export JAVA_HOME=$JAVA_11_HOME
-  else
-    export JAVA_HOME=$JAVA_8_HOME
-  fi
-
+  export JAVA_HOME=$JAVA_21_HOME
 
   mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
@@ -308,7 +307,7 @@ else
     echo "=========================================================="
 
 
-    export JAVA_HOME=$JAVA_11_HOME
+    export JAVA_HOME=$JAVA_21_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $OUTBOUND_AUTH_OIDC_REPO build complete."
@@ -362,7 +361,7 @@ else
     echo "Building $SCIM2_REPO repo..."
     echo "=========================================================="
 
-    export JAVA_HOME=$JAVA_8_HOME
+    export JAVA_HOME=$JAVA_21_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $SCIM2_REPO build complete."
@@ -403,11 +402,11 @@ else
       echo ""
       KERNEL_DEPENDENCY_VERSION=$(echo $DEPENDENCY_VERSION | sed -e "s/-/./g")
       echo "Dependency version for carbon.product : $KERNEL_DEPENDENCY_VERSION"
-      sed -i "s/version=\"4.10.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
+      sed -i "s/version=\"4.12.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
     fi
   fi
 
-  export JAVA_HOME=$JAVA_11_HOME
+  export JAVA_HOME=$JAVA_21_HOME
   cat pom.xml
   mvn clean install --batch-mode | tee mvn-build.log
 
@@ -427,7 +426,8 @@ else
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1

@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.1-SNAPSHOT</version>
+        <version>7.3.0-m2-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -31,28 +31,6 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Download Basic Auth jar from nexus and copy to the localauthenticator/jar folder-->
-                    <execution>
-                        <id>download_basicauth_jar</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wso2.carbon.identity.application.auth.basic</groupId>
-                                    <artifactId>org.wso2.carbon.identity.application.authenticator.basicauth</artifactId>
-                                    <version>${identity.local.auth.basicauth.version}</version>
-                                    <type>jar</type>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>${basedir}/target/localauthenticatorCopied/jar
-                                    </outputDirectory>
-                                    <includes>**/*.jar</includes>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
                     <!-- Download IWA jar from nexus and copy to the  localauthenticator/jar folder-->
                     <execution>
                         <id>download_iwa_jar</id>

@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.wso2.is</groupId>
 		<artifactId>identity-features</artifactId>
-		<version>7.2.1-SNAPSHOT</version>
+		<version>7.3.0-m2-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -44,6 +44,7 @@
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
                 <version>${carbon.p2.plugin.version}</version>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
                         <id>p2-feature-generation</id>

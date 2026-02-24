@@ -34,7 +34,7 @@ public class AuthenticationBuilder {
     public static final String CLIENT_CREDENTIAL_CLIENT_ID = "testClientId";
     public static final String CLIENT_CREDENTIAL_CLIENT_SECRET = "testClientSecret";
     public static final String ENCODED_CREDENTIAL = "dGVzdENsaWVudElkOnRlc3RDbGllbnRTZWNyZXQ=";
-    public static final String CLIENT_CREDENTIAL_SCOPES = "read write";
+    public static final String CLIENT_CREDENTIAL_SCOPES = "read+write";
 
     // API Key Auth constants
     public static final String API_KEY_HEADER = "test-api-header";

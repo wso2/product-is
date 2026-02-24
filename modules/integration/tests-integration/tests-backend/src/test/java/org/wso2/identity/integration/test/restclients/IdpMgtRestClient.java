@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -30,6 +30,7 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Roles;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +40,7 @@ public class IdpMgtRestClient extends RestBaseClient {
 
     private static final String CLAIMS_PATH = "/claims";
     private static final String FEDERATED_AUTHENTICATORS_PATH = "/federated-authenticators/";
+    private static final String OUTBOUND_CONNECTORS_PATH = "/provisioning/outbound-connectors/";
     private final String serverUrl;
     private final String IDENTITY_PROVIDER_BASE_PATH = "/api/server/v1/identity-providers";
     private final String tenantDomain;
@@ -72,6 +74,24 @@ public class IdpMgtRestClient extends RestBaseClient {
     }
 
     /**
+     * Get an Identity Provider by ID.
+     *
+     * @param idpId Identity Provider Id.
+     * @return JSONObject with Identity Provider details.
+     * @throws Exception If an error occurred while getting the idp.
+     */
+    public JSONObject getIdentityProvider(String idpId) throws Exception {
+
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            return getJSONObject(responseBody);
+        }
+    }
+
+    /**
      * Get an Identity Provider's federated authenticator
      *
      * @param idpId                    identity provider id.
@@ -83,6 +103,25 @@ public class IdpMgtRestClient extends RestBaseClient {
 
         String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
                 tenantDomain) + PATH_SEPARATOR + idpId + FEDERATED_AUTHENTICATORS_PATH + federatedAuthenticatorId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            return getJSONObject(responseBody);
+        }
+    }
+
+    /**
+     * Get an Identity Provider's outbound provisioning connector.
+     *
+     * @param idpId       Identity Provider Id.
+     * @param connectorId Outbound connector id.
+     * @return JSONObject with outbound connector details including properties.
+     * @throws Exception If an error occurred while getting the outbound connector.
+     */
+    public JSONObject getIdpOutboundConnector(String idpId, String connectorId) throws Exception {
+
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId + OUTBOUND_CONNECTORS_PATH + connectorId;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
@@ -106,6 +145,25 @@ public class IdpMgtRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "Idp claim configurations update, failed");
+        }
+    }
+
+    /**
+     * Update an Identity Provider's roles configuration (outbound provisioning roles).
+     *
+     * @param idpId    Identity Provider Id.
+     * @param idpRoles Roles configuration to set.
+     * @throws IOException If an error occurred while updating idp roles.
+     */
+    public void updateIdpRoles(String idpId, Roles idpRoles) throws IOException {
+
+        String jsonRequest = toJSONString(idpRoles);
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId + "/roles";
+
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "IdP roles update failed");
         }
     }
 
