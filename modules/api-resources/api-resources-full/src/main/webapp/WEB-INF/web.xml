@@ -120,7 +120,8 @@
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
                 org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
-                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -213,7 +214,8 @@
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
                 org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
-                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
