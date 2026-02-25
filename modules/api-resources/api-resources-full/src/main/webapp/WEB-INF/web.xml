@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2021-2025, WSO2 LLC. (http://www.wso2.com).
+  ~ Copyright (c) 2021-2026, WSO2 LLC. (http://www.wso2.com).
   ~
   ~ WSO2 LLC. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -372,7 +372,8 @@
                 org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
-                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi
+                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
+                org.wso2.carbon.identity.api.user.password.v1.MeApi
             </param-value>
         </init-param>
         <init-param>
@@ -529,7 +530,8 @@
                 org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
-                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi
+                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
+                org.wso2.carbon.identity.api.user.password.v1.MeApi
             </param-value>
         </init-param>
         <init-param>
