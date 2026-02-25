@@ -3,7 +3,7 @@ name: Integration Test Runner JDK25
 on:
   workflow_dispatch:
   schedule:
-#    Daily at 23:00 UTC (04.30 AM SL time)
+    #    Daily at 23:00 UTC (04.30 AM SL time)
     - cron:  '0 23 * * *'
 
 
@@ -21,6 +21,14 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
+      - name: Set up Adopt JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "adopt"
+      - name: Product-IS build with JDK 21 without Integration Tests
+        run: |
+          mvn clean install --batch-mode -Dmaven.test.skip=true | tee mvn-build.log
       - name: Set up Adopt JDK 25
         uses: actions/setup-java@v4
         with:
@@ -28,6 +36,7 @@ jobs:
           distribution: "adopt"
       - name: Product-IS build with JDK 25 with Integration Tests
         run: |
+          cd modules/integration/
           mvn clean install --batch-mode | tee mvn-build.log
           
           PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -48,8 +57,8 @@ jobs:
           PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
           if [ "$PR_BUILD_SUCCESS_COUNT" != "17" ]; then
             echo "Success Count $PR_BUILD_SUCCESS_COUNT"
-            echo "PR BUILD not successfull. Aborting."
-            echo "::error::PR BUILD not successfull. Check artifacts for logs."
+            echo "PR BUILD is not successful. Aborting."
+            echo "::error::PR BUILD is not successful. Check artifacts for logs."
             exit 1
           fi
           
