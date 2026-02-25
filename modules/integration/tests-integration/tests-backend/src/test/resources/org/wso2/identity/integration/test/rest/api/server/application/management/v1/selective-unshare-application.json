@@ -1,0 +1,6 @@
+{
+  "applicationId": "${applicationId}",
+  "orgIds": [
+    "${organizationId}"
+  ]
+}

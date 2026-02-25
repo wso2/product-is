@@ -242,12 +242,6 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    private String getApplicationId(Response createFirstAppResponse) {
-
-        String location = createFirstAppResponse.getHeader(HttpHeaders.LOCATION);
-        return extractApplicationIdFromLocationHeader(location);
-    }
-
     private Response getApplication(String appId) {
 
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId;

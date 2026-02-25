@@ -28,7 +28,6 @@ import java.util.Set;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.DataProvider;
@@ -39,7 +38,6 @@ import org.wso2.carbon.identity.application.mgt.ApplicationConstants;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
-import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
 /**
  * Tests for negative paths of the Application Management REST API.
@@ -295,27 +293,5 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
         queryParam.put("filter", filter);
         Response response = getResponseOfGetWithQueryParams(GROUPS_METADATA_PATH, queryParam);
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "APP-60004");
-    }
-
-    private String getApplicationId(Response createFirstAppResponse) {
-
-        String location = createFirstAppResponse.getHeader(HttpHeaders.LOCATION);
-        return extractApplicationIdFromLocationHeader(location);
-    }
-
-    private Response createApplication(String appName) throws JSONException {
-
-        JSONObject createRequest = new JSONObject();
-        createRequest.put("name", appName);
-        String payload = createRequest.toString();
-
-        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
-        responseOfPost.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue());
-
-        return responseOfPost;
     }
 }
