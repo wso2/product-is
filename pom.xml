@@ -2892,7 +2892,7 @@
         <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
         <wss4j.wso2.version>1.6.0-wso2v8</wss4j.wso2.version>
         <openws.version>1.5.4</openws.version>
-        <xalan.version>2.7.2</xalan.version>
+        <xalan.version>2.7.3</xalan.version>
         <xalan.wso2.version>2.7.0.wso2v1</xalan.wso2.version>
         <rampart.wso2.version>1.6.1-wso2v43</rampart.wso2.version>
         <orbit.version.commons.httpclient>4.5.13.wso2v1</orbit.version.commons.httpclient>
