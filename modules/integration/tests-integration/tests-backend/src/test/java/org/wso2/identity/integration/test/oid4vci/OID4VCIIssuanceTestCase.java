@@ -36,6 +36,7 @@ import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
 import org.wso2.identity.integration.test.rest.api.server.vc.template.management.v1.model.VCTemplate;
+import org.wso2.identity.integration.test.rest.api.server.vc.template.management.v1.model.Claim;
 import org.wso2.identity.integration.test.rest.api.server.vc.template.management.v1.model.VCTemplateCreateRequest;
 import org.wso2.identity.integration.test.restclients.OID4VCIRestClient;
 import org.wso2.identity.integration.test.restclients.VCTemplateManagementRestClient;
@@ -179,7 +180,9 @@ public class OID4VCIIssuanceTestCase extends OAuth2ServiceAbstractIntegrationTes
                 .displayName(VC_DISPLAY_NAME)
                 .description(VC_DISPLAY_NAME)
                 .format(VC_TEMPLATE_FORMAT)
-                .claims(Arrays.asList(VC_CLAIM_GIVEN_NAME, VC_CLAIM_EMAIL))
+                .claims(Arrays.asList(
+                        new Claim().name(VC_CLAIM_GIVEN_NAME).type("LOCAL").claimUri(VC_CLAIM_GIVEN_NAME),
+                        new Claim().name(VC_CLAIM_EMAIL).type("LOCAL").claimUri(VC_CLAIM_EMAIL)))
                 .expiresIn(31536000);
 
         VCTemplate createdTemplate = vcTemplateManagementRestClient.createTemplate(request);
