@@ -762,6 +762,10 @@
                     <groupId>org.ops4j.pax.logging</groupId>
                     <artifactId>pax-logging-log4j2</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>com.ibm.icu</groupId>
+                    <artifactId>icu4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
