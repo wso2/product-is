@@ -54,7 +54,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
-            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.vc-client-application</artifactId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.digital-wallet-application</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
