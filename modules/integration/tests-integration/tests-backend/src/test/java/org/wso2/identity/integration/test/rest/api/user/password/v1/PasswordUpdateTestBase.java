@@ -59,6 +59,10 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperat
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.rest.api.user.password.v1.model.PasswordChangeRequest;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.RestBaseClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -453,6 +457,32 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
         JSONObject authorizedAPIs = new JSONObject(
                 RESTTestBase.readResource(AUTHORIZED_APIS_JSON, PasswordUpdateTestBase.class));
         return new OrgMgtRestClient(isServer, tenantInfo, serverURL, authorizedAPIs);
+    }
+
+    /**
+     * Enables or disables the password history governance connector for the current tenant.
+     *
+     * @param enable true to enable password history enforcement; false to disable it.
+     * @throws Exception If an error occurred while updating the governance connector.
+     */
+    protected void setPasswordHistoryEnabled(boolean enable) throws Exception {
+
+        IdentityGovernanceRestClient governanceClient =
+                new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        try {
+            PropertyReq property = new PropertyReq();
+            property.setName("passwordHistory.enable");
+            property.setValue(String.valueOf(enable));
+
+            ConnectorsPatchReq connectorPatch = new ConnectorsPatchReq();
+            connectorPatch.setOperation(OperationEnum.UPDATE);
+            connectorPatch.addProperties(property);
+
+            governanceClient.updateConnectors("UGFzc3dvcmQgUG9saWNpZXM", "cGFzc3dvcmRIaXN0b3J5",
+                    connectorPatch);
+        } finally {
+            governanceClient.closeHttpClient();
+        }
     }
 
     /**

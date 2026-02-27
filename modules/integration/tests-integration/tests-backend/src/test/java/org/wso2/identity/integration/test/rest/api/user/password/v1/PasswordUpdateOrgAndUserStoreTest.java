@@ -111,6 +111,7 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
     public void testInit() throws Exception {
 
         initBase(userMode);
+        setPasswordHistoryEnabled(false);
 
         // Create root app (non-shared) for super-org-only tests.
         ApplicationResponseModel rootApp = createApp(ROOT_APP_NAME, false);
@@ -146,7 +147,7 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
         secondaryUserStoreDomainId = userStoreMgtRestClient.addUserStore(userStoreReq);
         assertTrue(userStoreMgtRestClient.waitForUserStoreDeployment(SECONDARY_DOMAIN),
                 "Secondary JDBC user store is not deployed.");
-
+        Thread.sleep(5000);
         // Create user in secondary userstore.
         secondaryUserId = createTestUser(SECONDARY_USER, SECONDARY_USER_PASSWORD);
 
@@ -167,7 +168,7 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
         userStoreMgtRestClient.addSubOrgUserStore(subOrgUserStoreReq, switchedM2MToken);
         assertTrue(userStoreMgtRestClient.waitForSubOrgUserStoreDeployment(SUB_ORG_SECONDARY_DOMAIN, switchedM2MToken),
                 "Sub-org secondary JDBC user store is not deployed.");
-
+        Thread.sleep(5000);
         // Create a user in the sub-org secondary userstore.
         subOrgSecondaryUserId = createSubOrgUser(
                 SUB_ORG_SECONDARY_USER, SUB_ORG_SECONDARY_USER_PASSWORD, switchedM2MToken);

@@ -78,6 +78,7 @@ public class PasswordUpdateSessionPreservationTest extends PasswordUpdateTestBas
     public void testInit() throws Exception {
 
         initBase(userMode);
+        setPasswordHistoryEnabled(false);
 
         ApplicationResponseModel application = createApp("PasswordUpdateSessionTestApp", true);
         appId = application.getId();

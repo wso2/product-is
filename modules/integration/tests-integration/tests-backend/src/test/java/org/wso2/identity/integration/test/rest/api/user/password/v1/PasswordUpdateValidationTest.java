@@ -31,13 +31,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
-import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
-import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.password.v1.model.PasswordChangeRequest;
-import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -66,10 +62,6 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
         return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
     }
 
-    // Base64-encoded category and connector IDs for the password policies governance connector.
-    private static final String PASSWORD_POLICIES_CATEGORY_ID = "UGFzc3dvcmQgUG9saWNpZXM";
-    private static final String PASSWORD_HISTORY_CONNECTOR_ID = "cGFzc3dvcmRIaXN0b3J5";
-
     private static final String VALIDATION_USER_1 = "validationTestUser1";
     private static final String VALIDATION_USER_1_PASSWORD = "ValidTest1@123";
     private static final String VALID_NEW_PASSWORD = "ValidNew@123";
@@ -86,7 +78,6 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
     private String clientSecret;
     private String user1AccessToken;
     private String user2AccessToken;
-    private IdentityGovernanceRestClient governanceRestClient;
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
@@ -108,8 +99,6 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
         user1Id = createTestUser(VALIDATION_USER_1, VALIDATION_USER_1_PASSWORD);
         user2Id = createTestUser(VALIDATION_USER_2, VALIDATION_USER_2_PASSWORD);
 
-        governanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
-
         // Obtain access tokens once; they remain valid for the full class run due to session preservation.
         user1AccessToken = getUserAccessToken(clientId, clientSecret, VALIDATION_USER_1,
                 VALIDATION_USER_1_PASSWORD, PASSWORD_UPDATE_SCOPE);
@@ -129,11 +118,6 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
             safeCleanup(() -> {
                 if (user2Id != null) {
                     scim2RestClient.deleteUser(user2Id);
-                }
-            });
-            safeCleanup(() -> {
-                if (governanceRestClient != null) {
-                    governanceRestClient.closeHttpClient();
                 }
             });
             safeCleanup(() -> {
@@ -212,7 +196,7 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
     public void testPasswordHistoryViolation() throws Exception {
 
         // Password history is explicitly enabled only for this test and disabled in the finally block.
-        setPasswordHistoryEnabled(governanceRestClient, true);
+        setPasswordHistoryEnabled(true);
 
         try {
             // First change: initial password → NEW_PASSWORD_1.
@@ -240,7 +224,7 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
                         "Expected error code PWD-10003 for password history violation.");
             }
         } finally {
-            setPasswordHistoryEnabled(governanceRestClient, false);
+            setPasswordHistoryEnabled(false);
         }
     }
 
@@ -399,27 +383,6 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
             getTenantQualifiedURL(serverURL + CHANGE_PASSWORD_PATH, tenantInfo.getDomain()),
             restBaseClient.toJSONString(requestBody),
             headers);
-    }
-
-    /**
-     * Enables or disables the password history governance connector for the tenant.
-     *
-     * @param governanceClient the client used to call the Identity Governance REST API
-     * @param enable           true to enable password history enforcement; false to disable it
-     * @throws IOException if the REST call fails
-     */
-    private void setPasswordHistoryEnabled(IdentityGovernanceRestClient governanceClient, boolean enable)
-            throws IOException {
-
-        PropertyReq property = new PropertyReq();
-        property.setName("passwordHistory.enable");
-        property.setValue(String.valueOf(enable));
-
-        ConnectorsPatchReq connectorPatch = new ConnectorsPatchReq();
-        connectorPatch.setOperation(OperationEnum.UPDATE);
-        connectorPatch.addProperties(property);
-
-        governanceClient.updateConnectors(PASSWORD_POLICIES_CATEGORY_ID, PASSWORD_HISTORY_CONNECTOR_ID, connectorPatch);
     }
 
     /**
