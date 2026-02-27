@@ -203,6 +203,44 @@ public class ConfigSuccessTest extends ConfigTestBase {
     }
 
     @Test(dependsOnMethods = {"testPatchConfigs"})
+    public void testGetPreserveCurrentSessionAtPasswordUpdateConfig() throws Exception {
+
+        Response response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("preserveCurrentSessionAtPasswordUpdate", equalTo(false));
+    }
+
+    @Test(dependsOnMethods = {"testGetPreserveCurrentSessionAtPasswordUpdateConfig"})
+    public void testPatchPreserveCurrentSessionAtPasswordUpdateConfig() throws Exception {
+
+        String body = readResource("patch-modify-preserve-session-at-password-update-config.json");
+        Response response = getResponseOfPatch(CONFIGS_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("preserveCurrentSessionAtPasswordUpdate", equalTo(true));
+
+        String defaultBody = readResource("default-preserve-session-at-password-update-config.json");
+        getResponseOfPatch(CONFIGS_API_BASE_PATH, defaultBody);
+        response = getResponseOfGet(CONFIGS_API_BASE_PATH);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("preserveCurrentSessionAtPasswordUpdate", equalTo(false));
+    }
+
+    @Test(dependsOnMethods = {"testPatchConfigs"})
     public void testUpdateScimConfigs() throws Exception {
 
         String body = readResource("update-scim-configs.json");
