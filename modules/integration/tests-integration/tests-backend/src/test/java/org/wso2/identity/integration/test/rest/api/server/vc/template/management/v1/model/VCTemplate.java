@@ -30,7 +30,7 @@ public class VCTemplate {
     private String identifier;
     private String displayName;
     private String format;
-    private List<String> claims = new ArrayList<>();
+    private List<Claim> claims = new ArrayList<>();
     private Integer expiresIn;
     private String description;
     private String offerId;
@@ -79,12 +79,12 @@ public class VCTemplate {
         return this;
     }
 
-    public List<String> getClaims() {
+    public List<Claim> getClaims() {
 
         return claims;
     }
 
-    public VCTemplate claims(List<String> claims) {
+    public VCTemplate claims(List<Claim> claims) {
 
         this.claims = claims;
         return this;
