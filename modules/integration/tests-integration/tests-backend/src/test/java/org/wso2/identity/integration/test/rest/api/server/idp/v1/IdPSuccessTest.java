@@ -811,7 +811,7 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("rulesEnabled", equalTo(false))
                 .body("properties", notNullValue())
                 .body("properties.find{ it.key == 'scim-enable-pwd-provisioning' }.value", equalTo("true"))
-                // Secret properties are masked in the response, hence the value assertion is not removed.
+                // Secret properties are masked in the response, hence the value assertion is not performed.
                 //.body("properties.find{ it.key == 'scim-password' }.value", equalTo("admin"))
                 .body("properties.find{ it.key == 'scim-user-ep' }.value", equalTo("https://localhost:9445/userinfo"))
                 .body("properties.find{ it.key == 'scim-username' }.value", equalTo("admin"));
