@@ -180,7 +180,7 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
             List<APIResourceListItem> filteredAPIResource =
                     restClient.getAPIResourcesWithFiltering("identifier+eq+" + apiIdentifier);
             if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
-                continue;
+                Assert.fail("Required API resource not found for identifier: " + apiIdentifier);
             }
             String apiId = filteredAPIResource.get(0).getId();
             List<ScopeGetModel> apiResourceScopes = restClient.getAPIResourceScopes(apiId);
@@ -430,19 +430,15 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
                 "Basic " + Base64.encodeBase64String(credentials.getBytes()));
         headers[1] = new BasicHeader("Content-Type", "application/json");
         headers[2] = new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        RestBaseClient restBaseClient = new RestBaseClient();
-        try {
-            CloseableHttpResponse response = restBaseClient.getResponseOfHttpPatch(
-                    getTenantQualifiedURL(
-                            serverURL + SERVER_CONFIGS_PATH, tenantInfo.getDomain()),
-                            buildPreserveSessionPatchBody(preserve),
-                            headers);
+        try (CloseableHttpResponse response = restBaseClient.getResponseOfHttpPatch(
+                getTenantQualifiedURL(
+                        serverURL + SERVER_CONFIGS_PATH, tenantInfo.getDomain()),
+                buildPreserveSessionPatchBody(preserve),
+                headers)) {
             int statusCode = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
             Assert.assertTrue(statusCode >= 200 && statusCode < 300,
                     "Failed to update preserveCurrentSessionAtPasswordUpdate config. Status: " + statusCode);
-        } finally {
-            restBaseClient.client.close();
         }
     }
 
@@ -502,6 +498,26 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
         if (restBaseClient != null) {
             restBaseClient.client.close();
         }
+    }
+
+    /**
+     * Execute a cleanup action, swallowing any exception so that subsequent cleanup steps still run.
+     *
+     * @param action Cleanup action to execute.
+     */
+    protected void safeCleanup(CleanupAction action) {
+
+        try {
+            action.execute();
+        } catch (Exception ignored) {
+            // Intentionally suppressed so that remaining cleanup steps and the finally block always execute.
+        }
+    }
+
+    @FunctionalInterface
+    protected interface CleanupAction {
+
+        void execute() throws Exception;
     }
 
     /**

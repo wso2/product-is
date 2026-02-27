@@ -144,7 +144,6 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
             userStoreReq.addPropertiesItem(new Property().name(propertyDTO.getName()).value(propertyDTO.getValue()));
         }
         secondaryUserStoreDomainId = userStoreMgtRestClient.addUserStore(userStoreReq);
-        Thread.sleep(UserStoreMgtRestClient.WAIT_TIME_MILLIS);
         assertTrue(userStoreMgtRestClient.waitForUserStoreDeployment(SECONDARY_DOMAIN),
                 "Secondary JDBC user store is not deployed.");
 
@@ -177,51 +176,82 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
     @AfterClass(alwaysRun = true)
     public void testCleanup() throws Exception {
 
-        // Clean up sub-org resources (users first, then userstore).
-        if (subOrgSecondaryUserId != null) {
-            scim2RestClient.deleteSubOrgUser(subOrgSecondaryUserId, switchedM2MToken);
-        }
-        if (switchedM2MToken != null && userStoreMgtRestClient != null) {
-            userStoreMgtRestClient.deleteSubOrgUserStore(SUB_ORG_SECONDARY_DOMAIN, switchedM2MToken);
-        }
-        if (subOrgUserId != null) {
-            scim2RestClient.deleteSubOrgUser(subOrgUserId, switchedM2MToken);
-        }
+        try {
+            // Clean up sub-org resources (users first, then userstore).
+            safeCleanup(() -> {
+                if (subOrgSecondaryUserId != null) {
+                    scim2RestClient.deleteSubOrgUser(subOrgSecondaryUserId, switchedM2MToken);
+                }
+            });
 
-        // Delete root-level apps.
-        if (rootAppId != null) {
-            deleteApp(rootAppId);
-        }
-        if (sharedAppId != null) {
-            deleteApp(sharedAppId);
-        }
+            safeCleanup(() -> {
+                if (switchedM2MToken != null && userStoreMgtRestClient != null) {
+                    userStoreMgtRestClient.deleteSubOrgUserStore(SUB_ORG_SECONDARY_DOMAIN, switchedM2MToken);
+                }
+            });
 
-        // Delete sub-organization.
-        if (organizationId != null) {
-            orgMgtRestClient.deleteOrganization(organizationId);
-        }
+            safeCleanup(() -> {
+                if (subOrgUserId != null) {
+                    scim2RestClient.deleteSubOrgUser(subOrgUserId, switchedM2MToken);
+                }
+            });
 
-        // Clean up super-org resources (users first, then userstore).
-        if (secondaryUserId != null) {
-            scim2RestClient.deleteUser(secondaryUserId);
-        }
-        if (primaryUserId != null) {
-            scim2RestClient.deleteUser(primaryUserId);
-        }
-        if (secondaryUserStoreDomainId != null && userStoreMgtRestClient != null) {
-            userStoreMgtRestClient.deleteUserStore(secondaryUserStoreDomainId);
-            userStoreMgtRestClient.waitForUserStoreUnDeployment(secondaryUserStoreDomainId);
-        }
+            // Delete root-level apps.
+            safeCleanup(() -> {
+                if (rootAppId != null) {
+                    deleteApp(rootAppId);
+                }
+            });
 
-        // Close all HTTP clients.
-        if (orgMgtRestClient != null) {
-            orgMgtRestClient.closeHttpClient();
+            safeCleanup(() -> {
+                if (sharedAppId != null) {
+                    deleteApp(sharedAppId);
+                }
+            });
+
+            // Delete sub-organization.
+            safeCleanup(() -> {
+                if (organizationId != null) {
+                    orgMgtRestClient.deleteOrganization(organizationId);
+                }
+            });
+
+            // Clean up super-org resources (users first, then userstore).
+            safeCleanup(() -> {
+                if (secondaryUserId != null) {
+                    scim2RestClient.deleteUser(secondaryUserId);
+                }
+            });
+
+            safeCleanup(() -> {
+                if (primaryUserId != null) {
+                    scim2RestClient.deleteUser(primaryUserId);
+                }
+            });
+
+            safeCleanup(() -> {
+                if (secondaryUserStoreDomainId != null && userStoreMgtRestClient != null) {
+                    userStoreMgtRestClient.deleteUserStore(secondaryUserStoreDomainId);
+                    userStoreMgtRestClient.waitForUserStoreUnDeployment(secondaryUserStoreDomainId);
+                }
+            });
+
+            // Close all HTTP clients.
+            safeCleanup(() -> {
+                if (orgMgtRestClient != null) {
+                    orgMgtRestClient.closeHttpClient();
+                }
+            });
+
+            safeCleanup(() -> {
+                if (userStoreMgtRestClient != null) {
+                    userStoreMgtRestClient.closeHttpClient();
+                }
+            });
+        } finally {
+            setPreserveSessionConfig(false);
+            cleanupBase();
         }
-        if (userStoreMgtRestClient != null) {
-            userStoreMgtRestClient.closeHttpClient();
-        }
-        setPreserveSessionConfig(false);
-        cleanupBase();
     }
 
     // -----------------------------------------------------------------------
@@ -238,9 +268,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
                 PRIMARY_USER_NEW_PWD)) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Expected 204 for primary userstore password change via root app.");
+        } finally {
+            adminResetSuperOrgUserPassword(primaryUserId, PRIMARY_USER_PASSWORD);
         }
-
-        adminResetSuperOrgUserPassword(primaryUserId, PRIMARY_USER_PASSWORD);
     }
 
     @Test(description = "Verify password change for super org user in SECONDARY userstore via root app")
@@ -253,9 +283,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
                 SECONDARY_USER_NEW_PWD)) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Expected 204 for secondary userstore password change via root app.");
+        } finally {
+            adminResetSuperOrgUserPassword(secondaryUserId, SECONDARY_USER_PASSWORD);
         }
-
-        adminResetSuperOrgUserPassword(secondaryUserId, SECONDARY_USER_PASSWORD);
     }
 
     // -----------------------------------------------------------------------
@@ -272,9 +302,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
                 PRIMARY_USER_NEW_PWD)) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Expected 204 for primary userstore password change via shared app.");
+        } finally {
+            adminResetSuperOrgUserPassword(primaryUserId, PRIMARY_USER_PASSWORD);
         }
-
-        adminResetSuperOrgUserPassword(primaryUserId, PRIMARY_USER_PASSWORD);
     }
 
     @Test(description = "Verify password change for super org user in SECONDARY userstore via shared app")
@@ -287,9 +317,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
                 SECONDARY_USER_NEW_PWD)) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Expected 204 for secondary userstore password change via shared app.");
+        } finally {
+            adminResetSuperOrgUserPassword(secondaryUserId, SECONDARY_USER_PASSWORD);
         }
-
-        adminResetSuperOrgUserPassword(secondaryUserId, SECONDARY_USER_PASSWORD);
     }
 
     // -----------------------------------------------------------------------
@@ -306,9 +336,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
                 SUB_ORG_USER_NEW_PWD)) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Expected 204 for sub-org primary userstore password change via shared app.");
+        } finally {
+            adminResetSubOrgUserPassword(subOrgUserId, SUB_ORG_USER_PASSWORD, switchedM2MToken);
         }
-
-        adminResetSubOrgUserPassword(subOrgUserId, SUB_ORG_USER_PASSWORD, switchedM2MToken);
     }
 
     @Test(description = "Verify password change for sub-org user in SECONDARY userstore via shared app")
@@ -321,9 +351,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
                 SUB_ORG_SECONDARY_USER_PASSWORD, SUB_ORG_SECONDARY_USER_NEW_PWD)) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Expected 204 for sub-org secondary userstore password change via shared app.");
+        } finally {
+            adminResetSubOrgUserPassword(subOrgSecondaryUserId, SUB_ORG_SECONDARY_USER_PASSWORD, switchedM2MToken);
         }
-
-        adminResetSubOrgUserPassword(subOrgSecondaryUserId, SUB_ORG_SECONDARY_USER_PASSWORD, switchedM2MToken);
     }
 
     /**

@@ -102,23 +102,36 @@ public class PasswordUpdateSessionPreservationTest extends PasswordUpdateTestBas
     @AfterClass(alwaysRun = true)
     public void testCleanup() throws Exception {
 
-        if (subOrgUserId != null) {
-            scim2RestClient.deleteSubOrgUser(subOrgUserId, switchedM2MToken);
+        try {
+            safeCleanup(() -> {
+                if (subOrgUserId != null) {
+                    scim2RestClient.deleteSubOrgUser(subOrgUserId, switchedM2MToken);
+                }
+            });
+            safeCleanup(() -> {
+                if (organizationId != null) {
+                    orgMgtRestClient.deleteOrganization(organizationId);
+                }
+            });
+            safeCleanup(() -> {
+                if (orgMgtRestClient != null) {
+                    orgMgtRestClient.closeHttpClient();
+                }
+            });
+            safeCleanup(() -> {
+                if (userId != null) {
+                    scim2RestClient.deleteUser(userId);
+                }
+            });
+            safeCleanup(() -> {
+                if (appId != null) {
+                    deleteApp(appId);
+                }
+            });
+        } finally {
+            setPreserveSessionConfig(false);
+            cleanupBase();
         }
-        if (organizationId != null) {
-            orgMgtRestClient.deleteOrganization(organizationId);
-        }
-        if (orgMgtRestClient != null) {
-            orgMgtRestClient.closeHttpClient();
-        }
-        if (userId != null) {
-            scim2RestClient.deleteUser(userId);
-        }
-        if (appId != null) {
-            deleteApp(appId);
-        }
-        setPreserveSessionConfig(false);
-        cleanupBase();
     }
 
     @Test(priority = 1,

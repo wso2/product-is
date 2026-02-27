@@ -109,28 +109,41 @@ public class PasswordUpdateActionTest extends PasswordUpdateTestBase {
     @AfterClass(alwaysRun = true)
     public void testCleanup() throws Exception {
 
-        // Deactivate and delete action.
-        if (actionId != null) {
-            actionsRestClient.deactivateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId);
-            actionsRestClient.deleteActionType(PRE_UPDATE_PASSWORD_API_PATH, actionId);
-        }
+        try {
+            // Deactivate and delete action.
+            safeCleanup(() -> {
+                if (actionId != null) {
+                    actionsRestClient.deactivateAction(PRE_UPDATE_PASSWORD_API_PATH, actionId);
+                    actionsRestClient.deleteActionType(PRE_UPDATE_PASSWORD_API_PATH, actionId);
+                }
+            });
 
-        if (serviceExtensionMockServer != null) {
-            serviceExtensionMockServer.stopServer();
-            serviceExtensionMockServer = null;
-        }
+            safeCleanup(() -> {
+                if (serviceExtensionMockServer != null) {
+                    serviceExtensionMockServer.stopServer();
+                    serviceExtensionMockServer = null;
+                }
+            });
 
-        if (userId != null) {
-            scim2RestClient.deleteUser(userId);
+            safeCleanup(() -> {
+                if (userId != null) {
+                    scim2RestClient.deleteUser(userId);
+                }
+            });
+            safeCleanup(() -> {
+                if (appId != null) {
+                    deleteApp(appId);
+                }
+            });
+            safeCleanup(() -> {
+                if (actionsRestClient != null) {
+                    actionsRestClient.closeHttpClient();
+                }
+            });
+        } finally {
+            setPreserveSessionConfig(false);
+            cleanupBase();
         }
-        if (appId != null) {
-            deleteApp(appId);
-        }
-        if (actionsRestClient != null) {
-            actionsRestClient.closeHttpClient();
-        }
-        setPreserveSessionConfig(false);
-        cleanupBase();
     }
 
     @Test(priority = 1, description = "Verify password update fails when pre-update action returns FAILED")

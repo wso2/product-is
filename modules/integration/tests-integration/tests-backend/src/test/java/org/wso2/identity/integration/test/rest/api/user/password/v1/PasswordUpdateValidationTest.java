@@ -120,20 +120,31 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
     @AfterClass(alwaysRun = true)
     public void testCleanup() throws Exception {
 
-        if (user1Id != null) {
-            scim2RestClient.deleteUser(user1Id);
+        try {
+            safeCleanup(() -> {
+                if (user1Id != null) {
+                    scim2RestClient.deleteUser(user1Id);
+                }
+            });
+            safeCleanup(() -> {
+                if (user2Id != null) {
+                    scim2RestClient.deleteUser(user2Id);
+                }
+            });
+            safeCleanup(() -> {
+                if (governanceRestClient != null) {
+                    governanceRestClient.closeHttpClient();
+                }
+            });
+            safeCleanup(() -> {
+                if (appId != null) {
+                    deleteApp(appId);
+                }
+            });
+        } finally {
+            setPreserveSessionConfig(false);
+            cleanupBase();
         }
-        if (user2Id != null) {
-            scim2RestClient.deleteUser(user2Id);
-        }
-        if (governanceRestClient != null) {
-            governanceRestClient.closeHttpClient();
-        }
-        if (appId != null) {
-            deleteApp(appId);
-        }
-        setPreserveSessionConfig(false);
-        cleanupBase();
     }
 
     // ========================

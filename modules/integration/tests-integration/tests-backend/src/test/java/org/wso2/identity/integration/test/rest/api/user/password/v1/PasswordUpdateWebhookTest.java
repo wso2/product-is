@@ -93,17 +93,26 @@ public class PasswordUpdateWebhookTest extends PasswordUpdateTestBase {
     @AfterClass(alwaysRun = true)
     public void testCleanup() throws Exception {
 
-        if (webhookEventTestManager != null) {
-            webhookEventTestManager.teardown();
+        try {
+            safeCleanup(() -> {
+                if (webhookEventTestManager != null) {
+                    webhookEventTestManager.teardown();
+                }
+            });
+            safeCleanup(() -> {
+                if (userId != null) {
+                    scim2RestClient.deleteUser(userId);
+                }
+            });
+            safeCleanup(() -> {
+                if (appId != null) {
+                    deleteApp(appId);
+                }
+            });
+        } finally {
+            setPreserveSessionConfig(false);
+            cleanupBase();
         }
-        if (userId != null) {
-            scim2RestClient.deleteUser(userId);
-        }
-        if (appId != null) {
-            deleteApp(appId);
-        }
-        setPreserveSessionConfig(false);
-        cleanupBase();
     }
 
     @Test(description = "Verify POST_UPDATE_CREDENTIAL webhook fires after successful password change")

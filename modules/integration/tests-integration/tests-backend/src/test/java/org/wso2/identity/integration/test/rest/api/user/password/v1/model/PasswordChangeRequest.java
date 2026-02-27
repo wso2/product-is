@@ -21,57 +21,59 @@ package org.wso2.identity.integration.test.rest.api.user.password.v1.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Objects;
 
-public class PasswordChangeRequest {
-
+public class PasswordChangeRequest  {
+  
     private String currentPassword;
     private String newPassword;
 
     /**
-     **/
+    * Current password of the user.
+    **/
     public PasswordChangeRequest currentPassword(String currentPassword) {
 
         this.currentPassword = currentPassword;
         return this;
     }
-
+    
     @ApiModelProperty(example = "CurrentPassword123", required = true, value = "Current password of the user.")
     @JsonProperty("currentPassword")
     @Valid
     @NotNull(message = "Property currentPassword cannot be null.")
+
     public String getCurrentPassword() {
         return currentPassword;
     }
-
     public void setCurrentPassword(String currentPassword) {
         this.currentPassword = currentPassword;
     }
 
     /**
-     **/
+    * New password to set for the user.
+    **/
     public PasswordChangeRequest newPassword(String newPassword) {
 
         this.newPassword = newPassword;
         return this;
     }
-
+    
     @ApiModelProperty(example = "NewPassword456", required = true, value = "New password to set for the user.")
     @JsonProperty("newPassword")
     @Valid
     @NotNull(message = "Property newPassword cannot be null.")
+
     public String getNewPassword() {
         return newPassword;
     }
-
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
 
         if (this == o) {
             return true;
@@ -81,7 +83,7 @@ public class PasswordChangeRequest {
         }
         PasswordChangeRequest passwordChangeRequest = (PasswordChangeRequest) o;
         return Objects.equals(this.currentPassword, passwordChangeRequest.currentPassword) &&
-                Objects.equals(this.newPassword, passwordChangeRequest.newPassword);
+            Objects.equals(this.newPassword, passwordChangeRequest.newPassword);
     }
 
     @Override
@@ -92,17 +94,24 @@ public class PasswordChangeRequest {
     @Override
     public String toString() {
 
-        return "class PasswordChangeRequest {\n" +
-                "    currentPassword: " + toIndentedString(currentPassword) + "\n" +
-                "    newPassword: " + toIndentedString(newPassword) + "\n" +
-                "}";
+        StringBuilder sb = new StringBuilder();
+        sb.append("class PasswordChangeRequest {\n");
+        
+        sb.append("    currentPassword: ").append(toIndentedString(currentPassword)).append("\n");
+        sb.append("    newPassword: ").append(toIndentedString(newPassword)).append("\n");
+        sb.append("}");
+        return sb.toString();
     }
 
+    /**
+    * Convert the given object to string with each line indented by 4 spaces
+    * (except the first line).
+    */
     private String toIndentedString(java.lang.Object o) {
 
         if (o == null) {
             return "null";
         }
-        return o.toString();
+        return o.toString().replace("\n", "\n");
     }
 }
