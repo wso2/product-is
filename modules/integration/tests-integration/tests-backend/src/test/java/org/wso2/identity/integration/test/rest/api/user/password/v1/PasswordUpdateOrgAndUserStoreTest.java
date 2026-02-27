@@ -67,6 +67,8 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
     private static final String SECONDARY_DOMAIN = "SECONDARY";
     private static final String SUPER_TENANT_SECONDARY_USER_STORE_DB = "SUPER_TENANT_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
     private static final String TENANT_SECONDARY_USER_STORE_DB = "TENANT_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
+    private static final String SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB = "SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
+    private static final String TENANT_SUB_ORG_SECONDARY_USER_STORE_DB = "TENANT_SUB_ORG_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
     private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
     private static final String SECONDARY_USER = SECONDARY_DOMAIN + "/orgSecondaryUser";
     private static final String SECONDARY_USER_PASSWORD = "SecondaryUser@123";
@@ -142,6 +144,7 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
             userStoreReq.addPropertiesItem(new Property().name(propertyDTO.getName()).value(propertyDTO.getValue()));
         }
         secondaryUserStoreDomainId = userStoreMgtRestClient.addUserStore(userStoreReq);
+        Thread.sleep(UserStoreMgtRestClient.WAIT_TIME_MILLIS);
         assertTrue(userStoreMgtRestClient.waitForUserStoreDeployment(SECONDARY_DOMAIN),
                 "Secondary JDBC user store is not deployed.");
 
@@ -156,9 +159,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
         // Create a user in the sub-organization.
         subOrgUserId = createSubOrgUser(SUB_ORG_USER, SUB_ORG_USER_PASSWORD, switchedM2MToken);
 
-        // Set up secondary JDBC userstore in the sub-organization (reuse same JDBC properties).
+        // Set up secondary JDBC userstore in the sub-organization with a distinct database.
         UserStoreReq subOrgUserStoreReq = new UserStoreReq().typeId(USER_STORE_TYPE).name(SUB_ORG_SECONDARY_DOMAIN);
-        for (PropertyDTO propertyDTO : userStoreProperties) {
+        for (PropertyDTO propertyDTO : getSubOrgSecondaryUserStoreProperties()) {
             subOrgUserStoreReq.addPropertiesItem(
                     new Property().name(propertyDTO.getName()).value(propertyDTO.getValue()));
         }
@@ -334,5 +337,18 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
             return userStoreConfigUtils.getJDBCUserStoreProperties(SUPER_TENANT_SECONDARY_USER_STORE_DB);
         }
         return userStoreConfigUtils.getJDBCUserStoreProperties(TENANT_SECONDARY_USER_STORE_DB);
+    }
+
+    /**
+     * Helper method to retrieve userstore properties for the sub-organization based on the current test user mode.
+      * @return An array of PropertyDTO objects containing the userstore properties.
+      * @throws Exception If an error occurs while retrieving the userstore properties.
+      */
+    private PropertyDTO[] getSubOrgSecondaryUserStoreProperties() throws Exception {
+
+        if (userMode == TestUserMode.SUPER_TENANT_ADMIN) {
+            return userStoreConfigUtils.getJDBCUserStoreProperties(SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB);
+        }
+        return userStoreConfigUtils.getJDBCUserStoreProperties(TENANT_SUB_ORG_SECONDARY_USER_STORE_DB);
     }
 }

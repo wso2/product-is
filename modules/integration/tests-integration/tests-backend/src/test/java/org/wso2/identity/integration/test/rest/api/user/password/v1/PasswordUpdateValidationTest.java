@@ -23,7 +23,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -35,12 +34,16 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq.OperationEnum;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAddGroupobj;
 import org.wso2.identity.integration.test.rest.api.user.password.v1.model.PasswordChangeRequest;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
-import org.wso2.identity.integration.test.restclients.RestBaseClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -357,8 +360,6 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
      * @throws IOException if the HTTP request fails
      */
     private CloseableHttpResponse changePasswordWithBody(String accessToken, String body) throws IOException {
-
-        RestBaseClient restBaseClient = new RestBaseClient();
         Header[] headers = new Header[3];
         headers[0] = new BasicHeader("Authorization", "Bearer " + accessToken);
         headers[1] = new BasicHeader("Content-Type", "application/json");
@@ -377,18 +378,16 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
      * @throws IOException if the HTTP request fails
      */
     private CloseableHttpResponse changePasswordNoAuth(String currentPassword, String newPassword) throws IOException {
-
-        RestBaseClient restBaseClient = new RestBaseClient();
-        Header[] headers = new Header[2];
-        headers[0] = new BasicHeader("Content-Type", "application/json");
-        headers[1] = new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        PasswordChangeRequest requestBody = new PasswordChangeRequest()
-                .currentPassword(currentPassword)
-                .newPassword(newPassword);
-        return restBaseClient.getResponseOfHttpPost(
-                getTenantQualifiedURL(serverURL + CHANGE_PASSWORD_PATH, tenantInfo.getDomain()),
-                restBaseClient.toJSONString(requestBody),
-                headers);
+    Header[] headers = new Header[2];
+    headers[0] = new BasicHeader("Content-Type", "application/json");
+    headers[1] = new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT);
+    PasswordChangeRequest requestBody = new PasswordChangeRequest()
+        .currentPassword(currentPassword)
+        .newPassword(newPassword);
+    return restBaseClient.getResponseOfHttpPost(
+            getTenantQualifiedURL(serverURL + CHANGE_PASSWORD_PATH, tenantInfo.getDomain()),
+            restBaseClient.toJSONString(requestBody),
+            headers);
     }
 
     /**
@@ -421,26 +420,18 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
      */
     private void setUserAccountLocked(String userId, boolean locked) throws Exception {
 
-        org.json.simple.JSONObject payload = new org.json.simple.JSONObject();
-
-        JSONArray schemas = new JSONArray();
-        schemas.add("urn:ietf:params:scim:api:messages:2.0:PatchOp");
-        payload.put("schemas", schemas);
-
-        org.json.simple.JSONObject wso2Schema = new org.json.simple.JSONObject();
+        Map<String, Object> wso2Schema = new HashMap<>();
         wso2Schema.put("accountLocked", locked);
 
-        org.json.simple.JSONObject value = new org.json.simple.JSONObject();
-        value.put("urn:scim:wso2:schema", wso2Schema);
+        Map<String, Object> valueMap = new HashMap<>();
+        valueMap.put("urn:scim:wso2:schema", wso2Schema);
 
-        org.json.simple.JSONObject op = new org.json.simple.JSONObject();
-        op.put("op", "replace");
-        op.put("value", value);
+        PatchOperationRequestObject patchRequest = new PatchOperationRequestObject()
+                .schemas(Collections.singletonList("urn:ietf:params:scim:api:messages:2.0:PatchOp"))
+                .addOperations(new UserItemAddGroupobj()
+                        .op(UserItemAddGroupobj.OpEnum.REPLACE)
+                        .value(valueMap));
 
-        JSONArray operations = new JSONArray();
-        operations.add(op);
-        payload.put("Operations", operations);
-
-        scim2RestClient.patchUserWithRawJSON(payload.toJSONString(), userId);
+        scim2RestClient.updateUser(patchRequest, userId);
     }
 }

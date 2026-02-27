@@ -100,6 +100,7 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
     protected static final String AUTHORIZED_APIS_JSON = "app-authorized-apis.json";
 
     protected SCIM2RestClient scim2RestClient;
+    protected RestBaseClient restBaseClient;
 
     /**
      * Initialize the test case.
@@ -111,6 +112,7 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
 
         super.init(userMode);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        restBaseClient = new RestBaseClient();
     }
 
     /**
@@ -417,24 +419,30 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
      */
     protected void setPreserveSessionConfig(boolean preserve) throws Exception {
 
+        if (tenantInfo == null || tenantInfo.getContextUser() == null) {
+            return;
+        }
         String credentials = tenantInfo.getContextUser().getUserName() + ":" +
                 tenantInfo.getContextUser().getPassword();
 
-        RestBaseClient restBaseClient = new RestBaseClient();
         Header[] headers = new Header[3];
         headers[0] = new BasicHeader("Authorization",
                 "Basic " + Base64.encodeBase64String(credentials.getBytes()));
         headers[1] = new BasicHeader("Content-Type", "application/json");
         headers[2] = new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT);
-        try (CloseableHttpResponse response = restBaseClient.getResponseOfHttpPatch(
-                getTenantQualifiedURL(
-                    serverURL + SERVER_CONFIGS_PATH, tenantInfo.getDomain()),
-                    buildPreserveSessionPatchBody(preserve), 
-                    headers)) {
+        RestBaseClient restBaseClient = new RestBaseClient();
+        try {
+            CloseableHttpResponse response = restBaseClient.getResponseOfHttpPatch(
+                    getTenantQualifiedURL(
+                            serverURL + SERVER_CONFIGS_PATH, tenantInfo.getDomain()),
+                            buildPreserveSessionPatchBody(preserve),
+                            headers);
             int statusCode = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
             Assert.assertTrue(statusCode >= 200 && statusCode < 300,
                     "Failed to update preserveCurrentSessionAtPasswordUpdate config. Status: " + statusCode);
+        } finally {
+            restBaseClient.client.close();
         }
     }
 
@@ -491,6 +499,9 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
         if (restClient != null) {
             restClient.closeHttpClient();
         }
+        if (restBaseClient != null) {
+            restBaseClient.client.close();
+        }
     }
 
     /**
@@ -519,7 +530,6 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
     private CloseableHttpResponse doChangePasswordRequest(String url, String accessToken, String currentPassword,
                                                           String newPassword) throws IOException {
 
-        RestBaseClient restBaseClient = new RestBaseClient();
         Header[] headers = new Header[3];
         headers[0] = new BasicHeader("Authorization", "Bearer " + accessToken);
         headers[1] = new BasicHeader("Content-Type", "application/json");
@@ -527,7 +537,8 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
         PasswordChangeRequest requestBody = new PasswordChangeRequest()
                 .currentPassword(currentPassword)
                 .newPassword(newPassword);
-        return restBaseClient.getResponseOfHttpPost(url, restBaseClient.toJSONString(requestBody), headers);
+        return restBaseClient.getResponseOfHttpPost(url,
+                restBaseClient.toJSONString(requestBody), headers);
     }
 
     /**
@@ -541,6 +552,7 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
         Map<String, String> passwordValue = new HashMap<>();
         passwordValue.put("password", password);
         return new PatchOperationRequestObject()
+                .schemas(Collections.singletonList("urn:ietf:params:scim:api:messages:2.0:PatchOp"))
                 .addOperations(new UserItemAddGroupobj()
                         .op(UserItemAddGroupobj.OpEnum.REPLACE)
                         .value(passwordValue));
