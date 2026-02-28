@@ -21,12 +21,17 @@ package org.wso2.identity.integration.test.rest.api.user.password.v1;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
-import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
@@ -84,6 +89,9 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
     private static final String SUB_ORG_SECONDARY_USER_PASSWORD = "SubOrgSecStore@123";
     private static final String SUB_ORG_SECONDARY_USER_NEW_PWD = "SubOrgSecNew@123";
 
+    private static final String DB_USER_NAME = "wso2automation";
+    private static final String DB_USER_PASSWORD = "wso2automation";
+
     private String primaryUserId;
     private String secondaryUserId;
 
@@ -98,7 +106,6 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
     // Secondary userstore infrastructure.
     private UserStoreMgtRestClient userStoreMgtRestClient;
     private String secondaryUserStoreDomainId;
-    private final UserStoreConfigUtils userStoreConfigUtils = new UserStoreConfigUtils();
 
     // Sub-org infrastructure.
     private OrgMgtRestClient orgMgtRestClient;
@@ -356,28 +363,100 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
     }
 
     /**
-     * Helper method to retrieve userstore properties based on the current test user mode.
-     * @return
-     * @throws Exception
+     * Helper method to retrieve userstore properties for the root organization based on the current test user mode.
+     *
+     * @return An array of PropertyDTO objects containing the userstore properties.
+     * @throws IOException            If an error occurs when setting JDBC userstore properties.
+     * @throws SQLException           If an error occurs when performing a db action.
+     * @throws ClassNotFoundException If it fails to find the relevant java class.
      */
-    private PropertyDTO[] getSecondaryUserStoreProperties() throws Exception {
+    private PropertyDTO[] getSecondaryUserStoreProperties()
+            throws IOException, SQLException, ClassNotFoundException {
 
-        if (userMode == TestUserMode.SUPER_TENANT_ADMIN) {
-            return userStoreConfigUtils.getJDBCUserStoreProperties(SUPER_TENANT_SECONDARY_USER_STORE_DB);
-        }
-        return userStoreConfigUtils.getJDBCUserStoreProperties(TENANT_SECONDARY_USER_STORE_DB);
+        String dbName = userMode == TestUserMode.SUPER_TENANT_ADMIN
+                ? SUPER_TENANT_SECONDARY_USER_STORE_DB : TENANT_SECONDARY_USER_STORE_DB;
+        return buildUserStoreProperties(dbName);
     }
 
     /**
      * Helper method to retrieve userstore properties for the sub-organization based on the current test user mode.
-      * @return An array of PropertyDTO objects containing the userstore properties.
-      * @throws Exception If an error occurs while retrieving the userstore properties.
-      */
-    private PropertyDTO[] getSubOrgSecondaryUserStoreProperties() throws Exception {
+     *
+     * @return An array of PropertyDTO objects containing the userstore properties.
+     * @throws IOException            If an error occurs when setting JDBC userstore properties.
+     * @throws SQLException           If an error occurs when performing a db action.
+     * @throws ClassNotFoundException If it fails to find the relevant java class.
+     */
+    private PropertyDTO[] getSubOrgSecondaryUserStoreProperties()
+            throws IOException, SQLException, ClassNotFoundException {
 
-        if (userMode == TestUserMode.SUPER_TENANT_ADMIN) {
-            return userStoreConfigUtils.getJDBCUserStoreProperties(SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB);
+        String dbName = userMode == TestUserMode.SUPER_TENANT_ADMIN
+                ? SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB : TENANT_SUB_ORG_SECONDARY_USER_STORE_DB;
+        return buildUserStoreProperties(dbName);
+    }
+
+    /**
+     * Creates an H2 database for the given DB name and returns its JDBC user store properties.
+     * Uses {@link ServerConfigurationManager#getCarbonHome()} for both the database creation path
+     * and the JDBC URL, ensuring they are consistent even if {@code carbon.home} has been overwritten
+     * by a secondary IS server lifecycle.
+     *
+     * @param dbName The name of the H2 database to create.
+     * @return An array of PropertyDTO objects containing the userstore properties.
+     * @throws IOException            If an error occurs when setting JDBC userstore properties.
+     * @throws SQLException           If an error occurs when performing a db action.
+     * @throws ClassNotFoundException If it fails to find the relevant java class.
+     */
+    private PropertyDTO[] buildUserStoreProperties(String dbName)
+            throws IOException, SQLException, ClassNotFoundException {
+
+        H2DataBaseManager dbManager = new H2DataBaseManager(
+                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+                        + "/repository/database/" + dbName,
+                DB_USER_NAME, DB_USER_PASSWORD);
+        dbManager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbManager.disconnect();
+
+        PropertyDTO[] props = new PropertyDTO[12];
+        for (int i = 0; i < props.length; i++) {
+            props[i] = new PropertyDTO();
         }
-        return userStoreConfigUtils.getJDBCUserStoreProperties(TENANT_SUB_ORG_SECONDARY_USER_STORE_DB);
+        props[0].setName("driverName");
+        props[0].setValue("org.h2.Driver");
+
+        props[1].setName("url");
+        props[1].setValue("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+                + "/repository/database/" + dbName);
+
+        props[2].setName("userName");
+        props[2].setValue(DB_USER_NAME);
+
+        props[3].setName("password");
+        props[3].setValue(DB_USER_PASSWORD);
+
+        props[4].setName("PasswordJavaRegEx");
+        props[4].setValue("^[\\S]{5,30}$");
+
+        props[5].setName("UsernameJavaRegEx");
+        props[5].setValue("^[\\S]{5,30}$");
+
+        props[6].setName("Disabled");
+        props[6].setValue("false");
+
+        props[7].setName("PasswordDigest");
+        props[7].setValue("SHA-256");
+
+        props[8].setName("StoreSaltedPassword");
+        props[8].setValue("true");
+
+        props[9].setName("SCIMEnabled");
+        props[9].setValue("true");
+
+        props[10].setName("UserIDEnabled");
+        props[10].setValue("true");
+
+        props[11].setName("GroupIDEnabled");
+        props[11].setValue("true");
+
+        return props;
     }
 }
