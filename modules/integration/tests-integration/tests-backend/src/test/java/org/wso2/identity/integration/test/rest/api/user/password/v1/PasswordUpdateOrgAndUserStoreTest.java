@@ -1,0 +1,462 @@
+/*
+ * Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.wso2.identity.integration.test.rest.api.user.password.v1;
+
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq;
+import org.wso2.identity.integration.test.rest.api.server.user.store.v1.model.UserStoreReq.Property;
+import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
+import org.wso2.identity.integration.test.restclients.UserStoreMgtRestClient;
+
+import javax.servlet.http.HttpServletResponse;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
+/**
+ * Integration tests for verifying password change across different app types, organizations,
+ * and userstore combinations via the Password Update API.
+ */
+public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
+
+    private final TestUserMode userMode;
+
+    @Factory(dataProvider = "restAPIUserConfigProvider")
+    public PasswordUpdateOrgAndUserStoreTest(TestUserMode userMode) {
+        this.userMode = userMode;
+    }
+
+    @DataProvider(name = "restAPIUserConfigProvider")
+    public static Object[][] restAPIUserConfigProvider() {
+        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+    }
+
+    private static final String ROOT_APP_NAME = "PasswordUpdateRootApp";
+    private static final String SHARED_APP_NAME = "PasswordUpdateSharedApp";
+
+    private static final String PRIMARY_USER = "orgPrimaryUser";
+    private static final String PRIMARY_USER_PASSWORD = "PrimaryUser@123";
+    private static final String PRIMARY_USER_NEW_PWD = "PrimaryNew@123";
+
+    private static final String SECONDARY_DOMAIN = "SECONDARY";
+    private static final String SUPER_TENANT_SECONDARY_USER_STORE_DB = "SUPER_TENANT_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
+    private static final String TENANT_SECONDARY_USER_STORE_DB = "TENANT_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
+    private static final String SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB = "SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
+    private static final String TENANT_SUB_ORG_SECONDARY_USER_STORE_DB = "TENANT_SUB_ORG_SECONDARY_USER_STORE_DB_PASSWORD_UPDATE_TEST";
+    private static final String USER_STORE_TYPE = "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg";
+    private static final String SECONDARY_USER = SECONDARY_DOMAIN + "/orgSecondaryUser";
+    private static final String SECONDARY_USER_PASSWORD = "SecondaryUser@123";
+    private static final String SECONDARY_USER_NEW_PWD = "SecondaryNew@123";
+
+    private static final String SUB_ORG_NAME = "pwdupdateSubOrg";
+    private static final String SUB_ORG_USER = "subOrgPwdUser";
+    private static final String SUB_ORG_USER_PASSWORD = "SubOrgPwd@123";
+    private static final String SUB_ORG_USER_NEW_PWD = "SubOrgNew@123";
+
+    private static final String SUB_ORG_SECONDARY_DOMAIN = "SUBORGJDBC";
+    private static final String SUB_ORG_SECONDARY_USER = SUB_ORG_SECONDARY_DOMAIN + "/subOrgSecUser";
+    private static final String SUB_ORG_SECONDARY_USER_PASSWORD = "SubOrgSecStore@123";
+    private static final String SUB_ORG_SECONDARY_USER_NEW_PWD = "SubOrgSecNew@123";
+
+    private static final String DB_USER_NAME = "wso2automation";
+    private static final String DB_USER_PASSWORD = "wso2automation";
+
+    private String primaryUserId;
+    private String secondaryUserId;
+
+    private String rootAppId;
+    private String rootClientId;
+    private String rootClientSecret;
+
+    private String sharedAppId;
+    private String sharedAppClientId;
+    private String sharedAppClientSecret;
+
+    // Secondary userstore infrastructure.
+    private UserStoreMgtRestClient userStoreMgtRestClient;
+    private String secondaryUserStoreDomainId;
+
+    // Sub-org infrastructure.
+    private OrgMgtRestClient orgMgtRestClient;
+    private String organizationId;
+    private String subOrgUserId;
+    private String subOrgSecondaryUserId;
+    private String switchedM2MToken;
+
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+
+        initBase(userMode);
+        setPasswordHistoryEnabled(false);
+
+        // Create root app (non-shared) for super-org-only tests.
+        ApplicationResponseModel rootApp = createApp(ROOT_APP_NAME, false);
+        rootAppId = rootApp.getId();
+        authorizePasswordUpdateScope(rootAppId);
+
+        OpenIDConnectConfiguration rootOidcConfig = getOIDCInboundDetailsOfApplication(rootAppId);
+        rootClientId = rootOidcConfig.getClientId();
+        rootClientSecret = rootOidcConfig.getClientSecret();
+
+        // Create shared app for both super-org and sub-org tests (via Organization SSO).
+        ApplicationResponseModel sharedApp = createApp(SHARED_APP_NAME, true);
+        sharedAppId = sharedApp.getId();
+        authorizePasswordUpdateScope(sharedAppId);
+
+        OpenIDConnectConfiguration sharedAppOidcConfig = getOIDCInboundDetailsOfApplication(sharedAppId);
+        sharedAppClientId = sharedAppOidcConfig.getClientId();
+        sharedAppClientSecret = sharedAppOidcConfig.getClientSecret();
+
+        // Enable session preservation so tokens remain valid after password change.
+        setPreserveSessionConfig(true);
+
+        // Create primary user.
+        primaryUserId = createTestUser(PRIMARY_USER, PRIMARY_USER_PASSWORD);
+
+        // Set up secondary JDBC userstore.
+        userStoreMgtRestClient = new UserStoreMgtRestClient(serverURL, tenantInfo);
+        PropertyDTO[] userStoreProperties = getSecondaryUserStoreProperties();
+        UserStoreReq userStoreReq = new UserStoreReq().typeId(USER_STORE_TYPE).name(SECONDARY_DOMAIN);
+        for (PropertyDTO propertyDTO : userStoreProperties) {
+            userStoreReq.addPropertiesItem(new Property().name(propertyDTO.getName()).value(propertyDTO.getValue()));
+        }
+        secondaryUserStoreDomainId = userStoreMgtRestClient.addUserStore(userStoreReq);
+        assertTrue(userStoreMgtRestClient.waitForUserStoreDeployment(SECONDARY_DOMAIN),
+                "Secondary JDBC user store is not deployed.");
+        // Create user in secondary userstore.
+        secondaryUserId = createTestUser(SECONDARY_USER, SECONDARY_USER_PASSWORD);
+
+        // Set up sub-organization infrastructure.
+        orgMgtRestClient = createOrgMgtRestClient();
+        organizationId = orgMgtRestClient.addOrganization(SUB_ORG_NAME);
+        switchedM2MToken = orgMgtRestClient.switchM2MToken(organizationId);
+
+        // Create a user in the sub-organization.
+        subOrgUserId = createSubOrgUser(SUB_ORG_USER, SUB_ORG_USER_PASSWORD, switchedM2MToken);
+
+        // Set up secondary JDBC userstore in the sub-organization with a distinct database.
+        UserStoreReq subOrgUserStoreReq = new UserStoreReq().typeId(USER_STORE_TYPE).name(SUB_ORG_SECONDARY_DOMAIN);
+        for (PropertyDTO propertyDTO : getSubOrgSecondaryUserStoreProperties()) {
+            subOrgUserStoreReq.addPropertiesItem(
+                    new Property().name(propertyDTO.getName()).value(propertyDTO.getValue()));
+        }
+        userStoreMgtRestClient.addSubOrgUserStore(subOrgUserStoreReq, switchedM2MToken);
+        assertTrue(userStoreMgtRestClient.waitForSubOrgUserStoreDeployment(SUB_ORG_SECONDARY_DOMAIN, switchedM2MToken),
+                "Sub-org secondary JDBC user store is not deployed.");
+        // Create a user in the sub-org secondary userstore.
+        subOrgSecondaryUserId = createSubOrgUser(
+                SUB_ORG_SECONDARY_USER, SUB_ORG_SECONDARY_USER_PASSWORD, switchedM2MToken);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testCleanup() throws Exception {
+
+        try {
+            // Clean up sub-org resources (users first, then userstore).
+            safeCleanup(() -> {
+                if (subOrgSecondaryUserId != null) {
+                    scim2RestClient.deleteSubOrgUser(subOrgSecondaryUserId, switchedM2MToken);
+                }
+            });
+
+            safeCleanup(() -> {
+                if (switchedM2MToken != null && userStoreMgtRestClient != null) {
+                    userStoreMgtRestClient.deleteSubOrgUserStore(SUB_ORG_SECONDARY_DOMAIN, switchedM2MToken);
+                }
+            });
+
+            safeCleanup(() -> {
+                if (subOrgUserId != null) {
+                    scim2RestClient.deleteSubOrgUser(subOrgUserId, switchedM2MToken);
+                }
+            });
+
+            // Delete root-level apps.
+            safeCleanup(() -> {
+                if (rootAppId != null) {
+                    deleteApp(rootAppId);
+                }
+            });
+
+            safeCleanup(() -> {
+                if (sharedAppId != null) {
+                    deleteApp(sharedAppId);
+                }
+            });
+
+            // Delete sub-organization.
+            safeCleanup(() -> {
+                if (organizationId != null) {
+                    orgMgtRestClient.deleteOrganization(organizationId);
+                }
+            });
+
+            // Clean up super-org resources (users first, then userstore).
+            safeCleanup(() -> {
+                if (secondaryUserId != null) {
+                    scim2RestClient.deleteUser(secondaryUserId);
+                }
+            });
+
+            safeCleanup(() -> {
+                if (primaryUserId != null) {
+                    scim2RestClient.deleteUser(primaryUserId);
+                }
+            });
+
+            safeCleanup(() -> {
+                if (secondaryUserStoreDomainId != null && userStoreMgtRestClient != null) {
+                    userStoreMgtRestClient.deleteUserStore(secondaryUserStoreDomainId);
+                    userStoreMgtRestClient.waitForUserStoreUnDeployment(secondaryUserStoreDomainId);
+                }
+            });
+
+            // Close all HTTP clients.
+            safeCleanup(() -> {
+                if (orgMgtRestClient != null) {
+                    orgMgtRestClient.closeHttpClient();
+                }
+            });
+
+            safeCleanup(() -> {
+                if (userStoreMgtRestClient != null) {
+                    userStoreMgtRestClient.closeHttpClient();
+                }
+            });
+        } finally {
+            setPreserveSessionConfig(false);
+            cleanupBase();
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 1. rootApp (non-shared) -> super-org users
+    // -----------------------------------------------------------------------
+
+    @Test(description = "Verify password change for super org user in PRIMARY userstore via root app")
+    public void testRootApp_PrimaryUserStore() throws Exception {
+
+        String accessToken = getUserAccessToken(rootClientId, rootClientSecret, PRIMARY_USER,
+                PRIMARY_USER_PASSWORD, PASSWORD_UPDATE_SCOPE);
+
+        try (CloseableHttpResponse response = changePassword(accessToken, PRIMARY_USER_PASSWORD,
+                PRIMARY_USER_NEW_PWD)) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Expected 204 for primary userstore password change via root app.");
+        } finally {
+            adminResetSuperOrgUserPassword(primaryUserId, PRIMARY_USER_PASSWORD);
+        }
+    }
+
+    @Test(description = "Verify password change for super org user in SECONDARY userstore via root app")
+    public void testRootApp_SecondaryUserStore() throws Exception {
+
+        String accessToken = getUserAccessToken(rootClientId, rootClientSecret, SECONDARY_USER,
+                SECONDARY_USER_PASSWORD, PASSWORD_UPDATE_SCOPE);
+
+        try (CloseableHttpResponse response = changePassword(accessToken, SECONDARY_USER_PASSWORD,
+                SECONDARY_USER_NEW_PWD)) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Expected 204 for secondary userstore password change via root app.");
+        } finally {
+            adminResetSuperOrgUserPassword(secondaryUserId, SECONDARY_USER_PASSWORD);
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 2. sharedApp (shared) -> super-org users
+    // -----------------------------------------------------------------------
+
+    @Test(description = "Verify password change for super org user in PRIMARY userstore via shared app")
+    public void testSharedApp_PrimaryUserStore() throws Exception {
+
+        String accessToken = getUserAccessToken(sharedAppClientId, sharedAppClientSecret, PRIMARY_USER,
+                PRIMARY_USER_PASSWORD, PASSWORD_UPDATE_SCOPE);
+
+        try (CloseableHttpResponse response = changePassword(accessToken, PRIMARY_USER_PASSWORD,
+                PRIMARY_USER_NEW_PWD)) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Expected 204 for primary userstore password change via shared app.");
+        } finally {
+            adminResetSuperOrgUserPassword(primaryUserId, PRIMARY_USER_PASSWORD);
+        }
+    }
+
+    @Test(description = "Verify password change for super org user in SECONDARY userstore via shared app")
+    public void testSharedApp_SecondaryUserStore() throws Exception {
+
+        String accessToken = getUserAccessToken(sharedAppClientId, sharedAppClientSecret, SECONDARY_USER,
+                SECONDARY_USER_PASSWORD, PASSWORD_UPDATE_SCOPE);
+
+        try (CloseableHttpResponse response = changePassword(accessToken, SECONDARY_USER_PASSWORD,
+                SECONDARY_USER_NEW_PWD)) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Expected 204 for secondary userstore password change via shared app.");
+        } finally {
+            adminResetSuperOrgUserPassword(secondaryUserId, SECONDARY_USER_PASSWORD);
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // 3. sharedApp (shared) -> sub-org users (Organization SSO flow)
+    // -----------------------------------------------------------------------
+
+    @Test(description = "Verify password change for sub-org user in PRIMARY userstore via shared app")
+    public void testSharedApp_SubOrgPrimaryUserStore() throws Exception {
+
+        String accessToken = getSubOrgUserAccessToken(sharedAppClientId, sharedAppClientSecret, SUB_ORG_USER,
+                SUB_ORG_USER_PASSWORD, ORG_PASSWORD_UPDATE_SCOPE, SUB_ORG_NAME, organizationId);
+
+        try (CloseableHttpResponse response = changePasswordInSubOrg(accessToken, SUB_ORG_USER_PASSWORD,
+                SUB_ORG_USER_NEW_PWD)) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Expected 204 for sub-org primary userstore password change via shared app.");
+        } finally {
+            adminResetSubOrgUserPassword(subOrgUserId, SUB_ORG_USER_PASSWORD, switchedM2MToken);
+        }
+    }
+
+    @Test(description = "Verify password change for sub-org user in SECONDARY userstore via shared app")
+    public void testSharedApp_SubOrgSecondaryUserStore() throws Exception {
+
+        String accessToken = getSubOrgUserAccessToken(sharedAppClientId, sharedAppClientSecret, SUB_ORG_SECONDARY_USER,
+                SUB_ORG_SECONDARY_USER_PASSWORD, ORG_PASSWORD_UPDATE_SCOPE, SUB_ORG_NAME, organizationId);
+
+        try (CloseableHttpResponse response = changePasswordInSubOrg(accessToken,
+                SUB_ORG_SECONDARY_USER_PASSWORD, SUB_ORG_SECONDARY_USER_NEW_PWD)) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Expected 204 for sub-org secondary userstore password change via shared app.");
+        } finally {
+            adminResetSubOrgUserPassword(subOrgSecondaryUserId, SUB_ORG_SECONDARY_USER_PASSWORD, switchedM2MToken);
+        }
+    }
+
+    /**
+     * Helper method to retrieve userstore properties for the root organization based on the current test user mode.
+     *
+     * @return An array of PropertyDTO objects containing the userstore properties.
+     * @throws IOException            If an error occurs when setting JDBC userstore properties.
+     * @throws SQLException           If an error occurs when performing a db action.
+     * @throws ClassNotFoundException If it fails to find the relevant java class.
+     */
+    private PropertyDTO[] getSecondaryUserStoreProperties()
+            throws IOException, SQLException, ClassNotFoundException {
+
+        String dbName = userMode == TestUserMode.SUPER_TENANT_ADMIN
+                ? SUPER_TENANT_SECONDARY_USER_STORE_DB : TENANT_SECONDARY_USER_STORE_DB;
+        return buildUserStoreProperties(dbName);
+    }
+
+    /**
+     * Helper method to retrieve userstore properties for the sub-organization based on the current test user mode.
+     *
+     * @return An array of PropertyDTO objects containing the userstore properties.
+     * @throws IOException            If an error occurs when setting JDBC userstore properties.
+     * @throws SQLException           If an error occurs when performing a db action.
+     * @throws ClassNotFoundException If it fails to find the relevant java class.
+     */
+    private PropertyDTO[] getSubOrgSecondaryUserStoreProperties()
+            throws IOException, SQLException, ClassNotFoundException {
+
+        String dbName = userMode == TestUserMode.SUPER_TENANT_ADMIN
+                ? SUPER_TENANT_SUB_ORG_SECONDARY_USER_STORE_DB : TENANT_SUB_ORG_SECONDARY_USER_STORE_DB;
+        return buildUserStoreProperties(dbName);
+    }
+
+    /**
+     * Creates an H2 database for the given DB name and returns its JDBC user store properties.
+     * Uses {@link ServerConfigurationManager#getCarbonHome()} for both the database creation path
+     * and the JDBC URL, ensuring they are consistent even if {@code carbon.home} has been overwritten
+     * by a secondary IS server lifecycle.
+     *
+     * @param dbName The name of the H2 database to create.
+     * @return An array of PropertyDTO objects containing the userstore properties.
+     * @throws IOException            If an error occurs when setting JDBC userstore properties.
+     * @throws SQLException           If an error occurs when performing a db action.
+     * @throws ClassNotFoundException If it fails to find the relevant java class.
+     */
+    private PropertyDTO[] buildUserStoreProperties(String dbName)
+            throws IOException, SQLException, ClassNotFoundException {
+
+        H2DataBaseManager dbManager = new H2DataBaseManager(
+                "jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+                        + "/repository/database/" + dbName,
+                DB_USER_NAME, DB_USER_PASSWORD);
+        dbManager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbManager.disconnect();
+
+        PropertyDTO[] props = new PropertyDTO[12];
+        for (int i = 0; i < props.length; i++) {
+            props[i] = new PropertyDTO();
+        }
+        props[0].setName("driverName");
+        props[0].setValue("org.h2.Driver");
+
+        props[1].setName("url");
+        props[1].setValue("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+                + "/repository/database/" + dbName);
+
+        props[2].setName("userName");
+        props[2].setValue(DB_USER_NAME);
+
+        props[3].setName("password");
+        props[3].setValue(DB_USER_PASSWORD);
+
+        props[4].setName("PasswordJavaRegEx");
+        props[4].setValue("^[\\S]{5,30}$");
+
+        props[5].setName("UsernameJavaRegEx");
+        props[5].setValue("^[\\S]{5,30}$");
+
+        props[6].setName("Disabled");
+        props[6].setValue("false");
+
+        props[7].setName("PasswordDigest");
+        props[7].setValue("SHA-256");
+
+        props[8].setName("StoreSaltedPassword");
+        props[8].setValue("true");
+
+        props[9].setName("SCIMEnabled");
+        props[9].setValue("true");
+
+        props[10].setName("UserIDEnabled");
+        props[10].setValue("true");
+
+        props[11].setName("GroupIDEnabled");
+        props[11].setValue("true");
+
+        return props;
+    }
+}
