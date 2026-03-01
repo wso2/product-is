@@ -2952,7 +2952,7 @@
         <swagger-core-version>1.5.22</swagger-core-version>
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
         <!--UI Cypress test -->
-        <com.fasterxml.jackson.version>2.16.1</com.fasterxml.jackson.version>
+        <com.fasterxml.jackson.version>2.18.6</com.fasterxml.jackson.version>
         <com.fasterxml.jackson.databind.version>2.16.1</com.fasterxml.jackson.databind.version>
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
         <!--ws-trust-client-->
