@@ -358,6 +358,9 @@
 
                                 <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" />
 
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.sh" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; \${line.separator}    -Doptimize=true \" />
+                                <replace file="target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat" token="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot;" value="-Dhttpclient.hostnameVerifier=&quot;DefaultAndLocalhost&quot; -Doptimize=true" />
+
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;!--Authenticator name=&quot;MutualSSLAuthenticator&quot; disabled=&quot;false&quot;&gt;" value="&lt;Authenticator name=&quot;MutualSSLAuthenticator&quot;&gt;" />
 
                                 <replace file="../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/security/authenticators.xml" token="&lt;/Authenticator--&gt;" value="&lt;/Authenticator&gt;" />
