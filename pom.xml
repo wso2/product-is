@@ -2669,7 +2669,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.39</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.41</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2822,7 +2822,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.5</carbon.kernel.version>
+        <carbon.kernel.version>4.12.6</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.0</identity.verification.version>
