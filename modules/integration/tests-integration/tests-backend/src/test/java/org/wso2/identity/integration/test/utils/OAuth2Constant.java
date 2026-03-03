@@ -135,6 +135,19 @@ public final class OAuth2Constant {
     public static final String FIDP_PARAM = "fidp";
 
     public static final String SUBJECT_TOKEN = "subject_token";
+
+    // CIBA (Client Initiated Backchannel Authentication)
+    public static final String OAUTH2_GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba";
+    public static final String CIBA_ENDPOINT = "https://localhost:9853/oauth2/ciba";
+    public static final String CIBA_AUTH_REQ_ID = "auth_req_id";
+    public static final String CIBA_AUTH_URL = "auth_url";
+    public static final String CIBA_EXPIRES_IN = "expires_in";
+    public static final String CIBA_INTERVAL = "interval";
+    public static final String CIBA_LOGIN_HINT = "login_hint";
+    public static final String CIBA_BINDING_MESSAGE = "binding_message";
+    public static final String CIBA_NOTIFICATION_CHANNEL = "notification_channel";
+    public static final String CIBA_NOTIFICATION_CHANNEL_EXTERNAL = "external";
+
     public static final class PlaygroundAppPaths {
 
         public static final String callBackPath = "/oauth2client";
