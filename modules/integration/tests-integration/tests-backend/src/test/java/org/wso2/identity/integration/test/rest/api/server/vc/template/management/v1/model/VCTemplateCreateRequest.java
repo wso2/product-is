@@ -29,7 +29,7 @@ public class VCTemplateCreateRequest {
     private String identifier;
     private String displayName;
     private String format;
-    private List<String> claims = new ArrayList<>();
+    private List<Claim> claims = new ArrayList<>();
     private Integer expiresIn;
     private String description;
 
@@ -66,12 +66,12 @@ public class VCTemplateCreateRequest {
         return this;
     }
 
-    public List<String> getClaims() {
+    public List<Claim> getClaims() {
 
         return claims;
     }
 
-    public VCTemplateCreateRequest claims(List<String> claims) {
+    public VCTemplateCreateRequest claims(List<Claim> claims) {
 
         this.claims = claims;
         return this;

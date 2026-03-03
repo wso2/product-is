@@ -25,6 +25,7 @@ declare -a ALL_TESTS=(
     "is-tests-saml-query-profile"
     "is-tests-default-encryption"
     "is-test-session-mgt"
+    "is-tests-password-update-api"
 )
 
 # Function to disable tests not in the enabled list.

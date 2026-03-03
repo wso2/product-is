@@ -526,4 +526,14 @@
             <class name="org.wso2.identity.integration.test.encryption.EventPublisherPasswordEncryptionTestCase"/>
         </classes>
     </test>
+
+    <test name="is-tests-password-update-api" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateSessionPreservationTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateOrgAndUserStoreTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateValidationTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateActionTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateWebhookTest"/>
+        </classes>
+    </test>
 </suite>
