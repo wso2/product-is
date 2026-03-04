@@ -133,10 +133,12 @@ public class WorkflowAssociationResponse  {
         this.isEnabled = isEnabled;
     }
 
+    @ApiModelProperty(example = "{}", value = "Workflow Association Rule")
+    @JsonProperty("rule")
+    @Valid
     public Object getRule() {
         return rule;
     }
-
     public void setRule(Object rule) {
         this.rule = rule;
     }
