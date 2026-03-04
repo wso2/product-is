@@ -1,0 +1,13 @@
+{
+  "language": "en",
+  "purposes": [
+    {
+      "purposeId": 1,
+      "elements": [
+        {
+          "elementId": 1
+        }
+      ]
+    }
+  ]
+}

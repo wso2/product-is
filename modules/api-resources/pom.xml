@@ -708,6 +708,11 @@
                 <version>${carbon.consent.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.consent.mgt</groupId>
+                <artifactId>org.wso2.carbon.api.server.consent.mgt.v2</artifactId>
+                <version>${carbon.consent.mgt.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
                 <artifactId>org.wso2.carbon.api.server.local.auth.api</artifactId>
                 <version>${identity.local.auth.api.version}</version>

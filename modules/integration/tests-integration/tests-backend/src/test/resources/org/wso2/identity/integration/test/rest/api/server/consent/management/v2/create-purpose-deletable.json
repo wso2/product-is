@@ -1,0 +1,12 @@
+{
+  "name": "Data Cleanup",
+  "description": "To remove user data upon account deletion",
+  "group": "Core Identity",
+  "groupType": "System",
+  "elements": [
+    {
+      "elementId": 1,
+      "mandatory": false
+    }
+  ]
+}

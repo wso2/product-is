@@ -1,0 +1,22 @@
+{
+  "service": "test-integration-service",
+  "language": "en",
+  "purposes": [
+    {
+      "purposeId": 1,
+      "terminationPeriod": 365,
+      "elements": [
+        {
+          "elementId": 1,
+          "validityPeriod": 365
+        }
+      ]
+    }
+  ],
+  "metadata": [
+    {
+      "key": "testKey",
+      "value": "testValue"
+    }
+  ]
+}

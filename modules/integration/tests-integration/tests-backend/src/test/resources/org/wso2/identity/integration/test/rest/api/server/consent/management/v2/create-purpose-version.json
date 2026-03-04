@@ -1,0 +1,9 @@
+{
+  "description": "Updated consent elements for enhanced authentication",
+  "elements": [
+    {
+      "elementId": 2,
+      "mandatory": true
+    }
+  ]
+}

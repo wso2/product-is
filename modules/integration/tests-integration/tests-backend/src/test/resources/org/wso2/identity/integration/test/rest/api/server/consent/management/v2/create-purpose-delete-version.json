@@ -1,0 +1,6 @@
+{
+  "name": "Test-Delete-Version-With-Consent",
+  "description": "Purpose for testing version deletion with consent",
+  "group": "Test",
+  "groupType": "Testing"
+}

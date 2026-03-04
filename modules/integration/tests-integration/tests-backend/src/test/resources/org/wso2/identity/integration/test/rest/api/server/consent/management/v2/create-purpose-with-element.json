@@ -1,0 +1,12 @@
+{
+  "name": "Test-Purpose-With-Element",
+  "description": "Purpose using element",
+  "group": "Test",
+  "groupType": "Testing",
+  "elements": [
+    {
+      "elementId": 1,
+      "mandatory": true
+    }
+  ]
+}

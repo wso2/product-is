@@ -1,0 +1,13 @@
+{
+  "description": "Second explicit version for no-auto-snapshot verification",
+  "elements": [
+    {
+      "elementId": 1,
+      "mandatory": true
+    },
+    {
+      "elementId": 2,
+      "mandatory": false
+    }
+  ]
+}
