@@ -37,6 +37,7 @@ public class WorkflowAssociationResponse  {
     private Operation operation;
     private String workflowName;
     private Boolean isEnabled;
+    private Object rule;
 
     /**
      * Unique id to represent a workflow association
@@ -132,7 +133,13 @@ public class WorkflowAssociationResponse  {
         this.isEnabled = isEnabled;
     }
 
+    public Object getRule() {
+        return rule;
+    }
 
+    public void setRule(Object rule) {
+        this.rule = rule;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
