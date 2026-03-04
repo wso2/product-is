@@ -728,6 +728,16 @@
                 <version>${carbon.consent.mgt.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.consent.management.v2</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.consent.management.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.local.auth.api</groupId>
                 <artifactId>org.wso2.carbon.api.server.local.auth.api</artifactId>
                 <version>${identity.local.auth.api.version}</version>
