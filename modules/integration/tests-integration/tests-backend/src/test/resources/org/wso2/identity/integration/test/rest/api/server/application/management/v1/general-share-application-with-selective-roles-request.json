@@ -1,0 +1,16 @@
+{
+  "applicationId": "${applicationId}",
+  "policy": "${policy}",
+  "roleSharing": {
+    "mode": "SELECTED",
+    "roles": [
+      {
+        "displayName": "NewAdmin",
+        "audience": {
+          "display": "My App",
+          "type": "application"
+        }
+      }
+    ]
+  }
+}
