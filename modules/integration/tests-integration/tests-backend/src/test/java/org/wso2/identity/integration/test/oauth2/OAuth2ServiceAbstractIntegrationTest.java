@@ -60,6 +60,7 @@ import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AllowedIssuer;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -299,7 +300,8 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
      */
     public ApplicationResponseModel addOrganizationApplication(String applicationName,
                                                                ApplicationConfig applicationConfig,
-                                                               String switchedAccessToken) throws Exception {
+                                                               String switchedAccessToken,
+                                                               String organizationId) throws Exception {
 
         if (applicationConfig == null) {
             return getBasicOAuthApplication(CALLBACK_URL);
@@ -311,6 +313,9 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
         oidcConfig.setGrantTypes(applicationConfig.getGrantTypes());
         oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+        AllowedIssuer allowedIssuer = new AllowedIssuer();
+        allowedIssuer.organizationId(organizationId);
+        oidcConfig.setIssuer(allowedIssuer);
 
         AccessTokenConfiguration accessTokenConfiguration = new AccessTokenConfiguration();
         accessTokenConfiguration.type(applicationConfig.getTokenType().getTokenTypeProperty());
