@@ -713,6 +713,45 @@
         <url-pattern>/identity/consent-mgt/v1.0/*</url-pattern>
     </servlet-mapping>
 
+    <!-- Servlet instance for /identity/consent-mgt/v2.0 -->
+    <servlet>
+        <servlet-name>IdentityConsentMgtV2ApiServlet</servlet-name>
+        <servlet-class>
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.api.server.consent.management.v2.ConsentsApi,
+                org.wso2.carbon.identity.api.server.consent.management.v2.PurposesApi,
+                org.wso2.carbon.identity.api.server.consent.management.v2.ElementsApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                org.wso2.carbon.identity.servlet.mgt.CustomJacksonJsonProvider,
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper,
+                org.apache.cxf.jaxrs.ext.search.SearchContextProvider
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.inInterceptors</param-name>
+            <param-value>
+                org.wso2.carbon.identity.servlet.mgt.CustomBeanValidationInterceptor
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityConsentMgtV2ApiServlet</servlet-name>
+        <url-pattern>/identity/consent-mgt/v2.0/*</url-pattern>
+    </servlet-mapping>
+
     <!--  Servlet instance for /identity/oauth2/dcr/v1.1 -->
     <servlet>
         <servlet-name>IdentityOAuth2DcrV1_1ApiServlet</servlet-name>

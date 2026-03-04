@@ -1,0 +1,5 @@
+{
+  "version": "v3",
+  "description": "Third version with both elements",
+  "elements": [{"id": "1", "mandatory": true}, {"id": "2", "mandatory": false}]
+}

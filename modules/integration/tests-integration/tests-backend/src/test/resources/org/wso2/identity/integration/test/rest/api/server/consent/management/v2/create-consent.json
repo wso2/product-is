@@ -1,0 +1,9 @@
+{
+  "subjectId": "1",
+  "serviceId": "test-integration-service",
+  "language": "en",
+  "purposes": [{"id": "1", "elements": [{"id": "1"}]}],
+  "properties": {
+    "testKey": "testValue"
+  }
+}

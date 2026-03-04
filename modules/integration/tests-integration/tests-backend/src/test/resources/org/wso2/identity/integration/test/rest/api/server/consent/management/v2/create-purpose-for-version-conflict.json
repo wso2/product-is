@@ -1,0 +1,6 @@
+{
+  "name": "Version Conflict Test Purpose",
+  "description": "Purpose used for testing duplicate version label creation conflict",
+  "type": "Test",
+  "version": "1"
+}
