@@ -157,12 +157,13 @@ public class WorkflowAssociationResponse  {
                 Objects.equals(this.associationName, workflowAssociationResponse.associationName) &&
                 Objects.equals(this.operation, workflowAssociationResponse.operation) &&
                 Objects.equals(this.workflowName, workflowAssociationResponse.workflowName) &&
-                Objects.equals(this.isEnabled, workflowAssociationResponse.isEnabled);
+                Objects.equals(this.isEnabled, workflowAssociationResponse.isEnabled) &&
+                Objects.equals(this.rule, workflowAssociationResponse.rule);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, associationName, operation, workflowName, isEnabled);
+        return Objects.hash(id, associationName, operation, workflowName, isEnabled, rule);
     }
 
     @Override
@@ -176,6 +177,7 @@ public class WorkflowAssociationResponse  {
         sb.append("    operation: ").append(toIndentedString(operation)).append("\n");
         sb.append("    workflowName: ").append(toIndentedString(workflowName)).append("\n");
         sb.append("    isEnabled: ").append(toIndentedString(isEnabled)).append("\n");
+        sb.append("    rule: ").append(toIndentedString(rule)).append("\n");
         sb.append("}");
         return sb.toString();
     }
