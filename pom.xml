@@ -2769,7 +2769,7 @@
         <identity.metadata.saml.version>1.11.1</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
-        <identity.workflow.version>1.0.22</identity.workflow.version>
+        <identity.workflow.version>1.1.0</identity.workflow.version>
         <identity.user.workflow.version>6.0.2</identity.user.workflow.version>
 
         <!-- Connector Versions -->
@@ -2822,7 +2822,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.5</carbon.kernel.version>
+        <carbon.kernel.version>4.12.7</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.0</identity.verification.version>
@@ -2835,7 +2835,7 @@
         <carbon.metrics.version>1.3.12</carbon.metrics.version>
         <carbon.analytics-common.version>5.5.0</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.27</carbon.dashboards.version>
-        <carbon.healthcheck.version>1.3.3</carbon.healthcheck.version>
+        <carbon.healthcheck.version>1.4.0</carbon.healthcheck.version>
 
         <!-- agent-identity -->
         <carbon.identity.agent.version>1.0.9</carbon.identity.agent.version>
