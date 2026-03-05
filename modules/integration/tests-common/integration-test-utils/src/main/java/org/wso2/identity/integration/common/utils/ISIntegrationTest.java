@@ -177,6 +177,32 @@ public class ISIntegrationTest {
     }
 
     /**
+     * Get the tenant perspective endpoint URL with the root tenant domain and the sub organization id.
+     *
+     * @param endpointURL The endpoint URL with the hostname.
+     * @param tenantDomain Root organization tenant domain.
+     * @param organizationId Sub organization id.
+     * @return Tenant perspective endpoint URL with the root tenant domain and the sub organization id.
+     */
+    public String getTenantPerspectiveURLForSubOrgApps(String endpointURL, String tenantDomain,
+                                                       String organizationId) {
+
+        try {
+            if(!tenantDomain.isBlank() && !tenantDomain.equalsIgnoreCase(
+                    MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+
+                String baseURL = getBaseURL();
+                endpointURL = endpointURL.replace(baseURL,
+                        baseURL + TENANTED_URL_PATH_SPECIFIER + tenantDomain +
+                                ORGANIZATION_PATH_SPECIFIER + "/" + organizationId);
+            }
+            return endpointURL;
+        } catch (XPathExpressionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Get the qualified endpoint URL without the hostname for the given tenant.
      *
      * @param endpointURLWithHostname   The endpoint URL without the hostname.
