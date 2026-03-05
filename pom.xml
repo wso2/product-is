@@ -2701,7 +2701,7 @@
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.8.0</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.4.228</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.6.6</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.6.0</identity.user.account.association.version>
@@ -2746,7 +2746,7 @@
         <provisioning.connector.google.version>5.2.8</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.2.10</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.3.5</provisioning.connector.scim.version>
-        <provisioning.connector.scim2.version>2.1.1</provisioning.connector.scim2.version>
+        <provisioning.connector.scim2.version>2.1.2</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.11.1</identity.local.auth.basicauth.version>
