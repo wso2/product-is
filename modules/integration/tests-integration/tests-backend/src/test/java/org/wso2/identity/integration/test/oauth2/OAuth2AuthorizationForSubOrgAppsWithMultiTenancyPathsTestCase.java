@@ -114,9 +114,11 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 
 /**
- * Holds the integration tests for sub organization application authorizations.
+ * Holds the integration tests for sub organization application authorizations when a sub organization behaves as
+ * a tenant. A sub org can utilize /t/<SUB_ORG_TENANT_DOMAIN>/... paths similar to tenanted paths. These tests will
+ * verify no breaking changes could happen for existing usages of this pattern.
  */
-public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String API_SERVER_BASE_PATH = "api/server/v1";
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
@@ -171,7 +173,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private String organizationId;
     private String testApiResourceId;
     private String organizationApplicationId;
-    private String sharedApplicationId;
+    private String applicationId;
 
     // Variables for JWT token flow
     private String jwtSessionDataKey;
@@ -182,19 +184,16 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     public static Object[][] configProvider() {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_ADMIN, "sub001", "sub001"},
-                {TestUserMode.TENANT_ADMIN, "sub002", "sub002"}};
+                {TestUserMode.SUPER_TENANT_ADMIN, "sub004", "sub004"},
+                {TestUserMode.TENANT_ADMIN, "sub003", "sub003"}};
     }
 
     @Factory(dataProvider = "configProvider")
-    public OAuth2AuthorizationForSubOrganizationAppsTestCase(TestUserMode userMode,
-                                                             String organizationName,
-                                                             String organizationHandle) {
+    public OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase(TestUserMode userMode, String orgName, String orgHandle) {
 
         this.userMode = userMode;
-        this.ORGANIZATION_NAME = organizationName;
-        this.ORGANIZATION_HANDLE = organizationHandle;
-
+        this.ORGANIZATION_NAME = orgName;
+        this.ORGANIZATION_HANDLE = orgHandle;
     }
 
 
@@ -202,7 +201,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     public void initTestClass() throws Exception {
 
         // Configure deployment.toml only once before all tests
-        synchronized (OAuth2AuthorizationForSubOrganizationAppsTestCase.class) {
+        synchronized (OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase.class) {
             if (!isServerConfigured) {
                 // Initialize with super tenant admin to configure server
                 super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -511,8 +510,8 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         if (orgMgtRestClient != null) {
             orgMgtRestClient.closeHttpClient();
         }
-        if (sharedApplicationId != null) {
-            deleteApp(sharedApplicationId);
+        if (applicationId != null) {
+            deleteApp(applicationId);
         }
         if (restClient != null) {
             restClient.closeHttpClient();
@@ -528,7 +527,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         }
 
         // Restore original deployment.toml configuration after all tests complete
-        synchronized (OAuth2AuthorizationForSubOrganizationAppsTestCase.class) {
+        synchronized (OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase.class) {
             if (isServerConfigured && staticServerConfigurationManager != null) {
                 log.info("Resetting deployment.toml to original configuration");
                 staticServerConfigurationManager.restoreToLastConfiguration(true);
@@ -555,17 +554,17 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
                 .build();
 
         ApplicationResponseModel application = addApplication(applicationConfig);
-        sharedApplicationId = application.getId();
+        applicationId = application.getId();
 
         JSONObject managementAppAPIResources = new JSONObject(RESTTestBase.readResource(
                 MGT_APP_AUTHORIZED_API_RESOURCES, this.getClass()));
 
-        updateAuthorizedAPIs(sharedApplicationId, managementAppAPIResources);
+        updateAuthorizedAPIs(applicationId, managementAppAPIResources);
 
-        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(sharedApplicationId);
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
         CLIENT_ID = oidcConfig.getClientId();
         CLIENT_SECRET = oidcConfig.getClientSecret();
-        shareApplication(sharedApplicationId);
+        shareApplication(applicationId);
     }
 
     private String createOrganizationApplication(String applicationName, String accessToken, String organizationId)
@@ -940,7 +939,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         urlParameters.add(new BasicNameValuePair("scope", scopeString));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-                getRootTenantQualifiedURLForSubOrgApps(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain(), organizationId));
+                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, ORGANIZATION_HANDLE));
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         assertNotNull(locationHeader, "Location header expected for authorize request is not available.");
@@ -1001,7 +1000,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         headers.add(new BasicHeader("User-Agent", USER_AGENT));
 
         HttpResponse response = sendPostRequest(client, headers, urlParameters,
-                getRootTenantQualifiedURLForSubOrgApps(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain(), organizationId));
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, ORGANIZATION_HANDLE));
         assertNotNull(response, "Failed to receive response for access token request.");
 
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -1026,9 +1025,9 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private void validateTokenIntrospection(String token, String activeErrorMessage, String tokenType)
             throws Exception {
 
-        String introspectionUrl = getRootTenantQualifiedURLForSubOrgApps(OAuth2Constant.INTRO_SPEC_ENDPOINT,
-                tenantInfo.getDomain(), organizationId);
+        String introspectionUrl = getTenantQualifiedURL(OAuth2Constant.INTRO_SPEC_ENDPOINT, ORGANIZATION_HANDLE);
         log.info("Introspection endpoint URL: " + introspectionUrl);
+        log.info("Introspecting token: " + token);
 
         org.json.simple.JSONObject introspectionResponse = introspectTokenWithTenant(client, token,
                 introspectionUrl, ORG_APP_CLIENT_ID, ORG_APP_CLIENT_SECRET);
