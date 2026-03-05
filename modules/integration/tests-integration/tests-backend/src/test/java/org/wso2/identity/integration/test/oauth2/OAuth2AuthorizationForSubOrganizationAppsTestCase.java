@@ -261,7 +261,8 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
          Create an application from the switched token in the created application and enable authorization
          grant types. The newly created API resource will be added via updateOrganizationAppAuthorizedAPIs
         */
-        organizationApplicationId = createOrganizationApplication(ORGANIZATION_MAIN_APP_NAME, switchedM2MToken);
+        organizationApplicationId = createOrganizationApplication(ORGANIZATION_MAIN_APP_NAME, switchedM2MToken,
+                organizationId);
 
         // Create a user in the organization to perform login
         createOrgUser();
@@ -564,7 +565,8 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         shareApplication(applicationId);
     }
 
-    private String createOrganizationApplication(String applicationName, String accessToken) throws Exception {
+    private String createOrganizationApplication(String applicationName, String accessToken, String organizationId)
+            throws Exception {
 
         List<UserClaimConfig> userClaimConfigs = Collections.singletonList(
                 new UserClaimConfig.Builder().localClaimUri("http://wso2.org/claims/emailaddress")
@@ -584,7 +586,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
                 .build();
 
         ApplicationResponseModel applicationResponseModel = addOrganizationApplication(applicationName,
-                applicationConfig, accessToken);
+                applicationConfig, accessToken, organizationId);
         String organizationApplicationId = applicationResponseModel.getId();
 
         JSONObject orgAppAPIResources = new JSONObject(RESTTestBase.readResource(
