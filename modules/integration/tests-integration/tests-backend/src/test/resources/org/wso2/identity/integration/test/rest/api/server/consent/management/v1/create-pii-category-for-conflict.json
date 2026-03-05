@@ -1,0 +1,5 @@
+{
+  "piiCategory": "username",
+  "description": "User's login username",
+  "sensitive": false
+}
