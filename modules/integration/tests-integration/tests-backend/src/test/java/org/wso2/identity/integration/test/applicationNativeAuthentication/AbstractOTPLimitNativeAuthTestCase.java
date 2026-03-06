@@ -92,44 +92,25 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 
 /**
  * Abstract base class for Email-OTP and SMS-OTP OTP limit (retry + resend) integration tests.
- *
- * <p>Provides shared:
- * <ul>
- *   <li>Test-user constants and creation</li>
- *   <li>Adaptive-auth script template</li>
- *   <li>OIDC application creation helper</li>
- *   <li>Auth-flow helpers: init → IDF → OTP challenge</li>
- *   <li>OTP submit / resend / assertion helpers</li>
- *   <li>Resident-IDP cache reset</li>
- * </ul>
- *
- * <p>Concrete subclasses supply channel-specific setup (app registration, SMS sender, GreenMail
- * purging) and the four test methods (retry #1, retry #2, resend #1, resend #2).
  */
 public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    // ── Test user ──────────────────────────────────────────────────────────────
     protected static final String TEST_USER_NAME     = "it_user_otp_limits";
     protected static final String TEST_USER_PASSWORD = "User@123Otp!";
     protected static final String TEST_USER_EMAIL    = "it_user_otp_limits@example.com";
     protected static final String TEST_USER_MOBILE   = "+94771234567";
 
-    // ── Wrong OTP used to deterministically trigger retry limits ──────────────
     protected static final String WRONG_OTP = "000000";
 
-    // ── Adaptive-auth script template ─────────────────────────────────────────
     /**
      * Template for the adaptive-auth script that enforces OTP retry/resend limits.
      * The single {@code %s} placeholder is replaced with the authenticator key
      * (e.g. {@code "email-otp-authenticator"} or {@code "sms-otp-authenticator"}).
-     *
-     * <p>Runtime params set:
-     * <ul>
-     *   <li>{@code enableRetryFromAuthenticator} = "true"</li>
-     *   <li>{@code maximumAllowedFailureAttempts} = "2" → 1st wrong → FAIL_INCOMPLETE, 2nd → HTTP 400</li>
-     *   <li>{@code maximumAllowedResendAttempts}  = "1" → 1st resend → INCOMPLETE, 2nd → HTTP 400</li>
-     *   <li>{@code terminateOnResendLimitExceeded} = "true"</li>
-     * </ul>
+     * Runtime params set:
+     *  {@code enableRetryFromAuthenticator} = "true"
+     *  {@code maximumAllowedFailureAttempts} = "2" → 1st wrong → FAIL_INCOMPLETE, 2nd → HTTP 400
+     *  {@code maximumAllowedResendAttempts}  = "1" → 1st resend → INCOMPLETE, 2nd → HTTP 400<
+     *  {@code terminateOnResendLimitExceeded} = "true"
      */
     protected static final String ADAPTIVE_SCRIPT_TEMPLATE =
             "var onLoginRequest = function(context) {\n" +
@@ -147,31 +128,13 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
             "  }, {});\n" +
             "};\n";
 
-    // ── Shared infrastructure ──────────────────────────────────────────────────
     protected CloseableHttpClient client;
     protected SCIM2RestClient scim2RestClient;
     protected String userId;
-
-    /**
-     * Preserved copy of {@code backendURL} <b>before</b> stripping {@code "services/"}.
-     *
-     * <p>{@link IdentityProviderMgtServiceClient} is an Axis2 SOAP stub and requires the
-     * URL to end with {@code "services/"}.  Subclasses that need the REST notification-sender
-     * API strip {@code "services/"} from {@code backendURL}, so we capture the original here.
-     */
     protected String soapBackendURL;
-
-    // ── Per-test flow state ────────────────────────────────────────────────────
-    /** The active flowId for the current test scenario. */
     protected String flowId;
-    /** The authenticatorId of the current challenge step. */
     protected String authenticatorId;
-    /** The URL to POST the next auth step to. */
     protected String href;
-
-    // ══════════════════════════════════════════════════════════════════════════
-    //  Shared init helpers called by subclass @BeforeClass
-    // ══════════════════════════════════════════════════════════════════════════
 
     /**
      * Initialises the common HTTP client and test-framework base, strips
@@ -183,7 +146,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
      */
     protected void commonInit() throws Exception {
 
-        // Preserve the SOAP-compatible backendURL before stripping.
         soapBackendURL = backendURL;
         backendURL = backendURL.replace("services/", "");
 
@@ -230,10 +192,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
         href = null;
         userId = null;
     }
-
-    // ══════════════════════════════════════════════════════════════════════════
-    //  Auth-flow helpers
-    // ══════════════════════════════════════════════════════════════════════════
 
     /**
      * Initiates a fresh API-based auth flow then completes the mandatory IDF step.
@@ -324,10 +282,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
                 .extract();
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  Assertion helpers
-    // ══════════════════════════════════════════════════════════════════════════
-
     /**
      * Asserts that an HTTP 400 error response body exactly matches the expected
      * OTP-limit-exceeded payload.
@@ -361,10 +315,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
         Assert.assertNotNull(actualTraceId, "traceId must be present in the error response.");
         Assert.assertFalse(actualTraceId.trim().isEmpty(), "traceId must not be blank in the error response.");
     }
-
-    // ══════════════════════════════════════════════════════════════════════════
-    //  Flow state extraction helpers
-    // ══════════════════════════════════════════════════════════════════════════
 
     /**
      * Parses the init-response JSON and stores {@link #flowId}, {@link #authenticatorId}
@@ -457,10 +407,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
         }
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  Request body builders
-    // ══════════════════════════════════════════════════════════════════════════
-
     private String buildOTPSubmitBody(String flowId, String authenticatorId, String otpCode) {
 
         return "{\n" +
@@ -514,10 +460,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
         return params;
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  Application creation helper
-    // ══════════════════════════════════════════════════════════════════════════
-
     /**
      * Creates an OIDC application with API-based authentication enabled, a single
      * authentication step for {@code authenticatorName}, and the adaptive-auth script
@@ -567,10 +509,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
         return getApplication(newAppId);
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  User creation helper
-    // ══════════════════════════════════════════════════════════════════════════
-
     /**
      * Builds the test user with both an email address (for Email-OTP) and a mobile
      * number (for SMS-OTP).
@@ -591,16 +529,9 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
         return user;
     }
 
-    // ══════════════════════════════════════════════════════════════════════════
-    //  IDP cache reset
-    // ══════════════════════════════════════════════════════════════════════════
-
     /**
-     * Resets the resident-IDP federated-authenticator cache to avoid pollution from
-     * previously executed test suites.
-     *
-     * <p>Uses {@link #soapBackendURL} (the original value ending with {@code "services/"})
-     * because {@link IdentityProviderMgtServiceClient} is an Axis2 SOAP stub.
+     * Resets the resident IDP cache to ensure that any changes to the IDP (e.g. enabling
+     * just the SAML SSO federated authenticator) are reflected in the test execution.
      */
     protected void resetResidentIDPCache() throws Exception {
 
