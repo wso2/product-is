@@ -250,6 +250,10 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
         Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 
+    /**
+     * Waits for exactly one incoming email on GreenMail (up to 10 s), then extracts
+     * the OTP from the {@code <b>NNNNNN</b>} pattern in the email body.
+     */
     private String getOTPFromEmail() {
 
         Assert.assertTrue(Utils.getMailServer().waitForIncomingEmail(10000, 1),

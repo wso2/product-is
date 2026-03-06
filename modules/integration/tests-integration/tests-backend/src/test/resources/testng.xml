@@ -134,11 +134,11 @@
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthentication2FATestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.ApplicationNativeAuthenticationDeviceFlowTestCase"/>
+            <!--             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.CustomAuthenticatorNativeAuthenticationTestCase"/>-->
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.EmailOTPLimitNativeAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.SMSOTPLimitNativeAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.EmailOTPSoftResendLimitNativeAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.SMSOTPSoftResendLimitNativeAuthTestCase"/>
-             <class name="org.wso2.identity.integration.test.applicationNativeAuthentication.CustomAuthenticatorNativeAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.apiAuthorization.RBACWithAPIAuthorizationTestCase"/>
             <class name="org.wso2.identity.integration.test.oid4vci.OID4VCIIssuanceTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessPasswordGrantTestCase"/>

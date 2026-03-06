@@ -249,7 +249,7 @@ public class EmailOTPSoftResendLimitNativeAuthTestCase extends AbstractOTPLimitN
 
     /**
      * Waits for exactly one incoming email on GreenMail (up to 10 s), then extracts
-     * the 6-digit OTP from the {@code <b>NNNNNN</b>} pattern in the email body.
+     * the OTP from the {@code <b>NNNNNN</b>} pattern in the email body.
      */
     private String getOTPFromEmail() {
 

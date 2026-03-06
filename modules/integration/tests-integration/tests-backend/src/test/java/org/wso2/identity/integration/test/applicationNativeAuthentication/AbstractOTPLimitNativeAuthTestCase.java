@@ -115,7 +115,7 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
      * Runtime params set:
      *  {@code enableRetryFromAuthenticator} = "true"
      *  {@code maximumAllowedFailureAttempts} = "2" → 1st wrong → FAIL_INCOMPLETE, 2nd → HTTP 400
-     *  {@code maximumAllowedResendAttempts}  = "1" → 1st resend → INCOMPLETE, 2nd → HTTP 400<
+     *  {@code maximumAllowedResendAttempts}  = "1" → 1st resend → INCOMPLETE, 2nd → HTTP 400
      *  {@code terminateOnResendLimitExceeded} = "true"
      */
     protected static final String ADAPTIVE_SCRIPT_TEMPLATE =
@@ -556,11 +556,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
 
     /**
      * Creates an OIDC application identical to {@link #createOTPApp} except that the
-     * adaptive-auth script uses {@code terminateOnResendLimitExceeded = "false"}.
-     *
-     * <p>When this flag is {@code false}, exceeding the resend limit returns HTTP 200 with
-     * {@code flowStatus = FAIL_INCOMPLETE} and an error entry in {@code nextStep.messages}
-     * (messageId = {@code ABA-60003}), rather than terminating the flow with HTTP 400.
      *
      * @param appName           display name for the application.
      * @param authenticatorName authenticator key (e.g. {@code "email-otp-authenticator"}).
@@ -608,15 +603,6 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
 
     /**
      * Asserts the response when the resend limit is exceeded and
-     * {@code terminateOnResendLimitExceeded = false}.
-     *
-     * <p>Expected: HTTP 200 with:
-     * <ul>
-     *   <li>{@code flowStatus = FAIL_INCOMPLETE}</li>
-     *   <li>{@code nextStep.messages[0].type = "ERROR"}</li>
-     *   <li>{@code nextStep.messages[0].messageId = "ABA-60003"}</li>
-     *   <li>{@code nextStep.messages[0].message = "resent.count.exceeded"}</li>
-     * </ul>
      *
      * @param resp the HTTP 200 response to assert.
      */
