@@ -122,11 +122,11 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.zip.Deflater;
 import java.util.zip.DeflaterOutputStream;
 
@@ -183,7 +183,7 @@ public class SAML2SSOTestBase extends SSOCommonClientForSAML {
     private X509Credential defaultX509Cred;
 
     private static boolean isBootStrapped = false;
-    private static Random random = new Random();
+    private static SecureRandom random = new SecureRandom();
 
 //    public void init() throws Exception {
 //
