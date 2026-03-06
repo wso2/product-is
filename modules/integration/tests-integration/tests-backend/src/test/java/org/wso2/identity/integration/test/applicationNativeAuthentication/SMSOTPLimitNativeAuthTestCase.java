@@ -24,6 +24,8 @@ import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
@@ -57,27 +59,42 @@ public class SMSOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthTes
     private static final String OTP_AUTHENTICATOR = "sms-otp-authenticator";
     private static final String SMS_SENDER_REQUEST_FORMAT =
             "{\"content\": {{body}}, \"to\": {{mobile}} }";
+
+    private final TestUserMode userMode;
     private String appId;
     private String appConsumerKey;
     private MockSMSProvider mockSMSProvider;
     private NotificationSenderRestClient notificationSenderRestClient;
 
+    @Factory(dataProvider = "testExecutionContextProvider")
+    public SMSOTPLimitNativeAuthTestCase(TestUserMode userMode) {
+
+        this.userMode = userMode;
+    }
+
+    @DataProvider(name = "testExecutionContextProvider")
+    public static Object[][] getTestExecutionContext() {
+
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_USER},
+                {TestUserMode.TENANT_USER}
+        };
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_USER);
-        commonInit();
+        super.init(userMode);
+        commonInit(userMode);
         mockSMSProvider = new MockSMSProvider();
         mockSMSProvider.start();
         notificationSenderRestClient = new NotificationSenderRestClient(backendURL, tenantInfo);
 
-        // This is to ensure a clean state for the SMS sender config,in case if there is an existing one with
-        // incompatible config.
+        // Ensure a clean state by deleting any existing SMS sender before creating a new one.
         try {
             notificationSenderRestClient.deleteSMSProvider();
-        } catch (Exception ignored) {
-            // This exception is expected when there is no existing SMS sender, so we can ignore it.
+        } catch (Throwable ignored) {
+            // Sender not present or already deleted – nothing to clean up.
         }
         notificationSenderRestClient.createSMSProvider(buildSMSSender());
     }
@@ -88,8 +105,16 @@ public class SMSOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthTes
         if (appId != null) {
             deleteApp(appId);
         }
-        notificationSenderRestClient.deleteSMSProvider();
-        notificationSenderRestClient.closeHttpClient();
+
+        if (notificationSenderRestClient != null) {
+            try {
+                notificationSenderRestClient.deleteSMSProvider();
+            } catch (Throwable ignored) {
+                // Sender was never registered or was already removed – nothing to do.
+            }
+            notificationSenderRestClient.closeHttpClient();
+        }
+
         if (mockSMSProvider != null) {
             mockSMSProvider.stop();
         }

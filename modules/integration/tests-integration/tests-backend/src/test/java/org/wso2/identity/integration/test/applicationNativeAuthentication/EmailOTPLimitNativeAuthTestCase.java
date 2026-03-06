@@ -26,6 +26,8 @@ import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -55,15 +57,32 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
 
     private static final String APP_NAME          = "it-email-otp-first-factor";
     private static final String OTP_AUTHENTICATOR = "email-otp-authenticator";
+
+    private final TestUserMode userMode;
     private String appId;
     private String appConsumerKey;
+
+    @Factory(dataProvider = "testExecutionContextProvider")
+    public EmailOTPLimitNativeAuthTestCase(TestUserMode userMode) {
+
+        this.userMode = userMode;
+    }
+
+    @DataProvider(name = "testExecutionContextProvider")
+    public static Object[][] getTestExecutionContext() {
+
+        return new Object[][]{
+                {TestUserMode.SUPER_TENANT_USER},
+                {TestUserMode.TENANT_USER}
+        };
+    }
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
         Utils.getMailServer().purgeEmailFromAllMailboxes();
-        super.init(TestUserMode.SUPER_TENANT_USER);
-        commonInit();
+        super.init(userMode);
+        commonInit(userMode);
     }
 
     @AfterClass(alwaysRun = true)

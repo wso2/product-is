@@ -39,6 +39,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.FederatedAuthenticatorConfig;
 import org.wso2.carbon.identity.application.common.model.idp.xsd.IdentityProvider;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
@@ -132,22 +133,36 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
     protected SCIM2RestClient scim2RestClient;
     protected String userId;
     protected String soapBackendURL;
+    /**
+     * Tenant-qualified OAuth2 authorize endpoint URL.
+     * For super-tenant: {@link OAuth2Constant#AUTHORIZE_ENDPOINT_URL}.
+     * For tenant mode: {@code /t/<domain>/oauth2/authorize}.
+     * Set in {@link #commonInit(TestUserMode)}.
+     */
+    protected String authorizeEndpointURL;
     protected String flowId;
     protected String authenticatorId;
     protected String href;
 
     /**
-     * Initialises the common HTTP client and test-framework base, strips
-     * {@code "services/"} from {@code backendURL} (saving the original in
-     * {@link #soapBackendURL}), creates the test user, and resets the IDP cache.
+     * Initialises common infrastructure: HTTP client, test user, and IDP cache reset.
      *
      * <p>Must be called from the concrete subclass {@code @BeforeClass} <em>after</em>
-     * {@code super.init(TestUserMode.SUPER_TENANT_USER)}.
+     * {@code super.init(userMode)}.
+     *
+     * @param userMode the {@link TestUserMode} passed by the subclass factory – used to
+     *                 compute the correct tenant-qualified authorize endpoint URL.
      */
-    protected void commonInit() throws Exception {
+    protected void commonInit(TestUserMode userMode) throws Exception {
 
         soapBackendURL = backendURL;
         backendURL = backendURL.replace("services/", "");
+
+        // Build the tenant-qualified authorize endpoint URL.
+        // For SUPER_TENANT this is just AUTHORIZE_ENDPOINT_URL; for tenant mode it
+        // is prefixed with /t/<tenantDomain>/.
+        authorizeEndpointURL = getTenantQualifiedURL(
+                OAuth2Constant.AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain());
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
@@ -170,7 +185,7 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
     }
 
     /**
-     * Tears down the common resources created in {@link #commonInit()}.
+     * Tears down the common resources created in {@link #commonInit(TestUserMode)}.
      * Must be called from the concrete subclass {@code @AfterClass}.
      */
     protected void commonTearDown() throws Exception {
@@ -207,7 +222,7 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
         HttpResponse response = sendPostRequestWithParameters(
                 client,
                 buildOAuth2Parameters(consumerKey),
-                OAuth2Constant.AUTHORIZE_ENDPOINT_URL);
+                authorizeEndpointURL);
         Assert.assertNotNull(response, "Auth flow initiation returned null response.");
 
         String bodyStr = EntityUtils.toString(response.getEntity(), UTF_8);
