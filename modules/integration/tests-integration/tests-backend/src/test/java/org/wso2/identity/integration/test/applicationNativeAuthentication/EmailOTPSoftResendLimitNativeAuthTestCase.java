@@ -228,6 +228,7 @@ public class EmailOTPSoftResendLimitNativeAuthTestCase extends AbstractOTPLimitN
         // Clean the mailbox to ensure we read the correct OTP email for this test, independent of previous tests.
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         initiateAuthFlow(appConsumerKey);
+        String ignoredOTP = getOTPFromEmail();
         // Clean the mailbox to get rid of the OTP email sent during initiation.
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         ExtractableResponse<Response> resendResp = triggerResend(HttpStatus.SC_OK);
