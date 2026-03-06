@@ -89,4 +89,9 @@ public class Constants {
             "Authentication failed. The maximum number of retry attempts has been exceeded.";
     public static final String ERROR_DESC_OTP_RESEND_LIMIT_EXCEEDED =
             "Authentication failed. The maximum number of OTP resend attempts has been exceeded.";
+
+    // Message fields in nextStep.messages (used when terminateOnResendLimitExceeded=false).
+    public static final String MESSAGE_TYPE_ERROR = "ERROR";
+    public static final String RESEND_LIMIT_EXCEEDED_MESSAGE_ID = "ABA-60003";
+    public static final String RESEND_LIMIT_EXCEEDED_MESSAGE = "resent.count.exceeded";
 }

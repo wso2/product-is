@@ -80,10 +80,15 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.HREF;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.LINKS;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.MESSAGE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.MESSAGE_ID;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.MESSAGE_TYPE_ERROR;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.MESSAGES;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.METADATA;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.NEXT_STEP;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.PARAMS;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.PROMPT_TYPE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.RESEND_LIMIT_EXCEEDED_MESSAGE;
+import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.RESEND_LIMIT_EXCEEDED_MESSAGE_ID;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.REQUIRED_PARAMS;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.RESPONSE_MODE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.STEP_TYPE;
@@ -123,6 +128,31 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
             "          \"maximumAllowedFailureAttempts\": \"2\",\n" +
             "          \"maximumAllowedResendAttempts\": \"1\",\n" +
             "          \"terminateOnResendLimitExceeded\": \"true\"\n" +
+            "        }\n" +
+            "      }\n" +
+            "    }\n" +
+            "  }, {});\n" +
+            "};\n";
+
+    /**
+     * Same as {@link #ADAPTIVE_SCRIPT_TEMPLATE} but with
+     * {@code terminateOnResendLimitExceeded = "false"}.
+     *
+     * <p>When {@code false}, exceeding the resend limit does <em>not</em> terminate the
+     * flow with HTTP 400. Instead the server returns HTTP 200 with
+     * {@code flowStatus = FAIL_INCOMPLETE} and an error entry in
+     * {@code nextStep.messages[0].messageId = "ABA-60003"}.
+     */
+    protected static final String ADAPTIVE_SCRIPT_SOFT_RESEND_TEMPLATE =
+            "var onLoginRequest = function(context) {\n" +
+            "  executeStep(1, {\n" +
+            "    authenticatorParams: {\n" +
+            "      local: {\n" +
+            "        \"%s\": {\n" +
+            "          \"enableRetryFromAuthenticator\": \"true\",\n" +
+            "          \"maximumAllowedFailureAttempts\": \"2\",\n" +
+            "          \"maximumAllowedResendAttempts\": \"1\",\n" +
+            "          \"terminateOnResendLimitExceeded\": \"false\"\n" +
             "        }\n" +
             "      }\n" +
             "    }\n" +
@@ -522,6 +552,93 @@ public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAb
 
         String newAppId = addApplication(application);
         return getApplication(newAppId);
+    }
+
+    /**
+     * Creates an OIDC application identical to {@link #createOTPApp} except that the
+     * adaptive-auth script uses {@code terminateOnResendLimitExceeded = "false"}.
+     *
+     * <p>When this flag is {@code false}, exceeding the resend limit returns HTTP 200 with
+     * {@code flowStatus = FAIL_INCOMPLETE} and an error entry in {@code nextStep.messages}
+     * (messageId = {@code ABA-60003}), rather than terminating the flow with HTTP 400.
+     *
+     * @param appName           display name for the application.
+     * @param authenticatorName authenticator key (e.g. {@code "email-otp-authenticator"}).
+     * @return the created {@link ApplicationResponseModel}.
+     */
+    protected ApplicationResponseModel createOTPAppWithSoftResendLimit(
+            String appName, String authenticatorName) throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+
+        List<String> grantTypes = new ArrayList<>();
+        Collections.addAll(grantTypes, OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
+
+        List<String> callBackUrls = new ArrayList<>();
+        Collections.addAll(callBackUrls, OAuth2Constant.CALLBACK_URL);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(grantTypes);
+        oidcConfig.setCallbackURLs(callBackUrls);
+        oidcConfig.setPublicClient(true);
+
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocols);
+        application.setName(appName);
+
+        application.advancedConfigurations(new AdvancedApplicationConfiguration());
+        application.getAdvancedConfigurations().setEnableAPIBasedAuthentication(true);
+
+        AuthenticationStep step = new AuthenticationStep();
+        step.setId(1);
+        step.addOptionsItem(new Authenticator().idp("LOCAL").authenticator(authenticatorName));
+
+        AuthenticationSequence authSequence = new AuthenticationSequence();
+        authSequence.setType(AuthenticationSequence.TypeEnum.USER_DEFINED);
+        authSequence.addStepsItem(step);
+        authSequence.setSubjectStepId(1);
+        authSequence.setScript(String.format(ADAPTIVE_SCRIPT_SOFT_RESEND_TEMPLATE, authenticatorName));
+
+        application.setAuthenticationSequence(authSequence);
+
+        String newAppId = addApplication(application);
+        return getApplication(newAppId);
+    }
+
+    /**
+     * Asserts the response when the resend limit is exceeded and
+     * {@code terminateOnResendLimitExceeded = false}.
+     *
+     * <p>Expected: HTTP 200 with:
+     * <ul>
+     *   <li>{@code flowStatus = FAIL_INCOMPLETE}</li>
+     *   <li>{@code nextStep.messages[0].type = "ERROR"}</li>
+     *   <li>{@code nextStep.messages[0].messageId = "ABA-60003"}</li>
+     *   <li>{@code nextStep.messages[0].message = "resent.count.exceeded"}</li>
+     * </ul>
+     *
+     * @param resp the HTTP 200 response to assert.
+     */
+    protected void assertSoftResendLimitExceededPayload(ExtractableResponse<Response> resp) {
+
+        String status = resp.jsonPath().getString(FLOW_STATUS);
+        Assert.assertEquals(status, FAIL_INCOMPLETE,
+                "Soft resend limit: expected FAIL_INCOMPLETE but got: " + status);
+
+        String messagesPrefix = NEXT_STEP + "." + MESSAGES + "[0]";
+        String actualType      = resp.jsonPath().getString(messagesPrefix + ".type");
+        String actualMessageId = resp.jsonPath().getString(messagesPrefix + "." + MESSAGE_ID);
+        String actualMessage   = resp.jsonPath().getString(messagesPrefix + "." + MESSAGE);
+
+        Assert.assertEquals(actualType, MESSAGE_TYPE_ERROR,
+                "Soft resend limit: expected message type ERROR but got: " + actualType);
+        Assert.assertEquals(actualMessageId, RESEND_LIMIT_EXCEEDED_MESSAGE_ID,
+                "Soft resend limit: expected messageId " + RESEND_LIMIT_EXCEEDED_MESSAGE_ID
+                        + " but got: " + actualMessageId);
+        Assert.assertEquals(actualMessage, RESEND_LIMIT_EXCEEDED_MESSAGE,
+                "Soft resend limit: expected message '" + RESEND_LIMIT_EXCEEDED_MESSAGE
+                        + "' but got: " + actualMessage);
     }
 
     /**
