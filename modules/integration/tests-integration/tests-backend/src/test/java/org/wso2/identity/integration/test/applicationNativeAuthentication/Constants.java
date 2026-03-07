@@ -74,4 +74,24 @@ public class Constants {
     public static final String MESSAGE_ID = "messageId";
     public static final String MESSAGES = "messages";
     public static final String FAIL_INCOMPLETE = "FAIL_INCOMPLETE";
+    public static final String INCOMPLETE = "INCOMPLETE";
+
+    // IDF (Identifier-First) step param keys.
+    public static final String USERNAME_PARAM = "username";
+    public static final String IDF_AUTHENTICATOR = "IdentifierExecutor";
+
+    // Error codes for OTP retry/resend limit exceeded responses (HTTP 400).
+    public static final String ERROR_CODE_OTP_RETRY_LIMIT_EXCEEDED = "ABA-60013";
+    public static final String ERROR_CODE_OTP_RESEND_LIMIT_EXCEEDED = "ABA-60014";
+    public static final String ERROR_MSG_OTP_RETRY_LIMIT_EXCEEDED = "Maximum retry attempts exceeded.";
+    public static final String ERROR_MSG_OTP_RESEND_LIMIT_EXCEEDED = "Maximum resend attempts exceeded.";
+    public static final String ERROR_DESC_OTP_RETRY_LIMIT_EXCEEDED =
+            "Authentication failed. The maximum number of retry attempts has been exceeded.";
+    public static final String ERROR_DESC_OTP_RESEND_LIMIT_EXCEEDED =
+            "Authentication failed. The maximum number of OTP resend attempts has been exceeded.";
+
+    // Message fields in nextStep.messages (used when terminateOnResendLimitExceeded=false).
+    public static final String MESSAGE_TYPE_ERROR = "ERROR";
+    public static final String RESEND_LIMIT_EXCEEDED_MESSAGE_ID = "ABA-60003";
+    public static final String RESEND_LIMIT_EXCEEDED_MESSAGE = "resent.count.exceeded";
 }
