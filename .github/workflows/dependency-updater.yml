@@ -185,7 +185,7 @@ jobs:
         with:
           name: mvn-test.log
           path: |
-            ${{steps.builder_step.outputs.REPO_NAME}}/mvn-test.log
+            ${{steps.builder_step.outputs.REPO_NAME}}/modules/integration/tests-integration/tests-backend/mvn-test.log
           if-no-files-found: warn
       - name: Archive heap dump
         if: always()
