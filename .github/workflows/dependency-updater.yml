@@ -78,17 +78,40 @@ jobs:
           git diff --color > dependency_updates.diff
           cat dependency_updates.diff
 
-      - name: Build and Run Tests
+      - name: Build
         working-directory: ${{ env.REPOSITORY }}
         run: |
           echo "Building project"
           echo "=========================================================="
-          mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-build.log
+          mvn clean install -DskipTests | tee mvn-build.log
           PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-          PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
           PR_BUILD_FINAL_RESULT=$(
             echo "==========================================================="
             echo "product-is BUILD $PR_BUILD_STATUS"
+            echo "=========================================================="
+          )
+          PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
+          PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
+          echo "::warning::$PR_BUILD_RESULT_LOG"
+          PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
+          if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+            echo "PR BUILD not successfull. Aborting."
+            echo "::error::PR BUILD not successfull. Check artifacts for logs."
+            exit 1
+          fi
+
+      - name: Run Integration Tests
+        working-directory: ${{ env.REPOSITORY }}
+        run: |
+          echo "Running integration tests"
+          echo "=========================================================="
+          cd modules/integration/tests-integration/tests-backend
+          mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-test.log
+          PR_TEST_STATUS=$(cat mvn-test.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+          PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-test.log)
+          PR_BUILD_FINAL_RESULT=$(
+            echo "==========================================================="
+            echo "product-is TESTS $PR_TEST_STATUS"
             echo "=========================================================="
             echo ""
             echo "$PR_TEST_RESULT"
@@ -96,10 +119,10 @@ jobs:
           PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
           PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
           echo "::warning::$PR_BUILD_RESULT_LOG"
-          PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-          if [ "$PR_BUILD_SUCCESS_COUNT" != "17" ]; then
-            echo "PR BUILD not successfull. Aborting."
-            echo "::error::PR BUILD not successfull. Check artifacts for logs."
+          PR_TEST_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-test.log | wc -l)
+          if [ "$PR_TEST_SUCCESS_COUNT" != "17" ]; then
+            echo "Integration tests not successfull. Aborting."
+            echo "::error::Integration tests not successfull. Check artifacts for logs."
             exit 1
           fi
 
@@ -155,6 +178,14 @@ jobs:
           name: mvn-build.log
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
+          if-no-files-found: warn
+      - name: Archive maven-test-log file
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mvn-test.log
+          path: |
+            ${{steps.builder_step.outputs.REPO_NAME}}/mvn-test.log
           if-no-files-found: warn
       - name: Archive heap dump
         if: always()
