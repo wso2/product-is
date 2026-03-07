@@ -1,0 +1,5 @@
+{
+  "piiCategory": "email",
+  "description": "User's primary email address",
+  "sensitive": false
+}
