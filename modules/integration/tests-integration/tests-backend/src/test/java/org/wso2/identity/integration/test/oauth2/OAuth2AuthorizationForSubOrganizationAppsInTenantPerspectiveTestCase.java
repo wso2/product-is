@@ -45,11 +45,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
@@ -58,30 +54,15 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
-import org.wso2.identity.integration.test.util.Utils;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdTokenConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceCreationModel;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeCreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.*;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Audience;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.Permission;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
-import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
-import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
-import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
-import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceCreationModel;
-import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeCreationModel;
-import org.wso2.identity.integration.test.restclients.APIResourceManagementClient;
-import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
-import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
-import org.wso2.identity.integration.test.restclients.RestBaseClient;
-import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.rest.api.user.common.model.*;
+import org.wso2.identity.integration.test.restclients.*;
+import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
@@ -89,34 +70,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.AUTHORIZATION_ATTRIBUTE;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.BASIC_AUTHORIZATION_ATTRIBUTE;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.BEARER_TOKEN_AUTHORIZATION_ATTRIBUTE;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.BASIC_HEADER;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import static org.testng.Assert.*;
+import static org.wso2.identity.integration.test.restclients.RestBaseClient.*;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 
 /**
  * Holds the integration tests for sub organization application authorizations.
  */
-public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class OAuth2AuthorizationForSubOrganizationAppsInTenantPerspectiveTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String API_SERVER_BASE_PATH = "api/server/v1";
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
@@ -154,8 +117,8 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
 
     // Instance variables per user mode)
     private final TestUserMode userMode;
-    private final String ORGANIZATION_NAME;
-    private final String ORGANIZATION_HANDLE;
+    private String ORGANIZATION_NAME;
+    private String ORGANIZATION_HANDLE;
     private String ORG_APP_CLIENT_ID;
     private String ORG_APP_CLIENT_SECRET;
     private CloseableHttpClient client;
@@ -171,7 +134,6 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private String organizationId;
     private String testApiResourceId;
     private String organizationApplicationId;
-    private String applicationId;
 
     // Variables for JWT token flow
     private String jwtSessionDataKey;
@@ -183,15 +145,18 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
 
         return new Object[][]{
 //                {TestUserMode.SUPER_TENANT_ADMIN, "sub001", "sub001"},
-                {TestUserMode.TENANT_ADMIN, "sub003", "sub003"}};
+                {TestUserMode.TENANT_ADMIN, "sub002", "sub002"}};
     }
 
     @Factory(dataProvider = "configProvider")
-    public OAuth2AuthorizationForSubOrganizationAppsTestCase(TestUserMode userMode, String orgName, String orgHandle) {
+    public OAuth2AuthorizationForSubOrganizationAppsInTenantPerspectiveTestCase(TestUserMode userMode,
+                                                                                String organizationName,
+                                                                                String organizationHandle) {
 
         this.userMode = userMode;
-        this.ORGANIZATION_NAME = orgName;
-        this.ORGANIZATION_HANDLE = orgHandle;
+        this.ORGANIZATION_NAME = organizationName;
+        this.ORGANIZATION_HANDLE = organizationHandle;
+
     }
 
 
@@ -199,7 +164,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     public void initTestClass() throws Exception {
 
         // Configure deployment.toml only once before all tests
-        synchronized (OAuth2AuthorizationForSubOrganizationAppsTestCase.class) {
+        synchronized (OAuth2AuthorizationForSubOrganizationAppsInTenantPerspectiveTestCase.class) {
             if (!isServerConfigured) {
                 // Initialize with super tenant admin to configure server
                 super.init(TestUserMode.SUPER_TENANT_ADMIN);
@@ -508,9 +473,6 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         if (orgMgtRestClient != null) {
             orgMgtRestClient.closeHttpClient();
         }
-        if (applicationId != null) {
-            deleteApp(applicationId);
-        }
         if (restClient != null) {
             restClient.closeHttpClient();
         }
@@ -529,7 +491,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     public void cleanupClass() throws Exception {
 
         // Restore original deployment.toml configuration after all tests complete
-        synchronized (OAuth2AuthorizationForSubOrganizationAppsTestCase.class) {
+        synchronized (OAuth2AuthorizationForSubOrganizationAppsInTenantPerspectiveTestCase.class) {
             if (isServerConfigured && staticServerConfigurationManager != null) {
                 log.info("Resetting deployment.toml to original configuration");
                 staticServerConfigurationManager.restoreToLastConfiguration(true);
@@ -556,7 +518,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
                 .build();
 
         ApplicationResponseModel application = addApplication(applicationConfig);
-        applicationId = application.getId();
+        String applicationId = application.getId();
 
         JSONObject managementAppAPIResources = new JSONObject(RESTTestBase.readResource(
                 MGT_APP_AUTHORIZED_API_RESOURCES, this.getClass()));
@@ -941,7 +903,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         urlParameters.add(new BasicNameValuePair("scope", scopeString));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, ORGANIZATION_HANDLE));
+                getTenantPerspectiveURLForSubOrgApps(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain(), organizationId));
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         assertNotNull(locationHeader, "Location header expected for authorize request is not available.");
@@ -1002,7 +964,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         headers.add(new BasicHeader("User-Agent", USER_AGENT));
 
         HttpResponse response = sendPostRequest(client, headers, urlParameters,
-                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, ORGANIZATION_HANDLE));
+                getTenantPerspectiveURLForSubOrgApps(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain(), organizationId));
         assertNotNull(response, "Failed to receive response for access token request.");
 
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -1027,7 +989,8 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private void validateTokenIntrospection(String token, String activeErrorMessage, String tokenType)
             throws Exception {
 
-        String introspectionUrl = getTenantQualifiedURL(OAuth2Constant.INTRO_SPEC_ENDPOINT, ORGANIZATION_HANDLE);
+        String introspectionUrl = getTenantPerspectiveURLForSubOrgApps(OAuth2Constant.INTRO_SPEC_ENDPOINT,
+                tenantInfo.getDomain(), organizationId);
         log.info("Introspection endpoint URL: " + introspectionUrl);
         log.info("Introspecting token: " + token);
 
