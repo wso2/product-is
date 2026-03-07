@@ -105,7 +105,8 @@ jobs:
         run: |
           echo "Running integration tests"
           echo "=========================================================="
-          mvn verify -Dmaven.test.failure.ignore=false | tee mvn-test.log
+          cd modules/integration/tests-integration/tests-backend
+          mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-test.log
           PR_TEST_STATUS=$(cat mvn-test.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
           PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-test.log)
           PR_BUILD_FINAL_RESULT=$(
