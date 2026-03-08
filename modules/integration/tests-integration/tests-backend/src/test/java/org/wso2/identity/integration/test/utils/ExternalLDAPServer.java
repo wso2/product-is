@@ -511,14 +511,14 @@ public class ExternalLDAPServer {
             String passwordToStore = "{" + algorithm.getAlgorithmName() + "}";
             if (algorithm != PasswordAlgorithm.PLAIN_TEXT) {
                 MessageDigest md = MessageDigest.getInstance(algorithm.getAlgorithmName());
-                md.update(password.getBytes());
+                md.update(password.getBytes(StandardCharsets.UTF_8));
                 byte[] bytes = md.digest();
                 String hash = Base64.encode(bytes);
                 passwordToStore = passwordToStore + hash;
             } else {
                 passwordToStore = password;
             }
-            adminEntry.put("userPassword", passwordToStore.getBytes());
+            adminEntry.put("userPassword", passwordToStore.getBytes(StandardCharsets.UTF_8));
         } catch (NoSuchAlgorithmException e) {
             throw new Exception("Could not find matching hash algorithm - " + algorithm.getAlgorithmName(), e);
         }
