@@ -50,7 +50,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
  */
 public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthTestCase {
 
-    private static final String APP_NAME          = "it-email-otp-first-factor";
+    private static final String APP_NAME = "it-email-otp-first-factor";
     private static final String OTP_AUTHENTICATOR = "email-otp-authenticator";
 
     private final TestUserMode userMode;

@@ -97,10 +97,10 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
  */
 public abstract class AbstractOTPLimitNativeAuthTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    protected static final String TEST_USER_NAME     = "it_user_otp_limits";
+    protected static final String TEST_USER_NAME = "it_user_otp_limits";
     protected static final String TEST_USER_PASSWORD = "User@123Otp!";
-    protected static final String TEST_USER_EMAIL    = "it_user_otp_limits@example.com";
-    protected static final String TEST_USER_MOBILE   = "+94771234567";
+    protected static final String TEST_USER_EMAIL = "it_user_otp_limits@example.com";
+    protected static final String TEST_USER_MOBILE = "+94771234567";
 
     protected static final String WRONG_OTP = "000000";
     protected static final String ADAPTIVE_SCRIPT_TEMPLATE =

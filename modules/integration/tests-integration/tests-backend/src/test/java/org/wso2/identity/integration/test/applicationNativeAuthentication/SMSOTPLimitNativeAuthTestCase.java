@@ -50,7 +50,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
  */
 public class SMSOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthTestCase {
 
-    private static final String APP_NAME          = "it-sms-otp-first-factor";
+    private static final String APP_NAME = "it-sms-otp-first-factor";
     private static final String OTP_AUTHENTICATOR = "sms-otp-authenticator";
     private static final String SMS_SENDER_REQUEST_FORMAT =
             "{\"content\": {{body}}, \"to\": {{mobile}} }";

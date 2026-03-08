@@ -53,7 +53,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
  */
 public class EmailOTPSoftResendLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthTestCase {
 
-    private static final String APP_NAME          = "it-email-otp-soft-resend-limit";
+    private static final String APP_NAME = "it-email-otp-soft-resend-limit";
     private static final String OTP_AUTHENTICATOR = "email-otp-authenticator";
 
     private final TestUserMode userMode;
