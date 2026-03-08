@@ -61,6 +61,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -193,14 +194,14 @@ public class ExternalLDAPServer {
                         throw new Exception(
                                 "Could not find digest algorithm - " + ADMIN_PASSWORD_ALGORITHM, e);
                     }
-                    messageDigest.update(password.getBytes());
+                    messageDigest.update(password.getBytes(StandardCharsets.UTF_8));
                     byte[] bytes = messageDigest.digest();
                     String hash = Base64.encode(bytes);
                     passwordToStore = passwordToStore + hash;
-                    adminPrincipal.setUserPassword(passwordToStore.getBytes());
+                    adminPrincipal.setUserPassword(passwordToStore.getBytes(StandardCharsets.UTF_8));
                     Attribute passwordAttribute = new DefaultAttribute(getAttributeType("userPassword"));
                     try {
-                        passwordAttribute.add(passwordToStore.getBytes());
+                        passwordAttribute.add(passwordToStore.getBytes(StandardCharsets.UTF_8));
                     } catch (LdapInvalidAttributeValueException e) {
                         String msg = "Adding password attribute failed .";
                         throw new Exception(msg, e);
