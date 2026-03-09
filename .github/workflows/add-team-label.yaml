@@ -2,7 +2,7 @@ name: Add Team Label via AI Classification
 
 on:
   issues:
-    types: [opened, reopened]
+    types: [opened]
 
 jobs:
   classify-and-label:
@@ -22,6 +22,7 @@ jobs:
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_BODY: ${{ github.event.issue.body }}
         run: |
+          set -euo pipefail
           echo "Classifying issue #$ISSUE_NUMBER..."
 
           PROMPT="You are a GitHub issue classifier for WSO2 Identity Server. Analyze the issue title and description and assign exactly one of the following team labels based on the most dominant topic.
@@ -64,15 +65,26 @@ jobs:
             messages: [{role: "user", content: $prompt}]
           }')
 
-          RESPONSE=$(curl -s https://api.anthropic.com/v1/messages \
+          RESPONSE=$(curl -s --fail https://api.anthropic.com/v1/messages \
             -H "Content-Type: application/json" \
             -H "x-api-key: $ANTHROPIC_API_KEY" \
             -H "anthropic-version: 2023-06-01" \
             -d "$DATA")
 
+          if [[ -z "$RESPONSE" ]]; then
+            echo "Error: Empty response from Claude API." >&2
+            exit 1
+          fi
+
           echo "Claude response: $RESPONSE"
 
           LABEL=$(echo "$RESPONSE" | jq -r '.content[0].text' | tr -d '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+
+          if [[ -z "$LABEL" || "$LABEL" == "null" ]]; then
+            echo "Error: Failed to extract a valid label from Claude API response." >&2
+            exit 1
+          fi
+
           echo "Claude classified the issue as: $LABEL"
 
           VALID_LABELS=(
