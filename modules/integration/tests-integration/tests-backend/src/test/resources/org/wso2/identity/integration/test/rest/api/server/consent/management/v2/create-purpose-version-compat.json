@@ -1,0 +1,9 @@
+{
+  "description": "Updated compat consent elements for compatibility version testing",
+  "elements": [
+    {
+      "elementId": 2,
+      "mandatory": true
+    }
+  ]
+}
