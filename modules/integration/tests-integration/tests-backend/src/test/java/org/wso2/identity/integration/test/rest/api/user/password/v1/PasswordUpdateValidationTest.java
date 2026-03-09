@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.user.password.v1;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
@@ -37,6 +38,7 @@ import org.wso2.identity.integration.test.rest.api.user.password.v1.model.Passwo
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -325,6 +327,16 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
         }
     }
 
+    @Test(priority=3, description = "Verify error when Basic authentication is used instead of a bearer token")
+    public void testBasicAuthCredentialsAreRejected() throws Exception {
+
+        try (CloseableHttpResponse response = changePasswordWithBasicAuth(VALIDATION_USER_1,
+                VALIDATION_USER_1_PASSWORD, VALIDATION_USER_1_PASSWORD, VALID_NEW_PASSWORD)) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_UNAUTHORIZED,
+                    "Expected 401 when Basic authentication is used for the change-password API.");
+        }
+    }
+
     @Test(priority=3, description = "Verify error when attempting to change password for a locked account")
     public void testLockedUserPasswordChange() throws Exception {
 
@@ -383,6 +395,37 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
             getTenantQualifiedURL(serverURL + CHANGE_PASSWORD_PATH, tenantInfo.getDomain()),
             restBaseClient.toJSONString(requestBody),
             headers);
+    }
+
+    /**
+     * Sends a password change request with HTTP Basic authentication to verify that this API
+     * accepts only Bearer tokens.
+     *
+     * @param username        username to encode in the Basic Authorization header
+     * @param password        password to encode in the Basic Authorization header
+     * @param currentPassword the user's current password in the request body
+     * @param newPassword     the desired new password in the request body
+     * @return the HTTP response; the caller is responsible for closing it
+     * @throws IOException if the HTTP request fails
+     */
+    private CloseableHttpResponse changePasswordWithBasicAuth(String username, String password,
+                                                              String currentPassword, String newPassword)
+            throws IOException {
+
+        Header[] headers = new Header[3];
+        String basicCredentials = username + ":" + password;
+        headers[0] = new BasicHeader("Authorization", "Basic " +
+                Base64.encodeBase64String(basicCredentials.getBytes(StandardCharsets.UTF_8)));
+        headers[1] = new BasicHeader("Content-Type", "application/json");
+        headers[2] = new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT);
+
+        PasswordChangeRequest requestBody = new PasswordChangeRequest()
+                .currentPassword(currentPassword)
+                .newPassword(newPassword);
+        return restBaseClient.getResponseOfHttpPost(
+                getTenantQualifiedURL(serverURL + CHANGE_PASSWORD_PATH, tenantInfo.getDomain()),
+                restBaseClient.toJSONString(requestBody),
+                headers);
     }
 
     /**
