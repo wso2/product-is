@@ -2830,7 +2830,7 @@
         <carbon.metrics.version>1.3.12</carbon.metrics.version>
         <carbon.analytics-common.version>5.5.0</carbon.analytics-common.version>
         <carbon.dashboards.version>2.0.27</carbon.dashboards.version>
-        <carbon.healthcheck.version>1.3.3</carbon.healthcheck.version>
+        <carbon.healthcheck.version>1.4.0</carbon.healthcheck.version>
 
         <!-- agent-identity -->
         <carbon.identity.agent.version>1.0.11</carbon.identity.agent.version>
