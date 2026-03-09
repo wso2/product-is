@@ -296,7 +296,7 @@ org.wso2.carbon.event.admin_4.12.0.jar                                          
 org.wso2.carbon.webapp.deployer_4.14.0.jar                                                          bundle         apache2
 org.wso2.carbon.event.output.adapter.websocket_5.5.0.jar                                            bundle         apache2
 org.eclipse.equinox.p2.console_1.3.300.v20240201-0843.jar                                           bundle         epl2
-solr_9.9.0.wso2v2.jar                                                                               bundle         apache2
+solr_10.0.0.wso2v1.jar                                                                              bundle         apache2
 zookeeper-3.9.4.jar                                                                                 jarinbundle    apache2
 jersey-client-3.1.5.jar                                                                             jarinbundle    apache2 + ccpd-universal + edl1 + mit + epl2 + bsd2
 hk2-locator-3.0.6.jar                                                                               jarinbundle    epl2
