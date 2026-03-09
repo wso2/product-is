@@ -190,11 +190,6 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowFailureTest"/>
             <class name="org.wso2.identity.integration.test.inheritance.ConfigInheritanceTestCase"/>
-        </classes>
-    </test>
-
-    <test name="is-test-compatibility-settings-deployment-config" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsDeploymentConfigTest"/>
         </classes>
     </test>
