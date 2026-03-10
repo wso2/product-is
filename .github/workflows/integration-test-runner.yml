@@ -11,8 +11,84 @@ env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 jobs:
+  build:
+    name: Build product-is pack
+    runs-on:
+      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Print Input
+        run: echo "Building product-is for PR - ${{ github.event.inputs.pr }}"
+      - name: Comment build info
+        run: |
+          owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
+          repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
+          pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
+          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Echo java 21 home
+        id: java-21-setup
+        run: echo "J21HOME=$JAVA_HOME" >> ${GITHUB_ENV}
+      - name: Build init
+        run: echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
+      - name: Cache maven packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2
+            !~/.m2/repository/org/wso2/is/wso2is
+          key: ${{ runner.os }}-pr-builder-build-${{ env.CURRENT_MONTH }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          run_install: false
+      - name: Build product-is pack (no tests)
+        id: build_step
+        env:
+          PR_LINK: ${{ github.event.inputs.pr }}
+          JAVA_21_HOME: ${{ env.J21HOME }}
+        run: |
+          bash .github/scripts/pr-builder-build.sh
+      - name: Archive diff file
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-pr-diff
+          path: |
+            ${{ steps.build_step.outputs.REPO_NAME }}/diff.diff
+          if-no-files-found: warn
+      - name: Archive dependency repo mvn build log
+        if: ${{ steps.build_step.outputs.REPO_NAME != 'product-is' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: repo-mvn-build-log
+          path: |
+            ${{ steps.build_step.outputs.REPO_NAME }}/mvn-build.log
+          if-no-files-found: warn
+      - name: Archive product-is build log
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-is-build-log
+          path: product-is-build/mvn-build.log
+          if-no-files-found: warn
+      - name: Upload pre-built product-is tree
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-is-build
+          # Upload the full source + compiled output so test runners can
+          # skip recompilation and jump straight to running tests.
+          path: product-is-build/
+          if-no-files-found: error
+          retention-days: 1
+
   run-test-runners:
-    runs-on: 
+    name: Run tests (runner ${{ matrix.runner_id }})
+    needs: build
+    runs-on:
       - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
     strategy:
       fail-fast: false
@@ -29,13 +105,6 @@ jobs:
     steps:
       - name: Print Input
         run: echo "Running the Test runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
-      - name: Comment build info
-        if: ${{ matrix.runner_id == 1 }}
-        run: |
-          owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
-          repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
-          pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
-          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -43,49 +112,29 @@ jobs:
           java-version: "21"
           distribution: "temurin"
       - name: Echo java 21 home
-        run: |
-          echo "J21HOME=$JAVA_HOME" >> ${GITHUB_ENV}
         id: java-21-setup
+        run: echo "J21HOME=$JAVA_HOME" >> ${GITHUB_ENV}
       - name: Build init
-        run: |
-          echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
-      - name: Cache maven packages
-        id: cache-maven-m2
-        uses: actions/cache@v4
+        run: echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
+      - name: Restore maven cache from build job
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.m2
             !~/.m2/repository/org/wso2/is/wso2is
-          key: ${{ runner.os }}-pr-builder-${{ env.CURRENT_MONTH }}-${{ matrix.runner_id }}
-      - name: Setup pnpm
-        id: setup-pnpm
-        uses: pnpm/action-setup@v4
+          key: ${{ runner.os }}-pr-builder-build-${{ env.CURRENT_MONTH }}
+      - name: Download pre-built product-is tree
+        uses: actions/download-artifact@v4
         with:
-          version: latest
-          run_install: false
-      - name: Run PR builder ${{ matrix.runner_id }}
+          name: product-is-build
+          path: product-is-build/
+      - name: Run PR test runner ${{ matrix.runner_id }}
         id: builder_step
         env:
-          PR_LINK: ${{github.event.inputs.pr}}
-          JAVA_21_HOME: ${{env.J21HOME}}
+          PR_LINK: ${{ github.event.inputs.pr }}
+          JAVA_21_HOME: ${{ env.J21HOME }}
         run: |
-          bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
-      - name: Archive PR diff file
-        if: ${{ matrix.runner_id == 1 }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: repo-pr-diff
-          path: |
-            ${{steps.builder_step.outputs.REPO_NAME}}/diff.diff
-          if-no-files-found: warn
-      - name: Archive repo mvn build log
-        if: ${{ matrix.runner_id == 1 && steps.builder_step.outputs.REPO_NAME != 'product-is' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: repo-mvn-build-log
-          path: |
-            ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
-          if-no-files-found: warn
+          bash .github/scripts/pr-builder-test.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
       - name: Archive product-is mvn build log
         if: always()
         uses: actions/upload-artifact@v4
@@ -106,10 +155,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: heap-dump
+          name: heap-dump-${{ matrix.runner_id }}
           path: |
             **/**.hprof
           if-no-files-found: ignore
+
   comment-and-approve:
     name: Comment the status and Approve PR
     needs: run-test-runners

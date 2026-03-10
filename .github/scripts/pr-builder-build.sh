@@ -1,68 +1,28 @@
 #!/bin/bash +x
+#
+# Copyright (c) 2026, WSO2 LLC. (https://www.wso2.com).
+#
+# WSO2 LLC. licenses this file to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied. See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
 OUTBOUND_AUTH_OIDC_REPO=identity-outbound-auth-oidc
 OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-outbound-auth-oidc.git
 SCIM2_REPO=identity-inbound-provisioning-scim2
 SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provisioning-scim2.git
 
-# Define all available tests.
-declare -a ALL_TESTS=(
-    "is-tests-default-configuration"
-    "is-test-rest-api"
-    "is-test-webhooks"
-    "is-tests-scim2"
-    "is-test-adaptive-authentication"
-    "is-test-adaptive-authentication-nashorn"
-    "is-test-adaptive-authentication-nashorn-with-restart"
-    "is-tests-default-configuration-ldap"
-    "is-tests-uuid-user-store"
-    "is-tests-federation"
-    "is-tests-federation-restart"
-    "is-tests-jdbc-userstore"
-    "is-tests-read-only-userstore"
-    "is-tests-oauth-jwt-token-gen-enabled"
-    "is-tests-email-username"
-    "is-tests-with-individual-configuration-changes"
-    "is-tests-saml-query-profile"
-    "is-tests-default-encryption"
-    "is-test-session-mgt"
-    "is-tests-password-update-api"
-)
-
-# Function to disable tests not in the enabled list.
-disable_tests() {
-    local enabled_tests=$1
-    local testng_path="product-is-$BUILDER_NUMBER/modules/integration/tests-integration/tests-backend/src/test/resources/testng.xml"
-
-    # Convert comma-separated string to array.
-    IFS=',' read -ra ENABLED_ARRAY <<< "$enabled_tests"
-
-    echo "Tests that will run:"
-    printf '%s\n' "${ENABLED_ARRAY[@]}"
-
-    echo -e "\nDisabling other tests:"
-    for test in "${ALL_TESTS[@]}"; do
-        if [[ ! " ${ENABLED_ARRAY[@]} " =~ " ${test} " ]]; then
-            echo "- Disabling: $test"
-            sed -i.bak "s/name=\"$test\"/& enabled=\"false\"/" "$testng_path"
-        fi
-    done
-}
-
-# Function to get expected BUILD SUCCESS count based on enabled tests.
-get_expected_build_success_count() {
-    local enabled_tests=$1
-    # If is-test-adaptive-authentication-nashorn is enabled, expect 17 BUILD SUCCESS messages.
-    if [[ "$enabled_tests" == *"is-test-adaptive-authentication-nashorn"* ]]; then
-        echo "17"
-    else
-        echo "1"
-    fi
-}
-
 # Main execution starts here.
-BUILDER_NUMBER=$1
-ENABLED_TESTS=$2
-
 echo ""
 echo "=========================================================="
 PR_LINK=${PR_LINK%/}
@@ -83,16 +43,14 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
-
-disable_tests "$ENABLED_TESTS"
+git clone https://github.com/wso2/product-is product-is-build
 
 if [ "$REPO" = "product-is" ]; then
 
   echo ""
-  echo "PR is for the product-is itself. Start building with test..."
+  echo "PR is for the product-is itself. Applying diff and building without tests..."
   echo "=========================================================="
-  cd product-is-$BUILDER_NUMBER
+  cd product-is-build
 
   echo ""
   echo "Applying PR $PULL_NUMBER as a diff..."
@@ -107,39 +65,21 @@ if [ "$REPO" = "product-is" ]; then
   }
 
   echo "Last 3 changes:"
-  COMMIT1=$(git log --oneline -1)
-  COMMIT2=$(git log --oneline -2 | tail -1)
-  COMMIT3=$(git log --oneline -3 | tail -1)
-  echo "$COMMIT1"
-  echo "$COMMIT2"
-  echo "$COMMIT3"
+  git log --oneline -3
 
   cat pom.xml
   export JAVA_HOME=$JAVA_21_HOME
-  mvn clean install --batch-mode | tee mvn-build.log
+  mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
-  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-  PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
-
-  PR_BUILD_FINAL_RESULT=$(
-    echo "==========================================================="
-    echo "product-is BUILD $PR_BUILD_STATUS"
-    echo "=========================================================="
-    echo ""
-    echo "$PR_TEST_RESULT"
-  )
-
-  PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
-  PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
-  echo "::warning::$PR_BUILD_RESULT_LOG"
-
-  PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
-    echo "PR BUILD not successfull. Aborting."
-    echo "::error::PR BUILD not successfull. Check artifacts for logs."
+  BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+  if [ "$BUILD_STATUS" != "SUCCESS" ]; then
+    echo "product-is BUILD not successful. Aborting."
+    echo "::error::product-is BUILD not successful. Check artifacts for logs."
     exit 1
   fi
+
+  cd ..
+
 else
   echo ""
   echo "PR is for the dependency repository $REPO."
@@ -150,8 +90,9 @@ else
   echo ""
   echo "Determining dependency version property key..."
   echo "=========================================================="
-  wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/version_property_finder.py
-  VERSION_PROPERTY=$(python version_property_finder.py $REPO product-is-$BUILDER_NUMBER 2>&1)
+  # version_property_finder.py is already available from the actions/checkout step.
+  VERSION_PROPERTY_FINDER=".github/scripts/version_property_finder.py"
+  VERSION_PROPERTY=$(python $VERSION_PROPERTY_FINDER $REPO product-is-build 2>&1)
   VERSION_PROPERTY_KEY=""
   if [ "$VERSION_PROPERTY" != "invalid" ]; then
     echo "Version property key for the $REPO is $VERSION_PROPERTY"
@@ -162,7 +103,7 @@ else
     echo "$REPO is not yet supported! Exiting..."
     echo "=========================================================="
     echo ""
-    echo "::error::PR builder not supprted"
+    echo "::error::PR builder not supported"
     exit 1
   fi
 
@@ -236,8 +177,6 @@ else
       if [ $MAIN_COMPONENT_BUILD_STATUS != "SUCCESS" ] || [ $SUB_COMPONENT_BUILD_STATUS != "SUCCESS" ]; then
           REPO_BUILD_STATUS="FAILED"
       fi
-      REPO_TEST_RESULT_1=$(sed -n -e '/Results :/,/Tests run:/ p' mvn-build.log)
-      REPO_TEST_RESULT_2=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
 
       REPO_FINAL_RESULT=$(
           echo "==========================================================="
@@ -266,8 +205,8 @@ else
   echo "::warning::$REPO_BUILD_RESULT_LOG"
 
   if [ "$REPO_BUILD_STATUS" != "SUCCESS" ]; then
-    echo "$REPO BUILD not successfull. Aborting."
-    echo "::error::$REPO BUILD not successfull. Check artifacts for logs."
+    echo "$REPO BUILD not successful. Aborting."
+    echo "::error::$REPO BUILD not successful. Check artifacts for logs."
     exit 1
   fi
   cd ..
@@ -279,7 +218,7 @@ else
     echo "Building Outbound Auth OIDC repo..."
     echo "=========================================================="
     git clone $OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK
-    OUTBOUND_AUTH_OIDC_VERSION_PROPERTY=$(python version_property_finder.py $OUTBOUND_AUTH_OIDC_REPO product-is-$BUILDER_NUMBER 2>&1)
+    OUTBOUND_AUTH_OIDC_VERSION_PROPERTY=$(python $VERSION_PROPERTY_FINDER $OUTBOUND_AUTH_OIDC_REPO product-is-build 2>&1)
     if [ "$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY" != "invalid" ]; then
       echo "Version property key for the $OUTBOUND_AUTH_OIDC_REPO is $OUTBOUND_AUTH_OIDC_VERSION_PROPERTY"
       OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY=$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY
@@ -307,7 +246,6 @@ else
     echo "Building repo $OUTBOUND_AUTH_OIDC_REPO..."
     echo "=========================================================="
 
-
     export JAVA_HOME=$JAVA_21_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
@@ -315,8 +253,8 @@ else
     SUB_REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
 
     if [ "$SUB_REPO_BUILD_STATUS" != "SUCCESS" ]; then
-      echo "$OUTBOUND_AUTH_OIDC_REPO repo build not successfull. Aborting."
-      echo "::error::$OUTBOUND_AUTH_OIDC_REPO repo build not successfull. Aborting."
+      echo "$OUTBOUND_AUTH_OIDC_REPO repo build not successful. Aborting."
+      echo "::error::$OUTBOUND_AUTH_OIDC_REPO repo build not successful. Aborting."
       exit 1
     fi
 
@@ -334,7 +272,7 @@ else
     echo "Building SCIM2 repo..."
     echo "=========================================================="
     git clone $SCIM2_REPO_CLONE_LINK
-    SCIM2_VERSION_PROPERTY=$(python version_property_finder.py $SCIM2_REPO product-is-$BUILDER_NUMBER 2>&1)
+    SCIM2_VERSION_PROPERTY=$(python $VERSION_PROPERTY_FINDER $SCIM2_REPO product-is-build 2>&1)
     if [ "$SCIM2_VERSION_PROPERTY" != "invalid" ]; then
       echo "Version property key for the $SCIM2_REPO is $SCIM2_VERSION_PROPERTY"
       SCIM2_VERSION_PROPERTY_KEY=$SCIM2_VERSION_PROPERTY
@@ -369,8 +307,8 @@ else
     SUB_REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
 
     if [ "$SUB_REPO_BUILD_STATUS" != "SUCCESS" ]; then
-      echo "$SCIM2_REPO repo build not successfull. Aborting."
-      echo "::error::$SCIM2_REPO repo build not successfull. Aborting."
+      echo "$SCIM2_REPO repo build not successful. Aborting."
+      echo "::error::$SCIM2_REPO repo build not successful. Aborting."
       exit 1
     fi
 
@@ -381,7 +319,7 @@ else
     cd ..
   fi
 
-  cd product-is-$BUILDER_NUMBER
+  cd product-is-build
 
   echo "Updating dependency version in product-is..."
   echo "=========================================================="
@@ -398,7 +336,7 @@ else
       echo "=========================================================="
       echo ""
       sed -i "s/<$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>.*<\/$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>/<$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>$OUTBOUND_AUTH_OIDC_DEPENDENCY_VERSION<\/$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY_KEY>/" pom.xml
-      echo "Updating caron-kernel version in carbon.product..."
+      echo "Updating carbon-kernel version in carbon.product..."
       echo "=========================================================="
       echo ""
       KERNEL_DEPENDENCY_VERSION=$(echo $DEPENDENCY_VERSION | sed -e "s/-/./g")
@@ -409,34 +347,25 @@ else
 
   export JAVA_HOME=$JAVA_21_HOME
   cat pom.xml
-  mvn clean install --batch-mode | tee mvn-build.log
 
-  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-  PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
+  # Build the full product pack without running integration tests.
+  # The test runners will reuse this pre-built pack.
+  mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
-  PR_BUILD_FINAL_RESULT=$(
-    echo "==========================================================="
-    echo "product-is BUILD $PR_BUILD_STATUS"
-    echo "=========================================================="
-    echo ""
-    echo "$PR_TEST_RESULT"
-  )
-
-  PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
-  PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
-  echo "::warning::$PR_BUILD_RESULT_LOG"
-
-  PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
-    echo "PR BUILD not successfull. Aborting."
-    echo "::error::PR BUILD not successfull. Check artifacts for logs."
+  BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+  if [ "$BUILD_STATUS" != "SUCCESS" ]; then
+    echo "product-is BUILD not successful. Aborting."
+    echo "::error::product-is BUILD not successful. Check artifacts for logs."
     exit 1
   fi
+
+  cd ..
 fi
 
 echo ""
 echo "=========================================================="
-echo "Build completed"
+echo "Build phase completed successfully."
+echo "The pre-built product-is directory is ready at: product-is-build/"
 echo "=========================================================="
 echo ""
+
