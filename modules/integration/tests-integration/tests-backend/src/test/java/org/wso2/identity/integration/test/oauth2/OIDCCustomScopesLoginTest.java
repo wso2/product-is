@@ -92,7 +92,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthzRuntimeEnabled;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
@@ -529,7 +528,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
         JSONObject jsonResponse = new JSONObject(responseString);
 
-        assertTrue(jsonResponse.has("scope"), "Scopes attribute is not found in the token response.");
+        Assert.assertTrue(jsonResponse.has("scope"), "Scopes attribute is not found in the token response.");
         String[] scopesInResponse = jsonResponse.getString("scope").split(" ");
         Assert.assertEquals(scopesInResponse.length, 4,
                 "Unrequested claims related OIDC scopes are included in the access token response.");
