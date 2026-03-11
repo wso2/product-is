@@ -48,7 +48,12 @@ jobs:
              Use for: AI agent identity management, AI-assisted login flows, AI-based branding, AI-driven identity features, any AI capability within WSO2 Identity Server.
 
           7. Team/Content
-             Use for: broken documentation links, grammar corrections, generic documentation improvements, documentation maintenance IN PRODUCT DOCUMENTATION websites. DO NOT USE this label for broken links in web applications such as console, myaccount etc. For those, use the appropriate team label based on the affected section.
+             Use for: broken documentation links, incorrect grammar, generic documentation improvements, documentation maintenance IN PRODUCT DOCUMENTATION websites.
+             
+             IMPORTANT:
+             * DO NOT USE this "Team/Content" label for,
+               - broken links in web applications such as console, myaccount etc. For those, use the appropriate team label based on the affected section in the web application.
+               - documentation issues that are about documenting product features, configurations etc. For such issues, use the appropriate team label based on what needs to be documented.
 
           RULES:
           - Analyze both the issue title and description.
