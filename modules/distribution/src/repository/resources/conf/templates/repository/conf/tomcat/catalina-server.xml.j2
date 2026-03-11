@@ -25,6 +25,11 @@
     {% endif %}
 
     <Service className="org.wso2.carbon.tomcat.ext.service.ExtendedStandardService" name="Catalina">
+        {%  if server.virtual_thread_enabled is sameas true %}
+        <Executor
+                name="virtualThreadExecutor"
+                className="org.apache.catalina.core.StandardVirtualThreadExecutor" />
+        {% endif %}
 
        {% for transport in custom_transport %}
        {% if transport != custom_transport.x509 %}
@@ -42,6 +47,9 @@
        -->
        {% if transport.http.enabled is sameas true %}
        <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+       {%  if server.virtual_thread_enabled is sameas true %}
+                  executor="virtualThreadExecutor"
+       {% endif %}
        {% for property_name,property_value in transport.http.properties.items() %}
                   {{property_name}}="{{property_value}}"
                           {% endfor %}
@@ -58,6 +66,9 @@
        <Connector protocol="org.apache.coyote.http11.Http11AprProtocol"
        {% else %}
        <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+       {% endif %}
+       {%  if server.virtual_thread_enabled is sameas true %}
+                  executor="virtualThreadExecutor"
        {% endif %}
        {% for property_name,property_value in transport.https.properties.items() %}
                   {{property_name}}="{{property_value}}"

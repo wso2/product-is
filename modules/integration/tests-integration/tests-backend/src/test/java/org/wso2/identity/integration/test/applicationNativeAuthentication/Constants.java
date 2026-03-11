@@ -74,4 +74,100 @@ public class Constants {
     public static final String MESSAGE_ID = "messageId";
     public static final String MESSAGES = "messages";
     public static final String FAIL_INCOMPLETE = "FAIL_INCOMPLETE";
+    public static final String INCOMPLETE = "INCOMPLETE";
+
+    // IDF (Identifier-First) step param keys.
+    public static final String USERNAME_PARAM = "username";
+
+    /**
+     * Error codes for OTP retry and resend limits when {@code terminateOnResendLimitExceeded = true}.
+     */
+    public enum OtpLimitExceededError {
+
+        RETRY_LIMIT_EXCEEDED(
+                "ABA-60013",
+                "Maximum retry attempts exceeded.",
+                "Authentication failed. The maximum number of retry attempts has been exceeded."),
+
+        RESEND_LIMIT_EXCEEDED(
+                "ABA-60014",
+                "Maximum resend attempts exceeded.",
+                "Authentication failed. The maximum number of OTP resend attempts has been exceeded.");
+
+        private final String code;
+        private final String message;
+        private final String description;
+
+        OtpLimitExceededError(String code, String message, String description) {
+
+            this.code = code;
+            this.message = message;
+            this.description = description;
+        }
+
+        public String getCode() {
+
+            return code;
+        }
+
+        public String getMessage() {
+
+            return message;
+        }
+
+        public String getDescription() {
+
+            return description;
+        }
+
+        @Override
+        public String toString() {
+
+            return code + " - " + message;
+        }
+    }
+
+    /**
+     * Message fields for OTP resend limit exceeded when {@code terminateOnResendLimitExceeded = false}.
+     *
+     */
+    public enum OtpLimitExceededMessage {
+
+        RESEND_LIMIT_EXCEEDED(
+                "ERROR",
+                "ABA-60003",
+                "resent.count.exceeded");
+
+        private final String type;
+        private final String messageId;
+        private final String message;
+
+        OtpLimitExceededMessage(String type, String messageId, String message) {
+
+            this.type = type;
+            this.messageId = messageId;
+            this.message = message;
+        }
+
+        public String getType() {
+
+            return type;
+        }
+
+        public String getMessageId() {
+
+            return messageId;
+        }
+
+        public String getMessage() {
+
+            return message;
+        }
+
+        @Override
+        public String toString() {
+
+            return messageId + " - " + message;
+        }
+    }
 }

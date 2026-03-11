@@ -42,6 +42,11 @@
         "publicClientAllowed": true
       },
       {
+        "name": "urn:openid:params:grant-type:ciba",
+        "displayName": "CIBA",
+        "publicClientAllowed": true
+      },
+      {
         "name": "account_switch",
         "displayName": "account_switch",
         "publicClientAllowed": true
@@ -206,5 +211,22 @@
           }
         ]
       }
-  }
+  },
+  "cibaMetadata": {
+    "supportedNotificationChannels": [
+      {
+        "name": "external",
+        "displayName": "External"
+      },
+      {
+        "name": "email",
+        "displayName": "Email"
+      },
+      {
+        "name": "sms",
+        "displayName": "SMS"
+      }
+    ]
+  },
+  "allowedIssuers": null
 }

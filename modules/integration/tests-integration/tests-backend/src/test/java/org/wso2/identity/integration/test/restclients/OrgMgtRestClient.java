@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -135,6 +135,25 @@ public class OrgMgtRestClient extends RestBaseClient {
     }
 
     /**
+     * Add an organization within the root organization.
+     *
+     * @param orgName Name of the organization.
+     * @param orgHandle Handle/tenant domain of the organization.
+     * @param m2mToken Authorized token to create an organization.
+     * @return ID of the created organization.
+     * @throws Exception If an error occurs while creating the organization.
+     */
+    public String addOrganizationWithToken(String orgName, String orgHandle, String m2mToken) throws Exception {
+
+        String body = buildOrgCreationRequestBody(orgName, null, orgHandle);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(organizationManagementApiBasePath, body,
+                getHeadersWithBearerToken(m2mToken))) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
      * Add an organization with an organization handle within the root organization.
      *
      * @param orgName   Name of the organization.
@@ -183,6 +202,22 @@ public class OrgMgtRestClient extends RestBaseClient {
         String m2mToken = getM2MAccessToken();
         try (CloseableHttpResponse response = getResponseOfHttpDelete(organizationManagementApiBasePath +
                 PATH_SEPARATOR + orgId, getHeadersWithBearerToken(m2mToken))) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
+                    "Organization deletion failed for organization with ID: " + orgId);
+        }
+    }
+
+    /**
+     * Delete an organization within root organization.
+     *
+     * @param orgId ID of the organization.
+     * @param accessToken Authorized token to delete an organization.
+     * @throws Exception If an error occurs while deleting the organization.
+     */
+    public void deleteOrganizationWithToken(String orgId, String accessToken) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(organizationManagementApiBasePath +
+                PATH_SEPARATOR + orgId, getHeadersWithBearerToken(accessToken))) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
                     "Organization deletion failed for organization with ID: " + orgId);
         }
