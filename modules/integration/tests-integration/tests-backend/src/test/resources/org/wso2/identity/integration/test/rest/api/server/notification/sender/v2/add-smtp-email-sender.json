@@ -1,0 +1,24 @@
+{
+    "name": "EmailPublisher",
+    "smtpServerHost": "smtp.gmail.com",
+    "smtpPort": 587,
+    "fromAddress": "iam@gmail.com",
+    "properties": [
+        {
+            "key": "mail.smtp.starttls.enable",
+            "value": "true"
+        },
+        {
+            "key": "minThread",
+            "value": "10"
+        },
+        {
+            "key": "mail.smtp.replyTo",
+            "value": "iam@gmail.com"
+        },
+        {
+            "key": "mail.smtp.signature",
+            "value": "Identity Server"
+        }
+    ]
+}
