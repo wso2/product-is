@@ -581,6 +581,9 @@
                                     org.wso2.carbon.identity.notification.push:org.wso2.carbon.identity.notification.push.feature:${identity.notification.push.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon.identity.notification.push:org.wso2.carbon.identity.notification.push.provider.amazonsns.feature:${identity.notification.push.provider.amazonsns.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.carbon.identity.local.auth.push:org.wso2.carbon.identity.local.auth.push.feature:${identity.local.auth.push.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -1234,6 +1237,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.notification.push.feature.group</id>
                                     <version>${identity.notification.push.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.notification.push.provider.amazonsns.feature.group</id>
+                                    <version>${identity.notification.push.provider.amazonsns.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.local.auth.push.feature.group</id>

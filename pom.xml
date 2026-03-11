@@ -2006,6 +2006,16 @@
                 <version>${identity.notification.push.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.notification.push</groupId>
+                <artifactId>org.wso2.carbon.identity.notification.push.provider.amazonsns</artifactId>
+                <version>${identity.notification.push.provider.amazonsns.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.notification.push</groupId>
+                <artifactId>org.wso2.carbon.identity.notification.push.provider.amazonsns.feature</artifactId>
+                <version>${identity.notification.push.provider.amazonsns.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.local.auth.push</groupId>
                 <artifactId>org.wso2.carbon.identity.local.auth.push.authenticator</artifactId>
                 <version>${identity.local.auth.push.version}</version>
@@ -2675,6 +2685,9 @@
 
         <identity.notification.push.version>1.1.2</identity.notification.push.version>
         <identity.notification.push.version.range>[1.0.0,2.0.0)</identity.notification.push.version.range>
+
+        <identity.notification.push.provider.amazonsns.version>1.0.0</identity.notification.push.provider.amazonsns.version>
+        <identity.notification.push.provider.amazonsns.version.range>[1.0.0,2.0.0)</identity.notification.push.provider.amazonsns.version.range>
 
         <identity.local.auth.push.version>1.1.2</identity.local.auth.push.version>
         <identity.local.auth.push.version.range>[1.0.0,2.0.0)</identity.local.auth.push.version.range>
