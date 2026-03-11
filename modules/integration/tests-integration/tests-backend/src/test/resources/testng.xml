@@ -315,6 +315,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.UserSharingSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.UserSharingFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v2.UserSharingSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v2.UserSharingFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementPositiveTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionPositiveTest"/>
@@ -324,12 +325,12 @@
         </classes>
     </test>
 
-<!--    <test name="is-test-session-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
-<!--        <classes>-->
-<!--            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtTest"/>-->
-<!--            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtFailureTest"/>-->
-<!--        </classes>-->
-<!--    </test>-->
+    <!--    <test name="is-test-session-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
+    <!--        <classes>-->
+    <!--            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtTest"/>-->
+    <!--            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtFailureTest"/>-->
+    <!--        </classes>-->
+    <!--    </test>-->
 
     <test name="is-test-webhooks" preserve-order="true" parallel="false">
         <classes>
