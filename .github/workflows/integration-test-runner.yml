@@ -12,7 +12,8 @@ env:
 
 jobs:
   run-test-runners:
-    runs-on: ubuntu-latest
+    runs-on: 
+      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
     strategy:
       fail-fast: false
       matrix:
@@ -112,7 +113,8 @@ jobs:
   comment-and-approve:
     name: Comment the status and Approve PR
     needs: run-test-runners
-    runs-on: ubuntu-latest
+    runs-on:
+      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
     if: always()
     steps:
       - name: Comment build status

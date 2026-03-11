@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -391,6 +391,11 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
         assertTrue(executionResponseObj instanceof FlowExecutionResponse,
                 "Unexpected response type for flow execution.");
+        FlowExecutionResponse executionResponse = (FlowExecutionResponse) executionResponseObj;
+        assertEquals(executionResponse.getFlowStatus(), "COMPLETE",
+                "Expected flow status COMPLETE for user self-registration via flow execution API. " +
+                        "Got INCOMPLETE — this may indicate that user '" + TEST_USER2_USERNAME +
+                        "' already exists (leftover from a previous failed run).");
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
