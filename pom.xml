@@ -1796,6 +1796,11 @@
                 <version>${identity.carbon.auth.rest.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.identity.auth.rest</groupId>
+                <artifactId>org.wso2.carbon.identity.custom.header.server.feature</artifactId>
+                <version>${identity.carbon.auth.rest.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.event.handler.accountlock</groupId>
                 <artifactId>org.wso2.carbon.identity.handler.event.account.lock.feature</artifactId>
                 <version>${identity.event.handler.account.lock.version}</version>
