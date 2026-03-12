@@ -2685,7 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.76</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.77</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2715,7 +2715,7 @@
         <identity.carbon.auth.rest.version>1.12.6</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.4.47</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.4.51</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.4</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
@@ -2782,7 +2782,7 @@
         <identity.oauth2.jwt.bearer.grant.version>2.3.11</identity.oauth2.jwt.bearer.grant.version>
         <identity.oauth2.token.exchange.grant.version>1.4.1</identity.oauth2.token.exchange.grant.version>
 
-        <identity.oauth.dpop.version>2.1.1</identity.oauth.dpop.version>
+        <identity.oauth.dpop.version>2.1.2</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.11.1</identity.metadata.saml.version>
