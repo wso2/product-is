@@ -2669,7 +2669,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.73</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.76</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2693,11 +2693,11 @@
         <identity.carbon.auth.saml2.version>5.12.4</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.6.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.12.5</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.12.6</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.oauth.version>7.4.47</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.12.3</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.12.4</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.8.0</identity.inbound.provisioning.scim.version>
@@ -2731,7 +2731,7 @@
         <identity.outbound.auth.oidc.version>5.15.1</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.1.0</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.6.0</identity.outbound.auth.passive.sts.version>
-        <identity.outbound.auth.samlsso.version>5.12.3</identity.outbound.auth.samlsso.version>
+        <identity.outbound.auth.samlsso.version>5.12.4</identity.outbound.auth.samlsso.version>
         <identity.outbound.auth.requestpath.basicauth.version>5.6.0</identity.outbound.auth.requestpath.basicauth.version>
         <identity.outbound.auth.requestpath.oauth.version>5.6.0</identity.outbound.auth.requestpath.oauth.version>
 
