@@ -2769,7 +2769,7 @@
         <identity.metadata.saml.version>1.11.1</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
-        <identity.workflow.version>1.1.1</identity.workflow.version>
+        <identity.workflow.version>1.1.2</identity.workflow.version>
         <identity.user.workflow.version>6.1.0</identity.user.workflow.version>
 
         <!-- Connector Versions -->
