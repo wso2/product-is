@@ -53,7 +53,9 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.PatchRequest;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -66,6 +68,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTest {
@@ -252,6 +255,19 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     public String addIdentityProvider(int portOffset, IdentityProviderPOSTRequest idp) throws Exception {
 
         return identityProviderMgtRestClients.get(portOffset).createIdentityProvider(idp);
+    }
+
+    public void patchIdentityProvider(int portOffset, String idpId, List<PatchRequest> patchRequests)
+            throws Exception {
+
+        identityProviderMgtRestClients.get(portOffset).patchIdentityProvider(idpId, patchRequests);
+    }
+
+    public void updateFederatedAuthenticator(int portOffset, String idpId, String authenticatorId,
+            FederatedAuthenticatorRequest.FederatedAuthenticator authenticator) throws Exception {
+
+        identityProviderMgtRestClients.get(portOffset).updateFederatedAuthenticator(
+                idpId, authenticatorId, authenticator);
     }
 
     public void deleteIdp(int portOffset, String idpId) throws Exception {
