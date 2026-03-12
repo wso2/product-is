@@ -109,6 +109,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.notification.providers.amazonsns</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.react-application</artifactId>
             <type>zip</type>
         </dependency>
