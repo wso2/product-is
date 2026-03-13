@@ -34,11 +34,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicNameValuePair;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
+import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
@@ -71,7 +74,12 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
@@ -80,6 +88,8 @@ import java.util.List;
 import java.util.Map;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Integration test for SAML federation between two IS instances with key rotation in place.
@@ -106,6 +116,11 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
     private static final String IDP_AUTHENTICATOR_NAME = "SAMLSSOAuthenticator";
     private static final String ENCODED_IDP_AUTHENTICATOR_ID = "U0FNTFNTT0F1dGhlbnRpY2F0b3I";
 
+    // Key-rotation keystore configuration.
+    private static final String SAML_KEYSTORE_TOML_CONFIG = "saml_keystore_rotation.toml";
+    private static final String SAML_KEYSTORE_SOURCE_FILE = "saml-keystore.p12";
+    private static final String SAML_KEYSTORE_TARGET_FILE = "saml-keystore.p12";
+
     private static final String SAML_NAME_ID_FORMAT =
             "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String COMMON_AUTH_URL = "https://localhost:%s/commonauth";
@@ -116,6 +131,10 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
     private static final String EMAIL = "samlKeyRotationUser@wso2.com";
 
     private SCIM2RestClient scim2RestClient;
+    private ServerConfigurationManager secondaryISConfigManager;
+    private String secondaryISCarbonHome;
+    /** The signing certificate registered in the primary IS IdP before key rotation. */
+    private String preRotationSigningCert;
 
     private String userId;
     private String primaryISIdpId;
@@ -126,6 +145,8 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
     public void initTest() throws Exception {
 
         super.initTest();
+
+        secondaryISCarbonHome = System.getProperty("carbon.home");
 
         createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
@@ -151,6 +172,10 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
             deleteUserInSecondaryIS();
         } finally {
             scim2RestClient.closeHttpClient();
+            // Restore the secondary IS deployment.toml if it was changed by the key-rotation test.
+            if (secondaryISConfigManager != null) {
+                secondaryISConfigManager.restoreToLastConfiguration(false);
+            }
         }
     }
 
@@ -188,7 +213,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
     @Test(groups = "wso2.is",
             dependsOnMethods = {"testApplicationCreatedInPrimaryIS", "testApplicationCreatedInSecondaryIS"},
             description = "Verify SAML federation login flow works before any key rotation")
-    public void testSAMLFederationBeforeKeyRotation() throws Exception {
+    public void testSAMLFederation() throws Exception {
 
         try (CloseableHttpClient client = buildHttpClient()) {
             String sessionDataKey = sendSAMLRequestToPrimaryIS(client);
@@ -217,17 +242,16 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
         }
     }
 
-    /**
-     * Verifies that SAML federation works correctly when the secondary IS signs its SAML response.
-     */
     @Test(groups = "wso2.is",
-            dependsOnMethods = "testSAMLFederationBeforeKeyRotation",
+            dependsOnMethods = "testSAMLFederation",
             description = "Verify federation with signed responses: secondary IS signs the response "
                     + "and primary IS validates it using the configured certificate")
     public void testSAMLFederationWithResponseSigningValidation() throws Exception {
 
         // Fetch the active signing certificate from the secondary IS SAML metadata.
         String secondaryISCert = fetchSecondaryISSigningCertificate();
+        // Persist so the post-rotation test can compare against it.
+        preRotationSigningCert = secondaryISCert;
 
         // Update the existing primary IS IdP with cert and enable signed response validation.
         updateIdpForSignedResponseValidation(secondaryISCert);
@@ -235,7 +259,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
         try (CloseableHttpClient client = buildHttpClient()) {
             String sessionDataKey = sendSAMLRequestToPrimaryIS(client);
             Assert.assertNotNull(sessionDataKey,
-                    "Could not obtain 'sessionDataKey' from primary IS");
+                    "Could not obtain 'sessionDataKey' from secondary IS");
 
             String redirectUrl = authenticateWithSecondaryIS(client, sessionDataKey);
             Assert.assertNotNull(redirectUrl,
@@ -257,6 +281,168 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
             assertValidSAMLResponse(samlResponse);
         }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testSAMLFederationWithResponseSigningValidation",
+            description = "Verify SAML federation works when the primary IS IdP is configured with "
+                    + "the secondary IS SAML metadata URI for certificate resolution")
+    public void testSAMLFederationWithMetadataUriCertificate() throws Exception {
+
+        String secondaryISMetadataUri = String.format(
+                "https://localhost:%s/identity/metadata/saml2", DEFAULT_PORT + PORT_OFFSET_1);
+
+        patchIdentityProvider(PORT_OFFSET_0, primaryISIdpId,
+                Collections.singletonList(new PatchRequest()
+                        .operation(PatchRequest.OperationEnum.ADD)
+                        .path("/certificate/samlMetadataUri")
+                        .value(secondaryISMetadataUri)));
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            String sessionDataKey = sendSAMLRequestToPrimaryIS(client);
+            Assert.assertNotNull(sessionDataKey,
+                    "Could not obtain 'sessionDataKey' from secondary IS");
+
+            String redirectUrl = authenticateWithSecondaryIS(client, sessionDataKey);
+            Assert.assertNotNull(redirectUrl,
+                    "No redirect URL returned after authentication at secondary IS");
+
+            Map<String, String> samlParams = getSAMLResponseFromSecondaryIS(client, redirectUrl);
+            Assert.assertNotNull(samlParams.get("SAMLResponse"),
+                    "Secondary IS did not return a SAMLResponse");
+            Assert.assertNotNull(samlParams.get("RelayState"),
+                    "Secondary IS did not return a RelayState");
+
+            redirectUrl = sendSAMLResponseToPrimaryIS(client, samlParams);
+            Assert.assertNotNull(redirectUrl,
+                    "Primary IS did not redirect after receiving SAMLResponse");
+
+            String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectUrl);
+            Assert.assertNotNull(samlResponse,
+                    "Could not obtain final SAMLResponse from primary IS when using metadata URI certificate");
+
+            assertValidSAMLResponse(samlResponse);
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testSAMLFederationWithMetadataUriCertificate",
+            description = "Rotate the SAML signing key on the secondary IS and verify the SAML "
+                    + "metadata endpoint reflects the new certificate")
+    public void testSecondaryISKeyRotationApplied() throws Exception {
+
+        applyNewKeystoreOnSecondaryIS();
+
+        // Fetch the signing certificate now exposed by the secondary IS metadata endpoint.
+        String postRotationCert = fetchSecondaryISSigningCertificate();
+        Assert.assertNotNull(postRotationCert,
+                "Secondary IS SAML metadata did not return a signing certificate after key rotation");
+        Assert.assertNotEquals(postRotationCert, preRotationSigningCert,
+                "Signing certificate in secondary IS SAML metadata has not changed after key rotation");
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testSecondaryISKeyRotationApplied",
+            description = "Verify SAML federation succeeds after key rotation when metadata URI is "
+                    + "configured as the certificate resolution method, as the IdP will dynamically "
+                    + "resolve the new certificate from the metadata endpoint")
+    public void testSAMLFederationWithMetadataUriCertificateAfterKeyRotation() throws Exception {
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            String sessionDataKey = sendSAMLRequestToPrimaryIS(client);
+            Assert.assertNotNull(sessionDataKey,
+                    "Could not obtain 'sessionDataKey' from secondary IS");
+
+            String redirectUrl = authenticateWithSecondaryIS(client, sessionDataKey);
+            Assert.assertNotNull(redirectUrl,
+                    "No redirect URL returned after authentication at secondary IS");
+
+            Map<String, String> samlParams = getSAMLResponseFromSecondaryIS(client, redirectUrl);
+            Assert.assertNotNull(samlParams.get("SAMLResponse"),
+                    "Secondary IS did not return a SAMLResponse");
+            Assert.assertNotNull(samlParams.get("RelayState"),
+                    "Secondary IS did not return a RelayState");
+
+            redirectUrl = sendSAMLResponseToPrimaryIS(client, samlParams);
+            Assert.assertNotNull(redirectUrl,
+                    "Primary IS did not redirect after receiving SAMLResponse");
+
+            String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectUrl);
+            Assert.assertNotNull(samlResponse,
+                    "Could not obtain final SAMLResponse from primary IS — metadata URI certificate "
+                            + "resolution should have succeeded with the rotated key");
+
+            assertValidSAMLResponse(samlResponse);
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testSAMLFederationWithMetadataUriCertificateAfterKeyRotation",
+            description = "Verify SAML federation fails when the primary IS IdP still holds the "
+                    + "pre-rotation static certificate after the secondary IS has rotated its key")
+    public void testSAMLFederationAfterKeyRotation() throws Exception {
+
+        patchIdentityProvider(PORT_OFFSET_0, primaryISIdpId,
+                Collections.singletonList(new PatchRequest()
+                        .operation(PatchRequest.OperationEnum.ADD)
+                        .path("/certificate/certificates/0")
+                        .value(preRotationSigningCert)));
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            String sessionDataKey = sendSAMLRequestToPrimaryIS(client);
+            Assert.assertNotNull(sessionDataKey,
+                    "Could not obtain 'sessionDataKey' from secondary IS after key rotation");
+
+            String redirectUrl = authenticateWithSecondaryIS(client, sessionDataKey);
+            Assert.assertNotNull(redirectUrl,
+                    "No redirect URL returned after authentication at secondary IS after key rotation");
+
+            Map<String, String> samlParams = getSAMLResponseFromSecondaryIS(client, redirectUrl);
+            Assert.assertNotNull(samlParams.get("SAMLResponse"),
+                    "Secondary IS did not return a SAMLResponse after key rotation");
+            Assert.assertNotNull(samlParams.get("RelayState"),
+                    "Secondary IS did not return a RelayState after key rotation");
+
+            redirectUrl = sendSAMLResponseToPrimaryIS(client, samlParams);
+            Assert.assertNotNull(redirectUrl,
+                    "Primary IS did not redirect after receiving SAMLResponse post key rotation");
+
+            String samlResponse = getSAMLResponseFromPrimaryIS(client, redirectUrl);
+
+            // The primary IS must reject the response because its IdP still holds the old
+            // certificate, while the secondary IS now signs with the rotated key.
+            // The signature failure causes no SAMLResponse to be returned.
+            Assert.assertNull(samlResponse,
+                    "SAMLResponse should be null due to signature failure after key rotation");
+        }
+    }
+
+    /**
+     * Change the saml keystore on the secondary IS.
+     * 
+     * @throws Exception If an error occurs while applying the new keystore and restarting the secondary IS.
+     */
+    private void applyNewKeystoreOnSecondaryIS() throws Exception {
+
+        // Copy the keystore file from test resources into the secondary IS security directory.
+        Path keystoreSource = Paths.get(
+                FrameworkPathUtil.getSystemResourceLocation(),
+                "keystores", "saml", SAML_KEYSTORE_SOURCE_FILE);
+        Path keystoreTarget = Paths.get(
+                secondaryISCarbonHome,
+                "repository", "resources", "security", SAML_KEYSTORE_TARGET_FILE);
+        Files.copy(keystoreSource, keystoreTarget, StandardCopyOption.REPLACE_EXISTING);
+
+        // Apply the new deployment.toml that activates [keystore.saml] and restart.
+        File defaultTomlFile = getDeploymentTomlFile(secondaryISCarbonHome);
+        File configuredTomlFile = new File(
+                FrameworkPathUtil.getSystemResourceLocation()
+                        + File.separator + "artifacts"
+                        + File.separator + "IS"
+                        + File.separator + "saml"
+                        + File.separator + SAML_KEYSTORE_TOML_CONFIG);
+        secondaryISConfigManager = new ServerConfigurationManager(TestDataHolder.getInstance().getAutomationContext());
+        secondaryISConfigManager.applyConfiguration(configuredTomlFile, defaultTomlFile, false, true);
     }
 
     /**
@@ -479,33 +665,43 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
     private String fetchSecondaryISSigningCertificate() throws Exception {
 
         String metadataUrl = String.format(
-                "https://localhost:%s/samlsso/metadata", DEFAULT_PORT + PORT_OFFSET_1);
+                "https://localhost:%s/identity/metadata/saml2", DEFAULT_PORT + PORT_OFFSET_1);
 
         try (CloseableHttpClient client = buildHttpClient()) {
             HttpGet request = new HttpGet(metadataUrl);
             HttpResponse response = client.execute(request);
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), 200,
+                    "Failed to fetch SAML metadata from secondary IS at " + metadataUrl);
             String responseBody = EntityUtils.toString(response.getEntity());
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            factory.setNamespaceAware(true);
+            factory.setNamespaceAware(false);
             factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             DocumentBuilder docBuilder = factory.newDocumentBuilder();
             Document document = docBuilder.parse(
                     new ByteArrayInputStream(responseBody.getBytes(StandardCharsets.UTF_8)));
 
-            XPath xpath = XPathFactory.newInstance().newXPath();
-            // Extract the base64 cert from the signing KeyDescriptor in the SAML metadata.
-            String cert = (String) xpath.evaluate(
-                    "//*[local-name()='KeyDescriptor'][@use='signing']"
-                            + "//*[local-name()='X509Certificate']/text()",
-                    document, XPathConstants.STRING);
+            // Walk every KeyDescriptor and pick the one whose 'use' attribute is 'signing'.
+            NodeList keyDescriptors = document.getElementsByTagName("KeyDescriptor");
+            String cert = null;
+            for (int i = 0; i < keyDescriptors.getLength(); i++) {
+                Element kd = (Element) keyDescriptors.item(i);
+                if ("signing".equals(kd.getAttribute("use"))) {
+                    NodeList certNodes = kd.getElementsByTagName("X509Certificate");
+                    if (certNodes.getLength() > 0) {
+                        cert = certNodes.item(0).getTextContent().replaceAll("\\s+", "");
+                        break;
+                    }
+                }
+            }
 
             Assert.assertNotNull(cert,
                     "Failed to extract signing certificate from secondary IS SAML metadata");
-            Assert.assertFalse(cert.trim().isEmpty(),
+            Assert.assertFalse(cert.isEmpty(),
                     "Signing certificate from secondary IS SAML metadata is blank");
-            // Collapse any whitespace introduced by metadata XML formatting.
-            return cert.trim().replaceAll("\\s+", "");
+
+            String pem = "-----BEGIN CERTIFICATE-----\n" + cert + "\n-----END CERTIFICATE-----";
+            return Base64.getEncoder().encodeToString(pem.getBytes(StandardCharsets.UTF_8));
         }
     }
 
@@ -523,6 +719,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
         FederatedAuthenticator authenticator = new FederatedAuthenticator()
                 .authenticatorId(ENCODED_IDP_AUTHENTICATOR_ID)
                 .name(IDP_AUTHENTICATOR_NAME)
+                .isDefault(true)
                 .isEnabled(true)
                 .addProperty(new Property()
                         .key(IdentityConstants.Authenticator.SAML2SSO.IDP_ENTITY_ID)
@@ -616,7 +813,8 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
                 .singleLogoutProfile(new SingleLogoutProfile()
                         .enabled(true))
                 .responseSigning(new SAMLResponseSigning()
-                        .enabled(true))
+                        .enabled(true)
+                        .signingAlgorithm("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"))
                 .singleSignOnProfile(new SingleSignOnProfile()
                         .assertion(new SAMLAssertionConfiguration()
                                 .nameIdFormat(SAML_NAME_ID_FORMAT)));
