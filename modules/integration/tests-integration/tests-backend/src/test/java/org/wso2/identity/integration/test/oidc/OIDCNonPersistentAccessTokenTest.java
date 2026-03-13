@@ -98,15 +98,15 @@ public class OIDCNonPersistentAccessTokenTest extends OIDCAbstractIntegrationTes
 
         super.init();
 
-        // Create user before config change (needs SCIM2 client from super.init()).
-        OIDCUtilTest.initUser();
-        createUser(OIDCUtilTest.user);
-
         // Apply non-persistent token TOML config (both AT and RT) and restart server.
         changeISConfiguration();
 
         // Re-initialize after server restart.
         super.init();
+
+        // Create user before config change (needs SCIM2 client from super.init()).
+        OIDCUtilTest.initUser();
+        createUser(OIDCUtilTest.user);
 
         RestAssured.baseURI = backendURL.replace(SERVICES, "");
 
