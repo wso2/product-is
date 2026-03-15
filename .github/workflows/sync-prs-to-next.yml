@@ -12,7 +12,7 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
+      GH_TOKEN:
         required: true
   workflow_dispatch:
     inputs:
@@ -28,7 +28,7 @@ permissions:
 env:
   BASE_BRANCH: master
   TARGET_BRANCH: next
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
   # Skip conditions for PRs (comma-separated arrays)
   SKIP_AUTHORS: ""
   SKIP_TITLE_PATTERNS: "[skip ci]"
@@ -53,7 +53,7 @@ jobs:
 
       - name: Sync each PR to next
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           INPUT_PRS: ${{ inputs.prs }}
         run: |
           echo "$INPUT_PRS" | jq -c '.[]' | while read -r entry; do

@@ -65,4 +65,4 @@ jobs:
     with:
       prs: ${{ needs.scan-merged-prs.outputs.prs }}
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
