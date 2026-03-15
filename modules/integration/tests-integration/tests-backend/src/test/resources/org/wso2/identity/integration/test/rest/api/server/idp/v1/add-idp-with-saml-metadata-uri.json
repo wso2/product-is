@@ -5,5 +5,14 @@
   "isFederationHub": false,
   "certificate": {
     "samlMetadataUri": "http://SAMPLE.SAML.METADATA.URI/"
+  },
+  "claims": {
+    "userIdClaim": {
+      "uri": "http://wso2.org/claims/username"
+    },
+    "roleClaim": {
+      "uri": "http://wso2.org/claims/role"
+    },
+    "provisioningClaims": []
   }
 }
