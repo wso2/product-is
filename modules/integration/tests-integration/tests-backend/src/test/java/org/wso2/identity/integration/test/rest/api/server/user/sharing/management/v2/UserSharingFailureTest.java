@@ -339,9 +339,8 @@ public class UserSharingFailureTest extends UserSharingBaseTest {
         HttpResponse response = getResponseOfPostToSubOrg(USER_SHARING_API_BASE_PATH + SHARE_PATH,
                 toJSONString(requestBody), subOrgToken);
 
-        // Endpoint behaves idempotently or 403s depending on auth, but DB should not reflect escalated shares.
-        Assert.assertTrue(response.getStatusLine().getStatusCode() == HttpStatus.SC_ACCEPTED ||
-                response.getStatusLine().getStatusCode() == HttpStatus.SC_FORBIDDEN);
+        // Endpoint accepts the request idempotently for both user modes — always returns 202.
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_ACCEPTED);
 
         // State remains unchanged for rootUser1 (Only shared to L1Org1 with no roles)
         validateUserSharingResults(Collections.singletonList(rootUser1Id), buildExpectedResultsForInvalidSelectiveShareTC1());
