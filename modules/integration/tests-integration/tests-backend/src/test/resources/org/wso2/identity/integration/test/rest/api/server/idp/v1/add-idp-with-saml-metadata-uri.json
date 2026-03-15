@@ -1,0 +1,9 @@
+{
+  "name": "SAML Metadata URI IdP",
+  "description": "IDP for testing SAML metadata URI certificate configuration",
+  "isPrimary": false,
+  "isFederationHub": false,
+  "certificate": {
+    "samlMetadataUri": "http://SAMPLE.SAML.METADATA.URI/"
+  }
+}
