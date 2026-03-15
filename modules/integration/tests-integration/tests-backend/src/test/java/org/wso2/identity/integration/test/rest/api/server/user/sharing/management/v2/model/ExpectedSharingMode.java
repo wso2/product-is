@@ -37,9 +37,10 @@ import java.util.Objects;
  * {@code sharingMode} field is absent in the response.
  * <p>
  * <b>Key rule:</b> when {@link #getRoleAssignmentMode()} is {@code "NONE"},
- * {@link #getRoleAssignmentRoles()} must be {@code null} — the GET response omits the
- * {@code roleAssignment.roles} key entirely. Assertions must use {@code nullValue()},
- * not {@code equalTo(Collections.emptyList())}.
+ * the GET response returns an empty list for {@code roleAssignment.roles}.
+ * Pass {@code null} for {@link #getRoleAssignmentRoles()} in the constructor — the
+ * assertion helper handles NONE mode by checking {@code equalTo(Collections.emptyList())}
+ * regardless of the stored value.
  */
 public class ExpectedSharingMode {
 
@@ -48,8 +49,8 @@ public class ExpectedSharingMode {
 
     /**
      * Expected roles in {@code sharingMode.roleAssignment.roles}.
-     * Must be {@code null} when {@code roleAssignmentMode} is {@code "NONE"} to reflect
-     * that the field is absent (not an empty list) in the GET response.
+     * Pass {@code null} when {@code roleAssignmentMode} is {@code "NONE"} — the assertion
+     * helper ignores this value for NONE mode and always checks for an empty list.
      */
     private final List<RoleWithAudience> roleAssignmentRoles;
 
@@ -89,15 +90,16 @@ public class ExpectedSharingMode {
 
     /**
      * Returns the expected roles for {@code sharingMode.roleAssignment.roles}.
-     * {@code null} when mode is {@code "NONE"}, indicating the field must be absent in the
-     * response (assert with {@code nullValue()}).
+     * {@code null} when mode is {@code "NONE"} — the assertion helper uses
+     * {@code equalTo(Collections.emptyList())} for NONE mode regardless of this value.
      */
     public List<RoleWithAudience> getRoleAssignmentRoles() {
         return roleAssignmentRoles;
     }
 
     /**
-     * Convenience check: returns {@code true} when mode is NONE, i.e., when roles must be absent.
+     * Convenience check: returns {@code true} when mode is NONE, i.e., when roles are expected
+     * to be an empty list in the response.
      */
     public boolean isNoneMode() {
         return "NONE".equalsIgnoreCase(roleAssignmentMode);

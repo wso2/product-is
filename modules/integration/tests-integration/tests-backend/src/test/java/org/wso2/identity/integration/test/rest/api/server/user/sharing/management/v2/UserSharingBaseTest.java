@@ -947,8 +947,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
      * orgs, SELECTED_ORG_ONLY orgs, and all orgs in a general share) the field must be absent.
      *
      * <p>Pass {@code null} for {@code expected} to assert absence. When mode is {@code NONE},
-     * {@code roleAssignment.roles} must be absent — assert with {@code nullValue()}, not
-     * {@code equalTo(emptyList())}.
+     * the API returns an empty list for {@code roleAssignment.roles} — asserted with
+     * {@code equalTo(Collections.emptyList())}.
      *
      * @param response The GET response to assert against.
      * @param orgId    The ID of the organization to check.
