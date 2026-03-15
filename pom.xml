@@ -2685,7 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.81</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.82</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2706,7 +2706,7 @@
         <carbon.consent.mgt.version>2.9.0</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.15.3</identity.governance.version>
+        <identity.governance.version>1.15.4</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.12.4</identity.carbon.auth.saml2.version>
@@ -2768,7 +2768,7 @@
         <provisioning.connector.scim2.version>2.1.6</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.11.1</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.11.2</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>6.0.3</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.5.0</identity.local.auth.iwa.version>
 
