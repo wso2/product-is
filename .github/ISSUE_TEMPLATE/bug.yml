@@ -29,6 +29,19 @@ body:
       description: Mention the environment details (OS, Database, Userstore, etc..) that the product is running on.
     validations:
       required: false
+  - type: dropdown
+    id: source-of-initiation
+    attributes:
+      label: Source of Initiation
+      description: >
+        Select who or what prompted this issue. **Customer** — WSO2 members only:
+        select this option only if you are a WSO2 employee opening this issue on behalf of a customer.
+      options:
+        - Internal
+        - "Customer (WSO2 members only — opening on behalf of a customer)"
+        - Community
+    validations:
+      required: true
   - type: checkboxes
     id: developer-checklist
     attributes:
