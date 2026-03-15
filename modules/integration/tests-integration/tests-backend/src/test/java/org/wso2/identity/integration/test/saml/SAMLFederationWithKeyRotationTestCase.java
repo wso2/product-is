@@ -54,6 +54,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAssertionConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLAttributeProfile;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAMLResponseSigning;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdpInitiatedSingleLogout;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleLogoutProfile;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SingleSignOnProfile;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
@@ -64,6 +65,7 @@ import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Property;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
@@ -131,6 +133,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
     private static final String EMAIL = "samlKeyRotationUser@wso2.com";
 
     private SCIM2RestClient scim2RestClient;
+    private OAuth2RestClient secondaryISAppManagementClient;
     private ServerConfigurationManager secondaryISConfigManager;
     private String secondaryISCarbonHome;
     /** The signing certificate registered in the primary IS IdP before key rotation. */
@@ -155,6 +158,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT});
 
         scim2RestClient = new SCIM2RestClient(getSecondaryISURI(), tenantInfo);
+        secondaryISAppManagementClient = new OAuth2RestClient(getSecondaryISURI(), tenantInfo);
 
         createUserInSecondaryIS();
         createIdpInPrimaryIS();
@@ -172,6 +176,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
             deleteUserInSecondaryIS();
         } finally {
             scim2RestClient.closeHttpClient();
+            secondaryISAppManagementClient.closeHttpClient();
             // Restore the secondary IS deployment.toml if it was changed by the key-rotation test.
             if (secondaryISConfigManager != null) {
                 secondaryISConfigManager.restoreToLastConfiguration(false);
@@ -244,6 +249,114 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
     @Test(groups = "wso2.is",
             dependsOnMethods = "testSAMLFederation",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP POST binding. "
+                    + "The secondary IS initiates logout to the primary IS which validates and responds via POST.")
+    public void testFederatedIdPInitiatedSLOWithFrontchannelPost() throws Exception {
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloInitResponse = client.execute(sloInitRequest);
+
+            Map<String, Integer> sloInitSearchParams = new HashMap<>();
+            sloInitSearchParams.put("SAMLRequest", 5);
+            Map<String, String> sloInitParams = extractValuesFromResponse(sloInitResponse, sloInitSearchParams);
+            Assert.assertNotNull(sloInitParams.get("SAMLRequest"),
+                    "Secondary IS did not return a SAMLRequest for SLO initiation via POST binding");
+
+            String primaryISSloUrl = String.format("https://localhost:%s/identity/saml/slo",
+                    DEFAULT_PORT + PORT_OFFSET_0);
+            HttpPost sloRequestPost = new HttpPost(primaryISSloUrl);
+            List<NameValuePair> sloRequestParams = new ArrayList<>();
+            sloRequestParams.add(new BasicNameValuePair("SAMLRequest", sloInitParams.get("SAMLRequest")));
+            sloRequestPost.setEntity(new UrlEncodedFormEntity(sloRequestParams));
+            HttpResponse sloRequestResponse = followRedirects(client, client.execute(sloRequestPost));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloRequestResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Primary IS did not return a SAMLResponse from identity/saml/slo for POST SLO");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for POST SLO");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for POST front-channel SLO");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOWithFrontchannelPost",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP Redirect binding. "
+                    + "The secondary IS initiates logout via a 302 redirect to the primary IS SLO endpoint "
+                    + "which responds with a SAMLResponse POST form.")
+    public void testFederatedIdPInitiatedSLOWithFrontchannelRedirect() throws Exception {
+
+        // Switch the secondary IS SP from POST to Redirect logout method for this test.
+        updateSecondaryISSPWithFrontchannelSLO(SingleLogoutProfile.LOGOUTMETHODEnum.FRONTCHANNEL_HTTP_REDIRECT);
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloResponse = followRedirects(client, client.execute(sloInitRequest));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Did not receive SAMLResponse from primary IS identity/saml/slo via redirect binding");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for redirect SLO");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for redirect front-channel SLO");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOWithFrontchannelRedirect",
             description = "Verify federation with signed responses: secondary IS signs the response "
                     + "and primary IS validates it using the configured certificate")
     public void testSAMLFederationWithResponseSigningValidation() throws Exception {
@@ -285,6 +398,115 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
     @Test(groups = "wso2.is",
             dependsOnMethods = "testSAMLFederationWithResponseSigningValidation",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP Redirect binding "
+                    + "with signed response validation enabled. The secondary IS SP is already configured for "
+                    + "redirect binding from the previous SLO test, so no binding change is required.")
+    public void testFederatedIdPInitiatedSLOWithSigningAndFrontchannelRedirect() throws Exception {
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloResponse = followRedirects(client, client.execute(sloInitRequest));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Did not receive SAMLResponse from primary IS identity/saml/slo via redirect binding with signing");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for redirect SLO with signing");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for redirect front-channel SLO with signing");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOWithSigningAndFrontchannelRedirect",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP POST binding "
+                    + "with signed response validation enabled. Switches the secondary IS SP from redirect "
+                    + "to POST binding before initiating the SLO flow.")
+    public void testFederatedIdPInitiatedSLOWithSigningAndFrontchannelPost() throws Exception {
+
+        // Switch the secondary IS SP from Redirect to POST logout method for this test.
+        updateSecondaryISSPWithFrontchannelSLO(SingleLogoutProfile.LOGOUTMETHODEnum.FRONTCHANNEL_HTTP_POST);
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloInitResponse = client.execute(sloInitRequest);
+
+            Map<String, Integer> sloInitSearchParams = new HashMap<>();
+            sloInitSearchParams.put("SAMLRequest", 5);
+            Map<String, String> sloInitParams = extractValuesFromResponse(sloInitResponse, sloInitSearchParams);
+            Assert.assertNotNull(sloInitParams.get("SAMLRequest"),
+                    "Secondary IS did not return a SAMLRequest for SLO initiation via POST binding with signing");
+
+            String primaryISSloUrl = String.format("https://localhost:%s/identity/saml/slo",
+                    DEFAULT_PORT + PORT_OFFSET_0);
+            HttpPost sloRequestPost = new HttpPost(primaryISSloUrl);
+            List<NameValuePair> sloRequestParams = new ArrayList<>();
+            sloRequestParams.add(new BasicNameValuePair("SAMLRequest", sloInitParams.get("SAMLRequest")));
+            sloRequestPost.setEntity(new UrlEncodedFormEntity(sloRequestParams));
+            HttpResponse sloRequestResponse = followRedirects(client, client.execute(sloRequestPost));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloRequestResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Primary IS did not return a SAMLResponse from identity/saml/slo for POST SLO with signing");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for POST SLO with signing");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for POST front-channel SLO with signing");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOWithSigningAndFrontchannelPost",
             description = "Verify SAML federation works when the primary IS IdP is configured with "
                     + "the secondary IS SAML metadata URI for certificate resolution")
     public void testSAMLFederationWithMetadataUriCertificate() throws Exception {
@@ -327,6 +549,117 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
     @Test(groups = "wso2.is",
             dependsOnMethods = "testSAMLFederationWithMetadataUriCertificate",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP POST binding "
+                    + "with the primary IS IdP configured to resolve the certificate from the secondary IS "
+                    + "SAML metadata URI. The secondary IS SP is already in POST mode, so no binding change "
+                    + "is required.")
+    public void testFederatedIdPInitiatedSLOWithMetadataUriCertificateAndFrontchannelPost() throws Exception {
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloInitResponse = client.execute(sloInitRequest);
+
+            Map<String, Integer> sloInitSearchParams = new HashMap<>();
+            sloInitSearchParams.put("SAMLRequest", 5);
+            Map<String, String> sloInitParams = extractValuesFromResponse(sloInitResponse, sloInitSearchParams);
+            Assert.assertNotNull(sloInitParams.get("SAMLRequest"),
+                    "Secondary IS did not return a SAMLRequest for SLO initiation via POST binding with metadata URI certificate");
+
+            String primaryISSloUrl = String.format("https://localhost:%s/identity/saml/slo",
+                    DEFAULT_PORT + PORT_OFFSET_0);
+            HttpPost sloRequestPost = new HttpPost(primaryISSloUrl);
+            List<NameValuePair> sloRequestParams = new ArrayList<>();
+            sloRequestParams.add(new BasicNameValuePair("SAMLRequest", sloInitParams.get("SAMLRequest")));
+            sloRequestPost.setEntity(new UrlEncodedFormEntity(sloRequestParams));
+            HttpResponse sloRequestResponse = followRedirects(client, client.execute(sloRequestPost));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloRequestResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Primary IS did not return a SAMLResponse from identity/saml/slo for POST SLO with metadata URI certificate");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for POST SLO with metadata URI certificate");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for POST front-channel SLO with metadata URI certificate");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOWithMetadataUriCertificateAndFrontchannelPost",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP Redirect binding "
+                    + "with the primary IS IdP configured to resolve the certificate from the secondary IS "
+                    + "SAML metadata URI. Switches the secondary IS SP from POST to Redirect binding before "
+                    + "initiating the SLO flow.")
+    public void testFederatedIdPInitiatedSLOWithMetadataUriCertificateAndFrontchannelRedirect() throws Exception {
+
+        // Switch the secondary IS SP from POST to Redirect logout method for this test.
+        updateSecondaryISSPWithFrontchannelSLO(SingleLogoutProfile.LOGOUTMETHODEnum.FRONTCHANNEL_HTTP_REDIRECT);
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloResponse = followRedirects(client, client.execute(sloInitRequest));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Did not receive SAMLResponse from primary IS identity/saml/slo via redirect binding with metadata URI certificate");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for redirect SLO with metadata URI certificate");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for redirect front-channel SLO with metadata URI certificate");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOWithMetadataUriCertificateAndFrontchannelRedirect",
             description = "Rotate the SAML signing key on the secondary IS and verify the SAML "
                     + "metadata endpoint reflects the new certificate")
     public void testSecondaryISKeyRotationApplied() throws Exception {
@@ -378,15 +711,221 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
     @Test(groups = "wso2.is",
             dependsOnMethods = "testSAMLFederationWithMetadataUriCertificateAfterKeyRotation",
-            description = "Verify SAML federation fails when the primary IS IdP still holds the "
-                    + "pre-rotation static certificate after the secondary IS has rotated its key")
-    public void testSAMLFederationAfterKeyRotation() throws Exception {
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP Redirect binding "
+                    + "after key rotation, with the primary IS IdP configured to resolve the certificate from "
+                    + "the secondary IS SAML metadata URI. The secondary IS SP is already in Redirect mode, "
+                    + "so no binding change is required.")
+    public void testFederatedIdPInitiatedSLOWithMetadataUriCertificateAfterKeyRotationAndFrontchannelRedirect()
+            throws Exception {
 
-        patchIdentityProvider(PORT_OFFSET_0, primaryISIdpId,
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloResponse = followRedirects(client, client.execute(sloInitRequest));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Did not receive SAMLResponse from primary IS via redirect binding after key rotation "
+                            + "with metadata URI certificate");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for redirect SLO after key rotation "
+                            + "with metadata URI certificate");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for redirect front-channel SLO after key rotation "
+                            + "with metadata URI certificate");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods =
+                    "testFederatedIdPInitiatedSLOWithMetadataUriCertificateAfterKeyRotationAndFrontchannelRedirect",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP POST binding "
+                    + "after key rotation, with the primary IS IdP configured to resolve the certificate from "
+                    + "the secondary IS SAML metadata URI. Switches the secondary IS SP from Redirect to POST "
+                    + "binding before initiating the SLO flow.")
+    public void testFederatedIdPInitiatedSLOWithMetadataUriCertificateAfterKeyRotationAndFrontchannelPost()
+            throws Exception {
+
+        // Switch the secondary IS SP from Redirect to POST logout method for this test.
+        updateSecondaryISSPWithFrontchannelSLO(SingleLogoutProfile.LOGOUTMETHODEnum.FRONTCHANNEL_HTTP_POST);
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloInitResponse = client.execute(sloInitRequest);
+
+            Map<String, Integer> sloInitSearchParams = new HashMap<>();
+            sloInitSearchParams.put("SAMLRequest", 5);
+            Map<String, String> sloInitParams = extractValuesFromResponse(sloInitResponse, sloInitSearchParams);
+            Assert.assertNotNull(sloInitParams.get("SAMLRequest"),
+                    "Secondary IS did not return a SAMLRequest for SLO initiation via POST binding after key rotation "
+                            + "with metadata URI certificate");
+
+            String primaryISSloUrl = String.format("https://localhost:%s/identity/saml/slo",
+                    DEFAULT_PORT + PORT_OFFSET_0);
+            HttpPost sloRequestPost = new HttpPost(primaryISSloUrl);
+            List<NameValuePair> sloRequestParams = new ArrayList<>();
+            sloRequestParams.add(new BasicNameValuePair("SAMLRequest", sloInitParams.get("SAMLRequest")));
+            sloRequestPost.setEntity(new UrlEncodedFormEntity(sloRequestParams));
+            HttpResponse sloRequestResponse = followRedirects(client, client.execute(sloRequestPost));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloRequestResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Primary IS did not return a SAMLResponse from identity/saml/slo for POST SLO after key rotation "
+                            + "with metadata URI certificate");
+
+            String secondaryISSamlssoUrl = String.format("https://localhost:%s/samlsso",
+                    DEFAULT_PORT + PORT_OFFSET_1);
+            HttpPost sloFinalPost = new HttpPost(secondaryISSamlssoUrl);
+            List<NameValuePair> sloFinalParams = new ArrayList<>();
+            sloFinalParams.add(new BasicNameValuePair("SAMLResponse", sloRespParams.get("SAMLResponse")));
+            sloFinalPost.setEntity(new UrlEncodedFormEntity(sloFinalParams));
+            HttpResponse logoutResponse = client.execute(sloFinalPost);
+            String logoutRedirectUrl = getHeaderValue(logoutResponse, "Location");
+
+            Assert.assertNotNull(logoutRedirectUrl,
+                    "Secondary IS did not redirect after receiving SAMLResponse for POST SLO after key rotation "
+                            + "with metadata URI certificate");
+            Assert.assertTrue(logoutRedirectUrl.contains("samlsso_logout.do"),
+                    "Expected redirect to samlsso_logout.do but got: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("crId"),
+                    "Logout redirect URL is missing 'crId' parameter: " + logoutRedirectUrl);
+            Assert.assertTrue(logoutRedirectUrl.contains("spEntityID"),
+                    "Logout redirect URL is missing 'spEntityID' parameter: " + logoutRedirectUrl);
+
+            HttpGet logoutPageRequest = new HttpGet(logoutRedirectUrl);
+            HttpResponse logoutPageResponse = client.execute(logoutPageRequest);
+            Assert.assertEquals(logoutPageResponse.getStatusLine().getStatusCode(), 200,
+                    "samlsso_logout.do page did not return 200 OK for POST front-channel SLO after key rotation "
+                            + "with metadata URI certificate");
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOWithMetadataUriCertificateAfterKeyRotationAndFrontchannelPost",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP POST binding "
+                    + "fails when the primary IS IdP holds the stale pre-rotation certificate. The primary IS "
+                    + "should reject the SAMLLogoutRequest with an error HTTP status code due to signature "
+                    + "validation failure on the logout request.")
+    public void testFederatedIdPInitiatedSLOFailureWithStaleStaticCertAndFrontchannelPost() throws Exception {
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            patchIdentityProvider(PORT_OFFSET_0, primaryISIdpId,
                 Collections.singletonList(new PatchRequest()
                         .operation(PatchRequest.OperationEnum.ADD)
                         .path("/certificate/certificates/0")
                         .value(preRotationSigningCert)));
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloInitResponse = client.execute(sloInitRequest);
+
+            Map<String, Integer> sloInitSearchParams = new HashMap<>();
+            sloInitSearchParams.put("SAMLRequest", 5);
+            Map<String, String> sloInitParams = extractValuesFromResponse(sloInitResponse, sloInitSearchParams);
+            Assert.assertNotNull(sloInitParams.get("SAMLRequest"),
+                    "Secondary IS did not return a SAMLRequest for SLO initiation via POST binding "
+                            + "with stale static certificate");
+
+            String primaryISSloUrl = String.format("https://localhost:%s/identity/saml/slo",
+                    DEFAULT_PORT + PORT_OFFSET_0);
+            HttpPost sloRequestPost = new HttpPost(primaryISSloUrl);
+            List<NameValuePair> sloRequestParams = new ArrayList<>();
+            sloRequestParams.add(new BasicNameValuePair("SAMLRequest", sloInitParams.get("SAMLRequest")));
+            sloRequestPost.setEntity(new UrlEncodedFormEntity(sloRequestParams));
+            HttpResponse sloRequestResponse = client.execute(sloRequestPost);
+
+            int statusCode = sloRequestResponse.getStatusLine().getStatusCode();
+            Assert.assertNotEquals(statusCode, 302,
+                    "Expected a non-302 error response from primary IS SLO endpoint when the logout request "
+                            + "signature validation fails due to a stale static certificate, but got HTTP "
+                            + statusCode);
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods = "testFederatedIdPInitiatedSLOFailureWithStaleStaticCertAndFrontchannelPost",
+            description = "Verify federated IdP-initiated SLO using SAML front-channel HTTP Redirect binding "
+                    + "fails when the primary IS IdP holds the stale pre-rotation certificate. The primary IS "
+                    + "should return a SAMLResponse whose StatusMessage indicates that signature validation "
+                    + "has failed for the logout request.")
+    public void testFederatedIdPInitiatedSLOFailureWithStaleStaticCertAndFrontchannelRedirect() throws Exception {
+
+        // Switch the secondary IS SP from POST to Redirect logout method for this test.
+        updateSecondaryISSPWithFrontchannelSLO(SingleLogoutProfile.LOGOUTMETHODEnum.FRONTCHANNEL_HTTP_REDIRECT);
+
+        String secondaryISMetadataUri = String.format(
+                "https://localhost:%s/identity/metadata/saml2", DEFAULT_PORT + PORT_OFFSET_1);
+
+        patchIdentityProvider(PORT_OFFSET_0, primaryISIdpId,
+                Collections.singletonList(new PatchRequest()
+                        .operation(PatchRequest.OperationEnum.ADD)
+                        .path("/certificate/samlMetadataUri")
+                        .value(secondaryISMetadataUri)));
+
+        try (CloseableHttpClient client = buildHttpClient()) {
+            performLoginForSLO(client);
+
+            patchIdentityProvider(PORT_OFFSET_0, primaryISIdpId,
+                Collections.singletonList(new PatchRequest()
+                        .operation(PatchRequest.OperationEnum.ADD)
+                        .path("/certificate/certificates/0")
+                        .value(preRotationSigningCert)));
+
+            String sloInitUrl = String.format("https://localhost:%s/samlsso?slo=true&spEntityID=%s",
+                    DEFAULT_PORT + PORT_OFFSET_1, SECONDARY_IS_SAML_ISSUER);
+            HttpGet sloInitRequest = new HttpGet(sloInitUrl);
+            HttpResponse sloResponse = followRedirects(client, client.execute(sloInitRequest));
+
+            Map<String, Integer> sloRespSearchParams = new HashMap<>();
+            sloRespSearchParams.put("SAMLResponse", 9);
+            Map<String, String> sloRespParams = extractValuesFromResponse(sloResponse, sloRespSearchParams);
+            Assert.assertNotNull(sloRespParams.get("SAMLResponse"),
+                    "Did not receive a SAMLResponse from primary IS via redirect binding "
+                            + "with stale static certificate");
+
+            assertSLOSignatureFailureSAMLResponse(sloRespParams.get("SAMLResponse"));
+        }
+    }
+
+    @Test(groups = "wso2.is",
+            dependsOnMethods =
+                    "testFederatedIdPInitiatedSLOFailureWithStaleStaticCertAndFrontchannelRedirect",
+            description = "Verify SAML federation fails when the primary IS IdP still holds the "
+                    + "pre-rotation static certificate after the secondary IS has rotated its key")
+    public void testSAMLFederationAfterKeyRotation() throws Exception {
 
         try (CloseableHttpClient client = buildHttpClient()) {
             String sessionDataKey = sendSAMLRequestToPrimaryIS(client);
@@ -415,6 +954,48 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
             Assert.assertNull(samlResponse,
                     "SAMLResponse should be null due to signature failure after key rotation");
         }
+    }
+
+    /**
+     * Updates the secondary IS SP's SAML inbound configuration to enable front-channel SLO with the
+     * specified logout method and IdP-initiated single logout.
+     *
+     * @param logoutMethod The front-channel SLO method to configure (POST or Redirect).
+     * @throws Exception If an error occurs while updating the SAML inbound configuration.
+     */
+    private void updateSecondaryISSPWithFrontchannelSLO(
+            SingleLogoutProfile.LOGOUTMETHODEnum logoutMethod) throws Exception {
+
+        SAML2ServiceProvider sp = secondaryISAppManagementClient.getSAMLInboundDetails(secondaryISAppId);
+        sp.getSingleLogoutProfile().logoutMethod(logoutMethod);
+        secondaryISAppManagementClient.updateInboundDetailsOfApplication(
+                secondaryISAppId, new SAML2Configuration().manualConfiguration(sp), "saml");
+    }
+
+    /**
+     * Performs a complete federated login flow to establish active sessions at both IS instances,
+     * which is required before initiating IdP-initiated SLO.
+     *
+     * @param client An HttpClient with cookie handling configured to maintain session state.
+     * @throws Exception If any step in the login flow fails.
+     */
+    private void performLoginForSLO(CloseableHttpClient client) throws Exception {
+
+        String sessionDataKey = sendSAMLRequestToPrimaryIS(client);
+        Assert.assertNotNull(sessionDataKey,
+                "Could not obtain 'sessionDataKey' during SLO pre-login");
+
+        String redirectUrl = authenticateWithSecondaryIS(client, sessionDataKey);
+        Assert.assertNotNull(redirectUrl,
+                "No redirect URL returned after authenticating with secondary IS during SLO pre-login");
+
+        Map<String, String> samlParams = getSAMLResponseFromSecondaryIS(client, redirectUrl);
+        Assert.assertNotNull(samlParams.get("SAMLResponse"),
+                "Secondary IS did not return a SAMLResponse during SLO pre-login");
+
+        redirectUrl = sendSAMLResponseToPrimaryIS(client, samlParams);
+        Assert.assertNotNull(redirectUrl,
+                "Primary IS did not redirect after accepting SAMLResponse during SLO pre-login");
     }
 
     /**
@@ -478,8 +1059,8 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
                 .addProperty(new Property()
                         .key(IdentityConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL))
                 .addProperty(new Property()
-                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_REQ_SIGNED)
-                        .value("false"))
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_SLO_REQUEST_ACCEPTED)
+                        .value("true"))
                 .addProperty(new Property()
                         .key(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_RESP_SIGNED)
                         .value("false"))
@@ -540,13 +1121,35 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
     private void createApplicationInSecondaryIS() throws Exception {
 
         String primaryISCommonAuthUrl = String.format(COMMON_AUTH_URL, DEFAULT_PORT + PORT_OFFSET_0);
+        String primaryISSloUrl = String.format("https://localhost:%s/identity/saml/slo",
+                DEFAULT_PORT + PORT_OFFSET_0);
+
+        SAML2ServiceProvider sp = new SAML2ServiceProvider()
+                .issuer(SECONDARY_IS_SAML_ISSUER)
+                .addAssertionConsumerUrl(primaryISCommonAuthUrl)
+                .defaultAssertionConsumerUrl(primaryISCommonAuthUrl)
+                .attributeProfile(new SAMLAttributeProfile()
+                        .enabled(true)
+                        .alwaysIncludeAttributesInResponse(true))
+                .singleLogoutProfile(new SingleLogoutProfile()
+                        .enabled(true)
+                        .logoutRequestUrl(primaryISSloUrl)
+                        .logoutMethod(SingleLogoutProfile.LOGOUTMETHODEnum.FRONTCHANNEL_HTTP_POST)
+                        .idpInitiatedSingleLogout(new IdpInitiatedSingleLogout()
+                                .enabled(true)))
+                .responseSigning(new SAMLResponseSigning()
+                        .enabled(true)
+                        .signingAlgorithm("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"))
+                .singleSignOnProfile(new SingleSignOnProfile()
+                        .assertion(new SAMLAssertionConfiguration()
+                                .nameIdFormat(SAML_NAME_ID_FORMAT)));
 
         ApplicationModel appModel = new ApplicationModel()
                 .name(SECONDARY_IS_SP_NAME)
                 .description("Primary IS proxy SP registered in secondary IS for key-rotation test")
                 .isManagementApp(true)
                 .inboundProtocolConfiguration(new InboundProtocols()
-                        .saml(buildSAMLConfig(SECONDARY_IS_SAML_ISSUER, primaryISCommonAuthUrl)));
+                        .saml(new SAML2Configuration().manualConfiguration(sp)));
 
         secondaryISAppId = addApplication(PORT_OFFSET_1, appModel);
     }
@@ -590,7 +1193,6 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
         HttpResponse response = client.execute(request);
         String location = getHeaderValue(response, "Location");
-        closeHttpConnection(response);
         return location;
     }
 
@@ -636,7 +1238,6 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
         HttpResponse response = client.execute(request);
         String location = getHeaderValue(response, "Location");
-        closeHttpConnection(response);
         return location;
     }
 
@@ -654,6 +1255,25 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
         HttpGet request = new HttpGet(redirectUrl);
         HttpResponse response = client.execute(request);
         return extractValueFromResponse(response, "SAMLResponse", 5);
+    }
+
+    /**
+     * Follows any 3xx redirect chain from the given response using GET requests, returning the
+     * final non-redirect response.
+     *
+     * @param client   The HTTP client to use for issuing GET requests (shares cookies with caller).
+     * @param response The initial response that may contain a Location header.
+     * @return The final response after all redirects have been followed.
+     * @throws Exception If an error occurs while following redirects.
+     */
+    private HttpResponse followRedirects(HttpClient client, HttpResponse response) throws Exception {
+
+        while (response.getStatusLine().getStatusCode() == 302) {
+            String location = getHeaderValue(response, "Location");
+            Assert.assertNotNull(location, "Redirect response is missing Location header");
+            response = client.execute(new HttpGet(location));
+        }
+        return response;
     }
 
     /**
@@ -738,6 +1358,12 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
                         .value("true"))
                 .addProperty(new Property()
                         .key(IdentityConstants.Authenticator.SAML2SSO.LOGOUT_REQ_URL))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_SLO_REQUEST_ACCEPTED)
+                        .value("true"))
+                .addProperty(new Property()
+                        .key(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_REQ_SIGNED)
+                        .value("true"))
                 .addProperty(new Property()
                         .key(IdentityConstants.Authenticator.SAML2SSO.IS_LOGOUT_REQ_SIGNED)
                         .value("false"))
@@ -885,5 +1511,41 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
         Assert.assertNotNull(nameId, "Subject NameID is missing from the SAML response");
         Assert.assertFalse(nameId.trim().isEmpty(),
                 "Subject NameID is blank in the SAML response");
+    }
+
+    /**
+     * Asserts that the given Base64-encoded SAMLResponse represents a failed SLO response whose
+     * StatusMessage indicates a signature validation failure for the logout request.
+     *
+     * @param encodedSamlResponse The Base64-encoded SAML logout response to validate.
+     * @throws Exception If an error occurs while parsing or validating the SAML response.
+     */
+    private void assertSLOSignatureFailureSAMLResponse(String encodedSamlResponse) throws Exception {
+
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedSamlResponse);
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.parse(new ByteArrayInputStream(decodedBytes));
+
+        XPath xpath = XPathFactory.newInstance().newXPath();
+
+        // Assert the StatusCode is not Success.
+        String statusCode = (String) xpath.evaluate(
+                "//*[local-name()='StatusCode']/@Value",
+                document, XPathConstants.STRING);
+        Assert.assertNotEquals(statusCode, "urn:oasis:names:tc:SAML:2.0:status:Success",
+                "SAML SLO response StatusCode should not be Success when signature validation fails");
+
+        // Assert the StatusMessage indicates signature validation failure.
+        String statusMessage = (String) xpath.evaluate(
+                "//*[local-name()='StatusMessage']/text()",
+                document, XPathConstants.STRING);
+        Assert.assertNotNull(statusMessage,
+                "StatusMessage is missing from the SAML SLO error response");
+        Assert.assertTrue(statusMessage.contains("Signature validation failed for logout request"),
+                "StatusMessage does not indicate signature validation failure: " + statusMessage);
     }
 }
