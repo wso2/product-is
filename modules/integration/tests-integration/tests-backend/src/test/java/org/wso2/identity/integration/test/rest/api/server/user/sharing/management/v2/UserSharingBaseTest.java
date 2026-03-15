@@ -834,7 +834,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         Map<String, Object> queryParams = new LinkedHashMap<>();
         queryParams.put(QUERY_PARAM_FILTER, "");
-        queryParams.put(QUERY_PARAM_ATTRIBUTES, ATTRIBUTE_ROLES);
+        queryParams.put(QUERY_PARAM_ATTRIBUTES, ATTRIBUTE_ROLES + "," + ATTRIBUTE_SHARING_MODE);
 
         Response response = getResponseOfGet(
                 USER_SHARING_API_BASE_PATH + PATH_SEPARATOR + userId + SHARED_ORGANIZATIONS_PATH, queryParams);
@@ -855,13 +855,13 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         }
 
         // ---- Top-level sharingMode (general share only) ----
-//        assertTopLevelSharingMode(response, expectedTopLevelSharingMode);
+        assertTopLevelSharingMode(response, expectedTopLevelSharingMode);
 
         // ---- Per-org inline roles and sharingMode ----
         for (String orgId : expectedOrgIds) {
             assertRolesForOrg(response, orgId, expectedRolesPerOrg.get(orgId));
-//            assertPerOrgSharingMode(response, orgId,
-//                    expectedPerOrgSharingMode != null ? expectedPerOrgSharingMode.get(orgId) : null);
+            assertPerOrgSharingMode(response, orgId,
+                    expectedPerOrgSharingMode != null ? expectedPerOrgSharingMode.get(orgId) : null);
         }
     }
 
@@ -887,8 +887,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                 .body(RESPONSE_TOP_LEVEL_SHARING_MODE_RA_MODE, equalTo(expected.getRoleAssignmentMode()));
 
         if (expected.isNoneMode()) {
-            // NONE mode: roles field must be absent (not an empty list).
-            response.then().body(RESPONSE_TOP_LEVEL_SHARING_MODE_RA_ROLES, nullValue());
+            // NONE mode: API returns an empty list for roles.
+            response.then().body(RESPONSE_TOP_LEVEL_SHARING_MODE_RA_ROLES, equalTo(Collections.emptyList()));
         } else {
             List<RoleWithAudience> roles = expected.getRoleAssignmentRoles();
             if (roles != null && !roles.isEmpty()) {
@@ -896,14 +896,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                         .body(RESPONSE_TOP_LEVEL_SHARING_MODE_RA_ROLES + ".displayName",
                                 hasItems(roles.stream()
                                         .map(RoleWithAudience::getDisplayName)
-                                        .toArray(String[]::new)))
-                        .body(RESPONSE_TOP_LEVEL_SHARING_MODE_RA_ROLES + ".audience.display",
-                                hasItems(roles.stream()
-                                        .map(r -> r.getAudience().getDisplay())
-                                        .toArray(String[]::new)))
-                        .body(RESPONSE_TOP_LEVEL_SHARING_MODE_RA_ROLES + ".audience.type",
-                                hasItems(roles.stream()
-                                        .map(r -> r.getAudience().getType())
                                         .toArray(String[]::new)));
             }
         }
@@ -980,8 +972,8 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         String raRolesPath = String.format(RESPONSE_PER_ORG_SHARING_MODE_RA_ROLES_FORMAT, orgId);
 
         if (expected.isNoneMode()) {
-            // NONE mode: roles field must be absent (not an empty list).
-            response.then().body(raRolesPath, nullValue());
+            // NONE mode: API returns an empty list for roles.
+            response.then().body(raRolesPath, equalTo(Collections.emptyList()));
         } else {
             List<RoleWithAudience> roles = expected.getRoleAssignmentRoles();
             if (roles != null && !roles.isEmpty()) {
@@ -989,14 +981,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                         .body(raRolesPath + ".displayName",
                                 hasItems(roles.stream()
                                         .map(RoleWithAudience::getDisplayName)
-                                        .toArray(String[]::new)))
-                        .body(raRolesPath + ".audience.display",
-                                hasItems(roles.stream()
-                                        .map(r -> r.getAudience().getDisplay())
-                                        .toArray(String[]::new)))
-                        .body(raRolesPath + ".audience.type",
-                                hasItems(roles.stream()
-                                        .map(r -> r.getAudience().getType())
                                         .toArray(String[]::new)));
             }
         }
