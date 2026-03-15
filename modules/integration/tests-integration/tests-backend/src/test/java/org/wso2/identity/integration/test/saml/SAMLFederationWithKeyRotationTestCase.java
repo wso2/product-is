@@ -600,7 +600,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
                         + File.separator + "saml"
                         + File.separator + SAML_KEYSTORE_TOML_CONFIG);
         secondaryISConfigManager = new ServerConfigurationManager(TestDataHolder.getInstance().getAutomationContext());
-        secondaryISConfigManager.applyConfiguration(configuredTomlFile, defaultTomlFile, false, true);
+        secondaryISConfigManager.applyConfiguration(configuredTomlFile, defaultTomlFile, true, true);
     }
 
     /**
