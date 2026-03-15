@@ -15,21 +15,6 @@ body:
       description: List the steps you followed when you encountered the issue.
     validations:
       required: true
-  - type: dropdown
-    id: area
-    attributes:
-      label: Please select the area issue is related to
-      options:
-        - Authentication & Registration
-        - User & Identity Administration
-        - API Access Mgt & Authorization
-        - B2B
-        - Identity Server Core
-        - Other
-      default: 5
-      multiple: false
-    validations:
-      required: true
   - type: input
     id: version
     attributes:
@@ -44,6 +29,19 @@ body:
       description: Mention the environment details (OS, Database, Userstore, etc..) that the product is running on.
     validations:
       required: false
+  - type: dropdown
+    id: source-of-initiation
+    attributes:
+      label: Source of Initiation
+      description: >
+        Select who or what prompted this issue. **Customer** — WSO2 members only:
+        select this option only if you are a WSO2 employee opening this issue on behalf of a customer.
+      options:
+        - Internal
+        - "Customer (WSO2 members only — opening on behalf of a customer)"
+        - Community
+    validations:
+      required: true
   - type: checkboxes
     id: developer-checklist
     attributes:
