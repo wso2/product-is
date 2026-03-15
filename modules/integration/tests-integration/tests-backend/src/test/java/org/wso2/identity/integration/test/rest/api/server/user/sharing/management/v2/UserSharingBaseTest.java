@@ -689,7 +689,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected void validateUserSharingResults(List<String> userIds, Map<String, Object> expectedResults)
             throws Exception {
 
-        final Object[] lastException = {null};
+        final Throwable[] lastException = {null};
 
         // Waits up to 20 seconds, checking every 2 seconds.
         await().atMost(20, TimeUnit.SECONDS)
@@ -712,7 +712,11 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         // If the 20 seconds run out and it still failed, throw the last caught exception
         if (lastException[0] != null) {
-            throw (Exception) lastException[0];
+            Throwable t = lastException[0];
+            if (t instanceof Error) {
+                throw (Error) t;
+            }
+            throw (Exception) t;
         }
     }
 
@@ -731,7 +735,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                                                                            Map<String, Object> expectedSharedResults)
             throws Exception {
 
-        final Object[] lastException = {null};
+        final Throwable[] lastException = {null};
 
         await().atMost(20, TimeUnit.SECONDS)
                 .pollInterval(2, TimeUnit.SECONDS)
@@ -750,7 +754,11 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                 });
 
         if (lastException[0] != null) {
-            throw (Exception) lastException[0];
+            Throwable t = lastException[0];
+            if (t instanceof Error) {
+                throw (Error) t;
+            }
+            throw (Exception) t;
         }
 
         // Assertions have passed — extract sharedUserId values from a fresh GET call per user.
