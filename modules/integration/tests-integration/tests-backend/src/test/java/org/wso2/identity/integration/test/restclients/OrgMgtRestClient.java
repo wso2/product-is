@@ -371,9 +371,20 @@ public class OrgMgtRestClient extends RestBaseClient {
 
         try (CloseableHttpResponse appCreationResponse = getResponseOfHttpPost(applicationManagementApiBasePath, body,
                 getHeaders())) {
-            String[] locationElements =
-                    appCreationResponse.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            int statusCode = appCreationResponse.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_CREATED) {
+                String responseBody = EntityUtils.toString(appCreationResponse.getEntity());
+                throw new RuntimeException("B2B application creation failed. Status: " + statusCode +
+                        ", Response: " + responseBody);
+            }
+            Header[] locationHeaders = appCreationResponse.getHeaders(LOCATION_HEADER);
+            if (locationHeaders == null || locationHeaders.length == 0) {
+                throw new RuntimeException("Location header not found in the response for B2B application creation");
+            }
+            String[] locationElements = locationHeaders[0].toString().split(PATH_SEPARATOR);
             b2bAppId = locationElements[locationElements.length - 1];
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create B2B application", e);
         }
 
         // Authorize necessary APIs for app.
