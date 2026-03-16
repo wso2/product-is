@@ -448,6 +448,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenExchangeGrantTypeTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.FederatedTokenSharingTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.FederatedTokenSharingIDPConfigDisabledTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithKeyRotationTestCase"/>
         </classes>
     </test>
 
@@ -468,7 +469,6 @@
     <test name="is-tests-federation-restart" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithKeyRotationTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.JITUserAssociationTestCase"/>
