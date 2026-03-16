@@ -179,7 +179,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
             secondaryISAppManagementClient.closeHttpClient();
             // Restore the secondary IS deployment.toml if it was changed by the key-rotation test.
             if (secondaryISConfigManager != null) {
-                secondaryISConfigManager.restoreToLastConfiguration(false);
+                secondaryISConfigManager.restoreToLastConfiguration(true);
             }
         }
     }
