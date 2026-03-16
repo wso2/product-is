@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -367,6 +367,7 @@ public class IdentityProviderPOSTRequest {
     public static class Certificate {
         private List<String> certificates = null;
         private String jwksUri;
+        private String samlMetadataUri;
 
         /**
          *
@@ -416,6 +417,26 @@ public class IdentityProviderPOSTRequest {
             this.jwksUri = jwksUri;
         }
 
+        /**
+         *
+         **/
+        public Certificate samlMetadataUri(String samlMetadataUri) {
+
+            this.samlMetadataUri = samlMetadataUri;
+            return this;
+        }
+
+        @ApiModelProperty()
+        @JsonProperty("samlMetadataUri")
+        @Valid
+        public String getSamlMetadataUri() {
+            return samlMetadataUri;
+        }
+
+        public void setSamlMetadataUri(String samlMetadataUri) {
+            this.samlMetadataUri = samlMetadataUri;
+        }
+
         @Override
         public boolean equals(Object o) {
 
@@ -427,12 +448,13 @@ public class IdentityProviderPOSTRequest {
             }
             Certificate certificate = (Certificate) o;
             return Objects.equals(this.certificates, certificate.certificates) &&
-                    Objects.equals(this.jwksUri, certificate.jwksUri);
+                    Objects.equals(this.jwksUri, certificate.jwksUri) &&
+                    Objects.equals(this.samlMetadataUri, certificate.samlMetadataUri);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(certificates, jwksUri);
+            return Objects.hash(certificates, jwksUri, samlMetadataUri);
         }
 
         @Override
@@ -441,6 +463,7 @@ public class IdentityProviderPOSTRequest {
             return "class Certificate {\n" +
                     "    certificates: " + toIndentedString(certificates) + "\n" +
                     "    jwksUri: " + toIndentedString(jwksUri) + "\n" +
+                    "    samlMetadataUri: " + toIndentedString(samlMetadataUri) + "\n" +
                     "}";
         }
     }

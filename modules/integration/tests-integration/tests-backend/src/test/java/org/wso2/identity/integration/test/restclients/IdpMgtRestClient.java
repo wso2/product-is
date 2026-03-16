@@ -29,12 +29,15 @@ import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest.FederatedAuthenticator;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.PatchRequest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Roles;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 public class IdpMgtRestClient extends RestBaseClient {
 
@@ -164,6 +167,46 @@ public class IdpMgtRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "IdP roles update failed");
+        }
+    }
+
+    /**
+     * Patch an Identity Provider.
+     *
+     * @param idpId         Identity Provider Id.
+     * @param patchRequests List of patch operations to apply.
+     * @throws Exception If an error occurred while patching the IdP.
+     */
+    public void patchIdentityProvider(String idpId, List<PatchRequest> patchRequests) throws Exception {
+
+        String jsonRequest = toJSONString(patchRequests);
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "IdP patch failed");
+        }
+    }
+
+    /**
+     * Update a federated authenticator of an Identity Provider.
+     *
+     * @param idpId                    Identity Provider Id.
+     * @param federatedAuthenticatorId Federated Authenticator Id.
+     * @param authenticator            Updated federated authenticator configuration.
+     * @throws Exception If an error occurred while updating the federated authenticator.
+     */
+    public void updateFederatedAuthenticator(String idpId, String federatedAuthenticatorId,
+            FederatedAuthenticator authenticator) throws Exception {
+
+        String jsonRequest = toJSONString(authenticator);
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId + FEDERATED_AUTHENTICATORS_PATH + federatedAuthenticatorId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Federated authenticator update failed");
         }
     }
 

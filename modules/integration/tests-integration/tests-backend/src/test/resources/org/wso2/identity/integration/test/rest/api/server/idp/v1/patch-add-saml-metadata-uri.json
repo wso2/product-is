@@ -1,0 +1,7 @@
+[
+  {
+    "operation": "ADD",
+    "path": "/certificate/samlMetadataUri",
+    "value": "http://SAMPLE.SAML.METADATA.URI/"
+  }
+]
