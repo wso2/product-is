@@ -2715,7 +2715,7 @@
         <identity.carbon.auth.rest.version>1.12.6</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.4.55</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.4.59</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.4</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
@@ -2819,7 +2819,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.5.25</identity.server.api.version>
+        <identity.server.api.version>1.5.27</identity.server.api.version>
         <identity.user.api.version>1.5.3</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
