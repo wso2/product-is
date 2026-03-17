@@ -230,6 +230,8 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
 
         Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
         assertNotNull(locationHeader, "Location header expected for authorize request is not available.");
+        assertTrue(locationHeader.getValue().contains("/t/" + tenantInfo.getDomain() + "/o/" + organizationId),
+                "Authorize redirect should follow the path /t/<tenant>/o/<orgId>.");
         EntityUtils.consume(response.getEntity());
 
         response = sendGetRequest(client, locationHeader.getValue());
@@ -257,6 +259,8 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
 
         Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
         assertNotNull(locationHeader, "Location header expected post login is not available.");
+        assertTrue(locationHeader.getValue().contains("/t/" + tenantInfo.getDomain() + "/o/" + organizationId),
+                "Post-login redirect should follow the path /t/<tenant>/o/<orgId>.");
         EntityUtils.consume(response.getEntity());
 
         do {
