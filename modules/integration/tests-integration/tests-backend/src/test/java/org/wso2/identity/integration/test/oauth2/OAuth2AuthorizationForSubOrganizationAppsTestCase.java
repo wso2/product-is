@@ -152,7 +152,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private static boolean isServerConfigured = false;
     private static ServerConfigurationManager staticServerConfigurationManager;
 
-    // Instance variables per user mode)
+    // Instance variables per user mode
     private final TestUserMode userMode;
     private final String ORGANIZATION_NAME;
     private final String ORGANIZATION_HANDLE;
@@ -171,6 +171,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private String organizationId;
     private String testApiResourceId;
     private String organizationApplicationId;
+    private String mgtApplicationIdInRootTenant;
 
     // Variables for JWT token flow
     private String jwtSessionDataKey;
@@ -181,16 +182,19 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     public static Object[][] configProvider() {
 
         return new Object[][]{
-//                {TestUserMode.SUPER_TENANT_ADMIN, "sub001", "sub001"},
+                {TestUserMode.SUPER_TENANT_ADMIN, "sub001", "sub001"},
                 {TestUserMode.TENANT_ADMIN, "sub002", "sub002"}};
     }
 
     @Factory(dataProvider = "configProvider")
-    public OAuth2AuthorizationForSubOrganizationAppsTestCase(TestUserMode userMode, String orgName, String orgHandle) {
+    public OAuth2AuthorizationForSubOrganizationAppsTestCase(TestUserMode userMode,
+                                                             String organizationName,
+                                                             String organizationHandle) {
 
         this.userMode = userMode;
-        this.ORGANIZATION_NAME = orgName;
-        this.ORGANIZATION_HANDLE = orgHandle;
+        this.ORGANIZATION_NAME = organizationName;
+        this.ORGANIZATION_HANDLE = organizationHandle;
+
     }
 
 
@@ -258,7 +262,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         testApiResourceId = createTestAPIResource();
 
         /*
-         Create an application from the switched token in the created application and enable authorization
+         Create an application from the switched token in the created organization and enable authorization
          grant types. The newly created API resource will be added via updateOrganizationAppAuthorizedAPIs
         */
         organizationApplicationId = createOrganizationApplication(ORGANIZATION_MAIN_APP_NAME, switchedM2MToken,
@@ -507,6 +511,9 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         if (orgMgtRestClient != null) {
             orgMgtRestClient.closeHttpClient();
         }
+        if (mgtApplicationIdInRootTenant != null) {
+            deleteApp(mgtApplicationIdInRootTenant);
+        }
         if (restClient != null) {
             restClient.closeHttpClient();
         }
@@ -519,10 +526,6 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         if (client != null) {
             client.close();
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void cleanupClass() throws Exception {
 
         // Restore original deployment.toml configuration after all tests complete
         synchronized (OAuth2AuthorizationForSubOrganizationAppsTestCase.class) {
@@ -552,17 +555,17 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
                 .build();
 
         ApplicationResponseModel application = addApplication(applicationConfig);
-        String applicationId = application.getId();
+        mgtApplicationIdInRootTenant = application.getId();
 
         JSONObject managementAppAPIResources = new JSONObject(RESTTestBase.readResource(
                 MGT_APP_AUTHORIZED_API_RESOURCES, this.getClass()));
 
-        updateAuthorizedAPIs(applicationId, managementAppAPIResources);
+        updateAuthorizedAPIs(mgtApplicationIdInRootTenant, managementAppAPIResources);
 
-        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(applicationId);
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(mgtApplicationIdInRootTenant);
         CLIENT_ID = oidcConfig.getClientId();
         CLIENT_SECRET = oidcConfig.getClientSecret();
-        shareApplication(applicationId);
+        shareApplication(mgtApplicationIdInRootTenant);
     }
 
     private String createOrganizationApplication(String applicationName, String accessToken, String organizationId)
@@ -587,7 +590,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
 
         ApplicationResponseModel applicationResponseModel = addOrganizationApplication(applicationName,
                 applicationConfig, accessToken, organizationId);
-        String organizationApplicationId = applicationResponseModel.getId();
+        String orgAppId = applicationResponseModel.getId();
 
         JSONObject orgAppAPIResources = new JSONObject(RESTTestBase.readResource(
                 ORGANIZATION_APP_AUTHORIZED_APIS_JSON, this.getClass()));
@@ -596,14 +599,14 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         orgAppAPIResources.put(TEST_API_RESOURCE_IDENTIFIER, new org.json.JSONArray().put(
                 TEST_API_RESOURCE_SCOPE_NAME));
 
-        updateOrganizationAppAuthorizedAPIs(organizationApplicationId, orgAppAPIResources);
+        updateOrganizationAppAuthorizedAPIs(orgAppId, orgAppAPIResources);
 
 
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfOrganizationApplication(
-                organizationApplicationId, accessToken);
+                orgAppId, accessToken);
         ORG_APP_CLIENT_ID = oidcConfig.getClientId();
         ORG_APP_CLIENT_SECRET = oidcConfig.getClientSecret();
-        return organizationApplicationId;
+        return orgAppId;
     }
 
     private void updateAuthorizedAPIs(String appId, JSONObject authorizedAPIs) throws JSONException, IOException {
@@ -937,7 +940,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         urlParameters.add(new BasicNameValuePair("scope", scopeString));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-                getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, ORGANIZATION_HANDLE));
+                getRootTenantQualifiedURLForSubOrgApps(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain(), organizationId));
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         assertNotNull(locationHeader, "Location header expected for authorize request is not available.");
@@ -998,7 +1001,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         headers.add(new BasicHeader("User-Agent", USER_AGENT));
 
         HttpResponse response = sendPostRequest(client, headers, urlParameters,
-                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, ORGANIZATION_HANDLE));
+                getRootTenantQualifiedURLForSubOrgApps(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain(), organizationId));
         assertNotNull(response, "Failed to receive response for access token request.");
 
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -1023,14 +1026,12 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private void validateTokenIntrospection(String token, String activeErrorMessage, String tokenType)
             throws Exception {
 
-        String introspectionUrl = getTenantQualifiedURL(OAuth2Constant.INTRO_SPEC_ENDPOINT, ORGANIZATION_HANDLE);
+        String introspectionUrl = getRootTenantQualifiedURLForSubOrgApps(OAuth2Constant.INTRO_SPEC_ENDPOINT,
+                tenantInfo.getDomain(), organizationId);
         log.info("Introspection endpoint URL: " + introspectionUrl);
-        log.info("Introspecting token: " + token);
 
         org.json.simple.JSONObject introspectionResponse = introspectTokenWithTenant(client, token,
                 introspectionUrl, ORG_APP_CLIENT_ID, ORG_APP_CLIENT_SECRET);
-        log.info("Introspection response: " + introspectionResponse.toJSONString());
-
         // Validate the token is active
         assertNotNull(introspectionResponse, "Introspection response is null.");
         assertTrue(introspectionResponse.containsKey("active"),
@@ -1063,12 +1064,6 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
      */
     private OAuth2RestClient createOAuth2RestClientForOrganization() throws IOException {
 
-        Tenant tenantInfo = new Tenant();
-        tenantInfo.setDomain(ORGANIZATION_HANDLE);
-        User user = new User();
-        user.setUserName("testadmin@" + ORGANIZATION_HANDLE);
-        tenantInfo.setContextUser(user);
-
         return new OAuth2RestClient(serverURL, tenantInfo);
     }
 
@@ -1076,12 +1071,6 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
      * Creates SCIM2RestClient for organization.
      */
     private SCIM2RestClient createSCIM2RestClientForOrganization() throws IOException {
-
-        Tenant tenantInfo = new Tenant();
-        tenantInfo.setDomain(ORGANIZATION_HANDLE);
-        User user = new User();
-        user.setUserName("testadmin@" + ORGANIZATION_HANDLE);
-        tenantInfo.setContextUser(user);
 
         return new SCIM2RestClient(serverURL, tenantInfo);
     }
@@ -1132,7 +1121,6 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
      */
     private void configureIntrospectionEndpoint() throws Exception {
 
-        log.info("Configuring deployment.toml for introspection endpoint with BasicClientAuthentication");
         String carbonHome = Utils.getResidentCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File introspectionConfigFile = new File(getISResourceLocation() + File.separator + "oauth" +
