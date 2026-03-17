@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -58,7 +59,9 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.Objects;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -176,8 +179,10 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
         shareRequest.setShareWithAllChildren(true);
         oAuth2RestClient.shareApplication(rootApplicationId, shareRequest);
 
-        // Allow time for the async share operation to complete.
-        Thread.sleep(5000);
+        switchedM2MToken = orgMgtRestClient.switchM2MToken(organizationId);
+        assertNotNull(switchedM2MToken, "Switched M2M token should not be null.");
+
+        waitForApplicationSharedToSubOrg(APP_NAME, switchedM2MToken, 10000);
     }
 
     @Test(priority = 5, dependsOnMethods = "testShareApplicationToSubOrg")
@@ -190,8 +195,15 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
         assertTrue(appResponse.getEnhancedOrgAuthenticationEnabled(),
                 "enhancedOrgAuthenticationEnabled should be true for the created application.");
 
+        assertNotNull(appResponse.getAuthenticationSequence(),
+                "Authentication sequence should not be null.");
+        assertNotNull(appResponse.getAuthenticationSequence().getSteps(),
+                "Authentication steps should not be null.");
         List<Authenticator> authenticators = appResponse.getAuthenticationSequence().getSteps().stream()
+                .filter(Objects::nonNull)
+                .filter(step -> step.getOptions() != null)
                 .flatMap(step -> step.getOptions().stream())
+                .filter(Objects::nonNull)
                 .toList();
         assertTrue(authenticators.stream()
                         .anyMatch(a -> "OrganizationIdentifierHandler".equals(a.getAuthenticator())),
@@ -203,9 +215,6 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
 
     @Test(priority = 6, dependsOnMethods = "testVerifyEnhancedFlagReflectedInAppResponse")
     public void testCreateSubOrgUser() throws Exception {
-
-        switchedM2MToken = orgMgtRestClient.switchM2MToken(organizationId);
-        assertNotNull(switchedM2MToken, "Switched M2M token should not be null.");
 
         UserObject endUser = new UserObject();
         endUser.setUserName(ORG_END_USER_USERNAME);
@@ -239,7 +248,7 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
         Map<String, Integer> keyPositionMap = new HashMap<>(1);
         keyPositionMap.put("name=\"sessionDataKey\"", 1);
         List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
-        assertNotNull(keyValues, "sessionDataKey not found on login page.");
+        assertTrue(keyValues != null && !keyValues.isEmpty(), "No sessionDataKey found on login page.");
 
         sessionDataKey = keyValues.get(0).getValue();
         assertNotNull(sessionDataKey, "Session data key should not be null.");
@@ -257,20 +266,20 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getRootTenantQualifiedOrgURL(COMMON_AUTH_URL, tenantInfo.getDomain(), organizationId));
 
-        Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
-        assertNotNull(locationHeader, "Location header expected post login is not available.");
-        assertTrue(locationHeader.getValue().contains("/t/" + tenantInfo.getDomain() + "/o/" + organizationId),
-                "Post-login redirect should follow the path /t/<tenant>/o/<orgId>.");
+        Header commonAuthToAuthorize = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        assertNotNull(commonAuthToAuthorize, "commonauth to authorize redirect location header is not available.");
+        assertTrue(commonAuthToAuthorize.getValue().contains("/t/" + tenantInfo.getDomain() + "/o/" + organizationId),
+                "commonauth to authorize redirect should follow the path (/t/<tenant>/o/<orgId>).");
         EntityUtils.consume(response.getEntity());
 
-        do {
-            response = sendGetRequest(client, locationHeader.getValue());
-            locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
-            EntityUtils.consume(response.getEntity());
-        } while (locationHeader != null && !locationHeader.getValue().contains(CALLBACK_URL.split("\\?")[0]));
+        response = sendGetRequest(client, commonAuthToAuthorize.getValue());
+        Header authorizeToCallback = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+        assertNotNull(authorizeToCallback, "authorize to callback redirect location header is not available.");
+        assertTrue(authorizeToCallback.getValue().contains(CALLBACK_URL.split("\\?")[0]),
+                "authorize to callback redirect should point to the callback URL.");
+        EntityUtils.consume(response.getEntity());
 
-        assertNotNull(locationHeader, "Redirection URL to the application with authorization code is null.");
-        authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
+        authorizationCode = getAuthorizationCodeFromURL(authorizeToCallback.getValue());
         assertNotNull(authorizationCode, "Authorization code should not be null.");
     }
 
@@ -314,6 +323,8 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
                 "username claim is missing from introspection response.");
         assertTrue(introspectionResponse.containsKey("org_id"),
                 "org_id claim is missing in the introspection response.");
+        Assert.assertEquals(introspectionResponse.get("org_id"), organizationId,
+                "org_id in introspection response should match the sub-organization used in the flow.");
     }
 
     @Test(priority = 11, dependsOnMethods = "testIntrospectAccessToken")
@@ -338,7 +349,7 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
             keyPositionMap.put("name=\"sessionDataKey\"", 1);
             List<DataExtractUtil.KeyValue> keyValues =
                     DataExtractUtil.extractDataFromResponse(loginPageResponse, keyPositionMap);
-            assertNotNull(keyValues, "sessionDataKey not found for negative test.");
+            assertTrue(keyValues != null && !keyValues.isEmpty(), "No sessionDataKey found for negative test.");
             EntityUtils.consume(loginPageResponse.getEntity());
 
             String freshSessionDataKey = keyValues.get(0).getValue();
@@ -351,46 +362,87 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
 
             HttpResponse loginResponse = sendPostRequestWithParameters(freshClient, urlParameters,
                     getRootTenantQualifiedOrgURL(COMMON_AUTH_URL, tenantInfo.getDomain(), organizationId));
-            Header loginLocationHeader = loginResponse.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
+            // commonauth → login page with authFailure=true, no authorization code issued.
+            Header commonAuthToLoginPage = loginResponse.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
             EntityUtils.consume(loginResponse.getEntity());
-
-            String location = loginLocationHeader != null ? loginLocationHeader.getValue() : "";
-            for (int i = 0; i < 5 && loginLocationHeader != null && !location.contains("code="); i++) {
-                HttpResponse followResponse = sendGetRequest(freshClient, location);
-                Header nextLocation = followResponse.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
-                EntityUtils.consume(followResponse.getEntity());
-                if (nextLocation == null) break;
-                location = nextLocation.getValue();
-            }
-            Assert.assertFalse(location.contains("code="),
+            assertNotNull(commonAuthToLoginPage, "commonauth to login page redirect location header is not available.");
+            Assert.assertFalse(commonAuthToLoginPage.getValue().contains("code="),
                     "Authorization code should NOT be present when wrong password is used.");
         }
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanupTest() throws Exception {
+    public void cleanupTest() {
 
         if (orgUserId != null && switchedM2MToken != null && scim2RestClient != null) {
-            scim2RestClient.deleteSubOrgUser(orgUserId, switchedM2MToken);
+            try {
+                scim2RestClient.deleteSubOrgUser(orgUserId, switchedM2MToken);
+            } catch (Exception e) {
+                log.error("Failed to delete sub-org user: " + orgUserId, e);
+            }
         }
         if (organizationId != null && orgMgtRestClient != null) {
-            orgMgtRestClient.deleteOrganization(organizationId);
+            try {
+                orgMgtRestClient.deleteOrganization(organizationId);
+            } catch (Exception e) {
+                log.error("Failed to delete organization: " + organizationId, e);
+            }
         }
         if (rootApplicationId != null && oAuth2RestClient != null) {
-            oAuth2RestClient.deleteApplication(rootApplicationId);
+            try {
+                oAuth2RestClient.deleteApplication(rootApplicationId);
+            } catch (Exception e) {
+                log.error("Failed to delete application: " + rootApplicationId, e);
+            }
         }
         if (client != null) {
-            client.close();
+            try {
+                client.close();
+            } catch (Exception e) {
+                log.error("Failed to close HTTP client.", e);
+            }
         }
         if (scim2RestClient != null) {
-            scim2RestClient.closeHttpClient();
+            try {
+                scim2RestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.error("Failed to close SCIM2 REST client.", e);
+            }
         }
         if (oAuth2RestClient != null) {
-            oAuth2RestClient.closeHttpClient();
+            try {
+                oAuth2RestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.error("Failed to close OAuth2 REST client.", e);
+            }
         }
         if (orgMgtRestClient != null) {
-            orgMgtRestClient.closeHttpClient();
+            try {
+                orgMgtRestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.error("Failed to close org management REST client.", e);
+            }
         }
+    }
+
+    private void waitForApplicationSharedToSubOrg(String appName, String subOrgToken, long timeoutMs)
+            throws Exception {
+
+        long deadline = System.currentTimeMillis() + timeoutMs;
+        long pollInterval = 500;
+        while (System.currentTimeMillis() < deadline) {
+            try {
+                String sharedAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgToken);
+                if (StringUtils.isNotBlank(sharedAppId)) {
+                    return;
+                }
+            } catch (IOException e) {
+                log.debug("Transient error while polling for shared application '" + appName + "', retrying.", e);
+            }
+            Thread.sleep(pollInterval);
+            pollInterval = Math.min(pollInterval * 2, 5000);
+        }
+        Assert.fail("Application '" + appName + "' was not shared to sub-organization within " + timeoutMs + " ms.");
     }
 
     private CloseableHttpClient createHttpClient() {
