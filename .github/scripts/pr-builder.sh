@@ -36,6 +36,12 @@ disable_tests() {
     # Convert comma-separated string to array.
     IFS=',' read -ra ENABLED_ARRAY <<< "$enabled_tests"
 
+    # If no tests specified, skip disabling and run all tests.
+    if [ ${#ENABLED_ARRAY[@]} -eq 0 ] || [ -z "${ENABLED_ARRAY[0]}" ]; then
+        echo "No enabled tests specified. Running all tests."
+        return
+    fi
+
     echo "Tests that will run:"
     printf '%s\n' "${ENABLED_ARRAY[@]}"
 
