@@ -149,7 +149,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
         super.initTest();
 
-        secondaryISCarbonHome = System.getProperty("carbon.home");
+        secondaryISCarbonHome = TestDataHolder.getInstance().getSecondaryISCarbonHome();
 
         createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
                 IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
