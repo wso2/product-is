@@ -57,8 +57,7 @@ disable_tests() {
 # Function to get expected BUILD SUCCESS count based on enabled tests.
 get_expected_build_success_count() {
     local enabled_tests=$1
-    # If is-test-adaptive-authentication-nashorn is enabled, expect 17 BUILD SUCCESS messages.
-    if [[ "$enabled_tests" == *"is-test-adaptive-authentication-nashorn"* ]]; then
+    if [[ -z "$enabled_tests" || "$enabled_tests" == *"is-test-adaptive-authentication-nashorn"* ]]; then
         echo "17"
     else
         echo "1"

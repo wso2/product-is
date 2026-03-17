@@ -16,12 +16,6 @@ jobs:
     steps:
       - name: Print Input
         run: echo "Running all tests sequentially for PR - ${{ github.event.inputs.pr }}"
-      - name: Comment build info
-        run: |
-          owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
-          repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
-          pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
-          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -95,23 +89,3 @@ jobs:
           path: |
             **/**.hprof
           if-no-files-found: ignore
-  comment-and-approve:
-    name: Comment the status and Approve PR
-    needs: run-all-tests
-    runs-on:
-      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
-    if: always()
-    steps:
-      - name: Comment build status
-        run: |
-          owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
-          repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
-          pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
-          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: ${{ needs.run-all-tests.result }}"}'
-      - name: Approve PR
-        if: ${{ needs.run-all-tests.result == 'success' }}
-        run: |
-          owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
-          repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
-          pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
-          curl -X POST https://api.github.com/repos/$owner/$repo/pulls/$pr_number/reviews -H 'Authorization:token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"Approving the pull request based on the successful pr build https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","event":"APPROVE"}'
