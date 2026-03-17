@@ -34,7 +34,7 @@
     <version>7.3.0-beta-SNAPSHOT</version>
     <name>WSO2 Identity Server</name>
     <url>http://wso2.org/projects/identity</url>
-
+    <!--Master branch identical versions -->
     <modules>
         <module>modules/features</module>
         <module>modules/p2-profile-gen</module>
