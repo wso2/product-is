@@ -44,7 +44,7 @@
       {
         "name": "urn:openid:params:grant-type:ciba",
         "displayName": "CIBA",
-        "publicClientAllowed": true
+        "publicClientAllowed": false
       },
       {
         "name": "account_switch",
