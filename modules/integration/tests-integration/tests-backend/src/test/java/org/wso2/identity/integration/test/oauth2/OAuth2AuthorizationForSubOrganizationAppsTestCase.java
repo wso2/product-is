@@ -51,8 +51,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
@@ -940,7 +938,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         urlParameters.add(new BasicNameValuePair("scope", scopeString));
 
         HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
-                getRootTenantQualifiedURLForSubOrgApps(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain(), organizationId));
+                getRootTenantQualifiedOrgURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain(), organizationId));
 
         Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         assertNotNull(locationHeader, "Location header expected for authorize request is not available.");
@@ -1001,7 +999,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         headers.add(new BasicHeader("User-Agent", USER_AGENT));
 
         HttpResponse response = sendPostRequest(client, headers, urlParameters,
-                getRootTenantQualifiedURLForSubOrgApps(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain(), organizationId));
+                getRootTenantQualifiedOrgURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain(), organizationId));
         assertNotNull(response, "Failed to receive response for access token request.");
 
         String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
@@ -1026,7 +1024,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
     private void validateTokenIntrospection(String token, String activeErrorMessage, String tokenType)
             throws Exception {
 
-        String introspectionUrl = getRootTenantQualifiedURLForSubOrgApps(OAuth2Constant.INTRO_SPEC_ENDPOINT,
+        String introspectionUrl = getRootTenantQualifiedOrgURL(OAuth2Constant.INTRO_SPEC_ENDPOINT,
                 tenantInfo.getDomain(), organizationId);
         log.info("Introspection endpoint URL: " + introspectionUrl);
 
