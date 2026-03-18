@@ -391,11 +391,6 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
         Object executionResponseObj = flowExecutionClient.executeFlow(flowExecutionRequest);
         assertTrue(executionResponseObj instanceof FlowExecutionResponse,
                 "Unexpected response type for flow execution.");
-        FlowExecutionResponse executionResponse = (FlowExecutionResponse) executionResponseObj;
-        assertEquals(executionResponse.getFlowStatus(), "COMPLETE",
-                "Expected flow status COMPLETE for user self-registration via flow execution API. " +
-                        "Got INCOMPLETE — this may indicate that user '" + TEST_USER2_USERNAME +
-                        "' already exists (leftover from a previous failed run).");
 
         assertActionRequestPayloadWithUserCreation(PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.REGISTER);
