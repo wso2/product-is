@@ -79,7 +79,6 @@
       "RSA-OAEP-256",
       "RSA-OAEP-384",
       "RSA-OAEP-512"
-
     ],
     "defaultValue": "RSA-OAEP"
   },
