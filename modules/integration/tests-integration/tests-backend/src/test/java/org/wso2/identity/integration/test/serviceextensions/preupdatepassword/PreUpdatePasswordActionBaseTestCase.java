@@ -535,18 +535,17 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     protected Object executeAdminInvitedUserRegistrationFlow() throws Exception {
 
+        Object initiationResponseObj = flowExecutionClient.initiateFlowExecution(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        FlowExecutionResponse initiationResponse = (FlowExecutionResponse) initiationResponseObj;
+        String flowId = initiationResponse.getFlowId();
+
         String recoveryLink = getRecoveryURLFromEmail();
         String confirmationCode = extractConfirmationCode(recoveryLink);
 
-        FlowExecutionRequest confirmationRequest = buildConfirmationRequest(confirmationCode);
-        Object confirmationResponseObj = flowExecutionClient.executeFlow(confirmationRequest);
-        if (!(confirmationResponseObj instanceof FlowExecutionResponse)) {
-            return confirmationResponseObj;
-        }
-        FlowExecutionResponse confirmationResponse = (FlowExecutionResponse) confirmationResponseObj;
+        FlowExecutionRequest confirmationRequest = buildConfirmationRequest(flowId, confirmationCode);
+        flowExecutionClient.executeFlow(confirmationRequest);
 
-        FlowExecutionRequest passwordRequest = buildAdminInvitedUserRegistrationFlowRequest(
-                confirmationResponse.getFlowId());
+        FlowExecutionRequest passwordRequest = buildAdminInvitedUserRegistrationFlowRequest(flowId);
 
         return flowExecutionClient.executeFlow(passwordRequest);
     }
@@ -565,10 +564,11 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         return flowExecutionRequest;
     }
 
-    private FlowExecutionRequest buildConfirmationRequest(String confirmationCode) {
+    private FlowExecutionRequest buildConfirmationRequest(String flowId, String confirmationCode) {
 
         FlowExecutionRequest confirmationRequest = new FlowExecutionRequest();
         confirmationRequest.setFlowType(INVITED_USER_REGISTRATION_FLOW_TYPE);
+        confirmationRequest.setFlowId(flowId);
 
         Map<String, String> confirmationInputs = new HashMap<>();
         confirmationInputs.put("confirmationCode", confirmationCode);
