@@ -433,11 +433,12 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {
 
-        return baseUrl.replace("9853", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
+        return baseUrl.replaceAll(":\\d+", ":" + (DEFAULT_PORT + portOffset)) + "/";
     }
 
     private String getSCIMUrl(int portOffset, String baseUrl) {
 
-        return baseUrl.replace("9853/services", String.valueOf(DEFAULT_PORT + portOffset)) + "/wso2/scim/";
+        String urlWithoutServices = baseUrl.replaceAll("/services$", "");
+        return urlWithoutServices.replaceAll(":\\d+", ":" + (DEFAULT_PORT + portOffset)) + "/wso2/scim/";
     }
 }
