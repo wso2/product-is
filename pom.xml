@@ -2952,7 +2952,7 @@
         <selenium.version>2.40.0</selenium.version>
         <testng.version>6.1.1</testng.version>
         <junit.version>4.13.1</junit.version>
-        <org.apache.tomcat.version>9.0.113</org.apache.tomcat.version>
+        <org.apache.tomcat.version>9.0.115</org.apache.tomcat.version>
         <msf4j.version>2.6.2</msf4j.version>
         <jacoco.agent.version>0.8.12</jacoco.agent.version>
         <xml.apis.version>1.4.01</xml.apis.version>
