@@ -191,6 +191,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowFailureTest"/>
             <class name="org.wso2.identity.integration.test.inheritance.ConfigInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsDeploymentConfigTest"/>
+            <class name="org.wso2.identity.integration.test.oauth2.EnhancedOrgAuthenticationDirectPathTestCase"/>
         </classes>
     </test>
 
@@ -448,6 +449,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenExchangeGrantTypeTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.FederatedTokenSharingTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.FederatedTokenSharingIDPConfigDisabledTestCase"/>
+            <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithKeyRotationTestCase"/>
         </classes>
     </test>
 
@@ -525,6 +527,7 @@
             <class name="org.wso2.identity.integration.test.organizationDiscovery.OrganizationDiscoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.recovery.UsernameRecoveryTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceResourceOwnerLockedTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationForSubOrganizationAppsTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCNonPersistentAccessTokenTest"/>
         </classes>

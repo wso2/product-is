@@ -44,7 +44,7 @@
       {
         "name": "urn:openid:params:grant-type:ciba",
         "displayName": "CIBA",
-        "publicClientAllowed": true
+        "publicClientAllowed": false
       },
       {
         "name": "account_switch",
@@ -75,7 +75,10 @@
   "idTokenEncryptionAlgorithm": {
     "options": [
       "RSA-OAEP",
-      "RSA1_5"
+      "RSA1_5",
+      "RSA-OAEP-256",
+      "RSA-OAEP-384",
+      "RSA-OAEP-512"
     ],
     "defaultValue": "RSA-OAEP"
   },
@@ -85,7 +88,8 @@
       "A192GCM",
       "A256GCM",
       "A128CBC-HS256",
-      "A128CBC+HS256"
+      "A128CBC+HS256",
+      "A192CBC-HS384"
     ],
     "defaultValue": "A128GCM"
   },
@@ -166,7 +170,10 @@
     "options": [
       "Select Option",
       "RSA-OAEP",
-      "RSA1_5"
+      "RSA1_5",
+      "RSA-OAEP-256",
+      "RSA-OAEP-384",
+      "RSA-OAEP-512"
     ]
   },
   "requestObjectEncryptionMethod": {
@@ -176,7 +183,8 @@
       "A192GCM",
       "A256GCM",
       "A128CBC-HS256",
-      "A128CBC+HS256"
+      "A128CBC+HS256",
+      "A192CBC-HS384"
     ]
   },
   "subjectType": {
@@ -196,7 +204,10 @@
       "allowedEncryptionAlgorithms": {
         "options": [
           "Select Option",
-          "RSA-OAEP"
+          "RSA-OAEP",
+          "RSA-OAEP-256",
+          "RSA-OAEP-384",
+          "RSA-OAEP-512"
         ]
       },
       "tokenEndpointAuthMethod": {
