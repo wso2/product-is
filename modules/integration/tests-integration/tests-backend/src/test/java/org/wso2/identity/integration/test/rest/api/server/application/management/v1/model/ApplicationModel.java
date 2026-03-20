@@ -34,6 +34,7 @@ public class ApplicationModel  {
     private String imageUrl;
     private String accessUrl;
     private Boolean isManagementApp;
+    private Boolean enhancedOrgAuthenticationEnabled;
     private ClaimConfiguration claimConfiguration;
     private InboundProtocols inboundProtocolConfiguration;
     private AuthenticationSequence authenticationSequence;
@@ -152,6 +153,24 @@ public class ApplicationModel  {
 
     /**
     **/
+    public ApplicationModel enhancedOrgAuthenticationEnabled(Boolean enhancedOrgAuthenticationEnabled) {
+
+        this.enhancedOrgAuthenticationEnabled = enhancedOrgAuthenticationEnabled;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false")
+    @JsonProperty("enhancedOrgAuthenticationEnabled")
+    @Valid
+    public Boolean getEnhancedOrgAuthenticationEnabled() {
+        return enhancedOrgAuthenticationEnabled;
+    }
+    public void setEnhancedOrgAuthenticationEnabled(Boolean enhancedOrgAuthenticationEnabled) {
+        this.enhancedOrgAuthenticationEnabled = enhancedOrgAuthenticationEnabled;
+    }
+
+    /**
+    **/
     public ApplicationModel claimConfiguration(ClaimConfiguration claimConfiguration) {
 
         this.claimConfiguration = claimConfiguration;
@@ -258,6 +277,7 @@ public class ApplicationModel  {
             Objects.equals(this.imageUrl, applicationModel.imageUrl) &&
             Objects.equals(this.accessUrl, applicationModel.accessUrl) &&
             Objects.equals(this.isManagementApp, applicationModel.isManagementApp) &&
+            Objects.equals(this.enhancedOrgAuthenticationEnabled, applicationModel.enhancedOrgAuthenticationEnabled) &&
             Objects.equals(this.claimConfiguration, applicationModel.claimConfiguration) &&
             Objects.equals(this.inboundProtocolConfiguration, applicationModel.inboundProtocolConfiguration) &&
             Objects.equals(this.authenticationSequence, applicationModel.authenticationSequence) &&
@@ -267,8 +287,9 @@ public class ApplicationModel  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, imageUrl, accessUrl, isManagementApp, claimConfiguration,
-                inboundProtocolConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
+        return Objects.hash(id, name, description, imageUrl, accessUrl, isManagementApp, enhancedOrgAuthenticationEnabled,
+                claimConfiguration, inboundProtocolConfiguration, authenticationSequence, advancedConfigurations,
+                provisioningConfigurations);
     }
 
     @Override
@@ -283,6 +304,7 @@ public class ApplicationModel  {
         sb.append("    imageUrl: ").append(toIndentedString(imageUrl)).append("\n");
         sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
         sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
+        sb.append("    enhancedOrgAuthenticationEnabled: ").append(toIndentedString(enhancedOrgAuthenticationEnabled)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
         sb.append("    inboundProtocolConfiguration: ").append(toIndentedString(inboundProtocolConfiguration)).append("\n");
         sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");
