@@ -1,5 +1,6 @@
 {
-  "description": "Second explicit version for no-auto-snapshot verification",
+  "version": "v3",
+  "description": "Third version with both elements",
   "elements": [
     {
       "elementId": 1,

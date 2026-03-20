@@ -55,14 +55,16 @@ import static org.hamcrest.Matchers.is;
  */
 public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase {
 
-    private static int createdElementId;
-    private static int createdSecondElementId;
-    private static int createdPurposeId;
-    private static int createdVersionId;
-    private static int createdThirdVersionId;
+    private static String createdElementId;
+    private static String createdSecondElementId;
+    private static String createdPurposeId;
+    private static String createdVersionLabel;
+    private static String createdVersionId;
+    private static String createdSecondVersionLabel;
+    private static String createdSecondVersionId;
     private static String createdReceiptId;
-    private static int deletableElementId;
-    private static int deletablePurposeId;
+    private static String deletableElementId;
+    private static String deletablePurposeId;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ConsentManagementV2SuccessTest(TestUserMode userMode) throws Exception {
@@ -103,12 +105,12 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", notNullValue())
+                .body("elementId", notNullValue())
                 .body("name", equalTo("email_address"))
                 .body("displayName", equalTo("Email Address"))
                 .body("description", equalTo("User's primary email address"));
 
-        createdElementId = response.jsonPath().getInt("id");
+        createdElementId = response.jsonPath().getString("elementId");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateElement"})
@@ -119,7 +121,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(createdElementId))
+                .body("elementId", equalTo(createdElementId))
                 .body("name", equalTo("email_address"))
                 .body("displayName", equalTo("Email Address"))
                 .body("description", equalTo("User's primary email address"));
@@ -135,11 +137,11 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", notNullValue())
+                .body("elementId", notNullValue())
                 .body("name", equalTo("phone_number"))
                 .body("displayName", equalTo("Phone Number"));
 
-        createdSecondElementId = response.jsonPath().getInt("id");
+        createdSecondElementId = response.jsonPath().getString("elementId");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateSecondElement"})
@@ -152,9 +154,9 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .statusCode(HttpStatus.SC_OK)
                 .body("items", notNullValue())
                 .body("count", greaterThanOrEqualTo(2))
-                .body("items.id", hasSize(greaterThanOrEqualTo(2)))
-                .body("items.find { it.id == " + createdElementId + " }.name", equalTo("email_address"))
-                .body("items.find { it.id == " + createdSecondElementId + " }.name", equalTo("phone_number"));
+                .body("items.elementId", hasSize(greaterThanOrEqualTo(2)))
+                .body("items.find { it.elementId == '" + createdElementId + "' }.name", equalTo("email_address"))
+                .body("items.find { it.elementId == '" + createdSecondElementId + "' }.name", equalTo("phone_number"));
     }
 
     // =========================================================================
@@ -166,21 +168,20 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
 
         // Replace placeholder element ID with the actual created element ID.
         String body = readResource("create-purpose.json")
-                .replace("\"elementId\": 1", "\"elementId\": " + createdElementId);
+                .replace("\"elementId\": 1", "\"elementId\": \"" + createdElementId + "\"");
         Response response = getResponseOfPost(PURPOSES_ENDPOINT, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", notNullValue())
+                .body("purposeId", notNullValue())
                 .body("name", equalTo("User Authentication"))
                 .body("description", equalTo("To authenticate users and manage their identity"))
-                .body("group", equalTo("Core Identity"))
-                .body("groupType", equalTo("System"))
-                .body("version", equalTo(1));
+                .body("type", equalTo("Core Identity"))
+                .body("latestVersion.version", equalTo("1"));
 
-        createdPurposeId = response.jsonPath().getInt("id");
+        createdPurposeId = response.jsonPath().getString("purposeId");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreatePurpose"})
@@ -191,15 +192,14 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(createdPurposeId))
+                .body("purposeId", equalTo(createdPurposeId))
                 .body("name", equalTo("User Authentication"))
                 .body("description", equalTo("To authenticate users and manage their identity"))
-                .body("group", equalTo("Core Identity"))
-                .body("groupType", equalTo("System"))
-                .body("version", equalTo(1))
+                .body("type", equalTo("Core Identity"))
+                .body("latestVersion.version", equalTo("1"))
                 .body("elements", hasSize(1))
-                .body("elements.find { it.elementId == " + createdElementId + " }", notNullValue())
-                .body("elements.find { it.elementId == " + createdElementId + " }.mandatory", is(true));
+                .body("elements.find { it.elementId == '" + createdElementId + "' }", notNullValue())
+                .body("elements.find { it.elementId == '" + createdElementId + "' }.mandatory", is(true));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetPurpose"})
@@ -212,22 +212,22 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .statusCode(HttpStatus.SC_OK)
                 .body("items", notNullValue())
                 .body("count", greaterThanOrEqualTo(1))
-                .body("items.find { it.id == " + createdPurposeId + " }.name", equalTo("User Authentication"))
-                .body("items.find { it.id == " + createdPurposeId + " }.group", equalTo("Core Identity"));
+                .body("items.find { it.purposeId == '" + createdPurposeId + "' }.name", equalTo("User Authentication"))
+                .body("items.find { it.purposeId == '" + createdPurposeId + "' }.type", equalTo("Core Identity"));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetPurpose"})
     public void testListPurposesWithGroupFilter() {
 
-        getResponseOfGet(PURPOSES_ENDPOINT + "?group=Core Identity")
+        getResponseOfGet(PURPOSES_ENDPOINT + "?type=Core Identity")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("items", notNullValue())
                 .body("count", greaterThanOrEqualTo(1))
-                .body("items.find { it.id == " + createdPurposeId + " }.name", equalTo("User Authentication"))
-                .body("items.findAll { it.group != 'Core Identity' }.size()", equalTo(0));
+                .body("items.find { it.purposeId == '" + createdPurposeId + "' }.name", equalTo("User Authentication"))
+                .body("items.findAll { it.type != 'Core Identity' }.size()", equalTo(0));
     }
 
     // =========================================================================
@@ -235,18 +235,15 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     // =========================================================================
 
     /**
-     * Verifies auto-snapshot on first explicit version creation.
-     * The first POST to /versions should:
-     * 1. Auto-snapshot the current base purpose as version 1.
-     * 2. Assign the caller's version as version 2.
+     * Creates a second explicit version with a user-provided version label.
+     * The version field is mandatory; the API no longer auto-snapshots.
      */
     @Test(groups = "wso2.is", dependsOnMethods = { "testCreateSecondElement", "testGetPurpose" })
     public void testCreatePurposeVersion() throws IOException {
 
-        // Version 2 intentionally uses the second element (phone_number) only,
-        // making its element set different from the base purpose (email_address only).
+        // v2 uses the second element (phone_number) only.
         String body = readResource("create-purpose-version.json")
-                .replace("\"elementId\": 2", "\"elementId\": " + createdSecondElementId);
+                .replace("\"elementId\": 2", "\"elementId\": \"" + createdSecondElementId + "\"");
         Response response = getResponseOfPost(
                 PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT, body);
         response.then()
@@ -254,23 +251,24 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", notNullValue())
-                .body("version", equalTo(2))
+                .body("versionId", notNullValue())
+                .body("version", equalTo("v2"))
                 .body("description", equalTo("Updated consent elements for enhanced authentication"))
-                // Version 2 must contain the second element (phone_number).
-                .body("elements.find { it.elementId == " + createdSecondElementId + " }", notNullValue())
-                // Version 2 must NOT contain the first element (email_address).
-                .body("elements.find { it.elementId == " + createdElementId + " }", equalTo(null));
+                // v2 must contain the second element (phone_number).
+                .body("elements.find { it.elementId == '" + createdSecondElementId + "' }", notNullValue())
+                // v2 must NOT contain the first element (email_address).
+                .body("elements.find { it.elementId == '" + createdElementId + "' }", equalTo(null));
 
-        createdVersionId = response.jsonPath().getInt("id");
+        createdVersionLabel = response.jsonPath().getString("version");
+        createdVersionId = response.jsonPath().getString("versionId");
     }
 
     /**
-     * After the first explicit version is created, the version list must contain exactly 2 entries:
-     * the auto-snapshot (version 1) and the newly created version (version 2).
+     * After creating an explicit version, the list must contain exactly 2 entries:
+     * the initial version created with the purpose ("1") and the newly created version ("v2").
      */
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreatePurposeVersion"})
-    public void testAutoSnapshotCreatesExactlyTwoVersionsAfterFirstExplicitVersion() {
+    public void testVersionListContainsTwoVersionsAfterVersionCreate() {
 
         getResponseOfGet(PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT)
                 .then()
@@ -282,12 +280,15 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     }
 
     /**
-     * Verifies that the auto-snapshot (version 1) contains the original purpose description
-     * and element associations, preserving the pre-versioning baseline.
+     * Verifies that version "1" (created atomically with the purpose) contains the original
+     * elements, and version "v2" contains only the second element.
+     * Elements are not included in list responses (PurposeVersionSummaryDTO has no elements field);
+     * this test uses GET single-version to verify element content per version.
      */
-    @Test(groups = "wso2.is", dependsOnMethods = {"testAutoSnapshotCreatesExactlyTwoVersionsAfterFirstExplicitVersion"})
-    public void testAutoSnapshotVersion1MatchesBasePurposeState() {
+    @Test(groups = "wso2.is", dependsOnMethods = {"testVersionListContainsTwoVersionsAfterVersionCreate"})
+    public void testVersionContentMatchesExpectedElements() {
 
+        // Extract version "1"'s versionId from the list.
         Response versionsResponse = getResponseOfGet(
                 PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT);
         versionsResponse.then()
@@ -295,24 +296,31 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
 
-        // Version 1 (auto-snapshot) must contain the original element (email_address).
-        versionsResponse.then()
-                .body("items.find { it.version == 1 }.version", equalTo(1))
-                .body("items.find { it.version == 1 }.elements.find { it.elementId == " + createdElementId + " }",
-                        notNullValue())
-                // Version 1 must NOT contain the second element (phone_number) — it mirrors the base purpose.
-                .body("items.find { it.version == 1 }.elements.find { it.elementId == " + createdSecondElementId + " }",
-                        equalTo(null));
+        String v1Id = versionsResponse.jsonPath()
+                .getString("items.find { it.version == '1' }.versionId");
 
-        // Version 2 must contain the second element (phone_number), not the first (email_address).
-        versionsResponse.then()
-                .body("items.find { it.version == 2 }.elements.find { it.elementId == " + createdSecondElementId + " }",
-                        notNullValue())
-                .body("items.find { it.version == 2 }.elements.find { it.elementId == " + createdElementId + " }",
-                        equalTo(null));
+        // GET version "1" directly and verify it contains the original element (email_address).
+        getResponseOfGet(PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT + "/" + v1Id)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("version", equalTo("1"))
+                .body("elements.find { it.elementId == '" + createdElementId + "' }", notNullValue())
+                .body("elements.find { it.elementId == '" + createdSecondElementId + "' }", equalTo(null));
+
+        // GET version "v2" directly and verify it contains only the second element (phone_number).
+        getResponseOfGet(PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT + "/" + createdVersionId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("version", equalTo("v2"))
+                .body("elements.find { it.elementId == '" + createdSecondElementId + "' }", notNullValue())
+                .body("elements.find { it.elementId == '" + createdElementId + "' }", equalTo(null));
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = {"testAutoSnapshotVersion1MatchesBasePurposeState"})
+    @Test(groups = "wso2.is", dependsOnMethods = {"testVersionContentMatchesExpectedElements"})
     public void testGetPurposeVersion() {
 
         getResponseOfGet(PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT + "/" + createdVersionId)
@@ -320,26 +328,25 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("id", equalTo(createdVersionId))
-                .body("version", equalTo(2))
+                .body("versionId", notNullValue())
+                .body("version", equalTo("v2"))
                 .body("description", equalTo("Updated consent elements for enhanced authentication"))
                 .body("elements", hasSize(1))
-                .body("elements.find { it.elementId == " + createdSecondElementId + " }", notNullValue())
-                .body("elements.find { it.elementId == " + createdSecondElementId + " }.mandatory", is(true));
+                .body("elements.find { it.elementId == '" + createdSecondElementId + "' }", notNullValue())
+                .body("elements.find { it.elementId == '" + createdSecondElementId + "' }.mandatory", is(true));
     }
 
     /**
-     * Verifies that a subsequent POST to /versions does NOT trigger another auto-snapshot.
-     * After a second explicit version (version 3), the list should contain exactly 3 entries.
+     * Creates a third version ("v3") and verifies the list contains exactly 3 entries.
+     * No auto-snapshot should occur.
      */
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetPurposeVersion"})
     public void testSubsequentVersionCreationDoesNotTriggerAutoSnapshot() throws IOException {
 
-        // Version 3 uses both elements (email_address + phone_number), demonstrating that
-        // each version can carry an independently chosen element set.
+        // v3 uses both elements (email_address + phone_number).
         String body = readResource("create-purpose-version-second.json")
-                .replace("\"elementId\": 1", "\"elementId\": " + createdElementId)
-                .replace("\"elementId\": 2", "\"elementId\": " + createdSecondElementId);
+                .replace("\"elementId\": 1", "\"elementId\": \"" + createdElementId + "\"")
+                .replace("\"elementId\": 2", "\"elementId\": \"" + createdSecondElementId + "\"");
         Response response = getResponseOfPost(
                 PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT, body);
         response.then()
@@ -347,17 +354,18 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", notNullValue())
-                .body("version", equalTo(3))
-                .body("description", equalTo("Second explicit version for no-auto-snapshot verification"))
-                // Version 3 must contain both elements.
+                .body("versionId", notNullValue())
+                .body("version", equalTo("v3"))
+                .body("description", equalTo("Third version with both elements"))
+                // v3 must contain both elements.
                 .body("elements", hasSize(2))
-                .body("elements.find { it.elementId == " + createdElementId + " }", notNullValue())
-                .body("elements.find { it.elementId == " + createdElementId + " }.mandatory", is(true))
-                .body("elements.find { it.elementId == " + createdSecondElementId + " }", notNullValue())
-                .body("elements.find { it.elementId == " + createdSecondElementId + " }.mandatory", is(false));
+                .body("elements.find { it.elementId == '" + createdElementId + "' }", notNullValue())
+                .body("elements.find { it.elementId == '" + createdElementId + "' }.mandatory", is(true))
+                .body("elements.find { it.elementId == '" + createdSecondElementId + "' }", notNullValue())
+                .body("elements.find { it.elementId == '" + createdSecondElementId + "' }.mandatory", is(false));
 
-        createdThirdVersionId = response.jsonPath().getInt("id");
+        createdSecondVersionLabel = response.jsonPath().getString("version");
+        createdSecondVersionId = response.jsonPath().getString("versionId");
 
         // Verify count is exactly 3, not 4 — no extra auto-snapshot.
         getResponseOfGet(PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT)
@@ -381,15 +389,28 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .body("count", equalTo(3))
                 .body("items.size()", equalTo(3))
                 .body("items.version", hasSize(3))
-                .body("items.find { it.version == 1 }", notNullValue())
-                .body("items.find { it.version == 2 }.id", equalTo(createdVersionId))
-                .body("items.find { it.version == 3 }.id", equalTo(createdThirdVersionId));
+                .body("items.find { it.version == '1' }", notNullValue())
+                .body("items.find { it.version == 'v2' }.versionId", notNullValue())
+                .body("items.find { it.version == 'v3' }.versionId", notNullValue());
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testListPurposeVersions"})
+    public void testSetLatestVersion() throws IOException {
+
+        // Set v2 as the latest version (createdVersionId holds v2's UUID).
+        String body = readResource("set-latest-version.json")
+                .replace("VERSION_ID_PLACEHOLDER", createdVersionId);
+        getResponseOfPut(PURPOSES_ENDPOINT + "/" + createdPurposeId + "/latest-version", body)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testSetLatestVersion"})
     public void testDeletePurposeVersion() {
 
-        getResponseOfDelete(PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT + "/" + createdThirdVersionId)
+        getResponseOfDelete(PURPOSES_ENDPOINT + "/" + createdPurposeId + VERSIONS_ENDPOINT + "/" + createdSecondVersionId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -404,17 +425,18 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     public void testCreateConsent() throws IOException {
 
         String body = readResource("create-consent.json")
-                .replace("\"purposeId\": 1", "\"purposeId\": " + createdPurposeId)
-                .replace("\"elementId\": 1", "\"elementId\": " + createdElementId);
+                .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + MultitenantUtils.getTenantAwareUsername(authenticatingUserName) + "\"")
+                .replace("\"purposeId\": \"1\"", "\"purposeId\": \"" + createdPurposeId + "\"")
+                .replace("\"elementId\": \"1\"", "\"elementId\": \"" + createdElementId + "\"");
         Response response = getResponseOfPost(CONSENTS_ENDPOINT, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("receiptId", notNullValue());
+                .body("consentId", notNullValue());
 
-        createdReceiptId = response.jsonPath().getString("receiptId");
+        createdReceiptId = response.jsonPath().getString("consentId");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateConsent"})
@@ -425,9 +447,9 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("receiptId", equalTo(createdReceiptId))
-                .body("subjectUserId", equalTo(MultitenantUtils.getTenantAwareUsername(authenticatingUserName)))
-                .body("service", equalTo("test-integration-service"))
+                .body("consentId", equalTo(createdReceiptId))
+                .body("subjectId", equalTo(MultitenantUtils.getTenantAwareUsername(authenticatingUserName)))
+                .body("serviceId", equalTo("test-integration-service"))
                 .body("language", equalTo("en"))
                 .body("state", equalTo("ACTIVE"))
                 .body("purposes", hasSize(1))
@@ -447,14 +469,26 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .statusCode(HttpStatus.SC_OK)
                 .body("items", notNullValue())
                 .body("count", greaterThanOrEqualTo(1))
-                .body("items.find { it.receiptId == '" + createdReceiptId + "' }", notNullValue())
-                .body("items.find { it.receiptId == '" + createdReceiptId + "' }.service",
+                .body("items.find { it.consentId == '" + createdReceiptId + "' }", notNullValue())
+                .body("items.find { it.consentId == '" + createdReceiptId + "' }.serviceId",
                         equalTo("test-integration-service"))
-                .body("items.find { it.receiptId == '" + createdReceiptId + "' }.state",
+                .body("items.find { it.consentId == '" + createdReceiptId + "' }.state",
                         equalTo("ACTIVE"));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testListConsents"})
+    public void testListConsentsWithPurposeIdFilter() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?purposeId=" + createdPurposeId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("count", greaterThanOrEqualTo(1))
+                .body("items.find { it.consentId == '" + createdReceiptId + "' }", notNullValue());
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testListConsentsWithPurposeIdFilter"})
     public void testRevokeConsent() {
 
         getResponseOfPost(CONSENTS_ENDPOINT + "/" + createdReceiptId + "/revoke", "")
@@ -464,7 +498,18 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 
-    @Test(groups = "wso2.is", dependsOnMethods = { "testRevokeConsent" })
+    @Test(groups = "wso2.is", dependsOnMethods = {"testRevokeConsent"})
+    public void testRevokeConsentIdempotent() {
+
+        // Second revoke of an already-revoked consent must also succeed with 204.
+        getResponseOfPost(CONSENTS_ENDPOINT + "/" + createdReceiptId + "/revoke", "")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testRevokeConsentIdempotent"})
     public void testGetRevokedConsentStillAccessible() {
 
         getResponseOfGet(CONSENTS_ENDPOINT + "/" + createdReceiptId)
@@ -472,7 +517,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("receiptId", equalTo(createdReceiptId))
+                .body("consentId", equalTo(createdReceiptId))
                 .body("state", equalTo("REVOKED"));
     }
 
@@ -490,12 +535,12 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", notNullValue())
+                .body("elementId", notNullValue())
                 .body("name", equalTo("address"))
                 .body("displayName", equalTo("Address"))
                 .body("description", equalTo("User's physical address"));
 
-        deletableElementId = response.jsonPath().getInt("id");
+        deletableElementId = response.jsonPath().getString("elementId");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDeletableElement"})
@@ -512,20 +557,19 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     public void testCreateDeletablePurpose() throws IOException {
 
         String body = readResource("create-purpose-deletable.json")
-                .replace("\"elementId\": 1", "\"elementId\": " + createdElementId);
+                .replace("\"elementId\": 1", "\"elementId\": \"" + createdElementId + "\"");
         Response response = getResponseOfPost(PURPOSES_ENDPOINT, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
                 .header(HttpHeaders.LOCATION, notNullValue())
-                .body("id", notNullValue())
+                .body("purposeId", notNullValue())
                 .body("name", equalTo("Data Cleanup"))
                 .body("description", equalTo("To remove user data upon account deletion"))
-                .body("group", equalTo("Core Identity"))
-                .body("groupType", equalTo("System"));
+                .body("type", equalTo("Core Identity"));
 
-        deletablePurposeId = response.jsonPath().getInt("id");
+        deletablePurposeId = response.jsonPath().getString("purposeId");
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDeletablePurpose"})

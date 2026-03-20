@@ -38,8 +38,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.wso2.identity.integration.test.util.Utils.getBasicAuthHeader;
 
 /**
@@ -55,9 +54,9 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
     private static final String V1_CONSENT_ENDPOINT_SUFFIX = "/api/identity/consent-mgt/v1.0/consents";
 
     private static String v1CreatedElementName;
-    private static int v2CreatedElementId;
+    private static String v2CreatedElementId;
     private static String v1CreatedPurposeName;
-    private static int v2CreatedPurposeId;
+    private static String v2CreatedPurposeId;
 
     private String v1ConsentEndpoint;
 
@@ -123,7 +122,9 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("items.find { it.name == '" + v1CreatedElementName + "' }", notNullValue());
+                .body("items.find { it.name == '" + v1CreatedElementName + "' }.name", equalTo("v1_email"))
+                .body("items.find { it.name == '" + v1CreatedElementName + "' }.description", equalTo("Created via V1 API"))
+                .body("items.find { it.name == '" + v1CreatedElementName + "' }.elementId", notNullValue());
     }
 
     /**
@@ -138,9 +139,13 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
         v2CreateResponse.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_CREATED);
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("elementId", notNullValue())
+                .body("name", equalTo("compat_email_address"))
+                .body("displayName", equalTo("Compat Email Address"))
+                .body("description", equalTo("Element created via V2 API for compatibility testing"));
 
-        v2CreatedElementId = v2CreateResponse.jsonPath().getInt("id");
+        v2CreatedElementId = v2CreateResponse.jsonPath().getString("elementId");
 
         // Verify via V1 API - search by name in pii-categories list
         RestClient restClient = new RestClient();
@@ -167,7 +172,7 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
                 .statusCode(HttpStatus.SC_OK)
                 .body("items", notNullValue())
                 .body("items.find { it.name == '" + v1CreatedElementName + "' }", notNullValue())
-                .body("items.find { it.id == " + v2CreatedElementId + " }", notNullValue());
+                .body("items.find { it.elementId == '" + v2CreatedElementId + "' }", notNullValue());
     }
 
     // =========================================================================
@@ -183,8 +188,8 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
         String v1PurposeBody = "{"
                 + "  \"purpose\": \"v1_purpose\","
                 + "  \"description\": \"Created via V1 API\","
-                + "  \"group\": \"Test Group\","
-                + "  \"groupType\": \"Test\","
+                + "  \"group\": \"DEFAULT\","
+                + "  \"groupType\": \"SP\","
                 + "  \"piiCategories\": ["
                 + "    {"
                 + "      \"piiCategoryId\": 1,"
@@ -211,7 +216,8 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("items.find { it.name == '" + v1CreatedPurposeName + "' }", notNullValue())
-                .body("items.find { it.name == '" + v1CreatedPurposeName + "' }.group", equalTo("Test Group"));
+                .body("items.find { it.name == '" + v1CreatedPurposeName + "' }.type", equalTo("SP"))
+                .body("items.find { it.name == '" + v1CreatedPurposeName + "' }.latestVersion", nullValue());
     }
 
     /**
@@ -221,16 +227,20 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
     public void testCreatePurposeV2GetPurposeV1() throws IOException {
 
         String v2PurposeBody = readResource("create-purpose-compat.json")
-                .replace("\"elementId\": 1", "\"elementId\": " + v2CreatedElementId);
+                .replace("\"elementId\": 1", "\"elementId\": \"" + v2CreatedElementId + "\"");
 
         Response v2CreateResponse = getResponseOfPost(PURPOSES_ENDPOINT, v2PurposeBody);
 
         v2CreateResponse.then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_CREATED);
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("purposeId", notNullValue())
+                .body("name", equalTo("Compat User Authentication"))
+                .body("description", equalTo("Purpose created via V2 API for compatibility testing"))
+                .body("type", equalTo("Compat Identity"));
 
-        v2CreatedPurposeId = v2CreateResponse.jsonPath().getInt("id");
+        v2CreatedPurposeId = v2CreateResponse.jsonPath().getString("purposeId");
         String v2PurposeName = v2CreateResponse.jsonPath().getString("name");
 
         // Verify via V1 API - search by name in purposes list
@@ -258,7 +268,7 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
                 .statusCode(HttpStatus.SC_OK)
                 .body("items", notNullValue())
                 .body("items.find { it.name == '" + v1CreatedPurposeName + "' }", notNullValue())
-                .body("items.find { it.id == " + v2CreatedPurposeId + " }", notNullValue());
+                .body("items.find { it.purposeId == '" + v2CreatedPurposeId + "' }", notNullValue());
     }
 
     /**
@@ -276,56 +286,5 @@ public class ConsentManagementV1V2CompatibilityTest extends ConsentManagementV2T
                 .get(String.class);
 
         org.testng.Assert.assertNotNull(JSONValue.parse(v1ListResponseStr));
-    }
-
-    // =========================================================================
-    // Purpose Versioning Compatibility Tests
-    // =========================================================================
-
-    /**
-     * Verify that a purpose created in V1 shows version field in V2 API.
-     * This test verifies that V1-created purposes are compatible with V2 versioning.
-     */
-    @Test(groups = "wso2.is", dependsOnMethods = {"testPurposesCreatedByBothVersionsAppearInV1List"})
-    public void testV1CreatedPurposeHasVersionInV2() {
-
-        // Find the V1-created purpose by name
-        Response v2GetResponse = getResponseOfGet(PURPOSES_ENDPOINT);
-        v2GetResponse.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("items.find { it.name == '" + v1CreatedPurposeName + "' }.version", notNullValue());
-    }
-
-    /**
-     * Verify that purpose versions created in V2 are accessible from V2 API.
-     * V1 API does not support versioning, which is a V2-only feature.
-     */
-    @Test(groups = "wso2.is", dependsOnMethods = {"testV1CreatedPurposeHasVersionInV2"})
-    public void testPurposeVersionsCreatedInV2() throws IOException {
-
-        // Create a version via V2
-        String versionBody = readResource("create-purpose-version-compat.json")
-                .replace("\"elementId\": 2", "\"elementId\": " + v2CreatedElementId);
-
-        Response v2VersionResponse = getResponseOfPost(
-                PURPOSES_ENDPOINT + "/" + v2CreatedPurposeId + VERSIONS_ENDPOINT, versionBody);
-
-        v2VersionResponse.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .body("version", notNullValue());
-
-        // Verify accessible via V2 versions endpoint
-        getResponseOfGet(PURPOSES_ENDPOINT + "/" + v2CreatedPurposeId + VERSIONS_ENDPOINT)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("items", hasSize(2)); // Auto-snapshot v1 + new v2
-
-        // Note: V1 API doesn't have versioning endpoint, this is V2-only feature
     }
 }

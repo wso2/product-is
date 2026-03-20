@@ -22,6 +22,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -48,8 +49,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
  */
 public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase {
 
-    private static final int NON_EXISTENT_ID = 999999;
-    private static final String NON_EXISTENT_RECEIPT_ID = "non-existent-receipt-id-00000000";
+    private static final String NON_EXISTENT_ID = "ffffffff-ffff-ffff-ffff-ffffffffffff";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ConsentManagementV2FailureTest(TestUserMode userMode) throws Exception {
@@ -142,7 +142,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
 
-        int elementId = createResponse.jsonPath().getInt("id");
+        String elementId = createResponse.jsonPath().getString("elementId");
 
         try {
             // Attempt to create duplicate element with the same name.
@@ -206,7 +206,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
 
-        int purposeId = createResponse.jsonPath().getInt("id");
+        String purposeId = createResponse.jsonPath().getString("purposeId");
 
         try {
             // Attempt to create a duplicate purpose with the same name.
@@ -249,12 +249,76 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
     @Test
     public void testCreatePurposeVersionForNonExistentPurposeReturns404() throws IOException {
 
-        String body = readResource("create-purpose-version.json");
+        String body = readResource("create-purpose-version-empty.json");
         getResponseOfPost(PURPOSES_ENDPOINT + "/" + NON_EXISTENT_ID + VERSIONS_ENDPOINT, body)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testCreatePurposeVersionWithMissingVersionFieldReturns400() throws IOException {
+
+        // Create a temporary purpose to test against.
+        String purposeBody = readResource("create-purpose-for-conflict.json");
+        Response purposeResponse = getResponseOfPost(PURPOSES_ENDPOINT, purposeBody);
+        // If already exists from a prior run, just use NON_EXISTENT_ID to trigger 404 — the 400
+        // schema validation fires before the purpose lookup, so we can use any UUID.
+        String purposeId = purposeResponse.statusCode() == HttpStatus.SC_CREATED
+                ? purposeResponse.jsonPath().getString("purposeId")
+                : NON_EXISTENT_ID;
+
+        try {
+            String body = readResource("create-purpose-version-missing-required.json");
+            getResponseOfPostNoFilter(PURPOSES_ENDPOINT + "/" + purposeId + VERSIONS_ENDPOINT, body)
+                    .then()
+                    .log().ifValidationFails()
+                    .assertThat()
+                    .statusCode(HttpStatus.SC_BAD_REQUEST)
+                    .body("code", notNullValue());
+        } finally {
+            if (!NON_EXISTENT_ID.equals(purposeId)) {
+                getResponseOfDelete(PURPOSES_ENDPOINT + "/" + purposeId);
+            }
+        }
+    }
+
+    @Test
+    public void testSetLatestVersionForNonExistentPurposeReturns404() throws IOException {
+
+        String body = readResource("set-latest-version.json")
+                .replace("VERSION_ID_PLACEHOLDER", NON_EXISTENT_ID);
+        getResponseOfPut(PURPOSES_ENDPOINT + "/" + NON_EXISTENT_ID + "/latest-version", body)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testSetLatestVersionWithNonExistentVersionReturns404() throws IOException {
+
+        // Create a temporary purpose.
+        String purposeBody = readResource("create-purpose-for-conflict.json");
+        Response purposeResponse = getResponseOfPost(PURPOSES_ENDPOINT, purposeBody);
+        String purposeId = purposeResponse.statusCode() == HttpStatus.SC_CREATED
+                ? purposeResponse.jsonPath().getString("purposeId")
+                : NON_EXISTENT_ID;
+
+        try {
+            String body = readResource("set-latest-version.json")
+                    .replace("VERSION_ID_PLACEHOLDER", NON_EXISTENT_ID);
+            getResponseOfPut(PURPOSES_ENDPOINT + "/" + purposeId + "/latest-version", body)
+                    .then()
+                    .log().ifValidationFails()
+                    .assertThat()
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
+        } finally {
+            if (!NON_EXISTENT_ID.equals(purposeId)) {
+                getResponseOfDelete(PURPOSES_ENDPOINT + "/" + purposeId);
+            }
+        }
     }
 
     @Test
@@ -275,7 +339,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
     @Test
     public void testGetNonExistentConsentReturns404() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "/" + NON_EXISTENT_RECEIPT_ID)
+        getResponseOfGet(CONSENTS_ENDPOINT + "/" + NON_EXISTENT_ID)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -285,7 +349,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
     @Test
     public void testRevokeNonExistentConsentReturns404() {
 
-        getResponseOfPost(CONSENTS_ENDPOINT + "/" + NON_EXISTENT_RECEIPT_ID + "/revoke", "")
+        getResponseOfPost(CONSENTS_ENDPOINT + "/" + NON_EXISTENT_ID + "/revoke", "")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -318,11 +382,11 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
-        int elementId = elementResponse.jsonPath().getInt("id");
+        String elementId = elementResponse.jsonPath().getString("elementId");
 
         // Create a purpose that uses this element
         String purposeBody = readResource("create-purpose-with-element.json")
-                .replace("\"elementId\": 1", "\"elementId\": " + elementId);
+                .replace("\"elementId\": 1", "\"elementId\": \"" + elementId + "\"");
         Response purposeResponse = getResponseOfPost(PURPOSES_ENDPOINT, purposeBody);
         purposeResponse.then()
                 .log().ifValidationFails()
@@ -349,7 +413,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
-        int elementId = elementResponse.jsonPath().getInt("id");
+        String elementId = elementResponse.jsonPath().getString("elementId");
 
         // Create a purpose with unique name for this test
         String purposeBody = readResource("create-purpose-delete-purpose.json");
@@ -358,12 +422,13 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
-        int purposeId = purposeResponse.jsonPath().getInt("id");
+        String purposeId = purposeResponse.jsonPath().getString("purposeId");
 
         // Create a consent with this purpose
         String consentBody = readResource("create-consent.json")
-                .replace("\"purposeId\": 1", "\"purposeId\": " + purposeId)
-                .replace("\"elementId\": 1", "\"elementId\": " + elementId);
+                .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + MultitenantUtils.getTenantAwareUsername(authenticatingUserName) + "\"")
+                .replace("\"purposeId\": \"1\"", "\"purposeId\": \"" + purposeId + "\"")
+                .replace("\"elementId\": \"1\"", "\"elementId\": \"" + elementId + "\"");
         getResponseOfPost(CONSENTS_ENDPOINT, consentBody)
                 .then()
                 .log().ifValidationFails()
@@ -391,7 +456,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
-        int elementId = elementResponse.jsonPath().getInt("id");
+        String elementId = elementResponse.jsonPath().getString("elementId");
 
         String secondElementBody = readResource("create-element-delete-version-2.json");
         Response secondElementResponse = getResponseOfPost(ELEMENTS_ENDPOINT, secondElementBody);
@@ -399,7 +464,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
-        int secondElementId = secondElementResponse.jsonPath().getInt("id");
+        String secondElementId = secondElementResponse.jsonPath().getString("elementId");
 
         // Create a purpose with unique name for this test
         String purposeBody = readResource("create-purpose-delete-version.json");
@@ -408,22 +473,32 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
-        int purposeId = purposeResponse.jsonPath().getInt("id");
+        String purposeId = purposeResponse.jsonPath().getString("purposeId");
 
         // Create a version
         String versionBody = readResource("create-purpose-version.json")
-                .replace("\"elementId\": 2", "\"elementId\": " + secondElementId);
+                .replace("\"elementId\": 2", "\"elementId\": \"" + secondElementId + "\"");
         Response versionResponse = getResponseOfPost(PURPOSES_ENDPOINT + "/" + purposeId + "/versions", versionBody);
         versionResponse.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED);
-        int versionId = versionResponse.jsonPath().getInt("id");
+        String versionId = versionResponse.jsonPath().getString("versionId");
+
+        // Set the newly created version as the latest version so consent gets linked to it
+        String setLatestVersionBody = readResource("set-latest-version.json")
+                .replace("VERSION_ID_PLACEHOLDER", versionId);
+        getResponseOfPut(PURPOSES_ENDPOINT + "/" + purposeId + "/latest-version", setLatestVersionBody)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
 
         // Create a consent with this purpose
         String consentBody = readResource("create-consent.json")
-                .replace("\"purposeId\": 1", "\"purposeId\": " + purposeId)
-                .replace("\"elementId\": 1", "\"elementId\": " + elementId);
+                .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + MultitenantUtils.getTenantAwareUsername(authenticatingUserName) + "\"")
+                .replace("\"purposeId\": \"1\"", "\"purposeId\": \"" + purposeId + "\"")
+                .replace("\"elementId\": \"1\"", "\"elementId\": \"" + elementId + "\"");
         getResponseOfPost(CONSENTS_ENDPOINT, consentBody)
                 .then()
                 .log().ifValidationFails()

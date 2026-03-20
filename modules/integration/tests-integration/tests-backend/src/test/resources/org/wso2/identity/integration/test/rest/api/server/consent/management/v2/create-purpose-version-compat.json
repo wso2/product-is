@@ -1,4 +1,5 @@
 {
+  "version": "v2",
   "description": "Updated compat consent elements for compatibility version testing",
   "elements": [
     {
