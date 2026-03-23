@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2022-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -229,8 +229,7 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         application = getApplication(applicationId);
         List<ClaimMappings> claimMappings = application.getClaimConfiguration().getClaimMappings();
         Assert.assertNotNull(claimMappings);
-        Assert.assertEquals(claimMappings.size(), 1);
-        Assert.assertEquals(claimMappings.get(0).getLocalClaim().getUri(), CUSTOM_MAPPED_LOCAL_CLAIM_URI);
+        Assert.assertEquals(claimMappings.size(), 5);
         if (!isLegacyAuthzRuntimeEnabled()) {
             // Authorize few system APIs.
             authorizeSystemAPIs(applicationId, new ArrayList<>(Collections.singletonList("/api/server/v1/oidc/scopes")));
@@ -588,17 +587,29 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
 
     private ClaimConfiguration getCustomLocalClaimMapping() {
 
-        ClaimMappings claimMapping = new ClaimMappings().applicationClaim(CUSTOM_MAPPED_LOCAL_CLAIM_URI);
-        claimMapping.setLocalClaim(new Claim().uri(CUSTOM_MAPPED_LOCAL_CLAIM_URI));
+        // Related to address OIDC scope.
+        RequestedClaimConfiguration countryClaim = new RequestedClaimConfiguration()
+                .claim(new Claim().uri("http://wso2.org/claims/country"));
+        // Related to email OIDC scope.
+        RequestedClaimConfiguration emailClaim = new RequestedClaimConfiguration()
+                .claim(new Claim().uri("http://wso2.org/claims/emailaddress"));
+        // Related to phone OIDC scope.
+        RequestedClaimConfiguration telephoneClaim = new RequestedClaimConfiguration()
+                .claim(new Claim().uri("http://wso2.org/claims/telephone"));
+        // Related to profile OIDC scope.
+        RequestedClaimConfiguration usernameClaim = new RequestedClaimConfiguration()
+                .claim(new Claim().uri("http://wso2.org/claims/username"));
+        // Related to custom_<tenant_domain> OIDC scope.
+        RequestedClaimConfiguration customClaim = new RequestedClaimConfiguration()
+                .claim(new Claim().uri(CUSTOM_MAPPED_LOCAL_CLAIM_URI));
 
-        RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
-        requestedClaim.setClaim(new Claim().uri(CUSTOM_MAPPED_LOCAL_CLAIM_URI));
-
-        ClaimConfiguration claimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
-        claimConfiguration.addClaimMappingsItem(claimMapping);
-        claimConfiguration.addRequestedClaimsItem(requestedClaim);
-
-        return claimConfiguration;
+        return new ClaimConfiguration()
+                .dialect(DialectEnum.LOCAL)
+                .addRequestedClaimsItem(countryClaim)
+                .addRequestedClaimsItem(emailClaim)
+                .addRequestedClaimsItem(telephoneClaim)
+                .addRequestedClaimsItem(usernameClaim)
+                .addRequestedClaimsItem(customClaim);
     }
 
     private void deleteCustomOIDCScope() throws Exception {
