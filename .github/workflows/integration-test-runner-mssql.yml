@@ -39,7 +39,7 @@ jobs:
       mssql:
         image: mcr.microsoft.com/mssql/server:2022-latest
         env:
-          SA_PASSWORD: "Wso2@IS#StrongPassw0rd"
+          SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
           ACCEPT_EULA: Y
           MSSQL_PID: Developer
         ports:
