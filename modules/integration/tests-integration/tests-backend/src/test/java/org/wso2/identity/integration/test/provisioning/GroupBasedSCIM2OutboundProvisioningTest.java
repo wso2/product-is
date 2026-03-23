@@ -203,7 +203,7 @@ public class GroupBasedSCIM2OutboundProvisioningTest extends ISIntegrationTest {
             description = "Enable outbound provisioning on the resident application")
     public void testEnableOutboundProvisioningOnResidentApp() throws Exception {
 
-        enableResidentAppOutboundProvisioning(appMgtClient, IDP_NAME);
+        enableResidentAppOutboundProvisioning(appMgtClient, IDP_NAME, false);
     }
 
     @Test(alwaysRun = true, dependsOnMethods = "testEnableOutboundProvisioningOnResidentApp",

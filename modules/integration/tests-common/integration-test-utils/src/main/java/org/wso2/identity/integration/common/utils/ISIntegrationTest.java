@@ -177,6 +177,32 @@ public class ISIntegrationTest {
     }
 
     /**
+     * Get the root tenant qualified organization endpoint URL. The URL will be in the format
+     * https://<HOST>:<PORT>/t/<ROOT_TENANT_DOMAIN>/o/<SUB_ORG_ID>/endpointURL
+     *
+     * @param endpointURL The endpoint URL with the hostname.
+     * @param rootTenantDomain Root organization tenant domain.
+     * @param organizationId Sub organization id.
+     * @return Tenant perspective endpoint URL with the root tenant domain and the sub organization id with
+     * above-mentioned format.
+     */
+    public String getRootTenantQualifiedOrgURL(String endpointURL, String rootTenantDomain, String organizationId) {
+
+        if (StringUtils.isEmpty(rootTenantDomain)) {
+            throw new IllegalArgumentException("Tenant domain is null or empty");
+        }
+
+        try {
+            String baseURL = getBaseURL();
+            return endpointURL.replace(baseURL,
+                    baseURL + TENANTED_URL_PATH_SPECIFIER + rootTenantDomain +
+                            ORGANIZATION_PATH_SPECIFIER + "/" + organizationId);
+        } catch (XPathExpressionException e) {
+            throw new IllegalStateException("Failed to retrieve base URL from configuration", e);
+        }
+    }
+
+    /**
      * Get the qualified endpoint URL without the hostname for the given tenant.
      *
      * @param endpointURLWithHostname   The endpoint URL without the hostname.
