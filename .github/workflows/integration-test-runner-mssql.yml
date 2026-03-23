@@ -13,7 +13,7 @@ on:
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
-  MSSQL_SA_PASSWORD: "Wso2@IS#StrongPassw0rd"
+  MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
   WSO2_IDENTITY_DB: "WSO2IDENTITY_DB"
   WSO2_SHARED_DB: "WSO2SHARED_DB"
   WSO2_AGENT_IDENTITY_DB: "WSO2AGENTIDENTITY_DB"
