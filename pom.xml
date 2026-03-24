@@ -2685,11 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-<<<<<<< HEAD
-        <carbon.identity.framework.version>7.11.5</carbon.identity.framework.version>
-=======
-        <carbon.identity.framework.version>7.11.13</carbon.identity.framework.version>
->>>>>>> 0f38879ba63b42d4ff7c539370a40f686b20f612
+        <carbon.identity.framework.version>7.11.14</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
