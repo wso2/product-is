@@ -2685,7 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.104</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.13</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2706,7 +2706,7 @@
         <carbon.consent.mgt.version>2.9.0</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.15.4</identity.governance.version>
+        <identity.governance.version>1.16.1</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.12.4</identity.carbon.auth.saml2.version>
@@ -2715,7 +2715,7 @@
         <identity.carbon.auth.rest.version>1.12.6</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.4.68</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.5.1</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.4</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
@@ -2736,7 +2736,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.12.0</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.12.7</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.13.0</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.2.2</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.2.2</org.wso2.identity.event.publishers.version>
@@ -2819,7 +2819,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.5.27</identity.server.api.version>
+        <identity.server.api.version>1.6.3</identity.server.api.version>
         <identity.user.api.version>1.5.3</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
