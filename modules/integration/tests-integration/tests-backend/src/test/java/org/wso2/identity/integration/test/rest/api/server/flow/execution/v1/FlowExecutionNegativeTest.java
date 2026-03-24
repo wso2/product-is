@@ -84,7 +84,15 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
         flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
         flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         addRegistrationFlow(flowManagementClient);
+
+        UserObject secondaryUser = new UserObject()
+                .userName(SECONDARY_TEST_USER)
+                .password(SECONDARY_TEST_USER_PASSWORD)
+                .name(new Name().givenName("Secondary").familyName("User"))
+                .addEmail(new Email().value(SECONDARY_TEST_USER_EMAIL));
+        secondaryTestUserId = scim2RestClient.createUser(secondaryUser);
     }
 
     @AfterClass(alwaysRun = true)
@@ -92,9 +100,13 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
 
         super.conclude();
         disableFlow(REGISTRATION, flowManagementClient);
+        if (secondaryTestUserId != null) {
+            scim2RestClient.deleteUser(secondaryTestUserId);
+        }
         identityGovernanceRestClient.closeHttpClient();
         flowManagementClient.closeHttpClient();
         flowExecutionClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
     }
 
     @Test
@@ -194,6 +206,33 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
         Assert.assertNotNull(error);
         Assert.assertNotNull(error.getCode());
         Assert.assertEquals(error.getCode(), "FE-60008");
+    }
+
+    @Test(dependsOnMethods = "testExecuteFlowWithInvalidInputs")
+    public void testExecuteFlowWithDuplicateUsername() throws Exception {
+
+        initiateFlow();
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("http://wso2.org/claims/username", SECONDARY_TEST_USER);
+        inputs.put("password", "Wso2@Test2");
+        inputs.put("http://wso2.org/claims/emailaddress", "another.dup@example.com");
+        inputs.put("http://wso2.org/claims/givenname", "Another");
+        inputs.put("http://wso2.org/claims/lastname", "User");
+        Object responseObj = flowExecutionClient.executeFlow(getFlowExecutionRequest(flowId, inputs));
+        Assert.assertTrue(responseObj instanceof FlowExecutionResponse,
+                "Expected FlowExecutionResponse for duplicate username but got: " +
+                        (responseObj != null ? responseObj.getClass().getName() : "null"));
+        FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getFlowStatus(), STATUS_INCOMPLETE,
+                "Expected INCOMPLETE status when duplicate username is submitted.");
+        Assert.assertEquals(response.getType().toString(), TYPE_VIEW,
+                "Expected VIEW type when duplicate username is submitted.");
+        Assert.assertNotNull(response.getData());
+        Assert.assertNotNull(response.getData().getAdditionalData(),
+                "Expected additionalData with validation error for duplicate username.");
+        Assert.assertNotNull(response.getData().getAdditionalData().get("error"),
+                "Expected 'error' key in additionalData for duplicate username.");
     }
 
     private static FlowExecutionRequest getFlowExecutionRequest(String flowId,
