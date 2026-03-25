@@ -55,6 +55,7 @@ import org.wso2.identity.integration.test.serviceextensions.model.AllowedOperati
 import org.wso2.identity.integration.test.serviceextensions.model.Operation;
 import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccessTokenActionRequest;
 import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccessTokenEvent;
+import org.wso2.identity.integration.test.serviceextensions.model.Session;
 import org.wso2.identity.integration.test.serviceextensions.model.Tenant;
 import org.wso2.identity.integration.test.serviceextensions.model.TokenRequest;
 import org.wso2.identity.integration.test.serviceextensions.model.User;
@@ -95,6 +96,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
@@ -149,6 +151,7 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
     private List<String> customScopes;
     private List<String> requestedScopes;
     private String sessionDataKey;
+    private String sessionDataKeyConsent;
     private String authorizationCode;
     private String accessToken;
     private String clientId;
@@ -308,6 +311,19 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
 
         response = sendGetRequest(client, locationHeader.getValue());
         locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        assertNotNull(locationHeader, "Redirection URL to the consent page is null.");
+        EntityUtils.consume(response.getEntity());
+
+        sessionDataKeyConsent = URLEncodedUtils.parse(URI.create(locationHeader.getValue()), StandardCharsets.UTF_8)
+                .stream()
+                .filter(param -> "sessionDataKeyConsent".equals(param.getName()))
+                .map(NameValuePair::getValue)
+                .findFirst()
+                .orElse(null);
+        assertNotNull(sessionDataKeyConsent, "sessionDataKeyConsent is null.");
+
+        response = sendApprovalPost(client, sessionDataKeyConsent);
+        locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         assertNotNull(locationHeader, "Redirection URL to the application with authorization code is null.");
         EntityUtils.consume(response.getEntity());
 
@@ -360,6 +376,24 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
         PreIssueAccessTokenActionRequest expectedRequest = getRequest();
 
         assertEquals(actualRequest, expectedRequest);
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testGetAccessTokenWithAuthCodeGrant",
+            description = "Verify that the pre issue access token action request contains the session " +
+                    "with a valid sessionDataKeyConsent for authorization code grant")
+    public void testPreIssueAccessTokenActionRequestContainsSession() throws Exception {
+
+        String actualRequestPayload =
+                serviceExtensionMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
+        PreIssueAccessTokenActionRequest actualRequest =
+                new ObjectMapper().readValue(actualRequestPayload, PreIssueAccessTokenActionRequest.class);
+
+        Session session = actualRequest.getEvent().getSession();
+        assertNotNull(session, "Session object should be present in the action request for authorization code grant.");
+        assertNotNull(session.getSessionDataKeyConsent(),
+                "sessionDataKeyConsent should be present in the session for authorization code grant.");
+        assertFalse(session.getSessionDataKeyConsent().isEmpty(),
+                "sessionDataKeyConsent should not be empty.");
     }
 
     @Test(groups = "wso2.is", description = "Verify that the access token contains the updated scopes " +
@@ -674,7 +708,7 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
                 .grantTypes(new ArrayList<>(Collections.singleton(OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE)))
                 .tokenType(ApplicationConfig.TokenType.JWT)
                 .expiryTime(3600)
-                .skipConsent(true)
+                .skipConsent(false)
                 .build();
 
         ApplicationResponseModel application = addApplication(applicationConfig);
