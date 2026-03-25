@@ -1,0 +1,6 @@
+# Fragment: merge this into existing deployment.toml for tests that require SaaS app creation.
+# Overrides the secure-by-default (false) value so integration tests that create or convert
+# SaaS applications continue to work.
+
+[saas]
+enable_app_creation = true
