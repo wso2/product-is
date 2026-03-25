@@ -2706,7 +2706,7 @@
         <carbon.consent.mgt.version>2.9.0</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.15.6</identity.governance.version>
+        <identity.governance.version>1.15.7</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.12.4</identity.carbon.auth.saml2.version>
@@ -2715,7 +2715,7 @@
         <identity.carbon.auth.rest.version>1.12.6</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.4.71</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.4.72</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.4</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
