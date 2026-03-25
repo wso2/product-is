@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2026, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2019-2025, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -29,12 +29,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
-import org.wso2.identity.integration.test.util.Utils;
-
-import java.io.File;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -55,52 +49,18 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
     public static final String SUBJECT_CLAIM_URI = "http://wso2.org/claims/username";
     private static final int GROUPS_COUNT = 2;
     private static final String GROUP_NAME_PREFIX = "Group_2_";
-    private static final String SAAS_FRAGMENT_TOML = "saas_app_creation_enabled_fragment.toml";
     private String appId;
     private String[] groupIDs;
-    private ServerConfigurationManager serverConfigurationManager;
-    private final TestUserMode userMode;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ApplicationPatchTest(TestUserMode userMode) throws Exception {
 
         super(userMode);
-        this.userMode = userMode;
     }
 
     @BeforeClass(alwaysRun = true)
     public void testStart() throws Exception {
 
-        /*
-         * SaaS app creation is disabled by default. Merge the saas fragment into
-         * deployment.toml and restart.
-         * ServerConfigurationManager requires SUPER_TENANT_ADMIN credentials to manage the server,
-         * so initialize with that context before the restart regardless of the factory user mode.
-         */
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        File defaultConfigFile = getDeploymentTomlFile(Utils.getResidentCarbonHome());
-        File fragmentFile = new File(getISResourceLocation() + File.separator + "application"
-                + File.separator + "mgt" + File.separator + SAAS_FRAGMENT_TOML);
-
-        String existingContent = new String(Files.readAllBytes(defaultConfigFile.toPath()), StandardCharsets.UTF_8);
-        String fragmentContent = new String(Files.readAllBytes(fragmentFile.toPath()), StandardCharsets.UTF_8);
-        String mergedContent = existingContent.trim() + "\n\n" + fragmentContent.trim() + "\n";
-
-        File mergedTomlFile = File.createTempFile("deployment-saas-", ".toml");
-        mergedTomlFile.deleteOnExit();
-        Files.write(mergedTomlFile.toPath(), mergedContent.getBytes(StandardCharsets.UTF_8));
-
-        log.info("Merging saas fragment into existing deployment.toml and restarting the server.");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(mergedTomlFile, defaultConfigFile, true);
-        serverConfigurationManager.restartGracefully();
-
-        log.info("Re-initializing after server restart.");
-        super.init(userMode);
-        this.context = isServer;
-        this.authenticatingUserName = context.getContextTenant().getTenantAdmin().getUserName();
-        this.authenticatingCredential = context.getContextTenant().getTenantAdmin().getPassword();
-        this.tenant = context.getContextTenant().getDomain();
         super.init();
         groupIDs = super.createGroups(GROUPS_COUNT, GROUP_NAME_PREFIX);
     }
@@ -108,14 +68,8 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
     @AfterClass(alwaysRun = true)
     public void testEnd() throws Exception {
 
-        if (groupIDs != null) {
-            super.deleteGroups(groupIDs);
-        }
+        super.deleteGroups(groupIDs);
         super.testConclude();
-        if (serverConfigurationManager != null) {
-            log.info("Restoring deployment.toml to last configuration.");
-            serverConfigurationManager.restoreToLastConfiguration(true);
-        }
     }
 
     @Test
