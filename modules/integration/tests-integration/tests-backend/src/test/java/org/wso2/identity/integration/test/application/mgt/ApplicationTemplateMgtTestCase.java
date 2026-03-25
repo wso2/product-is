@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2018-2026, WSO2 LLC. (https://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  WSO2 LLC. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License.
  *  You may obtain a copy of the License at
@@ -26,13 +26,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.identity.application.common.model.xsd.SpTemplate;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Scanner;
 
 import static org.testng.Assert.assertEquals;
@@ -44,7 +48,10 @@ import static org.testng.Assert.fail;
 
 public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
 
+    private static final String SAAS_FRAGMENT_TOML = "saas_app_creation_enabled_fragment.toml";
+
     private ApplicationManagementServiceClient applicationManagementServiceClient;
+    private ServerConfigurationManager serverConfigurationManager;
     private final String applicationName1 = "TestServiceProvider1";
     private final String applicationName2 = "TestServiceProvider2";
     private final String templateName1 = "TestTemplate1";
@@ -63,6 +70,29 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
+        /*
+         * SaaS app creation is disabled by default. Merge the saas fragment into
+         * deployment.toml and restart.
+         */
+        super.init();
+        File defaultConfigFile = getDeploymentTomlFile(Utils.getResidentCarbonHome());
+        File fragmentFile = new File(getISResourceLocation() + File.separator + "application"
+                + File.separator + "mgt" + File.separator + SAAS_FRAGMENT_TOML);
+
+        String existingContent = new String(Files.readAllBytes(defaultConfigFile.toPath()), StandardCharsets.UTF_8);
+        String fragmentContent = new String(Files.readAllBytes(fragmentFile.toPath()), StandardCharsets.UTF_8);
+        String mergedContent = existingContent.trim() + "\n\n" + fragmentContent.trim() + "\n";
+
+        File mergedTomlFile = File.createTempFile("deployment-saas-", ".toml");
+        mergedTomlFile.deleteOnExit();
+        Files.write(mergedTomlFile.toPath(), mergedContent.getBytes(StandardCharsets.UTF_8));
+
+        log.info("Merging saas fragment into existing deployment.toml and restarting the server.");
+        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager.applyConfigurationWithoutRestart(mergedTomlFile, defaultConfigFile, true);
+        serverConfigurationManager.restartGracefully();
+
+        log.info("Re-initializing after server restart.");
         super.init();
         ConfigurationContext configContext = ConfigurationContextFactory.createConfigurationContextFromFileSystem(null
                 , null);
@@ -80,6 +110,11 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
         applicationManagementServiceClient.deleteApplication(applicationName1);
         applicationManagementServiceClient.deleteApplication(applicationName2);
         applicationManagementServiceClient = null;
+
+        if (serverConfigurationManager != null) {
+            log.info("Restoring deployment.toml to last configuration.");
+            serverConfigurationManager.restoreToLastConfiguration(true);
+        }
     }
 
     @Test(alwaysRun = true, description = "Testing create service provider template")
