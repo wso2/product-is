@@ -64,6 +64,29 @@ get_expected_build_success_count() {
     fi
 }
 
+# Function to fetch PR base branch.
+get_pr_base_branch() {
+  local user=$1
+  local repo=$2
+  local pull_number=$3
+  local pr_api_url="https://api.github.com/repos/$user/$repo/pulls/$pull_number"
+  local auth_header=()
+
+  if [ -n "$GITHUB_TOKEN" ]; then
+    auth_header=(-H "Authorization: Bearer $GITHUB_TOKEN")
+  fi
+
+  local pr_metadata
+  pr_metadata=$(curl -sSL "${auth_header[@]}" -H "Accept: application/vnd.github+json" "$pr_api_url")
+
+  echo "$pr_metadata" | python -c 'import sys, json
+try:
+  data = json.load(sys.stdin)
+  print(data.get("base", {}).get("ref", ""))
+except Exception:
+  print("")'
+}
+
 # Main execution starts here.
 BUILDER_NUMBER=$1
 ENABLED_TESTS=$2
@@ -79,16 +102,28 @@ echo "::warning::Build ran for PR $PR_LINK"
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
 REPO=$(echo $PR_LINK | awk -F'/' '{print $5}')
 PULL_NUMBER=$(echo $PR_LINK | awk -F'/' '{print $7}')
+PR_BASE_BRANCH=$(get_pr_base_branch "$USER" "$REPO" "$PULL_NUMBER")
 
 echo "    USER: $USER"
 echo "    REPO: $REPO"
 echo "    PULL_NUMBER: $PULL_NUMBER"
+if [ -n "$PR_BASE_BRANCH" ]; then
+    echo "    PR_BASE_BRANCH: $PR_BASE_BRANCH"
+else
+    echo "    PR_BASE_BRANCH: <not-resolved>"
+fi
 echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
+if [ -n "$PR_BASE_BRANCH" ]; then
+  echo "Cloning product-is from PR base branch: $PR_BASE_BRANCH"
+  git clone --branch "$PR_BASE_BRANCH" --single-branch https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
+else
+  echo "Unable to resolve PR base branch. Cloning product-is default branch."
+  git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
+fi
 
 disable_tests "$ENABLED_TESTS"
 
@@ -155,7 +190,7 @@ else
   echo ""
   echo "Determining dependency version property key..."
   echo "=========================================================="
-  wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/version_property_finder.py
+  wget https://raw.githubusercontent.com/wso2/product-is/next/.github/scripts/version_property_finder.py
   VERSION_PROPERTY=$(python version_property_finder.py $REPO product-is-$BUILDER_NUMBER 2>&1)
   VERSION_PROPERTY_KEY=""
   if [ "$VERSION_PROPERTY" != "invalid" ]; then

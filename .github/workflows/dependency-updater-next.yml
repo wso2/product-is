@@ -24,10 +24,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Adopt JDK 11
+      - name: Set up Adopt JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: "11"
+          java-version: "21"
           distribution: "adopt"
       - name: Check $JAVA_HOME
         run: |
@@ -44,57 +44,51 @@ jobs:
             ${{ runner.os }}-maven-${{ env.cache-name }}-
             ${{ runner.os }}-maven-
             ${{ runner.os }}-
-      - name: Update Dependencies
+      - name: Clone Repository
         id: builder_step
         run: |
           echo "REPO_NAME=${{ env.REPOSITORY }}" >> "$GITHUB_OUTPUT"
-          echo ""
           echo "Starting dependency upgrade"
           echo "=========================================================="
-          echo ""
           echo "Clean up any existing files"
           echo "=========================================================="
           rm -rf ${{ env.REPOSITORY }}
-          echo ""
           echo "Cloning: https://github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}"
           echo "=========================================================="
           git clone 'https://github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}'.git'
           cd ${{ env.REPOSITORY }}
-          echo ""
           echo 'Add remote: '${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'as https://github.com/'${{ env.PRODUCT_REPOSITORY_PUBLIC }}
           echo "=========================================================="
           git remote add ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'https://@github.com/'${{ env.PRODUCT_REPOSITORY_PUBLIC }}
-          echo ""
-          echo 'Fetching:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}
+          echo "Fetching: ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}"
           echo "=========================================================="
           git fetch ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}
-          echo ""
-          echo 'Checking out:' ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} 'next branch'
+          echo "Checking out: ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }} next branch"
           echo "=========================================================="
           git checkout -b ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }} ${{ env.REMOTE_PRODUCT_REPOSITORY_PUBLIC }}'/next'
 
-          echo ""
-          echo 'Updating dependencies'
+      - name: Update Dependencies
+        working-directory: ${{ env.REPOSITORY }}
+        run: |
+          echo "Updating dependencies"
           echo "=========================================================="
-          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
-          echo ""
-          echo 'Available updates'
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*,org.wso2.carbon.multitenancy:*,org.wso2.carbon.registry:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          echo "Available updates"
           echo "=========================================================="
           git diff --color > dependency_updates.diff
           cat dependency_updates.diff
 
-          echo ""
-          echo 'Build'
+      - name: Build
+        working-directory: ${{ env.REPOSITORY }}
+        run: |
+          echo "Building project"
           echo "=========================================================="
-          mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-build.log
+          mvn clean install -DskipTests | tee mvn-build.log
           PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-          PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
           PR_BUILD_FINAL_RESULT=$(
             echo "==========================================================="
             echo "product-is BUILD $PR_BUILD_STATUS"
             echo "=========================================================="
-            echo ""
-            echo "$PR_TEST_RESULT"
           )
           PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
           PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
@@ -106,26 +100,58 @@ jobs:
             exit 1
           fi
 
-          if [ -s dependency_updates.diff ]
-          then
+      - name: Run Integration Tests
+        working-directory: ${{ env.REPOSITORY }}
+        run: |
+          echo "Running integration tests"
+          echo "=========================================================="
+          cd modules/integration/tests-integration/tests-backend
+          mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-test.log
+          PR_TEST_STATUS=$(cat mvn-test.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+          PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-test.log)
+          PR_BUILD_FINAL_RESULT=$(
+            echo "==========================================================="
+            echo "product-is TESTS $PR_TEST_STATUS"
+            echo "=========================================================="
             echo ""
-            echo 'Commit Changes'
+            echo "$PR_TEST_RESULT"
+          )
+          PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
+          PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
+          echo "::warning::$PR_BUILD_RESULT_LOG"
+          PR_TEST_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-test.log | wc -l)
+          if [ "$PR_TEST_SUCCESS_COUNT" != "17" ]; then
+            echo "Integration tests not successfull. Aborting."
+            echo "::error::Integration tests not successfull. Check artifacts for logs."
+            exit 1
+          fi
+
+      - name: Commit and Push Changes
+        working-directory: ${{ env.REPOSITORY }}
+        run: |
+          if [ -s dependency_updates.diff ]; then
+            echo "Committing changes"
             echo "=========================================================="
             git config --global user.email ${{ env.GIT_EMAIL }}
             git config --global user.name ${{ env.GIT_USERNAME }}
             git commit -a -m 'Bump dependencies (next branch) from '${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
             git remote rm origin
             git remote add origin 'https://'${{ secrets.PAT }}'@github.com/'${{ env.PRODUCT_REPOSITORY_FORKED }}
-
-            echo ""
-            echo 'Push Changes'
+            echo "Pushing changes"
             echo "=========================================================="
             git push -u origin ${{ env.DEPENDENCY_UPGRADE_BRANCH_NAME }}
-
-            echo ""
-            echo 'Send Pull Request'
+          else
+            echo "There are no dependency updates available"
             echo "=========================================================="
+            exit 0
+          fi
 
+      - name: Send Pull Request
+        working-directory: ${{ env.REPOSITORY }}
+        run: |
+          if [ -s dependency_updates.diff ]; then
+            echo "Sending Pull Request"
+            echo "=========================================================="
             TITLE="[Next Branch] Bump Dependencies #"${{ env.BUILD_NUMBER }}
             RESPONSE=$(curl -s -w "%{http_code}" -k -X \
             POST https://api.github.com/repos/${{ env.PRODUCT_REPOSITORY_PUBLIC }}/pulls \
@@ -137,11 +163,6 @@ jobs:
             if [[ $STATUS == "201" ]]; then
               echo "PR=$(echo $RESPONSE_BODY | jq -r '.html_url')" >> $GITHUB_ENV
             fi
-          else
-            echo ""
-            echo "There are no dependency updates available"
-            echo "=========================================================="
-            exit 0
           fi
       - name: Archive dependency diff file
         if: always()
@@ -157,6 +178,14 @@ jobs:
           name: mvn-build.log
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
+          if-no-files-found: warn
+      - name: Archive maven-test-log file
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mvn-test.log
+          path: |
+            ${{steps.builder_step.outputs.REPO_NAME}}/modules/integration/tests-integration/tests-backend/mvn-test.log
           if-no-files-found: warn
       - name: Archive heap dump
         if: always()
