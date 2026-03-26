@@ -57,6 +57,9 @@ public class SaasAppCreationInitializerTestCase extends ISIntegrationTest {
     @AfterTest(alwaysRun = true)
     public void disableSaasAppCreation() throws Exception {
 
+        if (serverConfigurationManager == null) {
+            return;
+        }
         super.init();
         serverConfigurationManager.restoreToLastConfiguration(false);
         serverConfigurationManager.restartGracefully();

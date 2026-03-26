@@ -324,16 +324,6 @@
         </classes>
     </test>
 
-    <!--This test block enables [saas] enable_app_creation = true for tests that require creating or converting
-        SaaS applications.-->
-    <test name="is-tests-saas-app-creation" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.application.mgt.SaasAppCreationInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationPatchTest"/>
-        </classes>
-    </test>
-
 <!--    <test name="is-test-session-mgt" preserve-order="true" parallel="false" group-by-instances="true">-->
 <!--        <classes>-->
 <!--            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtTest"/>-->
@@ -560,6 +550,14 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateValidationTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateActionTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateWebhookTest"/>
+        </classes>
+    </test>
+
+    <test name="is-tests-saas-app-creation" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.application.mgt.SaasAppCreationInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationPatchTest"/>
         </classes>
     </test>
 </suite>
