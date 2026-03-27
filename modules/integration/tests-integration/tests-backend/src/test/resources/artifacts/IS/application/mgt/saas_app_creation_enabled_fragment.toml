@@ -1,0 +1,5 @@
+# Fragment: append to deployment.toml at suite startup to enable SaaS app creation for integration tests.
+# Overrides the secure-by-default (false) value so tests that create or convert SaaS applications work.
+
+[saas]
+enable_app_creation = true
