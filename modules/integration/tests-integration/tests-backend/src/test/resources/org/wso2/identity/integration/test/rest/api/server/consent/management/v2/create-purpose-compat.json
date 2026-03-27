@@ -1,0 +1,11 @@
+{
+  "name": "Compat User Authentication",
+  "description": "Purpose created via V2 API for compatibility testing",
+  "type": "Compat Identity",
+  "elements": [
+    {
+      "elementId": 1,
+      "mandatory": true
+    }
+  ]
+}
