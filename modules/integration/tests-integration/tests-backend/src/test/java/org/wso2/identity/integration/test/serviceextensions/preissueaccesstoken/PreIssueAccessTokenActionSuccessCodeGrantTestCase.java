@@ -376,17 +376,6 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
         PreIssueAccessTokenActionRequest expectedRequest = getRequest();
 
         assertEquals(actualRequest, expectedRequest);
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = "testGetAccessTokenWithAuthCodeGrant",
-            description = "Verify that the pre issue access token action request contains the session " +
-                    "with a valid sessionDataKeyConsent for authorization code grant")
-    public void testPreIssueAccessTokenActionRequestContainsSession() throws Exception {
-
-        String actualRequestPayload =
-                serviceExtensionMockServer.getReceivedRequestPayload(MOCK_SERVER_ENDPOINT_RESOURCE_PATH);
-        PreIssueAccessTokenActionRequest actualRequest =
-                new ObjectMapper().readValue(actualRequestPayload, PreIssueAccessTokenActionRequest.class);
 
         Session session = actualRequest.getEvent().getSession();
         assertNotNull(session, "Session object should be present in the action request for authorization code grant.");
