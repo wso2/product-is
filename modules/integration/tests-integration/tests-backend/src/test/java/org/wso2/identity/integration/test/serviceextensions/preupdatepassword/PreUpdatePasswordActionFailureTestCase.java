@@ -228,21 +228,21 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 PreUpdatePasswordEvent.Action.UPDATE);
     }
 
-//     @Test(dependsOnMethods = "testAdminUpdatePassword",
-//             description = "Verify the user password reset with pre update password action")
-//     public void testUserResetPassword() throws Exception {
+    @Test(dependsOnMethods = "testAdminUpdatePassword",
+            description = "Verify the user password reset with pre update password action")
+    public void testUserResetPassword() throws Exception {
 
-//         String passwordRecoveryFormURL = retrievePasswordResetURL(application);
-//         submitPasswordRecoveryForm(passwordRecoveryFormURL, TEST_USER1_USERNAME);
+        String passwordRecoveryFormURL = retrievePasswordResetURL(application);
+        submitPasswordRecoveryForm(passwordRecoveryFormURL, TEST_USER1_USERNAME);
 
-//         String recoveryLink = getRecoveryURLFromEmail();
-//         HttpResponse postResponse = resetPassword(recoveryLink, RESET_PASSWORD);
-//         Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK);
-//         assertErrors(postResponse);
+        String recoveryLink = getRecoveryURLFromEmail();
+        HttpResponse postResponse = resetPassword(recoveryLink, RESET_PASSWORD);
+        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK);
+        assertErrors(postResponse);
 
-//         assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
-//                 PreUpdatePasswordEvent.Action.RESET);
-//     }
+        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.RESET);
+    }
 
 //    @Test(dependsOnMethods = "testAdminUpdatePassword",
 //            description = "Verify the user password recovery flow failure with pre update password action")
@@ -271,7 +271,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
 //        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
 //    }
 
-    @Test(dependsOnMethods = "testAdminUpdatePassword",
+    @Test(dependsOnMethods = "testUserResetPassword",
             description = "Verify the admin force password reset with pre update password action")
     public void testAdminForcePasswordReset() throws Exception {
 
