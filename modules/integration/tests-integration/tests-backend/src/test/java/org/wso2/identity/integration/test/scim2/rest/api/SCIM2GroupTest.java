@@ -227,7 +227,6 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
         ServiceProvider serviceProviderApp = new ServiceProvider();
         serviceProviderApp.setApplicationName(APPLICATION_NAME);
         serviceProviderApp.setDescription("sample-description");
-        serviceProviderApp.setSaasApp(true);
         applicationManagementServiceClient.createApplication(serviceProviderApp);
         serviceProviderApp = applicationManagementServiceClient.getApplication(APPLICATION_NAME);
 
