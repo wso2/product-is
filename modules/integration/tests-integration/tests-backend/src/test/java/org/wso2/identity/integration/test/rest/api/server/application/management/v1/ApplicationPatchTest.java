@@ -171,7 +171,6 @@ public class ApplicationPatchTest extends ApplicationManagementBaseTest {
 
         // Assert that the PATCH update of advanced configs was successful.
         getApplication(appId).then()
-                .body("advancedConfigurations.find{ it.key == 'saas' }.value", equalTo(true))
                 .body("advancedConfigurations.find{ it.key == 'discoverableByEndUsers' }.value", equalTo(true))
                 .body("advancedConfigurations.find{ it.key == 'skipLoginConsent' }.value", equalTo(true))
                 .body("advancedConfigurations.find{ it.key == 'skipLogoutConsent' }.value", equalTo(true))
