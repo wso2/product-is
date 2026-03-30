@@ -1,4 +1,4 @@
-name: Integration Test Runner MSSQL
+name: Integration Test Runner - DB Testing
 on:
   workflow_dispatch:
     inputs:
@@ -10,14 +10,23 @@ on:
         description: "URL to a pre-built WSO2 IS zip pack to test against (optional). If provided, the downloaded pack replaces the one built from source."
         default:
         required: false
+      database_type:
+        description: "Database type to use for integration tests"
+        required: true
+        default: "mssql"
+        type: choice
+        options:
+          - mssql
+          - mysql
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
-  MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
   WSO2_IDENTITY_DB: "WSO2IDENTITY_DB"
   WSO2_SHARED_DB: "WSO2SHARED_DB"
   WSO2_AGENT_IDENTITY_DB: "WSO2AGENTIDENTITY_DB"
   MSSQL_JDBC_VERSION: "12.8.1.jre11"
+  MYSQL_JDBC_VERSION: "8.0.33"
 
 jobs:
   run-test-runners:
@@ -35,24 +44,9 @@ jobs:
           - runner_id: 4
             tests: "is-tests-with-individual-configuration-changes"
 
-    services:
-      mssql:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
-          ACCEPT_EULA: Y
-          MSSQL_PID: Developer
-        ports:
-          - 1433:1433
-        options: >-
-          --health-cmd "/opt/mssql-tools18/bin/sqlcmd -S localhost -U SA -P 'Wso2@IS#StrongPassw0rd' -Q 'SELECT 1' -C"
-          --health-interval 10s
-          --health-timeout 10s
-          --health-retries 15
-
     steps:
       - name: Print Input
-        run: echo "Running the Test Runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
+        run: echo "Running the Test Runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }} with database - ${{ github.event.inputs.database_type }}"
 
       - name: Comment build info
         if: ${{ matrix.runner_id == 1 && github.event.inputs.pr != '' }}
@@ -62,7 +56,7 @@ jobs:
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments \
             -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' \
-            -d '{"body":"MSSQL PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
+            -d '{"body":"${{ github.event.inputs.database_type }} PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
 
       - uses: actions/checkout@v4
 
@@ -87,7 +81,7 @@ jobs:
           path: |
             ~/.m2
             !~/.m2/repository/org/wso2/is/wso2is
-          key: ${{ runner.os }}-mssql-runner-${{ env.CURRENT_MONTH }}-${{ matrix.runner_id }}
+          key: ${{ runner.os }}-${{ github.event.inputs.database_type }}-runner-${{ env.CURRENT_MONTH }}-${{ matrix.runner_id }}
 
       - name: Apply PR diff (if PR provided)
         if: ${{ github.event.inputs.pr != '' }}
@@ -143,7 +137,20 @@ jobs:
           echo "IS_DIST=$IS_DIST" >> $GITHUB_ENV
           echo "IS distribution located at: $IS_DIST"
 
+      # ── MSSQL setup ──────────────────────────────────────────────────────────
+
+      - name: Start MSSQL
+        if: ${{ github.event.inputs.database_type == 'mssql' }}
+        run: |
+          docker run -d --name mssql \
+            -e SA_PASSWORD="$DB_PASSWORD" \
+            -e ACCEPT_EULA=Y \
+            -e MSSQL_PID=Developer \
+            -p 1433:1433 \
+            mcr.microsoft.com/mssql/server:2022-latest
+
       - name: Install mssql-tools18
+        if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft-prod.gpg > /dev/null
           curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
@@ -152,10 +159,11 @@ jobs:
           echo "/opt/mssql-tools18/bin" >> $GITHUB_PATH
 
       - name: Wait for MSSQL and create databases
+        if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           echo "Waiting for MSSQL to be ready..."
           for i in $(seq 1 30); do
-            if sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -Q "SELECT 1" -C 2>/dev/null; then
+            if sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -Q "SELECT 1" -C 2>/dev/null; then
               echo "MSSQL is ready."
               break
             fi
@@ -163,25 +171,27 @@ jobs:
             sleep 5
           done
           echo "Creating WSO2 IS databases..."
-          sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -Q "CREATE DATABASE [$WSO2_IDENTITY_DB]" -C
-          sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -Q "CREATE DATABASE [$WSO2_SHARED_DB]" -C
-          sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -Q "CREATE DATABASE [$WSO2_AGENT_IDENTITY_DB]" -C
+          sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -Q "CREATE DATABASE [$WSO2_IDENTITY_DB]" -C
+          sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -Q "CREATE DATABASE [$WSO2_SHARED_DB]" -C
+          sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -Q "CREATE DATABASE [$WSO2_AGENT_IDENTITY_DB]" -C
           echo "Databases created successfully."
 
       - name: Run MSSQL schema scripts
+        if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           echo "IS distribution directory: $IS_DIST"
           echo "Running shared DB schema script..."
-          sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -d "$WSO2_SHARED_DB" -i "$IS_DIST/dbscripts/mssql.sql" -C
+          sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -d "$WSO2_SHARED_DB" -i "$IS_DIST/dbscripts/mssql.sql" -C
           echo "Running identity DB schema script..."
-          sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -d "$WSO2_IDENTITY_DB" -i "$IS_DIST/dbscripts/identity/mssql.sql" -C
+          sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -d "$WSO2_IDENTITY_DB" -i "$IS_DIST/dbscripts/identity/mssql.sql" -C
           echo "Running agent identity DB schema script..."
-          sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -d "$WSO2_AGENT_IDENTITY_DB" -i "$IS_DIST/dbscripts/identity/agent/mssql.sql" -C
+          sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -d "$WSO2_AGENT_IDENTITY_DB" -i "$IS_DIST/dbscripts/identity/agent/mssql.sql" -C
           echo "Running consent schema script..."
-          sqlcmd -S localhost,1433 -U SA -P "$MSSQL_SA_PASSWORD" -d "$WSO2_IDENTITY_DB" -i "$IS_DIST/dbscripts/consent/mssql.sql" -C
+          sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -d "$WSO2_IDENTITY_DB" -i "$IS_DIST/dbscripts/consent/mssql.sql" -C
           echo "All schema scripts executed successfully."
 
       - name: Add MSSQL JDBC driver to IS distribution
+        if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           echo "Downloading MSSQL JDBC driver version $MSSQL_JDBC_VERSION..."
           mvn dependency:get -q -Dartifact=com.microsoft.sqlserver:mssql-jdbc:$MSSQL_JDBC_VERSION
@@ -190,13 +200,14 @@ jobs:
           echo "MSSQL JDBC driver added: $IS_DIST/repository/components/lib/mssql-jdbc-$MSSQL_JDBC_VERSION.jar"
 
       - name: Configure deployment.toml for MSSQL
+        if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           DEPLOYMENT_TOML="$IS_DIST/repository/conf/deployment.toml"
           echo "Configuring $DEPLOYMENT_TOML for MSSQL..."
           python3 << PYEOF
           import re, os
 
-          mssql_sa_password = "${MSSQL_SA_PASSWORD}"
+          mssql_sa_password = "${DB_PASSWORD}"
           ws_identity_db = "${WSO2_IDENTITY_DB}"
           ws_shared_db = "${WSO2_SHARED_DB}"
           ws_agent_db = "${WSO2_AGENT_IDENTITY_DB}"
@@ -234,6 +245,117 @@ jobs:
           echo "Verifying deployment.toml MSSQL configuration:"
           grep -A4 '\[database\.identity_db\]' "$DEPLOYMENT_TOML"
           grep -A4 '\[database\.shared_db\]' "$DEPLOYMENT_TOML"
+
+      # ── MySQL setup ───────────────────────────────────────────────────────────
+
+      - name: Start MySQL
+        if: ${{ github.event.inputs.database_type == 'mysql' }}
+        run: |
+          docker run -d --name mysql \
+            -e MYSQL_ROOT_PASSWORD="$DB_PASSWORD" \
+            -p 3306:3306 \
+            mysql:8.0
+
+      - name: Install MySQL client
+        if: ${{ github.event.inputs.database_type == 'mysql' }}
+        run: sudo apt-get install -y mysql-client
+
+      - name: Wait for MySQL and create databases
+        if: ${{ github.event.inputs.database_type == 'mysql' }}
+        run: |
+          echo "Waiting for MySQL to be ready..."
+          MYSQL_READY=false
+          for i in $(seq 1 30); do
+            if mysqladmin ping -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" --silent 2>/dev/null; then
+              echo "MySQL is ready."
+              MYSQL_READY=true
+              break
+            fi
+            echo "Attempt $i: MySQL not ready yet, retrying in 5 seconds..."
+            sleep 5
+          done
+          if [ "$MYSQL_READY" != "true" ]; then
+            echo "ERROR: MySQL did not become ready after 30 attempts."
+            docker logs mysql || true
+            exit 1
+          fi
+          echo "Creating WSO2 IS databases..."
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_IDENTITY_DB\` CHARACTER SET latin1;"
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_SHARED_DB\` CHARACTER SET latin1;"
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_AGENT_IDENTITY_DB\` CHARACTER SET latin1;"
+          echo "Databases created successfully."
+
+      - name: Run MySQL schema scripts
+        if: ${{ github.event.inputs.database_type == 'mysql' }}
+        run: |
+          echo "IS distribution directory: $IS_DIST"
+          echo "Running shared DB schema script..."
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" "$WSO2_SHARED_DB" < "$IS_DIST/dbscripts/mysql.sql"
+          echo "Running identity DB schema script..."
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" "$WSO2_IDENTITY_DB" < "$IS_DIST/dbscripts/identity/mysql.sql"
+          echo "Running agent identity DB schema script..."
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" "$WSO2_AGENT_IDENTITY_DB" < "$IS_DIST/dbscripts/identity/agent/mysql.sql"
+          echo "Running consent schema script..."
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" "$WSO2_IDENTITY_DB" < "$IS_DIST/dbscripts/consent/mysql.sql"
+          echo "All schema scripts executed successfully."
+
+      - name: Add MySQL JDBC driver to IS distribution
+        if: ${{ github.event.inputs.database_type == 'mysql' }}
+        run: |
+          echo "Downloading MySQL JDBC driver version $MYSQL_JDBC_VERSION..."
+          mvn dependency:get -q -Dartifact=com.mysql:mysql-connector-j:$MYSQL_JDBC_VERSION
+          JDBC_JAR="$HOME/.m2/repository/com/mysql/mysql-connector-j/$MYSQL_JDBC_VERSION/mysql-connector-j-$MYSQL_JDBC_VERSION.jar"
+          cp "$JDBC_JAR" "$IS_DIST/repository/components/lib/"
+          echo "MySQL JDBC driver added: $IS_DIST/repository/components/lib/mysql-connector-j-$MYSQL_JDBC_VERSION.jar"
+
+      - name: Configure deployment.toml for MySQL
+        if: ${{ github.event.inputs.database_type == 'mysql' }}
+        run: |
+          DEPLOYMENT_TOML="$IS_DIST/repository/conf/deployment.toml"
+          echo "Configuring $DEPLOYMENT_TOML for MySQL..."
+          python3 << PYEOF
+          import re, os
+
+          mysql_root_password = "${DB_PASSWORD}"
+          ws_identity_db = "${WSO2_IDENTITY_DB}"
+          ws_shared_db = "${WSO2_SHARED_DB}"
+          ws_agent_db = "${WSO2_AGENT_IDENTITY_DB}"
+          deployment_toml = "${DEPLOYMENT_TOML}"
+
+          with open(deployment_toml, "r") as f:
+              content = f.read()
+
+          # Replace [database.identity_db] section
+          content = re.sub(
+              r'\[database\.identity_db\](\s*\n[^\[]+)',
+              f'[database.identity_db]\ntype = "mysql"\nurl = "jdbc:mysql://localhost:3306/{ws_identity_db}?autoReconnect=true"\nusername = "root"\npassword = "{mysql_root_password}"\n',
+              content
+          )
+
+          # Replace [database.shared_db] section
+          content = re.sub(
+              r'\[database\.shared_db\](\s*\n[^\[]+)',
+              f'[database.shared_db]\ntype = "mysql"\nurl = "jdbc:mysql://localhost:3306/{ws_shared_db}?autoReconnect=true"\nusername = "root"\npassword = "{mysql_root_password}"\n',
+              content
+          )
+
+          # Replace [datasource.AgentIdentity] section
+          content = re.sub(
+              r'\[datasource\.AgentIdentity\](\s*\n[^\[]+)',
+              f'[datasource.AgentIdentity]\nid = "AgentIdentity"\nurl = "jdbc:mysql://localhost:3306/{ws_agent_db}?autoReconnect=true"\nusername = "root"\npassword = "{mysql_root_password}"\ndriver = "com.mysql.cj.jdbc.Driver"\n',
+              content
+          )
+
+          with open(deployment_toml, "w") as f:
+              f.write(content)
+
+          print("deployment.toml configured for MySQL successfully.")
+          PYEOF
+          echo "Verifying deployment.toml MySQL configuration:"
+          grep -A4 '\[database\.identity_db\]' "$DEPLOYMENT_TOML"
+          grep -A4 '\[database\.shared_db\]' "$DEPLOYMENT_TOML"
+
+      # ── common steps ──────────────────────────────────────────────────────────
 
       - name: Disable tests not in matrix
         run: |
@@ -282,7 +404,7 @@ jobs:
 
           PR_BUILD_FINAL_RESULT=$(
             echo "==========================================================="
-            echo "product-is MSSQL BUILD $PR_BUILD_STATUS"
+            echo "product-is ${{ github.event.inputs.database_type }} BUILD $PR_BUILD_STATUS"
             echo "=========================================================="
             echo ""
             echo "$PR_TEST_RESULT"
@@ -301,8 +423,8 @@ jobs:
 
           PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" ../../mvn-integration-test.log | wc -l)
           if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
-            echo "MSSQL Integration test build not successful. Aborting."
-            echo "::error::MSSQL Integration test build not successful. Check artifacts for logs."
+            echo "${{ github.event.inputs.database_type }} Integration test build not successful. Aborting."
+            echo "::error::${{ github.event.inputs.database_type }} Integration test build not successful. Check artifacts for logs."
             exit 1
           fi
 
@@ -310,7 +432,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mssql-mvn-build-log-${{ matrix.runner_id }}
+          name: ${{ github.event.inputs.database_type }}-mvn-build-log-${{ matrix.runner_id }}
           path: |
             mvn-build.log
             mvn-integration-test.log
@@ -320,7 +442,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mssql-surefire-report-${{ matrix.runner_id }}
+          name: ${{ github.event.inputs.database_type }}-surefire-report-${{ matrix.runner_id }}
           path: |
             modules/integration/**/surefire-reports
           if-no-files-found: warn
@@ -329,7 +451,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mssql-heap-dump-${{ matrix.runner_id }}
+          name: ${{ github.event.inputs.database_type }}-heap-dump-${{ matrix.runner_id }}
           path: |
             **/**.hprof
           if-no-files-found: ignore
@@ -347,7 +469,7 @@ jobs:
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments \
             -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' \
-            -d '{"body":"MSSQL PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: ${{ needs.run-test-runners.result }}"}'
+            -d '{"body":"${{ github.event.inputs.database_type }} PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: ${{ needs.run-test-runners.result }}"}'
       - name: Approve PR
         if: ${{ needs.run-test-runners.result == 'success' }}
         run: |
@@ -356,4 +478,4 @@ jobs:
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/pulls/$pr_number/reviews \
             -H 'Authorization:token ${{secrets.PR_BUILDER_COMMENT}}' \
-            -d '{"body":"Approving the pull request based on successful MSSQL pr build https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","event":"APPROVE"}'
+            -d '{"body":"Approving the pull request based on successful ${{ github.event.inputs.database_type }} pr build https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","event":"APPROVE"}'
