@@ -52,6 +52,7 @@
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.AccountLockEnabledTestCase"/>
             <class name="org.wso2.identity.integration.test.identity.mgt.IdentityGovernanceTestCase"/>
+            <class name="org.wso2.identity.integration.test.identity.mgt.PasswordExpirationTestCase"/>
             <!--Disabling since the Challenge Question is provided as a connector and it does not exist in the product by default.-->
             <!--<class name="org.wso2.identity.integration.test.challenge.questions.mgt.ChallengeQuestionManagementAdminServiceTestCase"/>-->
 
