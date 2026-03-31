@@ -2685,7 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.122</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.124</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2841,7 +2841,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.22</carbon.kernel.version>
+        <carbon.kernel.version>4.12.25</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.1</identity.verification.version>
@@ -2874,7 +2874,7 @@
         <jibx.wso2.version>1.2.1.wso2v1</jibx.wso2.version>
         <axis2.jibx.wso2.version>1.6.1.wso2v11</axis2.jibx.wso2.version>
         <axis2.jaxb.wso2.version>${axis2.wso2.version}</axis2.jaxb.wso2.version>
-        <axis2-transports.version>2.0.0-wso2v83</axis2-transports.version>
+        <axis2-transports.version>2.0.0-wso2v85</axis2-transports.version>
         <h2database.wso2.version>2.2.224.wso2v2</h2database.wso2.version>
         <slf4j.version>1.7.28</slf4j.version>
 
