@@ -246,6 +246,22 @@ jobs:
           grep -A4 '\[database\.identity_db\]' "$DEPLOYMENT_TOML"
           grep -A4 '\[database\.shared_db\]' "$DEPLOYMENT_TOML"
 
+      - name: Export MSSQL database env vars for IS TOML overrides
+        if: ${{ github.event.inputs.database_type == 'mssql' }}
+        run: |
+          echo "IDENTITY_DATABASE_DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver" >> $GITHUB_ENV
+          echo "IDENTITY_DATABASE_URL=jdbc:sqlserver://localhost:1433;databaseName=${WSO2_IDENTITY_DB};SendStringParametersAsUnicode=false" >> $GITHUB_ENV
+          echo "IDENTITY_DATABASE_USERNAME=SA" >> $GITHUB_ENV
+          echo "IDENTITY_DATABASE_PASSWORD=${DB_PASSWORD}" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_URL=jdbc:sqlserver://localhost:1433;databaseName=${WSO2_SHARED_DB};SendStringParametersAsUnicode=false" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_USERNAME=SA" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_PASSWORD=${DB_PASSWORD}" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_DRIVER=com.microsoft.sqlserver.jdbc.SQLServerDriver" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_URL=jdbc:sqlserver://localhost:1433;databaseName=${WSO2_AGENT_IDENTITY_DB};SendStringParametersAsUnicode=false" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_USERNAME=SA" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_PASSWORD=${DB_PASSWORD}" >> $GITHUB_ENV
+
       # ── MySQL setup ───────────────────────────────────────────────────────────
 
       - name: Start MySQL
@@ -354,6 +370,22 @@ jobs:
           echo "Verifying deployment.toml MySQL configuration:"
           grep -A4 '\[database\.identity_db\]' "$DEPLOYMENT_TOML"
           grep -A4 '\[database\.shared_db\]' "$DEPLOYMENT_TOML"
+
+      - name: Export MySQL database env vars for IS TOML overrides
+        if: ${{ github.event.inputs.database_type == 'mysql' }}
+        run: |
+          echo "IDENTITY_DATABASE_DRIVER=com.mysql.cj.jdbc.Driver" >> $GITHUB_ENV
+          echo "IDENTITY_DATABASE_URL=jdbc:mysql://localhost:3306/${WSO2_IDENTITY_DB}?autoReconnect=true" >> $GITHUB_ENV
+          echo "IDENTITY_DATABASE_USERNAME=root" >> $GITHUB_ENV
+          echo "IDENTITY_DATABASE_PASSWORD=${DB_PASSWORD}" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_DRIVER=com.mysql.cj.jdbc.Driver" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_URL=jdbc:mysql://localhost:3306/${WSO2_SHARED_DB}?autoReconnect=true" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_USERNAME=root" >> $GITHUB_ENV
+          echo "SHARED_DATABASE_PASSWORD=${DB_PASSWORD}" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_DRIVER=com.mysql.cj.jdbc.Driver" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_URL=jdbc:mysql://localhost:3306/${WSO2_AGENT_IDENTITY_DB}?autoReconnect=true" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_USERNAME=root" >> $GITHUB_ENV
+          echo "AGENTIDENTITY_DATABASE_PASSWORD=${DB_PASSWORD}" >> $GITHUB_ENV
 
       # ── common steps ──────────────────────────────────────────────────────────
 
