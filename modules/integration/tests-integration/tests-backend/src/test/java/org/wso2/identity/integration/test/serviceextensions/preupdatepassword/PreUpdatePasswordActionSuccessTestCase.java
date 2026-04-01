@@ -244,21 +244,21 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
                 PreUpdatePasswordEvent.Action.UPDATE);
     }
 
-//     @Test(dependsOnMethods = "testApplicationUpdatePassword",
-//             description = "Verify the user password reset with pre update password action")
-//     public void testUserResetPassword() throws Exception {
+    @Test(dependsOnMethods = "testApplicationUpdatePassword",
+            description = "Verify the user password reset with pre update password action")
+    public void testUserResetPassword() throws Exception {
 
-//         String passwordRecoveryFormURL = retrievePasswordResetURL(application);
-//         submitPasswordRecoveryForm(passwordRecoveryFormURL, TEST_USER1_USERNAME);
+        String passwordRecoveryFormURL = retrievePasswordResetURL(application);
+        submitPasswordRecoveryForm(passwordRecoveryFormURL, TEST_USER1_USERNAME);
 
-//         String recoveryLink = getRecoveryURLFromEmail();
-//         HttpResponse postResponse = resetPassword(recoveryLink, RESET_PASSWORD);
-//         Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK);
-//         Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
+        String recoveryLink = getRecoveryURLFromEmail();
+        HttpResponse postResponse = resetPassword(recoveryLink, RESET_PASSWORD);
+        Assert.assertEquals(postResponse.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK);
+        Assert.assertTrue(EntityUtils.toString(postResponse.getEntity()).contains("Password Reset Successfully"));
 
-//         assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
-//                 PreUpdatePasswordEvent.Action.RESET);
-//     }
+        assertActionRequestPayload(userId, RESET_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
+                PreUpdatePasswordEvent.Action.RESET);
+    }
 
 //    @Test(dependsOnMethods = "testApplicationUpdatePassword",
 //            description = "Verify the user password recovery flow with pre update password action")
@@ -278,7 +278,7 @@ public class PreUpdatePasswordActionSuccessTestCase extends PreUpdatePasswordAct
 //        updateFlowStatus(PASSWORD_RECOVERY_FLOW_TYPE, false);
 //    }
 
-    @Test(dependsOnMethods = "testApplicationUpdatePassword",
+    @Test(dependsOnMethods = "testUserResetPassword",
             description = "Verify the user password set with pre update password action via offline invite link")
     public void testUserSetPasswordViaOfflineInviteLink() throws Exception {
 
