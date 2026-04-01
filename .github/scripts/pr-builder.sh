@@ -34,24 +34,6 @@ declare -a ALL_TESTS=(
     "is-tests-password-update-api"
 )
 
-# Get PR base branch using GitHub API.
-# Requires GITHUB_TOKEN to be set in workflow env.
-get_pr_base_branch() {
-  local user=$1
-  local repo=$2
-  local pr_number=$3
-
-  if [ -z "${GITHUB_TOKEN}" ]; then
-    echo "::error::GITHUB_TOKEN is not set. Cannot determine PR base branch."
-    exit 1
-  fi
-
-  curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" \
-       -H "Accept: application/vnd.github+json" \
-       "https://api.github.com/repos/$user/$repo/pulls/$pr_number" | \
-    python -c "import sys,json; print(json.load(sys.stdin)['base']['ref'])"
-}
-
 # Function to disable tests not in the enabled list.
 disable_tests() {
     local enabled_tests=$1
@@ -104,14 +86,11 @@ echo "::warning::Build ran for PR $PR_LINK"
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
 REPO=$(echo $PR_LINK | awk -F'/' '{print $5}')
 PULL_NUMBER=$(echo $PR_LINK | awk -F'/' '{print $7}')
-BASE_BRANCH=$(get_pr_base_branch "$USER" "$REPO" "$PULL_NUMBER")
 
 echo "    USER: $USER"
 echo "    REPO: $REPO"
 echo "    PULL_NUMBER: $PULL_NUMBER"
-echo "    BASE_BRANCH: $BASE_BRANCH"
 echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
-echo "BASE_BRANCH=$BASE_BRANCH" >> "$GITHUB_OUTPUT"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
@@ -217,11 +196,14 @@ else
       echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
   else
-    echo ""
-    echo "Checking out for PR base branch $BASE_BRANCH..."
-    echo "=========================================================="
-    git checkout "$BASE_BRANCH"
+    if [ "$WORKFLOW_BRANCH" = "next" ]; then
+      echo ""
+      echo "Checking out for next branch..."
+      echo "=========================================================="
+      git checkout next
+    fi
   fi
+
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
   echo ""
