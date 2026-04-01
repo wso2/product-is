@@ -4,6 +4,11 @@ OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-o
 SCIM2_REPO=identity-inbound-provisioning-scim2
 SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provisioning-scim2.git
 
+# Define workflow branch (selected branch for the workflow run).
+# Prefer WORKFLOW_BRANCH (explicit), otherwise GITHUB_REF_NAME, otherwise "master".
+WORKFLOW_BRANCH=${WORKFLOW_BRANCH:-${GITHUB_REF_NAME:-master}}
+WORKFLOW_BRANCH=${WORKFLOW_BRANCH#refs/heads/}
+
 # Define all available tests.
 declare -a ALL_TESTS=(
     "is-tests-default-configuration"
@@ -28,6 +33,24 @@ declare -a ALL_TESTS=(
     "is-test-session-mgt"
     "is-tests-password-update-api"
 )
+
+# Get PR base branch using GitHub API.
+# Requires GITHUB_TOKEN to be set in workflow env.
+get_pr_base_branch() {
+  local user=$1
+  local repo=$2
+  local pr_number=$3
+
+  if [ -z "${GITHUB_TOKEN}" ]; then
+    echo "::error::GITHUB_TOKEN is not set. Cannot determine PR base branch."
+    exit 1
+  fi
+
+  curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" \
+       -H "Accept: application/vnd.github+json" \
+       "https://api.github.com/repos/$user/$repo/pulls/$pr_number" | \
+    python -c "import sys,json; print(json.load(sys.stdin)['base']['ref'])"
+}
 
 # Function to disable tests not in the enabled list.
 disable_tests() {
@@ -75,21 +98,25 @@ PR_LINK=${PR_LINK%/}
 JAVA_21_HOME=${JAVA_21_HOME%/}
 echo "    PR_LINK: $PR_LINK"
 echo "    JAVA 21 Home: $JAVA_21_HOME"
+echo "    WORKFLOW_BRANCH (product-is): $WORKFLOW_BRANCH"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
 REPO=$(echo $PR_LINK | awk -F'/' '{print $5}')
 PULL_NUMBER=$(echo $PR_LINK | awk -F'/' '{print $7}')
+BASE_BRANCH=$(get_pr_base_branch "$USER" "$REPO" "$PULL_NUMBER")
 
 echo "    USER: $USER"
 echo "    REPO: $REPO"
 echo "    PULL_NUMBER: $PULL_NUMBER"
+echo "    BASE_BRANCH: $BASE_BRANCH"
 echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
+echo "BASE_BRANCH=$BASE_BRANCH" >> "$GITHUB_OUTPUT"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
+git clone --branch "$WORKFLOW_BRANCH" --single-branch https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
 disable_tests "$ENABLED_TESTS"
 
@@ -156,7 +183,7 @@ else
   echo ""
   echo "Determining dependency version property key..."
   echo "=========================================================="
-  wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/version_property_finder.py
+  wget https://raw.githubusercontent.com/wso2/product-is/$WORKFLOW_BRANCH/.github/scripts/version_property_finder.py
   VERSION_PROPERTY=$(python version_property_finder.py $REPO product-is-$BUILDER_NUMBER 2>&1)
   VERSION_PROPERTY_KEY=""
   if [ "$VERSION_PROPERTY" != "invalid" ]; then
@@ -189,7 +216,11 @@ else
       echo ""
       echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
-      git checkout 5.5.x
+  else
+    echo ""
+    echo "Checking out for PR base branch $BASE_BRANCH..."
+    echo "=========================================================="
+    git checkout "$BASE_BRANCH"
   fi
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
