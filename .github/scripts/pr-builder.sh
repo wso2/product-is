@@ -80,7 +80,7 @@ PR_LINK=${PR_LINK%/}
 JAVA_21_HOME=${JAVA_21_HOME%/}
 echo "    PR_LINK: $PR_LINK"
 echo "    JAVA 21 Home: $JAVA_21_HOME"
-echo "    WORKFLOW_BRANCH: $WORKFLOW_BRANCH"
+echo "    WORKFLOW_BRANCH (product-is): $WORKFLOW_BRANCH"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
@@ -91,7 +91,6 @@ echo "    USER: $USER"
 echo "    REPO: $REPO"
 echo "    PULL_NUMBER: $PULL_NUMBER"
 echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
-echo "WORKFLOW_BRANCH=$WORKFLOW_BRANCH" >> "$GITHUB_OUTPUT"
 echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
@@ -159,7 +158,7 @@ else
   echo ""
   echo "Cloning $USER/$REPO"
   echo "=========================================================="
-  git clone --branch "$WORKFLOW_BRANCH" --single-branch https://github.com/$USER/$REPO
+  git clone https://github.com/$USER/$REPO
   echo ""
   echo "Determining dependency version property key..."
   echo "=========================================================="
@@ -196,8 +195,15 @@ else
       echo ""
       echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
-      git checkout 5.5.x
+  else
+    if [ "$WORKFLOW_BRANCH" = "next" ]; then
+      echo ""
+      echo "Checking out for next branch..."
+      echo "=========================================================="
+      git checkout next
+    fi
   fi
+
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
   echo ""
@@ -291,7 +297,7 @@ else
     echo ""
     echo "Building Outbound Auth OIDC repo..."
     echo "=========================================================="
-    git clone --branch "$WORKFLOW_BRANCH" --single-branch $OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK
+    git clone $OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK
     OUTBOUND_AUTH_OIDC_VERSION_PROPERTY=$(python version_property_finder.py $OUTBOUND_AUTH_OIDC_REPO product-is-$BUILDER_NUMBER 2>&1)
     if [ "$OUTBOUND_AUTH_OIDC_VERSION_PROPERTY" != "invalid" ]; then
       echo "Version property key for the $OUTBOUND_AUTH_OIDC_REPO is $OUTBOUND_AUTH_OIDC_VERSION_PROPERTY"
@@ -306,7 +312,6 @@ else
       exit 1
     fi
     cd $OUTBOUND_AUTH_OIDC_REPO
-    git checkout "$WORKFLOW_BRANCH"
     OUTBOUND_AUTH_OIDC_DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
     echo "Outbound Auth OIDC Dependency Version: $OUTBOUND_AUTH_OIDC_DEPENDENCY_VERSION"
     echo ""
@@ -347,7 +352,7 @@ else
     echo ""
     echo "Building SCIM2 repo..."
     echo "=========================================================="
-    git clone --branch "$WORKFLOW_BRANCH" --single-branch $SCIM2_REPO_CLONE_LINK
+    git clone $SCIM2_REPO_CLONE_LINK
     SCIM2_VERSION_PROPERTY=$(python version_property_finder.py $SCIM2_REPO product-is-$BUILDER_NUMBER 2>&1)
     if [ "$SCIM2_VERSION_PROPERTY" != "invalid" ]; then
       echo "Version property key for the $SCIM2_REPO is $SCIM2_VERSION_PROPERTY"
@@ -362,7 +367,6 @@ else
       exit 1
     fi
     cd $SCIM2_REPO
-    git checkout "$WORKFLOW_BRANCH"
     SCIM2_DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
     echo "SCIM2 Dependency Version: $SCIM2_DEPENDENCY_VERSION"
     echo ""
