@@ -195,8 +195,15 @@ else
       echo ""
       echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
-      git checkout 5.5.x
+  else
+    if [ "$WORKFLOW_BRANCH" = "test-git-actions" ]; then
+      echo ""
+      echo "Checking out for next branch..."
+      echo "=========================================================="
+      git checkout next
+    fi
   fi
+
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
   echo ""
