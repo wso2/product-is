@@ -41,7 +41,7 @@ get_pr_base_branch() {
   local repo=$2
   local pr_number=$3
 
-  if [ -z "${GITHUB_TOKEN:-}" ]; then
+  if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
     echo "::error::GITHUB_TOKEN is not set. Cannot determine PR base branch." >&2
     return 1
   fi
@@ -49,7 +49,7 @@ get_pr_base_branch() {
   PYTHON_BIN=python
   command -v python3 >/dev/null 2>&1 && PYTHON_BIN=python3
 
-  RESPONSE=$(curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" \
+  RESPONSE=$(curl -sS -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
        -H "Accept: application/vnd.github+json" \
        "https://api.github.com/repos/$user/$repo/pulls/$pr_number")
 
