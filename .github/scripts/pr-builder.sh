@@ -93,6 +93,81 @@ git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
 disable_tests "$ENABLED_TESTS"
 
+if [ -n "$PATCHED_IS_ZIP_URL" ]; then
+  echo ""
+  echo "=========================================================="
+  echo "Patched IS zip provided. Skipping IS build from source."
+  echo "Using zip from: $PATCHED_IS_ZIP_URL"
+  echo "=========================================================="
+
+  cd product-is-$BUILDER_NUMBER
+
+  export JAVA_HOME=$JAVA_21_HOME
+  IS_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+  echo "IS Version: $IS_VERSION"
+
+  echo ""
+  echo "Downloading patched IS zip..."
+  echo "=========================================================="
+  wget --output-document=/tmp/patched-is.zip "$PATCHED_IS_ZIP_URL" || {
+    echo "Failed to download patched IS zip. Exiting..."
+    echo "::error::Failed to download patched IS zip from the provided URL."
+    exit 1
+  }
+
+  echo ""
+  echo "Installing patched IS zip to local Maven repository..."
+  echo "=========================================================="
+  mvn install:install-file \
+    -Dfile=/tmp/patched-is.zip \
+    -DgroupId=org.wso2.is \
+    -DartifactId=wso2is \
+    -Dversion="${IS_VERSION}" \
+    -Dpackaging=zip \
+    --batch-mode || {
+    echo "Failed to install patched IS zip to local Maven repository. Exiting..."
+    echo "::error::Failed to install patched IS zip to local Maven repository."
+    exit 1
+  }
+
+  echo ""
+  echo "Placing patched IS zip at expected distribution path..."
+  echo "=========================================================="
+  mkdir -p modules/distribution/target
+  cp /tmp/patched-is.zip "modules/distribution/target/wso2is-${IS_VERSION}.zip"
+
+  echo ""
+  echo "Building and running tests against patched IS zip..."
+  echo "=========================================================="
+  cat pom.xml
+  mvn clean install -pl '!modules/distribution' --batch-mode | tee mvn-build.log
+
+  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+  PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
+
+  PR_BUILD_FINAL_RESULT=$(
+    echo "==========================================================="
+    echo "product-is BUILD $PR_BUILD_STATUS"
+    echo "=========================================================="
+    echo ""
+    echo "$PR_TEST_RESULT"
+  )
+
+  PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
+  PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
+  echo "::warning::$PR_BUILD_RESULT_LOG"
+
+  PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
+  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
+    echo "PR BUILD not successfull. Aborting."
+    echo "::error::PR BUILD not successfull. Check artifacts for logs."
+    exit 1
+  fi
+
+  exit 0
+fi
+
 if [ "$REPO" = "product-is" ]; then
 
   echo ""

@@ -6,6 +6,10 @@ on:
         description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481)"
         default:
         required: true
+      patched_is_zip_url:
+        description: "Optional: Direct download URL of a pre-built patched IS zip. When provided, this zip is used instead of building IS from source."
+        default:
+        required: false
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
@@ -68,6 +72,7 @@ jobs:
         env:
           PR_LINK: ${{github.event.inputs.pr}}
           JAVA_21_HOME: ${{env.J21HOME}}
+          PATCHED_IS_ZIP_URL: ${{github.event.inputs.patched_is_zip_url}}
         run: |
           bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
       - name: Archive PR diff file
