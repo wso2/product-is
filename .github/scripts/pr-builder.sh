@@ -93,7 +93,7 @@ git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
 disable_tests "$ENABLED_TESTS"
 
-if [ -n "$PATCHED_IS_ZIP_URL" ]; then
+if [ "$REPO" = "product-is" ] && [ -n "$PATCHED_IS_ZIP_URL" ]; then
   echo ""
   echo "=========================================================="
   echo "Patched IS zip provided. Skipping IS build from source."
@@ -114,6 +114,15 @@ if [ -n "$PATCHED_IS_ZIP_URL" ]; then
     echo "::error::Failed to download patched IS zip from the provided URL."
     exit 1
   }
+
+  if [ -n "$PATCHED_IS_ZIP_SHA256" ]; then
+    echo "Verifying SHA256 checksum..."
+    echo "${PATCHED_IS_ZIP_SHA256}  /tmp/patched-is.zip" | sha256sum -c - || {
+      echo "::error::Patched IS zip SHA256 checksum verification failed."
+      exit 1
+    }
+    echo "Checksum verified."
+  fi
 
   echo ""
   echo "Installing patched IS zip to local Maven repository..."
@@ -141,6 +150,7 @@ if [ -n "$PATCHED_IS_ZIP_URL" ]; then
   echo "=========================================================="
   cat pom.xml
   mvn clean install -pl '!modules/distribution' --batch-mode | tee mvn-build.log
+  MAVEN_EXIT_CODE=${PIPESTATUS[0]}
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
   PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
@@ -157,9 +167,7 @@ if [ -n "$PATCHED_IS_ZIP_URL" ]; then
   PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
-  PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
+  if [ "$MAVEN_EXIT_CODE" -ne 0 ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
