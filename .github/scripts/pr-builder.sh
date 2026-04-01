@@ -41,15 +41,31 @@ get_pr_base_branch() {
   local repo=$2
   local pr_number=$3
 
-  if [ -z "${{ secrets.GITHUB_TOKEN }}" ]; then
-    echo "::error::GITHUB_TOKEN is not set. Cannot determine PR base branch."
-    exit 1
+  if [ -z "${GITHUB_TOKEN:-}" ]; then
+    echo "::error::GITHUB_TOKEN is not set. Cannot determine PR base branch." >&2
+    return 1
   fi
 
-  curl -sS -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+  PYTHON_BIN=python
+  command -v python3 >/dev/null 2>&1 && PYTHON_BIN=python3
+
+  RESPONSE=$(curl -sS -H "Authorization: Bearer $GITHUB_TOKEN" \
        -H "Accept: application/vnd.github+json" \
-       "https://api.github.com/repos/$user/$repo/pulls/$pr_number" | \
-    python -c "import sys,json; print(json.load(sys.stdin)['base']['ref'])"
+       "https://api.github.com/repos/$user/$repo/pulls/$pr_number")
+
+  BASE=$(
+    echo "$RESPONSE" | $PYTHON_BIN -c "import sys,json; d=json.load(sys.stdin); print(d.get('base',{}).get('ref',''))"
+  )
+
+  if [ -z "$BASE" ]; then
+    echo "::error::Unable to determine PR base branch from GitHub API response." >&2
+    echo "::error::Repo: $user/$repo PR: $pr_number" >&2
+    # Print API error message if present (helps debugging permissions)
+    echo "$RESPONSE" | $PYTHON_BIN -c "import sys,json; d=json.load(sys.stdin); print('::error::API message: %s' % d.get('message','(none)'))" 2>/dev/null >&2 || true
+    return 1
+  fi
+
+  echo "$BASE"
 }
 
 # Function to disable tests not in the enabled list.
