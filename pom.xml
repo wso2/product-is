@@ -2807,7 +2807,7 @@
 
         <identity.org.mgt.version>2.4.17</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.5.1</identity.org.mgt.core.version>
-        <identity.organization.login.version>1.2.4</identity.organization.login.version>
+        <identity.organization.login.version>1.2.5</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.2.0</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
@@ -2834,7 +2834,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>4.1.3</identity.apps.console.version>
         <identity.apps.myaccount.version>4.0.0</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.0.6</identity.apps.core.version>
+        <identity.apps.core.version>5.0.8</identity.apps.core.version>
         <identity.apps.tests.version>1.6.387</identity.apps.tests.version>
 
         <!-- Charon -->
