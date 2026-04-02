@@ -143,7 +143,7 @@ jobs:
         if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           docker run -d --name mssql \
-            -e MSSQL_SA_PASSWORD="$DB_PASSWORD" \
+            -e SA_PASSWORD="$DB_PASSWORD" \
             -e ACCEPT_EULA=Y \
             -e MSSQL_PID=Developer \
             -p 1433:1433 \
@@ -153,7 +153,7 @@ jobs:
         if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft-prod.gpg > /dev/null
-          curl -fsSL https://packages.microsoft.com/config/ubuntu/24.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
           sudo apt-get update -y
           sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
           echo "/opt/mssql-tools18/bin" >> $GITHUB_PATH
@@ -162,21 +162,14 @@ jobs:
         if: ${{ github.event.inputs.database_type == 'mssql' }}
         run: |
           echo "Waiting for MSSQL to be ready..."
-          MSSQL_READY=false
           for i in $(seq 1 30); do
             if sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -Q "SELECT 1" -C 2>/dev/null; then
               echo "MSSQL is ready."
-              MSSQL_READY=true
               break
             fi
             echo "Attempt $i: MSSQL not ready yet, retrying in 5 seconds..."
             sleep 5
           done
-          if [ "$MSSQL_READY" != "true" ]; then
-            echo "ERROR: MSSQL did not become ready after 30 attempts."
-            docker logs mssql || true
-            exit 1
-          fi
           echo "Creating WSO2 IS databases..."
           sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -Q "CREATE DATABASE [$WSO2_IDENTITY_DB]" -C
           sqlcmd -S localhost,1433 -U SA -P "$DB_PASSWORD" -Q "CREATE DATABASE [$WSO2_SHARED_DB]" -C
@@ -303,9 +296,9 @@ jobs:
             exit 1
           fi
           echo "Creating WSO2 IS databases..."
-          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_IDENTITY_DB\`;"
-          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_SHARED_DB\`;"
-          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_AGENT_IDENTITY_DB\`;"
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_IDENTITY_DB\` CHARACTER SET latin1;"
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_SHARED_DB\` CHARACTER SET latin1;"
+          mysql -h 127.0.0.1 -P 3306 -u root -p"$DB_PASSWORD" -e "CREATE DATABASE \`$WSO2_AGENT_IDENTITY_DB\` CHARACTER SET latin1;"
           echo "Databases created successfully."
 
       - name: Run MySQL schema scripts
