@@ -2835,7 +2835,7 @@
         <identity.apps.console.version>3.3.14</identity.apps.console.version>
         <identity.apps.myaccount.version>3.0.6</identity.apps.myaccount.version>
         <identity.apps.core.version>4.0.6</identity.apps.core.version>
-        <identity.apps.tests.version>1.6.386</identity.apps.tests.version>
+        <identity.apps.tests.version>1.6.387</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
