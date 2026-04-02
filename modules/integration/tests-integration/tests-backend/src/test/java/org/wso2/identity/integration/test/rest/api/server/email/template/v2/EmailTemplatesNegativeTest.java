@@ -39,7 +39,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
  */
 public class EmailTemplatesNegativeTest extends EmailTemplatesTestBase {
 
-    private static final String INCORRECT_TEMPLATE_TYPE_ID = "QWNjb3VudEVuYWJsZQqwSa";
+    private static final String INCORRECT_TEMPLATE_TYPE_ID = "Tm9uRXhpc3RlbnRUeXBl";
     private static final String UNDECODABLE_TEMPLATE_TYPE_ID = "QWNjb3VudEVuYWJsZQ111";
     private static final String INVALID_APPLICATION_UUID = "invalid-uuid";
     private static final String INCORRECT_TEMPLATE_ID = "en_FR";
