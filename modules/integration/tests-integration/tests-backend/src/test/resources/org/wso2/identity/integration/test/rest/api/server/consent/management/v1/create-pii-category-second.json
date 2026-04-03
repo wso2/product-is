@@ -1,0 +1,5 @@
+{
+  "piiCategory": "phone",
+  "description": "User's primary phone number",
+  "sensitive": false
+}
