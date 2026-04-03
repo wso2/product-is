@@ -860,6 +860,7 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setName(SERVICE_PROVIDER_NAME);
         application.setIsManagementApp(true);
+        application.setEnhancedOrgAuthenticationEnabled(false);
 
         String appId = addApplication(application);
 
