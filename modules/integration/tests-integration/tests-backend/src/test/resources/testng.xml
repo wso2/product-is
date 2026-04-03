@@ -47,6 +47,7 @@
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderUserTestCase"/>
             <class name="org.wso2.identity.integration.test.scim.SCIMServiceProviderGroupTestCase"/>
             <class name="org.wso2.identity.integration.test.application.mgt.ImportExportServiceProviderTest"/>
+            <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.application.mgt.DefaultAuthSeqManagementTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.account.connector.UserAccountConnectorTestCase"/>
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
@@ -254,6 +255,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationImportExportTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationPatchTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthFailureTest"/>
@@ -556,8 +558,6 @@
     <test name="is-tests-saas-app-creation" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.application.mgt.SaasAppCreationInitializerTestCase"/>
-            <class name="org.wso2.identity.integration.test.application.mgt.ApplicationTemplateMgtTestCase"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationPatchTest"/>
         </classes>
     </test>
 </suite>
