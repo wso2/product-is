@@ -242,6 +242,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		application.advancedConfigurations(
 				new AdvancedApplicationConfiguration().skipLoginConsent(applicationConfig.isSkipConsent())
 						.skipLogoutConsent(applicationConfig.isSkipConsent()));
+		application.setEnhancedOrgAuthenticationEnabled(false);
 
 		String appId = restClient.createApplication(application);
 		return restClient.getApplication(appId);
@@ -281,6 +282,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
 		application.setName(SERVICE_PROVIDER_NAME);
 		application.setIsManagementApp(true);
+		application.setEnhancedOrgAuthenticationEnabled(false);
 
 		application.setClaimConfiguration(setApplicationClaimConfig()); ;
 
@@ -350,6 +352,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
         application.advancedConfigurations(
                 new AdvancedApplicationConfiguration().skipLoginConsent(applicationConfig.isSkipConsent())
                         .skipLogoutConsent(applicationConfig.isSkipConsent()));
+        application.setEnhancedOrgAuthenticationEnabled(false);
 
         String appId = restClient.createOrganizationApplication(application, switchedAccessToken);
         return restClient.getOrganizationApplication(appId, switchedAccessToken);
