@@ -153,6 +153,7 @@ public class PasswordUpdateTestBase extends OAuth2ServiceAbstractIntegrationTest
 
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setIsManagementApp(true);
+        application.setEnhancedOrgAuthenticationEnabled(false);
         application.advancedConfigurations(
                 new AdvancedApplicationConfiguration().skipLoginConsent(true).skipLogoutConsent(true));
 
