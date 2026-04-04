@@ -593,11 +593,11 @@ public class SAML2SSOTestBase extends SSOCommonClientForSAML {
                     .toByteArray(), Base64.DONT_BREAK_LINES);
             return URLEncoder.encode(encodedRequestMessage, StandardCharsets.UTF_8.name()).trim();
         } else if (SAMLConstants.SAML2_POST_BINDING_URI.equals(binding)) {
-            return Base64.encodeBytes(rspWrt.toString().getBytes(),
+            return Base64.encodeBytes(rspWrt.toString().getBytes(StandardCharsets.UTF_8),
                     Base64.DONT_BREAK_LINES);
         } else {
             log.warn("Unsupported SAML2 HTTP Binding. Defaulting to " + SAMLConstants.SAML2_POST_BINDING_URI);
-            return Base64.encodeBytes(rspWrt.toString().getBytes(), Base64.DONT_BREAK_LINES);
+            return Base64.encodeBytes(rspWrt.toString().getBytes(StandardCharsets.UTF_8), Base64.DONT_BREAK_LINES);
         }
     }
 
@@ -1064,7 +1064,7 @@ public class SAML2SSOTestBase extends SSOCommonClientForSAML {
             throws IOException, SAXException, ParserConfigurationException {
 
         DocumentBuilder docBuilder = documentBuilderFactory.newDocumentBuilder();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(samlString.getBytes());
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(samlString.getBytes(StandardCharsets.UTF_8));
         return docBuilder.parse(inputStream);
     }
 
