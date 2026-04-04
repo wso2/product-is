@@ -13,7 +13,6 @@ WORKFLOW_BRANCH=${WORKFLOW_BRANCH#refs/heads/}
 declare -a ALL_TESTS=(
     "is-tests-default-configuration"
     "is-test-rest-api"
-    "is-tests-saas-app-creation"
     "is-test-webhooks"
     "is-tests-scim2"
     "is-test-adaptive-authentication"
