@@ -2685,7 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.129</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.130</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2819,7 +2819,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.5.29</identity.server.api.version>
+        <identity.server.api.version>1.5.30</identity.server.api.version>
         <identity.user.api.version>1.5.5</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
