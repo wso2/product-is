@@ -98,6 +98,89 @@ git clone --branch "$WORKFLOW_BRANCH" --single-branch https://github.com/wso2/pr
 
 disable_tests "$ENABLED_TESTS"
 
+if [ "$REPO" = "product-is" ] && [ -n "$PATCHED_IS_ZIP_URL" ]; then
+  echo ""
+  echo "=========================================================="
+  echo "Patched IS zip provided. Skipping IS build from source."
+  echo "Using zip from: $PATCHED_IS_ZIP_URL"
+  echo "=========================================================="
+
+  cd product-is-$BUILDER_NUMBER
+
+  export JAVA_HOME=$JAVA_21_HOME
+  IS_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+  echo "IS Version: $IS_VERSION"
+
+  echo ""
+  echo "Downloading patched IS zip..."
+  echo "=========================================================="
+  wget --output-document=/tmp/patched-is.zip "$PATCHED_IS_ZIP_URL" || {
+    echo "Failed to download patched IS zip. Exiting..."
+    echo "::error::Failed to download patched IS zip from the provided URL."
+    exit 1
+  }
+
+  if [ -n "$PATCHED_IS_ZIP_SHA256" ]; then
+    echo "Verifying SHA256 checksum..."
+    echo "${PATCHED_IS_ZIP_SHA256}  /tmp/patched-is.zip" | sha256sum -c - || {
+      echo "::error::Patched IS zip SHA256 checksum verification failed."
+      exit 1
+    }
+    echo "Checksum verified."
+  fi
+
+  echo ""
+  echo "Installing patched IS zip to local Maven repository..."
+  echo "=========================================================="
+  mvn install:install-file \
+    -Dfile=/tmp/patched-is.zip \
+    -DgroupId=org.wso2.is \
+    -DartifactId=wso2is \
+    -Dversion="${IS_VERSION}" \
+    -Dpackaging=zip \
+    --batch-mode || {
+    echo "Failed to install patched IS zip to local Maven repository. Exiting..."
+    echo "::error::Failed to install patched IS zip to local Maven repository."
+    exit 1
+  }
+
+  echo ""
+  echo "Placing patched IS zip at expected distribution path..."
+  echo "=========================================================="
+  mkdir -p modules/distribution/target
+  cp /tmp/patched-is.zip "modules/distribution/target/wso2is-${IS_VERSION}.zip"
+
+  echo ""
+  echo "Building and running tests against patched IS zip..."
+  echo "=========================================================="
+  cat pom.xml
+  mvn clean install -pl '!modules/distribution' --batch-mode | tee mvn-build.log
+  MAVEN_EXIT_CODE=${PIPESTATUS[0]}
+
+  PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
+  PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
+
+  PR_BUILD_FINAL_RESULT=$(
+    echo "==========================================================="
+    echo "product-is BUILD $PR_BUILD_STATUS"
+    echo "=========================================================="
+    echo ""
+    echo "$PR_TEST_RESULT"
+  )
+
+  PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
+  PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
+  echo "::warning::$PR_BUILD_RESULT_LOG"
+
+  if [ "$MAVEN_EXIT_CODE" -ne 0 ]; then
+    echo "PR BUILD not successfull. Aborting."
+    echo "::error::PR BUILD not successfull. Check artifacts for logs."
+    exit 1
+  fi
+
+  exit 0
+fi
+
 if [ "$REPO" = "product-is" ]; then
 
   echo ""
