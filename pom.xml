@@ -2832,7 +2832,7 @@
         <conditional.authentication.functions.version>1.3.3</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>3.3.18</identity.apps.console.version>
+        <identity.apps.console.version>3.3.19</identity.apps.console.version>
         <identity.apps.myaccount.version>3.0.9</identity.apps.myaccount.version>
         <identity.apps.core.version>4.0.8</identity.apps.core.version>
         <identity.apps.tests.version>1.6.388</identity.apps.tests.version>
