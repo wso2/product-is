@@ -18,15 +18,11 @@
 
 package org.wso2.identity.integration.test.rest.api.server.session;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.CookieStore;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -79,7 +75,7 @@ public class SessionMgtTest extends SessionMgtTestBase {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         restClient = new OAuth2RestClient(serverURL, context.getContextTenant());
-        
+
         // Create test application.
         createTestApplication();
     }
