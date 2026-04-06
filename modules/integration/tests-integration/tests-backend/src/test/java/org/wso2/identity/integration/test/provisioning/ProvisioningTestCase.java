@@ -417,6 +417,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         automationContextMap.put(PORT_OFFSET_1, context1);
 
         Map<String, String> startupParameterMap2 = new HashMap<String, String>();
+        startupParameterMap2.put("-Doptimize", String.valueOf(false));
         startupParameterMap2.put(PORT_OFFSET_PARAM, String.valueOf(CommonConstants.IS_DEFAULT_OFFSET + PORT_OFFSET_2));
         startupParameterMap2.put(ENABLE_REMOTE_SHUTDOWN_RESTART_PARAM, String.valueOf(true));
 
