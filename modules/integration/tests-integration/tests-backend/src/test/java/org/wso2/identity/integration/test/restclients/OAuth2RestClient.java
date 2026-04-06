@@ -454,6 +454,24 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Delete an application in a sub-organization.
+     *
+     * @param appId       Application id.
+     * @param accessToken Switched M2M access token for the sub-organization.
+     * @throws IOException If an error occurred while deleting an application.
+     */
+    public void deleteOrganizationApplication(String appId, String accessToken) throws IOException {
+
+        String endpointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl,
+                getHeadersWithBearerToken(accessToken))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Organization application deletion failed");
+        }
+    }
+
+    /**
      * Get OIDC inbound configuration details of an application.
      *
      * @param appId Application id.

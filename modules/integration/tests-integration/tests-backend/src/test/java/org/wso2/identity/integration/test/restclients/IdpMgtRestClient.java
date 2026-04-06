@@ -35,6 +35,8 @@ import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.PatchRequ
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Roles;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -225,6 +227,65 @@ public class IdpMgtRestClient extends RestBaseClient {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Idp deletion failed");
         }
+    }
+
+    /**
+     * Create an Identity Provider in an organization using a bearer token.
+     *
+     * @param idpCreateReqObj Identity Provider request object.
+     * @param accessToken     Bearer token for the organization.
+     * @return ID of the created identity provider.
+     * @throws Exception If an error occurred while creating the identity provider.
+     */
+    public String createOrganizationIdentityProvider(IdentityProviderPOSTRequest idpCreateReqObj,
+            String accessToken) throws Exception {
+
+        String jsonRequest = toJSONString(idpCreateReqObj);
+        String endPointUrl = getSubOrgIdentityProviderPath();
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Identity provider creation in organization failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Delete an Identity Provider from an organization using a bearer token.
+     *
+     * @param idpId       Identity Provider Id.
+     * @param accessToken Bearer token for the organization.
+     * @throws IOException If an error occurred while deleting the identity provider.
+     */
+    public void deleteIdpInOrganization(String idpId, String accessToken) throws IOException {
+
+        String endPointUrl = getSubOrgIdentityProviderPath() + PATH_SEPARATOR + idpId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl,
+                getHeadersWithBearerToken(accessToken))) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Identity provider deletion from organization failed");
+        }
+    }
+
+    private String getSubOrgIdentityProviderPath() {
+
+        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {
+            return serverUrl + ORGANIZATION_PATH + "api/server/v1/identity-providers";
+        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH +
+                "api/server/v1/identity-providers";
+    }
+
+    private Header[] getHeadersWithBearerToken(String accessToken) {
+
+        Header[] headerList = new Header[3];
+        headerList[0] = new BasicHeader(USER_AGENT_ATTRIBUTE, OAuth2Constant.USER_AGENT);
+        headerList[1] = new BasicHeader(AUTHORIZATION_ATTRIBUTE, BEARER_TOKEN_AUTHORIZATION_ATTRIBUTE + accessToken);
+        headerList[2] = new BasicHeader(CONTENT_TYPE_ATTRIBUTE, String.valueOf(ContentType.JSON));
+        return headerList;
     }
 
     private Header[] getHeaders() {
