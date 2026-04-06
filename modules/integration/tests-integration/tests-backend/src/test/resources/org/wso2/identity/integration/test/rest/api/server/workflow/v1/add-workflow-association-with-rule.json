@@ -1,0 +1,17 @@
+{
+  "associationName": "Rule Based Workflow Association",
+  "operation": "{operation}",
+  "workflowId": "{workflowId}",
+  "isEnabled": true,
+  "rule": {
+    "condition": "OR",
+    "rules": [{
+      "condition": "AND",
+      "expressions": [{
+        "field": "{field}",
+        "operator": "{operator}",
+        "value": "{value}"
+      }]
+    }]
+  }
+}
