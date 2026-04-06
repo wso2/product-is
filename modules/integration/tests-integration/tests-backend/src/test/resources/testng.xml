@@ -188,6 +188,7 @@
             <class name="org.wso2.identity.integration.test.apiAuthorization.APIResourceInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowRulesTest"/>  
             <class name="org.wso2.identity.integration.test.inheritance.ConfigInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsDeploymentConfigTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.EnhancedOrgAuthenticationDirectPathTestCase"/>
