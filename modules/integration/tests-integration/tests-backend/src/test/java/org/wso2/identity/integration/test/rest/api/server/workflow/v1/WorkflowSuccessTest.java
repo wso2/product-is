@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -195,7 +195,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     @Test(dependsOnMethods = {"testAddWorkflowAssociations"})
     public void testCreateUserPendingApprovalAndApprove() throws Exception {
 
-        createdUserName = "John@wso2.com+" + new Random().nextInt(10);
+        createdUserName = "John@wso2.com+" + UUID.randomUUID();
 
         UserObject user = new UserObject().userName(createdUserName).password("Test@12345");
         SCIM2RestClient.CreateUserResponse createResp = scim2RestClient.attemptUserCreation(user);
@@ -215,7 +215,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
         // 1) Add association for ADD_ROLE.
         addWorkflowAssociation("ADD_ROLE");
 
-        createdRoleName = "Role-" + new Random().nextInt(10);
+        createdRoleName = "Role-" + UUID.randomUUID();
         RoleRequestObject roleReq = new RoleRequestObject().displayName(createdRoleName);
 
         SCIM2RestClient.RoleCreateResponse roleResp = scim2RestClient.attemptRoleV2Creation(roleReq);
