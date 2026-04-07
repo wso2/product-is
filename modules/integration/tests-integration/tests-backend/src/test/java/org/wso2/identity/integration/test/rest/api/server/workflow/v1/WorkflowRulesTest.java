@@ -93,6 +93,7 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         RestAssured.basePath = basePath;
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        cleanupWorkflowByName("User Approval Workflow");
 
         // Create the workflow.
         String body = readResource("add-workflow.json");
