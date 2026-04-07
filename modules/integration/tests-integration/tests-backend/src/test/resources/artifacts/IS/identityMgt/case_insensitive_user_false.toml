@@ -15,13 +15,13 @@ use_case_sensitive_username_for_cache_keys = "false"
 
 [database.identity_db]
 type = "h2"
-url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;MODE=MSSQLServer;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;IGNORECASE=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
 username = "wso2carbon"
 password = "wso2carbon"
 
 [database.shared_db]
 type = "h2"
-url = "jdbc:h2:./repository/database/WSO2SHARED_DB;MODE=MSSQLServer;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+url = "jdbc:h2:./repository/database/WSO2SHARED_DB;IGNORECASE=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
 username = "wso2carbon"
 password = "wso2carbon"
 

@@ -13,19 +13,19 @@ type = "database_unique_id"
 
 [database.identity_db]
 type = "h2"
-url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;MODE=MSSQLServer;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;IGNORECASE=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
 username = "wso2carbon"
 password = "wso2carbon"
 
 [database.shared_db]
 type = "h2"
-url = "jdbc:h2:./repository/database/WSO2SHARED_DB;MODE=MSSQLServer;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+url = "jdbc:h2:./repository/database/WSO2SHARED_DB;IGNORECASE=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
 username = "wso2carbon"
 password = "wso2carbon"
 
 [datasource.AgentIdentity]
 id = "AgentIdentity"
-url = "jdbc:h2:./repository/database/WSO2AGENTIDENTITY_DB;MODE=MSSQLServer;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+url = "jdbc:h2:./repository/database/WSO2AGENTIDENTITY_DB;IGNORECASE=TRUE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
 username = "wso2carbon"
 password = "wso2carbon"
 driver = "org.h2.Driver"

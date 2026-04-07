@@ -2685,7 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.10.135</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.137-SNAPSHOT</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2736,7 +2736,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.12.0</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.12.10</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.12.11-SNAPSHOT</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.2.3</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.2.2</org.wso2.identity.event.publishers.version>
