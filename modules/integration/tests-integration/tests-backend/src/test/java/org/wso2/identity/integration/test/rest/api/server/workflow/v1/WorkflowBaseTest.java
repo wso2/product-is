@@ -19,7 +19,9 @@
 package org.wso2.identity.integration.test.rest.api.server.workflow.v1;
 
 import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -27,6 +29,8 @@ import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base test class for workflow management REST APIs.
@@ -68,5 +72,37 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
     public void testFinish() {
 
         RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    /**
+     * Deletes any workflow associations and workflows matching the given name.
+     * Used at test setup to handle dirty state left by previous failed runs.
+     */
+    protected void cleanupWorkflowByName(String name) {
+
+        RestAssured.basePath = basePath;
+        Response assocResp = getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH);
+        if (assocResp.getStatusCode() == HttpStatus.SC_OK) {
+            List<Map<String, Object>> assocs = assocResp.jsonPath().getList("workflowAssociations");
+            if (assocs != null) {
+                for (Map<String, Object> assoc : assocs) {
+                    if (name.equals(assoc.get("workflowName"))) {
+                        getResponseOfDelete(
+                                WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + assoc.get("id"));
+                    }
+                }
+            }
+        }
+        Response workflowsResp = getResponseOfGet(WORKFLOW_API_BASE_PATH);
+        if (workflowsResp.getStatusCode() == HttpStatus.SC_OK) {
+            List<Map<String, Object>> workflows = workflowsResp.jsonPath().getList("workflows");
+            if (workflows != null) {
+                for (Map<String, Object> workflow : workflows) {
+                    if (name.equals(workflow.get("name"))) {
+                        getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflow.get("id"));
+                    }
+                }
+            }
+        }
     }
 }
