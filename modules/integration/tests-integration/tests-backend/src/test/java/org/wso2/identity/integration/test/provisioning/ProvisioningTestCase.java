@@ -430,9 +430,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 startupParameterMap2);
 
         manager.startServers(server2);
-
-        // Capture Server 2's carbon home immediately after startup, before any other server start
-        // can overwrite the global carbon.home system property.
+        
         String server2CarbonHome = System.getProperty("carbon.home");
         File defaultTomlFile = getDeploymentTomlFile(server2CarbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "provisioning"
