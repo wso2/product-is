@@ -41,6 +41,7 @@ import org.wso2.carbon.identity.application.common.model.xsd.JustInTimeProvision
 import org.wso2.carbon.identity.application.common.model.xsd.OutboundProvisioningConfig;
 import org.wso2.carbon.identity.application.common.model.xsd.ServiceProvider;
 import org.wso2.carbon.integration.common.admin.client.AuthenticatorClient;
+import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.exceptions.CharonException;
@@ -58,6 +59,7 @@ import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +95,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     public static final String SAMPLE_IDENTITY_PROVIDER_NAME = "sample";
     public static final String PORT_OFFSET_PARAM = "-DportOffset";
     public static final String ENABLE_REMOTE_SHUTDOWN_RESTART_PARAM = "-DenableRemoteShutdownAndRestart";
+    private static final String DEFAULT_H2_DATABASE_CONFIG = "default_configs_with_h2_db.toml";
 
     public static final int DEFAULT_PORT = 9853;
     public static final int adminUserId = 0;
@@ -427,6 +430,16 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 startupParameterMap2);
 
         manager.startServers(server2);
+
+        // Capture Server 2's carbon home immediately after startup, before any other server start
+        // can overwrite the global carbon.home system property.
+        String server2CarbonHome = System.getProperty("carbon.home");
+        File defaultTomlFile = getDeploymentTomlFile(server2CarbonHome);
+        File configuredTomlFile = new File(getISResourceLocation() + File.separator + "provisioning"
+                + File.separator + DEFAULT_H2_DATABASE_CONFIG);
+        ServerConfigurationManager server2ConfigManager = new ServerConfigurationManager(context2);
+        server2ConfigManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
+        server2ConfigManager.restartGracefully();
     }
 
     //TODO: Need to remove
