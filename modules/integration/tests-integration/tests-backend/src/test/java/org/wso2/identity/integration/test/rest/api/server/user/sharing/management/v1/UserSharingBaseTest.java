@@ -301,7 +301,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         // Mark roles and groups as requested claims for the app 2.
         updateRequestedClaimsOfApp(appId, getClaimConfigurationsWithRolesAndGroups());
-        shareApplication(appId);
+        shareApplication(appId, appName);
 
         // Get sub org details of Applications.
         Map<String, Object> appDetailsOfSubOrgs = new HashMap<>();
@@ -335,10 +335,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         String subOrgSwitchToken = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN);
         String subOrgAppName = appName + PATH_SEPARATOR + subOrgName;
 
-        await().atMost(30, TimeUnit.SECONDS)
-                .pollInterval(2, TimeUnit.SECONDS)
-                .until(() -> StringUtils.isNotEmpty(
-                        oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken)));
         String subOrgAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken);
 
         Map<String, String> subOrgRoleIdsByName = StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audience) ?
@@ -515,11 +511,20 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         oAuth2RestClient.updateApplication(appId, patchModelApp2);
     }
 
-    private void shareApplication(String applicationId) throws Exception {
+    private void shareApplication(String applicationId, String appName) throws Exception {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(true);
         oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
+
+        // Wait until the shared app is visible in all sub orgs before returning.
+        for (Map<String, Object> orgDetail : orgDetails.values()) {
+            String subOrgSwitchToken = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN);
+            await().atMost(30, TimeUnit.SECONDS)
+                    .pollInterval(2, TimeUnit.SECONDS)
+                    .until(() -> StringUtils.isNotEmpty(
+                            oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken)));
+        }
     }
 
     // Methods to add users in organizations and sub organizations for testing purposes.
@@ -901,9 +906,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
      */
     protected void cleanUpUsers() throws Exception {
 
-        if (userDetails == null) {
-            return;
-        }
         for (Map.Entry<String, Map<String, Object>> entry : userDetails.entrySet()) {
             String userId = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ID);
             String orgName = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ORG_NAME);
@@ -935,9 +937,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         for (String audience : audiences) {
             Map<String, Object> orgWiseRolesOfAudience = roleDetails.get(audience);
-            if (orgWiseRolesOfAudience == null) {
-                continue;
-            }
             for (Map.Entry<String, Object> entry : orgWiseRolesOfAudience.entrySet()) {
                 String audienceName = entry.getKey();
                 Map<String, String> roles = (Map<String, String>) entry.getValue();
