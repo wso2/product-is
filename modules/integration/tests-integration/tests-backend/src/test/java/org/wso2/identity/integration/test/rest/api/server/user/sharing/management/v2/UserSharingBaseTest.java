@@ -373,6 +373,10 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         String subOrgSwitchToken = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN);
         String subOrgAppName = appName + PATH_SEPARATOR + subOrgName;
 
+        await().atMost(30, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .until(() -> StringUtils.isNotEmpty(
+                        oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken)));
         String subOrgAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken);
 
         Map<String, String> subOrgRoleIdsByName = StringUtils.equalsIgnoreCase(APPLICATION_AUDIENCE, audience) ?
@@ -577,9 +581,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(true);
         oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
-
-        // Application sharing is async; wait for it to complete before proceeding.
-        await().atMost(5, TimeUnit.SECONDS).until(() -> true);
     }
 
     // =========================================================================
@@ -1143,6 +1144,9 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
      */
     protected void cleanUpUsers() throws Exception {
 
+        if (userDetails == null) {
+            return;
+        }
         for (Map.Entry<String, Map<String, Object>> entry : userDetails.entrySet()) {
             String userId = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ID);
             String orgName = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ORG_NAME);
@@ -1172,6 +1176,9 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         for (String audience : audiences) {
             Map<String, Object> orgWiseRolesOfAudience = roleDetails.get(audience);
+            if (orgWiseRolesOfAudience == null) {
+                continue;
+            }
             for (Map.Entry<String, Object> entry : orgWiseRolesOfAudience.entrySet()) {
                 String audienceName = entry.getKey();
                 Map<String, String> roles = (Map<String, String>) entry.getValue();
