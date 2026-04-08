@@ -228,9 +228,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <!-- TODO: keeping ports without a offset due to a bug in TAF 4.3.1, Need to be changed to 9765 and 9445 -->
-                    <port type="http">10173</port>
-                    <port type="https">9853</port>
+                    <port type="http">10175</port>
+                    <port type="https">9855</port>
                 </ports>
                 <properties>
                 </properties>
