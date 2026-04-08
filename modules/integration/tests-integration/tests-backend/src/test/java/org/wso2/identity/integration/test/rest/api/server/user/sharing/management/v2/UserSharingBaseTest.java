@@ -1149,9 +1149,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
      */
     protected void cleanUpUsers() throws Exception {
 
-        if (userDetails == null) {
-            return;
-        }
         for (Map.Entry<String, Map<String, Object>> entry : userDetails.entrySet()) {
             String userId = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ID);
             String orgName = (String) entry.getValue().get(MAP_USER_DETAILS_KEY_USER_ORG_NAME);
@@ -1181,9 +1178,6 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         for (String audience : audiences) {
             Map<String, Object> orgWiseRolesOfAudience = roleDetails.get(audience);
-            if (orgWiseRolesOfAudience == null) {
-                continue;
-            }
             for (Map.Entry<String, Object> entry : orgWiseRolesOfAudience.entrySet()) {
                 String audienceName = entry.getKey();
                 Map<String, String> roles = (Map<String, String>) entry.getValue();
