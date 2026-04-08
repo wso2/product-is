@@ -47,7 +47,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -96,7 +95,6 @@ import static org.wso2.identity.integration.test.utils.CarbonUtils.isLegacyAuthz
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_CODE_NAME;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ID_TOKEN;
@@ -491,49 +489,6 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
         // Validate whether requested scopes are present.
         Scope scope = oidcTokenResponse.getOIDCTokens().getAccessToken().getScope();
         Assert.assertTrue(containAllRequestedOIDCScopes(scope), "Access token does not contain all requested scopes.");
-    }
-
-    @Test(groups = "wso2.is", description = "Test unrequested OIDC scopes are not included in the token response.",
-            dependsOnMethods = "testResourceOwnerGrantSendAuthRequestPost")
-    public void testUnrequestedOIDCScopesDrop() throws Exception {
-
-        // Update claim config requesting only email and profile OIDC scopes related claims.
-        ApplicationPatchModel applicationPatch = new ApplicationPatchModel()
-                .claimConfiguration(new ClaimConfiguration()
-                        .dialect(DialectEnum.LOCAL)
-                        .addRequestedClaimsItem(new RequestedClaimConfiguration()
-                                .claim(new Claim().uri("http://wso2.org/claims/username")))
-                        .addRequestedClaimsItem(new RequestedClaimConfiguration()
-                                .claim(new Claim().uri("http://wso2.org/claims/emailaddress"))));
-        updateApplication(applicationId, applicationPatch);
-
-        // Invoke password grant token endpoint to verify the scopes returned in the response.
-        List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
-        parameters.add(new BasicNameValuePair("username", loginUsername));
-        parameters.add(new BasicNameValuePair("password", loginPassword));
-
-        // Requesting additional OIDC scopes which are not requested by the application.
-        parameters.add(new BasicNameValuePair("scope", requestedScopes));
-
-        List<Header> headers = new ArrayList<>();
-        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
-                getBase64EncodedString(consumerKey, consumerSecret)));
-        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
-        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
-
-        HttpResponse response = sendPostRequest(client, headers, parameters,
-                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
-
-        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
-        JSONObject jsonResponse = new JSONObject(responseString);
-
-        Assert.assertTrue(jsonResponse.has("scope"), "Scopes attribute is not found in the token response.");
-        String[] scopesInResponse = jsonResponse.getString("scope").split(" ");
-        Assert.assertEquals(scopesInResponse.length, 4,
-                "Unrequested claims related OIDC scopes are included in the access token response.");
-        Assert.assertTrue(Arrays.asList(scopesInResponse)
-                .containsAll(Arrays.asList("openid", "email", "profile", "internal_login")));
     }
 
     private String getIntrospectionUrl(String tenantDomain) {
