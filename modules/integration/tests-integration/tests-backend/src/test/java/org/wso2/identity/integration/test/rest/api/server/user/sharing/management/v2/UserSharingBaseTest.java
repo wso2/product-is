@@ -1178,6 +1178,9 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
 
         for (String audience : audiences) {
             Map<String, Object> orgWiseRolesOfAudience = roleDetails.get(audience);
+            if (orgWiseRolesOfAudience == null) {
+                continue;
+            }
             for (Map.Entry<String, Object> entry : orgWiseRolesOfAudience.entrySet()) {
                 String audienceName = entry.getKey();
                 Map<String, String> roles = (Map<String, String>) entry.getValue();

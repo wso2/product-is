@@ -456,15 +456,18 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
      * {@code APP_ROLE_1}. Root-level policy stored: {@code SELECTED / [APP_ROLE_1]}.
      *
      * <p><b>TC1 — PATCH ADD APP_ROLE_2 to L1Org1:</b> {@code handleRoleAssignmentAddition} is
-     * additive — APP_ROLE_1 is preserved. No cascade to L2Org1, L2Org2, L3Org1. Policy table
-     * unchanged. After TC1: L1Org1 has [APP_ROLE_1, APP_ROLE_2]; all other orgs have [APP_ROLE_1].
+     * additive — APP_ROLE_1 is preserved. The operation cascades through L1Org1's entire descendant
+     * subtree (L2Org1, L2Org2, L3Org1), so APP_ROLE_2 is added to all four orgs. Policy table
+     * unchanged. After TC1: L1Org1, L2Org1, L2Org2, L3Org1 have [APP_ROLE_1, APP_ROLE_2];
+     * L1Org2, L2Org3, L1Org3 (outside L1Org1's subtree) still have [APP_ROLE_1].
      * Top-level sharingMode.roleAssignment.roles = [APP_ROLE_1] (original policy, not current
-     * L1Org1 assignments).
+     * assignments).
      *
-     * <p><b>TC2 — PATCH REMOVE APP_ROLE_1 from L1Org1:</b> APP_ROLE_1 removed from L1Org1; APP_ROLE_2
-     * is preserved. No cascade. Policy table still unchanged. After TC2: L1Org1 has [APP_ROLE_2];
-     * all other orgs have [APP_ROLE_1]. Top-level sharingMode.roleAssignment.roles still =
-     * [APP_ROLE_1].
+     * <p><b>TC2 — PATCH REMOVE APP_ROLE_1 from L1Org1:</b> APP_ROLE_1 removed from L1Org1 and all
+     * its descendants (L2Org1, L2Org2, L3Org1) via cascade; APP_ROLE_2 is preserved in those orgs.
+     * Policy table still unchanged. After TC2: L1Org1, L2Org1, L2Org2, L3Org1 have [APP_ROLE_2];
+     * L1Org2, L2Org3, L1Org3 still have [APP_ROLE_1].
+     * Top-level sharingMode.roleAssignment.roles still = [APP_ROLE_1].
      */
     @Test(dependsOnMethods = {"testGeneralUserUnsharing"})
     public void testPatchGeneralSharedUser() throws Exception {
@@ -555,17 +558,19 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
      * policyHoldingOrgId = L1Org1, policy = {@code WITH_CHILDREN}, roles = [APP_ROLE_1].
      *
      * <p><b>TC1 — PATCH ADD APP_ROLE_2 to L2Org1 (a child org, not the policy holder):</b>
-     * PATCH is strictly per-org; no cascade. L1Org1 (the policy holder) is untouched.
-     * L2Org1 per-org sharingMode remains null after this PATCH — sharingMode is determined by
-     * the original share policy, not by PATCH targeting. After TC1: L1Org1 = [APP_ROLE_1] with
-     * per-org sharingMode = WITH_CHILDREN/SELECTED/[APP_ROLE_1]; L2Org1 = [APP_ROLE_1, APP_ROLE_2]
-     * with per-org sharingMode = null; L2Org2 = [APP_ROLE_1]; L3Org1 = [APP_ROLE_1].
+     * The operation cascades through L2Org1's descendant subtree (L3Org1), so both L2Org1 and
+     * L3Org1 receive APP_ROLE_2. L1Org1 (the policy holder) and L2Org2 (a sibling of L2Org1)
+     * are untouched. L2Org1's per-org sharingMode remains null — sharingMode is determined by
+     * the original share policy, not by PATCH targeting.
+     * After TC1: L1Org1 = [APP_ROLE_1]; L2Org1 = [APP_ROLE_1, APP_ROLE_2];
+     * L2Org2 = [APP_ROLE_1]; L3Org1 = [APP_ROLE_1, APP_ROLE_2].
      *
      * <p><b>TC2 — PATCH REMOVE APP_ROLE_1 from L1Org1 (the policy holder):</b> Proves that the
      * ResourceSharingPolicy table is never modified by PATCH — the per-org sharingMode for L1Org1
-     * still shows roleAssignment.roles = [APP_ROLE_1] even after removal. L2Org1 retains
-     * [APP_ROLE_1, APP_ROLE_2] from TC1; no cascade. After TC2: L1Org1 = [] with per-org
-     * sharingMode still = WITH_CHILDREN/SELECTED/[APP_ROLE_1]; all other orgs unchanged.
+     * still shows roleAssignment.roles = [APP_ROLE_1] even after removal. The REMOVE cascades
+     * through L1Org1's entire descendant subtree (L2Org1, L2Org2, L3Org1). APP_ROLE_2 (assigned
+     * in TC1) is preserved in L2Org1 and L3Org1 since only APP_ROLE_1 is removed.
+     * After TC2: L1Org1 = []; L2Org1 = [APP_ROLE_2]; L2Org2 = []; L3Org1 = [APP_ROLE_2].
      */
     @Test(dependsOnMethods = {"testPatchGeneralSharedUser"})
     public void testPatchSelectiveSharedUser() throws Exception {
@@ -957,9 +962,11 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     /**
      * Expected state after Phase 5 TC1 (PATCH ADD APP_ROLE_2 to L1Org1).
      *
-     * <p>L1Org1: [APP_ROLE_1, APP_ROLE_2]. All other 6 orgs: [APP_ROLE_1]. Top-level
-     * sharingMode.roleAssignment.roles = [APP_ROLE_1] — the original policy-time roles, unchanged
-     * by PATCH.
+     * <p>PATCH ADD cascades through L1Org1's entire descendant subtree (L2Org1, L2Org2, L3Org1),
+     * so all four orgs now have [APP_ROLE_1, APP_ROLE_2]. Orgs outside L1Org1's subtree
+     * (L1Org2, L2Org3, L1Org3) are unaffected and retain [APP_ROLE_1].
+     * Top-level sharingMode.roleAssignment.roles = [APP_ROLE_1] — the original policy-time roles,
+     * unchanged by PATCH.
      */
     private Map<String, Object> setExpectedResultsAfterPatchGeneralSharingTestCase1() {
 
@@ -978,12 +985,12 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         RoleWithAudience appRole2 = createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE);
 
         Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
-        // L1Org1 now has both roles after PATCH ADD.
+        // PATCH ADD APP_ROLE_2 to L1Org1 cascades to all descendants of L1Org1.
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_1_NAME), Arrays.asList(appRole1, appRole2));
-        // Remaining orgs are unaffected by the PATCH targeting L1Org1 (no cascade).
-        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Collections.singletonList(appRole1));
-        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Collections.singletonList(appRole1));
-        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Collections.singletonList(appRole1));
+        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Arrays.asList(appRole1, appRole2));
+        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Arrays.asList(appRole1, appRole2));
+        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Arrays.asList(appRole1, appRole2));
+        // Orgs outside L1Org1's subtree are unaffected.
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_2_NAME), Collections.singletonList(appRole1));
         expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_3_NAME), Collections.singletonList(appRole1));
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_3_NAME), Collections.singletonList(appRole1));
@@ -1001,9 +1008,14 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     /**
      * Expected state after Phase 5 TC2 (PATCH REMOVE APP_ROLE_1 from L1Org1, continuing from TC1).
      *
-     * <p>L1Org1: [APP_ROLE_2] only. All other 6 orgs: [APP_ROLE_1] (no cascade). Top-level
-     * sharingMode.roleAssignment.roles = [APP_ROLE_1] — STILL the original policy-time roles even
-     * though L1Org1 no longer has APP_ROLE_1 assigned.
+     * <p>Entering state (from TC1): L1Org1, L2Org1, L2Org2, L3Org1 each have
+     * [APP_ROLE_1, APP_ROLE_2]; L1Org2, L2Org3, L1Org3 have [APP_ROLE_1].
+     *
+     * <p>PATCH REMOVE APP_ROLE_1 from L1Org1 cascades through L1Org1's entire descendant subtree
+     * (L2Org1, L2Org2, L3Org1). After TC2: L1Org1, L2Org1, L2Org2, L3Org1 have [APP_ROLE_2] only;
+     * L1Org2, L2Org3, L1Org3 (outside L1Org1's subtree) still have [APP_ROLE_1].
+     * Top-level sharingMode.roleAssignment.roles = [APP_ROLE_1] — STILL the original policy-time
+     * roles even though no org in the subtree has APP_ROLE_1 assigned anymore.
      */
     private Map<String, Object> setExpectedResultsAfterPatchGeneralSharingTestCase2() {
 
@@ -1022,11 +1034,13 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         RoleWithAudience appRole2 = createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE);
 
         Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
-        // L1Org1: APP_ROLE_1 was removed; APP_ROLE_2 (added in TC1) remains.
+        // PATCH REMOVE APP_ROLE_1 from L1Org1 cascades to all descendants of L1Org1.
+        // Each retains APP_ROLE_2 (added in TC1); APP_ROLE_1 is gone.
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_1_NAME), Collections.singletonList(appRole2));
-        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Collections.singletonList(appRole1));
-        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Collections.singletonList(appRole1));
-        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Collections.singletonList(appRole1));
+        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Collections.singletonList(appRole2));
+        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Collections.singletonList(appRole2));
+        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Collections.singletonList(appRole2));
+        // Orgs outside L1Org1's subtree are unaffected.
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_2_NAME), Collections.singletonList(appRole1));
         expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_3_NAME), Collections.singletonList(appRole1));
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_3_NAME), Collections.singletonList(appRole1));
@@ -1092,10 +1106,11 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     /**
      * Expected state after Phase 6 TC1 (PATCH ADD APP_ROLE_2 to L2Org1).
      *
-     * <p>L2Org1: [APP_ROLE_1, APP_ROLE_2]. L1Org1, L2Org2, L3Org1 unchanged. PATCH is strictly
-     * per-org — there is no cascade and L1Org1 (the policy holder) is untouched. L2Org1 per-org
-     * sharingMode remains null even though it was the direct PATCH target; sharingMode is
-     * determined by the original share policy, not by PATCH.
+     * <p>PATCH ADD cascades through L2Org1's descendant subtree (L3Org1), so both L2Org1 and
+     * L3Org1 now have [APP_ROLE_1, APP_ROLE_2]. L1Org1 (policy holder, not a descendant of L2Org1)
+     * and L2Org2 (sibling of L2Org1, not a descendant) are untouched.
+     * L2Org1's per-org sharingMode remains null even though it was the direct PATCH target;
+     * sharingMode is determined by the original share policy, not by PATCH.
      */
     private Map<String, Object> setExpectedResultsAfterPatchSelectiveSharingTestCase1() {
 
@@ -1112,11 +1127,14 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         RoleWithAudience appRole2 = createRoleWithAudience(APP_ROLE_2, APP_1_NAME, APPLICATION_AUDIENCE);
 
         Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
+        // L1Org1: untouched — not in L2Org1's subtree.
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_1_NAME), Collections.singletonList(appRole1));
-        // L2Org1: APP_ROLE_2 added; APP_ROLE_1 preserved (PATCH ADD is additive).
+        // L2Org1: APP_ROLE_2 added (direct target); APP_ROLE_1 preserved (additive).
         expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Arrays.asList(appRole1, appRole2));
+        // L2Org2: untouched — sibling of L2Org1, not a descendant.
         expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Collections.singletonList(appRole1));
-        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Collections.singletonList(appRole1));
+        // L3Org1: APP_ROLE_2 cascaded from L2Org1; APP_ROLE_1 preserved.
+        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Arrays.asList(appRole1, appRole2));
         expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
 
         // L1Org1 per-org sharingMode unchanged (still the policy holder with original roles).
@@ -1138,10 +1156,15 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     /**
      * Expected state after Phase 6 TC2 (PATCH REMOVE APP_ROLE_1 from L1Org1, continuing from TC1).
      *
-     * <p>L1Org1: [] (empty — APP_ROLE_1 removed). All other orgs unchanged. Critical assertion:
-     * L1Org1 per-org sharingMode.roleAssignment.roles STILL = [APP_ROLE_1] because the
-     * ResourceSharingPolicy table was not modified by the PATCH. L2Org1 retains [APP_ROLE_1,
-     * APP_ROLE_2] from TC1 — no cascade from PATCH.
+     * <p>Entering state (from TC1): L1Org1 = [APP_ROLE_1]; L2Org1 = [APP_ROLE_1, APP_ROLE_2];
+     * L2Org2 = [APP_ROLE_1]; L3Org1 = [APP_ROLE_1, APP_ROLE_2].
+     *
+     * <p>PATCH REMOVE APP_ROLE_1 from L1Org1 cascades through L1Org1's entire descendant subtree
+     * (L2Org1, L2Org2, L3Org1). APP_ROLE_2 (assigned in TC1 to L2Org1 and L3Org1) is preserved
+     * since only APP_ROLE_1 is removed.
+     * After TC2: L1Org1 = []; L2Org1 = [APP_ROLE_2]; L2Org2 = []; L3Org1 = [APP_ROLE_2].
+     * Critical assertion: L1Org1 per-org sharingMode.roleAssignment.roles STILL = [APP_ROLE_1]
+     * because PATCH never modifies the ResourceSharingPolicy table.
      */
     private Map<String, Object> setExpectedResultsAfterPatchSelectiveSharingTestCase2() {
 
@@ -1160,10 +1183,12 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
         Map<String, List<RoleWithAudience>> expectedRolesPerExpectedOrg = new HashMap<>();
         // L1Org1: APP_ROLE_1 removed; no roles remain.
         expectedRolesPerExpectedOrg.put(getOrgId(L1_ORG_1_NAME), Collections.emptyList());
-        // L2Org1: unchanged from TC1 (APP_ROLE_2 added, APP_ROLE_1 still present).
-        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Arrays.asList(appRole1, appRole2));
-        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Collections.singletonList(appRole1));
-        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Collections.singletonList(appRole1));
+        // L2Org1: APP_ROLE_1 removed via cascade; APP_ROLE_2 (from TC1) remains.
+        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_1_NAME), Collections.singletonList(appRole2));
+        // L2Org2: APP_ROLE_1 removed via cascade; no other roles.
+        expectedRolesPerExpectedOrg.put(getOrgId(L2_ORG_2_NAME), Collections.emptyList());
+        // L3Org1: APP_ROLE_1 removed via cascade; APP_ROLE_2 (cascaded in TC1) remains.
+        expectedRolesPerExpectedOrg.put(getOrgId(L3_ORG_1_NAME), Collections.singletonList(appRole2));
         expectedResults.put(MAP_KEY_EXPECTED_ROLES_PER_EXPECTED_ORG, expectedRolesPerExpectedOrg);
 
         // L1Org1 per-org sharingMode.roleAssignment.roles STILL = [APP_ROLE_1] even though the
