@@ -1,0 +1,21 @@
+{
+  "subjectId": "1",
+  "serviceId": "test-integration-service",
+  "language": "en",
+  "purposes": [
+    {
+      "purposeId": "1",
+      "elements": [
+        {
+          "elementId": "1"
+        }
+      ]
+    }
+  ],
+  "properties": [
+    {
+      "key": "testKey",
+      "value": "testValue"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "Test-Purpose-With-Element",
+  "description": "Purpose using element",
+  "type": "Test",
+  "elements": [
+    {
+      "elementId": 1,
+      "mandatory": true
+    }
+  ]
+}
