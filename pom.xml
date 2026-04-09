@@ -2685,7 +2685,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.39</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.40</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2768,7 +2768,7 @@
         <provisioning.connector.scim2.version>2.1.6</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.11.3</identity.local.auth.basicauth.version>
+        <identity.local.auth.basicauth.version>6.11.4</identity.local.auth.basicauth.version>
         <identity.local.auth.fido.version>6.0.4</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.5.0</identity.local.auth.iwa.version>
 
@@ -2788,11 +2788,11 @@
         <identity.metadata.saml.version>1.11.1</identity.metadata.saml.version>
 
         <!-- Identity Workflow -->
-        <identity.workflow.version>1.1.7</identity.workflow.version>
+        <identity.workflow.version>1.1.8</identity.workflow.version>
         <identity.user.workflow.version>6.1.0</identity.user.workflow.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.4.2</authenticator.totp.version>
+        <authenticator.totp.version>3.4.3</authenticator.totp.version>
         <authenticator.backupcode.version>0.1.1</authenticator.backupcode.version>
         <authenticator.office365.version>2.2.0</authenticator.office365.version>
         <authenticator.smsotp.version>3.4.2</authenticator.smsotp.version>
@@ -2808,7 +2808,7 @@
         <identity.org.mgt.version>2.4.18</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.5.1</identity.org.mgt.core.version>
         <identity.organization.login.version>1.2.5</identity.organization.login.version>
-        <identity.oauth2.grant.organizationswitch.version>1.2.0</identity.oauth2.grant.organizationswitch.version>
+        <identity.oauth2.grant.organizationswitch.version>1.2.1</identity.oauth2.grant.organizationswitch.version>
 
         <!-- Hash Provider Versions-->
         <hashprovider.pbkdf2.version>0.2.0</hashprovider.pbkdf2.version>
@@ -2834,7 +2834,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>4.1.3</identity.apps.console.version>
         <identity.apps.myaccount.version>4.0.0</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.0.9</identity.apps.core.version>
+        <identity.apps.core.version>5.0.10</identity.apps.core.version>
         <identity.apps.tests.version>1.6.388</identity.apps.tests.version>
 
         <!-- Charon -->
@@ -2983,7 +2983,7 @@
         <project.scm.id>my-scm-server</project.scm.id>
 
         <!-- Integration UI Templates Version -->
-        <identity.integration.ui.templates.version>1.0.34</identity.integration.ui.templates.version>
+        <identity.integration.ui.templates.version>1.0.36</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
