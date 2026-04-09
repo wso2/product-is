@@ -657,7 +657,7 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 {"attributes eq Country", false, false},
                 {"attributes sw C and attributes ew try", false, false},
                 {"attributes eq Region", true, false},
-                {"attributes co A", true, true},
+                {"attributes co B", true, true},
         };
     }
 
