@@ -18,13 +18,13 @@ base_dn = "dc=wso2,dc=org"
 
 [database.identity_db]
 type = "h2"
-url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+url = "jdbc:h2:./repository/database/WSO2IDENTITY_DB;COLLATION=en_US;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
 username = "wso2carbon"
 password = "wso2carbon"
 
 [database.shared_db]
 type = "h2"
-url = "jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+url = "jdbc:h2:./repository/database/WSO2SHARED_DB;COLLATION=en_US;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
 username = "wso2carbon"
 password = "wso2carbon"
 
