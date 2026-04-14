@@ -536,6 +536,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                     .userCriteria(getUserCriteriaForBaseUserUnsharing(userIds));
             getResponseOfPost(USER_SHARING_API_BASE_PATH + UNSHARE_WITH_ALL_PATH,
                     toJSONString(cleanupRequest));
+            validateUserSharingResults(userIds, setExpectedResultsForEmptyShare());
         }
     }
 
@@ -645,6 +646,7 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
                     .userCriteria(getUserCriteriaForBaseUserUnsharing(userIds));
             getResponseOfPost(USER_SHARING_API_BASE_PATH + UNSHARE_WITH_ALL_PATH,
                     toJSONString(cleanupRequest));
+            validateUserSharingResults(userIds, setExpectedResultsForEmptyShare());
         }
     }
 
