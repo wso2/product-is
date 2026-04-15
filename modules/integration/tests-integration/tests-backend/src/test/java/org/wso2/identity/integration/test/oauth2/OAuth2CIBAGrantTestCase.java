@@ -245,10 +245,9 @@ public class OAuth2CIBAGrantTestCase extends OAuth2ServiceAbstractIntegrationTes
             dependsOnMethods = "testSendApprovalPost")
     public void testPollTokenEndpoint() throws Exception {
 
-        Thread.sleep(pollingInterval * 1000);
+        Thread.sleep(pollingInterval * 1000 + 500);
 
-        JSONObject tokenResponse = pollTokenEndpointWithRetry(consumerKey, consumerSecret, authReqId,
-                pollingInterval);
+        JSONObject tokenResponse = sendCIBATokenRequest(consumerKey, consumerSecret, authReqId);
 
         Assert.assertTrue(tokenResponse.containsKey(OAuth2Constant.ACCESS_TOKEN),
                 "Access token not found in the CIBA token response.");
@@ -281,11 +280,12 @@ public class OAuth2CIBAGrantTestCase extends OAuth2ServiceAbstractIntegrationTes
         Assert.assertNotNull(newAuthReqId, "auth_req_id is null for pre-auth polling test.");
 
         Object interval = cibaResponse.get(OAuth2Constant.CIBA_INTERVAL);
-        Thread.sleep((long) interval * 1000);
+        if (interval != null) {
+            Thread.sleep((long) interval * 1000 + 500);
+        }
 
         // Poll token endpoint WITHOUT completing user authentication.
-        JSONObject tokenResponse = pollTokenEndpointWithRetry(consumerKey, consumerSecret, newAuthReqId,
-                (long) interval);
+        JSONObject tokenResponse = sendCIBATokenRequest(consumerKey, consumerSecret, newAuthReqId);
 
         Assert.assertTrue(tokenResponse.containsKey("error"),
                 "Expected error response when polling before user authentication.");
@@ -441,33 +441,5 @@ public class OAuth2CIBAGrantTestCase extends OAuth2ServiceAbstractIntegrationTes
                      new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
             return (JSONObject) org.json.simple.JSONValue.parse(responseBuffer);
         }
-    }
-
-    /**
-     * Poll the token endpoint with retry logic to handle 'slow_down' responses.
-     * If the server returns 'slow_down', this method waits for the polling interval and retries
-     * up to {@link #MAX_TOKEN_POLL_RETRIES} times.
-     *
-     * @param clientId        Client ID for Basic auth.
-     * @param clientSecret    Client secret for Basic auth.
-     * @param authReqId       The auth_req_id from the CIBA authentication response.
-     * @param intervalSeconds The polling interval in seconds from the CIBA response.
-     * @return JSONObject of the token response (either a successful response or a non-slow_down error).
-     * @throws Exception If an error occurred or max retries exceeded with slow_down.
-     */
-    private JSONObject pollTokenEndpointWithRetry(String clientId, String clientSecret,
-                                                  String authReqId,
-                                                  long intervalSeconds) throws Exception {
-
-        JSONObject tokenResponse = null;
-        for (int attempt = 0; attempt < MAX_TOKEN_POLL_RETRIES; attempt++) {
-            tokenResponse = sendCIBATokenRequest(clientId, clientSecret, authReqId);
-            if (!SLOW_DOWN_ERROR.equals(tokenResponse.get("error"))) {
-                return tokenResponse;
-            }
-            // Server indicated we are polling too fast, wait for the interval and retry.
-            Thread.sleep(intervalSeconds * 1000);
-        }
-        return tokenResponse;
     }
 }
