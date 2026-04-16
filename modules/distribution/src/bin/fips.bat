@@ -16,13 +16,13 @@ rem KIND, either express or implied.  See the License for the
 rem specific language governing permissions and limitations
 rem under the License.
 
-set BC_FIPS_VERSION=2.1.0
-set BCPKIX_FIPS_VERSION=2.1.9
-set BCUTIL_FIPS_VERSION=2.1.4
+set BC_FIPS_VERSION=2.1.2
+set BCPKIX_FIPS_VERSION=2.1.10
+set BCUTIL_FIPS_VERSION=2.1.5
 
-set EXPECTED_BC_FIPS_CHECKSUM=c8df3d47f9854f3e9ca57e9fc862da18c9381fa9
-set EXPECTED_BCPKIX_FIPS_CHECKSUM=722eaefa83fd8c53e1fc019bde25e353258ed22b
-set EXPECTED_BCUTIL_FIPS_CHECKSUM=1d37b7a28560684f5b8e4fd65478c9130d4015d0
+set EXPECTED_BC_FIPS_CHECKSUM=061fbe8383f70489dda95a11a2a4739eb818ff2c
+set EXPECTED_BCPKIX_FIPS_CHECKSUM=41d15c70437440d63b65225d7c00873a030d25d0
+set EXPECTED_BCUTIL_FIPS_CHECKSUM=30b41ebc759a4f02e2ff7ab9acb09268923ee41f
 
 rem ----- Only set CARBON_HOME if not already set ----------------------------
 :checkServer
