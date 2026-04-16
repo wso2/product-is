@@ -420,7 +420,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
 
     private void approveFirstPendingTask() {
 
-        Response listResp = getResponseOfGetNoFilter(APPROVAL_API_PATH);
+        Response listResp = getResponseOfGetNoFilter(APPROVAL_API_PATH + "?status=READY");
         listResp.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
 
         String taskId = listResp.jsonPath().getString("[0].id");

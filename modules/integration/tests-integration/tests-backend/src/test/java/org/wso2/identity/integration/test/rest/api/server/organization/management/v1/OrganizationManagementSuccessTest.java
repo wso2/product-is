@@ -1434,8 +1434,8 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     public void testAddMetaAttributesToOrganizations() {
 
         // Initialize meta attributes in sorted order.
-        String[] attributes = {"1", "2", "3", ":", "@", "A", "B", "C", "LMN", "PQR", "STU", "a", "b", "c", "fg", "jKL",
-                "mNo", "x", "y", "z"};
+        String[] attributes = { "1", "2", "3", "AA", "BB", "CC", "FG", "JKL", "LMN", "MNO", "PQR", "STU", "X", "Y",
+            "Z" };
 
         metaAttributes = new ArrayList<>(Arrays.asList(attributes));
         List<Map<String, String>> addedAttributes = new ArrayList<>();
@@ -2052,6 +2052,13 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
                 newOrganizations.add(org);
             } else {
                 throw new RuntimeException("Failed to create organization " + i);
+            }
+            // Ensure each organization has a unique creation timestamp to maintain deterministic
+            // ordering in pagination tests that sort by creation time.
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
 
