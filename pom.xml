@@ -2721,12 +2721,12 @@
         <identity.carbon.auth.rest.version>1.12.11</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.5.19</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.5.20</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.5</identity.inbound.auth.saml.version>
-        <identity.inbound.auth.openid.version>5.13.0</identity.inbound.auth.openid.version>
+        <identity.inbound.auth.openid.version>5.13.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.8.1</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.7.2</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.7.3</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.6.0</identity.user.account.association.version>
@@ -2811,7 +2811,7 @@
         <identity.extension.utils>1.3.0</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.1.1</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.4.18</identity.org.mgt.version>
+        <identity.org.mgt.version>2.4.19</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.5.1</identity.org.mgt.core.version>
         <identity.organization.login.version>1.2.5</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.2.1</identity.oauth2.grant.organizationswitch.version>
@@ -2850,7 +2850,7 @@
         <carbon.kernel.version>4.12.30</carbon.kernel.version>
 
         <!-- Identity Verification -->
-        <identity.verification.version>1.1.1</identity.verification.version>
+        <identity.verification.version>1.1.2</identity.verification.version>
 
         <!-- Carbon Repo Versions -->
         <carbon.deployment.version>4.14.0</carbon.deployment.version>
