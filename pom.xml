@@ -2754,7 +2754,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.3.0</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.3.0</social.authenticator.google.version>
+        <social.authenticator.google.version>5.3.2</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.3.0</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.1.2</social.authenticator.apple.version>
         <social.authenticator.github.version>1.2.0</social.authenticator.github.version>
