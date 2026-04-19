@@ -210,8 +210,8 @@ public class OIDCNonPersistentAccessTokenTest extends OIDCAbstractIntegrationTes
 
         // Change user password; retain_revoked_token=true means the revoked token IDs are tracked.
         changeUserPassword(UPDATED_PASSWORD_SCENARIO_1);
-        // Wait 1 second so that new tokens will have iat > credential_changed_time.
-        Thread.sleep(1000);
+        // Wait 3 second so that new tokens will have iat > credential_changed_time.
+        Thread.sleep(3000);
 
         // Verify the non-persistent JWT AT is now reported as inactive by introspect.
         Map<String, String> introspectParams = new HashMap<>();
@@ -238,6 +238,9 @@ public class OIDCNonPersistentAccessTokenTest extends OIDCAbstractIntegrationTes
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+        // Wait an additional 2 seconds before re-issuing tokens.
+        Thread.sleep(2000);
 
         // Re-issue a password grant with the new password to obtain fresh tokens for subsequent tests.
         Map<String, String> params = new HashMap<>();
@@ -419,8 +422,8 @@ public class OIDCNonPersistentAccessTokenTest extends OIDCAbstractIntegrationTes
 
         // Change user password; retain_revoked_token=true means token IDs are tracked in the revocation list.
         changeUserPassword(UPDATED_PASSWORD_SCENARIO_2);
-        // Wait 1 second so that new tokens will have iat > credential_changed_time.
-        Thread.sleep(1000);
+        // Wait 3 second so that new tokens will have iat > credential_changed_time.
+        Thread.sleep(3000);
 
         // Verify the non-persistent JWT AT is now reported as inactive by introspect.
         Map<String, String> introspectATParams = new HashMap<>();
@@ -447,6 +450,9 @@ public class OIDCNonPersistentAccessTokenTest extends OIDCAbstractIntegrationTes
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+        // Wait an additional 2 seconds before re-issuing tokens.
+        Thread.sleep(2000);
 
         // Re-issue a password grant with the new password to obtain fresh tokens for subsequent tests.
         Map<String, String> params = new HashMap<>();

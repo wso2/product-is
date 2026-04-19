@@ -16,11 +16,11 @@
   },
   "claims": {
     "userIdClaim": {
-      "uri": ""
+      "uri": "http://wso2.org/claims/username"
     },
     "provisioningClaims": [],
     "roleClaim": {
-      "uri": ""
+      "uri": "http://wso2.org/claims/role"
     }
   },
   "federatedAuthenticators": {
