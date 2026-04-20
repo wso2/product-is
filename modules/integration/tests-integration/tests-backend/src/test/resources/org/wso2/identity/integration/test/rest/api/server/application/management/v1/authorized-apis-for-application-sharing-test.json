@@ -1,0 +1,21 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_delete"
+  ],
+  "/o/api/server/v1/organizations": [
+    "internal_org_organization_view",
+    "internal_org_organization_create",
+    "internal_org_organization_delete"
+  ],
+  "/api/server/v1/api-resources": [
+    "internal_api_resource_create",
+    "internal_api_resource_view",
+    "internal_api_resource_update",
+    "internal_api_resource_delete"
+  ],
+  "/o/api/server/v1/api-resources": [
+    "internal_org_api_resource_view"
+  ]
+}
