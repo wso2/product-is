@@ -1,0 +1,12 @@
+{
+  "purpose": "User Authentication",
+  "description": "To authenticate users and manage their identity",
+  "group": "SIGNIN",
+  "groupType": "SYSTEM",
+  "piiCategories": [
+    {
+      "piiCategoryId": 1,
+      "mandatory": true
+    }
+  ]
+}

@@ -553,6 +553,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateValidationTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateActionTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateWebhookTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.consent.management.v1.ConsentManagementV1SuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.consent.management.v1.ConsentManagementV1FailureTest"/>
         </classes>
     </test>
 

@@ -1,0 +1,35 @@
+{
+  "services": [
+    {
+      "service": "test-integration-v1-service",
+      "tenantDomain": "carbon.super",
+      "purposes": [
+        {
+          "purposeId": 1,
+          "purposeCategoryId": [1],
+          "consentType": "EXPLICIT",
+          "piiCategory": [
+            {
+              "piiCategoryId": 1,
+              "validity": "days:365"
+            }
+          ],
+          "primaryPurpose": true,
+          "termination": "days:365",
+          "thirdPartyDisclosure": false,
+          "thirdPartyName": ""
+        }
+      ]
+    }
+  ],
+  "collectionMethod": "Sign-Up",
+  "jurisdiction": "CA",
+  "language": "EN",
+  "policyURL": "https://example.com/privacy",
+  "properties": [
+    {
+      "key": "testKey",
+      "value": "testValue"
+    }
+  ]
+}
