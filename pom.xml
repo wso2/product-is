@@ -2839,7 +2839,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.31</carbon.kernel.version>
+        <carbon.kernel.version>4.12.32</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.1</identity.verification.version>
@@ -2975,7 +2975,7 @@
         <!--ws-trust-client-->
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
         <org.xmlunit.version>2.6.3</org.xmlunit.version>
-        <org.apache.logging.log4j.version>2.25.3</org.apache.logging.log4j.version>
+        <org.apache.logging.log4j.version>2.25.4</org.apache.logging.log4j.version>
         <org.apache.log4j.wso2.version>1.2.17.wso2v1</org.apache.log4j.wso2.version>
 
         <project.scm.id>my-scm-server</project.scm.id>
