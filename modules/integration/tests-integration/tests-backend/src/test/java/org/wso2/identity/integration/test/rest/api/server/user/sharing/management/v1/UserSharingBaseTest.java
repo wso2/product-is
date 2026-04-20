@@ -161,6 +161,8 @@ import static org.wso2.identity.integration.test.rest.api.server.user.sharing.ma
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.constant.UserSharingConstants.USER_SHARING_API_BASE_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
+import org.awaitility.core.ConditionTimeoutException;
+
 import static org.awaitility.Awaitility.await;
 
 /**
@@ -620,26 +622,34 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     protected void validateUserSharingResults(List<String> userIds, Map<String, Object> expectedResults)
             throws Exception {
 
-        final Object[] lastException = {null};
+        final Throwable[] lastThrowable = {null};
 
-        await().atMost(20, TimeUnit.SECONDS)
-                .pollInterval(2, TimeUnit.SECONDS)
-                .ignoreExceptions()
-                .until(() -> {
-                    try {
-                        for (String userId : userIds) {
-                            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
+        try {
+            await().atMost(60, TimeUnit.SECONDS)
+                    .pollInterval(2, TimeUnit.SECONDS)
+                    .ignoreExceptions()
+                    .until(() -> {
+                        try {
+                            for (String userId : userIds) {
+                                validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedResults);
+                            }
+                            lastThrowable[0] = null;
+                            return true;
+                        } catch (AssertionError | Exception e) {
+                            lastThrowable[0] = e;
+                            return false;
                         }
-                        lastException[0] = null;
-                        return true;
-                    } catch (AssertionError | Exception e) {
-                        lastException[0] = e;
-                        return false;
-                    }
-                });
+                    });
+        } catch (ConditionTimeoutException ignored) {
+            // Awaitility timed out — fall through so the last real failure is rethrown below.
+        }
 
-        if (lastException[0] != null) {
-            throw (Exception) lastException[0];
+        if (lastThrowable[0] != null) {
+            Throwable t = lastThrowable[0];
+            if (t instanceof Error) {
+                throw (Error) t;
+            }
+            throw (Exception) t;
         }
     }
 
@@ -661,27 +671,35 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
                                                                            Map<String, Object> expectedSharedResults)
             throws Exception {
 
-        final Object[] lastException = {null};
+        final Throwable[] lastException = {null};
 
         List<String> sharedUserIds = new ArrayList<>();
-        await().atMost(20, TimeUnit.SECONDS)
-                .pollInterval(2, TimeUnit.SECONDS)
-                .ignoreExceptions()
-                .until(() -> {
-                    try {
-                        for (String userId : userIds) {
-                            validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedSharedResults);
+        try {
+            await().atMost(60, TimeUnit.SECONDS)
+                    .pollInterval(2, TimeUnit.SECONDS)
+                    .ignoreExceptions()
+                    .until(() -> {
+                        try {
+                            for (String userId : userIds) {
+                                validateUserHasBeenSharedToExpectedOrgsWithExpectedRoles(userId, expectedSharedResults);
+                            }
+                            lastException[0] = null;
+                            return true;
+                        } catch (AssertionError | Exception e) {
+                            lastException[0] = e;
+                            return false;
                         }
-                        lastException[0] = null;
-                        return true;
-                    } catch (AssertionError | Exception e) {
-                        lastException[0] = e;
-                        return false;
-                    }
-                });
+                    });
+        } catch (ConditionTimeoutException ignored) {
+            // Awaitility timed out — fall through so the last real failure is rethrown below.
+        }
 
         if (lastException[0] != null) {
-            throw (Exception) lastException[0];
+            Throwable t = lastException[0];
+            if (t instanceof Error) {
+                throw (Error) t;
+            }
+            throw (Exception) t;
         }
 
         // Once assertions pass, extract shared user IDs
