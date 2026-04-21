@@ -46,7 +46,6 @@ import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
@@ -275,12 +274,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     public void testGetMe() throws Exception {
 
         userAccessToken = getUserToken();
-        Response response = io.restassured.RestAssured.given()
-                .auth().preemptive().oauth2(userAccessToken)
-                .contentType(SCIM_CONTENT_TYPE)
-                .header(HttpHeaders.ACCEPT, SCIM_CONTENT_TYPE)
-                .when()
-                .get(ME_ENDPOINT);
+        Response response = getResponseOfGetWithOAuth2(ME_ENDPOINT, userAccessToken);
         if (HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusCode()) {
             log.info(">>> Content: >>>" + response.getBody().prettyPrint());
         }
