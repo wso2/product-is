@@ -1,0 +1,16 @@
+{
+  "provider": "Custom",
+  "providerURL": "https://example.sms.sender",
+  "sender": "0123456789",
+  "contentType": "JSON",
+  "properties": [
+    {
+        "key": "body",
+        "value": "{\"content\": {{body}}, \"to\": {{mobile}} }"
+    },
+    {
+      "key" : "http.headers",
+      "value": "X-Version: 1, Accept: application/json ,Content-Type: application/json"
+    }
+  ]
+}

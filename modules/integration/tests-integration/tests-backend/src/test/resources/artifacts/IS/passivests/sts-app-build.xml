@@ -31,6 +31,14 @@
     <property name="openid.properties.default" location="${oauth.properties}/PassiveSTSSampleApp"/>
 
     <target name="default">
+        <!-- Remove old servlet-api JARs to prevent conflicts with Tomcat 9.0.113 -->
+        <delete>
+            <fileset dir="${sts.webapp.lib}">
+                <include name="servlet-api-*.jar"/>
+                <include name="javax.servlet-api-*.jar"/>
+            </fileset>
+        </delete>
+        
         <delete file="${sts.webapp.webinf}/web.xml"/>
         <copy file="${openid.properties.default}/web.xml" tofile="${sts.webapp.webinf}/web.xml"/>
         <war destfile="${build}/PassiveSTSSampleApp.war" webxml="${sts.webapp}/WEB-INF/web.xml">
@@ -57,5 +65,13 @@
         <delete file="${sts.webapp.lib}/log4j-over-slf4j-1.7.5.jar"/>
         <delete file="${sts.webapp.lib}/jcl-over-slf4j-1.7.5.jar"/>
         <delete file="${sts.webapp.lib}/slf4j-api-1.7.5.jar"/>
+        
+        <!-- Remove old servlet-api JARs to prevent conflicts with Tomcat 9.0.113 -->
+        <delete>
+            <fileset dir="${sts.webapp.lib}">
+                <include name="servlet-api-*.jar"/>
+                <include name="javax.servlet-api-*.jar"/>
+            </fileset>
+        </delete>
     </target>
 </project>

@@ -483,8 +483,10 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
         request.setEntity(new UrlEncodedFormEntity(urlParameters));
         HttpResponse response = client.execute(request);
 
-        BufferedReader responseBuffer = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        return (JSONObject) JSONValue.parse(responseBuffer);
+        try (BufferedReader responseBuffer =
+                     new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+            return (JSONObject) JSONValue.parse(responseBuffer);
+        }
     }
 
     private JSONObject responseObjectNew(List<NameValuePair> postParameters, String uri) throws Exception {

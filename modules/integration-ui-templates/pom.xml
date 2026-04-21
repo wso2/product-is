@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.wso2.is</groupId>
         <artifactId>identity-server-parent</artifactId>
-        <version>7.2.0-beta-SNAPSHOT</version>
+        <version>7.4.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -50,6 +50,11 @@
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.mcp-client-application</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.digital-wallet-application</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -84,6 +89,11 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.microsoft-365-v2</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.zoom</artifactId>
             <type>zip</type>
         </dependency>
@@ -99,12 +109,34 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.notification.providers.amazonsns</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.react-application</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
             <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.nextjs-application</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.vue-application</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.angular-application</artifactId>
+            <version>${identity.integration.ui.templates.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.integration.ui.templates</groupId>
+            <artifactId>org.wso2.carbon.identity.integration.ui.templates.applications.expressjs-application</artifactId>
+            <version>${identity.integration.ui.templates.version}</version>
             <type>zip</type>
         </dependency>
     </dependencies>

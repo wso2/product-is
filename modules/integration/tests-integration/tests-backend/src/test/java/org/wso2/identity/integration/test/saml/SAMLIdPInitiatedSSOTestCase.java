@@ -138,10 +138,12 @@ public class SAMLIdPInitiatedSSOTestCase extends AbstractSAMLSSOTestCase {
 
         String sessionDataKey = getSessionDataKeyFromRedirectUrl(redirectUrl);
 
-        HttpResponse samlssoResponse = Utils.sendPOSTMessage(sessionDataKey, String.format(SAML_SSO_URL,
-                IS_DEFAULT_HTTPS_PORT), USER_AGENT, SP_ACS_URL, samlConfig.getApp()
-                        .getArtifact(), samlConfig.getUser().getUsername(), samlConfig.getUser().getPassword(),
-                httpClient);
+        HttpResponse samlssoResponse = Utils.sendPOSTMessage(sessionDataKey, getTenantQualifiedURL(String.format(
+                SAML_SSO_URL, IS_DEFAULT_HTTPS_PORT), samlConfig.getUser().getTenantDomain()), USER_AGENT, SP_ACS_URL,
+                samlConfig.getApp().getArtifact(), samlConfig.getUser().getTenantAwareUsername(),
+                samlConfig.getUser().getPassword(), httpClient,
+                getTenantQualifiedURL(String.format(SAML_SSO_URL, IS_DEFAULT_HTTPS_PORT),
+                        samlConfig.getUser().getTenantDomain()));
 
         List<NameValuePair> consentRequiredClaims = Utils.getConsentRequiredClaimsFromResponse(samlssoResponse);
         HttpResponse commonAuthResponse = setConsentForSP(sessionDataKey, consentRequiredClaims);

@@ -109,8 +109,6 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
     private String authenticatorId;
     private String href;
     private JSONArray paramsArray;
-    private Lookup<CookieSpecProvider> cookieSpecRegistry;
-    private RequestConfig requestConfig;
     private CloseableHttpClient client;
     private UserManagementClient userMgtServiceClient;
     private String code;
@@ -121,10 +119,10 @@ public class ApplicationNativeAuthenticationTestCase extends OAuth2ServiceAbstra
 
         super.init(TestUserMode.SUPER_TENANT_USER);
 
-        cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
                 .build();
-        requestConfig = RequestConfig.custom()
+        RequestConfig requestConfig = RequestConfig.custom()
                 .setCookieSpec(CookieSpecs.DEFAULT)
                 .build();
         client = HttpClientBuilder.create()

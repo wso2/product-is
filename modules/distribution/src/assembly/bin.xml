@@ -181,7 +181,7 @@
                 <include>**/</include>
             </includes>
         </fileSet>
-        <!--copy rule meta data files of rule metadata feature-->
+        <!--copy rule metadata files of rule metadata feature-->
         <fileSet>
             <directory>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/rulemeta
@@ -189,6 +189,17 @@
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/rulemeta</outputDirectory>
             <includes>
                 <include>**/*.json</include>
+            </includes>
+        </fileSet>
+
+        <!--copy compatibility settings files of compatibility settings feature-->
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/compatibilitysettings
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/conf/templates/repository/conf</outputDirectory>
+            <includes>
+                <include>**/*.j2</include>
             </includes>
         </fileSet>
 
@@ -522,6 +533,7 @@
                 <include>mex/</include>
                 <include>mexut/</include>
                 <include>oauth2/</include>
+                <include>oid4vci/</include>
                 <include>scim2/</include>
                 <include>wso2/</include>
                 <include>api#health-check#v1.0/</include>
@@ -796,6 +808,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/samlsso_response_loader.html
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/oauth_response.html</source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
             <destName>oauth_response.html</destName>
@@ -808,6 +827,12 @@
             <filtered>true</filtered>
         </file>
         <file>
+            <source>src/repository/resources/pages/samlsso_federate_loader.html</source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
+            <destName>samlsso_federate_loader.html</destName>
+            <filtered>true</filtered>
+        </file>
+        <file>
             <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/invalid_tenant_domain_response.html</source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
             <destName>invalid_tenant_domain_response.html</destName>
@@ -816,6 +841,13 @@
         <file>
             <source>
                 ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/sts_response.html
+            </source>
+            <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/identity/pages/sts_response_loader.html
             </source>
             <outputDirectory>wso2is-${pom.version}/repository/resources/identity/pages</outputDirectory>
             <fileMode>644</fileMode>

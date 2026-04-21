@@ -64,6 +64,13 @@
         </selenium>
     </tools>
 
+    <!--  Configs to add in deployment.toml at startup to enable admin/SOAP services. -->
+    <enableAdminServices>
+        <expectedParentKey>server</expectedParentKey>
+        <expectedKey>enable_admin_services</expectedKey>
+        <expectedValue>true</expectedValue>
+    </enableAdminServices>
+
     <!--  SMTP Server configs to be added to the deployment.toml during the initial server startup  -->
     <emailSenderConfigs>
         <from_address>admin@wso2.com</from_address>
@@ -210,9 +217,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <!-- TODO: keeping ports without a offset due to a bug in TAF 4.3.1, Need to be changed to 9764 and 9444-->
-                    <port type="http">10173</port>
-                    <port type="https">9853</port>
+                    <port type="http">10174</port>
+                    <port type="https">9854</port>
                 </ports>
                 <properties>
                 </properties>
@@ -222,9 +228,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <!-- TODO: keeping ports without a offset due to a bug in TAF 4.3.1, Need to be changed to 9765 and 9445 -->
-                    <port type="http">10173</port>
-                    <port type="https">9853</port>
+                    <port type="http">10175</port>
+                    <port type="https">9855</port>
                 </ports>
                 <properties>
                 </properties>

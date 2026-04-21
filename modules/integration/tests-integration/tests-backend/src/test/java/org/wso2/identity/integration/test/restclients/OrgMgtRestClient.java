@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -126,7 +126,45 @@ public class OrgMgtRestClient extends RestBaseClient {
     public String addOrganization(String orgName) throws Exception {
 
         String m2mToken = getM2MAccessToken();
-        String body = buildOrgCreationRequestBody(orgName, null);
+        String body = buildOrgCreationRequestBody(orgName, null, null);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(organizationManagementApiBasePath, body,
+                getHeadersWithBearerToken(m2mToken))) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Add an organization within the root organization.
+     *
+     * @param orgName Name of the organization.
+     * @param orgHandle Handle/tenant domain of the organization.
+     * @param m2mToken Authorized token to create an organization.
+     * @return ID of the created organization.
+     * @throws Exception If an error occurs while creating the organization.
+     */
+    public String addOrganizationWithToken(String orgName, String orgHandle, String m2mToken) throws Exception {
+
+        String body = buildOrgCreationRequestBody(orgName, null, orgHandle);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(organizationManagementApiBasePath, body,
+                getHeadersWithBearerToken(m2mToken))) {
+            String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Add an organization with an organization handle within the root organization.
+     *
+     * @param orgName   Name of the organization.
+     * @param orgHandle Handle of the organization.
+     * @return ID of the created organization.
+     * @throws Exception If an error occurs while creating the organization.
+     */
+    public String addOrganization(String orgName, String orgHandle) throws Exception {
+
+        String m2mToken = getM2MAccessToken();
+        String body = buildOrgCreationRequestBody(orgName, null, orgHandle);
         try (CloseableHttpResponse response = getResponseOfHttpPost(organizationManagementApiBasePath, body,
                 getHeadersWithBearerToken(m2mToken))) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
@@ -145,7 +183,7 @@ public class OrgMgtRestClient extends RestBaseClient {
     public String addSubOrganization(String orgName, String parentOrgId) throws Exception {
 
         String m2mToken = switchM2MToken(parentOrgId);
-        String body = buildOrgCreationRequestBody(orgName, parentOrgId);
+        String body = buildOrgCreationRequestBody(orgName, parentOrgId, null);
         try (CloseableHttpResponse response = getResponseOfHttpPost(subOrganizationManagementApiBasePath, body,
                 getHeadersWithBearerToken(m2mToken))) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
@@ -164,6 +202,22 @@ public class OrgMgtRestClient extends RestBaseClient {
         String m2mToken = getM2MAccessToken();
         try (CloseableHttpResponse response = getResponseOfHttpDelete(organizationManagementApiBasePath +
                 PATH_SEPARATOR + orgId, getHeadersWithBearerToken(m2mToken))) {
+            assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
+                    "Organization deletion failed for organization with ID: " + orgId);
+        }
+    }
+
+    /**
+     * Delete an organization within root organization.
+     *
+     * @param orgId ID of the organization.
+     * @param accessToken Authorized token to delete an organization.
+     * @throws Exception If an error occurs while deleting the organization.
+     */
+    public void deleteOrganizationWithToken(String orgId, String accessToken) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(organizationManagementApiBasePath +
+                PATH_SEPARATOR + orgId, getHeadersWithBearerToken(accessToken))) {
             assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_NO_CONTENT,
                     "Organization deletion failed for organization with ID: " + orgId);
         }
@@ -317,9 +371,20 @@ public class OrgMgtRestClient extends RestBaseClient {
 
         try (CloseableHttpResponse appCreationResponse = getResponseOfHttpPost(applicationManagementApiBasePath, body,
                 getHeaders())) {
-            String[] locationElements =
-                    appCreationResponse.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+            int statusCode = appCreationResponse.getStatusLine().getStatusCode();
+            if (statusCode != HttpStatus.SC_CREATED) {
+                String responseBody = EntityUtils.toString(appCreationResponse.getEntity());
+                throw new RuntimeException("B2B application creation failed. Status: " + statusCode +
+                        ", Response: " + responseBody);
+            }
+            Header[] locationHeaders = appCreationResponse.getHeaders(LOCATION_HEADER);
+            if (locationHeaders == null || locationHeaders.length == 0) {
+                throw new RuntimeException("Location header not found in the response for B2B application creation");
+            }
+            String[] locationElements = locationHeaders[0].toString().split(PATH_SEPARATOR);
             b2bAppId = locationElements[locationElements.length - 1];
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create B2B application", e);
         }
 
         // Authorize necessary APIs for app.
@@ -380,12 +445,16 @@ public class OrgMgtRestClient extends RestBaseClient {
         return b2bSelfServiceApp.toString();
     }
 
-    private String buildOrgCreationRequestBody(String orgName, String parentOrgId) throws JSONException {
+    private String buildOrgCreationRequestBody(String orgName, String parentOrgId, String orgHandle)
+            throws JSONException {
 
         JSONObject organization = new JSONObject();
         organization.put("name", orgName);
         if (StringUtils.isNotBlank(parentOrgId)) {
             organization.put("parentId", parentOrgId);
+        }
+        if (StringUtils.isNotBlank(orgHandle)) {
+            organization.put("orgHandle", orgHandle);
         }
         return organization.toString();
     }

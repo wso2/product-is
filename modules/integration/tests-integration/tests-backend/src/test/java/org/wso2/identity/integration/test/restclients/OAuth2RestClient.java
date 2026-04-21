@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, WSO2 LLC. (https://www.wso2.com).
+ * Copyright (c) 2023-2026, WSO2 LLC. (https://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -166,6 +166,30 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Create an application in the organization.
+     *
+     * @param application Application Model with application creation details.
+     * @param accessToken Authorized token to create an application in an organization.
+     * @return ID of the created application.
+     * @throws IOException If an error occurred while creating an application.
+     */
+    public String createOrganizationApplication(ApplicationModel application, String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(application);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(subOrgApplicationManagementApiBasePath, jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+
+            if (response.getStatusLine().getStatusCode() == 201) {
+                String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+                return locationElements[locationElements.length - 1];
+            }
+            String responseBody = EntityUtils.toString(response.getEntity());
+            throw new RuntimeException("Error occurred while creating the application. Response: " + responseBody);
+        }
+    }
+
+    /**
      * To create V2 roles.
      *
      * @param role an instance of RoleV2
@@ -225,6 +249,28 @@ public class OAuth2RestClient extends RestBaseClient {
         String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ApplicationResponseModel.class);
+        }
+    }
+
+    /**
+     * Get application details of an organization.
+     *
+     * @param appId Application id.
+     * @param accessToken Authorized token to get the application.
+     * @return ApplicationResponseModel object.
+     * @throws IOException If an error occurred while getting an application.
+     */
+    public ApplicationResponseModel getOrganizationApplication(String appId, String accessToken)
+            throws IOException {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(accessToken))) {
             String responseBody = EntityUtils.toString(response.getEntity());
 
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
@@ -422,6 +468,22 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Get OIDC inbound configuration details of an application in an organization.
+     *
+     * @param appId Application id.
+     * @param accessToken Authorized token to get the inbound configurations of the application.
+     * @return OpenIDConnectConfiguration object with oidc configuration details.
+     * @throws Exception If an error occurred while getting OIDC inbound configuration details.
+     */
+    public OpenIDConnectConfiguration getOIDCInboundDetailsOfOrganizationApp(String appId, String accessToken)
+            throws Exception {
+
+        String responseBody = getConfigOfOrganizationApp(appId, OIDC, accessToken);
+        ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+        return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
+    }
+
+    /**
      * Get SAML inbound configuration details of an application.
      *
      * @param appId Application id.
@@ -442,6 +504,18 @@ public class OAuth2RestClient extends RestBaseClient {
                 PATH_SEPARATOR + inboundType;
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return EntityUtils.toString(response.getEntity());
+        }
+    }
+
+    private String getConfigOfOrganizationApp(String appId, String inboundType,
+                                              String accessToken) throws Exception {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + inboundType;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl,
+                getHeadersWithBearerToken(accessToken))) {
             return EntityUtils.toString(response.getEntity());
         }
     }

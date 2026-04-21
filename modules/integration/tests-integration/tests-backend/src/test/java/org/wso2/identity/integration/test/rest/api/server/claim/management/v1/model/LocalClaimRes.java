@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -28,6 +29,7 @@ import java.util.List;
 /**
  * Local claim response.
  **/
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LocalClaimRes {
 
     private String id = null;
@@ -44,6 +46,7 @@ public class LocalClaimRes {
     private String[] subAttributes = null;
     private LabelValueDTO[] canonicalValues = null;
     private Boolean multiValued = null;
+   private Boolean managedInUserStore = null;
 
     public enum UniquenessScopeEnum {
         NONE, WITHIN_USERSTORE, ACROSS_USERSTORES,
@@ -274,6 +277,21 @@ public class LocalClaimRes {
     }
 
     /**
+     * Specifies if the claim is managed in user store.
+     **/
+    @ApiModelProperty(value = "Specifies if the claim is managed in user store.")
+    @JsonProperty("managedInUserStore")
+    public Boolean getManagedInUserStore() {
+
+        return managedInUserStore;
+    }
+
+    public void setManagedInUserStore(Boolean managedInUserStore) {
+
+        this.managedInUserStore = managedInUserStore;
+    }
+
+    /**
      * Specifies the scope of uniqueness validation for the claim value.
      **/
     @ApiModelProperty(value = "Specifies the scope of uniqueness validation for the claim value.")
@@ -381,6 +399,7 @@ public class LocalClaimRes {
         sb.append("    regEx: ").append(regEx).append("\n");
         sb.append("    required: ").append(required).append("\n");
         sb.append("    supportedByDefault: ").append(supportedByDefault).append("\n");
+        sb.append("    managedInUserStore: ").append(managedInUserStore).append("\n");
         sb.append("    uniquenessScope: ").append(uniquenessScope).append("\n");
         sb.append("    sharedProfileValueResolvingMethod: ").append(sharedProfileValueResolvingMethod).append("\n");
         sb.append("    attributeMapping: ").append(attributeMapping).append("\n");

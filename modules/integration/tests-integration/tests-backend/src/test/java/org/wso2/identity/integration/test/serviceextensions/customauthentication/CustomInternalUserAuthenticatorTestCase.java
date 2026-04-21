@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.serviceextensions.customauthenticatio
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.Header;
@@ -81,6 +82,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -196,11 +201,15 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
     @Test
     public void testInitAuthorizeRequestWithCustomInternalUserAuthentication() throws Exception {
 
+        Thread.sleep(5000);
         String customAuthenticatorPageUrl = authorizeApplication();
         Document customAuthenticatorPage = fetchCustomAuthenticatorPage(customAuthenticatorPageUrl);
         String commonAuthUrl = submitCredentialsToCustomAuthenticator(customAuthenticatorPage);
         authorizationCode = handleCommonAuthRequest(commonAuthUrl);
         assertNotNull(authorizationCode);
+        
+        // Assert that the mock service received the expected payloads
+        assertMockServiceReceivedValidateAuthenticateRequest();
     }
 
     @Test(dependsOnMethods = "testInitAuthorizeRequestWithCustomInternalUserAuthentication")
@@ -354,7 +363,9 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
 
     private String authorizeApplication() throws Exception {
 
-        HttpResponse authorizeRequest = sendPostRequestWithParameters(httpClient, buildOAuth2Parameters(consumerKey),
+        List<NameValuePair> urlParameters = buildOAuth2Parameters(consumerKey);
+        urlParameters.add(new BasicNameValuePair("testParam", "123_abc"));
+        HttpResponse authorizeRequest = sendPostRequestWithParameters(httpClient, urlParameters,
                 getTenantQualifiedURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain()));
         assertNotNull(authorizeRequest, "Authorization request failed. Authorized response is null.");
         assertEquals(authorizeRequest.getStatusLine().getStatusCode(), 302);
@@ -524,5 +535,67 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
 
         SignedJWT signedJWT = SignedJWT.parse(jwtToken);
         return signedJWT.getJWTClaimsSet();
+    }
+
+    private void assertMockServiceReceivedValidateAuthenticateRequest() {
+
+        verify(postRequestedFor(
+                urlEqualTo(MockCustomAuthenticatorService.API_AUTHENTICATE_ENDPOINT)
+        )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.actionType",
+                                equalTo("AUTHENTICATION"))
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.flowId")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.request.additionalParams")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath(
+                                "$.event.request.additionalParams[?(@.name == 'testParam')]")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath(
+                                "$.event.request.additionalParams[?(@.name == 'testParam')].value[0]",
+                                equalTo("123_abc"))
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.tenant.id")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.tenant.name")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.organization.id")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.organization.name")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.organization.orgHandle")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.organization.depth",
+                                equalTo("0"))
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.application.id")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.application.name")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.event.currentStepIndex",
+                                equalTo("1"))
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath(
+                                "$.allowedOperations[?(@.op == 'redirect')]")
+                )
+                .withRequestBody(
+                        com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath("$.requestId")
+                ));
     }
 }

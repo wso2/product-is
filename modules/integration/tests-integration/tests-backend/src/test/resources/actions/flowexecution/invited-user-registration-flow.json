@@ -1,0 +1,129 @@
+{
+  "steps": [
+    {
+      "id": "execution_yb2h",
+      "type": "EXECUTION",
+      "size": {
+        "width": 206,
+        "height": 70
+      },
+      "position": {
+        "x": 200,
+        "y": 200
+      },
+      "data": {
+        "action": {
+          "type": "EXECUTOR",
+          "executor": {
+            "name": "ConfirmationCodeValidationExecutor"
+          },
+          "next": "ID_s688"
+        }
+      }
+    },
+    {
+      "id": "ID_s688",
+      "type": "VIEW",
+      "size": {
+        "width": 350,
+        "height": 449
+      },
+      "position": {
+        "x": 492.0245693050557,
+        "y": 319
+      },
+      "data": {
+        "components": [
+          {
+            "category": "DISPLAY",
+            "type": "TYPOGRAPHY",
+            "id": "typography_px3k",
+            "variant": "H3",
+            "config": {
+              "text": "Set Password"
+            }
+          },
+          {
+            "category": "BLOCK",
+            "type": "FORM",
+            "config": {},
+            "id": "form_njf3",
+            "components": [
+              {
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "PASSWORD",
+                "config": {
+                  "identifier": "password",
+                  "type": "password",
+                  "hint": "",
+                  "label": "Password",
+                  "required": false,
+                  "placeholder": "Enter your password"
+                },
+                "id": "input_d846"
+              },
+              {
+                "category": "ACTION",
+                "type": "BUTTON",
+                "id": "button_72ry",
+                "variant": "PRIMARY",
+                "action": {
+                  "type": "EXECUTOR",
+                  "executor": {
+                    "name": "PasswordProvisioningExecutor"
+                  },
+                  "next": "END"
+                },
+                "config": {
+                  "type": "submit",
+                  "text": "Continue"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "END",
+      "type": "END",
+      "size": {
+        "width": 350,
+        "height": 308
+      },
+      "position": {
+        "x": 1120,
+        "y": 420
+      },
+      "data": {
+        "components": [
+          {
+            "category": "DISPLAY",
+            "type": "TYPOGRAPHY",
+            "id": "typography_u2oz",
+            "variant": "H3",
+            "config": {
+              "text": "Password Set Successfully"
+            }
+          },
+          {
+            "category": "DISPLAY",
+            "type": "RICH_TEXT",
+            "config": {
+              "text": "<p class=\"rich-text-paragraph rich-text-align-center\"><span class=\"rich-text-pre-wrap\">You have successfully set a password for your account.</span></p>"
+            },
+            "id": "display_hgvm"
+          }
+        ],
+        "action": {
+          "type": "EXECUTOR",
+          "executor": {
+            "name": "UserProvisioningExecutor"
+          }
+        }
+      }
+    }
+  ],
+  "flowType": "INVITED_USER_REGISTRATION"
+}

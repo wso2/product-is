@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2019-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -28,6 +28,7 @@ public final class OAuth2Constant {
     public static final String OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     public static final String OAUTH2_GRANT_TYPE_RESOURCE_OWNER = "password";
     public static final String OAUTH2_GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
+    public static final String OAUTH2_GRANT_TYPE_ORGANIZATION_SWITCH = "organization_switch";
     public static final String OAUTH2_RESPONSE_TYPE_TOKEN = "token";
 
     public static final String OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE = "authorization_code";
@@ -42,6 +43,7 @@ public final class OAuth2Constant {
     public final static String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
     public final static String ACCESS_TOKEN_ENDPOINT = "https://localhost:9853/oauth2/token";
     public final static String TOKEN_REVOKE_ENDPOINT = "https://localhost:9853/oauth2/revoke";
+    public final static String OIDC_LOGOUT_ENDPOINT = "https://localhost:9853/oidc/logout";
     public final static String PAR_ENDPOINT = "https://localhost:9853/oauth2/par";
     public final static String OAUTH2_DEFAULT_ERROR_URL = "https://localhost:9853/authenticationendpoint/" +
             "oauth2_error.do";
@@ -133,6 +135,19 @@ public final class OAuth2Constant {
     public static final String FIDP_PARAM = "fidp";
 
     public static final String SUBJECT_TOKEN = "subject_token";
+
+    // CIBA (Client Initiated Backchannel Authentication)
+    public static final String OAUTH2_GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba";
+    public static final String CIBA_ENDPOINT = "https://localhost:9853/oauth2/ciba";
+    public static final String CIBA_AUTH_REQ_ID = "auth_req_id";
+    public static final String CIBA_AUTH_URL = "auth_url";
+    public static final String CIBA_EXPIRES_IN = "expires_in";
+    public static final String CIBA_INTERVAL = "interval";
+    public static final String CIBA_LOGIN_HINT = "login_hint";
+    public static final String CIBA_BINDING_MESSAGE = "binding_message";
+    public static final String CIBA_NOTIFICATION_CHANNEL = "notification_channel";
+    public static final String CIBA_NOTIFICATION_CHANNEL_EXTERNAL = "external";
+
     public static final class PlaygroundAppPaths {
 
         public static final String callBackPath = "/oauth2client";

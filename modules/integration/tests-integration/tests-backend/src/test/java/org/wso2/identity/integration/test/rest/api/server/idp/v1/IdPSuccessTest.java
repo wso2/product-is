@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019-2026, WSO2 LLC. (http://www.wso2.com).
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.identity.integration.test.rest.api.server.idp.v1;
@@ -31,7 +33,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.util.UserDefinedLocalAuthenticatorPayload;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
@@ -570,6 +571,29 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test
+    public void testAddIdPWithSamlMetadataUri() throws IOException {
+
+        String body = readResource("add-idp-with-saml-metadata-uri.json");
+        Response response = getResponseOfPost(IDP_API_BASE_PATH, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue())
+                .body("name", equalTo("SAML Metadata URI IdP"))
+                .body("certificate.samlMetadataUri", equalTo("http://SAMPLE.SAML.METADATA.URI/"))
+                .body("certificate.jwksUri", nullValue())
+                .body("certificate.certificates", nullValue());
+
+        String location = response.getHeader(HttpHeaders.LOCATION);
+        assertNotNull(location);
+        String idpWithSamlMetadataUri = location.substring(location.lastIndexOf("/") + 1);
+        assertNotNull(idpWithSamlMetadataUri);
+
+        deleteCreatedIdP(idpWithSamlMetadataUri);
+    }
+
+    @Test
     public void addSAMLStandardBasedIdP() throws IOException, XPathExpressionException {
 
         String baseIdentifier = "federatedAuthenticators.authenticators.find { it.authenticatorId == '" +
@@ -811,7 +835,8 @@ public class IdPSuccessTest extends IdPTestBase {
                 .body("rulesEnabled", equalTo(false))
                 .body("properties", notNullValue())
                 .body("properties.find{ it.key == 'scim-enable-pwd-provisioning' }.value", equalTo("true"))
-                .body("properties.find{ it.key == 'scim-password' }.value", equalTo("admin"))
+                // Secret properties are masked in the response, hence the value assertion is not performed.
+                //.body("properties.find{ it.key == 'scim-password' }.value", equalTo("admin"))
                 .body("properties.find{ it.key == 'scim-user-ep' }.value", equalTo("https://localhost:9445/userinfo"))
                 .body("properties.find{ it.key == 'scim-username' }.value", equalTo("admin"));
     }
@@ -987,6 +1012,68 @@ public class IdPSuccessTest extends IdPTestBase {
     }
 
     @Test(dependsOnMethods = "testPatchIdP")
+    public void testPatchIdPWithSamlMetadataUri() throws IOException {
+
+        String body = readResource("patch-add-jwks-uri.json");
+        Response response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("certificate.jwksUri", equalTo("http://SAMPLE.JWKS.URI/"))
+                .body("certificate.samlMetadataUri", nullValue())
+                .body("certificate.certificates", nullValue());
+
+        body = readResource("patch-add-saml-metadata-uri.json");
+        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("certificate.samlMetadataUri", equalTo("http://SAMPLE.SAML.METADATA.URI/"))
+                .body("certificate.jwksUri", nullValue())
+                .body("certificate.certificates", nullValue());
+
+        body = readResource("patch-add-certificate.json");
+        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("certificate.certificates", notNullValue())
+                .body("certificate.samlMetadataUri", nullValue())
+                .body("certificate.jwksUri", nullValue());
+
+        body = readResource("patch-add-saml-metadata-uri.json");
+        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("certificate.samlMetadataUri", equalTo("http://SAMPLE.SAML.METADATA.URI/"))
+                .body("certificate.jwksUri", nullValue())
+                .body("certificate.certificates", nullValue());
+
+        body = readResource("patch-replace-saml-metadata-uri.json");
+        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("certificate.samlMetadataUri", equalTo("http://UPDATED.SAML.METADATA.URI/"))
+                .body("certificate.jwksUri", nullValue())
+                .body("certificate.certificates", nullValue());
+
+        body = readResource("patch-remove-saml-metadata-uri.json");
+        response = getResponseOfPatch(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("certificate.samlMetadataUri", nullValue());
+    }
+
+    @Test(dependsOnMethods = "testPatchIdPWithSamlMetadataUri")
     public void testExportIDPToFile() {
 
         Response response = getResponseOfGet(IDP_API_BASE_PATH + PATH_SEPARATOR + idPId + PATH_SEPARATOR +

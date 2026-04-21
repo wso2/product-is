@@ -4,10 +4,17 @@ OUTBOUND_AUTH_OIDC_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-o
 SCIM2_REPO=identity-inbound-provisioning-scim2
 SCIM2_REPO_CLONE_LINK=https://github.com/wso2-extensions/identity-inbound-provisioning-scim2.git
 
+# Define workflow branch (selected branch for the workflow run).
+# Prefer WORKFLOW_BRANCH (explicit), otherwise GITHUB_REF_NAME, otherwise "master".
+WORKFLOW_BRANCH=${WORKFLOW_BRANCH:-${GITHUB_REF_NAME:-master}}
+WORKFLOW_BRANCH=${WORKFLOW_BRANCH#refs/heads/}
+
 # Define all available tests.
 declare -a ALL_TESTS=(
     "is-tests-default-configuration"
     "is-test-rest-api"
+    "is-tests-saas-app-creation"
+    "is-test-webhooks"
     "is-tests-scim2"
     "is-test-adaptive-authentication"
     "is-test-adaptive-authentication-nashorn"
@@ -23,6 +30,8 @@ declare -a ALL_TESTS=(
     "is-tests-with-individual-configuration-changes"
     "is-tests-saml-query-profile"
     "is-tests-default-encryption"
+    "is-test-session-mgt"
+    "is-tests-password-update-api"
 )
 
 # Function to disable tests not in the enabled list.
@@ -32,6 +41,12 @@ disable_tests() {
 
     # Convert comma-separated string to array.
     IFS=',' read -ra ENABLED_ARRAY <<< "$enabled_tests"
+
+    # If no tests specified, skip disabling and run all tests.
+    if [ ${#ENABLED_ARRAY[@]} -eq 0 ] || [ -z "${ENABLED_ARRAY[0]}" ]; then
+        echo "No enabled tests specified. Running all tests."
+        return
+    fi
 
     echo "Tests that will run:"
     printf '%s\n' "${ENABLED_ARRAY[@]}"
@@ -45,6 +60,16 @@ disable_tests() {
     done
 }
 
+# Function to get expected BUILD SUCCESS count based on enabled tests.
+get_expected_build_success_count() {
+    local enabled_tests=$1
+    if [[ -z "$enabled_tests" || "$enabled_tests" == *"is-test-adaptive-authentication-nashorn"* ]]; then
+        echo "17"
+    else
+        echo "1"
+    fi
+}
+
 # Main execution starts here.
 BUILDER_NUMBER=$1
 ENABLED_TESTS=$2
@@ -52,13 +77,10 @@ ENABLED_TESTS=$2
 echo ""
 echo "=========================================================="
 PR_LINK=${PR_LINK%/}
-JDK_VERSION=${JDK_VERSION%/}
-JAVA_8_HOME=${JAVA_8_HOME%/}
-JAVA_11_HOME=${JAVA_11_HOME%/}
+JAVA_21_HOME=${JAVA_21_HOME%/}
 echo "    PR_LINK: $PR_LINK"
-echo "    JAVA 8 Home: $JAVA_8_HOME"
-echo "    JAVA 11 Home: $JAVA_11_HOME"
-echo "    User Input: $JDK_VERSION"
+echo "    JAVA 21 Home: $JAVA_21_HOME"
+echo "    WORKFLOW_BRANCH (product-is): $WORKFLOW_BRANCH"
 echo "::warning::Build ran for PR $PR_LINK"
 
 USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
@@ -73,7 +95,7 @@ echo "=========================================================="
 echo "Cloning product-is"
 echo "=========================================================="
 
-git clone https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
+git clone --branch "$WORKFLOW_BRANCH" --single-branch https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
 disable_tests "$ENABLED_TESTS"
 
@@ -105,7 +127,7 @@ if [ "$REPO" = "product-is" ]; then
   echo "$COMMIT3"
 
   cat pom.xml
-  export JAVA_HOME=$JAVA_11_HOME
+  export JAVA_HOME=$JAVA_21_HOME
   mvn clean install --batch-mode | tee mvn-build.log
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -124,7 +146,8 @@ if [ "$REPO" = "product-is" ]; then
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1
@@ -139,7 +162,7 @@ else
   echo ""
   echo "Determining dependency version property key..."
   echo "=========================================================="
-  wget https://raw.githubusercontent.com/wso2/product-is/master/.github/scripts/version_property_finder.py
+  wget https://raw.githubusercontent.com/wso2/product-is/$WORKFLOW_BRANCH/.github/scripts/version_property_finder.py
   VERSION_PROPERTY=$(python version_property_finder.py $REPO product-is-$BUILDER_NUMBER 2>&1)
   VERSION_PROPERTY_KEY=""
   if [ "$VERSION_PROPERTY" != "invalid" ]; then
@@ -160,25 +183,27 @@ else
   cd $REPO
   if [ "$REPO" = "carbon-kernel" ]; then
     echo ""
-    echo "Checking out for 4.10.x branch..."
+    echo "Checking out for 4.12.x branch..."
     echo "=========================================================="
-    git checkout 4.10.x
+    git checkout 4.12.x
   elif [ "$REPO" = "carbon-deployment" ]; then
     echo ""
-    echo "Checking out for 4.x.x branch in carbon-deployment..."
+    echo "Checking out for 4.14.x branch in carbon-deployment..."
     echo "=========================================================="
-    git checkout 4.x.x
+    git checkout 4.14.x
   elif [ "$REPO" = "carbon-analytics-common" ]; then
       echo ""
-      echo "Checking out for 5.2.x branch in carbon-analytics-common..."
+      echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
-      git checkout 5.2.x
-  elif [ "$REPO" = "identity-extension-utils" ]; then
+  else
+    if [ "$WORKFLOW_BRANCH" = "next" ]; then
       echo ""
-      echo "Checking out for 1.0.x branch in identity-extension-utils..."
+      echo "Checking out for next branch..."
       echo "=========================================================="
-      git checkout 1.0.x
+      git checkout next
+    fi
   fi
+
   DEPENDENCY_VERSION=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
   echo "Dependency Version: $DEPENDENCY_VERSION"
   echo ""
@@ -197,12 +222,7 @@ else
   echo "Building dependency repo $REPO..."
   echo "=========================================================="
 
-  if [ "$JDK_VERSION" = "11" ]; then
-    export JAVA_HOME=$JAVA_11_HOME
-  else
-    export JAVA_HOME=$JAVA_8_HOME
-  fi
-
+  export JAVA_HOME=$JAVA_21_HOME
 
   mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
@@ -307,7 +327,7 @@ else
     echo "=========================================================="
 
 
-    export JAVA_HOME=$JAVA_11_HOME
+    export JAVA_HOME=$JAVA_21_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $OUTBOUND_AUTH_OIDC_REPO build complete."
@@ -361,7 +381,7 @@ else
     echo "Building $SCIM2_REPO repo..."
     echo "=========================================================="
 
-    export JAVA_HOME=$JAVA_8_HOME
+    export JAVA_HOME=$JAVA_21_HOME
     mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $SCIM2_REPO build complete."
@@ -402,11 +422,11 @@ else
       echo ""
       KERNEL_DEPENDENCY_VERSION=$(echo $DEPENDENCY_VERSION | sed -e "s/-/./g")
       echo "Dependency version for carbon.product : $KERNEL_DEPENDENCY_VERSION"
-      sed -i "s/version=\"4.10.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
+      sed -i "s/version=\"4.12.*\"/version=\"$KERNEL_DEPENDENCY_VERSION\"/g" modules/p2-profile-gen/carbon.product
     fi
   fi
 
-  export JAVA_HOME=$JAVA_11_HOME
+  export JAVA_HOME=$JAVA_21_HOME
   cat pom.xml
   mvn clean install --batch-mode | tee mvn-build.log
 
@@ -426,7 +446,8 @@ else
   echo "::warning::$PR_BUILD_RESULT_LOG"
 
   PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-  if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+  EXPECTED_BUILD_SUCCESS_COUNT=$(get_expected_build_success_count "$ENABLED_TESTS")
+  if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
     echo "PR BUILD not successfull. Aborting."
     echo "::error::PR BUILD not successfull. Check artifacts for logs."
     exit 1

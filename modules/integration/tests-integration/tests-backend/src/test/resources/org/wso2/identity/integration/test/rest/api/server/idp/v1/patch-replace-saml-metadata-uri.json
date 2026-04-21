@@ -1,0 +1,7 @@
+[
+  {
+    "operation": "REPLACE",
+    "path": "/certificate/samlMetadataUri",
+    "value": "http://UPDATED.SAML.METADATA.URI/"
+  }
+]

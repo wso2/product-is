@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -98,6 +98,72 @@ public class SCIM2RestClient extends RestBaseClient {
                     "User creation failed");
             JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
             return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Create a user with raw JSON request.
+     *
+     * @param jsonRequest JSON string with user creation details.
+     * @return Id of the created user.
+     * @throws Exception If an error occurred while creating a user.
+     */
+    public String createUserWithRawJSON(String jsonRequest) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getUsersPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "User creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Update a user with raw JSON PATCH request.
+     *
+     * @param jsonRequest JSON string with SCIM2 patch operations.
+     * @param userId      Id of the user to update.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while updating the user.
+     */
+    public JSONObject patchUserWithRawJSON(String jsonRequest, String userId) throws Exception {
+
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "User patch failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Create a user with bearer token.
+     *
+     * @param userInfo    Object with user creation details.
+     * @param bearerToken Bearer token to be used in the request.
+     * @return JSONObject of the HTTP response.
+     */
+    public JSONObject createUser(UserObject userInfo, String bearerToken) {
+
+        String jsonRequest = toJSONString(userInfo);
+        if (userInfo.getScimSchemaExtensionEnterprise() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_ENTERPRISE, USER_ENTERPRISE_SCHEMA);
+        }
+        if (userInfo.getScimSchemaExtensionSystem() != null) {
+            jsonRequest = jsonRequest.replace(SCIM_SCHEMA_EXTENSION_SYSTEM, USER_SYSTEM_SCHEMA);
+        }
+
+        Header[] headers = (bearerToken != null) ? getHeadersWithBearerToken(bearerToken) : getHeaders();
+        String usersPath = getUsersPath();
+        try (CloseableHttpResponse response = getResponseOfHttpPost(usersPath, jsonRequest, headers)) {
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            JSONObject responseObject = new JSONObject();
+            responseObject.put("statusCode", response.getStatusLine().getStatusCode());
+            responseObject.put("body", jsonResponse);
+            return responseObject;
+        } catch (Exception e) {
+            throw new RuntimeException("Error while creating the user.", e);
         }
     }
 
@@ -360,6 +426,21 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Attempt to delete a user and return the response status code.
+     *
+     * @param userId ID of the user.
+     * @throws IOException If an error occurred while deleting a user.
+     */
+    public int attemptUserDelete(String userId) throws IOException {
+
+        String endPointUrl = getUsersPath() + PATH_SEPARATOR + userId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
      * Delete an existing user of an organization.
      *
      * @param userId           ID of the user.
@@ -374,6 +455,25 @@ public class SCIM2RestClient extends RestBaseClient {
                 getHeadersWithBearerToken(switchedM2MToken))) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "User deletion failed.");
+        }
+    }
+
+    /**
+     * Get the details of a user by filtering with the given filter.
+     *
+     * @param filter filter string.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while getting a user.
+     */
+    public JSONObject filterUsers(String filter) throws Exception {
+
+        String endPointUrl = getUsersPath();
+        if (StringUtils.isNotEmpty(filter)) {
+            endPointUrl += "?filter=" + filter;
+        }
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
         }
     }
 
@@ -397,6 +497,30 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Attempt to add a new role and return the response status code without assertions.
+     * If successfully created (201), returns the created role id as well.
+     * If engaged with workflow (202), roleId will be null and the caller should approve the task and verify.
+     *
+     * @param roleInfo Role request object.
+     * @return Response with status code and role id (if created).
+     * @throws Exception If an error occurred while adding a role.
+     */
+    public RoleCreateResponse attemptRoleV2Creation(RoleRequestObject roleInfo) throws Exception {
+
+        String jsonRequest = toJSONString(roleInfo);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesV2Path(), jsonRequest, getHeaders())) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String roleId = null;
+            if (statusCode == HttpServletResponse.SC_CREATED) {
+                JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+                roleId = jsonResponse.get("id").toString();
+            }
+            return new RoleCreateResponse(statusCode, roleId);
+        }
+    }
+
+    /**
      * Update an existing role.
      *
      * @param patchRoleInfo Role patch request object.
@@ -409,6 +533,27 @@ public class SCIM2RestClient extends RestBaseClient {
         String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
 
         try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role update failed");
+        }
+    }
+
+    /**
+     * Update an existing role of an organization.
+     *
+     * @param patchRoleInfo Role patch request object.
+     * @param roleId        Role id.
+     * @param accessToken   Authorized token to update the role in an organization.
+     * @throws IOException If an error occurred while updating a role.
+     */
+    public void updateOrganizationUserRole(PatchOperationRequestObject patchRoleInfo, String roleId,
+                                           String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(patchRoleInfo);
+        String endPointUrl = getSubOrgRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
                     "Role update failed");
         }
@@ -459,6 +604,97 @@ public class SCIM2RestClient extends RestBaseClient {
     }
 
     /**
+     * Attempt to delete an existing role and return the response status code.
+     *
+     * @param roleId Role id.
+     * @return Response status code.
+     * @throws IOException If an error occurred while deleting a role.
+     */
+    public int attemptRoleV2Delete(String roleId) throws IOException {
+
+        String endPointUrl = getRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Attempt to update users of a role (SCIM2 v2 Roles endpoint) and return the response status code.
+     *
+     * @param roleId        Role id.
+     * @param patchRoleInfo Role patch request object.
+     * @return Response status code.
+     * @throws IOException If an error occurred while updating users of a role.
+     */
+    public int attemptUpdateUsersOfRoleV2(String roleId, PatchOperationRequestObject patchRoleInfo) throws IOException {
+
+        String jsonRequest = toJSONString(patchRoleInfo);
+        String endPointUrl = getRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Get role by id and return the raw JSON body.
+     *
+     * @param roleId Role id.
+     * @return JSONObject of the HTTP response body.
+     * @throws Exception If an error occurred while getting the role.
+     */
+    public JSONObject getRole(String roleId) throws Exception {
+
+        String endPointUrl = getRolesPath() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Attempt to get a role and return the status code without parsing/validations.
+     *
+     * @param roleId Role id.
+     * @return HTTP status code.
+     * @throws IOException If an error occurred while invoking the GET request.
+     */
+    public int attemptGetRoleV2(String roleId) throws IOException {
+
+        String endPointUrl = getRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Response object for role creation attempts.
+     */
+    public static class RoleCreateResponse {
+
+        private final int statusCode;
+        private final String roleId;
+
+        public RoleCreateResponse(int statusCode, String roleId) {
+
+            this.statusCode = statusCode;
+            this.roleId = roleId;
+        }
+
+        public int getStatusCode() {
+
+            return statusCode;
+        }
+
+        public String getRoleId() {
+
+            return roleId;
+        }
+    }
+
+    /**
      * Add a new role in v2.
      *
      * @param role Role request object.
@@ -472,6 +708,28 @@ public class SCIM2RestClient extends RestBaseClient {
                 getHeaders())) {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
+        }
+    }
+
+    /**
+     * Create a V2 role in the organization.
+     *
+     * @param role an instance of RoleV2.
+     * @param accessToken Authorized token to create V2 roles in an organization.
+     * @return the role ID.
+     * @throws IOException throws if an error occurs while creating the role.
+     */
+    public String addOrganizationV2Roles(RoleV2 role, String accessToken) throws IOException {
+
+        String jsonRequest = toJSONString(role);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getSubOrgRolesV2Path(), jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            if (response.getStatusLine().getStatusCode() == 201) {
+                String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+                return locationElements[locationElements.length - 1];
+            }
+            String responseBody = EntityUtils.toString(response.getEntity());
+            throw new RuntimeException("Error occurred while creating the role. Response: " + responseBody);
         }
     }
 
@@ -646,6 +904,61 @@ public class SCIM2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Group deletion failed");
+        }
+    }
+
+    /**
+     * Create a group with raw JSON request.
+     *
+     * @param jsonRequest JSON string with group creation details.
+     * @return Id of the created group.
+     * @throws Exception If an error occurred while creating a group.
+     */
+    public String createGroupWithRawJSON(String jsonRequest) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getGroupsPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Group creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Update a group with raw JSON PATCH request.
+     *
+     * @param jsonRequest JSON string with SCIM2 patch operations.
+     * @param groupId     Id of the group to update.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while updating the group.
+     */
+    public JSONObject patchGroupWithRawJSON(String jsonRequest, String groupId) throws Exception {
+
+        String endPointUrl = getGroupsPath() + PATH_SEPARATOR + groupId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Group patch failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Get the details of groups by filtering with the given filter.
+     *
+     * @param filter filter string.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while getting groups.
+     */
+    public JSONObject filterGroups(String filter) throws Exception {
+
+        String endPointUrl = getGroupsPath();
+        if (StringUtils.isNotEmpty(filter)) {
+            endPointUrl += "?filter=" + filter;
+        }
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
         }
     }
 

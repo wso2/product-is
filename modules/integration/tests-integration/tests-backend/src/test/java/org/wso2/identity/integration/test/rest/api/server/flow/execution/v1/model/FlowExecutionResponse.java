@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.*;
 public class FlowExecutionResponse  {
 
     private String flowId;
+    private String flowType;
     private String flowStatus;
 
     @XmlType(name="TypeEnum")
@@ -90,6 +91,27 @@ public class FlowExecutionResponse  {
     }
     public void setFlowId(String flowId) {
         this.flowId = flowId;
+    }
+
+    /**
+     * Unique identifier to identify the flow type
+     **/
+    public FlowExecutionResponse flowType(String flowType) {
+
+        this.flowType = flowType;
+        return this;
+    }
+
+    @ApiModelProperty(example = "REGISTRATION", required = true, value = "Unique identifier to identify the flow type")
+    @JsonProperty("flowType")
+    @Valid
+    @NotNull(message = "Property flowType cannot be null.")
+
+    public String getFlowType() {
+        return flowType;
+    }
+    public void setFlowType(String flowType) {
+        this.flowType = flowType;
     }
 
     /**
@@ -163,6 +185,7 @@ public class FlowExecutionResponse  {
         }
         FlowExecutionResponse flowExecutionResponse = (FlowExecutionResponse) o;
         return Objects.equals(this.flowId, flowExecutionResponse.flowId) &&
+                Objects.equals(this.flowType, flowExecutionResponse.flowType) &&
                 Objects.equals(this.flowStatus, flowExecutionResponse.flowStatus) &&
                 Objects.equals(this.type, flowExecutionResponse.type) &&
                 Objects.equals(this.data, flowExecutionResponse.data);
@@ -170,7 +193,7 @@ public class FlowExecutionResponse  {
 
     @Override
     public int hashCode() {
-        return Objects.hash(flowId, flowStatus, type, data);
+        return Objects.hash(flowId, flowType, flowStatus, type, data);
     }
 
     @Override
@@ -180,6 +203,7 @@ public class FlowExecutionResponse  {
         sb.append("class FlowExecutionResponse {\n");
 
         sb.append("    flowId: ").append(toIndentedString(flowId)).append("\n");
+        sb.append("    flowType: ").append(toIndentedString(flowType)).append("\n");
         sb.append("    flowStatus: ").append(toIndentedString(flowStatus)).append("\n");
         sb.append("    type: ").append(toIndentedString(type)).append("\n");
         sb.append("    data: ").append(toIndentedString(data)).append("\n");
@@ -199,4 +223,3 @@ public class FlowExecutionResponse  {
         return o.toString().replace("\n", "\n");
     }
 }
-

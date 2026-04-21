@@ -1,0 +1,20 @@
+{
+  "failOnErrors":1,
+  "schemas": ["urn:ietf:params:scim:api:messages:2.0:BulkRequest"],
+  "Operations": [
+    {
+      "method": "PATCH",
+      "path": "/Groups/{{id}}",
+      "bulkId": "qwerty",
+      "data": {
+        "Operations": [
+          {
+            "op": "replace",
+            "path": "displayName",
+            "value": "TourGuide-new"
+          }
+        ]
+      }
+    }
+  ]
+}

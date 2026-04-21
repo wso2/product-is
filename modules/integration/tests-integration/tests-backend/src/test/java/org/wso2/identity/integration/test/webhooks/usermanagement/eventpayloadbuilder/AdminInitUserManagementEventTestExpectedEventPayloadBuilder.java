@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.webhooks.util.EventPayloadUtils;
 
 /**
  * Utility class to build expected event payloads for SCIM2 user test cases.
@@ -44,9 +45,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         userCreatedEvent.put("initiatorType", "ADMIN");
         userCreatedEvent.put("user", createUserObjectForUserCreate(userId, tenantDomain));
-        userCreatedEvent.put("tenant", createTenantObject(tenantDomain));
-        userCreatedEvent.put("organization", createOrganizationObject(tenantDomain));
-        userCreatedEvent.put("userStore", createUserStoreObject());
+        userCreatedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userCreatedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userCreatedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
         userCreatedEvent.put("action", "REGISTER");
 
         return userCreatedEvent;
@@ -68,9 +69,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         registrationSuccessEvent.put("initiatorType", "ADMIN");
         registrationSuccessEvent.put("user", createUserObjectForUserCreate(userId, tenantDomain));
-        registrationSuccessEvent.put("tenant", createTenantObject(tenantDomain));
-        registrationSuccessEvent.put("organization", createOrganizationObject(tenantDomain));
-        registrationSuccessEvent.put("userStore", createUserStoreObject());
+        registrationSuccessEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        registrationSuccessEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        registrationSuccessEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
         registrationSuccessEvent.put("action", "REGISTER");
 
         return registrationSuccessEvent;
@@ -93,9 +94,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userProfileUpdateEvent.put("initiatorType", "ADMIN");
         userProfileUpdateEvent.put("user",
                 createUserObjectForUserProfileUpdateWithoutAnyAccountStateManagementClaims(userId, tenantDomain));
-        userProfileUpdateEvent.put("tenant", createTenantObject(tenantDomain));
-        userProfileUpdateEvent.put("organization", createOrganizationObject(tenantDomain));
-        userProfileUpdateEvent.put("userStore", createUserStoreObject());
+        userProfileUpdateEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userProfileUpdateEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userProfileUpdateEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
         userProfileUpdateEvent.put("action", "PROFILE_UPDATE");
 
         return userProfileUpdateEvent;
@@ -118,9 +119,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userProfileUpdateEvent.put("initiatorType", "ADMIN");
         userProfileUpdateEvent.put("user",
                 createUserObjectForUserProfileUpdateWithAccountLockClaim(userId, tenantDomain));
-        userProfileUpdateEvent.put("tenant", createTenantObject(tenantDomain));
-        userProfileUpdateEvent.put("organization", createOrganizationObject(tenantDomain));
-        userProfileUpdateEvent.put("userStore", createUserStoreObject());
+        userProfileUpdateEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userProfileUpdateEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userProfileUpdateEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
         userProfileUpdateEvent.put("action", "PROFILE_UPDATE");
 
         return userProfileUpdateEvent;
@@ -140,9 +141,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject accountLockedEvent = new JSONObject();
 
         accountLockedEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
-        accountLockedEvent.put("tenant", createTenantObject(tenantDomain));
-        accountLockedEvent.put("organization", createOrganizationObject(tenantDomain));
-        accountLockedEvent.put("userStore", createUserStoreObject());
+        accountLockedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        accountLockedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        accountLockedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
 
         return accountLockedEvent;
     }
@@ -161,9 +162,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject accountLockedEvent = new JSONObject();
 
         accountLockedEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
-        accountLockedEvent.put("tenant", createTenantObject(tenantDomain));
-        accountLockedEvent.put("organization", createOrganizationObject(tenantDomain));
-        accountLockedEvent.put("userStore", createUserStoreObject());
+        accountLockedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        accountLockedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        accountLockedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
 
         return accountLockedEvent;
     }
@@ -185,9 +186,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userProfileUpdateEvent.put("initiatorType", "ADMIN");
         userProfileUpdateEvent.put("user",
                 createUserObjectForUserProfileUpdateWithAccountDisableClaim(userId, tenantDomain));
-        userProfileUpdateEvent.put("tenant", createTenantObject(tenantDomain));
-        userProfileUpdateEvent.put("organization", createOrganizationObject(tenantDomain));
-        userProfileUpdateEvent.put("userStore", createUserStoreObject());
+        userProfileUpdateEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userProfileUpdateEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userProfileUpdateEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
         userProfileUpdateEvent.put("action", "PROFILE_UPDATE");
 
         return userProfileUpdateEvent;
@@ -208,9 +209,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         userDisableEvent.put("initiatorType", "ADMIN");
         userDisableEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
-        userDisableEvent.put("tenant", createTenantObject(tenantDomain));
-        userDisableEvent.put("organization", createOrganizationObject(tenantDomain));
-        userDisableEvent.put("userStore", createUserStoreObject());
+        userDisableEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userDisableEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userDisableEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
 
         return userDisableEvent;
     }
@@ -230,9 +231,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         userDisableEvent.put("initiatorType", "ADMIN");
         userDisableEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
-        userDisableEvent.put("tenant", createTenantObject(tenantDomain));
-        userDisableEvent.put("organization", createOrganizationObject(tenantDomain));
-        userDisableEvent.put("userStore", createUserStoreObject());
+        userDisableEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userDisableEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userDisableEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
 
         return userDisableEvent;
     }
@@ -252,9 +253,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         userDeletedEvent.put("initiatorType", "ADMIN");
         userDeletedEvent.put("user", createUserObjectForUserDelete(userId, tenantDomain));
-        userDeletedEvent.put("tenant", createTenantObject(tenantDomain));
-        userDeletedEvent.put("organization", createOrganizationObject(tenantDomain));
-        userDeletedEvent.put("userStore", createUserStoreObject());
+        userDeletedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userDeletedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userDeletedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
 
         return userDeletedEvent;
     }
@@ -275,10 +276,10 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         registrationFailedEvent.put("initiatorType", "ADMIN");
         registrationFailedEvent.put("user", createUserObjectForUserCreateFailure(tenantDomain));
-        registrationFailedEvent.put("tenant", createTenantObject(tenantDomain));
-        registrationFailedEvent.put("organization", createOrganizationObject(tenantDomain));
+        registrationFailedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        registrationFailedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
         registrationFailedEvent.put("action", "REGISTER");
-        registrationFailedEvent.put("reason", createReasonObject(reasonDescription));
+        registrationFailedEvent.put("reason", EventPayloadUtils.createReasonObject(reasonDescription));
 
         return registrationFailedEvent;
     }
@@ -516,42 +517,5 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("organization", userOrganization);
 
         return user;
-    }
-
-    private static JSONObject createTenantObject(String tenantDomain) throws JSONException {
-
-        JSONObject tenant = new JSONObject();
-        tenant.put("id", "dummy-tenant-id");
-        tenant.put("name", tenantDomain);
-        return tenant;
-    }
-
-    private static JSONObject createOrganizationObject(String tenantDomain) throws JSONException {
-
-        JSONObject organization = new JSONObject();
-        organization.put("id", "dummy-org-id");
-        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            organization.put("name", "Super");
-        } else {
-            organization.put("name", tenantDomain);
-        }
-        organization.put("orgHandle", tenantDomain);
-        organization.put("depth", 0);
-        return organization;
-    }
-
-    private static JSONObject createUserStoreObject() throws JSONException {
-
-        JSONObject userStore = new JSONObject();
-        userStore.put("id", "UFJJTUFSWQ==");
-        userStore.put("name", "PRIMARY");
-        return userStore;
-    }
-
-    private static JSONObject createReasonObject(String reasonDescription) throws JSONException {
-
-        JSONObject reason = new JSONObject();
-        reason.put("description", reasonDescription);
-        return reason;
     }
 }

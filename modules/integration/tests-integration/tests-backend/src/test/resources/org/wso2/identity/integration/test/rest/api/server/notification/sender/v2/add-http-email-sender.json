@@ -1,0 +1,24 @@
+{
+    "name": "EmailPublisher",
+    "provider": "HTTP",
+    "providerURL": "https://example.email.sender",
+    "fromAddress": "iam@gmail.com",
+    "properties": [
+        {
+            "key": "http.client.method",
+            "value": "POST"
+        },
+        {
+            "key": "http.headers",
+            "value": "X-Version: 1, Accept: application/json, Content-Type: application/json"
+        },
+        {
+            "key": "contentType",
+            "value": "JSON"
+        },
+        {
+            "key": "body",
+            "value": "{\"eventData\":{\"source\":\"{{subject}}\",\"content\":{{body}}},\"messages\":{\"email\":[{\"to\":{\"email\":\"{{send-to}}\"}}]}}"
+        }
+    ]
+}

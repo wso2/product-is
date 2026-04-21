@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2021-2025, WSO2 LLC. (http://www.wso2.com).
+  ~ Copyright (c) 2021-2026, WSO2 LLC. (http://www.wso2.com).
   ~
   ~ WSO2 LLC. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -80,7 +80,9 @@
                 org.wso2.carbon.identity.api.server.flow.execution.v1.FlowApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowsApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi,
-                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi
+                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi,
+                org.wso2.carbon.identity.api.server.vc.template.management.v1.VcTemplatesApi,
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -118,7 +120,8 @@
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
                 org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
-                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -172,7 +175,8 @@
                 org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
                 org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
-                org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi
+                org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi,
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -210,7 +214,8 @@
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
                 org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
-                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -368,7 +373,7 @@
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
                 org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
-                org.wso2.carbon.identity.rest.api.user.approval.v1.MeApi
+                org.wso2.carbon.identity.api.user.password.v1.MeApi
             </param-value>
         </init-param>
         <init-param>
@@ -435,7 +440,8 @@
                 org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.MeApi,
                 org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi,
                 org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.AuthorizedAppsApi,
-                org.wso2.carbon.identity.rest.api.user.recovery.v2.RecoveryApi
+                org.wso2.carbon.identity.rest.api.user.recovery.v2.RecoveryApi,
+                org.wso2.carbon.identity.rest.api.user.approval.v2.MeApi
             </param-value>
         </init-param>
         <init-param>
@@ -524,7 +530,8 @@
                 org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
-                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi
+                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
+                org.wso2.carbon.identity.api.user.password.v1.MeApi
             </param-value>
         </init-param>
         <init-param>

@@ -35,6 +35,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OIDCLogoutConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
@@ -138,6 +139,9 @@ public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegratio
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
         oidcConfig.setGrantTypes(grantTypes);
         oidcConfig.addCallbackURLsItem(application.getCallBackURL());
+        OIDCLogoutConfiguration logoutConfig = new OIDCLogoutConfiguration();
+        logoutConfig.setFrontChannelLogoutUrl(application.getFrontChannellogoutURI());
+        oidcConfig.setLogout(logoutConfig);
 
         ClaimConfiguration applicationClaimConfiguration = new ClaimConfiguration().dialect(DialectEnum.CUSTOM);
         for (String claimUri : application.getRequiredClaims()) {

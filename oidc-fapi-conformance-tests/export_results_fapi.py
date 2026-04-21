@@ -17,20 +17,32 @@ def save_results(plan, i):
 # return names of all failed, warnings and other test cases of a given test plan
 def get_failed_tests(plan):
     test_fails = []
-    test_warnings = []
-    test_others = []
-    test_log = json.loads(requests.get(url=conformance_suite_url + "/api/log?length=100&search=" + plan['_id'], verify=False).content)
-    for test in test_log['data']:
-        if "result" in test and test['result'] == "FAILED":
-            test_fails.append('Test Name: ' + test['testName'] + '  id: ' + test['testId'])
-        elif "result" in test and test['result'] == "WARNING":
-            test_warnings.append('Test Name: ' + test['testName'] + '  id: ' + test['testId'])
+    test_errors = []
+    try:
+        response = requests.post(url=conformance_suite_url + "/api/plan/" + plan['_id'] + "/certificationpackage", files={'clientSideData': ('', None)}, verify=False, timeout=60)
+
+        if response.status_code == 200:
+            print(f"✅ All tests passed for plan {plan['_id']}")
+        elif response.status_code == 422:
+            error_data = response.json()
+            failed_tests = error_data.get('failed_tests', {})
+            if failed_tests:
+                for test_module, test_info in failed_tests.items():
+                    test_fails.append(f"Test Module: {test_module}, Details: {test_info}")
+        elif response.status_code == 404:
+            error_data = response.json()
+            test_errors.append(f"Plan not found: {error_data.get('error_description', 'Unknown error')}")
+        elif response.status_code == 403:
+            error_data = response.json()
+            test_errors.append(f"Access forbidden: {error_data.get('error_description', 'Unknown error')}")
         else:
-            test_others.append('Test Name: ' + test['testName'] + '  id: ' + test['testId'])
+            error_data = response.json()
+            test_errors.append(f"Unexpected error (status code {response.status_code}): {error_data.get('error_description', 'Unknown error')}")
+    except Exception as e:
+        test_errors.append(f"Exception occurred: {str(e)}")
     return {
         'fails': test_fails,
-        'warnings': test_warnings,
-        'others': test_others
+        'errors': test_errors
     }
 
 
@@ -45,27 +57,25 @@ if __name__ == '__main__':
         i += 1
         save_results(test_plan, i)
         failed_tests_list = get_failed_tests(test_plan)
-        if len(failed_tests_list['fails']) > 0 or len(failed_tests_list['warnings']) > 0:
+        if len(failed_tests_list['fails']) > 0 or len(failed_tests_list['errors']) > 0:
             failed_plan_details[test_plan['planName']] = failed_tests_list
             if len(failed_tests_list['fails']) > 0:
+                contains_fails = True
+            elif len(failed_tests_list['errors']) > 0:
                 contains_fails = True
 
     if failed_plan_details:
         print("Following tests have fails/warnings\n===========================")
         for test_plan in failed_plan_details:
             failed_count = len(failed_plan_details[test_plan]['fails'])
-            warnings_count = len(failed_plan_details[test_plan]['warnings'])
-            success_count = len(failed_plan_details[test_plan]['others'])
-            total_count = failed_count + warnings_count + success_count
+            errors_count = len(failed_plan_details[test_plan]['errors'])
             print("\n"+test_plan+"\n-----------------------------------")
-            print("Total Test Cases: " + str(total_count))
-            print("Successful: " + str(success_count))
-            print("Warnings: " + str(warnings_count))
+            print("Errors: " + str(errors_count))
             print("Failures: " + str(failed_count))
             print("\nFailed Test Cases\n-----")
             print(*failed_plan_details[test_plan]['fails'], sep="\n")
-            print("\nTest Cases with Warnings\n--------")
-            print(*failed_plan_details[test_plan]['warnings'], sep="\n")
+            print("\nTest Errors\n--------")
+            print(*failed_plan_details[test_plan]['errors'], sep="\n")
         if contains_fails:
             sys.exit(1)
         else:

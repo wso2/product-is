@@ -19,6 +19,9 @@
 <Server port="8005" shutdown="SHUTDOWN">
 
     <Service className="org.wso2.carbon.tomcat.ext.service.ExtendedStandardService" name="Catalina">
+        <Executor
+                name="virtualThreadExecutor"
+                className="org.apache.catalina.core.StandardVirtualThreadExecutor" />
 
         <!--
         optional attributes:
@@ -26,6 +29,7 @@
         proxyPort="80"
         -->
         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+                   executor="virtualThreadExecutor"
                    URIEncoding="UTF-8"
                    disableUploadTimeout="false"
                    acceptCount="200"
@@ -52,6 +56,7 @@
         Added sslEnabledProtocols="TLSv1,TLSv1.1,TLSv1.2" for poodle vulnerability fix
         -->
         <Connector protocol="org.apache.coyote.http11.Http11NioProtocol"
+                   executor="virtualThreadExecutor"
                    acceptorThreadCount="2"
                    compressibleMimeType="text/html,text/javascript,application/x-javascript,application/javascript,application/xml,text/css,application/xslt+xml,text/xsl,image/gif,image/jpg,image/jpeg"
                    enableLookups="false"

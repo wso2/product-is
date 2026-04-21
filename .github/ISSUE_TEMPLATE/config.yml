@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: Ask a question
-    url: https://github.com/wso2/product-is/wiki/Engage-with-the-community
-    about: Check here on how you can ask a question about the product
+    url: https://discord.gg/wso2
+    about: Join our Discord community to ask questions about the WSO2 Identity Server

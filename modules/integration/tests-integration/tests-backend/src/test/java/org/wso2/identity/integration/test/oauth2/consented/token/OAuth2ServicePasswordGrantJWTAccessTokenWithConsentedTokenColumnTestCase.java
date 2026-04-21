@@ -149,7 +149,7 @@ public class OAuth2ServicePasswordGrantJWTAccessTokenWithConsentedTokenColumnTes
 
         Assert.assertEquals(oidcTokens.getIDToken().getJWTClaimsSet().getClaim(EMAIL_OIDC_CLAIM), USER_EMAIL,
                 "Requested user claims is not returned back with the ID token.");
-        Assert.assertEquals(((net.minidev.json.JSONObject) oidcTokens.getIDToken().getJWTClaimsSet()
+        Assert.assertEquals(((java.util.Map<?, ?>) oidcTokens.getIDToken().getJWTClaimsSet()
                         .getClaim(ADDRESS_OIDC_CLAIM)).get(COUNTRY_OIDC_CLAIM).toString(), COUNTRY,
                 "Requested user claims is not returned back with the ID token.");
     }

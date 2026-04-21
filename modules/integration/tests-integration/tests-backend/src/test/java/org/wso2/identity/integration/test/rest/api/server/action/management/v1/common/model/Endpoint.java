@@ -21,6 +21,8 @@ package org.wso2.identity.integration.test.rest.api.server.action.management.v1.
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -30,6 +32,8 @@ public class Endpoint {
 
     private String uri;
     private AuthenticationType authentication;
+    private List<String> allowedHeaders = null;
+    private List<String> allowedParameters = null;
 
     /**
      **/
@@ -71,6 +75,60 @@ public class Endpoint {
         this.authentication = authentication;
     }
 
+    /**
+     * List of HTTP headers to forward to the extension.
+     **/
+    public Endpoint allowedHeaders(List<String> allowedHeaders) {
+
+        this.allowedHeaders = allowedHeaders;
+        return this;
+    }
+
+    @ApiModelProperty(example = "[\"x-geo-location\",\"host\"]", value = "List of HTTP headers to forward to the extension.")
+    @JsonProperty("allowedHeaders")
+    @Valid
+    public List<String> getAllowedHeaders() {
+        return allowedHeaders;
+    }
+    public void setAllowedHeaders(List<String> allowedHeaders) {
+        this.allowedHeaders = allowedHeaders;
+    }
+
+    public Endpoint addAllowedHeadersItem(String allowedHeadersItem) {
+        if (this.allowedHeaders == null) {
+            this.allowedHeaders = new ArrayList<String>();
+        }
+        this.allowedHeaders.add(allowedHeadersItem);
+        return this;
+    }
+
+    /**
+     * List of parameters to forward to the extension.
+     **/
+    public Endpoint allowedParameters(List<String> allowedParameters) {
+
+        this.allowedParameters = allowedParameters;
+        return this;
+    }
+
+    @ApiModelProperty(example = "[\"device-id\"]", value = "List of parameters to forward to the extension.")
+    @JsonProperty("allowedParameters")
+    @Valid
+    public List<String> getAllowedParameters() {
+        return allowedParameters;
+    }
+    public void setAllowedParameters(List<String> allowedParameters) {
+        this.allowedParameters = allowedParameters;
+    }
+
+    public Endpoint addAllowedParametersItem(String allowedParametersItem) {
+        if (this.allowedParameters == null) {
+            this.allowedParameters = new ArrayList<String>();
+        }
+        this.allowedParameters.add(allowedParametersItem);
+        return this;
+    }
+
     @Override
     public boolean equals(java.lang.Object o) {
 
@@ -82,12 +140,14 @@ public class Endpoint {
         }
         Endpoint endpoint = (Endpoint) o;
         return Objects.equals(this.uri, endpoint.uri) &&
-                Objects.equals(this.authentication, endpoint.authentication);
+                Objects.equals(this.authentication, endpoint.authentication) &&
+                Objects.equals(this.allowedHeaders, endpoint.allowedHeaders) &&
+                Objects.equals(this.allowedParameters, endpoint.allowedParameters);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uri, authentication);
+        return Objects.hash(uri, authentication, allowedHeaders, allowedParameters);
     }
 
     @Override
@@ -97,6 +157,8 @@ public class Endpoint {
         sb.append("class Endpoint {\n");
         sb.append("    uri: ").append(toIndentedString(uri)).append("\n");
         sb.append("    authentication: ").append(toIndentedString(authentication)).append("\n");
+        sb.append("    allowedHeaders: ").append(toIndentedString(allowedHeaders)).append("\n");
+        sb.append("    allowedParameters: ").append(toIndentedString(allowedParameters)).append("\n");
         sb.append("}");
         return sb.toString();
     }

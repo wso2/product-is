@@ -30,29 +30,39 @@ wso2_is_version = sys.argv[7]
 workflow_name = sys.argv[8]
 
 failed_count = 0
-warnings_count = 0
-total_tests_count = 0
+errors_count = 0
 
 warnings.filterwarnings("ignore")
-plan_list = json.loads(requests.get(url=conformance_suite_url + "/api/plan?length=50", verify=False).content)
 
-# loop through all test plans and count fails, warnings and total test cases
+# Try to fetch plans; mark failure and include error if unreachable
+unreachable_error = None
+try:
+    resp = requests.get(
+        url=conformance_suite_url + "/api/plan?length=50",
+        verify=False,
+        timeout=5
+    )
+    resp.raise_for_status()
+    plan_list = json.loads(resp.content)
+except Exception as e:
+    unreachable_error = f"Conformance Suite is unreachable at {conformance_suite_url}. Error: {type(e).__name__}"
+    plan_list = {"data": []}
+    workflow_status = "failure"
+
+# loop through all test plans and count fails and errors
 for test_plan in plan_list['data']:
     failed_tests_list = export_results.get_failed_tests(test_plan)
     if len(failed_tests_list['fails']) > 0:
         failed_count += len(failed_tests_list['fails'])
-        total_tests_count += len(failed_tests_list['fails'])
-    if len(failed_tests_list['warnings']) > 0:
-        warnings_count += len(failed_tests_list['warnings'])
-        total_tests_count += len(failed_tests_list['warnings'])
-    if len(failed_tests_list['others']) > 0:
-        total_tests_count += len(failed_tests_list['others'])
+    if len(failed_tests_list['errors']) > 0:
+        errors_count += len(failed_tests_list['errors'])
 
 font_color = '#009944'
 if workflow_status == 'failure':
     font_color = '#ff0000'
 
 message_headers = {'Content-Type': 'application/json; charset=UTF-8'}
+error_line = f"\nError: {unreachable_error}" if unreachable_error else ""
 message = {
     "cards": [
         {
@@ -72,9 +82,9 @@ message = {
                         {
                             "textParagraph": {
                                 "text": f"Status: <b><font color= {font_color}> {workflow_status}"
-                                        f"</font></b></br>\nTotal test cases: {str(total_tests_count)}" 
-                                        f"\nFailed test cases: {str(failed_count)}" 
-                                        f"\nTest cases with warnings: {str(warnings_count)}"
+                                        f"</font></b></br>\nFailed test cases: {str(failed_count)}" 
+                                        f"\nTest cases with errors: {str(errors_count)}"
+                                        f"{error_line}"
                             }
                         },
                         {

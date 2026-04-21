@@ -2,6 +2,7 @@
 hostname = "localhost"
 node_ip = "127.0.0.1"
 base_path = "https://$ref{server.hostname}:${carbon.management.port}"
+enable_admin_services = true
 
 [super_admin]
 username = "admin"
@@ -19,6 +20,13 @@ driver = "$env{SHARED_DATABASE_DRIVER}"
 url = "$env{SHARED_DATABASE_URL}"
 username = "$env{SHARED_DATABASE_USERNAME}"
 password = "$env{SHARED_DATABASE_PASSWORD}"
+
+[datasource.AgentIdentity]
+id = "AgentIdentity"
+driver = "$env{AGENTIDENTITY_DATABASE_DRIVER}"
+url = "$env{AGENTIDENTITY_DATABASE_URL}"
+username = "$env{AGENTIDENTITY_DATABASE_USERNAME}"
+password = "$env{AGENTIDENTITY_DATABASE_PASSWORD}"
 
 [user_store]
 type = "database_unique_id"

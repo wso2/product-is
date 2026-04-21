@@ -103,6 +103,7 @@ public class UserDefinedLocalAuthenticatorPayload {
         authenticationConfig.setProperties(propertyMap);
         authenticationConfig.setProperties(propertyMap);
         endpoint.setAuthentication(authenticationConfig);
+        endpoint.setAllowedParameters(endpointConfig.getEndpointConfig().getAllowedParameters());
         return endpoint;
     }
 }

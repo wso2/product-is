@@ -74,7 +74,6 @@ public class UserMeApprovalTest extends UserApprovalTestBase {
 
         super(userMode);
         setUpWorkFlowAssociation();
-        waitForWorkflowToDeploy();
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

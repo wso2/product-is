@@ -60,6 +60,7 @@ import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AllowedIssuer;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -69,6 +70,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration.DialectEnum;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimMappings;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.DomainAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.HybridFlowConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.IdTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
@@ -223,6 +225,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
 		}
 
+        if (applicationConfig.isEnableHybridFlow()) {
+            HybridFlowConfiguration hybridFlow = getHybridFlowConfiguration(applicationConfig);
+            oidcConfig.setHybridFlow(hybridFlow);
+        }
+
 		InboundProtocols inboundProtocolsConfig = new InboundProtocols();
 		inboundProtocolsConfig.setOidc(oidcConfig);
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
@@ -235,10 +242,24 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		application.advancedConfigurations(
 				new AdvancedApplicationConfiguration().skipLoginConsent(applicationConfig.isSkipConsent())
 						.skipLogoutConsent(applicationConfig.isSkipConsent()));
+		application.setEnhancedOrgAuthenticationEnabled(false);
 
 		String appId = restClient.createApplication(application);
 		return restClient.getApplication(appId);
 	}
+
+    private static HybridFlowConfiguration getHybridFlowConfiguration(ApplicationConfig applicationConfig) {
+
+        HybridFlowConfiguration hybridFlow = new HybridFlowConfiguration();
+        hybridFlow.setEnable(true);
+        // Setting the first response type as currently only one response type is supported in the test cases.
+        // This should be improved to support multiple response types in future if needed.
+        if (applicationConfig.getResponseTypes() != null &&
+                !applicationConfig.getResponseTypes().isEmpty()) {
+            hybridFlow.setResponseType(applicationConfig.getResponseTypes().get(0));
+        }
+        return hybridFlow;
+    }
 
     public ApplicationResponseModel addApplication() throws Exception {
 
@@ -261,6 +282,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
 		application.setName(SERVICE_PROVIDER_NAME);
 		application.setIsManagementApp(true);
+		application.setEnhancedOrgAuthenticationEnabled(false);
 
 		application.setClaimConfiguration(setApplicationClaimConfig()); ;
 
@@ -268,6 +290,73 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		return getApplication(appId);
 	}
+
+    /**
+     * Add an application to an organization.
+     *
+     * @param applicationName Name of the application.
+     * @param applicationConfig Configurations of the application.
+     * @param switchedAccessToken Authorized token to create an application in an organization.
+     * @return Created application details
+     * @throws Exception If an exception occurred in the application add process.
+     */
+    public ApplicationResponseModel addOrganizationApplication(String applicationName,
+                                                               ApplicationConfig applicationConfig,
+                                                               String switchedAccessToken,
+                                                               String organizationId) throws Exception {
+
+        if (applicationConfig == null) {
+            return getBasicOAuthApplication(CALLBACK_URL);
+        }
+
+        ApplicationModel application = new ApplicationModel();
+        application.setName(applicationName);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(applicationConfig.getGrantTypes());
+        oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+        AllowedIssuer allowedIssuer = new AllowedIssuer();
+        allowedIssuer.organizationId(organizationId);
+        oidcConfig.setIssuer(allowedIssuer);
+
+        AccessTokenConfiguration accessTokenConfiguration = new AccessTokenConfiguration();
+        accessTokenConfiguration.type(applicationConfig.getTokenType().getTokenTypeProperty());
+        accessTokenConfiguration.applicationAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+        accessTokenConfiguration.userAccessTokenExpiryInSeconds(applicationConfig.getExpiryTime());
+        // Add access token claim list.
+        List<String> accessTokenClaimList = applicationConfig.getRequestedClaimList().stream()
+                .map(UserClaimConfig::getOidcClaimUri).collect(Collectors.toList());
+        accessTokenConfiguration.accessTokenAttributes(accessTokenClaimList);
+        oidcConfig.accessToken(accessTokenConfiguration);
+
+        if (applicationConfig.getRefreshTokenExpiryTime() > 0) {
+            RefreshTokenConfiguration refreshTokenConfiguration = new RefreshTokenConfiguration();
+            refreshTokenConfiguration.expiryInSeconds(applicationConfig.getRefreshTokenExpiryTime())
+                    .renewRefreshToken(false);
+            oidcConfig.refreshToken(refreshTokenConfiguration);
+        }
+
+        if (applicationConfig.getAudienceList() != null && !applicationConfig.getAudienceList().isEmpty()) {
+            oidcConfig.idToken(new IdTokenConfiguration().audience(applicationConfig.getAudienceList()));
+        }
+
+        InboundProtocols inboundProtocolsConfig = new InboundProtocols();
+        inboundProtocolsConfig.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocolsConfig);
+
+        if (applicationConfig.getRequestedClaimList() != null && !applicationConfig.getRequestedClaimList().isEmpty()) {
+            application.setClaimConfiguration(
+                    buildClaimConfigurationForRequestedClaims(applicationConfig.getRequestedClaimList()));
+        }
+
+        application.advancedConfigurations(
+                new AdvancedApplicationConfiguration().skipLoginConsent(applicationConfig.isSkipConsent())
+                        .skipLogoutConsent(applicationConfig.isSkipConsent()));
+        application.setEnhancedOrgAuthenticationEnabled(false);
+
+        String appId = restClient.createOrganizationApplication(application, switchedAccessToken);
+        return restClient.getOrganizationApplication(appId, switchedAccessToken);
+    }
 
 	public ApplicationResponseModel addApplicationWithGrantType(String grantType) throws Exception {
 
@@ -407,6 +496,21 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 
 		return restClient.getOIDCInboundDetails(appId);
 	}
+
+    /**
+     * Get Application oidc inbound configuration details with a given application id of an organization.
+     *
+     * @param appId Application ID.
+     * @param switchedAccessToken Authorized token to get the OIDC inbound configurations of an application.
+     * @return OIDC configurations of the given application.
+     * @throws Exception If an exception occurred during the OIDC inbound config retrieval.
+     */
+    public OpenIDConnectConfiguration getOIDCInboundDetailsOfOrganizationApplication(String appId,
+                                                                                     String switchedAccessToken)
+            throws Exception {
+
+        return restClient.getOIDCInboundDetailsOfOrganizationApp(appId,  switchedAccessToken);
+    }
 
 	/**
 	 * Get Application saml inbound configuration details with a given id.
@@ -657,7 +761,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 			IOException {
 
 		List<NameValuePair> urlParameters = new ArrayList<>();
-		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserName()));
+		urlParameters.add(new BasicNameValuePair("username", userInfo.getUserNameWithoutDomain()));
 		urlParameters.add(new BasicNameValuePair("password", userInfo.getPassword()));
 		urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
 		log.info(">>> sendLoginPost:sessionDataKey: " + sessionDataKey);

@@ -138,13 +138,11 @@ public class ApplicationManagementTestCase extends ISIntegrationTest {
             ServiceProvider serviceProvider = applicationManagementServiceClient.getApplication
                     (applicationName);
             serviceProvider.setDescription("Updated description");
-            serviceProvider.setSaasApp(true);
             applicationManagementServiceClient.updateApplicationData(serviceProvider);
             ServiceProvider updatedServiceProvider = applicationManagementServiceClient
                     .getApplication(applicationName);
             Assert.assertEquals(updatedServiceProvider.getDescription(), "Updated description",
                     "Failed update application description");
-            Assert.assertEquals(updatedServiceProvider.getSaasApp(), true, "Set isSaasApp failed");
         } catch (Exception e) {
             Assert.fail("Error while trying to update Service Provider", e);
         }

@@ -1,0 +1,28 @@
+# This workflow will run when a PR is merged and save the PR information for later use.
+
+name: 💡 PR Merged
+
+on:
+    pull_request:
+        types: [closed]
+        branches: [master, main]
+
+jobs:
+    save-pr-information:
+        runs-on: ubuntu-latest
+        if: github.event.pull_request.merged == true
+        steps:
+            - name: ⬇️ Checkout
+              uses: actions/checkout@v3
+
+            - name: ℹ️ Display PR Information
+              run: echo "PR Number \#${{github.event.number}}"
+
+            - name: 💾 Save PR Number for Later Use
+              run: echo "${{github.event.number}}" > PR_NUMBER
+
+            - name: 📦 Upload PR Number as Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: pr-number
+                path: PR_NUMBER

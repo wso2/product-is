@@ -34,11 +34,15 @@ SUBSCRIBE_APIS = [
     },
     {
         "identifier": "/api/server/v1/applications",
-        "scopes": ["internal_application_mgt_create", "internal_application_mgt_update", "internal_application_mgt_view"]
+        "scopes": ["internal_application_mgt_create", "internal_application_mgt_update", "internal_application_mgt_view", "internal_application_mgt_client_secret_view"]
     },
     {
         "identifier": "/api/server/v1/oidc/scopes",
         "scopes": ["internal_oidc_scope_mgt_update"]
+    },
+    {
+        "identifier": "/api/server/v1/applications/(.*)/authenticationSequence/script",
+        "scopes": ["internal_application_script_update"]
     }
 ]
 

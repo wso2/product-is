@@ -31,6 +31,7 @@ public class Error {
     private String message;
     private String description;
     private String traceId;
+    private String flowType;
 
     /**
      *
@@ -112,6 +113,25 @@ public class Error {
         this.traceId = traceId;
     }
 
+    /**
+     *
+     **/
+    public Error flowType(String flowType) {
+        this.flowType = flowType;
+        return this;
+    }
+
+    @ApiModelProperty(example = "REGISTRATION", value = "")
+    @JsonProperty("flowType")
+    @Valid
+    public String getFlowType() {
+        return flowType;
+    }
+
+    public void setFlowType(String flowType) {
+        this.flowType = flowType;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -126,12 +146,13 @@ public class Error {
         return Objects.equals(this.code, error.code) &&
                 Objects.equals(this.message, error.message) &&
                 Objects.equals(this.description, error.description) &&
-                Objects.equals(this.traceId, error.traceId);
+                Objects.equals(this.traceId, error.traceId) &&
+                Objects.equals(this.flowType, error.flowType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, message, description, traceId);
+        return Objects.hash(code, message, description, traceId, flowType);
     }
 
     @Override
@@ -144,6 +165,7 @@ public class Error {
         sb.append("    message: ").append(toIndentedString(message)).append("\n");
         sb.append("    description: ").append(toIndentedString(description)).append("\n");
         sb.append("    traceId: ").append(toIndentedString(traceId)).append("\n");
+        sb.append("    flowType: ").append(toIndentedString(flowType)).append("\n");
         sb.append("}");
         return sb.toString();
     }

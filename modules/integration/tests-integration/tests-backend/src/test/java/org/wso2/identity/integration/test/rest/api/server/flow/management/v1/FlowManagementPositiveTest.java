@@ -33,6 +33,8 @@ import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 
 import java.io.IOException;
 
+import static org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementTestBase.FlowTypes.REGISTRATION;
+
 /**
  * This class contains the test cases for Flow Management API.
  */
@@ -88,7 +90,7 @@ public class FlowManagementPositiveTest extends FlowManagementTestBase {
 
         ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
         FlowRequest expectedRegistrationFlowRequest = getFlowRequest(jsonReader);
-        FlowResponse registrationFlowResponse = flowManagementClient.getRegistrationFlow();
+        FlowResponse registrationFlowResponse = flowManagementClient.getFlow(REGISTRATION);
         assert registrationFlowResponse.getSteps().equals(expectedRegistrationFlowRequest.getSteps())
                 : "Registration flow mismatch";
     }

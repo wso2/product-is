@@ -11,7 +11,6 @@ import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
-import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.File;
@@ -60,6 +59,9 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
         testDataHolder.setAutomationContext(new AutomationContext("IDENTITY", "identity002", TestUserMode
                 .SUPER_TENANT_ADMIN));
         startCarbonServer(PORT_OFFSET_1, testDataHolder.getAutomationContext(), startupParameters);
+        // Capture the secondary IS carbon home immediately after startup, before any other server
+        // start can overwrite the global carbon.home system property.
+        testDataHolder.setSecondaryISCarbonHome(System.getProperty("carbon.home"));
 
         /*
         When tests are executed under different profiles, the started secondary server above, might use the same
@@ -93,7 +95,7 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
             XPathExpressionException, AutomationUtilException {
 
         log.info("Using the embedded H2 database for the secondary server.");
-        String carbonHome = Utils.getResidentCarbonHome();
+        String carbonHome = TestDataHolder.getInstance().getSecondaryISCarbonHome();
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "provisioning" + File.separator + fileName);

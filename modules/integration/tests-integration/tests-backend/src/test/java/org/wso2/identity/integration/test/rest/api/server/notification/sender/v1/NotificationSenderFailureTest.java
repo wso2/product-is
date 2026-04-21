@@ -96,17 +96,28 @@ public class NotificationSenderFailureTest extends NotificationSenderTestBase {
         Response response =
                 getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH, body);
         if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .header(HttpHeaders.LOCATION, notNullValue());
-            String location = response.getHeader(HttpHeaders.LOCATION);
-            assertNotNull(location);
-            emailNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
-            assertNotNull(emailNotificationSenderName);
-            response = getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH, body);
-            validateErrorResponse(response, HttpStatus.SC_CONFLICT, "NSM-60002");
+            try {
+                response.then()
+                        .log().ifValidationFails()
+                        .assertThat()
+                        .statusCode(HttpStatus.SC_CREATED)
+                        .header(HttpHeaders.LOCATION, notNullValue());
+                String location = response.getHeader(HttpHeaders.LOCATION);
+                assertNotNull(location);
+                emailNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
+                assertNotNull(emailNotificationSenderName);
+                response = getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH, body);
+                validateErrorResponse(response, HttpStatus.SC_CONFLICT, "NSM-60002");
+            } finally {
+                // Cleaning the first email provider created.
+                if (emailNotificationSenderName != null) {
+                    Response deleteResponse =
+                            getResponseOfDelete(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR +
+                                    EMAIL_SENDERS_PATH + PATH_SEPARATOR + emailNotificationSenderName);
+                    deleteResponse.then().log().ifValidationFails().assertThat()
+                            .statusCode(HttpStatus.SC_NO_CONTENT);
+                }
+            }
         } else {
             response.then()
                     .log().ifValidationFails()

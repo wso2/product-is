@@ -1,0 +1,7 @@
+# Fragment: merge this into existing deployment.toml for compatibility settings integration test.
+# Overrides timestamp_reference, target_value, default_value for flowExecution.enableLegacyFlows.
+
+[compatibility_setting.flow_execution.enable_legacy_flows]
+timestamp_reference = "2030-01-01T00:00:00Z"
+target_value = true
+default_value = false

@@ -93,8 +93,12 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() {
+    public void testConclude() throws IOException {
 
+        RestAssured.basePath = basePath;
+        String body = readResource("disable-password-expiry.json");
+        getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/" + CATEGORY_PASSWORD_POLICIES
+                + "/connectors/" + CONNECTOR_PASSWORD_EXPIRY, body);
         super.conclude();
     }
 

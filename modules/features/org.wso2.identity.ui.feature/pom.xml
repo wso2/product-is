@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.wso2.is</groupId>
 		<artifactId>identity-features</artifactId>
-		<version>7.2.0-beta-SNAPSHOT</version>
+		<version>7.4.0-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -32,10 +32,6 @@
     <description>This feature contains the bundles required for Cloud Identity login UI and dashboard</description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.wso2.identity</groupId>
-            <artifactId>org.wso2.stratos.identity.dashboard.ui</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -44,6 +40,7 @@
                 <groupId>org.wso2.maven</groupId>
                 <artifactId>carbon-p2-plugin</artifactId>
                 <version>${carbon.p2.plugin.version}</version>
+                <extensions>true</extensions>
                 <executions>
                     <execution>
                         <id>p2-feature-generation</id>
@@ -63,9 +60,6 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>
-                                    org.wso2.identity:org.wso2.stratos.identity.dashboard.ui
-                                </bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.core.ui:${carbon.kernel.version}</importFeatureDef>

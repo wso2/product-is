@@ -205,4 +205,62 @@ public class UserStoreConfigUtils {
         propertyDTOs[11].setValue("true");
         return propertyDTOs;
     }
+
+    public PropertyDTO[] getJDBCUserStoreProperties(final String userStoreDBName,
+                                                    final String digestType,
+                                                    final String storeSalted,
+                                                    final String hashProps)
+            throws IOException, SQLException, ClassNotFoundException {
+
+        PropertyDTO[] propertyDTOs = new PropertyDTO[13];
+        for (int i = 0; i < propertyDTOs.length; i++) {
+            propertyDTOs[i] = new PropertyDTO();
+        }
+
+        H2DataBaseManager dbManager = new H2DataBaseManager("jdbc:h2:" + ServerConfigurationManager.getCarbonHome()
+                + "/repository/database/" + userStoreDBName, "wso2automation", "wso2automation");
+        dbManager.executeUpdate(new File(ServerConfigurationManager.getCarbonHome() + "/dbscripts/h2.sql"));
+        dbManager.disconnect();
+
+        propertyDTOs[0].setName("driverName");
+        propertyDTOs[0].setValue("org.h2.Driver");
+
+        propertyDTOs[1].setName("url");
+        propertyDTOs[1].setValue("jdbc:h2:./repository/database/" + userStoreDBName);
+
+        propertyDTOs[2].setName("userName");
+        propertyDTOs[2].setValue("wso2automation");
+
+        propertyDTOs[3].setName("password");
+        propertyDTOs[3].setValue("wso2automation");
+
+        propertyDTOs[4].setName("PasswordJavaRegEx");
+        propertyDTOs[4].setValue("^[\\S]{5,30}$");
+
+        propertyDTOs[5].setName("UsernameJavaRegEx");
+        propertyDTOs[5].setValue("^[\\S]{5,30}$");
+
+        propertyDTOs[6].setName("Disabled");
+        propertyDTOs[6].setValue("false");
+
+        propertyDTOs[7].setName("PasswordDigest");
+        propertyDTOs[7].setValue(digestType);
+
+        propertyDTOs[8].setName("StoreSaltedPassword");
+        propertyDTOs[8].setValue(storeSalted);
+
+        propertyDTOs[9].setName("Hash.Algorithm.Properties");
+        propertyDTOs[9].setValue(hashProps != null ? hashProps : "");
+
+        propertyDTOs[10].setName("UserIDEnabled");
+        propertyDTOs[10].setValue("true");
+
+        propertyDTOs[11].setName("GroupIDEnabled");
+        propertyDTOs[11].setValue("true");
+
+        propertyDTOs[12].setName("SCIMEnabled");
+        propertyDTOs[12].setValue("true");
+
+        return propertyDTOs;
+    }
 }

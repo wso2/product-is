@@ -6,31 +6,26 @@ on:
         description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481)"
         default:
         required: true
-      jdk:
-        description: "Enter Java version (ex: 8,11)"
-        default: 11
-        required: true
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 jobs:
   run-test-runners:
-    runs-on: ubuntu-latest
+    runs-on: 
+      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - runner_id: 1
-            tests: "is-tests-default-configuration,is-test-rest-api,is-tests-scim2,is-test-adaptive-authentication"
+            tests: "is-tests-default-configuration,is-test-rest-api,is-tests-saas-app-creation,is-test-webhooks,is-tests-scim2,is-test-adaptive-authentication"
           - runner_id: 2
             tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart"
           - runner_id: 3
-            tests: "is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption"
+            tests: "is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption,is-test-session-mgt,is-tests-password-update-api"
           - runner_id: 4
             tests: "is-tests-with-individual-configuration-changes"
-    env:
-      JAVA_TOOL_OPTIONS: "-Djdk.util.zip.disableZip64ExtraFieldValidation=true -Djdk.nio.zipfs.allowDotZipEntry=true"
     steps:
       - name: Print Input
         run: echo "Running the Test runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
@@ -42,23 +37,15 @@ jobs:
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
       - uses: actions/checkout@v4
-      - name: Set up Adopt JDK 8
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: "8"
-          distribution: "adopt"
-      - name: Echo java 8 home
+          java-version: "21"
+          distribution: "temurin"
+      - name: Echo java 21 home
         run: |
-          echo "J8HOME=$JAVA_HOME" >> ${GITHUB_ENV}
-        id: java-8-setup
-      - name: Set up Adopt JDK 11
-        uses: actions/setup-java@v4
-        with:
-          java-version: "11"
-          distribution: "adopt"
-      - name: Echo java 11 home
-        run: |
-          echo "J11HOME=$JAVA_HOME" >> ${GITHUB_ENV}
+          echo "J21HOME=$JAVA_HOME" >> ${GITHUB_ENV}
+        id: java-21-setup
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
@@ -80,9 +67,7 @@ jobs:
         id: builder_step
         env:
           PR_LINK: ${{github.event.inputs.pr}}
-          JDK_VERSION: ${{github.event.inputs.jdk}}
-          JAVA_8_HOME: ${{env.J8HOME}}
-          JAVA_11_HOME: ${{env.J11HOME}}
+          JAVA_21_HOME: ${{env.J21HOME}}
         run: |
           bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
       - name: Archive PR diff file
@@ -128,7 +113,8 @@ jobs:
   comment-and-approve:
     name: Comment the status and Approve PR
     needs: run-test-runners
-    runs-on: ubuntu-latest
+    runs-on:
+      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
     if: always()
     steps:
       - name: Comment build status
