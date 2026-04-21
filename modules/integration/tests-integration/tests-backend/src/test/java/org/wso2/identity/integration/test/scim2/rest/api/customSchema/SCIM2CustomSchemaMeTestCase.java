@@ -44,7 +44,33 @@ import org.wso2.carbon.identity.claim.metadata.mgt.stub.dto.LocalClaimDTO;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.user.core.UserCoreConstants;
 import org.wso2.identity.integration.common.clients.claim.metadata.mgt.ClaimMetadataManagementServiceClient;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.scim2.rest.api.SCIM2BaseTest;
+import org.wso2.identity.integration.test.utils.CarbonUtils;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import java.rmi.RemoteException;
 import java.util.Arrays;
@@ -92,9 +118,18 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     private static final String MANAGER_EMAIL_LOCAL_CLAIM_VALUE_AFTER_REPLACE = "piraveenaReplace@gmail.com";
 
     private static final String ME_ENDPOINT = "/Me";
+    private static final String SCIM2_ME_API_IDENTIFIER = "/scim2/Me";
+    private static final String SCIM2_USERS_API_IDENTIFIER = "/scim2/Users";
+    private static final String USER_TOKEN_SCOPES = "internal_login internal_user_mgt_update";
 
     private static String USERNAME = "userkim";
     private static String PASSWORD = "Wso2@test123";
+
+    private OAuth2RestClient oauth2RestClient;
+    private String appId;
+    private String clientId;
+    private String clientSecret;
+    private String userAccessToken;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public SCIM2CustomSchemaMeTestCase(TestUserMode userMode) throws Exception {
@@ -117,10 +152,32 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     }
 
     @BeforeClass(alwaysRun = true)
-    public void init() throws RemoteException, InterruptedException {
+    public void init() throws Exception {
 
         super.testInit(swaggerDefinition, tenant);
         Thread.sleep(5000);
+
+        oauth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
+
+        ApplicationModel appModel = new ApplicationModel();
+        appModel.setName("SCIM2CustomeSchemaMeTestApp");
+        appModel.setIsManagementApp(true);
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(Arrays.asList("authorization_code", "password"));
+        oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        appModel.setInboundProtocolConfiguration(inboundProtocols);
+        appId = oauth2RestClient.createApplication(appModel);
+
+        OpenIDConnectConfiguration oidcDetails = oauth2RestClient.getOIDCInboundDetails(appId);
+        clientId = oidcDetails.getClientId();
+        clientSecret = oidcDetails.getClientSecret();
+
+        if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
+            authorizeAPIForApp(SCIM2_ME_API_IDENTIFIER);
+            authorizeAPIForApp(SCIM2_USERS_API_IDENTIFIER);
+        }
     }
 
     @AfterClass(alwaysRun = true)
@@ -135,6 +192,16 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
             claimMetadataManagementServiceClient.removeClaimDialect(CUSTOM_SCHEMA_URI);
         } catch (RemoteException | ClaimMetadataManagementServiceClaimMetadataException e) {
            log.error(e);
+        }
+        try {
+            if (appId != null) {
+                oauth2RestClient.deleteApplication(appId);
+            }
+            if (oauth2RestClient != null) {
+                oauth2RestClient.closeHttpClient();
+            }
+        } catch (Exception e) {
+            log.error("Error cleaning up OAuth2 application", e);
         }
         super.conclude();
     }
@@ -207,9 +274,13 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     @Test(dependsOnMethods = "testCreateUser", description = "Tests get users and check for claims with /Me api")
     public void testGetMe() throws Exception {
 
-        authenticatingUserName = USERNAME + "@" + tenant;
-        authenticatingCredential = PASSWORD;
-        Response response = getResponseOfGet(ME_ENDPOINT, SCIM_CONTENT_TYPE);
+        userAccessToken = getUserToken();
+        Response response = io.restassured.RestAssured.given()
+                .auth().preemptive().oauth2(userAccessToken)
+                .contentType(SCIM_CONTENT_TYPE)
+                .header(HttpHeaders.ACCEPT, SCIM_CONTENT_TYPE)
+                .when()
+                .get(ME_ENDPOINT);
         if (HttpStatus.SC_INTERNAL_SERVER_ERROR == response.getStatusCode()) {
             log.info(">>> Content: >>>" + response.getBody().prettyPrint());
         }
@@ -239,7 +310,8 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     public void testPatchReplaceMyAttributes() throws Exception {
 
         String body = readResource("scim2-custom-schema-patch-replace-attribute.json");
-        Response response = getResponseOfPatch(ME_ENDPOINT, body, SCIM_CONTENT_TYPE);
+
+        Response response = getResponseOfPatchWithOAuth2(ME_ENDPOINT, body, userAccessToken);
         ExtractableResponse<Response> extractableResponse = response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -268,7 +340,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     public void testPatchRemoveMyAttributes() throws Exception {
 
         String body = readResource("scim2-custom-schema-patch-remove-attribute.json");
-        Response response = getResponseOfPatch(ME_ENDPOINT, body, SCIM_CONTENT_TYPE);
+        Response response = getResponseOfPatchWithOAuth2(ME_ENDPOINT, body, userAccessToken);
         ExtractableResponse<Response> extractableResponse = response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -296,7 +368,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     public void testPutMyAttributes() throws Exception {
 
         String body = readResource("scim2-custom-schema-put-user.json");
-        Response response = getResponseOfPut(ME_ENDPOINT, body, SCIM_CONTENT_TYPE);
+        Response response = getResponseOfPutWithOAuth2(ME_ENDPOINT, body, userAccessToken);
         ExtractableResponse<Response> extractableResponse = response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -322,7 +394,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     public void testPatchAddMyAttributes() throws Exception {
 
         String body = readResource("scim2-custom-schema-patch-add-attribute.json");
-        Response response = getResponseOfPatch(ME_ENDPOINT, body, SCIM_CONTENT_TYPE);
+        Response response = getResponseOfPatchWithOAuth2(ME_ENDPOINT, body, userAccessToken);
         ExtractableResponse<Response> extractableResponse = response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -354,6 +426,47 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
         getResponseOfGet(userIdEndpointURL, SCIM_CONTENT_TYPE).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    private String getUserToken() throws Exception {
+
+        String tokenEndpoint = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)
+                ? serverURL + "oauth2/token"
+                : serverURL + "t/" + tenant + "/oauth2/token";
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpPost post = new HttpPost(tokenEndpoint);
+            post.addHeader(HttpHeaders.AUTHORIZATION, OAuth2Constant.BASIC_HEADER + " " +
+                    Base64.encodeBase64String((clientId + ":" + clientSecret).getBytes()).trim());
+            post.addHeader(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
+            post.addHeader("User-Agent", OAuth2Constant.USER_AGENT);
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+            params.add(new BasicNameValuePair("username", USERNAME));
+            params.add(new BasicNameValuePair("password", PASSWORD));
+            params.add(new BasicNameValuePair("scope", USER_TOKEN_SCOPES));
+            post.setEntity(new UrlEncodedFormEntity(params));
+            HttpResponse response = httpClient.execute(post);
+            String responseStr = EntityUtils.toString(response.getEntity());
+            JSONObject json = (JSONObject) JSONValue.parse(responseStr);
+            assertNotNull(json.get("access_token"), "Failed to get user token: " + responseStr);
+            return json.get("access_token").toString();
+        }
+    }
+
+    private void authorizeAPIForApp(String apiIdentifier) throws Exception {
+
+        List<APIResourceListItem> filteredAPIResource =
+                oauth2RestClient.getAPIResourcesWithFiltering("identifier+eq+" + apiIdentifier);
+        if (filteredAPIResource != null && !filteredAPIResource.isEmpty()) {
+            String apiId = filteredAPIResource.get(0).getId();
+            List<ScopeGetModel> apiResourceScopes = oauth2RestClient.getAPIResourceScopes(apiId);
+            AuthorizedAPICreationModel authorizedAPICreationModel = new AuthorizedAPICreationModel();
+            authorizedAPICreationModel.setId(apiId);
+            authorizedAPICreationModel.setPolicyIdentifier("RBAC");
+            apiResourceScopes.forEach(scope -> authorizedAPICreationModel.addScopesItem(scope.getName()));
+            oauth2RestClient.addAPIAuthorizationToApplication(appId, authorizedAPICreationModel);
+        }
     }
 
     private void setCustomDialect() throws Exception {
