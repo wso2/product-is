@@ -41,10 +41,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
+
 /**
  * Base class for passkey integration tests.
  */
-public abstract class PasskeyClient {
+public abstract class PasskeyClient extends OAuth2ServiceAbstractIntegrationTest {
 
     protected static final String WEBAUTHN_CREATE = "webauthn.create";
     protected static final String WEBAUTHN_GET = "webauthn.get";

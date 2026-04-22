@@ -18,16 +18,20 @@
 
 package org.wso2.identity.integration.test.passkey;
 
-import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -35,7 +39,7 @@ import java.util.Collections;
 /**
  * Base class for passkey integration tests.
  */
-public abstract class PasskeyTestBase extends OAuth2ServiceAbstractIntegrationTest {
+public abstract class PasskeyTestBase extends PasskeyClient  {
 
     private static final String PASSKEY_MFA_CATEGORY_ID = "TXVsdGkgRmFjdG9yIEF1dGhlbnRpY2F0b3Jz";
     private static final String PASSKEY_CONNECTOR_ID = "RklET0F1dGhlbnRpY2F0b3I";
@@ -48,7 +52,7 @@ public abstract class PasskeyTestBase extends OAuth2ServiceAbstractIntegrationTe
      */
     protected void setUsernameLessAuthenticationEnabled(boolean enable) throws IOException {
 
-        updatePasskeyConnectorProperty("FIDO.EnableUsernameLessAuthentication", String.valueOf(enable));
+        updatePasskeyConnectorProperty("FIDO.EnableUsernamelessAuthentication", String.valueOf(enable));
     }
 
     /**
@@ -60,6 +64,47 @@ public abstract class PasskeyTestBase extends OAuth2ServiceAbstractIntegrationTe
     protected void setPasskeyProgressiveEnrollmentEnabled(boolean enable) throws IOException {
 
         updatePasskeyConnectorProperty("FIDO.EnablePasskeyProgressiveEnrollment", String.valueOf(enable));
+    }
+
+    /**
+     * Returns whether username-less authentication for passkeys is currently enabled.
+     *
+     * @return true if enabled, false otherwise.
+     * @throws Exception If an error occurred while retrieving the connector property.
+     */
+    protected boolean isUsernameLessAuthenticationEnabled() throws Exception {
+
+        return Boolean.parseBoolean(getPasskeyConnectorProperty("FIDO.EnableUsernamelessAuthentication"));
+    }
+
+    /**
+     * Returns whether passkey progressive enrollment is currently enabled.
+     *
+     * @return true if enabled, false otherwise.
+     * @throws Exception If an error occurred while retrieving the connector property.
+     */
+    protected boolean isPasskeyProgressiveEnrollmentEnabled() throws Exception {
+
+        return Boolean.parseBoolean(getPasskeyConnectorProperty("FIDO.EnablePasskeyProgressiveEnrollment"));
+    }
+
+    private String getPasskeyConnectorProperty(String name) throws Exception {
+
+        IdentityGovernanceRestClient governanceClient =
+                new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        try {
+            JSONObject connector = governanceClient.getConnector(PASSKEY_MFA_CATEGORY_ID, PASSKEY_CONNECTOR_ID);
+            JSONArray properties = (JSONArray) connector.get("properties");
+            for (Object item : properties) {
+                JSONObject property = (JSONObject) item;
+                if (name.equals(property.get("name"))) {
+                    return (String) property.get("value");
+                }
+            }
+            throw new IllegalStateException("Connector property not found: " + name);
+        } finally {
+            governanceClient.closeHttpClient();
+        }
     }
 
     private void updatePasskeyConnectorProperty(String name, String value) throws IOException {
@@ -208,5 +253,37 @@ public abstract class PasskeyTestBase extends OAuth2ServiceAbstractIntegrationTe
         application.setAuthenticationSequence(authSequence);
 
         return addApplication(application);
+    }
+
+    /**
+     * Creates a test user via the SCIM2 REST API and returns the user ID.
+     *
+     * @param scim2RestClient SCIM2 client to use for the request.
+     * @param username        Username for the new user.
+     * @param password        Password for the new user.
+     * @param email           Email address for the new user.
+     * @return ID of the created user.
+     * @throws Exception If an error occurred while creating the user.
+     */
+    protected String createTestUser(SCIM2RestClient scim2RestClient, String username, String password,
+            String email) throws Exception {
+
+        UserObject user = new UserObject();
+        user.setUserName(username);
+        user.setPassword(password);
+        user.addEmail(new Email().value(email));
+        return scim2RestClient.createUser(user);
+    }
+
+    /**
+     * Deletes a test user via the SCIM2 REST API.
+     *
+     * @param scim2RestClient SCIM2 client to use for the request.
+     * @param userId          ID of the user to delete.
+     * @throws Exception If an error occurred while deleting the user.
+     */
+    protected void deleteTestUser(SCIM2RestClient scim2RestClient, String userId) throws Exception {
+
+        scim2RestClient.deleteUser(userId);
     }
 }
