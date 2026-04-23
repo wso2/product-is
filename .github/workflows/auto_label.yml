@@ -108,6 +108,8 @@ jobs:
                 if [[ "$CATEGORY" != "" && "$CATEGORY" != "null" && "$CATEGORY" != "none" ]]; then
                 echo "Adding claude:queue label"
                 gh issue edit $ISSUE_NUMBER --add-label "AI-Agent/Queued" --repo ${{ github.repository }}
+                # Add wso2-engineering-bot as assignee
+                gh issue edit $ISSUE_NUMBER --add-assignee "wso2-engineering-bot" --repo ${{ github.repository }}
                 else
                 echo "No valid category returned. Not adding label."
                 fi
