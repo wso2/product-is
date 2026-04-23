@@ -1,0 +1,14 @@
+{
+  "version": "v3",
+  "description": "Third version with both elements",
+  "elements": [
+    {
+      "elementId": 1,
+      "mandatory": true
+    },
+    {
+      "elementId": 2,
+      "mandatory": false
+    }
+  ]
+}
