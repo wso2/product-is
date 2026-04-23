@@ -135,7 +135,9 @@
                                     pattern="{{http_access_log.pattern}}"/>
                 {% else %}
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="{{http_access_log.directory}}"
-                       prefix="{{http_access_log.prefix}}" suffix="{{http_access_log.suffix}}" pattern="{{http_access_log.pattern}}"/>
+                    prefix="{{http_access_log.prefix}}" suffix="{{http_access_log.suffix}}" pattern="{{http_access_log.pattern}}"
+                        requestAttributesEnabled="{{http_access_log.request_attributes_enabled}}"
+                />
                 {% endif %}
                 <Valve className="org.wso2.carbon.extension.identity.x509Certificate.valve.X509CertificateAuthenticationValve"/>
                 <Valve
