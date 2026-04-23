@@ -2684,7 +2684,7 @@
     <properties>
 
         <!--Carbon Identity Framework Version-->
-        <carbon.identity.framework.version>7.10.149</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.10.152</carbon.identity.framework.version>
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
         <identity.notification.push.version>1.1.5</identity.notification.push.version>
@@ -2713,7 +2713,7 @@
         <identity.carbon.auth.rest.version>1.12.11</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.4.94</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.4.97</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.5</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
@@ -2754,7 +2754,7 @@
 
         <!-- Social Authenticator Versions -->
         <social.authenticator.facebook.version>5.3.0</social.authenticator.facebook.version>
-        <social.authenticator.google.version>5.3.0</social.authenticator.google.version>
+        <social.authenticator.google.version>5.3.2</social.authenticator.google.version>
         <social.authenticator.windowslive.version>5.3.0</social.authenticator.windowslive.version>
         <social.authenticator.apple.version>1.1.2</social.authenticator.apple.version>
         <social.authenticator.github.version>1.2.0</social.authenticator.github.version>
@@ -2790,7 +2790,7 @@
         <identity.user.workflow.version>6.1.0</identity.user.workflow.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.4.3</authenticator.totp.version>
+        <authenticator.totp.version>3.4.4</authenticator.totp.version>
         <authenticator.backupcode.version>0.1.1</authenticator.backupcode.version>
         <authenticator.office365.version>2.2.0</authenticator.office365.version>
         <authenticator.smsotp.version>3.4.2</authenticator.smsotp.version>
@@ -2803,7 +2803,7 @@
         <identity.extension.utils>1.3.1</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.1.1</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.4.19</identity.org.mgt.version>
+        <identity.org.mgt.version>2.4.20</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.5.2</identity.org.mgt.core.version>
         <identity.organization.login.version>1.2.5</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.2.1</identity.oauth2.grant.organizationswitch.version>
@@ -2831,9 +2831,9 @@
 
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>3.3.29</identity.apps.console.version>
-        <identity.apps.myaccount.version>3.0.13</identity.apps.myaccount.version>
+        <identity.apps.myaccount.version>3.0.14</identity.apps.myaccount.version>
         <identity.apps.core.version>4.0.15</identity.apps.core.version>
-        <identity.apps.tests.version>1.6.388</identity.apps.tests.version>
+        <identity.apps.tests.version>1.6.389</identity.apps.tests.version>
 
         <!-- Charon -->
         <charon.version>3.4.1</charon.version>
