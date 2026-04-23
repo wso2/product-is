@@ -42,6 +42,11 @@ jobs:
               exit 0
             fi
 
+            if echo "$LABELS" | grep -q -i "migration"; then
+              echo "Issue contains a migration-related label. Skipping Claude classification."
+              exit 0
+            fi
+
             # Check if Hacktoberfest label exists
             if echo "$LABELS" | grep -q -i "^Hacktoberfest$"; then
               echo "Issue is part of Hacktoberfest. Skipping AI-Agent/Queued label."
@@ -103,6 +108,8 @@ jobs:
                 if [[ "$CATEGORY" != "" && "$CATEGORY" != "null" && "$CATEGORY" != "none" ]]; then
                 echo "Adding claude:queue label"
                 gh issue edit $ISSUE_NUMBER --add-label "AI-Agent/Queued" --repo ${{ github.repository }}
+                # Add wso2-engineering-bot as assignee
+                gh issue edit $ISSUE_NUMBER --add-assignee "wso2-engineering-bot" --repo ${{ github.repository }}
                 else
                 echo "No valid category returned. Not adding label."
                 fi

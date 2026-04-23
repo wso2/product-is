@@ -49,6 +49,9 @@ import org.wso2.identity.integration.test.utils.FileUtils;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 
 /**
  * Integration test class for testing the pre update profile action execution.
@@ -67,6 +70,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     private String actionId;
     private String userId;
     private String currentClaimValue;
+    private String userAccessToken;
     private ApplicationResponseModel application;
     private ServiceExtensionMockServer serviceExtensionMockServer;
 
@@ -93,10 +97,13 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
-        application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
+        application = createApplicationWithGrantTypes(CLIENT_CREDENTIALS_GRANT_TYPE, OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE,
+                OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
         clientId = oidcConfig.getClientId();
         clientSecret = oidcConfig.getClientSecret();
+
+        authorizeScim2MeApi(application.getId());
 
         UserObject userInfo = new UserObject()
                 .userName(TEST_USER1_USERNAME)
@@ -106,6 +113,9 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         userId = scim2RestClient.createUser(userInfo);
         currentClaimValue = TEST_USER_GIVEN_NAME;
         actionId = createPreUpdateProfileAction(ACTION_NAME, ACTION_DESCRIPTION);
+
+        userAccessToken = getUserAccessToken(clientId, clientSecret,
+                TEST_USER1_USERNAME, TEST_USER_PASSWORD);
 
         serviceExtensionMockServer = new ServiceExtensionMockServer();
         serviceExtensionMockServer.startServer();
@@ -143,8 +153,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         userPatchOp.setValue(TEST_USER_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
-        org.json.simple.JSONObject response = scim2RestClient.updateUserMe(patchUserInfo,
-                TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
+        org.json.simple.JSONObject response = scim2RestClient.updateUserMeWithToken(patchUserInfo, userAccessToken);
 
         assertNotNull(response);
         assertUpdatingClaimValue(TEST_USER_CLAIM_VALUE);
@@ -162,8 +171,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         userPatchOp.setValue(TEST_USER_UPDATED_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
-        org.json.simple.JSONObject response = scim2RestClient.updateUserMe(patchUserInfo,
-                TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
+        org.json.simple.JSONObject response = scim2RestClient.updateUserMeWithToken(patchUserInfo, userAccessToken);
 
         assertNotNull(response);
         assertUpdatingClaimValue(TEST_USER_UPDATED_CLAIM_VALUE);
@@ -180,8 +188,7 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         userPatchOp.setPath(NICK_NAME_USER_SCHEMA_NAME);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
-        org.json.simple.JSONObject response = scim2RestClient.updateUserMe(patchUserInfo,
-                TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
+        org.json.simple.JSONObject response = scim2RestClient.updateUserMeWithToken(patchUserInfo, userAccessToken);
 
         assertNotNull(response);
         assertRemovingClaimValue();
