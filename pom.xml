@@ -2984,7 +2984,7 @@
         <identity.integration.ui.templates.version>1.0.36</identity.integration.ui.templates.version>
 
         <greenmail.version>2.0.1</greenmail.version>
-        <jakarta.mail.version>2.0.1</jakarta.mail.version>
+        <jakarta.mail.version>2.0.2</jakarta.mail.version>
         <jsoup.version>1.15.3</jsoup.version>
         <nimbus-jose-jwt.version>9.41.2</nimbus-jose-jwt.version>
         
