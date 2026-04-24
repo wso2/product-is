@@ -66,21 +66,18 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private static final String profileName = "default";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
+    private static final String ACS_URL = CommonConstants.SAMPLE_APP_BASE_URL + "/%s/home.jsp";
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String IDENTITY_PROVIDER_NAME = "GoogleIDP";
-    private static final String IDENTITY_PROVIDER_ALIAS = "https://localhost:" + CommonConstants
-            .IS_DEFAULT_HTTPS_PORT + "/oauth2/token/";
+    private static final String IDENTITY_PROVIDER_ALIAS = CommonConstants.IS_HTTPS_BASE_URL + "/oauth2/token/";
     private static final String CLIENT_ID = "ClientId";
     private static final String CLIENT_SECRET = "ClientSecret";
     private static final String CALLBACK_URL = "callbackUrl";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_LOGIN_URL = CommonConstants.SAMPLE_APP_BASE_URL + "/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String SAML_SSO_URL = "https://localhost:" + CommonConstants.IS_DEFAULT_HTTPS_PORT +
-            "/samlsso";
-    private static final String COMMON_AUTH_URL = "https://localhost:" + CommonConstants.IS_DEFAULT_HTTPS_PORT +
-            "/commonauth";
+    private static final String SAML_SSO_URL = CommonConstants.IS_HTTPS_BASE_URL + "/samlsso";
+    private static final String COMMON_AUTH_URL = CommonConstants.IS_HTTPS_BASE_URL + "/commonauth";
     private static final String ACCOUNT_LOCK_CLAIM_URI = "http://wso2.org/claims/identity/accountLocked";
     private static  final String GOOGLE_AUTHENTICATOR = "GoogleOIDCAuthenticator";
 

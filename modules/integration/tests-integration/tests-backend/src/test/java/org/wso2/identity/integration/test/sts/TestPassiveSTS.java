@@ -39,6 +39,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
 import java.io.IOException;
@@ -59,10 +60,9 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String SERVICE_PROVIDER_Desc = "PassiveSTS Service Provider";
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
-    private static final String PASSIVE_STS_SAMPLE_APP_URL = "http://localhost:8490/PassiveSTSSampleApp";
-    private static final String PASSIVE_STS_SAMPLE_APP_URL_INCORRECT = "http://localhost:8490/Incorrect";
-    private static final String COMMON_AUTH_URL =
-            "https://localhost:9853/commonauth";
+    private static final String PASSIVE_STS_SAMPLE_APP_URL = CommonConstants.SAMPLE_APP_BASE_URL + "/PassiveSTSSampleApp";
+    private static final String PASSIVE_STS_SAMPLE_APP_URL_INCORRECT = CommonConstants.SAMPLE_APP_BASE_URL + "/Incorrect";
+    private static final String COMMON_AUTH_URL = CommonConstants.IS_HTTPS_BASE_URL + "/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
 
