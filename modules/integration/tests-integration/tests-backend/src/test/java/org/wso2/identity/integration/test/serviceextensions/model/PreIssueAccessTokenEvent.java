@@ -31,6 +31,7 @@ public class PreIssueAccessTokenEvent extends Event {
 
     private TokenRequest request;
     private final AccessToken accessToken;
+    private final Session session;
 
     private PreIssueAccessTokenEvent(Builder builder) {
 
@@ -40,6 +41,7 @@ public class PreIssueAccessTokenEvent extends Event {
         this.tenant = builder.tenant;
         this.user = builder.user;
         this.userStore = builder.userStore;
+        this.session = builder.session;
     }
 
     public TokenRequest getRequest() {
@@ -50,6 +52,11 @@ public class PreIssueAccessTokenEvent extends Event {
     public AccessToken getAccessToken() {
 
         return accessToken;
+    }
+
+    public Session getSession() {
+
+        return session;
     }
 
     @Override
@@ -88,8 +95,8 @@ public class PreIssueAccessTokenEvent extends Event {
         private Organization organization;
         private Tenant tenant;
         private User user;
-
         private UserStore userStore;
+        private Session session;
 
         public Builder accessToken(AccessToken accessToken) {
 
@@ -124,6 +131,12 @@ public class PreIssueAccessTokenEvent extends Event {
         public Builder userStore(UserStore userStore) {
 
             this.userStore = userStore;
+            return this;
+        }
+
+        public Builder session(Session session) {
+
+            this.session = session;
             return this;
         }
 
