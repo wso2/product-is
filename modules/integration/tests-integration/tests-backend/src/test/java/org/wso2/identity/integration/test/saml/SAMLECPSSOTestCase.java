@@ -36,6 +36,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
     private static final Log log = LogFactory.getLog(SAMLECPSSOTestCase.class);
     private static final String APPLICATION_NAME = "SAML-ECP-TestApplication";
     private ServerConfigurationManager serverConfigurationManager;
-    private static final String SAML_ECP_ISSUER = "https://localhost/ecp-sp";
+    private static final String SAML_ECP_ISSUER = "https://" + CommonConstants.SAMPLE_APP_HOST + "/ecp-sp";
 
     @Factory(dataProvider = "samlConfigProvider")
     public SAMLECPSSOTestCase(SAMLConfig config) {

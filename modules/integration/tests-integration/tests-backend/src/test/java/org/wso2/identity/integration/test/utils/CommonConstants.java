@@ -20,9 +20,14 @@ package org.wso2.identity.integration.test.utils;
 public class CommonConstants {
 
     public static final int IS_DEFAULT_OFFSET = 410;
-    public static final int IS_DEFAULT_HTTPS_PORT = 9853;
-    public static final int DEFAULT_TOMCAT_PORT = 8490;
-    public static final String DEFAULT_SERVICE_URL = "https://localhost:9853/services/";
+    public static final String DEFAULT_HOST = getSystemProperty("integration.test.host", "localhost");
+    public static final String IS_HOST = getSystemProperty("integration.test.is.host", DEFAULT_HOST);
+    public static final String SAMPLE_APP_HOST = getSystemProperty("integration.test.sample.host", DEFAULT_HOST);
+    public static final int IS_DEFAULT_HTTPS_PORT = getSystemPropertyAsInt("integration.test.is.https.port", 9853);
+    public static final int DEFAULT_TOMCAT_PORT = getSystemPropertyAsInt("integration.test.sample.http.port", 8490);
+    public static final String IS_HTTPS_BASE_URL = "https://" + IS_HOST + ":" + IS_DEFAULT_HTTPS_PORT;
+    public static final String SAMPLE_APP_BASE_URL = "http://" + SAMPLE_APP_HOST + ":" + DEFAULT_TOMCAT_PORT;
+    public static final String DEFAULT_SERVICE_URL = IS_HTTPS_BASE_URL + "/services/";
     public static final String SAML_REQUEST_PARAM = "SAMLRequest";
     public static final String SAML_RESPONSE_PARAM = "SAMLResponse";
     public static final String SESSION_DATA_KEY = "name=\"sessionDataKey\"";
@@ -36,6 +41,21 @@ public class CommonConstants {
         IDENTITY_PROVIDER_MGT_SERVICE_CLIENT,
         APPLICATION_MANAGEMENT_SERVICE_CLIENT,
         USER_MANAGEMENT_CLIENT
+    }
+
+    private static String getSystemProperty(String key, String defaultValue) {
+
+        String value = System.getProperty(key);
+        return value != null ? value : defaultValue;
+    }
+
+    private static int getSystemPropertyAsInt(String key, int defaultValue) {
+
+        String value = System.getProperty(key);
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+        return Integer.parseInt(value.trim());
     }
 
 
