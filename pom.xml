@@ -2840,7 +2840,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>4.1.3</identity.apps.console.version>
         <identity.apps.myaccount.version>4.0.0</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.0.14</identity.apps.core.version>
+        <identity.apps.core.version>5.0.15</identity.apps.core.version>
         <identity.apps.tests.version>1.6.389</identity.apps.tests.version>
 
         <!-- Charon -->
