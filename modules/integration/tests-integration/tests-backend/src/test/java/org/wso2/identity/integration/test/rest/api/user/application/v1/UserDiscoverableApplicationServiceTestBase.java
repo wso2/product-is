@@ -21,8 +21,11 @@ package org.wso2.identity.integration.test.rest.api.user.application.v1;
 import io.restassured.RestAssured;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
+
+import static org.awaitility.Awaitility.await;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -335,20 +338,18 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             String appId = oAuth2RestClient.createApplication(application);
             DISCOVERABLE_APP_IDS[i - 1] = appId;
             oAuth2RestClient.shareApplication(appId, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
-            String sharedAppId = null;
-            do {
-                if (sharedAppId != null) {
-                    Thread.sleep(1000);
-                }
-                sharedAppId = oAuth2RestClient.getAppIdUsingAppNameInOrganization(getApplicationName(
-                        String.valueOf(i)), subOrgToken);
-            } while (StringUtils.isEmpty(sharedAppId));
-            SUB_ORG_DISCOVERABLE_APP_IDS[i - 1] = sharedAppId;
+            String appName = getApplicationName(String.valueOf(i));
+            await().atMost(60, TimeUnit.SECONDS)
+                    .pollInterval(2, TimeUnit.SECONDS)
+                    .until(() -> StringUtils.isNotEmpty(
+                            oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgToken)));
+            SUB_ORG_DISCOVERABLE_APP_IDS[i - 1] =
+                    oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgToken);
             ApplicationPatchModel sharedAppPatch = new ApplicationPatchModel();
             AdvancedApplicationConfiguration sharedAppAdvancedConfig = new AdvancedApplicationConfiguration();
             assignDiscoverableGroups(sharedAppAdvancedConfig, i, SUB_ORG_GROUP_IDS);
             sharedAppPatch.advancedConfigurations(sharedAppAdvancedConfig);
-            oAuth2RestClient.updateSubOrgApplication(sharedAppId, sharedAppPatch, subOrgToken);
+            oAuth2RestClient.updateSubOrgApplication(SUB_ORG_DISCOVERABLE_APP_IDS[i - 1], sharedAppPatch, subOrgToken);
         }
         for (int i = 1; i <= TOTAL_NON_DISCOVERABLE_APP_COUNT; i++) {
             ApplicationModel application = new ApplicationModel();
@@ -425,6 +426,10 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         oAuth2RestClient.updateInboundDetailsOfApplication(rootMyAccountAppId, rootMyAccountAppOIDC, "oidc");
         oAuth2RestClient.shareApplication(
                 rootMyAccountAppId, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
+        await().atMost(60, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .until(() -> StringUtils.isNotEmpty(
+                        oAuth2RestClient.getAppIdUsingAppNameInOrganization(MY_ACCOUNT_APP_NAME, subOrgToken)));
     }
 
     /**
