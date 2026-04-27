@@ -48,8 +48,8 @@ org.wso2.carbon.identity.application.authentication.endpoint.util-7.10.78.jar   
 validation-api-2.0.1.Final.jar                                                                      bundle         apache2
 javax.annotation-api-1.3.2.jar                                                                      bundle         cddl1
 config-mapper-1.0.22.jar                                                                            jar            apache2
-log4j-core-2.25.3.jar                                                                               bundle         apache2
-log4j-api-2.25.3.jar                                                                                bundle         apache2
+log4j-core-2.25.4.jar                                                                               bundle         apache2
+log4j-api-2.25.4.jar                                                                                bundle         apache2
 antlr4-runtime-4.7.1.jar                                                                            bundle         bsd
 jaxws-ri-2.3.2.wso2v1.jar                                                                           bundle         apache2 + edl1
 jaxb-impl-2.4.0-b180830.0438.jar                                                                    bundle         cddl1
@@ -73,7 +73,7 @@ ant-contrib-1.0b3.jar                                                           
 jackson-dataformat-yaml-2.16.1.jar                                                                  bundle         apache2
 slf4j-api-2.0.16.jar                                                                                bundle         mit
 geronimo-jta_1.1_spec-1.1.jar                                                                       jar            apache2
-log4j-jcl-2.25.3.jar                                                                                bundle         apache2
+log4j-jcl-2.25.4.jar                                                                                bundle         apache2
 commons-lang-2.6.0.wso2v1.jar                                                                       bundle         apache2
 org.wso2.carbon.server-4.12.13.jar                                                                  bundle         apache2
 stax2-api-3.1.4.jar                                                                                 bundle         bsd

@@ -343,7 +343,7 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         }
 
         updateRequestedClaimsOfApp(appId, getClaimConfigurationsWithRolesAndGroups());
-        shareApplication(appId);
+        shareApplication(appId, appName);
 
         Map<String, Object> appDetailsOfSubOrgs = new HashMap<>();
         for (Map.Entry<String, Map<String, Object>> entry : orgDetails.entrySet()) {
@@ -574,14 +574,20 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
         oAuth2RestClient.updateApplication(appId, patchModelApp2);
     }
 
-    private void shareApplication(String applicationId) throws Exception {
+    private void shareApplication(String applicationId, String appName) throws Exception {
 
         ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
         applicationSharePOSTRequest.setShareWithAllChildren(true);
         oAuth2RestClient.shareApplication(applicationId, applicationSharePOSTRequest);
 
-        // Application sharing is async; wait for it to complete before proceeding.
-        await().atMost(5, TimeUnit.SECONDS).until(() -> true);
+        // Wait until the shared app is visible in all sub orgs before returning.
+        for (Map<String, Object> orgDetail : orgDetails.values()) {
+            String subOrgSwitchToken = (String) orgDetail.get(MAP_ORG_DETAILS_KEY_ORG_SWITCH_TOKEN);
+            await().atMost(30, TimeUnit.SECONDS)
+                    .pollInterval(2, TimeUnit.SECONDS)
+                    .until(() -> StringUtils.isNotEmpty(
+                            oAuth2RestClient.getAppIdUsingAppNameInOrganization(appName, subOrgSwitchToken)));
+        }
     }
 
     // =========================================================================

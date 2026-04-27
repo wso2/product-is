@@ -4,10 +4,11 @@ WSO2 Identity Server ${product.version}
 
 Welcome to the WSO2 Identity Server ${product.version} release.
 
-WSO2 Identity Server is an open source Identity and Access Management solution federating and managing identities across
-both enterprise and cloud service environments. It supports a wide array of authentication protocols such as
-SAML 2.0 Web SSO, OAuth 2.0, OpenID Connect and WS-Federation Passive. It supports role based authorization and
-fine grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is supported through SCIM.
+WSO2 Identity Server is an open source Identity and Access Management platform that enables organizations to manage authentication,
+authorization, and user provisioning through standardized protocols and enterprise integrations. It supports a wide array
+of authentication protocols such as SAML 2.0 Web SSO, OAuth 2.0, OpenID Connect and WS-Federation Passive. It supports
+role based authorization and fine grained authorization with XACML 2.0/3.0 while inbound/outbound provisioning is
+supported through SCIM.
 
 WSO2 Identity Server is developed on top of the revolutionary WSO2 Carbon platform, an OSGi based framework that provides
 seamless modularity to your SOA solution via componentization.
@@ -16,18 +17,20 @@ seamless modularity to your SOA solution via componentization.
 System Requirements
 ===================
 
-1. Minimum memory - 2 GB
+1. Minimum memory - 4 GB
 
-2. Processor - 2 Core/vCPU 1.1GHz or higher.
+2. Processor - 4 vCPUs (x86_64 Architecture)
 
-3. Java SE Development Kit 11
+3. Java SE Development Kit 21 or 25
 
-4. The Management Console requires full Javascript enablement of the Web browser.
+4. Disk space - ~10 GB, excluding space allocated for log files and databases.
 
-5. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
+5. The Console requires full Javascript enablement of the Web browser.
+
+6. To build WSO2 Identity Server from the Source distribution, it is also necessary that you have Maven 3 or later.
 
 For more details see
-    https://is.docs.wso2.com/en/7.2.0/deploy/get-started/install/
+    https://is.docs.wso2.com/en/latest/deploy/get-started/install/
 
 
 Project Resources
@@ -35,7 +38,7 @@ Project Resources
 
 * Home page          : http://wso2.com/products/identity-server
 * Library            : http://wso2.org/library/identity
-* Wiki               : https://is.docs.wso2.com/en/7.2.0
+* Wiki               : https://is.docs.wso2.com/en/latest
 * Issue Tracker      : https://github.com/wso2/product-is/issues
 * Forums             : http://stackoverflow.com/questions/tagged/wso2is/
 * WSO2 Developer List: iam-dev@wso2.org
@@ -46,10 +49,10 @@ Installation and Running
 
 1. Extract the downloaded zip file
 2. Run the wso2server.sh or wso2server.bat file in the /bin directory
-3. Once the server starts, point your Web browser to https://localhost:9443/carbon/
+3. Once the server starts, point your Web browser to https://localhost:9443/console
 4. User dashboard is available at https://localhost:9443/myaccount
 5. For more information, see the Installation Guide
-    https://is.docs.wso2.com/en/7.2.0/deploy/get-started/install/
+    https://is.docs.wso2.com/en/latest/get-started/quick-set-up/
 
 
 WSO2 Identity Server Distribution Directory Structure
@@ -172,7 +175,7 @@ By default mode, it would ask you to enter the master password
 > ciphertool -Dchange  (in UNIX)
 
 For more details see
-https://is.docs.wso2.com/en/7.2.0/deploy/security/encrypt-passwords-with-cipher-tool/
+https://is.docs.wso2.com/en/latest/deploy/security/encrypt-passwords-with-cipher-tool/
 
 Support
 =======
@@ -220,7 +223,7 @@ For more information about WSO2 Identity Server please see http://wso2.org/proje
 WSO2 Oxygen Tank developer portal for addition resources.
 
 For further details, see the WSO2 Identity Server documentation at
-https://is.docs.wso2.com/en/7.2.0
+https://is.docs.wso2.com/en/latest
 
 ---------------------------------------------------------------------------
-(c) Copyright 2022 WSO2 LLC.
+(c) Copyright 2026 WSO2 LLC.

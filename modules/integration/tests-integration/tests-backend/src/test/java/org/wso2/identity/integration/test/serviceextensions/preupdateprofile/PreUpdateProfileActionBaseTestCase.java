@@ -40,12 +40,17 @@ import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTe
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.model.PreUpdateProfileActionModel;
-import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,7 +60,10 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
 public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
 
     private static final String SCIM2_USERS_API = "/scim2/Users";
+    private static final String SCIM2_ME_API = "/scim2/Me";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
+    private static final String INTERNAL_LOGIN = "internal_login";
+    private static final String USER_ACCESS_TOKEN_SCOPES = INTERNAL_USER_MANAGEMENT_UPDATE + " " + INTERNAL_LOGIN;
 
     protected static final String TEST_USER1_USERNAME = "preUpdateProfileTestUserName";
     protected static final String TEST_USER_PASSWORD = "TestPassword@123";
@@ -102,6 +110,36 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
                 .setDefaultCookieStore(cookieStore)
                 .build();
 
+    }
+
+    /**
+     * Create an OAuth2 application with the given grant types and callback URL.
+     *
+     * @param grantTypes Grant types to enable on the application.
+     * @return ApplicationResponseModel of the created application.
+     * @throws Exception If an error occurred while creating the application.
+     */
+    protected ApplicationResponseModel createApplicationWithGrantTypes(String... grantTypes) throws Exception {
+
+        ApplicationModel appModel = new ApplicationModel();
+        appModel.setName(SERVICE_PROVIDER_NAME);
+        appModel.setIsManagementApp(true);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(Arrays.asList(grantTypes));
+        oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+
+        AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type("JWT");
+        accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+        accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+        oidcConfig.setAccessToken(accessTokenConfig);
+
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        appModel.setInboundProtocolConfiguration(inboundProtocols);
+
+        String appId = addApplication(appModel);
+        return getApplication(appId);
     }
 
     protected String createPreUpdateProfileAction(String actionName, String actionDescription) throws IOException {
@@ -151,6 +189,55 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
         JSONObject jsonResponse = new JSONObject(responseString);
 
         assertTrue(jsonResponse.has("access_token"));
+        return jsonResponse.getString("access_token");
+    }
+
+    /**
+     * Authorize the SCIM2 /Me API for the given application so that user tokens can access it.
+     *
+     * @param applicationId Application ID.
+     * @throws Exception If an error occurred while authorizing the API.
+     */
+    protected void authorizeScim2MeApi(String applicationId) throws Exception {
+
+        if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
+            authorizeSystemAPIs(applicationId, Collections.singletonList(SCIM2_ME_API));
+        }
+    }
+
+    /**
+     * Obtain a user access token via the resource owner password credentials grant, scoped with
+     * {@code internal_user_mgt_update} to allow PATCH /scim2/Me operations.
+     *
+     * @param clientId     OAuth2 client ID of the application.
+     * @param clientSecret OAuth2 client secret of the application.
+     * @param username     Username of the user authenticating.
+     * @param password     Password of the user authenticating.
+     * @return Access token string.
+     * @throws Exception If token acquisition fails.
+     */
+    protected String getUserAccessToken(String clientId, String clientSecret, String username, String password)
+            throws Exception {
+
+        List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+        parameters.add(new BasicNameValuePair("username", username));
+        parameters.add(new BasicNameValuePair("password", password));
+        parameters.add(new BasicNameValuePair("scope", USER_ACCESS_TOKEN_SCOPES));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(clientId, clientSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, parameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        JSONObject jsonResponse = new JSONObject(responseString);
+        assertTrue(jsonResponse.has("access_token"),
+                "Failed to obtain user access token. Response: " + responseString);
         return jsonResponse.getString("access_token");
     }
 }

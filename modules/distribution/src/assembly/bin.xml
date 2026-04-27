@@ -557,6 +557,15 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/flow-defaults
+            </directory>
+            <outputDirectory>wso2is-${pom.version}/repository/conf/flow-defaults</outputDirectory>
+            <includes>
+                <include>*.json</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <files>

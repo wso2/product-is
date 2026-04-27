@@ -360,13 +360,36 @@ public class SCIM2RestClient extends RestBaseClient {
      * @param password      password of the user.
      * @return JSONObject of the Closaeable HTTP response.
      * @throws IOException If an error occurred while updating a user.
+     * @deprecated Use {@link #updateUserMeWithToken(PatchOperationRequestObject, String)} with an OAuth2 bearer token
+     *             instead. Basic authentication is no longer supported for the /scim2/Me endpoint.
      */
+    @Deprecated
     public JSONObject updateUserMe(PatchOperationRequestObject patchUserInfo, String username, String password) throws Exception {
 
         String jsonRequest = toJSONString(patchUserInfo);
         String endPointUrl = getUsersMePath();
 
         try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeadersForSCIMME(username, password))) {
+            return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
+        }
+    }
+
+    /**
+     * Update the profile of the authenticated user via the /scim2/Me endpoint using an OAuth2 bearer token.
+     *
+     * @param patchUserInfo User patch request object.
+     * @param bearerToken   OAuth2 bearer token identifying the user.
+     * @return JSONObject of the HTTP response.
+     * @throws Exception If an error occurred while updating the user.
+     */
+    public JSONObject updateUserMeWithToken(PatchOperationRequestObject patchUserInfo, String bearerToken)
+            throws Exception {
+
+        String jsonRequest = toJSONString(patchUserInfo);
+        String endPointUrl = getUsersMePath();
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest,
+                getHeadersWithBearerToken(bearerToken))) {
             return getJSONObject(EntityUtils.toString(response.getEntity(), "UTF-8"));
         }
     }
