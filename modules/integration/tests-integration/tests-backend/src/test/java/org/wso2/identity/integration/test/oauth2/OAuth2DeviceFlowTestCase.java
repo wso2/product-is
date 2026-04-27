@@ -213,8 +213,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     @Test(groups = "wso2.is", description = "Send unapproved token", dependsOnMethods = "testSendDeviceAuthorize")
     public void testNonUsedDeviceTokenRequest() throws Exception {
 
-        // Wait 5 seconds because of the token polling interval.
-        Thread.sleep(5000);
+        // Wait longer than the 5 second polling interval to avoid slow_down response.
+        Thread.sleep(6000);
         JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
         String error = obj.get("error").toString();
         String errorDescription = obj.get("error_description").toString();
@@ -327,8 +327,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     @Test(groups = "wso2.is", description = "Send token post request", dependsOnMethods = "testSendApprovalPost")
     public void testTokenRequest() throws Exception {
 
-        // Wait 5 seconds because of the token polling interval.
-        Thread.sleep(5000);
+        // Wait longer than the 5 second polling interval to avoid slow_down response.
+        Thread.sleep(6000);
         JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
         String accessToken = obj.get("access_token").toString();
         Assert.assertNotNull(accessToken, "Assess token is null");
@@ -338,8 +338,8 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
             dependsOnMethods = "testTokenRequest")
     public void testExpiredDeviceTokenRequest() throws Exception {
 
-        // Wait 5 seconds because of the token polling interval.
-        Thread.sleep(5000);
+        // Wait longer than the 5 second polling interval to avoid slow_down response.
+        Thread.sleep(6000);
         JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
         String error = obj.get("error").toString();
         Assert.assertEquals(error, "expired_token");
