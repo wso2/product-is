@@ -2691,7 +2691,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.53</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.58</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2712,7 +2712,7 @@
         <carbon.consent.mgt.version>2.9.0</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.16.8</identity.governance.version>
+        <identity.governance.version>1.16.9</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.12.4</identity.carbon.auth.saml2.version>
@@ -2721,12 +2721,12 @@
         <identity.carbon.auth.rest.version>1.12.11</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.5.25</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.5.26</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.5</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.1</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.8.1</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.7.4</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.7.5</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.6.0</identity.user.account.association.version>
@@ -2795,7 +2795,7 @@
 
         <!-- Identity Workflow -->
         <identity.workflow.version>1.1.8</identity.workflow.version>
-        <identity.user.workflow.version>6.1.0</identity.user.workflow.version>
+        <identity.user.workflow.version>6.1.1</identity.user.workflow.version>
 
         <!-- Connector Versions -->
         <authenticator.totp.version>3.4.4</authenticator.totp.version>
@@ -2804,7 +2804,7 @@
         <authenticator.smsotp.version>3.4.2</authenticator.smsotp.version>
         <authenticator.magiclink.version>1.2.0</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.2.0</authenticator.emailotp.version>
-        <authenticator.local.auth.emailotp.version>1.2.0</authenticator.local.auth.emailotp.version>
+        <authenticator.local.auth.emailotp.version>1.2.1</authenticator.local.auth.emailotp.version>
         <authenticator.local.auth.smsotp.version>1.1.6</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.2.0</authenticator.twitter.version>
         <authenticator.x509.version>3.2.2</authenticator.x509.version>
