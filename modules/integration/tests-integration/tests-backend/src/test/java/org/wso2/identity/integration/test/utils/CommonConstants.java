@@ -55,7 +55,12 @@ public class CommonConstants {
         if (value == null || value.trim().isEmpty()) {
             return defaultValue;
         }
-        return Integer.parseInt(value.trim());
+
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
 
