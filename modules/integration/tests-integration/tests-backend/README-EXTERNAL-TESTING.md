@@ -70,6 +70,11 @@ mvn -pl modules/integration/tests-integration/tests-backend test \
     -Dintegration.test.is.https.port=9443
 ```
 
+**IMPORTANT: Use `test` goal NOT `clean install`**
+- ❌ `mvn clean install` - This compiles but does NOT run tests
+- ✅ `mvn test` - This compiles and runs tests
+- ✅ `mvn clean test` - This cleans, compiles, and runs tests
+
 ## Configuration Details
 
 ### System Properties Precedence
@@ -105,7 +110,20 @@ public static final String SAMPLE_APP_BASE_URL = "http://" + SAMPLE_APP_HOST + "
 
 ## Troubleshooting
 
-### Error: Connection Refused
+### Error: Tests not running / pom.xml system properties not recognized
+**Problem**: You run `mvn clean install` and tests don't execute
+
+**Solution**: 
+- Use `mvn test` instead of `mvn clean install`
+- The `install` goal only compiles; it doesn't run tests
+- Always use one of these:
+  ```bash
+  mvn test                    # Run tests only
+  mvn clean test             # Clean + run tests
+  mvn clean install -DskipTests test  # Build all → Install → Run tests
+  ```
+
+### Error: Server Extension Still Attempting Auto-Start
 **Problem**: Tests fail with connection refused errors
 ```
 java.net.ConnectException: Connection refused
