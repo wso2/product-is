@@ -47,6 +47,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAdd
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -63,7 +64,7 @@ import java.util.List;
  */
 public class RBACWithAPIAuthorizationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private static final String CALLBACK_URL = "https://localhost/callback";
+    private static final String CALLBACK_URL = "https://" + CommonConstants.IS_HOST + "/callback";
     private static final String USERS = "users";
     private static final String TEST_USER = "test_user";
     private static final String ADMIN_WSO2 = "Admin@wso2";
@@ -86,7 +87,7 @@ public class RBACWithAPIAuthorizationTestCase extends OAuth2ServiceAbstractInteg
     private String orgAppID;
     private String applicationAppID;
     private String userID;
-    private String tokenURL = "https://localhost:9853/oauth2/token";
+    private String tokenURL = CommonConstants.IS_HTTPS_BASE_URL + "/oauth2/token";
     private List<String> consumerKeys = new ArrayList<>();
     private List<String> consumerSecrets = new ArrayList<>();
 

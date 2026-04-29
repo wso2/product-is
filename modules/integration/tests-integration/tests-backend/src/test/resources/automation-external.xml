@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+  ~  Copyright (c) 2005-2010, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~
+  ~  WSO2 Inc. licenses this file to you under the Apache License,
+  ~  Version 2.0 (the "License"); you may not use this file except
+  ~  in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing,
+  ~  software distributed under the License is distributed on an
+  ~  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~  KIND, either express or implied.  See the License for the
+  ~  specific language governing permissions and limitations
+  ~  under the License.
+
+  ~ =====================================================================
+  ~ EXTERNAL SERVER TESTING CONFIGURATION
+  ~ =====================================================================
+  ~
+  ~ This configuration file is designed for testing against an EXTERNAL or
+  ~ PRE-RUNNING IS instance. It uses NoOpServerExtension which does NOT
+  ~ manage server lifecycle (no auto-start/stop/extraction).
+  ~
+  ~ USAGE:
+  ~   1. Ensure your external IS instance is running on the configured host/port
+  ~   2. Run tests with this configuration:
+  ~      mvn -pl modules/integration/tests-integration/tests-backend test \
+  ~          -Dautomation.config.file=automation-external.xml \
+  ~          -Dintegration.test.is.host=<external-is-host> \
+  ~          -Dintegration.test.is.https.port=<external-is-port> \
+  ~          -Dintegration.test.sample.host=<sample-app-host> \
+  ~          -Dintegration.test.sample.http.port=<sample-app-port>
+  ~
+  ~ EXAMPLE (with defaults):
+  ~   mvn -pl modules/integration/tests-integration/tests-backend test \
+  ~       -Dautomation.config.file=automation-external.xml
+  ~   (This assumes IS is running on localhost:9853 and sample app on localhost:8490)
+  ~
+  ~ CUSTOM EXTERNAL SERVER EXAMPLE:
+  ~   mvn -pl modules/integration/tests-integration/tests-backend test \
+  ~       -Dautomation.config.file=automation-external.xml \
+  ~       -Dintegration.test.is.host=192.168.1.100 \
+  ~       -Dintegration.test.is.https.port=8443 \
+  ~       -Dintegration.test.sample.host=192.168.1.101 \
+  ~       -Dintegration.test.sample.http.port=8080
+  ~
+  ~ SYSTEM PROPERTIES FOR CONFIGURATION:
+  ~   integration.test.is.host             - External IS hostname (default: localhost)
+  ~   integration.test.is.https.port       - External IS HTTPS port (default: 9853)
+  ~   integration.test.sample.host         - Sample app hostname (default: localhost)
+  ~   integration.test.sample.http.port    - Sample app HTTP port (default: 8490)
+  ~   integration.test.host                - Global default hostname (used if specific *is.host not set)
+  ~   integration.test.sample.http.port    - Sample app default HTTP port (used if specific port not set)
+  ~
+  ~ KEY SETTINGS IN THIS CONFIG:
+  ~   - NoOpServerExtension: Disables server lifecycle management
+  ~   - UserPopulateExtension: Still enabled to create test users on external server
+  ~   - deployment.delay: 30 seconds (reduced from 60 for faster startup checks)
+  ~   - coverage: false (disabled to avoid unpacking/instrumentation)
+  ~
+  ~ NOTES:
+  ~   - Ensure the external IS has all required configurations and databases set up
+  ~   - Comment out UserPopulateExtension if the server already has test users configured
+  ~   - Adjust deployment.delay if your server needs more time to fully initialize
+  ~
+
+-->
+<automation xmlns="automationSchema.xsd">
+    <!--  =================================================  -->
+    <!--                   Parameters                        -->
+    <!--  =================================================  -->
+    <configurations>
+        <!--
+         Change this to edit wait time for test artifact deployment
+        -->
+        <deploymentDelay>30000</deploymentDelay>
+        <!--
+         Change this to product|platform/cloud to execute test on specific environment
+        -->
+        <executionEnvironment>standalone</executionEnvironment>
+        <!--
+         Change this to true if you want to generate coverage statistics
+        -->
+        <coverage>false</coverage>
+        <coverageClassesRelativeDirectories>
+            <coverageClassesRelativeDirectory>repository/deployment/server/webapps</coverageClassesRelativeDirectory>
+            <coverageClassesRelativeDirectory>repository/components/plugins</coverageClassesRelativeDirectory>
+            <coverageClassesRelativeDirectory>repository/components/dropins</coverageClassesRelativeDirectory>
+            <coverageClassesRelativeDirectory>lib/runtimes/cxf3</coverageClassesRelativeDirectory>
+        </coverageClassesRelativeDirectories>
+        <!--
+         Change this to true if you want to enable framework dashboard
+        -->
+        <frameworkDashboard>false</frameworkDashboard>
+        <!--
+         Browser type with used by framework to execute UI test, supported types - chrome|firefox|opera|ie|htmlUnit
+        -->
+    </configurations>
+    <tools>
+        <selenium>
+            <!-- Change to enable remote webDriver -->
+            <!-- URL of remote webDriver server  -->
+            <remoteDriverUrl enable="true">http://10.100.2.51:4444/wd/hub/</remoteDriverUrl>
+
+            <!-- Type of the browser selenium tests are running" -->
+            <browser>
+                <browserType>firefox</browserType>
+                <!-- path to webDriver executable - required only for chrome-->
+                <webdriverPath enable="false">/home/test/name/webDriver</webdriverPath>
+            </browser>
+        </selenium>
+    </tools>
+
+    <!--  Configs to add in deployment.toml at startup to enable admin/SOAP services. -->
+    <enableAdminServices>
+        <expectedParentKey>server</expectedParentKey>
+        <expectedKey>enable_admin_services</expectedKey>
+        <expectedValue>true</expectedValue>
+    </enableAdminServices>
+
+    <!--  SMTP Server configs to be added to the deployment.toml during the initial server startup  -->
+    <emailSenderConfigs>
+        <from_address>admin@wso2.com</from_address>
+        <username>admin</username>
+        <password>admin</password>
+        <hostname>localhost</hostname>
+        <port>3025</port>
+        <enable_start_tls>true</enable_start_tls>
+        <enable_authentication>true</enable_authentication>
+    </emailSenderConfigs>
+    <!--
+    Database configuration to be used for data service testing. DB configuration in dbs files will be replaced with
+               below configuration at test run time
+    -->
+    <datasources>
+        <datasource name="dataService">
+            <url>jdbc:h2:testDB</url>
+            <username>wso2carbon</username>
+            <password>wso2carbon</password>
+            <driverClassName>org.h2.Driver</driverClassName>
+        </datasource>
+        <datasource name="dataService1">
+            <url>jdbc:h2:testDB</url>
+            <username>wso2carbon</username>
+            <password>wso2carbon</password>
+            <driverClassName>org.h2.Driver</driverClassName>
+        </datasource>
+    </datasources>
+    <security>
+        <!--
+                    KeyStore which will be used for encrypting/decrypting passwords
+                    and other sensitive information.
+        -->
+        <keystore name="wso2">
+            <!--  Keystore file location -->
+            <fileName>keystores/products/wso2carbon.p12</fileName>
+            <!--  Keystore type (JKS/PKCS12 etc.) -->
+            <type>PKCS12</type>
+            <!--  Keystore password -->
+            <password>wso2carbon</password>
+            <!--  Private Key alias -->
+            <keyAlias>wso2carbon</keyAlias>
+            <!--  Private Key password -->
+            <keyPassword>wso2carbon</keyPassword>
+        </keystore>
+        <!--
+                    System wide trust-store which is used to maintain the certificates of all
+                    the trusted parties.
+        -->
+        <truststore name="wso2">
+            <!--  trust-store file location  -->
+            <fileName>client-truststore.p12</fileName>
+            <!--  trust-store type (JKS/PKCS12 etc.)  -->
+            <type>PKCS12</type>
+            <!--  trust-store password  -->
+            <password>wso2carbon</password>
+        </truststore>
+    </security>
+    <featureManagement>
+        <p2Repositories>
+            <repository name="localDefault">
+                <repository repo-id="online-repository">https://wso2.org/repo</repository>
+                <repository repo-id="file-repository">file:///home/krishantha/test</repository>
+            </repository>
+        </p2Repositories>
+    </featureManagement>
+    <!--
+               System wide users who to be registered at the test initiation
+    -->
+    <userManagement>
+        <superTenant>
+            <tenant domain="carbon.super" key="superTenant">
+                <admin>
+                    <user key="superAdmin">
+                        <userName>admin</userName>
+                        <password>admin</password>
+                    </user>
+                </admin>
+                <users>
+                    <user key="user1">
+                        <userName>testuser11</userName>
+                        <password>Wso2_test11</password>
+                    </user>
+                    <user key="user2">
+                        <userName>testuser21</userName>
+                        <password>Wso2_test21</password>
+                    </user>
+                    <user key="Registry580UN">
+                        <userName>Registry580UN</userName>
+                        <password>Wso2_test580UN</password>
+                    </user>
+                    <user key="deniedUser">
+                        <userName>deniedUser</userName>
+                        <password>Wso2_test</password>
+                    </user>
+                </users>
+            </tenant>
+        </superTenant>
+        <tenants>
+            <tenant domain="wso2.com" key="wso2">
+                <admin>
+                    <user key="admin">
+                        <userName>admin</userName>
+                        <password>admin</password>
+                    </user>
+                </admin>
+                <users>
+                    <user key="user1">
+                        <userName>testuser11</userName>
+                        <password>Wso2_test11</password>
+                    </user>
+                    <user key="user2">
+                        <userName>testuser21</userName>
+                        <password>Wso2_test21</password>
+                    </user>
+
+                </users>
+            </tenant>
+        </tenants>
+    </userManagement>
+    <!--
+   This section will initiate the initial deployment of the platform required by
+   the test suites.
+
+   NOTE: For external IS testing, update the hosts/ports below to match your external server.
+   OR use system properties to override at runtime:
+     -Dintegration.test.is.host=your-host
+     -Dintegration.test.is.https.port=your-https-port
+-->
+    <platform>
+        <!--
+        cluster instance details to be used to platform test execution
+        -->
+        <productGroup name="IDENTITY" clusteringEnabled="false" default="true">
+
+            <instance name="identity001" type="standalone" nonBlockingTransportEnabled="false">
+                <hosts>
+                    <host type="default">localhost</host>
+                    <!-- For external testing, change to your external IS host -->
+                </hosts>
+                <ports>
+                    <port type="http">10173</port>
+                    <!-- For external testing, update to your external IS HTTPS port (e.g., 9443, 8443, etc.) -->
+                    <port type="https">9853</port>
+                </ports>
+                <properties>
+                </properties>
+            </instance>
+            <instance name="identity002" type="standalone" nonBlockingTransportEnabled="false">
+                <hosts>
+                    <host type="default">localhost</host>
+                </hosts>
+                <ports>
+                    <port type="http">10174</port>
+                    <port type="https">9854</port>
+                </ports>
+                <properties>
+                </properties>
+            </instance>
+            <instance name="identity003" type="standalone" nonBlockingTransportEnabled="false">
+                <hosts>
+                    <host type="default">localhost</host>
+                </hosts>
+                <ports>
+                    <port type="http">10175</port>
+                    <port type="https">9855</port>
+                </ports>
+                <properties>
+                </properties>
+            </instance>
+        </productGroup>
+    </platform>
+
+    <listenerExtensions>
+        <platformExecutionManager>
+            <extentionClasses>
+                <!--
+                    Using NoOpServerExtension instead of IdentityServerExtension
+                    This extension does NOT manage server lifecycle (no start/stop/extraction)
+                    Use this when running tests against an external/pre-running IS instance
+                -->
+                <class>
+                    <name>org.wso2.identity.integration.common.extension.server.NoOpServerExtension</name>
+                </class>
+
+                <!--
+                    UserPopulateExtension is still enabled to help create test users on the external server
+                    Comment this out if the external server already has the required test users or if user creation fails.
+                -->
+                <class>
+                    <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>
+                </class>
+            </extentionClasses>
+        </platformExecutionManager>
+
+
+        <PlatformSuiteManager>
+            <extentionClasses>
+                <!--<className>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</className>-->
+            </extentionClasses>
+        </PlatformSuiteManager>
+
+        <PlatformAnnotationTransferManager>
+            <extentionClasses>
+                <!--<className>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</className>-->
+            </extentionClasses>
+        </PlatformAnnotationTransferManager>
+
+        <PlatformTestManager>
+            <extentionClasses>
+
+            </extentionClasses>
+        </PlatformTestManager>
+
+        <PlatformReportManager>
+            <extentionClasses>
+            </extentionClasses>
+        </PlatformReportManager>
+
+    </listenerExtensions>
+</automation>
+

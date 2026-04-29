@@ -51,9 +51,9 @@ import java.util.Map;
 public class SAMLSSOConsentTestCase extends AbstractSAMLSSOTestCase{
 
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
-    private static final String SAML_SSO_INDEX_URL = "http://localhost:8490/%s/";
+    private static final String SAML_SSO_INDEX_URL = CommonConstants.SAMPLE_APP_BASE_URL + "/%s/";
     private static final String SAML_SSO_LOGOUT_URL =
-            "http://localhost:8490/%s/logout?SAML2.HTTPBinding=%s";
+            CommonConstants.SAMPLE_APP_BASE_URL + "/%s/logout?SAML2.HTTPBinding=%s";
 
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String lastNameClaimURI = "http://wso2.org/claims/lastname";

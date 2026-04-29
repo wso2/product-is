@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.tenant.mgt.stub.TenantMgtAdminServiceExceptionException;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
+import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.json.JSONObject;
 import org.json.XML;
 
@@ -36,15 +37,15 @@ import java.io.IOException;
 
 public class SAMLMetadataTestCase extends ISIntegrationTest {
 
-    private static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = "https://localhost:9853/identity/metadata/saml2";
+    private static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = CommonConstants.IS_HTTPS_BASE_URL + "/identity/metadata/saml2";
     private static final String SAML_METADATA_ENDPOINT_TENANT =
-            "https://localhost:9853/t/wso2.com/identity/metadata/saml2";
+            CommonConstants.IS_HTTPS_BASE_URL + "/t/wso2.com/identity/metadata/saml2";
     private static final String SAML_METADATA_ENDPOINT_WITH_SUPER_TENANT_AS_PATH_PARAM =
-            "https://localhost:9853/identity/metadata/saml2";
-    private static final String SAML_SSO_ENDPOINT_TENANT = "https://localhost:9853/t/wso2.com/samlsso";
-    private static final String SAML_SSO_ENDPOINT_SUPER_TENANT = "https://localhost:9853/samlsso";
-    private static final String SAMLARTRESOLVE_ENDPOINT = "https://localhost:9853/samlartresolve";
-    private static final String SAMLARTRESOLVE_ENDPOINT_TENANT = "https://localhost:9853/t/wso2.com/samlartresolve";
+            CommonConstants.IS_HTTPS_BASE_URL + "/identity/metadata/saml2";
+    private static final String SAML_SSO_ENDPOINT_TENANT = CommonConstants.IS_HTTPS_BASE_URL + "/t/wso2.com/samlsso";
+    private static final String SAML_SSO_ENDPOINT_SUPER_TENANT = CommonConstants.IS_HTTPS_BASE_URL + "/samlsso";
+    private static final String SAMLARTRESOLVE_ENDPOINT = CommonConstants.IS_HTTPS_BASE_URL + "/samlartresolve";
+    private static final String SAMLARTRESOLVE_ENDPOINT_TENANT = CommonConstants.IS_HTTPS_BASE_URL + "/t/wso2.com/samlartresolve";
 
     @Test(groups = "wso2.is", description = "This test method will test SAML Metadata endpoints.")
     public void getSAMLMetadata() throws IOException, JSONException {
