@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -320,6 +320,150 @@ public class PreIssueAccessTokenActionFailureTest extends ActionTestBase {
         responseOfPost.then().assertThat().statusCode(HttpStatus.SC_CREATED);
 
         return responseOfPost.getBody().jsonPath().getString("id");
+    }
+
+    @Test(dependsOnMethods = {"testDeactivateActionWithInvalidID"})
+    public void testCreateActionWithClientCredentialMissingClientId() {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Required authentication properties are not " +
+                        "provided or invalid."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialMissingClientId"})
+    public void testCreateActionWithClientCredentialMissingClientSecret() {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Required authentication properties are not " +
+                        "provided or invalid."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialMissingClientSecret"})
+    public void testCreateActionWithClientCredentialMissingTokenEndpoint() {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Required authentication properties are not " +
+                        "provided or invalid."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialMissingTokenEndpoint"})
+    public void testCreateActionWithClientCredentialEmptyClientId() {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, "");
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Authentication property values cannot be empty."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialEmptyClientId"})
+    public void testCreateActionWithClientCredentialEmptyClientSecret() {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, "");
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Authentication property values cannot be empty."));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialEmptyClientSecret"})
+    public void testCreateActionWithClientCredentialEmptyTokenEndpoint() {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, "");
+                                }})));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Authentication property values cannot be empty."));
     }
 
     private String createActionWithRule() {
