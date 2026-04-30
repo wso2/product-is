@@ -1,0 +1,80 @@
+name: Integration Test Runner (Zip Upload)
+on:
+  workflow_dispatch:
+    inputs:
+      zip_url:
+        description: "Download URL for the IS distribution zip (wso2is-*.zip). Upload to a GitHub release or accessible storage first."
+        required: true
+
+env:
+  MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
+
+jobs:
+  run-test-runners:
+    runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner_id: 1
+            tests: "is-tests-default-configuration,is-test-rest-api,is-test-webhooks,is-tests-scim2,is-test-adaptive-authentication"
+          - runner_id: 2
+            tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart"
+          - runner_id: 3
+            tests: "is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption,is-test-session-mgt,is-tests-password-update-api"
+          - runner_id: 4
+            tests: "is-tests-with-individual-configuration-changes"
+    steps:
+      - name: Print Input
+        run: echo "Running integration test runner ${{ matrix.runner_id }} against provided zip"
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Echo java 21 home
+        run: |
+          echo "J21HOME=$JAVA_HOME" >> ${GITHUB_ENV}
+        id: java-21-setup
+      - name: Build init
+        run: |
+          echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
+      - name: Cache maven packages
+        id: cache-maven-m2
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2
+            !~/.m2/repository/org/wso2/is/wso2is
+          key: ${{ runner.os }}-zip-runner-${{ env.CURRENT_MONTH }}-${{ matrix.runner_id }}
+      - name: Run zip test runner ${{ matrix.runner_id }}
+        env:
+          ZIP_URL: ${{ github.event.inputs.zip_url }}
+          JAVA_21_HOME: ${{ env.J21HOME }}
+        run: |
+          bash .github/scripts/zip-based-test-runner.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
+      - name: Archive product-is mvn build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-is-mvn-build-log-${{ matrix.runner_id }}
+          path: |
+            product-is-${{ matrix.runner_id }}/mvn-build.log
+          if-no-files-found: warn
+      - name: Archive product-is surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-is-surefire-report-${{ matrix.runner_id }}
+          path: |
+            product-is-${{ matrix.runner_id }}/**/surefire-reports
+          if-no-files-found: warn
+      - name: Archive heap dump
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: heap-dump-${{ matrix.runner_id }}
+          path: |
+            **/**.hprof
+          if-no-files-found: ignore
