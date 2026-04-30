@@ -82,6 +82,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
+        cleanupWorkflowByName("User Approval Workflow");
         // Prepare SCIM2 client for user operations used in approval flow test.
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
     }
@@ -89,6 +90,12 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
 
+        if (workflowAssociationId != null) {
+            getResponseOfDelete(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId);
+        }
+        if (workflowId != null) {
+            getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId);
+        }
         if (createdRoleId != null) {
             scim2RestClient.deleteV2Role(createdRoleId);
         }

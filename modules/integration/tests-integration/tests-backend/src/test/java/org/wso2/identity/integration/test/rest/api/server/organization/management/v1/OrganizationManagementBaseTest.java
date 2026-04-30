@@ -262,6 +262,7 @@ public class OrganizationManagementBaseTest extends RESTAPIServerTestBase {
         inboundProtocolsConfig.setOidc(oidcConfig);
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setName(appName);
+        application.setEnhancedOrgAuthenticationEnabled(false);
 
         AdvancedApplicationConfiguration advancedApplicationConfiguration = new AdvancedApplicationConfiguration();
         advancedApplicationConfiguration.setSkipLoginConsent(true);

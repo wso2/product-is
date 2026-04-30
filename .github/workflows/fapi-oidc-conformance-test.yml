@@ -133,11 +133,8 @@ jobs:
     - name: Clone conformance suite
       run: |
         sudo snap install jq
-        # TODO: Pinned to release-v5.1.39 due to tests failing in v5.1.40. Revert to latest once upstream fix is available.
-        # LATEST_RELEASE_BRANCH=$(curl -s https://gitlab.com/api/v4/projects/4175605/releases/ | jq '.[]' | jq -r '.name' | head -1)
-        # echo ">>> Conformance suite latest release branch: $LATEST_RELEASE_BRANCH"
-        LATEST_RELEASE_BRANCH=release-v5.1.39
-        echo ">>> Conformance suite pinned branch is taken: $CONFORMANCE_SUITE_BRANCH"
+        LATEST_RELEASE_BRANCH=$(curl -s https://gitlab.com/api/v4/projects/4175605/releases/ | jq '.[]' | jq -r '.name' | head -1)
+        echo ">>> Conformance suite latest release branch: $LATEST_RELEASE_BRANCH"
         PROVIDED_VERSION=${{github.event.inputs.conformance-suite-version}}
         if [[ -z "${PROVIDED_VERSION}" ]]; then
               CONFORMANCE_SUITE_BRANCH=$LATEST_RELEASE_BRANCH
