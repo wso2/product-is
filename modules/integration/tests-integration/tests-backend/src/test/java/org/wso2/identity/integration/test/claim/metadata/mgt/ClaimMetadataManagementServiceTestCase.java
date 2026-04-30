@@ -33,6 +33,7 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Includes automated tests for operations in ClaimMetadataManagementService.
@@ -102,11 +103,14 @@ public class ClaimMetadataManagementServiceTestCase extends ISIntegrationTest {
                 subAttributes.get(0).equals(LOCAL_CLAIM_URI_PREFIX + ACCOUNT_ID_CLAIM));
 
         JSONArray canonicalValues = (JSONArray) claim.get(ClaimConstants.CANONICAL_VALUES_PROPERTY);
-        assert (canonicalValues != null && canonicalValues.size() == 2
-                && ((JSONObject) canonicalValues.get(0)).get("label").equals("Personal")
-                && ((JSONObject) canonicalValues.get(0)).get("value").equals("personal")
-                && ((JSONObject) canonicalValues.get(1)).get("label").equals("Work")
-                && ((JSONObject) canonicalValues.get(1)).get("value").equals("work"));
+        assert canonicalValues != null && canonicalValues.size() == 2;
+        Map<String, String> canonicalValuesMap = new HashMap<>();
+        for (Object cv : canonicalValues) {
+            JSONObject cvObj = (JSONObject) cv;
+            canonicalValuesMap.put((String) cvObj.get("label"), (String) cvObj.get("value"));
+        }
+        assert "personal".equals(canonicalValuesMap.get("Personal"))
+                && "work".equals(canonicalValuesMap.get("Work"));
 
         assert ((JSONObject) claim.get(ClaimConstants.INPUT_FORMAT_PROPERTY)).get(INPUT_TYPE)
                 .equals(INPUT_TYPE_CHECKBOX_GROUP);

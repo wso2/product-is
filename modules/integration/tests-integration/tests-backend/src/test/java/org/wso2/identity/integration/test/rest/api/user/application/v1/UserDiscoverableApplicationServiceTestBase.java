@@ -374,6 +374,11 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
             oAuth2RestClient.deleteApplication(oAuth2RestClient.getAppIdUsingAppName(getApplicationName(
                     String.valueOf(i + TOTAL_DISCOVERABLE_APP_COUNT))));
         }
+        String lastSharedAppName = getApplicationName(String.valueOf(TOTAL_DISCOVERABLE_APP_COUNT));
+        await().atMost(60, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .until(() -> StringUtils.isEmpty(
+                        oAuth2RestClient.getAppIdUsingAppNameInOrganization(lastSharedAppName, subOrgToken)));
     }
 
     /**
@@ -448,6 +453,10 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         accessTokenConfiguration.setValidateTokenBinding(true);
         oAuth2RestClient.updateInboundDetailsOfApplication(rootMyAccountAppId, rootMyAccountAppOIDC, "oidc");
         oAuth2RestClient.unshareApplication(rootMyAccountAppId);
+        await().atMost(60, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .until(() -> StringUtils.isEmpty(
+                        oAuth2RestClient.getAppIdUsingAppNameInOrganization(MY_ACCOUNT_APP_NAME, subOrgToken)));
     }
 
     /**
