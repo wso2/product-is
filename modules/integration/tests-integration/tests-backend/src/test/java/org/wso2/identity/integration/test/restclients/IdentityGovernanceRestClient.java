@@ -90,6 +90,26 @@ public class IdentityGovernanceRestClient extends RestBaseClient {
     }
 
     /**
+     * Get a governance connector.
+     *
+     * @param categoryId  Connector category id.
+     * @param connectorId Connector id.
+     * @return JSON object representing the governance connector.
+     * @throws Exception If an error occurred while retrieving the governance connector.
+     */
+    public JSONObject getConnector(String categoryId, String connectorId) throws Exception {
+
+        String endPointUrl = identityGovernanceApiBasePath + PATH_SEPARATOR + categoryId +
+                CONNECTORS_BASE_PATH + PATH_SEPARATOR + connectorId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Connector retrieval failed");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
      * Get a governance connector in sub-organization.
      *
      * @param categoryId       Connector category id.
