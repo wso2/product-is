@@ -66,8 +66,13 @@ public class PasskeyRedirectBasedTest extends PasskeyTestBase {
     private static final String TEST_PASSWORD = "Passkey@Test123";
     private static final String TEST_EMAIL = "passkey_test_user@wso2.com";
 
+    private static final String SECOND_TEST_USERNAME = "passkey_test_user2";
+    private static final String SECOND_TEST_PASSWORD = "Passkey@Test456";
+    private static final String SECOND_TEST_EMAIL = "passkey_test_user2@wso2.com";
+
     private String appId;
     private String testUserId;
+    private String secondTestUserId;
     private SCIM2RestClient scim2RestClient;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
@@ -91,6 +96,8 @@ public class PasskeyRedirectBasedTest extends PasskeyTestBase {
         restClient = new OAuth2RestClient(serverURL, tenantInfo);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         testUserId = createTestUser(scim2RestClient, TEST_USERNAME, TEST_PASSWORD, TEST_EMAIL);
+        secondTestUserId = createTestUser(scim2RestClient, SECOND_TEST_USERNAME, SECOND_TEST_PASSWORD,
+                SECOND_TEST_EMAIL);
     }
 
     @AfterClass(alwaysRun = true)
@@ -101,6 +108,9 @@ public class PasskeyRedirectBasedTest extends PasskeyTestBase {
         }
         if (testUserId != null) {
             deleteTestUser(scim2RestClient, testUserId);
+        }
+        if (secondTestUserId != null) {
+            deleteTestUser(scim2RestClient, secondTestUserId);
         }
         setPasskeyProgressiveEnrollmentEnabled(false);
         setUsernameLessAuthenticationEnabled(true);
@@ -306,6 +316,316 @@ public class PasskeyRedirectBasedTest extends PasskeyTestBase {
                     "Final redirect should target the configured callback URL.");
             Assert.assertTrue(callbackWithCode.contains("code="),
                     "Authorization code should be present in the callback URL.");
+        }
+    }
+
+    @Test(description = "Disable username-less authentication to verify the IDF username step is enforced.",
+            dependsOnMethods = "testPasskeyLoginWithRegisteredCredential")
+    public void testDisableUsernameLessAuthentication() throws Exception {
+
+        setUsernameLessAuthenticationEnabled(false);
+        Assert.assertFalse(isUsernameLessAuthenticationEnabled(),
+                "Passkey username-less authentication should be disabled.");
+    }
+
+    @Test(description = "Verify passkey login when username-less authentication is disabled: " +
+            "an IDF username step must be completed before the WebAuthn assertion.",
+            dependsOnMethods = "testDisableUsernameLessAuthentication")
+    public void testPasskeyLoginWithUsernameLessDisabled() throws Exception {
+
+        String clientId = getOIDCInboundDetailsOfApplication(appId).getClientId();
+        String commonAuthUrl = getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain());
+        String origin = serverURL.replaceAll("/$", "");
+
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider()).build();
+        RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build();
+
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build()) {
+
+            // Step 1: Initiate the authorization code flow and follow redirects to the login page.
+            String authorizeUrl = getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain())
+                    + "?response_type=code&client_id=" + clientId
+                    + "&redirect_uri=" + CALLBACK_URL
+                    + "&scope=openid";
+            HttpResponse response = sendGetRequest(httpClient, authorizeUrl);
+            response = followRedirectsUntilLoginPage(httpClient, response);
+
+            // Step 2: Extract sessionDataKey from the login page.
+            Map<String, Integer> keyPositionMap = new HashMap<>();
+            keyPositionMap.put("name=\"sessionDataKey\"", 1);
+            List<DataExtractUtil.KeyValue> keyValues =
+                    DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
+            Assert.assertNotNull(keyValues, "sessionDataKey not found on the login page.");
+            String sessionDataKey = keyValues.get(0).getValue();
+            Assert.assertNotNull(sessionDataKey, "sessionDataKey must not be null.");
+            EntityUtils.consume(response.getEntity());
+
+            // Step 3: Select the FIDOAuthenticator to start the passkey authentication flow.
+            List<NameValuePair> selectPasskeyParams = new ArrayList<>();
+            selectPasskeyParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            selectPasskeyParams.add(new BasicNameValuePair("authenticator", "FIDOAuthenticator"));
+            selectPasskeyParams.add(new BasicNameValuePair("idp", "LOCAL"));
+            response = sendPostRequestWithParameters(httpClient, selectPasskeyParams, commonAuthUrl);
+            Header fidoPageHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+            if (fidoPageHeader != null) {
+                response = sendGetRequest(httpClient, fidoPageHeader.getValue());
+                EntityUtils.consume(response.getEntity());
+            }
+
+            // Step 4: Submit the username via the IDF step. When username-less authentication is disabled
+            // the server requires the username before it can issue a WebAuthn challenge.
+            List<NameValuePair> idfParams = new ArrayList<>();
+            idfParams.add(new BasicNameValuePair("username", TEST_USERNAME));
+            idfParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            idfParams.add(new BasicNameValuePair("scenario", "INIT_FIDO_AUTH"));
+            idfParams.add(new BasicNameValuePair("authType", "idf"));
+            response = sendPostRequestWithParameters(httpClient, idfParams, commonAuthUrl);
+
+            // Step 5: Parse the WebAuthn request options from the fido2-auth.jsp redirect URL.
+            Header fidoAuthPageHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+            Assert.assertNotNull(fidoAuthPageHeader,
+                    "Expected a redirect to fido2-auth.jsp after submitting the username in IDF step.");
+            String fidoAuthJspUrl = fidoAuthPageHeader.getValue();
+
+            JSONObject requestData = extractRequestOptionsFromUrl(fidoAuthJspUrl);
+            String requestId = (String) requestData.get("requestId");
+            JSONObject pkOptions = (JSONObject) requestData.get("publicKeyCredentialRequestOptions");
+            String challenge = (String) pkOptions.get("challenge");
+            String rpId = pkOptions.containsKey("rpId")
+                    ? (String) pkOptions.get("rpId")
+                    : new URI(serverURL).getHost();
+
+            // Step 6: Perform the WebAuthn authentication ceremony using the stored credential.
+            String tokenResponse = authenticatePasskey(requestId, challenge, rpId, origin, TEST_USERNAME);
+
+            // Step 7: POST the assertion response to complete the passkey login.
+            List<NameValuePair> finishLoginParams = new ArrayList<>();
+            finishLoginParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            finishLoginParams.add(new BasicNameValuePair("tokenResponse", tokenResponse));
+            response = sendPostRequestWithParameters(httpClient, finishLoginParams, commonAuthUrl);
+
+            // Step 8: Follow the redirect chain until the callback URL with an authorization code appears.
+            String callbackWithCode = followRedirectsToCallback(httpClient, response);
+            Assert.assertNotNull(callbackWithCode,
+                    "Expected a redirect to the callback URL after successful passkey login.");
+            Assert.assertTrue(callbackWithCode.startsWith(CALLBACK_URL),
+                    "Final redirect should target the configured callback URL.");
+            Assert.assertTrue(callbackWithCode.contains("code="),
+                    "Authorization code should be present in the callback URL.");
+        }
+    }
+
+    @Test(description = "Register a passkey for the second test user via progressive enrollment.",
+            dependsOnMethods = "testPasskeyLoginWithUsernameLessDisabled")
+    public void testPasskeyRegistrationForSecondUser() throws Exception {
+
+        String clientId = getOIDCInboundDetailsOfApplication(appId).getClientId();
+        String commonAuthUrl = getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain());
+        String origin = serverURL.replaceAll("/$", "");
+
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider()).build();
+        RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build();
+
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build()) {
+
+            // Step 1: Initiate the authorization code flow and follow redirects to the login page.
+            String authorizeUrl = getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain())
+                    + "?response_type=code&client_id=" + clientId
+                    + "&redirect_uri=" + CALLBACK_URL
+                    + "&scope=openid";
+            HttpResponse response = sendGetRequest(httpClient, authorizeUrl);
+            response = followRedirectsUntilLoginPage(httpClient, response);
+
+            // Step 2: Extract sessionDataKey from the login page.
+            Map<String, Integer> keyPositionMap = new HashMap<>();
+            keyPositionMap.put("name=\"sessionDataKey\"", 1);
+            List<DataExtractUtil.KeyValue> keyValues =
+                    DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
+            Assert.assertNotNull(keyValues, "sessionDataKey not found on the login page.");
+            String sessionDataKey = keyValues.get(0).getValue();
+            Assert.assertNotNull(sessionDataKey, "sessionDataKey must not be null.");
+            EntityUtils.consume(response.getEntity());
+
+            // Step 3: Select the FIDOAuthenticator from the multi-option login page.
+            List<NameValuePair> selectPasskeyParams = new ArrayList<>();
+            selectPasskeyParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            selectPasskeyParams.add(new BasicNameValuePair("authenticator", "FIDOAuthenticator"));
+            selectPasskeyParams.add(new BasicNameValuePair("idp", "LOCAL"));
+            response = sendPostRequestWithParameters(httpClient, selectPasskeyParams, commonAuthUrl);
+            Header fidoPageHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+            if (fidoPageHeader != null) {
+                response = sendGetRequest(httpClient, fidoPageHeader.getValue());
+                EntityUtils.consume(response.getEntity());
+            }
+
+            // Step 4: POST INIT_FIDO_ENROLL to trigger the passkey progressive enrollment flow.
+            // Since username-less authentication is disabled, the username and authType=idf are required
+            // so the server can identify the user before initiating the enrollment ceremony.
+            List<NameValuePair> initEnrollParams = new ArrayList<>();
+            initEnrollParams.add(new BasicNameValuePair("username", SECOND_TEST_USERNAME));
+            initEnrollParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            initEnrollParams.add(new BasicNameValuePair("scenario", "INIT_FIDO_ENROLL"));
+            initEnrollParams.add(new BasicNameValuePair("authType", "idf"));
+            response = sendPostRequestWithParameters(httpClient, initEnrollParams, commonAuthUrl);
+            Header locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+            if (locationHeader != null) {
+                response = sendGetRequest(httpClient, locationHeader.getValue());
+                EntityUtils.consume(response.getEntity());
+            }
+
+            // Step 5: POST the second user's credentials to identify them for enrollment.
+            List<NameValuePair> credentialParams = new ArrayList<>();
+            credentialParams.add(new BasicNameValuePair("username", SECOND_TEST_USERNAME));
+            credentialParams.add(new BasicNameValuePair("password", SECOND_TEST_PASSWORD));
+            credentialParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            response = sendPostRequestWithParameters(httpClient, credentialParams, commonAuthUrl);
+
+            // Step 6: Extract the WebAuthn creation options from the fido2-enroll.jsp redirect URL.
+            locationHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            Assert.assertNotNull(locationHeader,
+                    "Expected a redirect to fido2-enroll.jsp from the authorize endpoint.");
+            String enrollJspUrl = locationHeader.getValue();
+            EntityUtils.consume(response.getEntity());
+
+            JSONObject creationData = extractCreationOptionsFromUrl(enrollJspUrl);
+            String requestId = (String) creationData.get("requestId");
+            JSONObject pkOptions = (JSONObject) creationData.get("publicKeyCredentialCreationOptions");
+            String challenge = (String) pkOptions.get("challenge");
+            String rpId = (String) ((JSONObject) pkOptions.get("rp")).get("id");
+            byte[] userHandle = base64UrlDecode((String) ((JSONObject) pkOptions.get("user")).get("id"));
+
+            // Step 7: Perform the WebAuthn registration ceremony for the second user.
+            String challengeResponse = registerPasskey(requestId, challenge, rpId, origin,
+                    SECOND_TEST_USERNAME, userHandle);
+
+            // Step 8: POST FINISH_FIDO_ENROLL to complete enrollment.
+            List<NameValuePair> finishEnrollParams = new ArrayList<>();
+            finishEnrollParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            finishEnrollParams.add(new BasicNameValuePair("challengeResponse", challengeResponse));
+            finishEnrollParams.add(new BasicNameValuePair("scenario", "FINISH_FIDO_ENROLL"));
+            finishEnrollParams.add(new BasicNameValuePair("displayName", SECOND_TEST_USERNAME));
+            response = sendPostRequestWithParameters(httpClient, finishEnrollParams, commonAuthUrl);
+
+            // Step 9: Follow the redirect chain to the callback URL and verify enrollment succeeded.
+            String callbackWithCode = followRedirectsToCallback(httpClient, response);
+            Assert.assertNotNull(callbackWithCode,
+                    "Expected a redirect to the callback URL after successful passkey registration.");
+            Assert.assertTrue(callbackWithCode.startsWith(CALLBACK_URL),
+                    "Final redirect should target the configured callback URL.");
+            Assert.assertTrue(callbackWithCode.contains("code="),
+                    "Authorization code should be present in the callback URL.");
+        }
+    }
+
+    @Test(description = "Verify that passkey login fails when the credential presented belongs to a different " +
+            "user than the one submitted in the IDF username step.",
+            dependsOnMethods = "testPasskeyRegistrationForSecondUser")
+    public void testPasskeyLoginWithMismatchedCredential() throws Exception {
+
+        String clientId = getOIDCInboundDetailsOfApplication(appId).getClientId();
+        String commonAuthUrl = getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain());
+        String origin = serverURL.replaceAll("/$", "");
+
+        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
+                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider()).build();
+        RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build();
+
+        try (CloseableHttpClient httpClient = HttpClientBuilder.create()
+                .disableRedirectHandling()
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .build()) {
+
+            // Step 1: Initiate the authorization code flow and follow redirects to the login page.
+            String authorizeUrl = getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain())
+                    + "?response_type=code&client_id=" + clientId
+                    + "&redirect_uri=" + CALLBACK_URL
+                    + "&scope=openid";
+            HttpResponse response = sendGetRequest(httpClient, authorizeUrl);
+            response = followRedirectsUntilLoginPage(httpClient, response);
+
+            // Step 2: Extract sessionDataKey from the login page.
+            Map<String, Integer> keyPositionMap = new HashMap<>();
+            keyPositionMap.put("name=\"sessionDataKey\"", 1);
+            List<DataExtractUtil.KeyValue> keyValues =
+                    DataExtractUtil.extractDataFromResponse(response, keyPositionMap);
+            Assert.assertNotNull(keyValues, "sessionDataKey not found on the login page.");
+            String sessionDataKey = keyValues.get(0).getValue();
+            Assert.assertNotNull(sessionDataKey, "sessionDataKey must not be null.");
+            EntityUtils.consume(response.getEntity());
+
+            // Step 3: Select the FIDOAuthenticator to start the passkey authentication flow.
+            List<NameValuePair> selectPasskeyParams = new ArrayList<>();
+            selectPasskeyParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            selectPasskeyParams.add(new BasicNameValuePair("authenticator", "FIDOAuthenticator"));
+            selectPasskeyParams.add(new BasicNameValuePair("idp", "LOCAL"));
+            response = sendPostRequestWithParameters(httpClient, selectPasskeyParams, commonAuthUrl);
+            Header fidoPageHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+            if (fidoPageHeader != null) {
+                response = sendGetRequest(httpClient, fidoPageHeader.getValue());
+                EntityUtils.consume(response.getEntity());
+            }
+
+            // Step 4: Submit the second user's username in the IDF step. The server will issue a WebAuthn
+            // challenge scoped to the second user's registered credentials.
+            List<NameValuePair> idfParams = new ArrayList<>();
+            idfParams.add(new BasicNameValuePair("username", SECOND_TEST_USERNAME));
+            idfParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            idfParams.add(new BasicNameValuePair("scenario", "INIT_FIDO_AUTH"));
+            idfParams.add(new BasicNameValuePair("authType", "idf"));
+            response = sendPostRequestWithParameters(httpClient, idfParams, commonAuthUrl);
+
+            // Step 5: Parse the WebAuthn request options from the fido2-auth.jsp redirect URL.
+            Header fidoAuthPageHeader = response.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+            EntityUtils.consume(response.getEntity());
+            Assert.assertNotNull(fidoAuthPageHeader,
+                    "Expected a redirect to fido2-auth.jsp after submitting the username in IDF step.");
+            String fidoAuthJspUrl = fidoAuthPageHeader.getValue();
+
+            JSONObject requestData = extractRequestOptionsFromUrl(fidoAuthJspUrl);
+            String requestId = (String) requestData.get("requestId");
+            JSONObject pkOptions = (JSONObject) requestData.get("publicKeyCredentialRequestOptions");
+            String challenge = (String) pkOptions.get("challenge");
+            String rpId = pkOptions.containsKey("rpId")
+                    ? (String) pkOptions.get("rpId")
+                    : new URI(serverURL).getHost();
+
+            // Step 6: Intentionally sign the challenge using the first user's credential. The credential ID
+            // is not in the second user's allowCredentials list, so the server must reject the assertion.
+            String tokenResponse = authenticatePasskey(requestId, challenge, rpId, origin, TEST_USERNAME);
+
+            // Step 7: POST the mismatched assertion response.
+            List<NameValuePair> finishLoginParams = new ArrayList<>();
+            finishLoginParams.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
+            finishLoginParams.add(new BasicNameValuePair("tokenResponse", tokenResponse));
+            response = sendPostRequestWithParameters(httpClient, finishLoginParams, commonAuthUrl);
+
+            // Step 8: Verify that no authorization code is issued — the server must reject the assertion.
+            String callbackWithCode = followRedirectsToCallback(httpClient, response);
+            Assert.assertNotNull(callbackWithCode,
+                    "Expected a redirect to the callback URL with an error response.");
+            Assert.assertTrue(callbackWithCode.startsWith(CALLBACK_URL),
+                    "Error redirect should target the configured callback URL.");
+            Assert.assertTrue(callbackWithCode.contains("error="),
+                    "Callback URL should contain an error parameter when login fails.");
+            Assert.assertFalse(callbackWithCode.contains("code="),
+                    "No authorization code should be issued when the asserted credential belongs " +
+                            "to a different user than the one identified in the IDF step.");
         }
     }
 
