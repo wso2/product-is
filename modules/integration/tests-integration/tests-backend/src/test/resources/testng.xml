@@ -123,6 +123,7 @@
             <class name="org.wso2.identity.integration.test.functions.library.mgt.FunctionLibraryManagementTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationWithRevokedAccessToken"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2TokenRevocationAfterAccountDisablingTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2PasswordGrantWithAccountLockingTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2BackChannelLogoutTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2OPIframeTestCase"/>
             <class name="org.wso2.identity.integration.test.CrossProtocolLogoutTestCase"/>
@@ -555,5 +556,6 @@
             <class name="org.wso2.identity.integration.test.rest.api.user.password.v1.PasswordUpdateWebhookTest"/>
         </classes>
     </test>
+    
 
 </suite>
