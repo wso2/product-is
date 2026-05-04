@@ -12,8 +12,7 @@ env:
 
 jobs:
   run-test-runners:
-    runs-on: 
-      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
@@ -113,8 +112,7 @@ jobs:
   comment-and-approve:
     name: Comment the status and Approve PR
     needs: run-test-runners
-    runs-on:
-      - codebuild-wso2_product-is-${{ github.run_id }}-${{ github.run_attempt }}
+    runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
     if: always()
     steps:
       - name: Comment build status
