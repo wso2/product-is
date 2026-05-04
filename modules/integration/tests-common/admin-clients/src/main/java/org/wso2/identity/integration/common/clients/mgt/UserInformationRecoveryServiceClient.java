@@ -18,6 +18,9 @@
 
 package org.wso2.identity.integration.common.clients.mgt;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.rmi.RemoteException;
 
 import org.apache.axis2.AxisFault;
@@ -34,6 +37,8 @@ import org.wso2.identity.integration.common.clients.AuthenticateStub;
 
 
 public class UserInformationRecoveryServiceClient {
+
+    private static final Log log = LogFactory.getLog(UserInformationRecoveryServiceClient.class);
 
 	private UserInformationRecoveryServiceStub infoRecoveryStub;
     private final String serviceName = "UserInformationRecoveryService";
@@ -57,7 +62,7 @@ public class UserInformationRecoveryServiceClient {
 		try {
 			bean = infoRecoveryStub.getCaptcha();
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
 		return bean;
 	}
@@ -67,7 +72,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.verifyUser(username, captcha);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -77,7 +82,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.sendRecoveryNotification(username, key, notificationType);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -88,7 +93,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.verifyConfirmationCode(username, code, captcha);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -99,7 +104,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.updatePassword(username, confirmationCode, newPassword);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -109,7 +114,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.getUserChallengeQuestionIds(username, confirmation);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -120,7 +125,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
     		bean = infoRecoveryStub.getUserChallengeQuestion(userName, confirmation, questionId);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -131,7 +136,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.verifyUserChallengeAnswer(userName, confirmation, questionId, answer);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -141,7 +146,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			questions = infoRecoveryStub.getAllChallengeQuestions();
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return questions;
     }
@@ -151,7 +156,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			claims = infoRecoveryStub.getUserIdentitySupportedClaims(dialect);
 		} catch (UserInformationRecoveryServiceIdentityExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return claims;
     }
@@ -162,7 +167,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.verifyAccount(claims, captcha, tenantDomain);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -173,7 +178,7 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.registerUser(userName, password, claims, profileName, tenantDomain);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
@@ -184,9 +189,8 @@ public class UserInformationRecoveryServiceClient {
     	try {
 			bean = infoRecoveryStub.confirmUserSelfRegistration(username, code, captcha, tenantDomain);
 		} catch (UserInformationRecoveryServiceIdentityMgtServiceExceptionException e) {
-			e.printStackTrace();
+			log.error("An error occurred during user information recovery service invocation", e);
 		}
     	return bean;
     }
 }
-	
