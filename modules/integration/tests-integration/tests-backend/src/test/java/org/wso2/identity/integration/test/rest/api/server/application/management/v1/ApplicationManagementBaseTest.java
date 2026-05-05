@@ -22,9 +22,11 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +40,12 @@ import org.testng.annotations.DataProvider;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
+import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.testng.Assert.assertNotNull;
+import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
 
 /**
  * Base test class for Application Management REST APIs.
@@ -55,6 +62,29 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
             "/templates";
     static final String GROUPS_METADATA_PATH = METADATA_API_BASE_PATH + "/groups";
     static final String PATH_SEPARATOR = "/";
+    static final String APPLICATION_SHARE_API_PATH = "/share";
+    static final String APPLICATION_UNSHARE_API_PATH = "/unshare";
+    static final String APPLICATION_SHARE_WITH_ALL_API_PATH = "/share-with-all";
+    static final String APPLICATION_UNSHARE_WITH_ALL_API_PATH = "/unshare-with-all";
+    static final String APPLICATION_SHARE_MODE_PARAM = "sharingMode";
+    static final String APPLICATION_SHARE_ATTRIBUTE_QUERY_PARAM = "attributes=";
+    static final String QUESTION_MARK = "?";
+    static final String ORGANIZATION_MANAGEMENT_API_BASE_PATH = "/organizations";
+
+    static final String APP_ID_PLACEHOLDER = "${applicationId}";
+    static final String POLICY_PLACEHOLDER = "${policy}";
+    static final String ORGANIZATION_PLACEHOLDER = "${organizationId}";
+    static final String JSON_PATH_SHARING_POLICY = "sharingMode.policy";
+    static final String JSON_PATH_ROLE_SHARING_MODE = "sharingMode.roleSharing.mode";
+    static final String JSON_PATH_ORGANIZATION_ID = "organizations[%d].id";
+    static final String JSON_PATH_ORGANIZATION_SHARING_POLICY = "organizations[%d].sharingMode.policy";
+    static final String JSON_PATH_ORGANIZATION_SHARING_MODE = "organizations[%d].sharingMode.roleSharing.mode";
+
+    static final String SAMPLE_APP_NAME = "dummy test app";
+    static final String SAMPLE_ORG_NAME_01 = "Greater Hospital";
+    static final String SAMPLE_ORG_NAME_02 = "Smaller Hospital";
+    static final String SAMPLE_ORG_NAME_03 = "Little Hospital";
+    static final String SAMPLE_ORG_NAME_04 = "Child Hospital";
 
     protected static String swaggerDefinition;
     private SCIM2RestClient scim2RestClient;
@@ -207,6 +237,35 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
         Assert.assertEquals(groups.length(), groupIDs.length, "Group count mismatched.");
         for (String groupID : groupIDs) {
             Assert.assertTrue(groups.toString().contains(groupID), "Group ID not found in the response.");
+        }
+    }
+
+    protected Response createApplication(String appName) throws JSONException {
+
+        JSONObject createRequest = new JSONObject();
+        createRequest.put("name", appName);
+        String payload = createRequest.toString();
+
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        return responseOfPost;
+    }
+
+    protected String getApplicationId(Response createFirstAppResponse) {
+
+        String location = createFirstAppResponse.getHeader(HttpHeaders.LOCATION);
+        return extractApplicationIdFromLocationHeader(location);
+    }
+
+    protected void cleanUpOrganizations(List<String> orgToCleanUp, OrgMgtRestClient orgMgtRestClient) throws Exception {
+
+        for (String orgId : orgToCleanUp) {
+            orgMgtRestClient.deleteOrganization(orgId);
         }
     }
 }
