@@ -32,6 +32,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
     public static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";
     public static final String SCIM2_GROUPS_ENDPOINT = "/scim2/Groups";
     public static final String SCIM2_ROLES_ENDPOINT = "/scim2/Roles";
+    public static final String SCIM2_ROLES_V3_ENDPOINT = "/scim2/v3/Roles";
     public static final String SCIM_RESOURCE_TYPES_ENDPOINT = "/scim2/ResourceTypes";
     public static final String USERS_ENDPOINT = "/Users";
     public static final String GROUPS_ENDPOINT = "/Groups";
