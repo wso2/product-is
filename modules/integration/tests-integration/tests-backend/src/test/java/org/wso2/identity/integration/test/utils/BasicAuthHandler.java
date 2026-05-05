@@ -24,6 +24,7 @@ import org.wso2.charon.core.extensions.AuthenticationHandler;
 import org.wso2.charon.core.extensions.AuthenticationInfo;
 import org.wso2.charon.core.extensions.CharonManager;
 import org.wso2.charon.core.schema.SCIMConstants;
+import org.wso2.identity.integration.test.utils.BasicAuthInfo;
 
 import java.util.Map;
 
@@ -111,7 +112,12 @@ public class BasicAuthHandler implements AuthenticationHandler {
      * @return AuthenticationInfo
      */
     public AuthenticationInfo getAuthenticationInfo() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        BasicAuthInfo basicAuthInfo = new BasicAuthInfo();
+        basicAuthInfo.setUserName(USER_NAME);
+        basicAuthInfo.setPassword(PASSWORD);
+        basicAuthInfo.setAuthorizationHeader(
+                getBase64EncodedBasicAuthHeader(USER_NAME, PASSWORD));
+        return basicAuthInfo;
     }
 
 }
