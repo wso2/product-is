@@ -348,6 +348,7 @@
             <class name="org.wso2.identity.integration.test.scim2.SCIM2RoleTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2SuperAdminProtectionTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2SchemasTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2BulkResourceTestCase"/>
