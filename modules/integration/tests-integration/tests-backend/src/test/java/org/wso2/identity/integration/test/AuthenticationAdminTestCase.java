@@ -45,7 +45,7 @@ public class AuthenticationAdminTestCase {
 
     @BeforeClass(groups = {"wso2.is"})
     public void setUp() {
-        ClientConnectionUtil.waitForPort(CommonConstants.IS_DEFAULT_HTTPS_PORT,"localhost");
+        ClientConnectionUtil.waitForPort(CommonConstants.IS_DEFAULT_HTTPS_PORT, CommonConstants.IS_HOST);
     }
 
     @Test (groups = "wso2.is")
@@ -85,7 +85,7 @@ public class AuthenticationAdminTestCase {
 
         try {
             this.authenticationAdminStub = new AuthenticationAdminStub(AUTHENTICATION_ADMIN_SERVICE_URL);
-            return this.authenticationAdminStub.login(userName, password, "localhost");
+            return this.authenticationAdminStub.login(userName, password, CommonConstants.IS_HOST);
         } catch (AxisFault axisFault) {
             logger.error("Error creating authentication admin stub.", axisFault);
             throw axisFault;

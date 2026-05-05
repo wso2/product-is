@@ -78,6 +78,13 @@
                                     <name>maven.test.haltafterfailure</name>
                                     <value>false</value>
                                 </property>
+                                <!-- Configuration file for automation framework (default: automation.xml) -->
+                                <!-- Use automation-external.xml for testing against external/pre-running IS instance -->
+                                <!-- Override with: -Dautomation.config.file=automation-external.xml -->
+                                <property>
+                                    <name>automation.config.file</name>
+                                    <value>automation.xml</value>
+                                </property>
                                 <property>
                                     <name>carbon.zip</name>
                                     <value>
@@ -173,6 +180,13 @@
                                 <property>
                                     <name>maven.test.haltafterfailure</name>
                                     <value>false</value>
+                                </property>
+                                <!-- Configuration file for automation framework (default: automation.xml) -->
+                                <!-- Use automation-external.xml for testing against external/pre-running IS instance -->
+                                <!-- Override with: -Dautomation.config.file=automation-external.xml -->
+                                <property>
+                                    <name>automation.config.file</name>
+                                    <value>automation.xml</value>
                                 </property>
                                 <property>
                                     <name>carbon.zip</name>
