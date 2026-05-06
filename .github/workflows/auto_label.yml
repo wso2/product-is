@@ -64,7 +64,7 @@ jobs:
             # manually adds the AI-Agent/Queued label after reviewing the issue.
             AUTHOR_ASSOCIATION="${ISSUE_AUTHOR_ASSOCIATION}"
             echo "Issue creator association: $AUTHOR_ASSOCIATION"
-            if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" ]]; then
+            if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" && "$AUTHOR_ASSOCIATION" != "CONTRIBUTOR" ]]; then
               echo "Issue creator does not have write access (association: $AUTHOR_ASSOCIATION). Skipping AI-Agent/Queued label."
               exit 0
             fi
