@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.passkey;
 
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep;
@@ -26,15 +27,32 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.util.EntityUtils;
 
+import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Base class for passkey integration tests.
@@ -256,6 +274,62 @@ public abstract class PasskeyTestBase extends PasskeyClient  {
     }
 
     /**
+     * Creates an OIDC application configured for app-native authentication with passkey as the
+     * second factor (BasicAuthenticator → FIDOAuthenticator). The application is registered as a
+     * public client with API-based authentication enabled.
+     *
+     * @param appName     Name of the application.
+     * @param callbackUrl Redirect callback URL.
+     * @return ID of the created application.
+     * @throws Exception If an error occurred while creating the application.
+     */
+    protected String addOIDCAppWithMFAPasskeyForAppNative(String appName, String callbackUrl)
+            throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+        application.setName(appName);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(Collections.singletonList("authorization_code"));
+        oidcConfig.setCallbackURLs(Collections.singletonList(callbackUrl));
+        oidcConfig.setPublicClient(true);
+
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocols);
+
+        AdvancedApplicationConfiguration advancedConfig = new AdvancedApplicationConfiguration();
+        advancedConfig.setEnableAPIBasedAuthentication(true);
+        application.setAdvancedConfigurations(advancedConfig);
+
+        Authenticator basicAuthenticator = new Authenticator();
+        basicAuthenticator.setIdp("LOCAL");
+        basicAuthenticator.setAuthenticator("BasicAuthenticator");
+
+        AuthenticationStep firstStep = new AuthenticationStep();
+        firstStep.setId(1);
+        firstStep.addOptionsItem(basicAuthenticator);
+
+        Authenticator passkeyAuthenticator = new Authenticator();
+        passkeyAuthenticator.setIdp("LOCAL");
+        passkeyAuthenticator.setAuthenticator("FIDOAuthenticator");
+
+        AuthenticationStep secondStep = new AuthenticationStep();
+        secondStep.setId(2);
+        secondStep.addOptionsItem(passkeyAuthenticator);
+
+        AuthenticationSequence authSequence = new AuthenticationSequence();
+        authSequence.setType(AuthenticationSequence.TypeEnum.USER_DEFINED);
+        authSequence.addStepsItem(firstStep);
+        authSequence.addStepsItem(secondStep);
+        authSequence.setSubjectStepId(1);
+
+        application.setAuthenticationSequence(authSequence);
+
+        return addApplication(application);
+    }
+
+    /**
      * Creates a test user via the SCIM2 REST API and returns the user ID.
      *
      * @param scim2RestClient SCIM2 client to use for the request.
@@ -285,5 +359,226 @@ public abstract class PasskeyTestBase extends PasskeyClient  {
     protected void deleteTestUser(SCIM2RestClient scim2RestClient, String userId) throws Exception {
 
         scim2RestClient.deleteUser(userId);
+    }
+
+    /**
+     * Enrolls a passkey for the given user via the My Account WebAuthn API, simulating
+     * the full registration ceremony with a virtual authenticator.
+     *
+     * @param username     Username of the user.
+     * @param password     Password of the user.
+     * @param clientId     OAuth2 client ID of an application with password grant enabled.
+     * @param clientSecret OAuth2 client secret of the application.
+     * @throws Exception If passkey enrollment fails at any step.
+     */
+    protected void enrollPasskeyForUser(String username, String password, String clientId,
+            String clientSecret) throws Exception {
+
+        String tenantDomain = tenantInfo.getDomain();
+        String origin = serverURL.replaceAll("/$", "");
+        String tokenEndpoint = getTenantQualifiedURL(serverURL + "oauth2/token", tenantDomain);
+        String startRegUrl = getTenantQualifiedURL(
+                serverURL + "api/users/v2/me/webauthn/start-usernameless-registration", tenantDomain);
+        String finishRegUrl = getTenantQualifiedURL(
+                serverURL + "api/users/v2/me/webauthn/finish-registration", tenantDomain);
+
+        String accessToken = getUserAccessTokenViaPasswordGrant(
+                username, password, clientId, clientSecret, tokenEndpoint);
+
+        JSONObject creationOptions = startWebAuthnRegistration(accessToken, startRegUrl, origin);
+
+        String requestId = (String) creationOptions.get("requestId");
+        JSONObject publicKeyOptions = (JSONObject) creationOptions.get("publicKeyCredentialCreationOptions");
+        String challenge = (String) publicKeyOptions.get("challenge");
+        String rpId = (String) ((JSONObject) publicKeyOptions.get("rp")).get("id");
+        byte[] userHandle = base64UrlDecode((String) ((JSONObject) publicKeyOptions.get("user")).get("id"));
+
+        String challengeResponse = registerPasskey(requestId, challenge, rpId, origin, username, userHandle);
+
+        finishWebAuthnRegistration(accessToken, finishRegUrl, challengeResponse);
+    }
+
+    private String getUserAccessTokenViaPasswordGrant(String username, String password,
+            String clientId, String clientSecret, String tokenEndpoint) throws Exception {
+
+        try (CloseableHttpClient client = createTrustAllHttpClient()) {
+            HttpPost post = new HttpPost(tokenEndpoint);
+            String credentials = Base64.getEncoder()
+                    .encodeToString((clientId + ":" + clientSecret).getBytes(StandardCharsets.UTF_8));
+            post.setHeader("Authorization", "Basic " + credentials);
+
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("grant_type", "password"));
+            params.add(new BasicNameValuePair("username", username));
+            params.add(new BasicNameValuePair("password", password));
+            params.add(new BasicNameValuePair("scope", "internal_login"));
+            post.setEntity(new UrlEncodedFormEntity(params));
+
+            HttpResponse response = client.execute(post);
+            String body = EntityUtils.toString(response.getEntity());
+            JSONObject json = (JSONObject) new JSONParser().parse(body);
+            String accessToken = (String) json.get("access_token");
+            if (accessToken == null) {
+                throw new IllegalStateException("Failed to obtain access token for user '" + username + "': " + body);
+            }
+            return accessToken;
+        }
+    }
+
+    private JSONObject startWebAuthnRegistration(String accessToken, String startRegUrl,
+            String origin) throws Exception {
+
+        try (CloseableHttpClient client = createTrustAllHttpClient()) {
+            HttpPost post = new HttpPost(startRegUrl);
+            post.setHeader("Authorization", "Bearer " + accessToken);
+
+            List<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("appId", origin));
+            post.setEntity(new UrlEncodedFormEntity(params));
+
+            HttpResponse response = client.execute(post);
+            String body = EntityUtils.toString(response.getEntity());
+            return (JSONObject) new JSONParser().parse(body);
+        }
+    }
+
+    private void finishWebAuthnRegistration(String accessToken, String finishRegUrl,
+            String challengeResponse) throws Exception {
+
+        try (CloseableHttpClient client = createTrustAllHttpClient()) {
+            HttpPost post = new HttpPost(finishRegUrl);
+            post.setHeader("Authorization", "Bearer " + accessToken);
+            post.setHeader("Content-Type", "application/json");
+            post.setEntity(new StringEntity(challengeResponse, StandardCharsets.UTF_8));
+
+            HttpResponse response = client.execute(post);
+            int status = response.getStatusLine().getStatusCode();
+            EntityUtils.consume(response.getEntity());
+            if (status < 200 || status >= 300) {
+                throw new IllegalStateException("Passkey finish-registration failed with HTTP " + status);
+            }
+        }
+    }
+
+    /**
+     * Creates an OIDC application with authorization code grant configured with passkey as the sole
+     * first-factor authenticator. Suitable for passwordless passkey-first login flows.
+     *
+     * @param appName     Name of the application.
+     * @param callbackUrl Redirect callback URL.
+     * @return ID of the created application.
+     * @throws Exception If an error occurred while creating the application.
+     */
+    protected String addOIDCAppWithPasskeyAsFirstFactor(String appName, String callbackUrl)
+            throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+        application.setName(appName);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(Collections.singletonList("authorization_code"));
+        oidcConfig.setCallbackURLs(Collections.singletonList(callbackUrl));
+
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocols);
+
+        Authenticator passkeyAuthenticator = new Authenticator();
+        passkeyAuthenticator.setIdp("LOCAL");
+        passkeyAuthenticator.setAuthenticator("FIDOAuthenticator");
+
+        AuthenticationStep step = new AuthenticationStep();
+        step.setId(1);
+        step.addOptionsItem(passkeyAuthenticator);
+
+        AuthenticationSequence authSequence = new AuthenticationSequence();
+        authSequence.setType(AuthenticationSequence.TypeEnum.USER_DEFINED);
+        authSequence.addStepsItem(step);
+        authSequence.setSubjectStepId(1);
+
+        application.setAuthenticationSequence(authSequence);
+        return addApplication(application);
+    }
+
+    /**
+     * Creates an OIDC application configured for app-native authentication with passkey as the sole
+     * first-factor authenticator. The application is registered as a public client with
+     * API-based authentication enabled.
+     *
+     * @param appName     Name of the application.
+     * @param callbackUrl Redirect callback URL.
+     * @return ID of the created application.
+     * @throws Exception If an error occurred while creating the application.
+     */
+    protected String addOIDCAppWithPasskeyForAppNative(String appName, String callbackUrl)
+            throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+        application.setName(appName);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(Collections.singletonList("authorization_code"));
+        oidcConfig.setCallbackURLs(Collections.singletonList(callbackUrl));
+        oidcConfig.setPublicClient(true);
+
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocols);
+
+        AdvancedApplicationConfiguration advancedConfig = new AdvancedApplicationConfiguration();
+        advancedConfig.setEnableAPIBasedAuthentication(true);
+        application.setAdvancedConfigurations(advancedConfig);
+
+        Authenticator passkeyAuthenticator = new Authenticator();
+        passkeyAuthenticator.setIdp("LOCAL");
+        passkeyAuthenticator.setAuthenticator("FIDOAuthenticator");
+
+        AuthenticationStep step = new AuthenticationStep();
+        step.setId(1);
+        step.addOptionsItem(passkeyAuthenticator);
+
+        AuthenticationSequence authSequence = new AuthenticationSequence();
+        authSequence.setType(AuthenticationSequence.TypeEnum.USER_DEFINED);
+        authSequence.addStepsItem(step);
+        authSequence.setSubjectStepId(1);
+
+        application.setAuthenticationSequence(authSequence);
+        return addApplication(application);
+    }
+
+    /**
+     * Creates a minimal OIDC application with both authorization_code and password grant types.
+     * Intended for test helper use (e.g., obtaining user tokens for API calls).
+     *
+     * @param appName     Name of the application.
+     * @param callbackUrl Redirect callback URL.
+     * @return ID of the created application.
+     * @throws Exception If an error occurred while creating the application.
+     */
+    protected String addPasswordGrantApp(String appName, String callbackUrl) throws Exception {
+
+        ApplicationModel application = new ApplicationModel();
+        application.setName(appName);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(List.of("authorization_code", "password"));
+        oidcConfig.setCallbackURLs(Collections.singletonList(callbackUrl));
+
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        application.setInboundProtocolConfiguration(inboundProtocols);
+
+        return addApplication(application);
+    }
+
+    protected CloseableHttpClient createTrustAllHttpClient() throws Exception {
+
+        SSLContext sslContext = SSLContextBuilder.create()
+                .loadTrustMaterial(null, (chain, authType) -> true)
+                .build();
+        return HttpClientBuilder.create()
+                .setSSLContext(sslContext)
+                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                .build();
     }
 }
