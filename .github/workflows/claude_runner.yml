@@ -4,25 +4,25 @@ on:
   issue_comment:
     types: [created]
   schedule:
-    - cron: "0 * * * *" 
+    - cron: "0 * * * *"
   workflow_dispatch: {}
 
 concurrency:
   group: doc-fixing-ai-agent
-  cancel-in-progress: false 
+  cancel-in-progress: false
 
 jobs:
   get_issue_and_assign:
     runs-on: ubuntu-latest
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
-      - uses: actions/checkout@v4 
+      - uses: actions/checkout@v4
 
-      - name: Install GitHub CLI 
+      - name: Install GitHub CLI
         run: |
           sudo apt-get update 
           sudo apt-get install -y gh jq 
- 
+
       - name: Get the Oldest Issue with AI-Agent/Queued label
         id: get_oldest_queued
         env:
@@ -36,12 +36,49 @@ jobs:
           fi
           ISSUE_NUMBER=$(echo "$ISSUE_JSON" | jq -r .number)
           echo "oldest_issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
-          
-      - name: Update labels and trigger Claude 
+
+      - name: Verify label was added by authorized user
+        id: verify_label_adder
         if: steps.get_oldest_queued.outputs.oldest_issue_number != ''
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
-        run: | 
+        run: |
+          ISSUE_NUMBER=${{ steps.get_oldest_queued.outputs.oldest_issue_number }}
+
+          echo "Verifying who added AI-Agent/Queued label for issue #$ISSUE_NUMBER..."
+
+          # Find who last added the AI-Agent/Queued label via the issue timeline
+          LABEL_ADDER=$(gh api "repos/${{ github.repository }}/issues/$ISSUE_NUMBER/timeline?per_page=100" \
+            | jq -r '[.[] | select(.event == "labeled" and .label.name == "AI-Agent/Queued")] | last | .actor.login')
+
+          echo "Label was added by: $LABEL_ADDER"
+
+          if [ -z "$LABEL_ADDER" ] || [ "$LABEL_ADDER" == "null" ]; then
+            echo "Could not determine who added AI-Agent/Queued label. Skipping issue #$ISSUE_NUMBER."
+            echo "authorized=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Check the collaborator permission level for the user who added the label
+          PERMISSION=$(gh api "repos/${{ github.repository }}/collaborators/$LABEL_ADDER/permission" \
+            --jq '.permission' 2>/dev/null || echo "none")
+
+          echo "Permission level for $LABEL_ADDER: $PERMISSION"
+
+          if [[ "$PERMISSION" == "write" || "$PERMISSION" == "admin" || "$PERMISSION" == "maintain" ]]; then
+            echo "User $LABEL_ADDER is authorized (permission: $PERMISSION). Proceeding."
+            echo "authorized=true" >> $GITHUB_OUTPUT
+          else
+            echo "Label was added by $LABEL_ADDER who does not have write access (permission: $PERMISSION). Removing label."
+            gh issue edit $ISSUE_NUMBER --repo ${{ github.repository }} --remove-label "AI-Agent/Queued"
+            echo "authorized=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update labels and trigger Claude
+        if: steps.get_oldest_queued.outputs.oldest_issue_number != '' && steps.verify_label_adder.outputs.authorized == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
+        run: |
           ISSUE=${{ steps.get_oldest_queued.outputs.oldest_issue_number }}
 
           # Remove AI-Agent/Queued, add AI-Agent/In-Progress
@@ -53,7 +90,9 @@ jobs:
 
   run_claude:
     runs-on: ubuntu-latest
-    if: contains(github.event.comment.body, '@wso2-engineering-bot')
+    if: |
+      contains(github.event.comment.body, '@wso2-engineering-bot') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
     steps:
       - name: Set environment variables
         id: set_env_vars
@@ -69,7 +108,7 @@ jobs:
           token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           path: product-is
           fetch-depth: 0
-      
+
       - name: Checkout target repository (docs-is)
         uses: actions/checkout@v4
         with:
@@ -85,13 +124,13 @@ jobs:
           echo "DOCS_IS_PATH=$GITHUB_WORKSPACE/docs-is" >> $GITHUB_ENV
 
       # Configure git globally in the main workspace first
-      - name: Configure git globally 
+      - name: Configure git globally
         run: |
           git config --global user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
           git config --global user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
 
           cd $GITHUB_WORKSPACE
-          
+
       - name: Prepare system prompt with environment variables
         id: prepare_prompt
         run: |
@@ -117,7 +156,7 @@ jobs:
           echo "SYSTEM_PROMPT<<EOF" >> $GITHUB_ENV
           echo "$SYSTEM_PROMPT" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
-        
+
       - name: Run Claude
         id: run_claude
         uses: anthropics/claude-code-action@v1
@@ -130,11 +169,11 @@ jobs:
           anthropic_api_key: ${{ secrets.DOC_FIXING_AGENT_ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           prompt: ${{ env.SYSTEM_PROMPT }}
-          trigger_phrase: "@wso2-engineering-bot" 
+          trigger_phrase: "@wso2-engineering-bot"
           claude_args: |
-            --allowedTools "Bash(*),Bash(git:*),Bash(mkdocs:*),Bash(python3:*),Bash(pip3:*),WebFetch,WebSearch,mcp__github__create_pull_request,mcp__github__get_issue,mcp__github__search_pull_requests,mcp__github__list_branches,Edit,Read,Write,mcp__github__update_issue,mcp__github__create_branch,mcp__github__add_issue_comment,mcp__github__get_file_contents"
+            --allowedTools "Bash(git:*),Bash(mkdocs:*),Bash(python3:*),Bash(pip3:*),mcp__github__create_pull_request,mcp__github__get_issue,mcp__github__search_pull_requests,mcp__github__list_branches,Edit,Read,Write,mcp__github__update_issue,mcp__github__create_branch,mcp__github__add_issue_comment,mcp__github__get_file_contents"
             --model claude-sonnet-4-5-20250929
-            
+
       - name: Get next queued issue
         id: get_next_queued
         env:
@@ -166,10 +205,10 @@ jobs:
           exit 0
 
       - name: Update labels and trigger Claude
-        env: 
+        env:
           GITHUB_TOKEN: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
         if: steps.get_next_queued.outputs.next_issue_number != ''
-        run: | 
+        run: |
           # Switch to product-is directory
           cd $PRODUCT_IS_PATH
           
