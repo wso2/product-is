@@ -3,9 +3,9 @@ name: Claude Code • Auto PR on Comment
 on:
   issue_comment:
     types: [created]
-  schedule:
-    - cron: "0 * * * *"
-  workflow_dispatch: {}
+  # schedule:
+  #   - cron: "0 * * * *"
+  # workflow_dispatch: {}
 
 concurrency:
   group: doc-fixing-ai-agent
@@ -14,7 +14,7 @@ concurrency:
 jobs:
   get_issue_and_assign:
     runs-on: ubuntu-latest
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: false
     steps:
       - uses: actions/checkout@v4
 
@@ -90,9 +90,7 @@ jobs:
 
   run_claude:
     runs-on: ubuntu-latest
-    if: |
-      contains(github.event.comment.body, '@wso2-engineering-bot') &&
-      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    if: false
     steps:
       - name: Set environment variables
         id: set_env_vars
