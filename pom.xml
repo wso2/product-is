@@ -2691,7 +2691,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.72</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.73</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2798,7 +2798,7 @@
         <identity.user.workflow.version>6.1.2</identity.user.workflow.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.4.4</authenticator.totp.version>
+        <authenticator.totp.version>3.4.5</authenticator.totp.version>
         <authenticator.backupcode.version>0.1.1</authenticator.backupcode.version>
         <authenticator.office365.version>2.2.0</authenticator.office365.version>
         <authenticator.smsotp.version>3.4.2</authenticator.smsotp.version>
