@@ -36,9 +36,23 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
     protected ActionsRestClient actionsRestClient;
     protected static final String USERNAME_PROPERTY = "username";
     protected static final String PASSWORD_PROPERTY = "password";
+    protected static final String CLIENT_ID_PROPERTY = "clientId";
+    protected static final String CLIENT_SECRET_PROPERTY = "clientSecret";
+    protected static final String TOKEN_ENDPOINT_PROPERTY = "tokenEndpoint";
+    protected static final String SCOPES_PROPERTY = "scopes";
     protected static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
     protected static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
     protected static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
+
+    protected static final String MOCK_IDP_TOKEN_ENDPOINT_PATH = "/test/idp/token";
+    protected static final String MOCK_IDP_TOKEN_ENDPOINT_URI =
+            "http://localhost:8587" + MOCK_IDP_TOKEN_ENDPOINT_PATH;
+    protected static final String MOCK_IDP_CLIENT_ID = "test-idp-client-id";
+    protected static final String MOCK_IDP_CLIENT_SECRET = "test-idp-client-secret";
+    protected static final String MOCK_IDP_USERNAME = "test-idp-user";
+    protected static final String MOCK_IDP_PASSWORD = "test-idp-password";
+    protected static final String MOCK_IDP_SCOPES = "send_scope";
+    protected static final String MOCK_IDP_ACCESS_TOKEN = "mock-idp-access-token-value";
 
     /**
      * Initialize the test case.

@@ -466,6 +466,178 @@ public class PreIssueAccessTokenActionFailureTest extends ActionTestBase {
                 .body("description", equalTo("Authentication property values cannot be empty."));
     }
 
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialEmptyTokenEndpoint"})
+    public void testCreateActionWithPasswordCredentialMissingClientId() {
+
+        assertPasswordCredentialMissingProperty(buildPasswordCredentialProperties(
+                null,
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialMissingClientId"})
+    public void testCreateActionWithPasswordCredentialMissingClientSecret() {
+
+        assertPasswordCredentialMissingProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                null,
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialMissingClientSecret"})
+    public void testCreateActionWithPasswordCredentialMissingTokenEndpoint() {
+
+        assertPasswordCredentialMissingProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                null,
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialMissingTokenEndpoint"})
+    public void testCreateActionWithPasswordCredentialMissingUsername() {
+
+        assertPasswordCredentialMissingProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                null,
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialMissingUsername"})
+    public void testCreateActionWithPasswordCredentialMissingPassword() {
+
+        assertPasswordCredentialMissingProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                null));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialMissingPassword"})
+    public void testCreateActionWithPasswordCredentialEmptyClientId() {
+
+        assertPasswordCredentialEmptyProperty(buildPasswordCredentialProperties(
+                "",
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialEmptyClientId"})
+    public void testCreateActionWithPasswordCredentialEmptyClientSecret() {
+
+        assertPasswordCredentialEmptyProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                "",
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialEmptyClientSecret"})
+    public void testCreateActionWithPasswordCredentialEmptyTokenEndpoint() {
+
+        assertPasswordCredentialEmptyProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                "",
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialEmptyTokenEndpoint"})
+    public void testCreateActionWithPasswordCredentialEmptyUsername() {
+
+        assertPasswordCredentialEmptyProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                "",
+                TEST_PASSWORD_AUTH_PROPERTY_VALUE));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialEmptyUsername"})
+    public void testCreateActionWithPasswordCredentialEmptyPassword() {
+
+        assertPasswordCredentialEmptyProperty(buildPasswordCredentialProperties(
+                TEST_CLIENT_ID_AUTH_PROPERTY_VALUE,
+                TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE,
+                TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE,
+                TEST_USERNAME_AUTH_PROPERTY_VALUE,
+                ""));
+    }
+
+    private HashMap<String, Object> buildPasswordCredentialProperties(String clientId, String clientSecret,
+                                                                     String tokenEndpoint, String username,
+                                                                     String password) {
+
+        HashMap<String, Object> properties = new HashMap<>();
+        if (clientId != null) {
+            properties.put(TEST_CLIENT_ID_AUTH_PROPERTY, clientId);
+        }
+        if (clientSecret != null) {
+            properties.put(TEST_CLIENT_SECRET_AUTH_PROPERTY, clientSecret);
+        }
+        if (tokenEndpoint != null) {
+            properties.put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, tokenEndpoint);
+        }
+        if (username != null) {
+            properties.put(TEST_USERNAME_AUTH_PROPERTY, username);
+        }
+        if (password != null) {
+            properties.put(TEST_PASSWORD_AUTH_PROPERTY, password);
+        }
+        return properties;
+    }
+
+    private void assertPasswordCredentialMissingProperty(HashMap<String, Object> properties) {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(properties)));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Required authentication properties are not " +
+                        "provided or invalid."));
+    }
+
+    private void assertPasswordCredentialEmptyProperty(HashMap<String, Object> properties) {
+
+        ActionModel action = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(properties)));
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(action));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("description", equalTo("Authentication property values cannot be empty."));
+    }
+
     private String createActionWithRule() {
 
         ORRule rule = new ORRule()
