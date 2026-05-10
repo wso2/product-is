@@ -92,7 +92,7 @@ public class ServiceExtensionMockServer {
 
     /**
      * Stub a token endpoint that returns a Bearer access token only when the request has the
-     * expected Basic auth header and a form body containing the password grant fields.
+     * expected Basic auth header and a form body for the OAuth2 password grant.
      *
      * @param url             URL of the token endpoint (path).
      * @param basicAuthHeader Expected Authorization header value (regex-matched).
@@ -100,8 +100,8 @@ public class ServiceExtensionMockServer {
      * @param username        Expected username form value.
      * @param password        Expected password form value.
      */
-    public void setupTokenEndpointStub(String url, String basicAuthHeader, String accessToken,
-                                       String username, String password) {
+    public void setupTokenEndpointStubForPasswordGrant(String url, String basicAuthHeader, String accessToken,
+                                                      String username, String password) {
 
         String responseBody = "{\"access_token\":\"" + accessToken +
                 "\",\"token_type\":\"Bearer\",\"expires_in\":3600}";
@@ -111,6 +111,30 @@ public class ServiceExtensionMockServer {
                 .withRequestBody(containing("grant_type=password"))
                 .withRequestBody(containing("username=" + username))
                 .withRequestBody(containing("password=" + password))
+                .willReturn(aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withHeader("Connection", "Close")
+                        .withBody(responseBody)));
+    }
+
+    /**
+     * Stub a token endpoint that returns a Bearer access token only when the request has the
+     * expected Basic auth header and a form body for the OAuth2 client_credentials grant.
+     *
+     * @param url             URL of the token endpoint (path).
+     * @param basicAuthHeader Expected Authorization header value (regex-matched).
+     * @param accessToken     Access token to return on a successful match.
+     */
+    public void setupTokenEndpointStubForClientCredentialsGrant(String url, String basicAuthHeader,
+                                                                String accessToken) {
+
+        String responseBody = "{\"access_token\":\"" + accessToken +
+                "\",\"token_type\":\"Bearer\",\"expires_in\":3600}";
+
+        wireMockServer.stubFor(post(urlEqualTo(url))
+                .withHeader("Authorization", matching(basicAuthHeader))
+                .withRequestBody(containing("grant_type=client_credentials"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")

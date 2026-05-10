@@ -84,14 +84,14 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 
 /**
  * Integration test class for testing the pre issue access token flow when the action endpoint
- * is configured with PASSWORD_CREDENTIAL authentication. The IS server is expected to acquire an
- * access token from the configured token endpoint via OAuth2 password grant and apply it to the
- * action endpoint as a Bearer token. The application-side trigger here is
+ * is configured with CLIENT_CREDENTIAL authentication. The IS server is expected to acquire an
+ * access token from the configured token endpoint via OAuth2 client_credentials grant and apply
+ * it to the action endpoint as a Bearer token. The application-side trigger here is
  * {@code client_credentials}.
  */
-public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase extends ActionsBaseTestCase {
+public class PreIssueAccessTokenActionSuccessClientCredentialAuthTestCase extends ActionsBaseTestCase {
 
-    private static final String EXTERNAL_SERVICE_NAME = "TestExternalServicePasswordCred";
+    private static final String EXTERNAL_SERVICE_NAME = "TestExternalServiceClientCred";
     private static final String PRE_ISSUE_ACCESS_TOKEN_API_PATH = "preIssueAccessToken";
     private static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
 
@@ -135,7 +135,7 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
     private ServiceExtensionMockServer serviceExtensionMockServer;
 
     @Factory(dataProvider = "testExecutionContextProvider")
-    public PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase(TestUserMode testUserMode) {
+    public PreIssueAccessTokenActionSuccessClientCredentialAuthTestCase(TestUserMode testUserMode) {
 
         this.userMode = testUserMode;
         this.tenantId = testUserMode == TestUserMode.SUPER_TENANT_USER ? "-1234" : "1";
@@ -203,10 +203,10 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
 
         serviceExtensionMockServer = new ServiceExtensionMockServer();
         serviceExtensionMockServer.startServer();
-        serviceExtensionMockServer.setupTokenEndpointStubForPasswordGrant(
+        serviceExtensionMockServer.setupTokenEndpointStubForClientCredentialsGrant(
                 MOCK_IDP_TOKEN_ENDPOINT_PATH,
                 "Basic " + getBase64EncodedString(MOCK_IDP_CLIENT_ID, MOCK_IDP_CLIENT_SECRET),
-                MOCK_IDP_ACCESS_TOKEN, MOCK_IDP_USERNAME, MOCK_IDP_PASSWORD);
+                MOCK_IDP_ACCESS_TOKEN);
         serviceExtensionMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
                 "Bearer " + MOCK_IDP_ACCESS_TOKEN,
                 FileUtils.readFileInClassPathAsString("actions/response/pre-issue-access-token-response.json"));
@@ -232,7 +232,7 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
     }
 
     @Test(groups = "wso2.is", description = "Get access token with client credentials grant which triggers the " +
-            "pre issue access token action configured with PASSWORD_CREDENTIAL authentication")
+            "pre issue access token action configured with CLIENT_CREDENTIAL authentication")
     public void testGetAccessTokenWithClientCredentialsGrant() throws Exception {
 
         List<NameValuePair> parameters = new ArrayList<>();
@@ -263,8 +263,8 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
 
     @Test(groups = "wso2.is", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant", description =
             "Verify the IS server requested an access token from the configured token endpoint using OAuth2 " +
-                    "password grant with the configured credentials.")
-    public void testTokenEndpointReceivedPasswordGrantRequest() {
+                    "client_credentials grant.")
+    public void testTokenEndpointReceivedClientCredentialsGrantRequest() {
 
         int callCount = serviceExtensionMockServer.getReceivedRequestCount(MOCK_IDP_TOKEN_ENDPOINT_PATH);
         Assert.assertTrue(callCount >= 1,
@@ -272,14 +272,15 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
 
         String tokenRequestPayload =
                 serviceExtensionMockServer.getReceivedRequestPayload(MOCK_IDP_TOKEN_ENDPOINT_PATH);
-        Assert.assertTrue(tokenRequestPayload.contains("grant_type=password"),
-                "Token endpoint request body did not contain grant_type=password. Body: " + tokenRequestPayload);
-        Assert.assertTrue(tokenRequestPayload.contains("username=" + MOCK_IDP_USERNAME),
-                "Token endpoint request body did not contain username=" + MOCK_IDP_USERNAME +
-                        ". Body: " + tokenRequestPayload);
-        Assert.assertTrue(tokenRequestPayload.contains("password=" + MOCK_IDP_PASSWORD),
-                "Token endpoint request body did not contain password=" + MOCK_IDP_PASSWORD +
-                        ". Body: " + tokenRequestPayload);
+        Assert.assertTrue(tokenRequestPayload.contains("grant_type=client_credentials"),
+                "Token endpoint request body did not contain grant_type=client_credentials. Body: "
+                        + tokenRequestPayload);
+        Assert.assertFalse(tokenRequestPayload.contains("username="),
+                "Token endpoint request body must not contain a username field for client_credentials. Body: "
+                        + tokenRequestPayload);
+        Assert.assertFalse(tokenRequestPayload.contains("password="),
+                "Token endpoint request body must not contain a password field for client_credentials. Body: "
+                        + tokenRequestPayload);
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "testGetAccessTokenWithClientCredentialsGrant", description =
@@ -447,13 +448,11 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
     private String createPreIssueAccessTokenAction() throws IOException {
 
         AuthenticationType authenticationType = new AuthenticationType();
-        authenticationType.setType(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL);
+        authenticationType.setType(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL);
         Map<String, Object> authProperties = new HashMap<>();
         authProperties.put(CLIENT_ID_PROPERTY, MOCK_IDP_CLIENT_ID);
         authProperties.put(CLIENT_SECRET_PROPERTY, MOCK_IDP_CLIENT_SECRET);
         authProperties.put(TOKEN_ENDPOINT_PROPERTY, MOCK_IDP_TOKEN_ENDPOINT_URI);
-        authProperties.put(USERNAME_PROPERTY, MOCK_IDP_USERNAME);
-        authProperties.put(PASSWORD_PROPERTY, MOCK_IDP_PASSWORD);
         authProperties.put(SCOPES_PROPERTY, MOCK_IDP_SCOPES);
         authenticationType.setProperties(authProperties);
 
@@ -464,8 +463,8 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
         endpoint.addAllowedParametersItem("testParam");
 
         ActionModel actionModel = new ActionModel();
-        actionModel.setName("Access Token Pre Issue PasswordCredential");
-        actionModel.setDescription("Pre issue access token action with PASSWORD_CREDENTIAL authentication");
+        actionModel.setName("Access Token Pre Issue ClientCredential");
+        actionModel.setDescription("Pre issue access token action with CLIENT_CREDENTIAL authentication");
         actionModel.setEndpoint(endpoint);
 
         return createAction(PRE_ISSUE_ACCESS_TOKEN_API_PATH, actionModel);
