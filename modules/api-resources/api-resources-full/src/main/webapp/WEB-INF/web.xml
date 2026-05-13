@@ -83,7 +83,8 @@
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi,
                 org.wso2.carbon.identity.api.server.vc.template.management.v1.VcTemplatesApi,
-                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
+                org.wso2.carbon.identity.api.server.moesif.publisher.v1.MoesifPublishersApi
             </param-value>
         </init-param>
         <init-param>
