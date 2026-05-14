@@ -198,6 +198,8 @@
             <class name="org.wso2.identity.integration.test.inheritance.ConfigInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsDeploymentConfigTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.EnhancedOrgAuthenticationDirectPathTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.SharedUserLegacyOrgAuthenticationTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.SharedUserSubOrgApplicationAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.passkey.PasskeyRedirectBasedTest"/>
             <class name="org.wso2.identity.integration.test.passkey.PasskeyAppNativeTest"/>
         </classes>
@@ -480,6 +482,7 @@
             <class name="org.wso2.identity.integration.test.base.SecondaryCarbonServerInitializerTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLFederationWithFileBasedSPAndIDPTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.ChangeACSUrlTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.SharedUserSubOrgAppFederatedAssociationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.JITUserAssociationTestCase"/>
         </classes>
     </test>
