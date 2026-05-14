@@ -1,0 +1,7 @@
+{
+  "name": "User Authentication",
+  "description": "To authenticate users and manage their identity",
+  "type": "Core Identity",
+  "version": "1",
+  "elements": [{"id": "1", "mandatory": true}]
+}
