@@ -77,7 +77,9 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
     @Override
     public void testConclude() throws Exception {
 
-        scim2RestClient.closeHttpClient();
+        if (scim2RestClient != null) {
+            scim2RestClient.closeHttpClient();
+        }
         super.testConclude();
     }
 
@@ -281,9 +283,11 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
 
         String purposeBody = readResource("create-purpose-for-conflict.json");
         Response purposeResponse = getResponseOfPost(PURPOSES_ENDPOINT, purposeBody);
-        String purposeId = purposeResponse.statusCode() == HttpStatus.SC_CREATED
-                ? purposeResponse.jsonPath().getString("id")
-                : NON_EXISTENT_ID;
+        purposeResponse.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
+        String purposeId = purposeResponse.jsonPath().getString("id");
 
         try {
             String body = readResource("set-latest-version.json")
@@ -316,9 +320,11 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
 
         String purposeBody = readResource("create-purpose-for-version-conflict.json");
         Response purposeResponse = getResponseOfPost(PURPOSES_ENDPOINT, purposeBody);
-        String purposeId = purposeResponse.statusCode() == HttpStatus.SC_CREATED
-                ? purposeResponse.jsonPath().getString("id")
-                : NON_EXISTENT_ID;
+        purposeResponse.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
+        String purposeId = purposeResponse.jsonPath().getString("id");
 
         try {
             String versionBody = readResource("create-purpose-version-empty.json");

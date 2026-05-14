@@ -103,6 +103,31 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
         testUserId = scim2RestClient.createUser(testUser);
     }
 
+    @AfterClass(alwaysRun = true)
+    @Override
+    public void testConclude() throws Exception {
+
+        try {
+            if (testUserId != null) {
+                scim2RestClient.deleteUser(testUserId);
+            }
+            if (createdPurposeId != null) {
+                getResponseOfDelete(PURPOSES_ENDPOINT + "/" + createdPurposeId);
+            }
+            if (createdElementId != null) {
+                getResponseOfDelete(ELEMENTS_ENDPOINT + "/" + createdElementId);
+            }
+            if (createdSecondElementId != null) {
+                getResponseOfDelete(ELEMENTS_ENDPOINT + "/" + createdSecondElementId);
+            }
+        } finally {
+            if (scim2RestClient != null) {
+                scim2RestClient.closeHttpClient();
+            }
+            super.testConclude();
+        }
+    }
+
     // =========================================================================
     // Element tests
     // =========================================================================
@@ -708,6 +733,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     public void testDeleteConsentTestUser() throws Exception {
 
         scim2RestClient.deleteUser(testUserId);
+        testUserId = null; // Avoid cleanup in @AfterClass since user is already deleted.
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testDeleteConsentTestUser"})
@@ -729,6 +755,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+        createdPurposeId = null; // Avoid cleanup in @AfterClass since purpose is already deleted.
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testDeletePurpose"})
@@ -739,11 +766,12 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-
+        createdElementId = null; // Avoid cleanup in @AfterClass since element is already deleted.
         getResponseOfDelete(ELEMENTS_ENDPOINT + "/" + createdSecondElementId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
+        createdSecondElementId = null; // Avoid cleanup in @AfterClass since element is already deleted.
     }
 }
