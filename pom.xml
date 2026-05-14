@@ -2696,7 +2696,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.82</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.83</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2845,7 +2845,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>4.1.3</identity.apps.console.version>
         <identity.apps.myaccount.version>4.0.0</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.0.22</identity.apps.core.version>
+        <identity.apps.core.version>5.0.24</identity.apps.core.version>
         <identity.apps.tests.version>1.6.390</identity.apps.tests.version>
 
         <!-- Charon -->
@@ -2874,7 +2874,7 @@
         <carbon.identity.openid4vc.version>1.1.6</carbon.identity.openid4vc.version>
 
         <!-- Moesif Integration -->
-        <identity.moesif.integration.version>1.0.2</identity.moesif.integration.version>
+        <identity.moesif.integration.version>1.0.3</identity.moesif.integration.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
