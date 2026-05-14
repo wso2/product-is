@@ -1,0 +1,7 @@
+{
+  "displayName": "DISPLAY_NAME",
+  "audience": {
+    "display": "AUDIENCE_DISPLAY",
+    "type": "AUDIENCE_TYPE"
+  }
+}
