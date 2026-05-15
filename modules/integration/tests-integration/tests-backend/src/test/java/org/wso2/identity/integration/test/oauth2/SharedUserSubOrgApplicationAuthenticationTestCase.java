@@ -57,6 +57,9 @@ import org.wso2.identity.integration.test.rest.api.server.user.sharing.managemen
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -94,6 +97,9 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
     public static final String ORGANIZATION_PATH = "o/";
     public static final String OAUTH_2_AUTHORIZE = "/oauth2/authorize";
     public static final String OAUTH_2_TOKEN = "/oauth2/token";
+    private static final String ACCOUNT_MGT_CATEGORY_ID = "QWNjb3VudCBNYW5hZ2VtZW50";
+    private static final String MULTI_ATTRIBUTE_CONNECTOR_ID = "bXVsdGlhdHRyaWJ1dGUubG9naW4uaGFuZGxlcg";
+    private static final String MULTI_ATTRIBUTE_ENABLE_PROPERTY = "account.multiattributelogin.handler.enable";
 
     private final TestUserMode userMode;
     private final String organizationName;
@@ -104,6 +110,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
     private OrgMgtRestClient orgMgtRestClient;
     private OAuth2RestClient oAuth2RestClient;
     private UserSharingRestClient userSharingRestClient;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
 
     private String organizationId;
     private String rootUserId;
@@ -140,9 +147,23 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         userSharingRestClient = new UserSharingRestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(MGT_APP_AUTHORIZED_API_RESOURCES, this.getClass())));
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
     }
 
     @Test(priority = 2, dependsOnMethods = "testInit")
+    public void testDisableMultiAttributeLogin() throws Exception {
+
+        ConnectorsPatchReq connectorPatchReq = new ConnectorsPatchReq();
+        connectorPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        PropertyReq enableProperty = new PropertyReq();
+        enableProperty.setName(MULTI_ATTRIBUTE_ENABLE_PROPERTY);
+        enableProperty.setValue("false");
+        connectorPatchReq.addProperties(enableProperty);
+        identityGovernanceRestClient.updateConnectors(ACCOUNT_MGT_CATEGORY_ID, MULTI_ATTRIBUTE_CONNECTOR_ID,
+                connectorPatchReq);
+    }
+
+    @Test(priority = 3, dependsOnMethods = "testDisableMultiAttributeLogin")
     public void testCreateSubOrganization() throws Exception {
 
         String m2mToken = orgMgtRestClient.getM2MAccessToken();
@@ -153,7 +174,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         assertNotNull(switchedM2MToken, "Switched M2M token should not be null.");
     }
 
-    @Test(priority = 3, dependsOnMethods = "testCreateSubOrganization")
+    @Test(priority = 4, dependsOnMethods = "testCreateSubOrganization")
     public void testCreateApplicationInSubOrg() throws Exception {
 
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
@@ -182,7 +203,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         assertNotNull(clientSecret, "Client secret should not be null.");
     }
 
-    @Test(priority = 4, dependsOnMethods = "testCreateApplicationInSubOrg")
+    @Test(priority = 5, dependsOnMethods = "testCreateApplicationInSubOrg")
     public void testUpdateSubOrgAppAuthenticationSequence() {
 
         AuthenticationSequence authSequence = new AuthenticationSequence()
@@ -204,7 +225,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         oAuth2RestClient.updateSubOrgApplication(subOrgAppId, patchModel, switchedM2MToken);
     }
 
-    @Test(priority = 5, dependsOnMethods = "testUpdateSubOrgAppAuthenticationSequence")
+    @Test(priority = 6, dependsOnMethods = "testUpdateSubOrgAppAuthenticationSequence")
     public void testCreateRootOrgUser() throws Exception {
 
         UserObject rootUser = new UserObject();
@@ -216,7 +237,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         assertNotNull(rootUserId, "Root organization user ID should not be null.");
     }
 
-    @Test(priority = 6, dependsOnMethods = "testCreateRootOrgUser")
+    @Test(priority = 7, dependsOnMethods = "testCreateRootOrgUser")
     public void testShareUserToSubOrg() throws Exception {
 
         UserShareWithAllRequestBody shareRequest = new UserShareWithAllRequestBody();
@@ -234,7 +255,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         assertTrue(isUserShared, "User should be shared to the sub-organization.");
     }
 
-    @Test(priority = 7, dependsOnMethods = "testShareUserToSubOrg")
+    @Test(priority = 8, dependsOnMethods = "testShareUserToSubOrg")
     public void testSendAuthorizeRequestToSubOrg() throws Exception {
 
         String subOrgAuthorizeUrl = getTenantQualifiedURL(serverURL + ORGANIZATION_PATH + organizationId +
@@ -256,7 +277,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         assertNotNull(subOrgSessionDataKey, "Sub-org session data key should not be null.");
     }
 
-    @Test(priority = 8, dependsOnMethods = "testSendAuthorizeRequestToSubOrg")
+    @Test(priority = 9, dependsOnMethods = "testSendAuthorizeRequestToSubOrg")
     public void testAuthenticateAtSubOrganization() throws Exception {
 
         String subOrgCommonAuthUrl = getTenantQualifiedURL(
@@ -293,7 +314,7 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
         assertNotNull(authorizationCode, "Authorization code should not be null.");
     }
 
-    @Test(priority = 9, dependsOnMethods = "testAuthenticateAtSubOrganization")
+    @Test(priority = 10, dependsOnMethods = "testAuthenticateAtSubOrganization")
     public void testGetAccessTokenAndVerifySubClaim() throws Exception {
 
         String subOrgTokenUrl = getTenantQualifiedURL(serverURL + ORGANIZATION_PATH + organizationId +
@@ -337,6 +358,13 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
     @AfterClass(alwaysRun = true)
     public void cleanupTest() {
 
+        if (identityGovernanceRestClient != null) {
+            try {
+                identityGovernanceRestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.error("Failed to close identity governance REST client.", e);
+            }
+        }
         if (organizationId != null && orgMgtRestClient != null) {
             try {
                 orgMgtRestClient.deleteOrganization(organizationId);

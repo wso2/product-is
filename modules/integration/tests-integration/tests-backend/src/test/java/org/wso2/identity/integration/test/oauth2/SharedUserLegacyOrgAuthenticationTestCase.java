@@ -58,6 +58,9 @@ import org.wso2.identity.integration.test.rest.api.server.user.sharing.managemen
 import org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -95,6 +98,9 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
     private static final String ROOT_USER_USERNAME = "user";
     private static final String ROOT_USER_PASSWORD = "SharedUser@wso2";
     private static final String ROOT_USER_EMAIL = "sharedlegacyuser@wso2.com";
+    private static final String ACCOUNT_MGT_CATEGORY_ID = "QWNjb3VudCBNYW5hZ2VtZW50";
+    private static final String MULTI_ATTRIBUTE_CONNECTOR_ID = "bXVsdGlhdHRyaWJ1dGUubG9naW4uaGFuZGxlcg";
+    private static final String MULTI_ATTRIBUTE_ENABLE_PROPERTY = "account.multiattributelogin.handler.enable";
 
     private final TestUserMode userMode;
     private final String organizationName;
@@ -105,6 +111,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
     private OrgMgtRestClient orgMgtRestClient;
     private OAuth2RestClient oAuth2RestClient;
     private UserSharingRestClient userSharingRestClient;
+    private IdentityGovernanceRestClient identityGovernanceRestClient;
 
     private String organizationId;
     private String rootUserId;
@@ -143,9 +150,23 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         userSharingRestClient = new UserSharingRestClient(serverURL, tenantInfo);
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(MGT_APP_AUTHORIZED_API_RESOURCES, this.getClass())));
+        identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
     }
 
     @Test(priority = 2, dependsOnMethods = "testInit")
+    public void testDisableMultiAttributeLogin() throws Exception {
+
+        ConnectorsPatchReq connectorPatchReq = new ConnectorsPatchReq();
+        connectorPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        PropertyReq enableProperty = new PropertyReq();
+        enableProperty.setName(MULTI_ATTRIBUTE_ENABLE_PROPERTY);
+        enableProperty.setValue("false");
+        connectorPatchReq.addProperties(enableProperty);
+        identityGovernanceRestClient.updateConnectors(ACCOUNT_MGT_CATEGORY_ID, MULTI_ATTRIBUTE_CONNECTOR_ID,
+                connectorPatchReq);
+    }
+
+    @Test(priority = 3, dependsOnMethods = "testDisableMultiAttributeLogin")
     public void testCreateApplicationWithLegacyOrgAuth() throws Exception {
 
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
@@ -174,7 +195,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertNotNull(clientSecret, "Client secret should not be null.");
     }
 
-    @Test(priority = 3, dependsOnMethods = "testCreateApplicationWithLegacyOrgAuth")
+    @Test(priority = 4, dependsOnMethods = "testCreateApplicationWithLegacyOrgAuth")
     public void testCreateSubOrganization() throws Exception {
 
         String m2mToken = orgMgtRestClient.getM2MAccessToken();
@@ -182,7 +203,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertNotNull(organizationId, "Organization ID should not be null.");
     }
 
-    @Test(priority = 4, dependsOnMethods = "testCreateSubOrganization")
+    @Test(priority = 5, dependsOnMethods = "testCreateSubOrganization")
     public void testShareApplicationToSubOrg() throws Exception {
 
         ApplicationSharePOSTRequest shareRequest = new ApplicationSharePOSTRequest();
@@ -198,7 +219,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertNotNull(sharedAppId, "Shared application ID in sub-organization should not be null.");
     }
 
-    @Test(priority = 5, dependsOnMethods = "testShareApplicationToSubOrg")
+    @Test(priority = 6, dependsOnMethods = "testShareApplicationToSubOrg")
     public void testUpdateSharedAppAuthenticationSequence() {
 
         AuthenticationSequence authSequence = new AuthenticationSequence()
@@ -220,7 +241,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         oAuth2RestClient.updateSubOrgApplication(sharedAppId, patchModel, switchedM2MToken);
     }
 
-    @Test(priority = 6, dependsOnMethods = "testUpdateSharedAppAuthenticationSequence")
+    @Test(priority = 7, dependsOnMethods = "testUpdateSharedAppAuthenticationSequence")
     public void testCreateRootOrgUser() throws Exception {
 
         UserObject rootUser = new UserObject();
@@ -232,7 +253,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertNotNull(rootUserId, "Root organization user ID should not be null.");
     }
 
-    @Test(priority = 7, dependsOnMethods = "testCreateRootOrgUser")
+    @Test(priority = 8, dependsOnMethods = "testCreateRootOrgUser")
     public void testShareUserToSubOrg() throws Exception {
 
         UserShareWithAllRequestBody shareRequest = new UserShareWithAllRequestBody();
@@ -250,7 +271,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertTrue(isUserShared, "User should be shared to the sub-organization.");
     }
 
-    @Test(priority = 8, dependsOnMethods = "testShareUserToSubOrg")
+    @Test(priority = 9, dependsOnMethods = "testShareUserToSubOrg")
     public void testSendAuthorizeRequestFromRootOrg() throws Exception {
 
         List<NameValuePair> params = new ArrayList<>();
@@ -271,7 +292,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertNotNull(sessionDataKey, "Session data key should not be null.");
     }
 
-    @Test(priority = 9, dependsOnMethods = "testSendAuthorizeRequestFromRootOrg")
+    @Test(priority = 10, dependsOnMethods = "testSendAuthorizeRequestFromRootOrg")
     public void testDiscoverSubOrganization() throws Exception {
 
         List<NameValuePair> orgSwitchParams = new ArrayList<>();
@@ -296,7 +317,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertNotNull(subOrgSessionDataKey, "Sub-org session data key should not be null.");
     }
 
-    @Test(priority = 10, dependsOnMethods = "testDiscoverSubOrganization")
+    @Test(priority = 11, dependsOnMethods = "testDiscoverSubOrganization")
     public void testAuthenticateAtSubOrganization() throws Exception {
 
         String subOrgCommonAuthUrl = getTenantQualifiedURL(
@@ -343,7 +364,7 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
         assertNotNull(authorizationCode, "Authorization code should not be null.");
     }
 
-    @Test(priority = 11, dependsOnMethods = "testAuthenticateAtSubOrganization")
+    @Test(priority = 12, dependsOnMethods = "testAuthenticateAtSubOrganization")
     public void testGetAccessTokenAndVerifySubClaim() throws Exception {
 
         List<NameValuePair> params = new ArrayList<>();
@@ -385,6 +406,13 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
     @AfterClass(alwaysRun = true)
     public void cleanupTest() {
 
+        if (identityGovernanceRestClient != null) {
+            try {
+                identityGovernanceRestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.error("Failed to close identity governance REST client.", e);
+            }
+        }
         if (organizationId != null && orgMgtRestClient != null) {
             try {
                 orgMgtRestClient.deleteOrganization(organizationId);
