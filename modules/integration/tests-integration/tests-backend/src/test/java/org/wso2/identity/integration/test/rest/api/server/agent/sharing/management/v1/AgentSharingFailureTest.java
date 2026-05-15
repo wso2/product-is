@@ -37,10 +37,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
  */
 public class AgentSharingFailureTest extends AgentSharingBaseTest {
 
-    private static final String AGENT_ID_PLACEHOLDER = "AGENT_ID";
-    private static final String ORG_ID_PLACEHOLDER = "ORG_ID";
-    private static final String ROLE_PLACEHOLDER = "ROLE";
-
     private static final String ROLE_DISPLAY_NAME = "View Numbers";
     private static final String ROLE_AUDIENCE_DISPLAY = "My App";
     private static final String ROLE_AUDIENCE_TYPE = "application";

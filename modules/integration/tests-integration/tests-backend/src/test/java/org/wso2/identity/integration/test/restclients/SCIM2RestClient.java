@@ -51,7 +51,6 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String SCIM2_V2_ROLES_ENDPOINT = "scim2/v2/Roles";
     private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
     private static final String SCIM2_AGENTS_ENDPOINT = "scim2/Agents";
-    private static final String AGENT_SCHEMA = "urn:scim:wso2:agent:schema";
     private static final String AGENT_CREATE_REQUEST_FILE = "create-agent-request-body.json";
     private static final String DISPLAY_NAME_PLACEHOLDER = "DISPLAY_NAME";
     private static final String SCIM2_SEARCH_PATH = "/.search";

@@ -61,6 +61,10 @@ public class AgentSharingBaseTest extends RESTAPIServerTestBase {
     protected static final String ORGANIZATIONS_FIELD = "organizations";
     protected static final String ORG_ID_FIELD = "orgId";
 
+    protected static final String AGENT_ID_PLACEHOLDER = "AGENT_ID";
+    protected static final String ORG_ID_PLACEHOLDER = "ORG_ID";
+    protected static final String ROLE_PLACEHOLDER = "ROLE";
+
     private static final String ROLE_REQUEST_BODY_JSON = "role-request-body.json";
     private static final String DISPLAY_NAME_PLACEHOLDER = "DISPLAY_NAME";
     private static final String AUDIENCE_DISPLAY_PLACEHOLDER = "AUDIENCE_DISPLAY";

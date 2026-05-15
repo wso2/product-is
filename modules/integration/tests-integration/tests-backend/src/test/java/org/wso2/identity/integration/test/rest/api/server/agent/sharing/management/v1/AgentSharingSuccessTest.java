@@ -35,15 +35,12 @@ import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.greaterThan;
 
 /**
  * Success-path integration tests for Agent Sharing v1 APIs.
  */
 public class AgentSharingSuccessTest extends AgentSharingBaseTest {
-
-    private static final String AGENT_ID_PLACEHOLDER = "AGENT_ID";
-    private static final String ORG_ID_PLACEHOLDER = "ORG_ID";
-    private static final String ROLE_PLACEHOLDER = "ROLE";
 
     private static final String ORG_ADMIN_ROLE_NAME = "Org Admin";
     private static final String ORG_VIEWER_ROLE_NAME = "Org Viewer";
@@ -95,14 +92,34 @@ public class AgentSharingSuccessTest extends AgentSharingBaseTest {
     @AfterClass(alwaysRun = true)
     public void testConclude() throws Exception {
 
-        if (agentId != null) {
-            scim2RestClient.deleteAgent(agentId);
+        try {
+            if (agentId != null) {
+                scim2RestClient.deleteAgent(agentId);
+            }
+        } catch (Exception e) {
+            log.warn("Failed to delete agent during cleanup.", e);
         }
-        if (orgId != null) {
-            orgMgtRestClient.deleteOrganization(orgId);
+        try {
+            if (orgId != null) {
+                orgMgtRestClient.deleteOrganization(orgId);
+            }
+        } catch (Exception e) {
+            log.warn("Failed to delete organization during cleanup.", e);
         }
-        scim2RestClient.closeHttpClient();
-        orgMgtRestClient.closeHttpClient();
+        try {
+            if (scim2RestClient != null) {
+                scim2RestClient.closeHttpClient();
+            }
+        } catch (Exception e) {
+            log.warn("Failed to close SCIM2 REST client during cleanup.", e);
+        }
+        try {
+            if (orgMgtRestClient != null) {
+                orgMgtRestClient.closeHttpClient();
+            }
+        } catch (Exception e) {
+            log.warn("Failed to close OrgMgt REST client during cleanup.", e);
+        }
         super.conclude();
     }
 
@@ -193,6 +210,22 @@ public class AgentSharingSuccessTest extends AgentSharingBaseTest {
     }
 
     @Test(dependsOnMethods = "testShareAgentsWithAllOrganizations")
+    public void testGetSharedOrganizationsOfAgent() {
+
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put(LIMIT_QUERY_PARAM, 5);
+        queryParams.put(ATTRIBUTES_QUERY_PARAM, ROLES_SHARING_MODE_ATTRIBUTES);
+
+        getResponseOfGet(AGENT_API_BASE_PATH + "/" + agentId + SHARE_PATH, queryParams)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(ORGANIZATIONS_FIELD, notNullValue())
+                .body("organizations.size()", greaterThan(0));
+    }
+
+    @Test(dependsOnMethods = "testGetSharedOrganizationsOfAgent")
     public void testUnshareAgentsFromAllOrganizations() throws IOException {
 
         String body = readResource(UNSHARE_AGENTS_FROM_ALL_ORGS_REQUEST)
@@ -207,10 +240,6 @@ public class AgentSharingSuccessTest extends AgentSharingBaseTest {
                 .body(DETAILS_FIELD, notNullValue());
 
         awaitAgentFullyUnshared(agentId);
-    }
-
-    @Test(dependsOnMethods = "testUnshareAgentsFromAllOrganizations")
-    public void testGetSharedOrganizationsOfAgent() {
 
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put(LIMIT_QUERY_PARAM, 5);
@@ -221,6 +250,7 @@ public class AgentSharingSuccessTest extends AgentSharingBaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body(ORGANIZATIONS_FIELD, notNullValue());
+                .body(ORGANIZATIONS_FIELD, notNullValue())
+                .body("organizations.size()", equalTo(0));
     }
 }
