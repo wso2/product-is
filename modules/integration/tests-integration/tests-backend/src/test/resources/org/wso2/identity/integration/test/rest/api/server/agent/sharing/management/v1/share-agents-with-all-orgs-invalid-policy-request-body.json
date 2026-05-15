@@ -1,0 +1,14 @@
+{
+  "agentCriteria": {
+    "agentIds": [
+      "AGENT_ID"
+    ]
+  },
+  "policy": " ",
+  "roleAssignment": {
+    "mode": "SELECTED",
+    "roles": [
+      ROLE
+    ]
+  }
+}

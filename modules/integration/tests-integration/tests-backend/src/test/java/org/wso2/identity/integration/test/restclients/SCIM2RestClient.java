@@ -40,6 +40,8 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 public class SCIM2RestClient extends RestBaseClient {
 
@@ -48,6 +50,9 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
     private static final String SCIM2_V2_ROLES_ENDPOINT = "scim2/v2/Roles";
     private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
+    private static final String SCIM2_AGENTS_ENDPOINT = "scim2/Agents";
+    private static final String AGENT_CREATE_REQUEST_FILE = "create-agent-request-body.json";
+    private static final String DISPLAY_NAME_PLACEHOLDER = "DISPLAY_NAME";
     private static final String SCIM2_SEARCH_PATH = "/.search";
     public static final String SCHEMAS_ENDPOINT = "scim2/Schemas";
     private static final String SCIM_JSON_CONTENT_TYPE = "application/scim+json";
@@ -1211,6 +1216,58 @@ public class SCIM2RestClient extends RestBaseClient {
         } else {
             return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + ORGANIZATION_PATH + SCIM2_GROUPS_ENDPOINT;
         }
+    }
+
+    /**
+     * Create an agent.
+     *
+     * @param displayName Display name of the agent.
+     * @return ID of the created agent.
+     * @throws Exception If an error occurred while creating the agent.
+     */
+    public String createAgent(String displayName) throws Exception {
+
+        String jsonRequest = readResource(AGENT_CREATE_REQUEST_FILE)
+                .replace(DISPLAY_NAME_PLACEHOLDER, displayName);
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getAgentsPath(), jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Agent creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
+        }
+    }
+
+    /**
+     * Delete an agent.
+     *
+     * @param agentId ID of the agent.
+     * @throws IOException If an error occurred while deleting the agent.
+     */
+    public void deleteAgent(String agentId) throws IOException {
+
+        String endPointUrl = getAgentsPath() + PATH_SEPARATOR + agentId;
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
+                    "Agent deletion failed");
+        }
+    }
+
+    private String readResource(String filename) throws IOException {
+
+        try (InputStream resourceAsStream = getClass().getResourceAsStream(filename)) {
+            if (resourceAsStream == null) {
+                throw new IOException("Resource not found: " + filename);
+            }
+            return new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
+    private String getAgentsPath() {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + SCIM2_AGENTS_ENDPOINT;
+        }
+        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_AGENTS_ENDPOINT;
     }
 
     /**

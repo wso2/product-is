@@ -1,0 +1,16 @@
+{
+  "agentCriteria": {
+    "agentIds": [
+      "AGENT_ID"
+    ]
+  },
+  "Operations": [
+    {
+      "op": "add",
+      "path": "organizations[orgId eq ORG_ID].roles",
+      "value": [
+        ROLE
+      ]
+    }
+  ]
+}

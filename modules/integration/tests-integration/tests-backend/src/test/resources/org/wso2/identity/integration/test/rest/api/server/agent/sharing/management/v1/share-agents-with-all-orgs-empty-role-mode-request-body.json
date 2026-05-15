@@ -1,0 +1,14 @@
+{
+  "agentCriteria": {
+    "agentIds": [
+      "AGENT_ID"
+    ]
+  },
+  "policy": "ALL_EXISTING_AND_FUTURE_ORGS",
+  "roleAssignment": {
+    "mode": "",
+    "roles": [
+      ROLE
+    ]
+  }
+}
