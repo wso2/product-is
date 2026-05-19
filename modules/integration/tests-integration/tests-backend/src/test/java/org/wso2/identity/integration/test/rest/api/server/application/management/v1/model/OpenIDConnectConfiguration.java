@@ -88,6 +88,7 @@ public enum StateEnum {
     private SubjectConfiguration subject;
     private Boolean isFAPIApplication = false;
     private FapiMetadata fapiMetadata;
+    private String fapiProfile = null;
     private CIBAAuthenticationRequestConfiguration cibaAuthenticationRequest;
     private AllowedIssuer issuer;
 
@@ -522,6 +523,24 @@ public enum StateEnum {
         this.fapiMetadata = fapiMetadata;
     }
 
+    /**
+     **/
+    public OpenIDConnectConfiguration fapiProfile(String fapiProfile) {
+
+        this.fapiProfile = fapiProfile;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("fapiProfile")
+    @Valid
+    public String getFapiProfile() {
+        return fapiProfile;
+    }
+    public void setFapiProfile(String fapiProfile) {
+        this.fapiProfile = fapiProfile;
+    }
+
     @ApiModelProperty(value = "")
     @JsonProperty("cibaAuthenticationRequest")
     @Valid
@@ -583,12 +602,13 @@ public enum StateEnum {
             Objects.equals(this.subject, openIDConnectConfiguration.subject) &&
             Objects.equals(this.isFAPIApplication, openIDConnectConfiguration.isFAPIApplication) &&
             Objects.equals(this.fapiMetadata, openIDConnectConfiguration.fapiMetadata) &&
+            Objects.equals(this.fapiProfile, openIDConnectConfiguration.fapiProfile) &&
             Objects.equals(this.issuer, openIDConnectConfiguration.issuer);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, clientSecret, state, grantTypes, callbackURLs, allowedOrigins, publicClient, pkce, hybridFlow, accessToken, refreshToken, subjectToken, idToken, logout, validateRequestObjectSignature, scopeValidators, clientAuthentication, requestObject, pushAuthorizationRequest, subject, isFAPIApplication, fapiMetadata, issuer);
+        return Objects.hash(clientId, clientSecret, state, grantTypes, callbackURLs, allowedOrigins, publicClient, pkce, hybridFlow, accessToken, refreshToken, subjectToken, idToken, logout, validateRequestObjectSignature, scopeValidators, clientAuthentication, requestObject, pushAuthorizationRequest, subject, isFAPIApplication, fapiMetadata, fapiProfile, issuer);
     }
 
     @Override
@@ -619,6 +639,7 @@ public enum StateEnum {
         sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
         sb.append("    isFAPIApplication: ").append(toIndentedString(isFAPIApplication)).append("\n");
         sb.append("    fapiMetadata: ").append(toIndentedString(fapiMetadata)).append("\n");
+        sb.append("    fapiProfile: ").append(toIndentedString(fapiProfile)).append("\n");
         sb.append("    issuer: ").append(toIndentedString(issuer)).append("\n");
         sb.append("}");
         return sb.toString();
