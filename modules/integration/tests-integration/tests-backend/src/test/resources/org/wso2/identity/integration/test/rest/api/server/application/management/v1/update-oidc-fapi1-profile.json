@@ -1,0 +1,28 @@
+{
+  "allowedOrigins": [
+    "http://wso2.is"
+  ],
+  "clientId": "fapi1_client_id",
+  "clientSecret": "fapi1_client_secret",
+  "grantTypes": [
+    "authorization_code"
+  ],
+  "callbackURLs": [
+    "https://localhost/callback"
+  ],
+  "publicClient": false,
+  "clientAuthentication": {
+    "tokenEndpointAuthMethod": "private_key_jwt",
+    "tokenEndpointAllowReusePvtKeyJwt": false,
+    "tokenEndpointAuthSigningAlg": "PS256"
+  },
+  "idToken": {
+    "idTokenSignedResponseAlg": "PS256"
+  },
+  "pkce": {
+    "mandatory": true,
+    "supportPlainTransformAlgorithm": false
+  },
+  "isFAPIApplication": true,
+  "fapiProfile": "FAPI1_ADVANCED"
+}

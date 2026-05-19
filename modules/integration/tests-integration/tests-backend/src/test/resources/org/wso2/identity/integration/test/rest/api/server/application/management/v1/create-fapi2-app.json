@@ -1,0 +1,30 @@
+{
+  "name": "FAPI2 Test Application",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "clientId": "fapi2_client_id",
+      "clientSecret": "fapi2_client_secret",
+      "grantTypes": [
+        "authorization_code"
+      ],
+      "callbackURLs": [
+        "https://localhost/callback"
+      ],
+      "publicClient": false,
+      "clientAuthentication": {
+        "tokenEndpointAuthMethod": "private_key_jwt",
+        "tokenEndpointAllowReusePvtKeyJwt": false,
+        "tokenEndpointAuthSigningAlg": "PS256"
+      },
+      "idToken": {
+        "idTokenSignedResponseAlg": "PS256"
+      },
+      "pkce": {
+        "mandatory": true,
+        "supportPlainTransformAlgorithm": false
+      },
+      "isFAPIApplication": true,
+      "fapiProfile": "FAPI2_SECURITY"
+    }
+  }
+}
