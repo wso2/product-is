@@ -178,7 +178,8 @@
                 org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi,
-                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
+                org.wso2.carbon.identity.api.server.organization.capability.governance.v1.OrgGovernanceApi
             </param-value>
         </init-param>
         <init-param>
