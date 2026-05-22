@@ -2696,7 +2696,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.90</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.92</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2750,7 +2750,7 @@
         <identity.event.handler.notification.version>1.13.4</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.2.3</org.wso2.identity.webhook.event.handlers.version>
-        <org.wso2.identity.event.publishers.version>1.2.2</org.wso2.identity.event.publishers.version>
+        <org.wso2.identity.event.publishers.version>1.2.3</org.wso2.identity.event.publishers.version>
 
         <!--<identity.agent.entitlement.proxy.version>5.1.1</identity.agent.entitlement.proxy.version>-->
         <!--<identity.carbon.auth.signedjwt.version>5.1.1</identity.carbon.auth.signedjwt.version>-->
@@ -2816,7 +2816,7 @@
         <identity.extension.utils>1.3.0</identity.extension.utils>
         <authenticator.auth.otp.commons.version>1.1.3</authenticator.auth.otp.commons.version>
 
-        <identity.org.mgt.version>2.5.10</identity.org.mgt.version>
+        <identity.org.mgt.version>2.5.11</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.5.4</identity.org.mgt.core.version>
         <identity.organization.login.version>1.3.2</identity.organization.login.version>
         <identity.oauth2.grant.organizationswitch.version>1.2.2</identity.oauth2.grant.organizationswitch.version>
@@ -2843,9 +2843,9 @@
         <conditional.authentication.functions.version>1.3.4</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>4.7.10</identity.apps.console.version>
+        <identity.apps.console.version>4.7.11</identity.apps.console.version>
         <identity.apps.myaccount.version>4.1.29</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.0.29</identity.apps.core.version>
+        <identity.apps.core.version>5.0.31</identity.apps.core.version>
         <identity.apps.tests.version>1.6.390</identity.apps.tests.version>
 
         <!-- Charon -->
