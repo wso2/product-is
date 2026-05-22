@@ -84,7 +84,8 @@
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi,
                 org.wso2.carbon.identity.api.server.vc.template.management.v1.VcTemplatesApi,
                 org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
-                org.wso2.carbon.identity.api.server.moesif.publisher.v1.MoesifPublishersApi
+                org.wso2.carbon.identity.api.server.moesif.publisher.v1.MoesifPublishersApi,
+				org.wso2.carbon.identity.api.server.organization.capability.governance.v1.OrgGovernanceApi
             </param-value>
         </init-param>
         <init-param>
@@ -172,7 +173,7 @@
                 org.wso2.carbon.identity.api.server.organization.management.v1.OrganizationsApi,
                 org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi,
                 org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi,
-                org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1.UsersApi,
+                org.wso2.carbon.identity.api.server.organization.user.sharing.management.,
                 org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi,
                 org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
                 org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
