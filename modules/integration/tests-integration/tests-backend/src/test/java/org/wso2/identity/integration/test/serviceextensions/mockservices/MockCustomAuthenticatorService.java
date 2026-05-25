@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.serviceextensions.mockservices;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.client.ScenarioMappingBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.identity.test.integration.service.dao.UserDTO;
@@ -39,10 +40,14 @@ public class MockCustomAuthenticatorService {
 
     public static final String API_PIN_ENTRY = "/api/pin-entry";
     public static final String SCENARIO_INTERNAL_USER = "internal-user";
+    public static final String SCENARIO_FEDERATED_USER = "federated-user";
     public static final String SCENARIO_SESSION_INITIALIZED = "SESSION_INITIALIZED";
     public static final String SCENARIO_SESSION_CHALLENGED = "SESSION_CHALLENGED";
     public static final String SCENARIO_SESSION_VALIDATED = "SESSION_VALIDATED";
     public static final String SCENARIO_SESSION_COMPLETED = "SESSION_COMPLETED";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String FEDERATED_USER_EXTERNAL_ID = "fed-user-external-id-001";
+
     private WireMockServer wireMockServer;
     private static final int port = 3999;
     private static final String host = "localhost";
@@ -50,24 +55,82 @@ public class MockCustomAuthenticatorService {
     public static final String API_VALIDATE_PIN_ENDPOINT = "/api/validate-pin";
 
     private String identityProviderAuthURL;
-    private UserDTO internalUser;
+    private UserDTO user;
+    private String scenarioName;
+    private String expectedInboundHeaderName;
+    private String expectedInboundHeaderValue;
 
     private static final Logger LOG = LoggerFactory.getLogger(MockCustomAuthenticatorService.class);
 
+    /**
+     * Start the mock service in the internal-user scenario with no inbound header assertions.
+     */
     public void start(String identityProviderAuthURL, UserDTO internalUser) {
 
-        this.identityProviderAuthURL = identityProviderAuthURL;
-        this.internalUser = internalUser;
-        this.start();
+        startInternal(identityProviderAuthURL, internalUser, SCENARIO_INTERNAL_USER, null, null);
     }
 
-    private void start() {
+    /**
+     * Start the mock service in the internal-user scenario; assert each inbound call carries the
+     * given {@code Authorization} header value.
+     */
+    public void start(String identityProviderAuthURL, UserDTO internalUser, String expectedAuthorizationHeader) {
+
+        startInternal(identityProviderAuthURL, internalUser, SCENARIO_INTERNAL_USER,
+                AUTHORIZATION_HEADER, expectedAuthorizationHeader);
+    }
+
+    /**
+     * Start the mock service in the internal-user scenario; assert each inbound call carries the
+     * given custom header (used for the API_KEY endpoint auth mode).
+     */
+    public void start(String identityProviderAuthURL, UserDTO internalUser, String expectedHeaderName,
+                      String expectedHeaderValue) {
+
+        startInternal(identityProviderAuthURL, internalUser, SCENARIO_INTERNAL_USER,
+                expectedHeaderName, expectedHeaderValue);
+    }
+
+    /**
+     * Start the mock service in the federated-user scenario. The {@code SUCCESS} response carries a
+     * federated user shape so the framework's JIT provisioner can persist the user.
+     */
+    public void startForFederated(String identityProviderAuthURL, UserDTO federatedUser) {
+
+        startInternal(identityProviderAuthURL, federatedUser, SCENARIO_FEDERATED_USER, null, null);
+    }
+
+    public void startForFederated(String identityProviderAuthURL, UserDTO federatedUser,
+                                  String expectedAuthorizationHeader) {
+
+        startInternal(identityProviderAuthURL, federatedUser, SCENARIO_FEDERATED_USER,
+                AUTHORIZATION_HEADER, expectedAuthorizationHeader);
+    }
+
+    public void startForFederated(String identityProviderAuthURL, UserDTO federatedUser,
+                                  String expectedHeaderName, String expectedHeaderValue) {
+
+        startInternal(identityProviderAuthURL, federatedUser, SCENARIO_FEDERATED_USER,
+                expectedHeaderName, expectedHeaderValue);
+    }
+
+    private void startInternal(String identityProviderAuthURL, UserDTO user, String scenarioName,
+                               String expectedInboundHeaderName, String expectedInboundHeaderValue) {
+
+        this.identityProviderAuthURL = identityProviderAuthURL;
+        this.user = user;
+        this.scenarioName = scenarioName;
+        this.expectedInboundHeaderName = expectedInboundHeaderName;
+        this.expectedInboundHeaderValue = expectedInboundHeaderValue;
+        this.startWireMock();
+    }
+
+    private void startWireMock() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.options().port(port));
         wireMockServer.start();
         WireMock.configureFor(host, port);
 
-        // Log all received requests
         wireMockServer.addMockServiceRequestListener((request, response) -> {
             LOG.info("Received Request: {}", request);
             LOG.info("Response Sent: {}", response.getBodyAsString());
@@ -75,11 +138,12 @@ public class MockCustomAuthenticatorService {
 
         Runtime.getRuntime().addShutdownHook(new Thread(wireMockServer::stop));
 
-        // Mock /api/authenticate (Initial Request)
-        wireMockServer.stubFor(post(urlEqualTo(API_AUTHENTICATE_ENDPOINT)).inScenario(SCENARIO_INTERNAL_USER)
-                .whenScenarioStateIs(STARTED)
-                .withRequestBody(matchingJsonPath("$.actionType", equalTo("AUTHENTICATION")))
-                .withRequestBody(matchingJsonPath("$.flowId"))
+        // /api/authenticate — initial call (returns a redirect to /api/pin-entry).
+        wireMockServer.stubFor(applyExpectedInboundHeader(
+                post(urlEqualTo(API_AUTHENTICATE_ENDPOINT)).inScenario(scenarioName)
+                        .whenScenarioStateIs(STARTED)
+                        .withRequestBody(matchingJsonPath("$.actionType", equalTo("AUTHENTICATION")))
+                        .withRequestBody(matchingJsonPath("$.flowId")))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -96,49 +160,25 @@ public class MockCustomAuthenticatorService {
                         .withTransformers("response-template"))
                 .willSetStateTo(SCENARIO_SESSION_INITIALIZED));
 
-        // Mock /api/authenticate (Initial Request)
-        wireMockServer.stubFor(post(urlEqualTo(API_AUTHENTICATE_ENDPOINT)).inScenario(SCENARIO_INTERNAL_USER)
-                .whenScenarioStateIs(SCENARIO_SESSION_VALIDATED)
-                .withRequestBody(matchingJsonPath("$.actionType", equalTo("AUTHENTICATION")))
-                .withRequestBody(matchingJsonPath("$.flowId"))
+        // /api/authenticate — second call after pin validation (returns SUCCESS with user claims).
+        wireMockServer.stubFor(applyExpectedInboundHeader(
+                post(urlEqualTo(API_AUTHENTICATE_ENDPOINT)).inScenario(scenarioName)
+                        .whenScenarioStateIs(SCENARIO_SESSION_VALIDATED)
+                        .withRequestBody(matchingJsonPath("$.actionType", equalTo("AUTHENTICATION")))
+                        .withRequestBody(matchingJsonPath("$.flowId")))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
-                        .withBody("{" +
-                                "  \"actionStatus\": \"SUCCESS\"," +
-                                "  \"data\": {" +
-                                "    \"user\": {" +
-                                "      \"id\": \"" + this.internalUser.getUserID() + "\"," +
-                                "      \"claims\": [" +
-                                "        {" +
-                                "          \"uri\": \"" + this.internalUser.getAttributes()[0].getAttributeName() +
-                                "\"," +
-                                "          \"value\": \"" + this.internalUser.getAttributes()[0].getAttributeValue() +
-                                "\"" +
-                                "        }," +
-                                "        {" +
-                                "          \"uri\": \"" + this.internalUser.getAttributes()[1].getAttributeName() +
-                                "\"," +
-                                "          \"value\": \"" + this.internalUser.getAttributes()[1].getAttributeValue() +
-                                "\"" +
-                                "        }," +
-                                "        { \"uri\": \"" + this.internalUser.getAttributes()[2].getAttributeName() +
-                                "\", \"value\": \"" + this.internalUser.getAttributes()[2].getAttributeValue() +
-                                "\" }," +
-                                "        { \"uri\": \"" + this.internalUser.getAttributes()[3].getAttributeName() +
-                                "\", \"value\": \"" + this.internalUser.getAttributes()[3].getAttributeValue() +
-                                "\" }" +
-                                "      ]" +
-                                "    }" +
-                                "  } }")
+                        .withBody(buildSuccessResponseBody())
                         .withTransformers("response-template"))
                 .willSetStateTo(SCENARIO_SESSION_COMPLETED));
 
-        // Stub for serving an HTML page when a GET request is made to /api/pin-entry
-        wireMockServer.stubFor(get(urlPathEqualTo(API_PIN_ENTRY)).inScenario(SCENARIO_INTERNAL_USER)
+        // GET /api/pin-entry — serves the pin entry HTML page.
+        // Note: spId is not asserted because IS only adds it for local custom authenticators; the
+        // federated flow forwards the redirect URL verbatim (flowId only).
+        wireMockServer.stubFor(get(urlPathEqualTo(API_PIN_ENTRY)).inScenario(scenarioName)
                 .whenScenarioStateIs(SCENARIO_SESSION_INITIALIZED)
                 .withQueryParam("flowId", matching(".+"))
-                .withQueryParam("spId", matching(".+"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/html")
@@ -154,13 +194,16 @@ public class MockCustomAuthenticatorService {
                                         "</form>" +
                                         "</body>" +
                                         "</html>"
-                                 )
+                        )
                         .withTransformers("response-template"))
                 .willSetStateTo(SCENARIO_SESSION_CHALLENGED));
 
-        wireMockServer.stubFor(post(urlEqualTo(API_VALIDATE_PIN_ENDPOINT)).inScenario(SCENARIO_INTERNAL_USER)
+        // POST /api/validate-pin — validates the user-supplied PIN and signals success back to IS.
+        // This endpoint is the authenticator's own internal endpoint, not protected by the configured
+        // endpoint authentication, so we don't apply the inbound-header matcher here.
+        wireMockServer.stubFor(post(urlEqualTo(API_VALIDATE_PIN_ENDPOINT)).inScenario(scenarioName)
                 .whenScenarioStateIs(SCENARIO_SESSION_CHALLENGED)
-                .withRequestBody(matchingJsonPath("$.username", equalTo("emily@aol.com")))
+                .withRequestBody(matchingJsonPath("$.username"))
                 .withRequestBody(matchingJsonPath("$.pin", equalTo("1234")))
                 .withRequestBody(matchingJsonPath("$.flowId"))
                 .willReturn(aResponse()
@@ -170,6 +213,52 @@ public class MockCustomAuthenticatorService {
                                 "?flowId={{jsonPath request.body '$.flowId'}}\"}")
                         .withTransformers("response-template"))
                 .willSetStateTo(SCENARIO_SESSION_VALIDATED));
+    }
+
+    /**
+     * Apply the configured inbound-header matcher to a stub builder if one was set, otherwise pass
+     * through unchanged. Mirrors how the Actions framework tests guard their action endpoint stubs.
+     */
+    private ScenarioMappingBuilder applyExpectedInboundHeader(ScenarioMappingBuilder mappingBuilder) {
+
+        if (expectedInboundHeaderName != null && expectedInboundHeaderValue != null) {
+            return (ScenarioMappingBuilder) mappingBuilder.withHeader(expectedInboundHeaderName,
+                    equalTo(expectedInboundHeaderValue));
+        }
+        return mappingBuilder;
+    }
+
+    /**
+     * Build a SUCCESS response body. The shape is the same for the internal-user and federated-user
+     * scenarios; the framework treats the response identically at the action layer — the
+     * authenticator's own implementation decides whether to look up an internal user or JIT-provision
+     * a federated user based on the returned claims.
+     */
+    private String buildSuccessResponseBody() {
+
+        String userId = SCENARIO_FEDERATED_USER.equals(scenarioName)
+                ? FEDERATED_USER_EXTERNAL_ID
+                : this.user.getUserID();
+        StringBuilder claims = new StringBuilder();
+        for (int i = 0; i < user.getAttributes().length; i++) {
+            if (i > 0) {
+                claims.append(",");
+            }
+            claims.append("{ \"uri\": \"")
+                    .append(user.getAttributes()[i].getAttributeName())
+                    .append("\", \"value\": \"")
+                    .append(user.getAttributes()[i].getAttributeValue())
+                    .append("\" }");
+        }
+        return "{" +
+                "  \"actionStatus\": \"SUCCESS\"," +
+                "  \"data\": {" +
+                "    \"user\": {" +
+                "      \"id\": \"" + userId + "\"," +
+                "      \"claims\": [" + claims + "]" +
+                "    }" +
+                "  }" +
+                "}";
     }
 
     public void stop() {

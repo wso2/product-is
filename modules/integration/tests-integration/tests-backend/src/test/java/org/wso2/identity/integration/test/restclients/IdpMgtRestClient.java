@@ -66,8 +66,21 @@ public class IdpMgtRestClient extends RestBaseClient {
      */
     public String createIdentityProvider(IdentityProviderPOSTRequest idpCreateReqObj) throws Exception {
         String jsonRequest = toJSONString(idpCreateReqObj);
-        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH, tenantDomain);
+        return createIdentityProviderFromJson(jsonRequest);
+    }
 
+    /**
+     * Create an Identity Provider from a raw JSON body. Useful when the IdP needs a payload shape
+     * that isn't easily expressed via {@link IdentityProviderPOSTRequest} (e.g. user-defined
+     * federated authenticator endpoint configs).
+     *
+     * @param jsonRequest Raw JSON request body.
+     * @return The created IdP's id.
+     */
+    public String createIdentityProviderFromJson(String jsonRequest) throws Exception {
+
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain);
         try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, jsonRequest, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
                     "Idp creation failed");

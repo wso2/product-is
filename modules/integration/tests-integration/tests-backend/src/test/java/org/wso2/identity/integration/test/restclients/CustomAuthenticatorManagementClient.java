@@ -24,8 +24,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
-import org.wso2.carbon.identity.api.server.authenticators.v1.model.AuthenticationType;
 import org.wso2.carbon.identity.api.server.authenticators.v1.model.UserDefinedLocalAuthenticatorCreation;
 import org.wso2.carbon.identity.application.common.model.UserDefinedAuthenticatorEndpointConfig;
 import org.wso2.carbon.identity.application.common.model.UserDefinedLocalAuthenticatorConfig;
@@ -35,9 +35,10 @@ import org.wso2.identity.integration.test.rest.api.server.authenticator.manageme
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class provides methods to manage custom authenticators via REST API.
@@ -46,6 +47,28 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
 
     private static final String AUTHENTICATOR_CUSTOM_API_BASE_PATH = "/authenticators/custom";
     private static final String PATH_SEPARATOR = "/";
+
+    // Endpoint authentication type identifiers used on the wire. These mirror the framework's
+    // AuthenticationType.TypeEnum string values. Strings are used directly so this client compiles
+    // both before and after the api-server PR that adds CLIENT_CREDENTIAL/PASSWORD_CREDENTIAL to
+    // the published enum.
+    public static final String AUTH_TYPE_BASIC = "BASIC";
+    public static final String AUTH_TYPE_BEARER = "BEARER";
+    public static final String AUTH_TYPE_API_KEY = "API_KEY";
+    public static final String AUTH_TYPE_CLIENT_CREDENTIAL = "CLIENT_CREDENTIAL";
+    public static final String AUTH_TYPE_PASSWORD_CREDENTIAL = "PASSWORD_CREDENTIAL";
+
+    // Endpoint authentication property keys (must match the framework's Authentication builders).
+    public static final String USERNAME_PROPERTY = "username";
+    public static final String PASSWORD_PROPERTY = "password";
+    public static final String ACCESS_TOKEN_PROPERTY = "accessToken";
+    public static final String API_KEY_HEADER_PROPERTY = "apiKeyHeader";
+    public static final String API_KEY_VALUE_PROPERTY = "apiKeyValue";
+    public static final String CLIENT_ID_PROPERTY = "clientId";
+    public static final String CLIENT_SECRET_PROPERTY = "clientSecret";
+    public static final String TOKEN_ENDPOINT_PROPERTY = "tokenEndpoint";
+    public static final String SCOPES_PROPERTY = "scopes";
+
     private final String username;
     private final String password;
 
@@ -61,28 +84,104 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
 
     }
 
+    /**
+     * Create a user-defined local custom authenticator with BASIC endpoint authentication.
+     */
+    public String createCustomAuthWithBasicEndpointAuth(String authenticatorName, String displayName,
+                                                        String endpointUri, String endpointAuthUsername,
+                                                        String endpointAuthPassword) throws Exception {
+
+        Map<String, String> properties = new LinkedHashMap<>();
+        properties.put(USERNAME_PROPERTY, endpointAuthUsername);
+        properties.put(PASSWORD_PROPERTY, endpointAuthPassword);
+        return createCustomAuthenticator(authenticatorName, displayName, endpointUri,
+                AUTH_TYPE_BASIC, properties);
+    }
+
+    /**
+     * Create a user-defined local custom authenticator with BEARER endpoint authentication.
+     */
+    public String createCustomAuthWithBearerEndpointAuth(String authenticatorName, String displayName,
+                                                         String endpointUri, String accessToken) throws Exception {
+
+        Map<String, String> properties = new LinkedHashMap<>();
+        properties.put(ACCESS_TOKEN_PROPERTY, accessToken);
+        return createCustomAuthenticator(authenticatorName, displayName, endpointUri,
+                AUTH_TYPE_BEARER, properties);
+    }
+
+    /**
+     * Create a user-defined local custom authenticator with API_KEY endpoint authentication.
+     */
+    public String createCustomAuthWithApiKeyEndpointAuth(String authenticatorName, String displayName,
+                                                         String endpointUri, String apiKeyHeader,
+                                                         String apiKeyValue) throws Exception {
+
+        Map<String, String> properties = new LinkedHashMap<>();
+        properties.put(API_KEY_HEADER_PROPERTY, apiKeyHeader);
+        properties.put(API_KEY_VALUE_PROPERTY, apiKeyValue);
+        return createCustomAuthenticator(authenticatorName, displayName, endpointUri,
+                AUTH_TYPE_API_KEY, properties);
+    }
+
+    /**
+     * Create a user-defined local custom authenticator with OAuth2 CLIENT_CREDENTIAL endpoint authentication.
+     */
+    public String createCustomAuthWithClientCredentialEndpointAuth(String authenticatorName, String displayName,
+                                                                   String endpointUri, String clientId,
+                                                                   String clientSecret, String tokenEndpoint,
+                                                                   String scopes) throws Exception {
+
+        Map<String, String> properties = new LinkedHashMap<>();
+        properties.put(CLIENT_ID_PROPERTY, clientId);
+        properties.put(CLIENT_SECRET_PROPERTY, clientSecret);
+        properties.put(TOKEN_ENDPOINT_PROPERTY, tokenEndpoint);
+        properties.put(SCOPES_PROPERTY, scopes);
+        return createCustomAuthenticator(authenticatorName, displayName, endpointUri,
+                AUTH_TYPE_CLIENT_CREDENTIAL, properties);
+    }
+
+    /**
+     * Create a user-defined local custom authenticator with OAuth2 PASSWORD_CREDENTIAL endpoint authentication.
+     */
+    public String createCustomAuthWithPasswordCredentialEndpointAuth(String authenticatorName, String displayName,
+                                                                     String endpointUri, String clientId,
+                                                                     String clientSecret, String tokenEndpoint,
+                                                                     String endpointAuthUsername,
+                                                                     String endpointAuthPassword,
+                                                                     String scopes) throws Exception {
+
+        Map<String, String> properties = new LinkedHashMap<>();
+        properties.put(CLIENT_ID_PROPERTY, clientId);
+        properties.put(CLIENT_SECRET_PROPERTY, clientSecret);
+        properties.put(TOKEN_ENDPOINT_PROPERTY, tokenEndpoint);
+        properties.put(USERNAME_PROPERTY, endpointAuthUsername);
+        properties.put(PASSWORD_PROPERTY, endpointAuthPassword);
+        properties.put(SCOPES_PROPERTY, scopes);
+        return createCustomAuthenticator(authenticatorName, displayName, endpointUri,
+                AUTH_TYPE_PASSWORD_CREDENTIAL, properties);
+    }
+
+    /**
+     * Backwards-compatible wrapper that delegates to {@link #createCustomAuthWithBasicEndpointAuth}.
+     */
     public String createCustomInternalUserAuthenticator(String authenticatorName, String displayName,
                                                         String endpointUri,
                                                         String endpointAuthUsername, String endpointAuthPassword)
             throws Exception {
 
-        UserDefinedLocalAuthenticatorConfig testAuthenticatorConfig =
-                createUserDefinedInternalUserAuthenticator(authenticatorName, displayName, endpointUri,
-                        endpointAuthUsername, endpointAuthPassword);
-        UserDefinedLocalAuthenticatorCreation authenticatorCreationPayload = UserDefinedLocalAuthenticatorPayload
-                .getBasedUserDefinedLocalAuthenticatorCreation(testAuthenticatorConfig);
+        return createCustomAuthWithBasicEndpointAuth(authenticatorName, displayName, endpointUri,
+                endpointAuthUsername, endpointAuthPassword);
+    }
 
-        try {
-            String jsonRequestBody =
-                    UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(authenticatorCreationPayload);
+    /**
+     * Retrieve the JSON representation of a custom authenticator.
+     */
+    public String getCustomAuthenticator(String authenticatorId) throws Exception {
 
-            try (CloseableHttpResponse response = getResponseOfHttpPost(customAuthenticatorAPIBasePath, jsonRequestBody,
-                    getHeaders())) {
-                String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
-                return locationElements[locationElements.length - 1];
-            }
-        } catch (JsonProcessingException e) {
-            throw new Exception("Error while creating custom internal user authenticator request payload.", e);
+        String apiEndpoint = customAuthenticatorAPIBasePath + PATH_SEPARATOR + authenticatorId;
+        try (CloseableHttpResponse response = getResponseOfHttpGet(apiEndpoint, getHeaders())) {
+            return EntityUtils.toString(response.getEntity());
         }
     }
 
@@ -103,11 +202,9 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
         client.close();
     }
 
-    private UserDefinedLocalAuthenticatorConfig createUserDefinedInternalUserAuthenticator(String name,
-                                                                                           String displayName,
-                                                                                           String endpointUri,
-                                                                                           String username,
-                                                                                           String password) {
+    private String createCustomAuthenticator(String name, String displayName, String endpointUri,
+                                             String authType,
+                                             Map<String, String> authProperties) throws Exception {
 
         UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(
                 AuthenticatorPropertyConstants.AuthenticationType.IDENTIFICATION);
@@ -118,15 +215,26 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
         UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =
                 new UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder();
         endpointConfig.uri(endpointUri);
-        endpointConfig.authenticationType(String.valueOf(AuthenticationType.TypeEnum.BASIC));
-        endpointConfig.authenticationProperties(new HashMap<String, String>() {{
-            put("username", username);
-            put("password", password);
-        }});
-        endpointConfig.allowedParameters((new ArrayList<>(Collections.singletonList("testParam"))));
+        endpointConfig.authenticationType(authType);
+        endpointConfig.authenticationProperties(new HashMap<>(authProperties));
+        endpointConfig.allowedParameters(new ArrayList<>(Collections.singletonList("testParam")));
         config.setEndpointConfig(endpointConfig.build());
 
-        return config;
+        UserDefinedLocalAuthenticatorCreation authenticatorCreationPayload = UserDefinedLocalAuthenticatorPayload
+                .getBasedUserDefinedLocalAuthenticatorCreation(config);
+
+        try {
+            String jsonRequestBody =
+                    UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(authenticatorCreationPayload);
+
+            try (CloseableHttpResponse response = getResponseOfHttpPost(customAuthenticatorAPIBasePath, jsonRequestBody,
+                    getHeaders())) {
+                String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
+                return locationElements[locationElements.length - 1];
+            }
+        } catch (JsonProcessingException e) {
+            throw new Exception("Error while creating custom authenticator request payload.", e);
+        }
     }
 
     private String getCustomAuthenticatorAPIBasePath(String serverUrl, String tenantDomain) {
