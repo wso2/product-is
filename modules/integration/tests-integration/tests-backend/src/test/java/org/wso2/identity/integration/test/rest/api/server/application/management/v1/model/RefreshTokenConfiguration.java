@@ -27,6 +27,9 @@ public class RefreshTokenConfiguration  {
     private Long expiryInSeconds;
     private Boolean extendRenewedRefreshTokenExpiryTime;
     private Boolean renewRefreshToken;
+    private Boolean gracefulRefreshTokenRotationEnabled;
+    private Integer gracefulRefreshTokenRotationValidityPeriod;
+    private Integer gracefulRefreshTokenReuseLimit;
 
     /**
      **/
@@ -84,7 +87,60 @@ public class RefreshTokenConfiguration  {
         this.renewRefreshToken = renewRefreshToken;
     }
 
+    /**
+     **/
+    public RefreshTokenConfiguration gracefulRefreshTokenRotationEnabled(Boolean gracefulRefreshTokenRotationEnabled) {
 
+        this.gracefulRefreshTokenRotationEnabled = gracefulRefreshTokenRotationEnabled;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false", value = "Enables grace period for old refresh token after rotation.")
+    @JsonProperty("gracefulRefreshTokenRotationEnabled")
+    @Valid
+    public Boolean getGracefulRefreshTokenRotationEnabled() {
+        return gracefulRefreshTokenRotationEnabled;
+    }
+    public void setGracefulRefreshTokenRotationEnabled(Boolean gracefulRefreshTokenRotationEnabled) {
+        this.gracefulRefreshTokenRotationEnabled = gracefulRefreshTokenRotationEnabled;
+    }
+
+    /**
+     **/
+    public RefreshTokenConfiguration gracefulRefreshTokenRotationValidityPeriod(
+            Integer gracefulRefreshTokenRotationValidityPeriod) {
+
+        this.gracefulRefreshTokenRotationValidityPeriod = gracefulRefreshTokenRotationValidityPeriod;
+        return this;
+    }
+
+    @ApiModelProperty(example = "30", value = "Seconds the old token stays valid after rotation.")
+    @JsonProperty("gracefulRefreshTokenRotationValidityPeriod")
+    @Valid
+    public Integer getGracefulRefreshTokenRotationValidityPeriod() {
+        return gracefulRefreshTokenRotationValidityPeriod;
+    }
+    public void setGracefulRefreshTokenRotationValidityPeriod(Integer gracefulRefreshTokenRotationValidityPeriod) {
+        this.gracefulRefreshTokenRotationValidityPeriod = gracefulRefreshTokenRotationValidityPeriod;
+    }
+
+    /**
+     **/
+    public RefreshTokenConfiguration gracefulRefreshTokenReuseLimit(Integer gracefulRefreshTokenReuseLimit) {
+
+        this.gracefulRefreshTokenReuseLimit = gracefulRefreshTokenReuseLimit;
+        return this;
+    }
+
+    @ApiModelProperty(example = "5", value = "Max times the old token can be reused within the grace window.")
+    @JsonProperty("gracefulRefreshTokenReuseLimit")
+    @Valid
+    public Integer getGracefulRefreshTokenReuseLimit() {
+        return gracefulRefreshTokenReuseLimit;
+    }
+    public void setGracefulRefreshTokenReuseLimit(Integer gracefulRefreshTokenReuseLimit) {
+        this.gracefulRefreshTokenReuseLimit = gracefulRefreshTokenReuseLimit;
+    }
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -98,12 +154,17 @@ public class RefreshTokenConfiguration  {
         RefreshTokenConfiguration refreshTokenConfiguration = (RefreshTokenConfiguration) o;
         return Objects.equals(this.expiryInSeconds, refreshTokenConfiguration.expiryInSeconds) &&
                 Objects.equals(this.extendRenewedRefreshTokenExpiryTime, refreshTokenConfiguration.extendRenewedRefreshTokenExpiryTime) &&
-                Objects.equals(this.renewRefreshToken, refreshTokenConfiguration.renewRefreshToken);
+                Objects.equals(this.renewRefreshToken, refreshTokenConfiguration.renewRefreshToken) &&
+                Objects.equals(this.gracefulRefreshTokenRotationEnabled, refreshTokenConfiguration.gracefulRefreshTokenRotationEnabled) &&
+                Objects.equals(this.gracefulRefreshTokenRotationValidityPeriod, refreshTokenConfiguration.gracefulRefreshTokenRotationValidityPeriod) &&
+                Objects.equals(this.gracefulRefreshTokenReuseLimit, refreshTokenConfiguration.gracefulRefreshTokenReuseLimit);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(expiryInSeconds, extendRenewedRefreshTokenExpiryTime, renewRefreshToken);
+        return Objects.hash(expiryInSeconds, extendRenewedRefreshTokenExpiryTime, renewRefreshToken,
+                gracefulRefreshTokenRotationEnabled, gracefulRefreshTokenRotationValidityPeriod,
+                gracefulRefreshTokenReuseLimit);
     }
 
     @Override
@@ -115,6 +176,9 @@ public class RefreshTokenConfiguration  {
         sb.append("    expiryInSeconds: ").append(toIndentedString(expiryInSeconds)).append("\n");
         sb.append("    extendRenewedRefreshTokenExpiryTime: ").append(toIndentedString(extendRenewedRefreshTokenExpiryTime)).append("\n");
         sb.append("    renewRefreshToken: ").append(toIndentedString(renewRefreshToken)).append("\n");
+        sb.append("    gracefulRefreshTokenRotationEnabled: ").append(toIndentedString(gracefulRefreshTokenRotationEnabled)).append("\n");
+        sb.append("    gracefulRefreshTokenRotationValidityPeriod: ").append(toIndentedString(gracefulRefreshTokenRotationValidityPeriod)).append("\n");
+        sb.append("    gracefulRefreshTokenReuseLimit: ").append(toIndentedString(gracefulRefreshTokenReuseLimit)).append("\n");
         sb.append("}");
         return sb.toString();
     }
