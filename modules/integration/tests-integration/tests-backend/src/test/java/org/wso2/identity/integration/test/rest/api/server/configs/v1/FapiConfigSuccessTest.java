@@ -40,7 +40,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.notNullValue;
 
 /**
- * Integration tests for the tenant FAPI configuration API (GET/PATCH /configs/fapi).
+ * Integration tests for the tenant FAPI configuration API (GET/PUT /configs/fapi).
  * Covers Group 1 (happy paths) and Group 5 (OIDC metadata reflection) from the test plan.
  */
 public class FapiConfigSuccessTest extends ConfigTestBase {
@@ -111,13 +111,13 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     }
 
     /**
-     * 1.2 - PATCH /configs/fapi to enable coexistence (both FAPI1_ADVANCED and FAPI2_SECURITY).
+     * 1.2 - PUT /configs/fapi to enable coexistence (both FAPI1_ADVANCED and FAPI2_SECURITY).
      */
     @Test(dependsOnMethods = "testGetDefaultFapiConfig")
     public void testPatchFapiConfigCoexistence() throws IOException {
 
         String body = readResource("fapi-config-coexistence.json");
-        Response response = getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body);
+        Response response = getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -127,7 +127,7 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     }
 
     /**
-     * 1.3 - GET after PATCH confirms coexistence config is persisted.
+     * 1.3 - GET after PUT confirms coexistence config is persisted.
      */
     @Test(dependsOnMethods = "testPatchFapiConfigCoexistence")
     public void testGetFapiConfigCoexistencePersistence() {
@@ -142,13 +142,13 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     }
 
     /**
-     * 1.4 - PATCH to FAPI2 only (migration scenario).
+     * 1.4 - PUT to FAPI2 only (migration scenario).
      */
     @Test(dependsOnMethods = "testGetFapiConfigCoexistencePersistence")
     public void testPatchFapiConfigFapi2Only() throws IOException {
 
         String body = readResource("fapi-config-fapi2-only.json");
-        Response response = getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body);
+        Response response = getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -161,13 +161,13 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     }
 
     /**
-     * 1.5 - PATCH to disable FAPI enforcement.
+     * 1.5 - PUT to disable FAPI enforcement.
      */
     @Test(dependsOnMethods = "testPatchFapiConfigFapi2Only")
     public void testPatchFapiConfigDisabled() throws IOException {
 
         String body = readResource("fapi-config-disabled.json");
-        Response response = getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body);
+        Response response = getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -176,13 +176,13 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     }
 
     /**
-     * 1.6 - PATCH back to FAPI1 only (downgrade / restore default).
+     * 1.6 - PUT back to FAPI1 only (downgrade / restore default).
      */
     @Test(dependsOnMethods = "testPatchFapiConfigDisabled")
     public void testRestoreFapiConfigToDefault() throws IOException {
 
         String body = readResource("fapi-config-fapi1-only.json");
-        Response response = getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body);
+        Response response = getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -200,7 +200,7 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     public void testOidcMetadataReflectsFapi1Only() throws IOException {
 
         String body = readResource("fapi-config-fapi1-only.json");
-        getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body)
+        getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body)
                 .then().assertThat().statusCode(HttpStatus.SC_OK);
 
         Response response = getResponseOfGetNoFilter(OIDC_METADATA_PATH);
@@ -223,7 +223,7 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     public void testOidcMetadataReflectsBothProfiles() throws IOException {
 
         String body = readResource("fapi-config-coexistence.json");
-        getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body)
+        getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body)
                 .then().assertThat().statusCode(HttpStatus.SC_OK);
 
         Response response = getResponseOfGetNoFilter(OIDC_METADATA_PATH);
@@ -241,7 +241,7 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     public void testOidcMetadataReflectsFapi2Only() throws IOException {
 
         String body = readResource("fapi-config-fapi2-only.json");
-        getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body)
+        getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body)
                 .then().assertThat().statusCode(HttpStatus.SC_OK);
 
         Response response = getResponseOfGetNoFilter(OIDC_METADATA_PATH);
@@ -263,7 +263,7 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     public void testRestoreAfterMetadataTests() throws IOException {
 
         String body = readResource("fapi-config-fapi1-only.json");
-        getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body)
+        getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
