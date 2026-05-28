@@ -39,7 +39,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import java.io.IOException;
 
 /**
- * Integration tests for error paths of the tenant FAPI configuration API (GET/PATCH /configs/fapi).
+ * Integration tests for error paths of the tenant FAPI configuration API (GET/PUT /configs/fapi).
  * Covers Group 2 (failure paths) from the test plan.
  */
 public class FapiConfigFailureTest extends ConfigTestBase {
@@ -100,7 +100,7 @@ public class FapiConfigFailureTest extends ConfigTestBase {
     }
 
     /**
-     * 2.3 - PATCH /configs/fapi with an unrecognised profile string returns 400.
+     * 2.3 - PUT /configs/fapi with an unrecognised profile string returns 400.
      * Uses a raw RestAssured call (no OpenApiValidationFilter) so the request reaches the server;
      * the filter would otherwise reject "INVALID_PROFILE" client-side before the server sees it.
      */
@@ -118,12 +118,12 @@ public class FapiConfigFailureTest extends ConfigTestBase {
                 .log().ifValidationFails()
                 .when()
                 .log().ifValidationFails()
-                .patch(FAPI_CONFIGS_API_BASE_PATH);
+                .put(FAPI_CONFIGS_API_BASE_PATH);
         validateHttpStatusCode(response, HttpStatus.SC_BAD_REQUEST);
     }
 
     /**
-     * 2.4 - PATCH /configs/fapi with malformed JSON returns 400.
+     * 2.4 - PUT /configs/fapi with malformed JSON returns 400.
      * Uses a raw RestAssured call (no OpenApiValidationFilter) so the request reaches the server;
      * the filter may also reject unparseable JSON body client-side.
      */
@@ -141,19 +141,19 @@ public class FapiConfigFailureTest extends ConfigTestBase {
                 .log().ifValidationFails()
                 .when()
                 .log().ifValidationFails()
-                .patch(FAPI_CONFIGS_API_BASE_PATH);
+                .put(FAPI_CONFIGS_API_BASE_PATH);
         validateHttpStatusCode(response, HttpStatus.SC_BAD_REQUEST);
     }
 
     /**
-     * 2.5 - PATCH /configs/fapi with enabled=true and an empty supportedProfiles list returns 400.
+     * 2.5 - PUT /configs/fapi with enabled=true and an empty supportedProfiles list returns 400.
      * The service layer rejects this because FAPI enforcement cannot be active without at least one profile.
      */
     @Test(dependsOnMethods = "testPatchFapiConfigWithMalformedJson")
     public void testPatchFapiConfigEnabledWithEmptyProfiles() {
 
         String body = "{\"enabled\":true,\"supportedProfiles\":[]}";
-        Response response = getResponseOfPatch(FAPI_CONFIGS_API_BASE_PATH, body);
+        Response response = getResponseOfPut(FAPI_CONFIGS_API_BASE_PATH, body);
         validateHttpStatusCode(response, HttpStatus.SC_BAD_REQUEST);
     }
 }
