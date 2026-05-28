@@ -49,12 +49,26 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
     protected static final String PATH_SEPARATOR = "/";
 
     protected final String AUTHENTICATOR_NAME = "custom-Authenticator";
+    protected final String AUTHENTICATOR_NAME_CC = "custom-AuthenticatorCC";
+    protected final String AUTHENTICATOR_NAME_PWD = "custom-AuthenticatorPWD";
     protected final String AUTHENTICATOR_DISPLAY_NAME = "ABC custom authenticator";
+    protected final String AUTHENTICATOR_DISPLAY_NAME_CC = "ABC custom authenticator CC";
+    protected final String AUTHENTICATOR_DISPLAY_NAME_PWD = "ABC custom authenticator PWD";
     protected final String AUTHENTICATOR_IMAGE = "https://test.com/authenticator.png";
     protected final String AUTHENTICATOR_DESCRIPTION = "This is custom local authenticator.";
     protected final String AUTHENTICATOR_ENDPOINT_URI = "https://test.com/authenticate";
+    protected final String AUTHENTICATOR_TOKEN_ENDPOINT_URI = "https://test.com/oauth2/token";
+    protected final String AUTHENTICATOR_ENDPOINT_CLIENT_ID = "endpointClientId";
+    protected final String AUTHENTICATOR_ENDPOINT_CLIENT_SECRET = "endpointClientSecret";
+    protected final String AUTHENTICATOR_ENDPOINT_SCOPES = "internal_login";
+    protected final String AUTHENTICATOR_ENDPOINT_USERNAME = "endpointUsername";
+    protected final String AUTHENTICATOR_ENDPOINT_PASSWORD = "endpointPassword";
     protected final String customAuthenticatorId = Base64.getUrlEncoder().withoutPadding().encodeToString(
             AUTHENTICATOR_NAME.getBytes(StandardCharsets.UTF_8));
+    protected final String customAuthenticatorIdCC = Base64.getUrlEncoder().withoutPadding().encodeToString(
+            AUTHENTICATOR_NAME_CC.getBytes(StandardCharsets.UTF_8));
+    protected final String customAuthenticatorIdPWD = Base64.getUrlEncoder().withoutPadding().encodeToString(
+            AUTHENTICATOR_NAME_PWD.getBytes(StandardCharsets.UTF_8));
     protected final String UPDATE_VALUE_POSTFIX = "Updated";
 
     protected static String swaggerDefinition;
@@ -103,6 +117,58 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
         endpointConfig.authenticationProperties(new HashMap<String, String>() {{
                 put("username", "adminUsername");
                 put("password", "adminPassword");
+            }});
+        config.setEndpointConfig(endpointConfig.build());
+
+        return config;
+    }
+
+    protected UserDefinedLocalAuthenticatorConfig createClientCredentialUserDefinedLocalAuthenticator(
+            AuthenticatorPropertyConstants.AuthenticationType type) {
+
+        UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(type);
+        config.setName(AUTHENTICATOR_NAME_CC);
+        config.setDisplayName(AUTHENTICATOR_DISPLAY_NAME_CC);
+        config.setImageUrl(AUTHENTICATOR_IMAGE);
+        config.setDescription(AUTHENTICATOR_DESCRIPTION);
+        config.setEnabled(true);
+
+        UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =
+                new UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder();
+        endpointConfig.uri(AUTHENTICATOR_ENDPOINT_URI);
+        endpointConfig.authenticationType(String.valueOf(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL));
+        endpointConfig.authenticationProperties(new HashMap<String, String>() {{
+                put("clientId", AUTHENTICATOR_ENDPOINT_CLIENT_ID);
+                put("clientSecret", AUTHENTICATOR_ENDPOINT_CLIENT_SECRET);
+                put("tokenEndpoint", AUTHENTICATOR_TOKEN_ENDPOINT_URI);
+                put("scopes", AUTHENTICATOR_ENDPOINT_SCOPES);
+            }});
+        config.setEndpointConfig(endpointConfig.build());
+
+        return config;
+    }
+
+    protected UserDefinedLocalAuthenticatorConfig createPasswordCredentialUserDefinedLocalAuthenticator(
+            AuthenticatorPropertyConstants.AuthenticationType type) {
+
+        UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(type);
+        config.setName(AUTHENTICATOR_NAME_PWD);
+        config.setDisplayName(AUTHENTICATOR_DISPLAY_NAME_PWD);
+        config.setImageUrl(AUTHENTICATOR_IMAGE);
+        config.setDescription(AUTHENTICATOR_DESCRIPTION);
+        config.setEnabled(true);
+
+        UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =
+                new UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder();
+        endpointConfig.uri(AUTHENTICATOR_ENDPOINT_URI);
+        endpointConfig.authenticationType(String.valueOf(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL));
+        endpointConfig.authenticationProperties(new HashMap<String, String>() {{
+                put("username", AUTHENTICATOR_ENDPOINT_USERNAME);
+                put("password", AUTHENTICATOR_ENDPOINT_PASSWORD);
+                put("tokenEndpoint", AUTHENTICATOR_TOKEN_ENDPOINT_URI);
+                put("clientId", AUTHENTICATOR_ENDPOINT_CLIENT_ID);
+                put("clientSecret", AUTHENTICATOR_ENDPOINT_CLIENT_SECRET);
+                put("scopes", AUTHENTICATOR_ENDPOINT_SCOPES);
             }});
         config.setEndpointConfig(endpointConfig.build());
 

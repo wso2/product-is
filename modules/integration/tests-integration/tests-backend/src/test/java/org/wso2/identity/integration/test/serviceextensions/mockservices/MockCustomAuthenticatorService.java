@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.serviceextensions.mockservices;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.ScenarioMappingBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ public class MockCustomAuthenticatorService {
 
     private String identityProviderAuthURL;
     private UserDTO internalUser;
+    private String expectedBearerToken;
 
     private static final Logger LOG = LoggerFactory.getLogger(MockCustomAuthenticatorService.class);
 
@@ -59,6 +61,12 @@ public class MockCustomAuthenticatorService {
         this.identityProviderAuthURL = identityProviderAuthURL;
         this.internalUser = internalUser;
         this.start();
+    }
+
+    public void start(String identityProviderAuthURL, UserDTO internalUser, String expectedBearerToken) {
+
+        this.expectedBearerToken = expectedBearerToken;
+        this.start(identityProviderAuthURL, internalUser);
     }
 
     private void start() {
@@ -76,10 +84,16 @@ public class MockCustomAuthenticatorService {
         Runtime.getRuntime().addShutdownHook(new Thread(wireMockServer::stop));
 
         // Mock /api/authenticate (Initial Request)
-        wireMockServer.stubFor(post(urlEqualTo(API_AUTHENTICATE_ENDPOINT)).inScenario(SCENARIO_INTERNAL_USER)
+        ScenarioMappingBuilder initialAuthenticateStub = post(urlEqualTo(API_AUTHENTICATE_ENDPOINT))
+                .inScenario(SCENARIO_INTERNAL_USER)
                 .whenScenarioStateIs(STARTED)
                 .withRequestBody(matchingJsonPath("$.actionType", equalTo("AUTHENTICATION")))
-                .withRequestBody(matchingJsonPath("$.flowId"))
+                .withRequestBody(matchingJsonPath("$.flowId"));
+        if (expectedBearerToken != null) {
+            initialAuthenticateStub = initialAuthenticateStub
+                    .withHeader("Authorization", equalTo("Bearer " + expectedBearerToken));
+        }
+        wireMockServer.stubFor(initialAuthenticateStub
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
@@ -96,11 +110,17 @@ public class MockCustomAuthenticatorService {
                         .withTransformers("response-template"))
                 .willSetStateTo(SCENARIO_SESSION_INITIALIZED));
 
-        // Mock /api/authenticate (Initial Request)
-        wireMockServer.stubFor(post(urlEqualTo(API_AUTHENTICATE_ENDPOINT)).inScenario(SCENARIO_INTERNAL_USER)
+        // Mock /api/authenticate (Post PIN Validation)
+        ScenarioMappingBuilder validatedAuthenticateStub = post(urlEqualTo(API_AUTHENTICATE_ENDPOINT))
+                .inScenario(SCENARIO_INTERNAL_USER)
                 .whenScenarioStateIs(SCENARIO_SESSION_VALIDATED)
                 .withRequestBody(matchingJsonPath("$.actionType", equalTo("AUTHENTICATION")))
-                .withRequestBody(matchingJsonPath("$.flowId"))
+                .withRequestBody(matchingJsonPath("$.flowId"));
+        if (expectedBearerToken != null) {
+            validatedAuthenticateStub = validatedAuthenticateStub
+                    .withHeader("Authorization", equalTo("Bearer " + expectedBearerToken));
+        }
+        wireMockServer.stubFor(validatedAuthenticateStub
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "application/json")
