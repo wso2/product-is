@@ -202,6 +202,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.SharedUserSubOrgApplicationAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.passkey.PasskeyRedirectBasedTest"/>
             <class name="org.wso2.identity.integration.test.passkey.PasskeyAppNativeTest"/>
+            <class name="org.wso2.identity.integration.test.oauth2.GracefulRefreshTokenRotationTestCase"/>
         </classes>
     </test>
 
