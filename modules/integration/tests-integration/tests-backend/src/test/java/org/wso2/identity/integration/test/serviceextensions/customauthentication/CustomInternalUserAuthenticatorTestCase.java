@@ -42,6 +42,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -71,6 +72,7 @@ import org.wso2.identity.integration.test.restclients.CustomAuthenticatorManagem
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.serviceextensions.mockservices.MockCustomAuthenticatorService;
+import org.wso2.identity.integration.test.serviceextensions.mockservices.ServiceExtensionMockServer;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
@@ -109,8 +111,27 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
     public static final String EMAIL_ATTRIBUTE_NAME = "email";
     public static final String FAMILY_NAME_ATTRIBUTE_NAME = "family_name";
 
-    // Authenticator properties
-    private final String AUTHENTICATOR_NAME = "custom-internal-auth";
+    // Authenticator name suffix per endpoint-auth type.
+    private static final String AUTHENTICATOR_NAME_BASIC = "custom-internal-auth";
+    private static final String AUTHENTICATOR_NAME_CC = "custom-internal-auth-cc";
+    private static final String AUTHENTICATOR_NAME_PWD = "custom-internal-auth-pwd";
+
+    // Mock IdP token endpoint constants (mirror of ActionsBaseTestCase values).
+    private static final String MOCK_IDP_TOKEN_ENDPOINT_PATH = "/test/idp/token";
+    private static final String MOCK_IDP_TOKEN_ENDPOINT_URI = "http://localhost:8587" + MOCK_IDP_TOKEN_ENDPOINT_PATH;
+    private static final String MOCK_IDP_CLIENT_ID = "test-idp-client-id";
+    private static final String MOCK_IDP_CLIENT_SECRET = "test-idp-client-secret";
+    private static final String MOCK_IDP_SCOPES = "send_scope";
+    private static final String MOCK_IDP_ACCESS_TOKEN = "mock-idp-access-token-value";
+    private static final String MOCK_IDP_RESOURCE_OWNER_USERNAME = "service-account";
+    private static final String MOCK_IDP_RESOURCE_OWNER_PASSWORD = "service-account-secret";
+
+    // Endpoint authentication type variants exercised end-to-end.
+    public enum EndpointAuthType {
+        BASIC,
+        CLIENT_CREDENTIAL,
+        PASSWORD_CREDENTIAL
+    }
 
     // API clients
     private OAuth2RestClient oAuth2RestClient;
@@ -122,27 +143,35 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
     private String consumerSecret;
     private String applicationId;
     private String authenticatorId;
+    private String authenticatorName;
     private String requestedScopes;
     private String authorizationCode;
     private UserDTO internalUser;
 
     private CloseableHttpClient httpClient;
     private MockCustomAuthenticatorService mockCustomAuthenticatorService;
+    private ServiceExtensionMockServer serviceExtensionMockServer;
 
     private final TestUserMode userMode;
+    private final EndpointAuthType endpointAuthType;
 
     @Factory(dataProvider = "testExecutionContextProvider")
-    public CustomInternalUserAuthenticatorTestCase(TestUserMode testUserMode) {
+    public CustomInternalUserAuthenticatorTestCase(TestUserMode testUserMode, EndpointAuthType endpointAuthType) {
 
         this.userMode = testUserMode;
+        this.endpointAuthType = endpointAuthType;
     }
 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER},
-                {TestUserMode.TENANT_USER},
+                {TestUserMode.SUPER_TENANT_USER, EndpointAuthType.BASIC},
+                {TestUserMode.SUPER_TENANT_USER, EndpointAuthType.CLIENT_CREDENTIAL},
+                {TestUserMode.SUPER_TENANT_USER, EndpointAuthType.PASSWORD_CREDENTIAL},
+                {TestUserMode.TENANT_USER, EndpointAuthType.BASIC},
+                {TestUserMode.TENANT_USER, EndpointAuthType.CLIENT_CREDENTIAL},
+                {TestUserMode.TENANT_USER, EndpointAuthType.PASSWORD_CREDENTIAL},
         };
     }
 
@@ -165,19 +194,54 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
 
         internalUser = createAndValidateInternalUser();
 
+        authenticatorName = resolveAuthenticatorName();
+
         mockCustomAuthenticatorService = new MockCustomAuthenticatorService();
-        mockCustomAuthenticatorService.start(getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain()),
-                internalUser);
+        if (endpointAuthType == EndpointAuthType.BASIC) {
+            mockCustomAuthenticatorService.start(getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain()),
+                    internalUser);
+        } else {
+            mockCustomAuthenticatorService.start(getTenantQualifiedURL(COMMON_AUTH_URL, tenantInfo.getDomain()),
+                    internalUser, MOCK_IDP_ACCESS_TOKEN);
+
+            serviceExtensionMockServer = new ServiceExtensionMockServer();
+            serviceExtensionMockServer.startServer();
+            String basicAuthHeader = "Basic " + getBase64EncodedString(MOCK_IDP_CLIENT_ID, MOCK_IDP_CLIENT_SECRET);
+            if (endpointAuthType == EndpointAuthType.CLIENT_CREDENTIAL) {
+                serviceExtensionMockServer.setupTokenEndpointStubForClientCredentialsGrant(
+                        MOCK_IDP_TOKEN_ENDPOINT_PATH, basicAuthHeader, MOCK_IDP_ACCESS_TOKEN);
+            } else {
+                serviceExtensionMockServer.setupTokenEndpointStubForPasswordGrant(
+                        MOCK_IDP_TOKEN_ENDPOINT_PATH, basicAuthHeader, MOCK_IDP_ACCESS_TOKEN,
+                        MOCK_IDP_RESOURCE_OWNER_USERNAME, MOCK_IDP_RESOURCE_OWNER_PASSWORD);
+            }
+        }
 
         authenticatorId = setupCustomAuthenticator();
         applicationId = setupApplication();
         retrieveApplicationDetails();
     }
 
+    private String resolveAuthenticatorName() {
+
+        switch (endpointAuthType) {
+            case CLIENT_CREDENTIAL:
+                return AUTHENTICATOR_NAME_CC;
+            case PASSWORD_CREDENTIAL:
+                return AUTHENTICATOR_NAME_PWD;
+            case BASIC:
+            default:
+                return AUTHENTICATOR_NAME_BASIC;
+        }
+    }
+
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
         mockCustomAuthenticatorService.stop();
+        if (serviceExtensionMockServer != null) {
+            serviceExtensionMockServer.stopServer();
+        }
 
         if (internalUser != null) {
             scim2RestClient.deleteUser(internalUser.getUserID());
@@ -191,6 +255,7 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
         applicationId = null;
         authenticatorId = null;
         mockCustomAuthenticatorService = null;
+        serviceExtensionMockServer = null;
 
         httpClient.close();
         oAuth2RestClient.closeHttpClient();
@@ -225,6 +290,55 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
         parseAndValidateAccessTokenResponse(response);
     }
 
+    @Test(dependsOnMethods = "testInitAuthorizeRequestWithCustomInternalUserAuthentication")
+    public void testTokenEndpointCalledWithCorrectGrant() {
+
+        if (endpointAuthType == EndpointAuthType.BASIC) {
+            throw new SkipException("Token endpoint is only invoked for OAuth-protected authenticator endpoints.");
+        }
+
+        int callCount = serviceExtensionMockServer.getReceivedRequestCount(MOCK_IDP_TOKEN_ENDPOINT_PATH);
+        Assert.assertTrue(callCount >= 1,
+                "Expected at least one call to the configured token endpoint, got " + callCount);
+
+        String tokenRequestPayload =
+                serviceExtensionMockServer.getReceivedRequestPayload(MOCK_IDP_TOKEN_ENDPOINT_PATH);
+        if (endpointAuthType == EndpointAuthType.CLIENT_CREDENTIAL) {
+            Assert.assertTrue(tokenRequestPayload.contains("grant_type=client_credentials"),
+                    "Token endpoint request body did not contain grant_type=client_credentials. Body: "
+                            + tokenRequestPayload);
+            Assert.assertFalse(tokenRequestPayload.contains("username="),
+                    "Token endpoint request body must not contain a username field for client_credentials. Body: "
+                            + tokenRequestPayload);
+            Assert.assertFalse(tokenRequestPayload.contains("password="),
+                    "Token endpoint request body must not contain a password field for client_credentials. Body: "
+                            + tokenRequestPayload);
+        } else {
+            Assert.assertTrue(tokenRequestPayload.contains("grant_type=password"),
+                    "Token endpoint request body did not contain grant_type=password. Body: "
+                            + tokenRequestPayload);
+            Assert.assertTrue(
+                    tokenRequestPayload.contains("username=" + MOCK_IDP_RESOURCE_OWNER_USERNAME),
+                    "Token endpoint request body did not contain the configured resource-owner username. Body: "
+                            + tokenRequestPayload);
+            Assert.assertTrue(
+                    tokenRequestPayload.contains("password=" + MOCK_IDP_RESOURCE_OWNER_PASSWORD),
+                    "Token endpoint request body did not contain the configured resource-owner password. Body: "
+                            + tokenRequestPayload);
+        }
+    }
+
+    @Test(dependsOnMethods = "testInitAuthorizeRequestWithCustomInternalUserAuthentication")
+    public void testAuthenticatorEndpointReceivedBearerToken() {
+
+        if (endpointAuthType == EndpointAuthType.BASIC) {
+            throw new SkipException("Bearer-token forwarding only applies to OAuth-protected authenticator endpoints.");
+        }
+
+        verify(postRequestedFor(urlEqualTo(API_AUTHENTICATE_ENDPOINT))
+                .withHeader("Authorization", equalTo("Bearer " + MOCK_IDP_ACCESS_TOKEN)));
+    }
+
     private void initializeClients() throws Exception {
 
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
@@ -242,10 +356,27 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
 
     private String setupCustomAuthenticator() throws Exception {
 
-        String id = customAuthenticatorManagementClient.createCustomInternalUserAuthenticator(
-                AUTHENTICATOR_NAME, "Custom Internal Auth", mockCustomAuthenticatorService
-                        .getCustomAuthenticatorURL() + API_AUTHENTICATE_ENDPOINT, "endpointUsername",
-                "endpointPassword");
+        String endpointUrl = mockCustomAuthenticatorService.getCustomAuthenticatorURL() + API_AUTHENTICATE_ENDPOINT;
+        String id;
+        switch (endpointAuthType) {
+            case CLIENT_CREDENTIAL:
+                id = customAuthenticatorManagementClient.createCustomInternalUserAuthenticatorWithClientCredentials(
+                        authenticatorName, "Custom Internal Auth CC", endpointUrl, MOCK_IDP_CLIENT_ID,
+                        MOCK_IDP_CLIENT_SECRET, MOCK_IDP_TOKEN_ENDPOINT_URI, MOCK_IDP_SCOPES);
+                break;
+            case PASSWORD_CREDENTIAL:
+                id = customAuthenticatorManagementClient.createCustomInternalUserAuthenticatorWithPasswordCredentials(
+                        authenticatorName, "Custom Internal Auth PWD", endpointUrl,
+                        MOCK_IDP_RESOURCE_OWNER_USERNAME, MOCK_IDP_RESOURCE_OWNER_PASSWORD,
+                        MOCK_IDP_TOKEN_ENDPOINT_URI, MOCK_IDP_CLIENT_ID, MOCK_IDP_CLIENT_SECRET, MOCK_IDP_SCOPES);
+                break;
+            case BASIC:
+            default:
+                id = customAuthenticatorManagementClient.createCustomInternalUserAuthenticator(
+                        authenticatorName, "Custom Internal Auth", endpointUrl, "endpointUsername",
+                        "endpointPassword");
+                break;
+        }
         assertNotNull(id);
         return id;
     }
@@ -315,7 +446,7 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
                 .type(AuthenticationSequence.TypeEnum.USER_DEFINED)
                 .addStepsItem(new AuthenticationStep()
                         .id(1)
-                        .addOptionsItem(new Authenticator().idp("LOCAL").authenticator(AUTHENTICATOR_NAME)));
+                        .addOptionsItem(new Authenticator().idp("LOCAL").authenticator(authenticatorName)));
 
         application.authenticationSequence(authenticationSequence);
         application.advancedConfigurations(
