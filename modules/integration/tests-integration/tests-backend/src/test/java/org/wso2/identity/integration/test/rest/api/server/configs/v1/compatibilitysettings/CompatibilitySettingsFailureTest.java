@@ -85,7 +85,7 @@ public class CompatibilitySettingsFailureTest extends ConfigTestBase {
         };
     }
 
-    @Test(description = "GET by group with invalid group name returns 400 CNF-60003")
+    @Test(description = "GET by group with invalid group name returns 400 CNF-60003.")
     public void testGetCompatibilitySettingsByGroupInvalidGroupName() {
 
         Response response = getResponseOfGet(
@@ -93,7 +93,7 @@ public class CompatibilitySettingsFailureTest extends ConfigTestBase {
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_INVALID_INPUT);
     }
 
-    @Test(description = "GET by group with non-existent group returns 400 ICS-60002")
+    @Test(description = "GET by group with non-existent group returns 400 ICS-60002.")
     public void testGetCompatibilitySettingsByGroupNonexistentGroup() {
 
         Response response = getResponseOfGet(
@@ -101,7 +101,7 @@ public class CompatibilitySettingsFailureTest extends ConfigTestBase {
         validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, ERROR_CODE_UNSUPPORTED_SETTING_GROUP);
     }
 
-    @Test(description = "GET all compatibility settings without auth returns 401")
+    @Test(description = "GET all compatibility settings without auth returns 401.")
     public void testGetCompatibilitySettingsWithoutAuth() {
 
         Response response = getResponseOfGetWithoutAuthentication(
@@ -109,7 +109,7 @@ public class CompatibilitySettingsFailureTest extends ConfigTestBase {
         validateHttpStatusCode(response, HttpStatus.SC_UNAUTHORIZED);
     }
 
-    @Test(description = "GET by group without auth returns 401")
+    @Test(description = "GET by group without auth returns 401.")
     public void testGetCompatibilitySettingsByGroupWithoutAuth() {
 
         Response response = getResponseOfGetWithoutAuthentication(
