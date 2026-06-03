@@ -70,6 +70,7 @@ public class AdminInitCredentialEventTestExpectedEventPayloadBuilder {
         JSONObject userProfileUpdateEvent = new JSONObject();
 
         userProfileUpdateEvent.put("initiatorType", "ADMIN");
+        userProfileUpdateEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userProfileUpdateEvent.put("user",
                 createUserObjectForUserCredentialUpdateWithoutAnyOtherClaims(userId, tenantDomain));
         userProfileUpdateEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));

@@ -44,6 +44,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject userCreatedEvent = new JSONObject();
 
         userCreatedEvent.put("initiatorType", "ADMIN");
+        userCreatedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userCreatedEvent.put("user", createUserObjectForUserCreate(userId, tenantDomain));
         userCreatedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         userCreatedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
@@ -68,6 +69,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject registrationSuccessEvent = new JSONObject();
 
         registrationSuccessEvent.put("initiatorType", "ADMIN");
+        registrationSuccessEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         registrationSuccessEvent.put("user", createUserObjectForUserCreate(userId, tenantDomain));
         registrationSuccessEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         registrationSuccessEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
@@ -92,6 +94,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject userProfileUpdateEvent = new JSONObject();
 
         userProfileUpdateEvent.put("initiatorType", "ADMIN");
+        userProfileUpdateEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userProfileUpdateEvent.put("user",
                 createUserObjectForUserProfileUpdateWithoutAnyAccountStateManagementClaims(userId, tenantDomain));
         userProfileUpdateEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
@@ -117,6 +120,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject userProfileUpdateEvent = new JSONObject();
 
         userProfileUpdateEvent.put("initiatorType", "ADMIN");
+        userProfileUpdateEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userProfileUpdateEvent.put("user",
                 createUserObjectForUserProfileUpdateWithAccountLockClaim(userId, tenantDomain));
         userProfileUpdateEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
@@ -140,6 +144,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         JSONObject accountLockedEvent = new JSONObject();
 
+        accountLockedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         accountLockedEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
         accountLockedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         accountLockedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
@@ -161,6 +166,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         JSONObject accountLockedEvent = new JSONObject();
 
+        accountLockedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         accountLockedEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
         accountLockedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         accountLockedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
@@ -184,6 +190,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject userProfileUpdateEvent = new JSONObject();
 
         userProfileUpdateEvent.put("initiatorType", "ADMIN");
+        userProfileUpdateEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userProfileUpdateEvent.put("user",
                 createUserObjectForUserProfileUpdateWithAccountDisableClaim(userId, tenantDomain));
         userProfileUpdateEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
@@ -208,6 +215,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject userDisableEvent = new JSONObject();
 
         userDisableEvent.put("initiatorType", "ADMIN");
+        userDisableEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userDisableEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
         userDisableEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         userDisableEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
@@ -230,6 +238,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject userDisableEvent = new JSONObject();
 
         userDisableEvent.put("initiatorType", "ADMIN");
+        userDisableEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userDisableEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
         userDisableEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         userDisableEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
@@ -252,6 +261,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject userDeletedEvent = new JSONObject();
 
         userDeletedEvent.put("initiatorType", "ADMIN");
+        userDeletedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userDeletedEvent.put("user", createUserObjectForUserDelete(userId, tenantDomain));
         userDeletedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         userDeletedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
@@ -275,6 +285,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONObject registrationFailedEvent = new JSONObject();
 
         registrationFailedEvent.put("initiatorType", "ADMIN");
+        registrationFailedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         registrationFailedEvent.put("user", createUserObjectForUserCreateFailure(tenantDomain));
         registrationFailedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         registrationFailedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
