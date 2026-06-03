@@ -143,6 +143,7 @@ public class PasswordUpdateWebhookTest extends PasswordUpdateTestBase {
 
         JSONObject payload = new JSONObject();
         payload.put("initiatorType", "USER");
+        payload.put("initiatorIpAddress", "dummy-initiator-ip-address");
         payload.put("action", "CREDENTIAL_UPDATE");
         payload.put("credentialType", "PASSWORD");
         payload.put("user", buildUserObject(userId, tenantDomain));
