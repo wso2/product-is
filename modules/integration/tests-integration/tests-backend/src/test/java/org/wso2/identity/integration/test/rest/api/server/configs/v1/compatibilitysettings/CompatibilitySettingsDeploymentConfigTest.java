@@ -74,7 +74,7 @@ public class CompatibilitySettingsDeploymentConfigTest extends ConfigTestBase {
                 getISResourceLocation() + File.separator + "compatibility-settings" + File.separator
                         + COMPATIBILITY_SETTINGS_FRAGMENT_TOML);
 
-        // Merge only the compatibility-settings fragment into existing deployment.toml to avoid conflicts
+        // Merge only the compatibility-settings fragment into existing deployment.toml to avoid conflicts.
         String existingContent = new String(Files.readAllBytes(defaultConfigFile.toPath()), StandardCharsets.UTF_8);
         String fragmentContent = new String(Files.readAllBytes(fragmentFile.toPath()), StandardCharsets.UTF_8);
         String mergedContent = existingContent.trim() + "\n\n" + fragmentContent.trim() + "\n";
@@ -114,7 +114,7 @@ public class CompatibilitySettingsDeploymentConfigTest extends ConfigTestBase {
         RestAssured.basePath = basePath;
     }
 
-    @Test(description = "After deployment.toml override and restart, GET all compatibility settings returns 200")
+    @Test(description = "After deployment.toml override and restart, GET all compatibility settings returns 200.")
     public void testCompatibilitySettingsReflectDeploymentConfigGetAll() throws Exception {
 
         Response response = getResponseOfGet(CONFIGS_COMPATIBILITY_SETTINGS_API_BASE_PATH);
@@ -125,7 +125,7 @@ public class CompatibilitySettingsDeploymentConfigTest extends ConfigTestBase {
         response.then().body("$", notNullValue());
     }
 
-    @Test(description = "After deployment.toml override and restart, GET flowExecution reflects target_value=true")
+    @Test(description = "After deployment.toml override and restart, GET flowExecution reflects target_value=true.")
     public void testCompatibilitySettingsReflectDeploymentConfigByGroup() throws Exception {
 
         Response response = getResponseOfGet(
