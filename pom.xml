@@ -2879,7 +2879,7 @@
         <carbon.identity.openid4vc.version>1.1.6</carbon.identity.openid4vc.version>
 
         <!-- Moesif Integration -->
-        <identity.moesif.integration.version>1.0.5</identity.moesif.integration.version>
+        <identity.moesif.integration.version>1.0.6</identity.moesif.integration.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>
