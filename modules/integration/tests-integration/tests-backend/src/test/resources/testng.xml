@@ -198,6 +198,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.workflow.v1.WorkflowRulesTest"/>
             <class name="org.wso2.identity.integration.test.inheritance.ConfigInheritanceTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsDeploymentConfigTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.FapiConfigSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.FapiConfigFailureTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.EnhancedOrgAuthenticationDirectPathTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.SharedUserLegacyOrgAuthenticationTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.SharedUserSubOrgApplicationAuthenticationTestCase"/>
@@ -272,6 +274,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementFapiProfileSuccessTest"/>
             <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
             <!--<class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementWSTrustTest"/>-->
             <!--Disabling the test until the application templates are restructured.-->

@@ -1,0 +1,13 @@
+{
+  "grantTypes": [
+    "authorization_code"
+  ],
+  "clientId": "fapi1_client_id",
+  "clientSecret": "fapi1_client_secret",
+  "callbackURLs": [
+    "https://localhost/callback"
+  ],
+  "publicClient": false,
+  "isFAPIApplication": true,
+  "fapiProfile": "INVALID_PROFILE"
+}
