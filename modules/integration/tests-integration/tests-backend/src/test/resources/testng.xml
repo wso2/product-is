@@ -262,6 +262,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.keystore.management.v1.KeystoreManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.IdPSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.IdPFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.debug.v1.DebugSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.debug.v1.DebugFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.store.v1.UserStoreSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.store.v1.UserStoreFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSuccessTest"/>
