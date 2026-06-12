@@ -72,9 +72,17 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String TEST_USER_GIVEN_NAME = "test_user_given_name";
     protected static final String TEST_USER_LASTNAME = "test_user_last_name";
     protected static final String TEST_USER_EMAIL = "test.user@gmail.com";
+    protected static final String TEST_USER_MOBILE_NUMBER = "0771234567";
+    protected static final String TEST_USER_UPDATED_MOBILE_NUMBER = "0717654329";
+    protected static final String USER_SYSTEM_SCHEMA_ATTRIBUTE = "urn:scim:wso2:schema";
+    protected static final String COUNTRY_SCHEMA_NAME = "country";
+    protected static final String MOBILE_NUMBERS_SCHEMA_NAME = "mobileNumbers";
     protected static final String NICK_NAME_USER_SCHEMA_NAME = "nickName";
     protected static final String NICK_NAME_CLAIM_URI = "http://wso2.org/claims/nickname";
     protected static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
+    protected static final String LAST_NAME_CLAIM_URI = "http://wso2.org/claims/lastname";
+    protected static final String COUNTRY_CLAIM_URI = "http://wso2.org/claims/country";
+    protected static final String MOBILE_NUMBERS_CLAIM_URI = "http://wso2.org/claims/mobileNumbers";
     protected static final String PRIMARY_USER_STORE_ID = "UFJJTUFSWQ==";
     protected static final String PRIMARY_USER_STORE_NAME = "PRIMARY";
     protected static final String PRE_UPDATE_PROFILE_API_PATH = "preUpdateProfile";
@@ -144,6 +152,13 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
 
     protected String createPreUpdateProfileAction(String actionName, String actionDescription) throws IOException {
 
+        return createPreUpdateProfileAction(actionName, actionDescription,
+                Collections.singletonList(NICK_NAME_CLAIM_URI));
+    }
+
+    protected String createPreUpdateProfileAction(String actionName, String actionDescription, List<String> attributes)
+            throws IOException {
+
         AuthenticationType authentication = new AuthenticationType()
                 .type(AuthenticationType.TypeEnum.BASIC)
                 .putPropertiesItem(USERNAME_PROPERTY, MOCK_SERVER_AUTH_BASIC_USERNAME)
@@ -157,9 +172,15 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
         actionModel.setName(actionName);
         actionModel.setDescription(actionDescription);
         actionModel.setEndpoint(endpoint);
-        actionModel.setAttributes(Collections.singletonList(NICK_NAME_CLAIM_URI));
+        actionModel.setAttributes(attributes);
 
         return createAction(PRE_UPDATE_PROFILE_API_PATH, actionModel);
+    }
+
+    protected List<String> getPreUpdateProfileClaimModificationTestAttributes() {
+
+        return Arrays.asList(NICK_NAME_CLAIM_URI, GIVEN_NAME_CLAIM_URI, LAST_NAME_CLAIM_URI, COUNTRY_CLAIM_URI,
+                MOBILE_NUMBERS_CLAIM_URI);
     }
 
     protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret) throws Exception {
@@ -241,4 +262,3 @@ public class PreUpdateProfileActionBaseTestCase extends ActionsBaseTestCase {
         return jsonResponse.getString("access_token");
     }
 }
-
