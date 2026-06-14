@@ -59,6 +59,11 @@
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2-jaxbri</artifactId>
 			</dependency>
+			<dependency>
+				<groupId>org.wso2.is</groupId>
+				<artifactId>org.wso2.carbon.identity.session.data.optimizer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 	</dependencies>
 
 	<build>
@@ -92,6 +97,7 @@
 								<bundleDef>org.apache.axis2.wso2:axis2-jibx</bundleDef>
 								<bundleDef>org.jibx.wso2:jibx</bundleDef>
 								<bundleDef>org.apache.axis2.wso2:axis2-jaxbri</bundleDef>
+								<bundleDef>org.wso2.is:org.wso2.carbon.identity.session.data.optimizer:${project.version}</bundleDef>
 							</bundles>
 							<importFeatures>
 								<importFeatureDef>org.wso2.carbon.core.server:${carbon.kernel.version}</importFeatureDef>
