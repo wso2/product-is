@@ -94,13 +94,17 @@ public class GzipSessionSerializer implements SessionSerializer {
             }
 
             java.io.InputStream source = isCompressed ? new GZIPInputStream(pbis) : pbis;
-            try (ObjectInputStream ois = new ObjectInputStream(source)) {
-                return ois.readObject();
-            } catch (ClassNotFoundException e) {
-                throw new SessionSerializerException("Class not found while deserializing session data", e);
-            }
+            return readSessionObject(source);
         } catch (IOException e) {
             throw new SessionSerializerException("Error while decompressing and deserializing session data", e);
+        }
+    }
+
+    private Object readSessionObject(java.io.InputStream source) throws SessionSerializerException {
+        try (ObjectInputStream ois = new ObjectInputStream(source)) {
+            return ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            throw new SessionSerializerException("Error while deserializing session data", e);
         }
     }
 
