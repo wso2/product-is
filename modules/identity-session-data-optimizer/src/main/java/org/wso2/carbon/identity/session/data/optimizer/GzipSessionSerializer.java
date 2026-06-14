@@ -76,40 +76,28 @@ public class GzipSessionSerializer implements SessionSerializer {
         if (inputStream == null) {
             return null;
         }
-        try {
-            byte[] data;
-            try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                byte[] buffer = new byte[1024];
-                int len;
-                while ((len = inputStream.read(buffer)) != -1) {
-                    baos.write(buffer, 0, len);
-                }
-                data = baos.toByteArray();
-            }
-            if (data.length == 0) {
+        try (java.io.PushbackInputStream pbis = new java.io.PushbackInputStream(inputStream, 2)) {
+            byte[] header = new byte[2];
+            int len = pbis.read(header);
+            if (len <= 0) {
                 return null;
             }
-            if (isGzipped(data)) {
-                if (log.isDebugEnabled()) {
+            pbis.unread(header, 0, len);
+
+            boolean isCompressed = isGzipped(header, len);
+            if (log.isDebugEnabled()) {
+                if (isCompressed) {
                     log.debug("Deserializing GZIP compressed session data");
-                }
-                try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
-                     GZIPInputStream gzis = new GZIPInputStream(bais);
-                     ObjectInputStream ois = new ObjectInputStream(gzis)) {
-                    return ois.readObject();
-                } catch (ClassNotFoundException e) {
-                    throw new SessionSerializerException("Class not found while decompressing and deserializing session data", e);
-                }
-            } else {
-                if (log.isDebugEnabled()) {
+                } else {
                     log.debug("Deserializing standard (uncompressed) session data");
                 }
-                try (ByteArrayInputStream bais = new ByteArrayInputStream(data);
-                     ObjectInputStream ois = new ObjectInputStream(bais)) {
-                    return ois.readObject();
-                } catch (ClassNotFoundException e) {
-                    throw new SessionSerializerException("Class not found while deserializing standard session data", e);
-                }
+            }
+
+            java.io.InputStream source = isCompressed ? new GZIPInputStream(pbis) : pbis;
+            try (ObjectInputStream ois = new ObjectInputStream(source)) {
+                return ois.readObject();
+            } catch (ClassNotFoundException e) {
+                throw new SessionSerializerException("Class not found while deserializing session data", e);
             }
         } catch (IOException e) {
             throw new SessionSerializerException("Error while decompressing and deserializing session data", e);
@@ -119,12 +107,13 @@ public class GzipSessionSerializer implements SessionSerializer {
     /**
      * Checks if the byte array is GZIP compressed.
      *
-     * @param compressed Byte array to check.
+     * @param header Byte array header to check.
+     * @param len Length of read bytes.
      * @return true if GZIP compressed, false otherwise.
      */
-    private boolean isGzipped(byte[] compressed) {
-        return (compressed.length >= 2 &&
-                compressed[0] == (byte) (GZIPInputStream.GZIP_MAGIC) &&
-                compressed[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8));
+    private boolean isGzipped(byte[] header, int len) {
+        return (len >= 2 &&
+                header[0] == (byte) (GZIPInputStream.GZIP_MAGIC) &&
+                header[1] == (byte) (GZIPInputStream.GZIP_MAGIC >> 8));
     }
 }
