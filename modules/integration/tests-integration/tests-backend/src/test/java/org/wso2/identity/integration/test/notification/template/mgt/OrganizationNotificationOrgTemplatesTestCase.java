@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Test class to test the organization notification org templates for override and inheritance capabilities.
+ * Test class for organization notification org templates for override and inheritance capabilities.
  */
 public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationTest {
 
