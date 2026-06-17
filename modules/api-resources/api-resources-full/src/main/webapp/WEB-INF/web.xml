@@ -445,7 +445,8 @@
                 org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi,
                 org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.AuthorizedAppsApi,
                 org.wso2.carbon.identity.rest.api.user.recovery.v2.RecoveryApi,
-                org.wso2.carbon.identity.rest.api.user.approval.v2.MeApi
+                org.wso2.carbon.identity.rest.api.user.approval.v2.MeApi,
+                org.wso2.carbon.identity.rest.api.user.credential.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
