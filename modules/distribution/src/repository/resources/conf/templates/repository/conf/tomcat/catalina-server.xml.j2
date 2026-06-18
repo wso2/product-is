@@ -131,7 +131,8 @@
                 <Valve className="org.wso2.carbon.identity.core.context.valve.IdentityContextCreatorValve"/>
                 {% if http_access_log.useLogger is sameas true %}
                 <Valve className="org.wso2.carbon.tomcat.ext.valves.ConfigurableLoggerAccessLogValve"
-                                    pattern="{{http_access_log.pattern}}"/>
+                                    pattern="{{http_access_log.pattern}}"
+                                    requestAttributesEnabled="{{http_access_log.request_attributes_enabled}}"/>
                 {% else %}
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="{{http_access_log.directory}}"
                     prefix="{{http_access_log.prefix}}" suffix="{{http_access_log.suffix}}" pattern="{{http_access_log.pattern}}"
