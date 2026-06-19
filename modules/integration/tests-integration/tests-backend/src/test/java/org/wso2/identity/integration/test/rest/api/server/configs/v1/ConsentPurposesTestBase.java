@@ -34,9 +34,9 @@ public class ConsentPurposesTestBase extends ConfigTestBase {
     protected static final String CONSENT_MGT_PURPOSES_PATH = "/purposes";
     protected static final String CONSENT_MGT_ELEMENTS_PATH = "/elements";
 
-    protected static String createdPurposeId;
-    protected static String createdElementId;
-    protected static String createdAppId;
+    protected String createdPurposeId;
+    protected String createdElementId;
+    protected String createdAppId;
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {

@@ -23,6 +23,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
@@ -79,13 +80,17 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
         RestAssured.basePath = consentMgtBasePath;
         Response elementResponse = getResponseOfPostNoFilter(CONSENT_MGT_ELEMENTS_PATH,
                 readResource("create-consent-element.json"));
+        elementResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
         createdElementId = elementResponse.jsonPath().getString("id");
+        Assert.assertNotNull(createdElementId, "Element creation returned a null ID");
 
         // Create purpose referencing the element.
         String purposeBody = readResource("create-consent-purpose.json")
                 .replace("ELEMENT_ID_PLACEHOLDER", createdElementId);
         Response purposeResponse = getResponseOfPostNoFilter(CONSENT_MGT_PURPOSES_PATH, purposeBody);
+        purposeResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
         createdPurposeId = purposeResponse.jsonPath().getString("id");
+        Assert.assertNotNull(createdPurposeId, "Purpose creation returned a null ID");
 
         RestAssured.basePath = basePath;
 
@@ -210,6 +215,8 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
                 .when()
                 .delete(endpointPath)
                 .then()
-                .log().ifValidationFails();
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
     }
 }
