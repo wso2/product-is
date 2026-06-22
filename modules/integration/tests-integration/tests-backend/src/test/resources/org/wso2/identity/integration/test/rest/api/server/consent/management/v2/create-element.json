@@ -1,5 +1,9 @@
 {
   "name": "email_address",
   "displayName": "Email Address",
-  "description": "User's primary email address"
+  "description": "User's primary email address",
+  "properties": {
+    "dataCategory": "personal",
+    "retentionPeriod": "365"
+  }
 }

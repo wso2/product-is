@@ -377,7 +377,8 @@
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
                 org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
-                org.wso2.carbon.identity.api.user.password.v1.MeApi
+                org.wso2.carbon.identity.api.user.password.v1.MeApi,
+                org.wso2.carbon.identity.api.user.consent.v1.MeApi
             </param-value>
         </init-param>
         <init-param>
@@ -536,7 +537,8 @@
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
                 org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
-                org.wso2.carbon.identity.api.user.password.v1.MeApi
+                org.wso2.carbon.identity.api.user.password.v1.MeApi,
+                org.wso2.carbon.identity.api.user.consent.v1.MeApi
             </param-value>
         </init-param>
         <init-param>

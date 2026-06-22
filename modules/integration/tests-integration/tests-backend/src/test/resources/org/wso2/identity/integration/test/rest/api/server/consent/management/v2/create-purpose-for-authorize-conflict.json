@@ -1,6 +1,0 @@
-{
-  "name": "Authorize Conflict Test Purpose",
-  "description": "Purpose used for testing authorize on non-pending consent",
-  "type": "Test",
-  "version": "1"
-}
