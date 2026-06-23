@@ -2701,7 +2701,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.134</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.137</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2857,13 +2857,13 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.39</carbon.kernel.version>
+        <carbon.kernel.version>4.12.41</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.2</identity.verification.version>
 
         <!-- Carbon Repo Versions -->
-        <carbon.deployment.version>4.14.0</carbon.deployment.version>
+        <carbon.deployment.version>4.14.4</carbon.deployment.version>
         <carbon.commons.version>4.14.4</carbon.commons.version>
         <carbon.registry.version>4.10.2</carbon.registry.version>
         <carbon.multitenancy.version>4.14.2</carbon.multitenancy.version>
