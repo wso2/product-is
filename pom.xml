@@ -2990,7 +2990,7 @@
         <swagger-request-validator.version>2.6.0</swagger-request-validator.version>
         <!--UI Cypress test -->
         <com.fasterxml.jackson.version>2.21.2</com.fasterxml.jackson.version>
-        <com.fasterxml.jackson.databind.version>2.21.2</com.fasterxml.jackson.databind.version>
+        <com.fasterxml.jackson.databind.version>2.21.4</com.fasterxml.jackson.databind.version>
         <com.fasterxml.jackson.annotations.version>2.21</com.fasterxml.jackson.annotations.version>
         <jackson-core-asl.version>1.9.13</jackson-core-asl.version>
         <!--ws-trust-client-->
