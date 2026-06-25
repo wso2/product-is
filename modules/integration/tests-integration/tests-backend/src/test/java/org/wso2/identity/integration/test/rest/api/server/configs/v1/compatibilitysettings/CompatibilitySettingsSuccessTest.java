@@ -88,7 +88,7 @@ public class CompatibilitySettingsSuccessTest extends ConfigTestBase {
         };
     }
 
-    @Test(description = "GET all compatibility settings returns 200 and valid structure")
+    @Test(description = "GET all compatibility settings returns 200 and valid structure.")
     public void testGetCompatibilitySettings() throws Exception {
 
         Response response = getResponseOfGet(CONFIGS_COMPATIBILITY_SETTINGS_API_BASE_PATH);
@@ -99,7 +99,7 @@ public class CompatibilitySettingsSuccessTest extends ConfigTestBase {
         response.then().body("$", notNullValue());
     }
 
-    @Test(description = "GET compatibility settings by group flowExecution returns 200 and enableLegacyFlows")
+    @Test(description = "GET compatibility settings by group flowExecution returns 200 and enableLegacyFlows.")
     public void testGetCompatibilitySettingsByGroupFlowExecution() throws Exception {
 
         Response response = getResponseOfGet(
@@ -111,7 +111,7 @@ public class CompatibilitySettingsSuccessTest extends ConfigTestBase {
                 .body(ENABLE_LEGACY_FLOWS, equalTo("false"));
     }
 
-    @Test(description = "PATCH compatibility settings then GET reflects updated value",
+    @Test(description = "PATCH compatibility settings then GET reflects updated value.",
             dependsOnMethods = {"testGetCompatibilitySettingsByGroupFlowExecution"})
     public void testPatchCompatibilitySettingsFlowExecution() throws Exception {
 
@@ -131,7 +131,7 @@ public class CompatibilitySettingsSuccessTest extends ConfigTestBase {
                 .body(ENABLE_LEGACY_FLOWS, equalTo("true"));
     }
 
-    @Test(description = "PATCH then GET by group returns consistent flowExecution settings",
+    @Test(description = "PATCH then GET by group returns consistent flowExecution settings.",
             dependsOnMethods = {"testPatchCompatibilitySettingsFlowExecution"})
     public void testPatchThenGetByGroup() throws Exception {
 

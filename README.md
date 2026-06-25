@@ -1,6 +1,9 @@
 <a href="http://wso2.com/products/identity-server/">
-<img src="https://wso2.cachefly.net/wso2/sites/all/image_resources/wso2-branding-logos/wso2-logo-orange.png" alt="WSO2 logo" width=30% height=30% />
-
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://wso2.cachefly.net/wso2/sites/all/image_resources/logos/WSO2-Logo-White.png" />
+<source media="(prefers-color-scheme: light)" srcset="https://wso2.cachefly.net/wso2/sites/all/image_resources/logos/WSO2-Logo-Black.png" />
+<img src="https://wso2.cachefly.net/wso2/sites/all/image_resources/logos/WSO2-Logo-Black.png" alt="WSO2 logo" width=30% height=30% />
+</picture>
 </a>
 
 # WSO2 Identity Server
