@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -29,6 +30,8 @@ import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.mode
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.Message;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Step;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -59,6 +62,9 @@ import static org.wso2.identity.integration.test.rest.api.server.flow.execution.
 public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecutionTestBase {
 
     private static final String USERNAME_CLAIM = "http://wso2.org/claims/username";
+    // Generic identifier field used by the multi-attribute-login flow variant (resolved against the allowed
+    // attributes by the UserResolveExecutor), instead of binding the field to the username claim.
+    private static final String USER_IDENTIFIER_FIELD = "userIdentifier";
     private static final String USER_RESOLVE_ACTION_ID = "button_1ov4";
 
     private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE = "urn:scim:wso2:schema";
@@ -70,13 +76,25 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
     private static final String DISABLED_USER = "PwdRecDisabledUser";
     private static final String DISABLED_USER_EMAIL = "pwd.rec.disabled@example.com";
     private static final String NON_EXISTENT_USER = "PwdRecNonExistentUser";
+    private static final String NON_EXISTENT_USER_EMAIL = "pwd.rec.nonexistent@example.com";
     private static final String ACTIVE_USER = "PwdRecActiveUser";
     private static final String ACTIVE_USER_EMAIL = "pwd.rec.active@example.com";
     private static final String TEST_USER_PASSWORD = "Wso2@Test123";
 
-    private static final String USER_NOT_FOUND_I18N_KEY = "user.not.found";
-    private static final String ACCOUNT_LOCKED_I18N_KEY_PREFIX = "account.locked";
-    private static final String ACCOUNT_DISABLED_I18N_KEY = "account.disabled";
+    // The executor returns i18n keys wrapped in double braces (e.g. "{{user.not.found}}"); the framework
+    // serializes them verbatim, so the expected values must include the braces.
+    private static final String USER_NOT_FOUND_I18N_KEY = "{{user.not.found}}";
+    private static final String ACCOUNT_LOCKED_I18N_KEY_PREFIX = "{{account.locked";
+    private static final String ACCOUNT_DISABLED_I18N_KEY = "{{account.disabled}}";
+
+    // Account Management category; multi-attribute login handler connector and its properties.
+    private static final String ACCOUNT_MGT_CATEGORY = "QWNjb3VudCBNYW5hZ2VtZW50";
+    private static final String MULTI_ATTRIBUTE_CONNECTOR_ID = "bXVsdGlhdHRyaWJ1dGUubG9naW4uaGFuZGxlcg";
+    private static final String MULTI_ATTRIBUTE_ENABLE_PROPERTY = "account.multiattributelogin.handler.enable";
+    private static final String MULTI_ATTRIBUTE_ALLOWED_ATTRIBUTES_PROPERTY =
+            "account.multiattributelogin.handler.allowedattributes";
+    private static final String MULTI_ATTRIBUTE_ALLOWED_ATTRIBUTES =
+            "http://wso2.org/claims/username, http://wso2.org/claims/emailaddress";
 
     private FlowExecutionClient flowExecutionClient;
     private FlowManagementClient flowManagementClient;
@@ -143,6 +161,7 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
         if (activeUserId != null) {
             scim2RestClient.deleteUser(activeUserId);
         }
+        setMultiAttributeLoginStatus(false);
         disablePasswordRecoveryFlow(flowManagementClient);
         updatePasswordRecoveryFeatureStatus(false);
         setAccountDisableHandlerStatus(false);
@@ -207,14 +226,83 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
                 "Expected the OTP verification step to be rendered after resolving a valid user.");
     }
 
+    @Test(description = "Enable multi-attribute login (username + email) and persist the recovery flow variant whose " +
+            "identifier field uses the generic userIdentifier, so the recovery identifier can be an email.",
+            dependsOnMethods = "testActiveUserResolvesAndAdvances")
+    public void testEnableMultiAttributeLogin() throws Exception {
+
+        setMultiAttributeLoginStatus(true);
+        persistRecoveryFlowWithUserIdentifierField();
+    }
+
+    @Test(description = "With multi-attribute login enabled, submit a non-existent email and expect a user-not-found " +
+            "error.", dependsOnMethods = "testEnableMultiAttributeLogin")
+    public void testNonExistentEmailIsNotifiedWithMultiAttributeLogin() throws Exception {
+
+        FlowExecutionResponse response = submitIdentifier(USER_IDENTIFIER_FIELD, NON_EXISTENT_USER_EMAIL);
+        assertErrorMessage(response, USER_NOT_FOUND_I18N_KEY);
+    }
+
+    @Test(description = "With multi-attribute login enabled, submit a locked user's email and expect an error.",
+            dependsOnMethods = "testNonExistentEmailIsNotifiedWithMultiAttributeLogin")
+    public void testLockedAccountIsNotifiedWithMultiAttributeLogin() throws Exception {
+
+        FlowExecutionResponse response = submitIdentifier(USER_IDENTIFIER_FIELD, LOCKED_USER_EMAIL);
+        assertErrorMessage(response, ACCOUNT_LOCKED_I18N_KEY_PREFIX);
+    }
+
+    @Test(description = "With multi-attribute login enabled, submit a disabled user's email and expect an error.",
+            dependsOnMethods = "testLockedAccountIsNotifiedWithMultiAttributeLogin")
+    public void testDisabledAccountIsNotifiedWithMultiAttributeLogin() throws Exception {
+
+        FlowExecutionResponse response = submitIdentifier(USER_IDENTIFIER_FIELD, DISABLED_USER_EMAIL);
+        assertErrorMessage(response, ACCOUNT_DISABLED_I18N_KEY);
+    }
+
+    @Test(description = "With multi-attribute login enabled, submit a valid active user's email and expect the flow " +
+            "to advance past user resolution without any enumeration or account-status error.",
+            dependsOnMethods = "testDisabledAccountIsNotifiedWithMultiAttributeLogin")
+    public void testActiveUserResolvesViaEmailAndAdvances() throws Exception {
+
+        FlowExecutionResponse response = submitIdentifier(USER_IDENTIFIER_FIELD, ACTIVE_USER_EMAIL);
+
+        // Flow continues as a VIEW step (the next step is rendered), not terminated.
+        Assert.assertEquals(response.getFlowStatus(), STATUS_INCOMPLETE);
+        Assert.assertEquals(response.getType().toString(), TYPE_VIEW);
+
+        // No enumeration / account-status ERROR was surfaced for a valid active user resolved via email.
+        Assert.assertFalse(hasErrorMessage(response),
+                "Unexpected ERROR message for a valid active user: " + response.getData().getMessages());
+
+        // The flow advanced to the OTP verification step (proves it moved past user resolution).
+        Assert.assertTrue(containsOtpComponent(response.getData().getComponents()),
+                "Expected the OTP verification step to be rendered after resolving a valid user via email.");
+    }
+
     /**
-     * Initiate a fresh password recovery flow and submit the given username at the user resolution step.
+     * Initiate a fresh password recovery flow and submit the given username under the username claim field.
      *
      * @param username Username submitted to the {@code UserResolveExecutor}.
      * @return The flow execution response of the user resolution step.
      * @throws Exception If the flow could not be initiated or executed.
      */
     private FlowExecutionResponse submitIdentifier(String username) throws Exception {
+
+        return submitIdentifier(USERNAME_CLAIM, username);
+    }
+
+    /**
+     * Initiate a fresh password recovery flow and submit the given identifier under the given input field at the
+     * user resolution step. The field is the username claim for the default flow and {@code userIdentifier} for the
+     * multi-attribute-login variant.
+     *
+     * @param identifierField Input field identifier under which the value is submitted (username claim or
+     *                        {@code userIdentifier}).
+     * @param identifier      Identifier value submitted to the {@code UserResolveExecutor}.
+     * @return The flow execution response of the user resolution step.
+     * @throws Exception If the flow could not be initiated or executed.
+     */
+    private FlowExecutionResponse submitIdentifier(String identifierField, String identifier) throws Exception {
 
         Object initiationObj = flowExecutionClient.initiateFlowExecution(PASSWORD_RECOVERY);
         Assert.assertTrue(initiationObj instanceof FlowExecutionResponse);
@@ -225,7 +313,7 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
         request.setFlowId(flowId);
         request.setActionId(USER_RESOLVE_ACTION_ID);
         Map<String, String> inputs = new HashMap<>();
-        inputs.put(USERNAME_CLAIM, username);
+        inputs.put(identifierField, identifier);
         request.setInputs(inputs);
 
         Object responseObj = flowExecutionClient.executeFlow(request);
@@ -322,5 +410,65 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
         // Category "Account Management", connector "account.disable.handler".
         identityGovernanceRestClient.updateConnectors("QWNjb3VudCBNYW5hZ2VtZW50",
                 "YWNjb3VudC5kaXNhYmxlLmhhbmRsZXI", connectorsPatchReq);
+    }
+
+    private void setMultiAttributeLoginStatus(boolean enable) throws IOException {
+
+        ConnectorsPatchReq connectorsPatchReq = new ConnectorsPatchReq();
+        connectorsPatchReq.setOperation(ConnectorsPatchReq.OperationEnum.UPDATE);
+        PropertyReq enableProperty = new PropertyReq();
+        enableProperty.setName(MULTI_ATTRIBUTE_ENABLE_PROPERTY);
+        enableProperty.setValue(enable ? "true" : "false");
+        connectorsPatchReq.addProperties(enableProperty);
+        if (enable) {
+            PropertyReq allowedAttributesProperty = new PropertyReq();
+            allowedAttributesProperty.setName(MULTI_ATTRIBUTE_ALLOWED_ATTRIBUTES_PROPERTY);
+            allowedAttributesProperty.setValue(MULTI_ATTRIBUTE_ALLOWED_ATTRIBUTES);
+            connectorsPatchReq.addProperties(allowedAttributesProperty);
+        }
+        identityGovernanceRestClient.updateConnectors(ACCOUNT_MGT_CATEGORY, MULTI_ATTRIBUTE_CONNECTOR_ID,
+                connectorsPatchReq);
+    }
+
+    /**
+     * Re-persist the password recovery flow with its identifier field rebound from the username claim to the
+     * generic {@code userIdentifier}, as expected when multi-attribute login is enabled. The standard flow
+     * resource is reused and rewritten in memory rather than maintaining a separate flow definition.
+     */
+    private void persistRecoveryFlowWithUserIdentifierField() throws Exception {
+
+        FlowRequest flowRequest = new ObjectMapper()
+                .readValue(readResource(PASSWORD_RECOVERY_FLOW), FlowRequest.class);
+        replaceIdentifierField(flowRequest, USERNAME_CLAIM, USER_IDENTIFIER_FIELD);
+        flowManagementClient.putFlow(flowRequest);
+    }
+
+    private void replaceIdentifierField(FlowRequest flowRequest, String from, String to) {
+
+        for (Step step : flowRequest.getSteps()) {
+            if (step.getData() != null) {
+                replaceIdentifierField(step.getData().getComponents(), from, to);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void replaceIdentifierField(
+            List<org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Component> components,
+            String from, String to) {
+
+        if (components == null) {
+            return;
+        }
+        for (org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Component component
+                : components) {
+            if (component.getConfig() instanceof Map) {
+                Map<String, Object> config = (Map<String, Object>) component.getConfig();
+                if (from.equals(config.get("identifier"))) {
+                    config.put("identifier", to);
+                }
+            }
+            replaceIdentifierField(component.getComponents(), from, to);
+        }
     }
 }
