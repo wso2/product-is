@@ -37,9 +37,7 @@ import java.util.Map;
 import static org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionTestBase.FlowTypes.PASSWORD_RECOVERY;
 
 /**
- * Negative tests for the password recovery flow execution with the user enumeration and account status controls
- * enabled on the {@code UserResolveExecutor}. Covers the generic flow-execution error responses: initiating or
- * executing before the flow is enabled, executing with an invalid flow id, and submitting empty inputs.
+ * Negative tests for the password recovery flow execution with the user enumeration and account status controls.
  */
 public class RecoveryEnumerationControlsExecutionNegativeTest extends FlowExecutionTestBase {
 

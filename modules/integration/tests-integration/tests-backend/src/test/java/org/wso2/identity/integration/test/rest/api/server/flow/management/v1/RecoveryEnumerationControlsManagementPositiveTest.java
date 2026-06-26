@@ -33,7 +33,6 @@ import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.mod
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Executor;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowResponse;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Step;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 
 import java.io.IOException;
@@ -43,10 +42,7 @@ import java.util.Map;
 import static org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementTestBase.FlowTypes.PASSWORD_RECOVERY;
 
 /**
- * Positive tests for managing the password recovery flow's user enumeration and account status controls — the
- * {@code UserResolveExecutor}'s {@code notifyUserExistence} and {@code notifyUserAccountStatus} flags. While the
- * flow config is enabled, the controls-enabled flow is accepted and the notify flags round-trip on the executor
- * meta.
+ * Positive tests for managing the password recovery flow's user enumeration and account status controls.
  */
 public class RecoveryEnumerationControlsManagementPositiveTest extends FlowManagementTestBase {
 
@@ -114,7 +110,8 @@ public class RecoveryEnumerationControlsManagementPositiveTest extends FlowManag
     public void testGetPasswordRecoveryFlow() throws Exception {
 
         FlowResponse passwordRecoveryFlowResponse = flowManagementClient.getFlow(PASSWORD_RECOVERY);
-        Object meta = findUserResolveExecutorMetaInSteps(passwordRecoveryFlowResponse.getSteps());
+        Object meta = findUserResolveExecutorMeta(
+                passwordRecoveryFlowResponse.getSteps().getFirst().getData().getComponents());
         Assert.assertTrue(meta instanceof Map, "UserResolveExecutor meta not found in the retrieved flow.");
 
         Map<?, ?> metaMap = (Map<?, ?>) meta;
@@ -133,26 +130,6 @@ public class RecoveryEnumerationControlsManagementPositiveTest extends FlowManag
         flowConfig.setFlowType(PASSWORD_RECOVERY);
         flowConfig.setIsEnabled(enable);
         flowManagementClient.updateFlowConfig(flowConfig);
-    }
-
-    /**
-     * Walk the flow steps and locate the {@code meta} object of the {@code UserResolveExecutor} action.
-     *
-     * @param steps Steps of the retrieved flow.
-     * @return The executor meta object, or {@code null} if the executor is not found.
-     */
-    private Object findUserResolveExecutorMetaInSteps(List<Step> steps) {
-
-        for (Step step : steps) {
-            if (step.getData() == null) {
-                continue;
-            }
-            Object meta = findUserResolveExecutorMeta(step.getData().getComponents());
-            if (meta != null) {
-                return meta;
-            }
-        }
-        return null;
     }
 
     private Object findUserResolveExecutorMeta(List<Component> components) {

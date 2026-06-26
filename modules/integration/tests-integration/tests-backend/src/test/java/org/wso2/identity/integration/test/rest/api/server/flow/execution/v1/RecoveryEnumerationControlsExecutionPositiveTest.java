@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,8 +29,6 @@ import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.mode
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.Message;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
-import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Step;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -52,12 +49,7 @@ import java.util.Map;
 import static org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionTestBase.FlowTypes.PASSWORD_RECOVERY;
 
 /**
- * Tests the user enumeration and account status controls of the password recovery flow execution — the
- * {@code UserResolveExecutor}'s {@code notifyUserExistence} and {@code notifyUserAccountStatus} flags.
- *
- * <p>With both flags enabled, the executor must surface user-facing error messages (instead of silently
- * advancing the flow to prevent user enumeration) when the submitted identifier does not resolve to a user,
- * or resolves to a user whose account is locked or disabled.</p>
+ * Tests the user enumeration and account status controls of the password recovery flow execution.
  */
 public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecutionTestBase {
 
@@ -232,7 +224,7 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
     public void testEnableMultiAttributeLogin() throws Exception {
 
         setMultiAttributeLoginStatus(true);
-        persistRecoveryFlowWithUserIdentifierField();
+        addPasswordRecoveryMultiAttributeFlow(flowManagementClient);
     }
 
     @Test(description = "With multi-attribute login enabled, submit a non-existent email and expect a user-not-found " +
@@ -277,6 +269,39 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
         // The flow advanced to the OTP verification step (proves it moved past user resolution).
         Assert.assertTrue(containsOtpComponent(response.getData().getComponents()),
                 "Expected the OTP verification step to be rendered after resolving a valid user via email.");
+    }
+
+    @Test(description = "Disable the enumeration controls by persisting the controls-disabled flow (and disabling " +
+            "multi-attribute login) so the executor must silently advance instead of notifying the user.",
+            dependsOnMethods = "testActiveUserResolvesViaEmailAndAdvances")
+    public void testDisableEnumerationControls() throws Exception {
+
+        setMultiAttributeLoginStatus(false);
+        addPasswordRecoveryControlsDisabledFlow(flowManagementClient);
+    }
+
+    @Test(description = "With the controls disabled, submitting a non-existent identifier must silently advance the " +
+            "flow without any enumeration error.", dependsOnMethods = "testDisableEnumerationControls")
+    public void testNonExistentIdentifierSilentlyAdvances() throws Exception {
+
+        FlowExecutionResponse response = submitIdentifier(NON_EXISTENT_USER);
+        assertSilentlyAdvances(response);
+    }
+
+    @Test(description = "With the controls disabled, submitting a locked user must silently advance the flow without " +
+            "any account-status error.", dependsOnMethods = "testNonExistentIdentifierSilentlyAdvances")
+    public void testLockedAccountSilentlyAdvances() throws Exception {
+
+        FlowExecutionResponse response = submitIdentifier(LOCKED_USER);
+        assertSilentlyAdvances(response);
+    }
+
+    @Test(description = "With the controls disabled, submitting a disabled user must silently advance the flow " +
+            "without any account-status error.", dependsOnMethods = "testLockedAccountSilentlyAdvances")
+    public void testDisabledAccountSilentlyAdvances() throws Exception {
+
+        FlowExecutionResponse response = submitIdentifier(DISABLED_USER);
+        assertSilentlyAdvances(response);
     }
 
     /**
@@ -337,6 +362,22 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
                         && message.getI18nKey().startsWith(expectedI18nKeyPrefix));
         Assert.assertTrue(hasExpectedError,
                 "No ERROR message with i18n key '" + expectedI18nKeyPrefix + "' in: " + messages);
+    }
+
+    /**
+     * Assert that the flow silently advanced past user resolution: it re-renders as a VIEW step, carries no ERROR
+     * message, and renders the OTP verification step (the same response a valid user would get, so the caller
+     * cannot tell whether the identifier resolved to a user).
+     */
+    private void assertSilentlyAdvances(FlowExecutionResponse response) {
+
+        Assert.assertEquals(response.getFlowStatus(), STATUS_INCOMPLETE);
+        Assert.assertEquals(response.getType().toString(), TYPE_VIEW);
+        Assert.assertFalse(hasErrorMessage(response),
+                "Unexpected ERROR message while the enumeration controls are disabled: "
+                        + response.getData().getMessages());
+        Assert.assertTrue(containsOtpComponent(response.getData().getComponents()),
+                "Expected the OTP verification step to be rendered when the controls are disabled.");
     }
 
     /**
@@ -428,47 +469,5 @@ public class RecoveryEnumerationControlsExecutionPositiveTest extends FlowExecut
         }
         identityGovernanceRestClient.updateConnectors(ACCOUNT_MGT_CATEGORY, MULTI_ATTRIBUTE_CONNECTOR_ID,
                 connectorsPatchReq);
-    }
-
-    /**
-     * Re-persist the password recovery flow with its identifier field rebound from the username claim to the
-     * generic {@code userIdentifier}, as expected when multi-attribute login is enabled. The standard flow
-     * resource is reused and rewritten in memory rather than maintaining a separate flow definition.
-     */
-    private void persistRecoveryFlowWithUserIdentifierField() throws Exception {
-
-        FlowRequest flowRequest = new ObjectMapper()
-                .readValue(readResource(PASSWORD_RECOVERY_FLOW), FlowRequest.class);
-        replaceIdentifierField(flowRequest, USERNAME_CLAIM, USER_IDENTIFIER_FIELD);
-        flowManagementClient.putFlow(flowRequest);
-    }
-
-    private void replaceIdentifierField(FlowRequest flowRequest, String from, String to) {
-
-        for (Step step : flowRequest.getSteps()) {
-            if (step.getData() != null) {
-                replaceIdentifierField(step.getData().getComponents(), from, to);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void replaceIdentifierField(
-            List<org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Component> components,
-            String from, String to) {
-
-        if (components == null) {
-            return;
-        }
-        for (org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Component component
-                : components) {
-            if (component.getConfig() instanceof Map) {
-                Map<String, Object> config = (Map<String, Object>) component.getConfig();
-                if (from.equals(config.get("identifier"))) {
-                    config.put("identifier", to);
-                }
-            }
-            replaceIdentifierField(component.getComponents(), from, to);
-        }
     }
 }
