@@ -55,5 +55,6 @@ public final class Constants {
     public static final String ERROR_CODE_PARAM = "errorCode=";
     public static final String OTP_ERROR_ELEMENT_ID = "id=\"failed-msg\"";
     public static final String FLOW_STATUS_INCOMPLETE = "INCOMPLETE";
+    public static final String FLOW_STATUS_FAIL_INCOMPLETE = "FAIL_INCOMPLETE";
     public static final String FLOW_STATUS_SUCCESS = "SUCCESS_COMPLETED";
 }

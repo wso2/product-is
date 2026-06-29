@@ -160,7 +160,7 @@ public class EmailOTPProviderFailureLoginRedirectTest extends AbstractOTPProvide
     @Test(groups = "wso2.is", dependsOnMethods = "testProviderFailureShownWhenConfigEnabled")
     public void testLoginAfterRestoringProviderSameSession() throws Exception {
 
-        Utils.getMailServer().start();
+        restartMailServer();
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         HttpResponse resendResponse = resendOTP(sharedHttpClient, otpSessionDataKey);
         String otpPageUrl = followToOtpPage(sharedHttpClient, resendResponse);

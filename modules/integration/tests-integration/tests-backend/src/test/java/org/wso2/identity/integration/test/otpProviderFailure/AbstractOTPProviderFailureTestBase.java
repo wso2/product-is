@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.otpProviderFailure;
 
+import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
 import org.apache.http.Header;
@@ -219,6 +220,25 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
         return smsSender;
     }
 
+    /**
+     * Restart the mock SMTP server and re-register the SMTP user.
+     */
+    protected void restartMailServer() throws Exception {
+
+        GreenMail mailServer = Utils.getMailServer();
+        if (mailServer == null) {
+            return;
+        }
+        if (!mailServer.isRunning()) {
+            mailServer.start();
+        }
+        String smtpUsername = isServer.getConfigurationValue("//emailSenderConfigs/username");
+        String smtpPassword = isServer.getConfigurationValue("//emailSenderConfigs/password");
+        if (smtpUsername != null && smtpPassword != null) {
+            mailServer.setUser(smtpUsername, smtpPassword);
+        }
+    }
+
     protected CloseableHttpClient createSessionHttpClient() {
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
@@ -365,7 +385,16 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
         String body = "{\"flowId\":\"" + state.flowId + "\","
                 + "\"selectedAuthenticator\":{"
                 + "\"authenticatorId\":\"" + state.authenticatorId + "\","
-                + "\"params\":{\"OTPCode\":\"" + otpCode + "\"}}}";
+                + "\"params\":{\"OTPcode\":\"" + otpCode + "\"}}}";
+        return postToAuthn(state.flowId, body);
+    }
+
+    protected AuthnFlowState resendOTP(AuthnFlowState state) throws Exception {
+
+        String body = "{\"flowId\":\"" + state.flowId + "\","
+                + "\"selectedAuthenticator\":{"
+                + "\"authenticatorId\":\"" + state.authenticatorId + "\","
+                + "\"params\":{\"resendCode\":\"true\"}}}";
         return postToAuthn(state.flowId, body);
     }
 

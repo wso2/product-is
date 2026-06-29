@@ -39,6 +39,7 @@ public class EmailOTPProviderFailureLoginNativeTest extends AbstractOTPProviderF
     private String clientId;
     private String userId;
     private SCIM2RestClient scim2RestClient;
+    private AuthnFlowState providerFailureState;
 
     @Factory(dataProvider = "testExecutionContextProvider")
     public EmailOTPProviderFailureLoginNativeTest(TestUserMode userMode) throws Exception {
@@ -83,6 +84,23 @@ public class EmailOTPProviderFailureLoginNativeTest extends AbstractOTPProviderF
     }
 
     @Test(groups = "wso2.is")
+    public void testSuccessfulLoginWithProviderWorking() throws Exception {
+
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
+        AuthnFlowState state = initiateNativeFlow(clientId);
+        state = completeBasicAuth(state, Constants.TEST_USER_NAME, Constants.TEST_USER_PASSWORD);
+        Assert.assertFalse(hasProviderFailureInMessages(state.response),
+                "Provider failure should not be visible in messages when provider is working.");
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_INCOMPLETE,
+                "Flow should be INCOMPLETE at OTP step.");
+        String otp = extractOtpFromEmail(1);
+        Assert.assertNotNull(otp, "OTP should be received from mail server.");
+        state = submitOTPCode(state, otp);
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_SUCCESS,
+                "Flow should be SUCCESS_COMPLETED after correct OTP.");
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testSuccessfulLoginWithProviderWorking")
     public void testProviderFailureHiddenByDefault() throws Exception {
 
         Utils.getMailServer().stop();
@@ -102,14 +120,31 @@ public class EmailOTPProviderFailureLoginNativeTest extends AbstractOTPProviderF
         state = completeBasicAuth(state, Constants.TEST_USER_NAME, Constants.TEST_USER_PASSWORD);
         Assert.assertTrue(hasProviderFailureInMessages(state.response),
                 "Provider failure should be visible in messages when config is enabled.");
-        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_INCOMPLETE,
-                "Flow should be INCOMPLETE at OTP step.");
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_FAIL_INCOMPLETE,
+                "Flow should be FAIL_INCOMPLETE at OTP step when the provider failure is reported.");
+        providerFailureState = state;
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "testProviderFailureShownWhenConfigEnabled")
-    public void testSuccessfulLoginAfterProviderRestored() throws Exception {
+    public void testLoginAfterRestoringProviderSameSession() throws Exception {
 
-        Utils.getMailServer().start();
+        restartMailServer();
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
+        AuthnFlowState state = resendOTP(providerFailureState);
+        Assert.assertFalse(hasProviderFailureInMessages(state.response),
+                "Provider failure should be cleared after resend with provider restored.");
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_INCOMPLETE,
+                "Flow should be INCOMPLETE at OTP step after resend with provider restored.");
+        String otp = extractOtpFromEmail(1);
+        Assert.assertNotNull(otp, "OTP should be received after provider is restored.");
+        state = submitOTPCode(state, otp);
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_SUCCESS,
+                "Flow should be SUCCESS_COMPLETED after correct OTP.");
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testLoginAfterRestoringProviderSameSession")
+    public void testFreshLoginAfterProviderRestored() throws Exception {
+
         Utils.getMailServer().purgeEmailFromAllMailboxes();
         AuthnFlowState state = initiateNativeFlow(clientId);
         state = completeBasicAuth(state, Constants.TEST_USER_NAME, Constants.TEST_USER_PASSWORD);

@@ -42,6 +42,7 @@ public class SMSOTPProviderFailureLoginNativeTest extends AbstractOTPProviderFai
     private SCIM2RestClient scim2RestClient;
     private MockSMSProvider mockSMSProvider;
     private NotificationSenderRestClient notificationSenderRestClient;
+    private AuthnFlowState providerFailureState;
 
     @Factory(dataProvider = "testExecutionContextProvider")
     public SMSOTPProviderFailureLoginNativeTest(TestUserMode userMode) throws Exception {
@@ -95,6 +96,23 @@ public class SMSOTPProviderFailureLoginNativeTest extends AbstractOTPProviderFai
     }
 
     @Test(groups = "wso2.is")
+    public void testSuccessfulLoginWithProviderWorking() throws Exception {
+
+        mockSMSProvider.clearSmsContent();
+        AuthnFlowState state = initiateNativeFlow(clientId);
+        state = completeBasicAuth(state, Constants.TEST_USER_NAME, Constants.TEST_USER_PASSWORD);
+        Assert.assertFalse(hasProviderFailureInMessages(state.response),
+                "Provider failure should not be visible in messages when provider is working.");
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_INCOMPLETE,
+                "Flow should be INCOMPLETE at OTP step.");
+        String otp = mockSMSProvider.getOTP();
+        Assert.assertNotNull(otp, "OTP should be received from SMS provider.");
+        state = submitOTPCode(state, otp);
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_SUCCESS,
+                "Flow should be SUCCESS_COMPLETED after correct OTP.");
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testSuccessfulLoginWithProviderWorking")
     public void testProviderFailureHiddenByDefault() throws Exception {
 
         mockSMSProvider.stop();
@@ -114,14 +132,31 @@ public class SMSOTPProviderFailureLoginNativeTest extends AbstractOTPProviderFai
         state = completeBasicAuth(state, Constants.TEST_USER_NAME, Constants.TEST_USER_PASSWORD);
         Assert.assertTrue(hasProviderFailureInMessages(state.response),
                 "Provider failure should be visible in messages when config is enabled.");
-        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_INCOMPLETE,
-                "Flow should be INCOMPLETE at OTP step.");
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_FAIL_INCOMPLETE,
+                "Flow should be FAIL_INCOMPLETE at OTP step when the provider failure is reported.");
+        providerFailureState = state;
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "testProviderFailureShownWhenConfigEnabled")
-    public void testSuccessfulLoginAfterProviderRestored() throws Exception {
+    public void testLoginAfterRestoringProviderSameSession() throws Exception {
 
         mockSMSProvider.start();
+        mockSMSProvider.clearSmsContent();
+        AuthnFlowState state = resendOTP(providerFailureState);
+        Assert.assertFalse(hasProviderFailureInMessages(state.response),
+                "Provider failure should be cleared after resend with provider restored.");
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_INCOMPLETE,
+                "Flow should be INCOMPLETE at OTP step after resend with provider restored.");
+        String otp = mockSMSProvider.getOTP();
+        Assert.assertNotNull(otp, "OTP should be received after provider is restored.");
+        state = submitOTPCode(state, otp);
+        Assert.assertEquals(state.response.get("flowStatus"), Constants.FLOW_STATUS_SUCCESS,
+                "Flow should be SUCCESS_COMPLETED after correct OTP.");
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testLoginAfterRestoringProviderSameSession")
+    public void testFreshLoginAfterProviderRestored() throws Exception {
+
         mockSMSProvider.clearSmsContent();
         AuthnFlowState state = initiateNativeFlow(clientId);
         state = completeBasicAuth(state, Constants.TEST_USER_NAME, Constants.TEST_USER_PASSWORD);
