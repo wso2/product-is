@@ -51,18 +51,18 @@ To build the WSO2 Identity Server distribution from source, follow these steps:
 ## Running/Debugging the Integration Tests
 
 - Build the product using the steps above.
-- Navigate to `product-is/modules/integration/test-integration/test-backend` and run:  
+- Navigate to `product-is/modules/integration/tests-integration/tests-backend` and run:  
   `mvn clean install`  
   _(This will run all the integration tests.)_
 - To run a specific integration test:
-    1. Open the `testng.xml` file in the `test-backend` directory.
+    1. Open the `testng.xml` file in the `tests-backend/src/test/resources` directory.
     2. Comment out the tests you do not want to run.  
        _Do not comment out the listeners and the `is-tests-initialize` test group._
     3. Run `mvn clean install`.
 - To run integration tests in debug mode:  
   `mvn -Dmaven.surefire.debug test`
 - To run/debug integration tests and debug another repo:
-    1. Open the `automation.xml` file in the `test-backend` directory.
+    1. Open the `automation.xml` file in the `tests-backend/src/test/resources` directory.
     2. Uncomment the line:  
        `<parameter name="cmdArg" value="debug 5005" />`
     3. Run/debug the integration tests using:  
