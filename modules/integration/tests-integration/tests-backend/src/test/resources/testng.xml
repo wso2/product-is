@@ -204,6 +204,10 @@
             <class name="org.wso2.identity.integration.test.passkey.PasskeyRedirectBasedTest"/>
             <class name="org.wso2.identity.integration.test.passkey.PasskeyAppNativeTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.GracefulRefreshTokenRotationTestCase"/>
+            <class name="org.wso2.identity.integration.test.otpProviderFailure.email.EmailOTPProviderFailureLoginRedirectTest"/>
+            <class name="org.wso2.identity.integration.test.otpProviderFailure.email.EmailOTPProviderFailureLoginNativeTest"/>
+            <class name="org.wso2.identity.integration.test.otpProviderFailure.sms.SMSOTPProviderFailureLoginRedirectTest"/>
+            <class name="org.wso2.identity.integration.test.otpProviderFailure.sms.SMSOTPProviderFailureLoginNativeTest"/>
         </classes>
     </test>
 
