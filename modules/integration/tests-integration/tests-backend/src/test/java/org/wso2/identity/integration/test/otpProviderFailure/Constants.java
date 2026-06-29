@@ -29,9 +29,9 @@ public final class Constants {
 
     public static final String MFA_GOVERNANCE_CATEGORY_ID = "TXVsdGkgRmFjdG9yIEF1dGhlbnRpY2F0b3Jz";
 
-    public static final String EMAIL_OTP_CONNECTOR_ID = "RW1haWxPVFA";
+    public static final String EMAIL_OTP_CONNECTOR_ID = "ZW1haWwtb3RwLWF1dGhlbnRpY2F0b3I";
 
-    public static final String SMS_OTP_CONNECTOR_ID = "U21zT1RQ";
+    public static final String SMS_OTP_CONNECTOR_ID = "c21zLW90cC1hdXRoZW50aWNhdG9y";
 
     public static final String EMAIL_OTP_NOTIFY_SENDING_FAILURE_PROPERTY = "EmailOTP.NotifyEmailSendingFailure";
     public static final String SMS_OTP_NOTIFY_SENDING_FAILURE_PROPERTY = "SmsOTP.NotifySmsSendingFailure";

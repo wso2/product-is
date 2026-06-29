@@ -405,7 +405,7 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
             }
             String url = loc.getValue();
             EntityUtils.consume(response.getEntity());
-            if (url.contains("emailOtp.jsp") || url.contains("smsOtp.jsp")) {
+            if (url.contains("emailOtp.jsp") || url.contains("email_otp.do") || url.contains("smsOtp.jsp")) {
                 return url;
             }
             response = sendGetRequest(httpClient, url);
