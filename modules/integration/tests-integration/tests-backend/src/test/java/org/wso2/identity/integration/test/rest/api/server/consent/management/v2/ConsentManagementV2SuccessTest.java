@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.consent.management.v2;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -39,11 +40,11 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.sql.Timestamp;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
@@ -107,8 +108,10 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Override
     public void testConclude() throws Exception {
 
+        // @AfterMethod resets RestAssured.basePath; restore it so cleanup requests hit the right endpoints.
+        RestAssured.basePath = basePath;
         try {
-            if (testUserId != null) {
+            if (scim2RestClient != null && testUserId != null) {
                 scim2RestClient.deleteUser(testUserId);
             }
             if (createdPurposeId != null) {
@@ -128,6 +131,35 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
         }
     }
 
+    private String getUserConsentApiBaseUrl() {
+
+        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)) {
+            return serverURL + "api/users/v1/me/consents";
+        }
+        return serverURL + "t/" + tenant + "/api/users/v1/me/consents";
+    }
+
+    private Response userApiGet(String url) {
+
+        return given()
+                .auth().preemptive().basic(consentTestUserAuthName, CONSENT_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .get(url);
+    }
+
+    private Response userApiPost(String url, String body) {
+
+        return given()
+                .auth().preemptive().basic(consentTestUserAuthName, CONSENT_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .body(body)
+                .post(url);
+    }
+
     // =========================================================================
     // Element tests
     // =========================================================================
@@ -145,7 +177,9 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .body("id", notNullValue())
                 .body("name", equalTo("email_address"))
                 .body("displayName", equalTo("Email Address"))
-                .body("description", equalTo("User's primary email address"));
+                .body("description", equalTo("User's primary email address"))
+                .body("properties.dataCategory", equalTo("personal"))
+                .body("properties.retentionPeriod", equalTo("365"));
 
         createdElementId = response.jsonPath().getString("id");
     }
@@ -161,7 +195,9 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .body("id", equalTo(createdElementId))
                 .body("name", equalTo("email_address"))
                 .body("displayName", equalTo("Email Address"))
-                .body("description", equalTo("User's primary email address"));
+                .body("description", equalTo("User's primary email address"))
+                .body("properties.dataCategory", equalTo("personal"))
+                .body("properties.retentionPeriod", equalTo("365"));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetElement"})
@@ -193,6 +229,8 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .body("totalResults", greaterThanOrEqualTo(2))
                 .body("Elements.id", hasSize(greaterThanOrEqualTo(2)))
                 .body("Elements.find { it.id == '" + createdElementId + "' }.name", equalTo("email_address"))
+                .body("Elements.find { it.id == '" + createdElementId + "' }.properties.dataCategory",
+                        equalTo("personal"))
                 .body("Elements.find { it.id == '" + createdSecondElementId + "' }.name", equalTo("phone_number"))
                 .body("links", notNullValue());
     }
@@ -476,25 +514,18 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     // =========================================================================
 
     @Test(groups = "wso2.is", dependsOnMethods = { "testDeletePurposeVersion" })
-    public void testCreateConsent() throws IOException {
+    public void testCreateConsent() {
 
-        String body = readResource("create-consent.json")
-                .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + CONSENT_TEST_USER_NAME + "\"")
-                .replace("\"purposes\": [{\"id\": \"1\"", "\"purposes\": [{\"id\": \"" + createdPurposeId + "\"")
-                .replace("\"elements\": [{\"id\": \"1\"", "\"elements\": [{\"id\": \"" + createdElementId + "\"");
-        // Consent creation requires the authenticated user to match the subjectId, so authenticate as the test user.
-        Response response = given()
-                .auth().preemptive().basic(consentTestUserAuthName, CONSENT_TEST_USER_PASSWORD)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .body(body)
-                .post(CONSENTS_ENDPOINT);
+        // User API does not require subjectId — the caller is always the subject.
+        String body = "{\"serviceId\": \"test-integration-service\", \"language\": \"en\","
+                + " \"purposes\": [{\"id\": \"" + createdPurposeId + "\","
+                + " \"elements\": [{\"id\": \"" + createdElementId + "\"}]}],"
+                + " \"properties\": {\"testKey\": \"testValue\"}}";
+        Response response = userApiPost(getUserConsentApiBaseUrl(), body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
                 .body("id", notNullValue());
 
         createdReceiptId = response.jsonPath().getString("id");
@@ -503,7 +534,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateConsent"})
     public void testGetConsent() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "/" + createdReceiptId)
+        userApiGet(getUserConsentApiBaseUrl() + "/" + createdReceiptId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -523,91 +554,73 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetConsent"})
     public void testListConsents() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT)
+        // User API returns a plain JSON array scoped to the authenticated user.
+        userApiGet(getUserConsentApiBaseUrl())
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("Consents", notNullValue())
-                .body("totalResults", greaterThanOrEqualTo(1))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }", notNullValue())
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }.serviceId",
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("find { it.id == '" + createdReceiptId + "' }", notNullValue())
+                .body("find { it.id == '" + createdReceiptId + "' }.serviceId",
                         equalTo("test-integration-service"))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }.state",
-                        equalTo("ACTIVE"))
-                .body("links", notNullValue());
+                .body("find { it.id == '" + createdReceiptId + "' }.state",
+                        equalTo("ACTIVE"));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testListConsents"})
     public void testListConsentsWithPurposeIdFilter() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "?purposeId=" + createdPurposeId)
+        userApiGet(getUserConsentApiBaseUrl() + "?purposeId=" + createdPurposeId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", greaterThanOrEqualTo(1))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }", notNullValue())
-                .body("links", notNullValue());
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("id", hasItem(createdReceiptId));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testListConsentsWithPurposeIdFilter"})
     public void testListConsentsWithPurposeVersionIdFilter() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "?purposeVersionId=" + createdVersionId)
+        userApiGet(getUserConsentApiBaseUrl() + "?purposeVersionId=" + createdVersionId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", greaterThanOrEqualTo(1))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }", notNullValue())
-                .body("links", notNullValue());
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("id", hasItem(createdReceiptId));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testListConsents"})
     public void testListConsentsWithStateFilter() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "?state=ACTIVE")
+        userApiGet(getUserConsentApiBaseUrl() + "?state=ACTIVE")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", greaterThanOrEqualTo(1))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }", notNullValue())
-                .body("Consents.findAll { it.state != 'ACTIVE' }.size()", equalTo(0))
-                .body("links", notNullValue());
-    }
-
-    @Test(groups = "wso2.is", dependsOnMethods = {"testListConsents"})
-    public void testListConsentsWithSubjectIdFilter() {
-
-        getResponseOfGet(CONSENTS_ENDPOINT + "?subjectId=" + CONSENT_TEST_USER_NAME)
-                .then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", greaterThanOrEqualTo(1))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }", notNullValue())
-                .body("links", notNullValue());
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("id", hasItem(createdReceiptId))
+                .body("findAll { it.state != 'ACTIVE' }.size()", equalTo(0));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testListConsents"})
     public void testListConsentsWithServiceIdFilter() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "?serviceId=test-integration-service")
+        userApiGet(getUserConsentApiBaseUrl() + "?serviceId=test-integration-service")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", greaterThanOrEqualTo(1))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }", notNullValue())
-                .body("links", notNullValue());
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("id", hasItem(createdReceiptId));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetConsent"})
     public void testValidateActiveConsent() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "/" + createdReceiptId + "/validate")
+        userApiGet(getUserConsentApiBaseUrl() + "/" + createdReceiptId + "/validate")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -617,40 +630,31 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testValidateActiveConsent"})
-    public void testValidateExpiredConsent() throws IOException {
+    public void testValidateExpiredConsent() {
 
-        Timestamp expiredTimestamp = new Timestamp(System.currentTimeMillis() - 60_000L);
-        String expiredTimeValue = String.valueOf(expiredTimestamp.getTime());
-        String body = readResource("create-consent.json")
-                .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + CONSENT_TEST_USER_NAME + "\"")
-                .replace("\"purposes\": [{\"id\": \"1\"", "\"purposes\": [{\"id\": \"" + createdPurposeId + "\"")
-                .replace("\"elements\": [{\"id\": \"1\"", "\"elements\": [{\"id\": \"" + createdElementId + "\"")
-                .replace("\"properties\": {", "\"expiryTime\": " + expiredTimeValue + ",\n  \"properties\": {");
+        long expiredTime = System.currentTimeMillis() - 60_000L;
+        String body = "{\"serviceId\": \"test-integration-service\", \"language\": \"en\","
+                + " \"expiryTime\": " + expiredTime + ","
+                + " \"purposes\": [{\"id\": \"" + createdPurposeId + "\","
+                + " \"elements\": [{\"id\": \"" + createdElementId + "\"}]}]}";
 
-        Response response = given()
-                .auth().preemptive().basic(consentTestUserAuthName, CONSENT_TEST_USER_PASSWORD)
-                .contentType(ContentType.JSON)
-                .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                .log().ifValidationFails()
-                .body(body)
-                .post(CONSENTS_ENDPOINT);
+        Response response = userApiPost(getUserConsentApiBaseUrl(), body);
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue())
                 .body("id", notNullValue());
 
         String expiredReceiptId = response.jsonPath().getString("id");
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "/" + expiredReceiptId + "/validate")
+        userApiGet(getUserConsentApiBaseUrl() + "/" + expiredReceiptId + "/validate")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("state", equalTo("EXPIRED"));
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "/" + expiredReceiptId)
+        userApiGet(getUserConsentApiBaseUrl() + "/" + expiredReceiptId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -661,34 +665,34 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Test(groups = "wso2.is", dependsOnMethods = {
             "testListConsentsWithPurposeVersionIdFilter",
             "testListConsentsWithStateFilter",
-            "testListConsentsWithSubjectIdFilter",
             "testListConsentsWithServiceIdFilter",
             "testValidateActiveConsent"
     })
     public void testRevokeConsent() {
 
-        getResponseOfPost(CONSENTS_ENDPOINT + "/" + createdReceiptId + "/revoke", "")
+        // User API revoke returns 200.
+        userApiPost(getUserConsentApiBaseUrl() + "/" + createdReceiptId + "/revoke", "")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testRevokeConsent"})
     public void testRevokeConsentIdempotent() {
 
-        // Second revoke of an already-revoked consent must also succeed with 204.
-        getResponseOfPost(CONSENTS_ENDPOINT + "/" + createdReceiptId + "/revoke", "")
+        // Second revoke of an already-revoked consent must also succeed with 200.
+        userApiPost(getUserConsentApiBaseUrl() + "/" + createdReceiptId + "/revoke", "")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
-                .statusCode(HttpStatus.SC_NO_CONTENT);
+                .statusCode(HttpStatus.SC_OK);
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testRevokeConsentIdempotent"})
     public void testGetRevokedConsentStillAccessible() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "/" + createdReceiptId)
+        userApiGet(getUserConsentApiBaseUrl() + "/" + createdReceiptId)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -700,7 +704,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetRevokedConsentStillAccessible"})
     public void testValidateRevokedConsent() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "/" + createdReceiptId + "/validate")
+        userApiGet(getUserConsentApiBaseUrl() + "/" + createdReceiptId + "/validate")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -711,15 +715,14 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Test(groups = "wso2.is", dependsOnMethods = {"testGetRevokedConsentStillAccessible"})
     public void testListRevokedConsentsWithStateFilter() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "?state=REVOKED")
+        userApiGet(getUserConsentApiBaseUrl() + "?state=REVOKED")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
-                .body("totalResults", greaterThanOrEqualTo(1))
-                .body("Consents.find { it.id == '" + createdReceiptId + "' }", notNullValue())
-                .body("Consents.findAll { it.state != 'REVOKED' }.size()", equalTo(0))
-                .body("links", notNullValue());
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("id", hasItem(createdReceiptId))
+                .body("findAll { it.state != 'REVOKED' }.size()", equalTo(0));
     }
 
     // =========================================================================

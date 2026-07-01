@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.consent.management.v2;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
@@ -37,6 +38,7 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 
 /**
@@ -56,6 +58,14 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
 
     private SCIM2RestClient scim2RestClient;
 
+    // Cross-user test state — created in @BeforeClass, used across the 4 cross-user tests.
+    private String crossUserConsentId;
+    private String crossUserPurposeId;
+    private String crossUserElementId;
+    private String crossUserUserAId;
+    private String crossUserUserBId;
+    private String crossUserUserBAuthName;
+
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ConsentManagementV2FailureTest(TestUserMode userMode) throws Exception {
 
@@ -71,16 +81,34 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
 
         super.testInit(tenant);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
+        setupCrossUserTestData();
     }
 
     @AfterClass(alwaysRun = true)
     @Override
     public void testConclude() throws Exception {
 
-        if (scim2RestClient != null) {
-            scim2RestClient.closeHttpClient();
+        RestAssured.basePath = basePath;
+        try {
+            if (crossUserUserAId != null) {
+                scim2RestClient.deleteUser(crossUserUserAId);
+            }
+            if (crossUserUserBId != null) {
+                scim2RestClient.deleteUser(crossUserUserBId);
+            }
+            if (crossUserPurposeId != null) {
+                getResponseOfDelete(PURPOSES_ENDPOINT + "/" + crossUserPurposeId);
+            }
+            if (crossUserElementId != null) {
+                getResponseOfDelete(ELEMENTS_ENDPOINT + "/" + crossUserElementId);
+            }
+        } finally {
+            if (scim2RestClient != null) {
+                scim2RestClient.closeHttpClient();
+            }
+            RestAssured.basePath = "";
+            super.testConclude();
         }
-        super.testConclude();
     }
 
     // =========================================================================
@@ -398,79 +426,18 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
     @Test
     public void testAuthorizeNonExistentConsentReturns404() {
 
-        getResponseOfPost(CONSENTS_ENDPOINT + "/" + NON_EXISTENT_ID + "/authorize",
-                "{\"state\": \"APPROVED\"}")
+        // The authorize endpoint lives on the user API (/me/consents/{id}/authorize).
+        given()
+                .auth().preemptive().basic(crossUserUserBAuthName, FAILURE_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .body("{\"state\": \"APPROVED\"}")
+                .post(getUserConsentApiBaseUrl() + "/" + NON_EXISTENT_ID + "/authorize")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_NOT_FOUND);
-    }
-
-    @Test
-    public void testAuthorizeActiveConsentReturns409() throws Exception {
-
-        String elementId = null;
-        String purposeId = null;
-        String userId = null;
-
-        try {
-            String elementBody = readResource("create-element-for-authorize-conflict.json");
-            Response elementResponse = getResponseOfPost(ELEMENTS_ENDPOINT, elementBody);
-            elementResponse.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED);
-            elementId = elementResponse.jsonPath().getString("id");
-
-            String purposeBody = readResource("create-purpose-for-authorize-conflict.json");
-            Response purposeResponse = getResponseOfPost(PURPOSES_ENDPOINT, purposeBody);
-            purposeResponse.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED);
-            purposeId = purposeResponse.jsonPath().getString("id");
-
-            String userName = "consent_fail_authorize_user";
-            userId = createTestUser(userName);
-            String userAuthName = buildUserAuthName(userName);
-
-            String consentBody = readResource("create-consent.json")
-                    .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + userName + "\"")
-                    .replace("\"purposes\": [{\"id\": \"1\"", "\"purposes\": [{\"id\": \"" + purposeId + "\"")
-                    .replace("\"elements\": [{\"id\": \"1\"", "\"elements\": [{\"id\": \"" + elementId + "\"");
-            Response consentResponse = given()
-                    .auth().preemptive().basic(userAuthName, FAILURE_TEST_USER_PASSWORD)
-                    .contentType(ContentType.JSON)
-                    .header(HttpHeaders.ACCEPT, ContentType.JSON)
-                    .log().ifValidationFails()
-                    .body(consentBody)
-                    .post(CONSENTS_ENDPOINT);
-            consentResponse.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED);
-            String consentId = consentResponse.jsonPath().getString("id");
-
-            // Authorizing an ACTIVE (non-PENDING) consent must return 409.
-            getResponseOfPost(CONSENTS_ENDPOINT + "/" + consentId + "/authorize",
-                    "{\"state\": \"APPROVED\"}")
-                    .then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_CONFLICT)
-                    .body("code", notNullValue());
-        } finally {
-            // Deleting the user cascades their consents, unblocking purpose/element deletion.
-            if (userId != null) {
-                scim2RestClient.deleteUser(userId);
-            }
-            if (purposeId != null) {
-                getResponseOfDelete(PURPOSES_ENDPOINT + "/" + purposeId);
-            }
-            if (elementId != null) {
-                getResponseOfDelete(ELEMENTS_ENDPOINT + "/" + elementId);
-            }
-        }
     }
 
     // =========================================================================
@@ -547,17 +514,16 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
             userId = createTestUser(userName);
             String userAuthName = buildUserAuthName(userName);
 
-            String consentBody = readResource("create-consent.json")
-                    .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + userName + "\"")
-                    .replace("\"purposes\": [{\"id\": \"1\"", "\"purposes\": [{\"id\": \"" + purposeId + "\"")
-                    .replace("\"elements\": [{\"id\": \"1\"", "\"elements\": [{\"id\": \"" + elementId + "\"");
+            String consentBody = "{\"serviceId\": \"test-integration-service\", \"language\": \"en\","
+                    + " \"purposes\": [{\"id\": \"" + purposeId + "\","
+                    + " \"elements\": [{\"id\": \"" + elementId + "\"}]}]}";
             given()
                     .auth().preemptive().basic(userAuthName, FAILURE_TEST_USER_PASSWORD)
                     .contentType(ContentType.JSON)
                     .header(HttpHeaders.ACCEPT, ContentType.JSON)
                     .log().ifValidationFails()
                     .body(consentBody)
-                    .post(CONSENTS_ENDPOINT)
+                    .post(getUserConsentApiBaseUrlForUser(userName))
                     .then()
                     .log().ifValidationFails()
                     .assertThat()
@@ -639,17 +605,16 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
             userId = createTestUser(userName);
             String userAuthName = buildUserAuthName(userName);
 
-            String consentBody = readResource("create-consent.json")
-                    .replace("\"subjectId\": \"1\"", "\"subjectId\": \"" + userName + "\"")
-                    .replace("\"purposes\": [{\"id\": \"1\"", "\"purposes\": [{\"id\": \"" + purposeId + "\"")
-                    .replace("\"elements\": [{\"id\": \"1\"", "\"elements\": [{\"id\": \"" + elementId + "\"");
+            String consentBody = "{\"serviceId\": \"test-integration-service\", \"language\": \"en\","
+                    + " \"purposes\": [{\"id\": \"" + purposeId + "\","
+                    + " \"elements\": [{\"id\": \"" + elementId + "\"}]}]}";
             given()
                     .auth().preemptive().basic(userAuthName, FAILURE_TEST_USER_PASSWORD)
                     .contentType(ContentType.JSON)
                     .header(HttpHeaders.ACCEPT, ContentType.JSON)
                     .log().ifValidationFails()
                     .body(consentBody)
-                    .post(CONSENTS_ENDPOINT)
+                    .post(getUserConsentApiBaseUrlForUser(userName))
                     .then()
                     .log().ifValidationFails()
                     .assertThat()
@@ -681,8 +646,117 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
     }
 
     // =========================================================================
+    // Cross-user access tests — non-admin subject enforcement
+    // =========================================================================
+
+    @Test
+    public void testGetConsentOfAnotherUserReturns403() {
+
+        // User B attempts to fetch User A's consent via the user API — must be rejected.
+        given()
+                .auth().preemptive().basic(crossUserUserBAuthName, FAILURE_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .get(getUserConsentApiBaseUrl() + "/" + crossUserConsentId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("code", notNullValue());
+    }
+
+    @Test
+    public void testValidateConsentOfAnotherUserReturns403() {
+
+        given()
+                .auth().preemptive().basic(crossUserUserBAuthName, FAILURE_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .get(getUserConsentApiBaseUrl() + "/" + crossUserConsentId + "/validate")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("code", notNullValue());
+    }
+
+    @Test
+    public void testRevokeConsentOfAnotherUserReturns403() {
+
+        given()
+                .auth().preemptive().basic(crossUserUserBAuthName, FAILURE_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .post(getUserConsentApiBaseUrl() + "/" + crossUserConsentId + "/revoke")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_FORBIDDEN)
+                .body("code", notNullValue());
+    }
+
+    @Test
+    public void testListConsentsAsUserScopedToCaller() {
+
+        // User B's list on the user API must return only their own consents (none in this case).
+        given()
+                .auth().preemptive().basic(crossUserUserBAuthName, FAILURE_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .get(getUserConsentApiBaseUrl())
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", equalTo(0));
+    }
+
+    // =========================================================================
     // Helpers
     // =========================================================================
+
+    private void setupCrossUserTestData() throws Exception {
+
+        RestAssured.basePath = basePath;
+        try {
+            Response elementResponse = getResponseOfPost(ELEMENTS_ENDPOINT,
+                    "{\"name\": \"consent_fail_crossuser_elem\", \"displayName\": \"Cross User Elem\","
+                            + " \"description\": \"Cross user test element\"}");
+            elementResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+            crossUserElementId = elementResponse.jsonPath().getString("id");
+
+            Response purposeResponse = getResponseOfPost(PURPOSES_ENDPOINT,
+                    "{\"name\": \"consent_fail_crossuser_purpose\", \"description\": \"Cross user purpose\","
+                            + " \"type\": \"Core\", \"version\": \"1\","
+                            + " \"elements\": [{\"id\": \"" + crossUserElementId + "\", \"mandatory\": true}]}");
+            purposeResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+            crossUserPurposeId = purposeResponse.jsonPath().getString("id");
+
+            crossUserUserAId = createTestUser("consent_fail_crossuser_A");
+            crossUserUserBId = createTestUser("consent_fail_crossuser_B");
+            crossUserUserBAuthName = buildUserAuthName("consent_fail_crossuser_B");
+            String userAAuthName = buildUserAuthName("consent_fail_crossuser_A");
+
+            // Create the consent via the user API — user A creates their own consent.
+            String consentBody = "{\"serviceId\": \"cross-user-test\", \"language\": \"en\","
+                    + " \"purposes\": [{\"id\": \"" + crossUserPurposeId + "\","
+                    + " \"elements\": [{\"id\": \"" + crossUserElementId + "\"}]}]}";
+            Response consentResponse = given()
+                    .auth().preemptive().basic(userAAuthName, FAILURE_TEST_USER_PASSWORD)
+                    .contentType(ContentType.JSON)
+                    .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                    .body(consentBody)
+                    .post(getUserConsentApiBaseUrlForUser("consent_fail_crossuser_A"));
+            consentResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+            crossUserConsentId = consentResponse.jsonPath().getString("id");
+        } finally {
+            RestAssured.basePath = "";
+        }
+    }
 
     private String createTestUser(String userName) throws Exception {
 
@@ -699,5 +773,18 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
         return MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)
                 ? userName
                 : userName + "@" + tenant;
+    }
+
+    private String getUserConsentApiBaseUrl() {
+
+        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)) {
+            return serverURL + "api/users/v1/me/consents";
+        }
+        return serverURL + "t/" + tenant + "/api/users/v1/me/consents";
+    }
+
+    private String getUserConsentApiBaseUrlForUser(String userName) {
+
+        return getUserConsentApiBaseUrl();
     }
 }

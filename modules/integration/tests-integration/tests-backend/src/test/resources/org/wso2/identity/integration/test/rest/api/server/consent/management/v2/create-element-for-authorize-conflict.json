@@ -1,5 +1,0 @@
-{
-  "name": "authorize_conflict_test_element",
-  "displayName": "Authorize Conflict Test Element",
-  "description": "Element used for testing authorize on non-pending consent"
-}
