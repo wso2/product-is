@@ -358,6 +358,7 @@
     <test name="is-test-webhooks" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.webhooks.credentials.CredentialsEventTestCase"/>
+            <class name="org.wso2.identity.integration.test.webhooks.consent.ConsentEventTestCase"/>
         </classes>
     </test>
 
