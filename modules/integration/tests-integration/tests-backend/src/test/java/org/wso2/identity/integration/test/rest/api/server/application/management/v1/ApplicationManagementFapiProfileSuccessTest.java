@@ -24,6 +24,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
@@ -311,9 +312,13 @@ public class ApplicationManagementFapiProfileSuccessTest extends ApplicationMana
             return;
         }
         String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + appId;
-        Response response = getResponseOfDelete(path);
-        if (response.getStatusCode() == HttpStatus.SC_NO_CONTENT) {
+        Response deleteResponse = getResponseOfDelete(path);
+        int deleteStatus = deleteResponse.getStatusCode();
+        if (deleteStatus == HttpStatus.SC_NO_CONTENT) {
             getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+        } else if (deleteStatus != HttpStatus.SC_NOT_FOUND) {
+            Assert.fail("Unexpected status " + deleteStatus + " when deleting app " + appId
+                    + ". Response body: " + deleteResponse.getBody().asString());
         }
     }
 }
