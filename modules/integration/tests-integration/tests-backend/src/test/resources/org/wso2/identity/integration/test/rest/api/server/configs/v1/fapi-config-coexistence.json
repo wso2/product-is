@@ -1,0 +1,4 @@
+{
+  "enabled": true,
+  "supportedProfiles": ["FAPI1_ADVANCED", "FAPI2_SECURITY"]
+}
