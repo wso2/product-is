@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;

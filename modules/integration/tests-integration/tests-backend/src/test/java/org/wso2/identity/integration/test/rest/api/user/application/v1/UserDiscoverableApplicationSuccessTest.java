@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;

@@ -47,7 +47,7 @@ import java.security.spec.X509EncodedKeySpec;
 import java.text.ParseException;
 import java.util.Base64;
 import java.util.Date;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import static com.nimbusds.jose.JWSAlgorithm.ES256;
 import static com.nimbusds.jose.JWSAlgorithm.RS384;

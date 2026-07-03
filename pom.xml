@@ -760,9 +760,9 @@
                 <version>${taglibs.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-lang</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons.lang.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.is</groupId>
@@ -2316,9 +2316,9 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>commons-lang.wso2</groupId>
-                <artifactId>commons-lang</artifactId>
-                <version>${commons-lang.wso2.version}</version>
+                <groupId>org.wso2.orbit.org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.wso2.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -2942,7 +2942,7 @@
         <google.code.gson.version>2.9.0</google.code.gson.version>
         <oauth2.client.version>1.0.0</oauth2.client.version>
         <axiom.wso2.version>1.2.11-wso2v16</axiom.wso2.version>
-        <commons.lang.version>2.6</commons.lang.version>
+        <commons.lang3.version>3.18.0</commons.lang3.version>
         <charon.orbit.version>2.1.8</charon.orbit.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <axis2.client.version>${axis2.wso2.version}</axis2.client.version>
@@ -2963,7 +2963,7 @@
         <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
         <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
         <commons.logging.version.range>[1.2.0,2.0.0)</commons.logging.version.range>
-        <commons-lang.wso2.version>2.6.0.wso2v1</commons-lang.wso2.version>
+        <commons-lang3.wso2.version>3.18.0.wso2v1</commons-lang3.wso2.version>
 
         <!--  Test dependencies -->
         <carbon.automation.version>4.5.3</carbon.automation.version>

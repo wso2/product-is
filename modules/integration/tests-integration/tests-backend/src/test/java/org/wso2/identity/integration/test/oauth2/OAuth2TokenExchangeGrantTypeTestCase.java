@@ -19,7 +19,7 @@ package org.wso2.identity.integration.test.oauth2;
 
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;

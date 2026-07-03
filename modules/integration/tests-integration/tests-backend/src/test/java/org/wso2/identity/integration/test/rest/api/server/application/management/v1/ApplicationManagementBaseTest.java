@@ -24,7 +24,7 @@ import io.restassured.response.Response;
 import java.io.IOException;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;

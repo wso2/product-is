@@ -22,7 +22,7 @@ package org.wso2.identity.integration.test.rest.api.server.authenticator.managem
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.testng.annotations.AfterClass;

@@ -19,7 +19,7 @@
 package org.wso2.identity.integration.test.restclients;
 
 import io.restassured.http.ContentType;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;

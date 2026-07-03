@@ -18,7 +18,7 @@
 
 package org.wso2.identity.integration.test.oauth2;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.wink.client.ClientResponse;
 import org.apache.wink.client.Resource;
