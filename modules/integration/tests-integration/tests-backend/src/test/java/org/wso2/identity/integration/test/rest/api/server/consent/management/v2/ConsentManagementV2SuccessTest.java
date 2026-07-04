@@ -72,6 +72,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     private static String createdSecondVersionLabel;
     private static String createdSecondVersionId;
     private static String createdReceiptId;
+    private static String expiredReceiptId;
     private static String testUserId;
 
     private SCIM2RestClient scim2RestClient;
@@ -645,7 +646,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .statusCode(HttpStatus.SC_CREATED)
                 .body("id", notNullValue());
 
-        String expiredReceiptId = response.jsonPath().getString("id");
+        expiredReceiptId = response.jsonPath().getString("id");
 
         userApiGet(getUserConsentApiBaseUrl() + "/" + expiredReceiptId + "/validate")
                 .then()
@@ -660,6 +661,40 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK)
                 .body("state", equalTo("EXPIRED"));
+    }
+
+    /**
+     * EXPIRED is derived, not persisted (the row is stored ACTIVE with a past expiry). This exercises
+     * the list-with-state-filter path (buildCursorReceiptQuery) that the single-consent validate/GET
+     * path does not, and asserts the expired consent is returned and re-labelled EXPIRED.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testValidateExpiredConsent"})
+    public void testListConsentsWithExpiredStateFilter() {
+
+        userApiGet(getUserConsentApiBaseUrl() + "?state=EXPIRED")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("id", hasItem(expiredReceiptId))
+                .body("findAll { it.state != 'EXPIRED' }.size()", equalTo(0));
+    }
+
+    /**
+     * The ACTIVE filter must exclude expired rows even though they are stored as ACTIVE. Asserts the
+     * expired receipt id is absent, not merely that every returned row is labelled ACTIVE.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testValidateExpiredConsent"})
+    public void testListActiveConsentsExcludeExpired() {
+
+        userApiGet(getUserConsentApiBaseUrl() + "?state=ACTIVE")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("findAll { it.id == '" + expiredReceiptId + "' }.size()", equalTo(0))
+                .body("findAll { it.state != 'ACTIVE' }.size()", equalTo(0));
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {
@@ -731,7 +766,9 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
 
     @Test(groups = "wso2.is", dependsOnMethods = {
             "testValidateRevokedConsent",
-            "testListRevokedConsentsWithStateFilter"
+            "testListRevokedConsentsWithStateFilter",
+            "testListConsentsWithExpiredStateFilter",
+            "testListActiveConsentsExcludeExpired"
     })
     public void testDeleteConsentTestUser() throws Exception {
 

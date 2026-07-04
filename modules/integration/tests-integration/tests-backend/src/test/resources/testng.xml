@@ -348,6 +348,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.consent.management.v2.ConsentManagementV2FailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.consent.management.v2.ConsentManagementV2AdminModeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConsentPurposesSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.AgentConfigSuccessTest"/>
         </classes>
     </test>
 
