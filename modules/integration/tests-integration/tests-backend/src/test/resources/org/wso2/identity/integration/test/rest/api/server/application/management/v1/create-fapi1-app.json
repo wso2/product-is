@@ -4,6 +4,13 @@
     "oidc": {
       "clientId": "fapi1_client_id",
       "clientSecret": "fapi1_client_secret",
+      "accessToken": {
+        "type": "JWT",
+        "bindingType": "certificate",
+        "validateTokenBinding": true,
+        "applicationAccessTokenExpiryInSeconds": 3600,
+        "userAccessTokenExpiryInSeconds": 3600
+      },
       "grantTypes": [
         "authorization_code"
       ],

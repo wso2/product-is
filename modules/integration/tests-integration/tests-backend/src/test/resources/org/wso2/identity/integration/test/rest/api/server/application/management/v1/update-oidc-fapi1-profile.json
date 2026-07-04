@@ -4,6 +4,13 @@
   ],
   "clientId": "fapi1_client_id",
   "clientSecret": "fapi1_client_secret",
+  "accessToken": {
+    "type": "opaque",
+    "bindingType": "certificate",
+    "validateTokenBinding": true,
+    "applicationAccessTokenExpiryInSeconds": 3600,
+    "userAccessTokenExpiryInSeconds": 3600
+  },
   "grantTypes": [
     "authorization_code"
   ],

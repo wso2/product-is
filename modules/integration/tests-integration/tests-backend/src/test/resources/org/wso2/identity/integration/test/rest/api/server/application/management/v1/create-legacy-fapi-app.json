@@ -4,6 +4,13 @@
     "oidc": {
       "clientId": "fapi_client_id",
       "clientSecret": "fapi_client_secret",
+      "accessToken": {
+        "type": "Opaque",
+        "bindingType": "certificate",
+        "validateTokenBinding": true,
+        "applicationAccessTokenExpiryInSeconds": 3600,
+        "userAccessTokenExpiryInSeconds": 3600
+      },
       "grantTypes": [
         "authorization_code"
       ],
