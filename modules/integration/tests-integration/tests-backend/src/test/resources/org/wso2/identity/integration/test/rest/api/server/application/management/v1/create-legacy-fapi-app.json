@@ -1,0 +1,36 @@
+{
+  "name": "Legacy FAPI Test Application",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "clientId": "fapi_client_id",
+      "clientSecret": "fapi_client_secret",
+      "accessToken": {
+        "type": "Opaque",
+        "bindingType": "certificate",
+        "validateTokenBinding": true,
+        "applicationAccessTokenExpiryInSeconds": 3600,
+        "userAccessTokenExpiryInSeconds": 3600
+      },
+      "grantTypes": [
+        "authorization_code"
+      ],
+      "callbackURLs": [
+        "https://localhost/callback"
+      ],
+      "publicClient": false,
+      "clientAuthentication": {
+        "tokenEndpointAuthMethod": "private_key_jwt",
+        "tokenEndpointAllowReusePvtKeyJwt": false,
+        "tokenEndpointAuthSigningAlg": "PS256"
+      },
+      "idToken": {
+        "idTokenSignedResponseAlg": "PS256"
+      },
+      "pkce": {
+        "mandatory": true,
+        "supportPlainTransformAlgorithm": false
+      },
+      "isFAPIApplication": true
+    }
+  }
+}
