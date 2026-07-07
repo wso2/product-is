@@ -18,7 +18,7 @@
 
 package org.wso2.identity.integration.common.extension.server;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wso2.carbon.automation.extensions.ExtensionConstants;

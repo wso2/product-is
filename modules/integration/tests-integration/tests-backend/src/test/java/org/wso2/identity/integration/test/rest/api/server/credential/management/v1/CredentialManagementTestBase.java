@@ -19,7 +19,7 @@
 package org.wso2.identity.integration.test.rest.api.server.credential.management.v1;
 
 import io.restassured.RestAssured;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;

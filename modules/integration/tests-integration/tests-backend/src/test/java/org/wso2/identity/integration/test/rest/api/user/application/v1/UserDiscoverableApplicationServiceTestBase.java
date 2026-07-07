@@ -23,7 +23,7 @@ import io.restassured.RestAssured;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import static org.awaitility.Awaitility.await;
 import org.json.JSONException;

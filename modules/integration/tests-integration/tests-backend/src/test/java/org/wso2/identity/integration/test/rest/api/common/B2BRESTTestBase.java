@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.rest.api.common;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.hamcrest.Matcher;
 import org.wso2.carbon.automation.engine.context.AutomationContext;

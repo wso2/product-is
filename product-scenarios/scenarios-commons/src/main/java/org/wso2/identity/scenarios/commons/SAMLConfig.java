@@ -18,7 +18,7 @@
 
 package org.wso2.identity.scenarios.commons;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 

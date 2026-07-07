@@ -17,7 +17,7 @@
  */
 package org.wso2.identity.integration.common.clients.template.mgt;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.identity.template.mgt.TemplateManager;
