@@ -24,6 +24,7 @@ import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
@@ -42,6 +43,7 @@ import java.util.List;
 public class IdpMgtRestClient extends RestBaseClient {
 
     private static final String CLAIMS_PATH = "/claims";
+    private static final String GROUPS_PATH = "/groups/";
     private static final String FEDERATED_AUTHENTICATORS_PATH = "/federated-authenticators/";
     private static final String OUTBOUND_CONNECTORS_PATH = "/provisioning/outbound-connectors/";
     private final String serverUrl;
@@ -129,6 +131,35 @@ public class IdpMgtRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
             return getJSONObject(responseBody);
+        }
+    }
+
+    /**
+     * Add (replace) the groups of an Identity Provider.
+     *
+     * @param idpId      Identity Provider Id.
+     * @param groupNames Names of the IdP groups to be added.
+     * @return JSONArray of the created IdP groups, each with its assigned "id" and "name".
+     * @throws Exception If an error occurred while adding idp groups.
+     */
+    public JSONArray addIdPGroups(String idpId, String... groupNames) throws Exception {
+
+        JSONArray groupsRequest = new JSONArray();
+        for (String groupName : groupNames) {
+            JSONObject group = new JSONObject();
+            group.put("name", groupName);
+            group.put("id", "");
+            groupsRequest.add(group);
+        }
+
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + PATH_SEPARATOR + idpId + GROUPS_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPut(endPointUrl, groupsRequest.toJSONString(),
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Idp groups addition failed");
+            return getJSONArray(EntityUtils.toString(response.getEntity()));
         }
     }
 
