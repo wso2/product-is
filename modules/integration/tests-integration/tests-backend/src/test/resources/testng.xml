@@ -362,6 +362,7 @@
     <test name="is-test-webhooks" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.webhooks.credentials.CredentialsEventTestCase"/>
+            <class name="org.wso2.identity.integration.test.webhooks.rolemanagement.AdminInitRoleManagementEventTestCase"/>
             <class name="org.wso2.identity.integration.test.webhooks.usermanagement.AdminInitUserManagementEventTestCase"/>
         </classes>
     </test>
