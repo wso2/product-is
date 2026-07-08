@@ -47,10 +47,11 @@ public class SCIM2RestClient extends RestBaseClient {
 
     private static final String SCIM2_ME_ENDPOINT  = "scim2/Me";
     private static final String SCIM2_USERS_ENDPOINT = "scim2/Users";
+    private static final String SCIM2_AGENTS_ENDPOINT = "scim2/Agents";
+    private static final String AGENT_SCHEMA = "urn:scim:wso2:agent:schema";
     private static final String SCIM2_ROLES_ENDPOINT = "scim2/Roles";
     private static final String SCIM2_V2_ROLES_ENDPOINT = "scim2/v2/Roles";
     private static final String SCIM2_GROUPS_ENDPOINT = "scim2/Groups";
-    private static final String SCIM2_AGENTS_ENDPOINT = "scim2/Agents";
     private static final String AGENT_CREATE_REQUEST_FILE = "create-agent-request-body.json";
     private static final String DISPLAY_NAME_PLACEHOLDER = "DISPLAY_NAME";
     private static final String SCIM2_SEARCH_PATH = "/.search";
@@ -169,6 +170,33 @@ public class SCIM2RestClient extends RestBaseClient {
             return responseObject;
         } catch (Exception e) {
             throw new RuntimeException("Error while creating the user.", e);
+        }
+    }
+
+    /**
+     * Create an agent.
+     *
+     * @param displayName Display name of the agent.
+     * @param ownerId     Id of the user who owns the agent.
+     * @return Id of the created agent.
+     * @throws Exception If an error occurred while creating an agent.
+     */
+    public String createAgent(String displayName, String ownerId) throws Exception {
+
+        JSONObject agentSchema = new JSONObject();
+        agentSchema.put("DisplayName", displayName);
+        agentSchema.put("IsUserServingAgent", false);
+        agentSchema.put("Owner", ownerId + "@" + tenantDomain);
+
+        JSONObject agentRequest = new JSONObject();
+        agentRequest.put(AGENT_SCHEMA, agentSchema);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getAgentsPath(), agentRequest.toJSONString(),
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_CREATED,
+                    "Agent creation failed");
+            JSONObject jsonResponse = getJSONObject(EntityUtils.toString(response.getEntity()));
+            return jsonResponse.get("id").toString();
         }
     }
 
@@ -1158,6 +1186,15 @@ public class SCIM2RestClient extends RestBaseClient {
         }
     }
 
+    private String getAgentsPath() {
+
+        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            return serverUrl + SCIM2_AGENTS_ENDPOINT;
+        } else {
+            return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_AGENTS_ENDPOINT;
+        }
+    }
+
     private String getUsersMePath() {
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
@@ -1260,14 +1297,6 @@ public class SCIM2RestClient extends RestBaseClient {
             }
             return new String(resourceAsStream.readAllBytes(), StandardCharsets.UTF_8);
         }
-    }
-
-    private String getAgentsPath() {
-
-        if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            return serverUrl + SCIM2_AGENTS_ENDPOINT;
-        }
-        return serverUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + SCIM2_AGENTS_ENDPOINT;
     }
 
     /**
