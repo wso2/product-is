@@ -31,6 +31,8 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AssociatedRolesConfig;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest.FederatedAuthenticator;
@@ -86,6 +88,10 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
     private static final String APPLICATION_AUDIENCE = "APPLICATION";
     private static final String ROLE_NAME = "webhook-test-role";
     private static final String UPDATED_ROLE_NAME = "webhook-test-role-updated";
+    private static final String APP_UPDATE_APP_NAME = "webhook-test-role-app-update";
+    private static final String APP_UPDATE_ROLE_NAME = "webhook-test-role-via-app-update";
+    private static final String APP_DELETE_APP_NAME = "webhook-test-role-app-delete";
+    private static final String APP_DELETE_ROLE_NAME = "webhook-test-role-via-app-delete";
     private static final String INITIAL_PERMISSION = "internal_user_mgt_view";
     private static final String ADDED_PERMISSION = "internal_user_mgt_create";
     private static final String USERNAME_1 = "webhookroleuser1";
@@ -121,6 +127,10 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
     private String group2Id;
     private String idpId;
     private String idpGroupId;
+    private String appUpdateScenarioAppId;
+    private String appUpdateScenarioRoleId;
+    private String appDeleteScenarioAppId;
+    private String appDeleteScenarioRoleId;
 
     @Factory(dataProvider = "testExecutionContextProvider")
     public AdminInitRoleManagementEventTestCase(TestUserMode userMode) throws Exception {
@@ -149,7 +159,7 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
         idpMgtRestClient = new IdpMgtRestClient(serverURL, tenantInfo);
 
-        appId = createApplication();
+        appId = createApplication(APP_NAME);
         authorizeUserManagementAPI(appId);
 
         user1Id = createRoleMemberUser(USERNAME_1);
@@ -192,6 +202,20 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
         }
         if (appId != null) {
             oAuth2RestClient.deleteApplication(appId);
+        }
+        // Clean up the applications and roles used by the application triggered role deletion scenarios in case those
+        // tests failed before deleting them.
+        if (appUpdateScenarioRoleId != null) {
+            scim2RestClient.attemptRoleV2Delete(appUpdateScenarioRoleId);
+        }
+        if (appUpdateScenarioAppId != null) {
+            oAuth2RestClient.deleteApplication(appUpdateScenarioAppId);
+        }
+        if (appDeleteScenarioRoleId != null) {
+            scim2RestClient.attemptRoleV2Delete(appDeleteScenarioRoleId);
+        }
+        if (appDeleteScenarioAppId != null) {
+            oAuth2RestClient.deleteApplication(appDeleteScenarioAppId);
         }
 
         scim2RestClient.closeHttpClient();
@@ -344,11 +368,65 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
         scim2RestClient.deleteV2Role(roleId);
 
         webhookEventTestManager.stackExpectedEventPayload(ROLE_DELETED_EVENT_URI,
-                AdminInitRoleManagementEventTestExpectedEventPayloadBuilder.buildExpectedRoleDeletedEventPayload(
-                        tenantDomain));
+                AdminInitRoleManagementEventTestExpectedEventPayloadBuilder.buildExpectedRoleDeletedViaScimEventPayload(
+                        tenantDomain, appId, APP_NAME, UPDATED_ROLE_NAME));
         webhookEventTestManager.validateStackedEventPayloads();
 
         roleId = null;
+    }
+
+    @Test(dependsOnMethods = "testDeleteRole")
+    public void testDeleteRoleViaApplicationUpdate() throws Exception {
+
+        appUpdateScenarioAppId = createApplication(APP_UPDATE_APP_NAME);
+        appUpdateScenarioRoleId = createApplicationRole(APP_UPDATE_ROLE_NAME, appUpdateScenarioAppId);
+
+        webhookEventTestManager.stackExpectedEventPayload(ROLE_CREATED_EVENT_URI,
+                AdminInitRoleManagementEventTestExpectedEventPayloadBuilder
+                        .buildExpectedRoleCreatedWithoutPermissionsEventPayload(tenantDomain, appUpdateScenarioAppId,
+                                APP_UPDATE_APP_NAME, APP_UPDATE_ROLE_NAME));
+        webhookEventTestManager.validateStackedEventPayloads();
+
+        AssociatedRolesConfig clearedAssociatedRoles = new AssociatedRolesConfig();
+        clearedAssociatedRoles.setAllowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.APPLICATION);
+        clearedAssociatedRoles.setRoles(Collections.emptyList());
+        oAuth2RestClient.updateApplicationExpectingSuccess(appUpdateScenarioAppId,
+                new ApplicationPatchModel().associatedRoles(clearedAssociatedRoles));
+        appUpdateScenarioRoleId = null;
+
+        webhookEventTestManager.stackExpectedEventPayload(ROLE_DELETED_EVENT_URI,
+                AdminInitRoleManagementEventTestExpectedEventPayloadBuilder
+                        .buildExpectedRoleDeletedViaApplicationUpdateEventPayload(tenantDomain, appUpdateScenarioAppId,
+                                APP_UPDATE_APP_NAME, APP_UPDATE_ROLE_NAME));
+        webhookEventTestManager.validateStackedEventPayloads();
+    }
+
+    @Test(dependsOnMethods = "testDeleteRoleViaApplicationUpdate", enabled = false)
+    public void testDeleteRoleViaApplicationDelete() throws Exception {
+
+        /* Create a separate application and an application audience role associated with it.
+        Deleting the application deletes the role as a post task, emitting a roleDeleted
+        event with the action APPLICATION_DELETE. As the application no longer exists,
+        the audience does not contain the display name. */
+        appDeleteScenarioAppId = createApplication(APP_DELETE_APP_NAME);
+        appDeleteScenarioRoleId = createApplicationRole(APP_DELETE_ROLE_NAME, appDeleteScenarioAppId);
+
+        webhookEventTestManager.stackExpectedEventPayload(ROLE_CREATED_EVENT_URI,
+                AdminInitRoleManagementEventTestExpectedEventPayloadBuilder
+                        .buildExpectedRoleCreatedWithoutPermissionsEventPayload(tenantDomain, appDeleteScenarioAppId,
+                                APP_DELETE_APP_NAME, APP_DELETE_ROLE_NAME));
+        webhookEventTestManager.validateStackedEventPayloads();
+
+        oAuth2RestClient.deleteApplication(appDeleteScenarioAppId);
+        String deletedAppId = appDeleteScenarioAppId;
+        appDeleteScenarioAppId = null;
+        appDeleteScenarioRoleId = null;
+
+        webhookEventTestManager.stackExpectedEventPayload(ROLE_DELETED_EVENT_URI,
+                AdminInitRoleManagementEventTestExpectedEventPayloadBuilder
+                        .buildExpectedRoleDeletedViaApplicationDeleteEventPayload(tenantDomain, deletedAppId,
+                                APP_DELETE_ROLE_NAME));
+        webhookEventTestManager.validateStackedEventPayloads();
     }
 
     private RoleItemAddGroupobj buildListValueOperation(RoleItemAddGroupobj.OpEnum op, String path, ListObject value) {
@@ -360,12 +438,19 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
         return operation;
     }
 
-    private String createApplication() throws Exception {
+    private String createApplication(String appName) throws Exception {
 
         ApplicationModel application = new ApplicationModel()
-                .name(APP_NAME)
+                .name(appName)
                 .description("Application used as the audience for the role management webhook tests.");
         return oAuth2RestClient.createApplication(application);
+    }
+
+    private String createApplicationRole(String roleName, String applicationId) throws Exception {
+
+        Audience audience = new Audience(APPLICATION_AUDIENCE, applicationId);
+        RoleV2 role = new RoleV2(audience, roleName, Collections.emptyList(), Collections.emptyList());
+        return scim2RestClient.addV2Role(role);
     }
 
     private void authorizeUserManagementAPI(String applicationId) throws Exception {

@@ -342,6 +342,28 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Update an existing application expecting a successful (200) response.
+     * <p>
+     * Unlike {@link #updateApplication(String, ApplicationPatchModel)}, this does not assert a 403 when associated
+     * roles are present in the patch. This is used to clear the associated roles of an application (which deletes the
+     * application audience roles as a post task) via the application update endpoint.
+     *
+     * @param appId       Application id.
+     * @param application Updated application patch object.
+     * @throws IOException If an error occurred while updating an application.
+     */
+    public void updateApplicationExpectingSuccess(String appId, ApplicationPatchModel application) throws IOException {
+
+        String jsonRequest = toJSONString(application);
+        String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPatch(endPointUrl, jsonRequest, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Application update failed");
+        }
+    }
+
+    /**
      * Update an existing application.
      *
      * @param appId       Application id.
