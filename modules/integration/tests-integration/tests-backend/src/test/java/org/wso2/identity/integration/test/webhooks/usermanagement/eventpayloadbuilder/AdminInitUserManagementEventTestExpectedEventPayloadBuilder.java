@@ -144,11 +144,13 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         JSONObject accountLockedEvent = new JSONObject();
 
+        accountLockedEvent.put("initiatorType", "ADMIN");
         accountLockedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         accountLockedEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
         accountLockedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         accountLockedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
         accountLockedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        accountLockedEvent.put("action", "USER_ACCOUNT_LOCK");
 
         return accountLockedEvent;
     }
@@ -164,15 +166,17 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
     public static JSONObject buildExpectedAccountUnlockedEventPayload(String userId, String tenantDomain)
             throws Exception {
 
-        JSONObject accountLockedEvent = new JSONObject();
+        JSONObject accountUnlockedEvent = new JSONObject();
 
-        accountLockedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
-        accountLockedEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
-        accountLockedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
-        accountLockedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
-        accountLockedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        accountUnlockedEvent.put("initiatorType", "ADMIN");
+        accountUnlockedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
+        accountUnlockedEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
+        accountUnlockedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        accountUnlockedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        accountUnlockedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        accountUnlockedEvent.put("action", "USER_ACCOUNT_UNLOCK");
 
-        return accountLockedEvent;
+        return accountUnlockedEvent;
     }
 
     /**
@@ -220,6 +224,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userDisableEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         userDisableEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
         userDisableEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        userDisableEvent.put("action", "USER_ACCOUNT_DISABLE");
 
         return userDisableEvent;
     }
@@ -235,16 +240,17 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
     public static JSONObject buildExpectedAccountEnabledEventPayload(String userId, String tenantDomain)
             throws Exception {
 
-        JSONObject userDisableEvent = new JSONObject();
+        JSONObject userEnableEvent = new JSONObject();
 
-        userDisableEvent.put("initiatorType", "ADMIN");
-        userDisableEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
-        userDisableEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
-        userDisableEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
-        userDisableEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
-        userDisableEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        userEnableEvent.put("initiatorType", "ADMIN");
+        userEnableEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
+        userEnableEvent.put("user", createUserObjectForUserAccountStateChange(userId, tenantDomain));
+        userEnableEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
+        userEnableEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
+        userEnableEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        userEnableEvent.put("action", "USER_ACCOUNT_ENABLE");
 
-        return userDisableEvent;
+        return userEnableEvent;
     }
 
     /**
@@ -266,6 +272,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         userDeletedEvent.put("tenant", EventPayloadUtils.createTenantObject(tenantDomain));
         userDeletedEvent.put("organization", EventPayloadUtils.createOrganizationObject(tenantDomain));
         userDeletedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        userDeletedEvent.put("action", "USER_ACCOUNT_DELETE");
 
         return userDeletedEvent;
     }
@@ -301,9 +308,10 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("id", userId);
 
         JSONArray claims = new JSONArray();
-        claims.put(new JSONObject().put("uri", "http://wso2.org/claims/username").put("value", "test-user"));
-        claims.put(
-                new JSONObject().put("uri", "http://wso2.org/claims/emailaddress").put("value", "test-user@test.com"));
+        claims.put(new JSONObject().put("uri", "http://wso2.org/claims/username")
+                .put("value", "AdminInitUserManagementEventTestCase-user"));
+        claims.put(new JSONObject().put("uri", "http://wso2.org/claims/emailaddress")
+                        .put("value", "AdminInitUserManagementEventTestCase-user@test.com"));
         claims.put(new JSONObject().put("uri", "http://wso2.org/claims/lastname").put("value", "test-user-last-name"));
         claims.put(
                 new JSONObject().put("uri", "http://wso2.org/claims/givenname").put("value", "test-user-given-name"));
@@ -365,8 +373,8 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         updatedClaims.put(new JSONObject()
                 .put("uri", "http://wso2.org/claims/emailAddresses")
                 .put("value", new JSONArray()
-                        .put("test-user-personal@test.com")
-                        .put("test-user-work@test.com")));
+                        .put("AdminInitUserManagementEventTestCase-user-personal@test.com")
+                        .put("AdminInitUserManagementEventTestCase-user-work@test.com")));
         user.put("updatedClaims", updatedClaims);
 
         // Removed claims
@@ -421,7 +429,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         JSONArray claims = new JSONArray();
         claims.put(new JSONObject()
                 .put("uri", "http://wso2.org/claims/emailaddress")
-                .put("value", "test-user@test.com"));
+                .put("value", "AdminInitUserManagementEventTestCase-user@test.com"));
         user.put("claims", claims);
 
         JSONObject userOrganization = new JSONObject();
@@ -486,7 +494,8 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("id", userId);
 
         JSONArray claims = new JSONArray();
-        claims.put(new JSONObject().put("uri", "http://wso2.org/claims/username").put("value", "test-user"));
+        claims.put(new JSONObject().put("uri", "http://wso2.org/claims/username")
+                .put("value", "AdminInitUserManagementEventTestCase-user"));
         user.put("claims", claims);
 
         JSONObject userOrganization = new JSONObject();

@@ -160,7 +160,7 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
         idpId = createStandardsBasedIdP();
         idpGroupId = addIdPGroup();
 
-        webhookEventTestManager = new WebhookEventTestManager("/scim2/webhook", "WSO2",
+        webhookEventTestManager = new WebhookEventTestManager("/scim2/roles/webhook", "WSO2",
                 Collections.singletonList(ROLE_EVENT_CHANNEL),
                 "AdminInitRoleManagementEventTestCase",
                 automationContext);
