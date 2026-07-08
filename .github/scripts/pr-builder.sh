@@ -96,8 +96,6 @@ echo "=========================================================="
 
 git clone --branch "$WORKFLOW_BRANCH" --single-branch https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
 
-disable_tests "$ENABLED_TESTS"
-
 if [ "$REPO" = "product-is" ]; then
 
   echo ""
@@ -116,6 +114,13 @@ if [ "$REPO" = "product-is" ]; then
     echo "::error::Applying diff failed."
     exit 1
   }
+
+  # Disable non-selected tests AFTER applying the PR diff, so the diff applies
+  # against a pristine testng.xml. disable_tests expects to run from the workspace
+  # root (its path is relative to product-is-$BUILDER_NUMBER).
+  cd ..
+  disable_tests "$ENABLED_TESTS"
+  cd product-is-$BUILDER_NUMBER
 
   echo "Last 3 changes:"
   COMMIT1=$(git log --oneline -1)
@@ -398,6 +403,8 @@ else
     echo ""
     cd ..
   fi
+
+  disable_tests "$ENABLED_TESTS"
 
   cd product-is-$BUILDER_NUMBER
 
