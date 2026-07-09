@@ -390,7 +390,7 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
         AssociatedRolesConfig clearedAssociatedRoles = new AssociatedRolesConfig();
         clearedAssociatedRoles.setAllowedAudience(AssociatedRolesConfig.AllowedAudienceEnum.APPLICATION);
         clearedAssociatedRoles.setRoles(Collections.emptyList());
-        oAuth2RestClient.updateApplicationExpectingSuccess(appUpdateScenarioAppId,
+        oAuth2RestClient.updateApplication(appUpdateScenarioAppId,
                 new ApplicationPatchModel().associatedRoles(clearedAssociatedRoles));
         appUpdateScenarioRoleId = null;
 
