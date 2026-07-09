@@ -2752,7 +2752,7 @@
 
         <!-- Identity Event Handler Versions -->
         <identity.event.handler.account.lock.version>1.12.0</identity.event.handler.account.lock.version>
-        <identity.event.handler.notification.version>1.13.6</identity.event.handler.notification.version>
+        <identity.event.handler.notification.version>1.13.7</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.2.12</org.wso2.identity.webhook.event.handlers.version>
         <org.wso2.identity.event.publishers.version>1.2.3</org.wso2.identity.event.publishers.version>
@@ -2848,7 +2848,7 @@
         <conditional.authentication.functions.version>1.3.4</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>4.13.14</identity.apps.console.version>
+        <identity.apps.console.version>4.13.15</identity.apps.console.version>
         <identity.apps.myaccount.version>4.3.11</identity.apps.myaccount.version>
         <identity.apps.core.version>5.3.5</identity.apps.core.version>
         <identity.apps.tests.version>1.6.392</identity.apps.tests.version>
