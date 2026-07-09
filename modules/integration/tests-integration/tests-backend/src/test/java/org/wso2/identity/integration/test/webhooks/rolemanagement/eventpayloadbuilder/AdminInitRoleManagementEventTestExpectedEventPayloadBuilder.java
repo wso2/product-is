@@ -38,6 +38,8 @@ public class AdminInitRoleManagementEventTestExpectedEventPayloadBuilder {
     private static final String ACTION_ROLE_CREATE = "ROLE_CREATE";
     private static final String ACTION_ROLE_UPDATE = "ROLE_UPDATE";
     private static final String ACTION_ROLE_DELETE = "ROLE_DELETE";
+    private static final String ACTION_APPLICATION_UPDATE = "APPLICATION_UPDATE";
+    private static final String ACTION_APPLICATION_DELETE = "APPLICATION_DELETE";
     private static final String AUDIENCE_TYPE_APPLICATION = "application";
     private static final String USER_STORE_PRIMARY = "PRIMARY";
     private static final String USER_STORE_AGENT = "AGENT";
@@ -55,6 +57,19 @@ public class AdminInitRoleManagementEventTestExpectedEventPayloadBuilder {
         JSONObject role = buildBaseRole(roleName, appId, appName);
         role.put("permissions", new JSONArray().put(permission));
         event.put("role", role);
+
+        return event;
+    }
+
+    /**
+     * Builds the expected payload for a role created event with an application audience and no assigned permissions.
+     */
+    public static JSONObject buildExpectedRoleCreatedWithoutPermissionsEventPayload(String tenantDomain, String appId,
+                                                                                    String appName, String roleName)
+            throws Exception {
+
+        JSONObject event = buildBaseRoleEvent(tenantDomain, ACTION_ROLE_CREATE);
+        event.put("role", buildBaseRole(roleName, appId, appName));
 
         return event;
     }
@@ -205,14 +220,52 @@ public class AdminInitRoleManagementEventTestExpectedEventPayloadBuilder {
     }
 
     /**
-     * Builds the expected payload for a role deleted event. The role object contains only its id.
+     * Builds the expected payload for a role deleted event triggered via the SCIM2 roles endpoint. The deletion is
+     * initiated directly on the role while its application audience still exists, hence the action is
+     * {@code ROLE_DELETE} and the audience carries the resolved application {@code display} name.
      */
-    public static JSONObject buildExpectedRoleDeletedEventPayload(String tenantDomain) throws Exception {
+    public static JSONObject buildExpectedRoleDeletedViaScimEventPayload(String tenantDomain, String appId,
+                                                                         String appName, String roleName)
+            throws Exception {
 
-        JSONObject event = buildBaseRoleEvent(tenantDomain, ACTION_ROLE_DELETE);
+        return buildRoleDeletedEvent(tenantDomain, ACTION_ROLE_DELETE, appId, appName, roleName, true);
+    }
+
+    /**
+     * Builds the expected payload for a role deleted event triggered by clearing the application's associated roles via
+     * the application update endpoint. The application still exists, so the action is {@code APPLICATION_UPDATE} and the
+     * audience carries the resolved application {@code display} name.
+     */
+    public static JSONObject buildExpectedRoleDeletedViaApplicationUpdateEventPayload(String tenantDomain, String appId,
+                                                                                      String appName, String roleName)
+            throws Exception {
+
+        return buildRoleDeletedEvent(tenantDomain, ACTION_APPLICATION_UPDATE, appId, appName, roleName, true);
+    }
+
+    /**
+     * Builds the expected payload for a role deleted event triggered as a post task of deleting the application. The
+     * application no longer exists at the time the event is emitted, so the action is {@code APPLICATION_DELETE} and the
+     * audience does not contain the {@code display} name.
+     */
+    public static JSONObject buildExpectedRoleDeletedViaApplicationDeleteEventPayload(String tenantDomain, String appId,
+                                                                                      String roleName)
+            throws Exception {
+
+        return buildRoleDeletedEvent(tenantDomain, ACTION_APPLICATION_DELETE, appId, null, roleName, false);
+    }
+
+    private static JSONObject buildRoleDeletedEvent(String tenantDomain, String action, String appId, String appName,
+                                                    String roleName, boolean includeAudienceDisplay) throws Exception {
+
+        JSONObject event = buildBaseRoleEvent(tenantDomain, action);
 
         JSONObject role = new JSONObject();
         role.put("id", "dummy-role-id");
+        role.put("name", roleName);
+        role.put("audience", includeAudienceDisplay
+                ? createApplicationAudience(appId, appName)
+                : createApplicationAudienceWithoutDisplay(appId));
         event.put("role", role);
 
         return event;
@@ -245,6 +298,14 @@ public class AdminInitRoleManagementEventTestExpectedEventPayloadBuilder {
         audience.put("type", AUDIENCE_TYPE_APPLICATION);
         audience.put("value", appId);
         audience.put("display", appName);
+        return audience;
+    }
+
+    private static JSONObject createApplicationAudienceWithoutDisplay(String appId) throws JSONException {
+
+        JSONObject audience = new JSONObject();
+        audience.put("type", AUDIENCE_TYPE_APPLICATION);
+        audience.put("value", appId);
         return audience;
     }
 
