@@ -80,6 +80,13 @@ public class WebhooksRestClient extends RestBaseClient {
 
                 LOG.info("Response body for webhook create request: {}", jsonResponse);
 
+                int statusCode = response.getStatusLine().getStatusCode();
+                if (statusCode != 201 && statusCode != 200) {
+                    throw new WebhookManagementException(
+                            "Error occurred while creating webhook. Response status code: " + statusCode +
+                                    ". Response body: " + jsonResponse + ". ");
+                }
+
                 return objectMapper.readValue(jsonResponse, WebhookResponse.class);
             } else {
                 throw new WebhookManagementException(

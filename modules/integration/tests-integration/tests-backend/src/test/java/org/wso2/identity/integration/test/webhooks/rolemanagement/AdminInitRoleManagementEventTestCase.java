@@ -218,10 +218,18 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
             oAuth2RestClient.deleteApplication(appDeleteScenarioAppId);
         }
 
-        scim2RestClient.closeHttpClient();
-        oAuth2RestClient.closeHttpClient();
-        idpMgtRestClient.closeHttpClient();
-        webhookEventTestManager.teardown();
+        if (scim2RestClient != null) {
+            scim2RestClient.closeHttpClient();
+        }
+        if (oAuth2RestClient != null) {
+            oAuth2RestClient.closeHttpClient();
+        }
+        if (idpMgtRestClient != null) {
+            idpMgtRestClient.closeHttpClient();
+        }
+        if (webhookEventTestManager != null) {
+            webhookEventTestManager.teardown();
+        }
     }
 
     @Test
