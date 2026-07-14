@@ -146,7 +146,7 @@ jobs:
       - name: Install mssql-tools18
         run: |
           curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /usr/share/keyrings/microsoft-prod.gpg > /dev/null
-          curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+          curl -fsSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sed 's#\[arch=\(.*\)\]#[arch=\1 signed-by=/usr/share/keyrings/microsoft-prod.gpg]#' | sudo tee /etc/apt/sources.list.d/msprod.list
           sudo apt-get update -y
           sudo ACCEPT_EULA=Y apt-get install -y mssql-tools18 unixodbc-dev
           echo "/opt/mssql-tools18/bin" >> $GITHUB_PATH
