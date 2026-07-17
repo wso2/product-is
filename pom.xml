@@ -2701,11 +2701,11 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.158</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.159</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
-        <identity.notification.push.version>1.2.1</identity.notification.push.version>
+        <identity.notification.push.version>1.2.2</identity.notification.push.version>
         <identity.notification.push.version.range>[1.0.0,2.0.0)</identity.notification.push.version.range>
 
         <identity.notification.push.provider.amazonsns.version>1.0.0</identity.notification.push.provider.amazonsns.version>
@@ -2731,12 +2731,12 @@
         <identity.carbon.auth.rest.version>1.12.11</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.5.63</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.5.65</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.6</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.5</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.8.1</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.7.14</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.7.15</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.6.0</identity.user.account.association.version>
@@ -2848,9 +2848,9 @@
         <conditional.authentication.functions.version>1.3.6</conditional.authentication.functions.version>
 
         <!-- Identity Portal Versions -->
-        <identity.apps.console.version>4.13.21</identity.apps.console.version>
+        <identity.apps.console.version>4.13.24</identity.apps.console.version>
         <identity.apps.myaccount.version>4.3.11</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.3.6</identity.apps.core.version>
+        <identity.apps.core.version>5.3.8</identity.apps.core.version>
         <identity.apps.tests.version>1.6.392</identity.apps.tests.version>
 
         <!-- Charon -->
