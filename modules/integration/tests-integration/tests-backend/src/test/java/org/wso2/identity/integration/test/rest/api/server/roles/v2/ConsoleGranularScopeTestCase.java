@@ -55,8 +55,10 @@ import static org.testng.Assert.assertTrue;
  */
 public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
 
-    // Test groups marking the two server-state phases. Membership (not a suite-level filter) drives
-    // the @BeforeGroups knob-enable hook; priority keeps the disabled phase strictly ahead.
+    // Test groups marking the two server-state phases. In this product build the knob is ON by
+    // default, so the enabled phase runs first against the pristine pack; group membership (not a
+    // suite-level filter) drives the @BeforeGroups knob-disable hook, and priority keeps the enabled
+    // phase strictly ahead of the disabled phase.
     private static final String GRANULAR_DISABLED = "granular.console.disabled";
     private static final String GRANULAR_ENABLED = "granular.console.enabled";
 
@@ -88,7 +90,8 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        // Knob stays OFF here: the disabled phase runs first against the pristine default-off pack.
+        // Knob stays ON here: [console.console_settings] use_granular_console_permissions defaults
+        // to true in this build, so the enabled phase runs first against the pristine default-on pack.
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         oAuth2RestClient = new OAuth2RestClient(serverURL, tenantInfo);
@@ -97,28 +100,29 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
     }
 
     /**
-     * Turns on {@code [console.console_settings] use_granular_console_permissions} (default off) by appending
-     * the knob to the resident deployment.toml and restarting the server.
+     * Turns off {@code [console.console_settings] use_granular_console_permissions} (default on in this
+     * build) by rewriting/appending the knob in the resident deployment.toml and restarting the server.
+     * Runs after the enabled phase, so the disabled-phase tests observe the knob-off behaviour.
      */
-    @BeforeGroups(groups = GRANULAR_ENABLED, alwaysRun = true)
-    public void enableGranularConsolePermissions() throws Exception {
+    @BeforeGroups(groups = GRANULAR_DISABLED, alwaysRun = true)
+    public void disableGranularConsolePermissions() throws Exception {
 
         File defaultTomlFile = getDeploymentTomlFile(Utils.getResidentCarbonHome());
         String content = new String(Files.readAllBytes(defaultTomlFile.toPath()), StandardCharsets.UTF_8);
-        String enabledContent = content.replaceFirst(
+        String disabledContent = content.replaceFirst(
                 "(?m)^(\\s*use_granular_console_permissions\\s*=\\s*)(true|false)(\\s*(#.*)?)$",
-                "$1true$3");
-        if (enabledContent.equals(content)) {
+                "$1false$3");
+        if (disabledContent.equals(content)) {
             content += System.lineSeparator() + "[console.console_settings]" + System.lineSeparator()
-                    + "use_granular_console_permissions = true" + System.lineSeparator();
+                    + "use_granular_console_permissions = false" + System.lineSeparator();
         } else {
-            content = enabledContent;
+            content = disabledContent;
         }
-        File enabledTomlFile = File.createTempFile("console-granular-enabled", ".toml");
-        Files.write(enabledTomlFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
+        File disabledTomlFile = File.createTempFile("console-granular-disabled", ".toml");
+        Files.write(disabledTomlFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
-        serverConfigurationManager.applyConfigurationWithoutRestart(enabledTomlFile, defaultTomlFile, true);
+        serverConfigurationManager.applyConfigurationWithoutRestart(disabledTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 
         scim2RestClient.closeHttpClient();
@@ -150,7 +154,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         }
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 1,
+    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 20,
             description = "OFF.1: with the knob off, all three granular scopes do NOT resolve to the "
                     + "internal write scopes (the granular feature is inert).")
     public void granularScopesDoNotResolveWhenDisabled() throws Exception {
@@ -174,7 +178,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         };
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 2, dataProvider = "singleGranularScopeDisabled",
+    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 21, dataProvider = "singleGranularScopeDisabled",
             description = "OFF.2: with the knob off, a granular scope does NOT resolve to its internal "
                     + "action scope.")
     public void singleGranularDoesNotResolveWhenDisabled(String roleName, String granularScope, String internalScope)
@@ -187,7 +191,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
                 granularScope + " must not resolve to " + internalScope + " when disabled.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 3,
+    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 22,
             description = "OFF.3: console:applications_edit still resolves to the internal write scopes "
                     + "when the knob is off (legacy behaviour is not gated).")
     public void editStillResolvesWhenDisabled() throws Exception {
@@ -200,7 +204,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
                 "Edit must resolve to internal create + update + delete even when the granular knob is off.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 4,
+    @Test(groups = {"wso2.is", GRANULAR_DISABLED}, priority = 23,
             description = "OFF.4: directly-assigned internal scopes are retained when the knob is off "
                     + "(legacy roles unaffected).")
     public void legacyInternalScopesPreservedWhenDisabled() throws Exception {
@@ -212,7 +216,26 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         assertTrue(resolved.contains(I_UPDATE), "Directly-assigned internal update scope must be retained.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 10,
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 1,
+            description = "M0: the granular console permission feature is ON by default in this build, so "
+                    + "with no configuration change the granular scopes resolve to their internal action "
+                    + "scopes on the pristine pack.")
+    public void granularEnabledByDefault() throws Exception {
+
+        // No @BeforeGroups hook has run yet for this (enabled) phase: the server is still on its
+        // pristine deployment.toml, which asserts that use_granular_console_permissions defaults to true.
+        String roleId = createConsoleRole("console-default-granular", FEATURE, CREATE, UPDATE, DELETE);
+
+        Set<String> resolved = scim2RestClient.getV2RolePermissions(roleId);
+        assertTrue(resolved.contains(I_CREATE),
+                "create must resolve to internal create with the default-on granular knob.");
+        assertTrue(resolved.contains(I_UPDATE),
+                "update must resolve to internal update with the default-on granular knob.");
+        assertTrue(resolved.contains(I_DELETE),
+                "delete must resolve to internal delete with the default-on granular knob.");
+    }
+
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 2,
             description = "M1.1: a legacy role assigned internal scopes directly retains those internal "
                     + "scopes after retrieval.")
     public void legacyInternalScopesPreserved() throws Exception {
@@ -225,7 +248,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         assertTrue(resolved.contains(VIEW), "View feature scope must resolve to the internal view scope.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 11,
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 3,
             description = "M1.2: a legacy role assigned the full set of internal application action "
                     + "scopes retains all of them.")
     public void legacyAllInternalActionsPreserved() throws Exception {
@@ -239,7 +262,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         assertTrue(resolved.contains(EDIT), "Edit feature scope must resolve to the internal edit scopes.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 12,
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 4,
             description = "M2.1: console:applications_edit resolves to the internal create/update/delete "
                     + "application-management scopes (the backward-compat reference).")
     public void editResolvesToInternalWriteScopes() throws Exception {
@@ -265,7 +288,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         };
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 13, dataProvider = "singleGranularScopeEnabled",
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 5, dataProvider = "singleGranularScopeEnabled",
             description = "M3.2-M3.4: a single granular scope resolves to exactly its matching internal "
                     + "action scope and must not grant the other write actions.")
     public void singleGranularResolvesToMatchingInternal(String roleName, String featureScope, String expectedInternalScope,
@@ -283,7 +306,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
                 featureScope + " must not grant " + absentInternalScopeB + ".");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 14,
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 6,
             description = "M3.1: all three granular scopes resolve to the same internal write scopes as "
                     + "console:applications_edit (effective backward compatibility).")
     public void allThreeGranularResolveToEditInternals() throws Exception {
@@ -296,7 +319,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         assertTrue(resolved.contains(EDIT), "edit must resolve to internal create.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 15,
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 7,
             description = "M3.5: two granular scopes resolve to exactly their two internal actions, not "
                     + "the third.")
     public void twoGranularResolveToPartialInternals() throws Exception {
@@ -309,7 +332,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         assertFalse(resolved.contains(I_DELETE), "delete action must not be granted from create + update.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 16,
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 8,
             description = "E2: edit together with all three granular scopes resolves to the write "
                     + "internals with no duplicate feature-action entries.")
     public void editPlusAllGranularIsIdempotent() throws Exception {
@@ -323,7 +346,7 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
         assertEquals(Collections.frequency(resolved, CREATE), 1, "Create feature scope must not be duplicated.");
     }
 
-    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 17,
+    @Test(groups = {"wso2.is", GRANULAR_ENABLED}, priority = 9,
             description = "E7: retrieving a resolved role twice returns an identical, stable scope set "
                     + "(no read-time write amplification).")
     public void retrievalIsIdempotent() throws Exception {
