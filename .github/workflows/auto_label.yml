@@ -27,7 +27,7 @@ jobs:
             echo "Fetching issue labels and assignees..."
 
             # Fetch labels and assignees
-            ISSUE_JSON=$(gh issue view "$ISSUE_NUMBER" --repo "${{ github.repository }}" --json labels,assignees)
+            ISSUE_JSON=$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json labels,assignees)
 
             # Extract labels and assignee count
             LABELS=$(echo "$ISSUE_JSON" | jq -r '.labels[].name')
@@ -138,9 +138,9 @@ jobs:
                 # Add claude:queue label if a valid category is returned
                 if [[ "$CATEGORY" != "" && "$CATEGORY" != "null" && "$CATEGORY" != "none" ]]; then
                 echo "Adding claude:queue label"
-                gh issue edit $ISSUE_NUMBER --add-label "AI-Agent/Queued" --repo ${{ github.repository }}
+                gh issue edit $ISSUE_NUMBER --add-label "AI-Agent/Queued" --repo "$GITHUB_REPOSITORY"
                 # Add wso2-engineering-bot as assignee
-                gh issue edit $ISSUE_NUMBER --add-assignee "wso2-engineering-bot" --repo ${{ github.repository }}
+                gh issue edit $ISSUE_NUMBER --add-assignee "wso2-engineering-bot" --repo "$GITHUB_REPOSITORY"
                 else
                 echo "No valid category returned. Not adding label."
                 fi

@@ -10,7 +10,7 @@ ALLOWED_PATTERNS=(
 )
 
 # Get list of files staged for commit
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
+STAGED_FILES=$(git diff --cached --name-only)
 
 if [ -z "$STAGED_FILES" ]; then
     exit 0
@@ -21,7 +21,8 @@ echo "Pre-commit validation: Checking staged files against whitelist..."
 # Check if all changes are within allowed patterns (whitelist enforcement)
 INVALID_FOUND=false
 
-for file in $STAGED_FILES; do
+while IFS= read -r file; do
+    [ -z "$file" ] && continue
     ALLOWED=false
 
     for pattern in "${ALLOWED_PATTERNS[@]}"; do
@@ -32,10 +33,10 @@ for file in $STAGED_FILES; do
     done
 
     if [ "$ALLOWED" = false ]; then
-        echo "❌ COMMIT BLOCKED: File outside allowed paths: $file"
+        echo "COMMIT BLOCKED: File outside allowed paths: $file"
         INVALID_FOUND=true
     fi
-done
+done <<< "$STAGED_FILES"
 
 if [ "$INVALID_FOUND" = true ]; then
     echo ""
@@ -72,7 +73,7 @@ STAGED_DIFF=$(git diff --cached)
 # Check for common secret patterns
 if echo "$STAGED_DIFF" | grep -qE '(ghp_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,}|xox[baprs]-[a-zA-Z0-9-]+|AKIA[0-9A-Z]{16}|\b[A-Za-z0-9+/]{40}=?\b)' || \
    echo "$STAGED_DIFF" | grep -qiE '(password|secret|api[_-]?key|token)\s*[:=]\s*["\x27][^"\x27\s]{8,}["\x27]'; then
-    echo "❌ COMMIT BLOCKED: Potential secrets detected in staged changes"
+    echo "COMMIT BLOCKED: Potential secrets detected in staged changes"
     echo ""
     echo "Detected secret-like patterns in staged changes (content redacted for security)."
     echo "$STAGED_DIFF" | grep -cE '(ghp_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,}|xox[baprs]-[a-zA-Z0-9-]+|AKIA[0-9A-Z]{16})' || true
@@ -90,6 +91,6 @@ if [ "$SECRETS_FOUND" = true ]; then
     exit 1
 fi
 
-echo "✅ No secrets detected"
-echo "✅ Pre-commit validation passed"
+echo "No secrets detected"
+echo "Pre-commit validation passed"
 exit 0
