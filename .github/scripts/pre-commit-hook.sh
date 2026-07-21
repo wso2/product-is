@@ -67,17 +67,17 @@ echo ""
 echo "Scanning for secrets in staged changes..."
 SECRETS_FOUND=false
 
-# Get the diff of staged changes
-STAGED_DIFF=$(git diff --cached)
+# Get the newly added lines from the staged changes (exclude context/removed lines and file headers)
+STAGED_DIFF=$(git diff --cached | grep '^+' | grep -v '^+++' || true)
 
 # Check for common secret patterns
-if echo "$STAGED_DIFF" | grep -qE '(ghp_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,}|xox[baprs]-[a-zA-Z0-9-]+|AKIA[0-9A-Z]{16}|\b[A-Za-z0-9+/]{40}=?\b)' || \
-   echo "$STAGED_DIFF" | grep -qiE '(password|secret|api[_-]?key|token)\s*[:=]\s*["\x27][^"\x27\s]{8,}["\x27]'; then
+if printf "%s\n" "$STAGED_DIFF" | grep -qE '(ghp_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,}|xox[baprs]-[a-zA-Z0-9-]+|AKIA[0-9A-Z]{16}|\b[A-Za-z0-9+/]{40}=?\b)' || \
+   printf "%s\n" "$STAGED_DIFF" | grep -qiE '(password|secret|api[_-]?key|token)\s*[:=]\s*["\x27][^"\x27\s]{8,}["\x27]'; then
     echo "COMMIT BLOCKED: Potential secrets detected in staged changes"
     echo ""
     echo "Detected secret-like patterns in staged changes (content redacted for security)."
-    echo "$STAGED_DIFF" | grep -cE '(ghp_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,}|xox[baprs]-[a-zA-Z0-9-]+|AKIA[0-9A-Z]{16})' || true
-    echo "$STAGED_DIFF" | grep -ciE '(password|secret|api[_-]?key|token)\s*[:=]\s*["\x27][^"\x27\s]{8,}["\x27]' || true
+    printf "%s\n" "$STAGED_DIFF" | grep -cE '(ghp_[a-zA-Z0-9]{36}|ghs_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,}|xox[baprs]-[a-zA-Z0-9-]+|AKIA[0-9A-Z]{16})' || true
+    printf "%s\n" "$STAGED_DIFF" | grep -ciE '(password|secret|api[_-]?key|token)\s*[:=]\s*["\x27][^"\x27\s]{8,}["\x27]' || true
     SECRETS_FOUND=true
 fi
 

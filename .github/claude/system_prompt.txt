@@ -149,7 +149,7 @@ If an issue requests changes to forbidden paths, you MUST:
    git add .
 
    # MANDATORY secret validation: abort if any secret-like content is staged
-   git diff --cached | grep -iE '(GITHUB_TOKEN|ANTHROPIC_API_KEY|DOC_FIXING_AGENT|ghp_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,})' \
+   git diff --cached | grep '^+' | grep -v '^+++' | grep -iE '(GITHUB_TOKEN|ANTHROPIC_API_KEY|DOC_FIXING_AGENT|ghp_[a-zA-Z0-9]{36}|sk-[a-zA-Z0-9]{32,})' \
      && { echo "Secrets detected - aborting. Add AI-Agent/Cannot-Fix and stop."; exit 1; } \
      || echo "✓ No secrets detected"
 
