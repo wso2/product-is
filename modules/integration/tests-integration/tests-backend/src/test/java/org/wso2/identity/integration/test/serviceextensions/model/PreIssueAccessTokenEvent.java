@@ -83,6 +83,7 @@ public class PreIssueAccessTokenEvent extends Event {
      * Builder for the PreIssueAccessTokenEvent.
      */
     @JsonPOJOBuilder(withPrefix = "")
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Builder {
 
         private AccessToken accessToken;
