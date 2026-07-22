@@ -55,6 +55,7 @@ import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccess
 import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccessTokenEvent;
 import org.wso2.identity.integration.test.serviceextensions.model.Tenant;
 import org.wso2.identity.integration.test.serviceextensions.model.TokenRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.TokenResponse;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.AuthenticationType;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.Endpoint;
@@ -359,9 +360,14 @@ public class PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase exte
 
         Tenant tenant = new Tenant(tenantId, tenantInfo.getDomain());
 
+        TokenResponse tokenResponse = new TokenResponse.Builder()
+                .parameters(Arrays.asList("access_token", "token_type", "scope", "expires_in"))
+                .build();
+
         PreIssueAccessTokenEvent event = new PreIssueAccessTokenEvent.Builder()
                 .request(tokenRequest)
                 .accessToken(accessTokenInRequest)
+                .response(tokenResponse)
                 .tenant(tenant)
                 .organization(null)
                 .build();

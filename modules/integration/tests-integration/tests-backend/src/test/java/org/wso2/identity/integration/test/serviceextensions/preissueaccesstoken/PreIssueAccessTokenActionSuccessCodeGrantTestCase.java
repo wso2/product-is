@@ -57,6 +57,7 @@ import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccess
 import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccessTokenEvent;
 import org.wso2.identity.integration.test.serviceextensions.model.Tenant;
 import org.wso2.identity.integration.test.serviceextensions.model.TokenRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.TokenResponse;
 import org.wso2.identity.integration.test.serviceextensions.model.User;
 import org.wso2.identity.integration.test.serviceextensions.model.UserStore;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
@@ -479,9 +480,14 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
                 new UserStore(Base64.getEncoder().encodeToString("PRIMARY".getBytes(StandardCharsets.UTF_8)),
                         "PRIMARY");
 
+        TokenResponse tokenResponse = new TokenResponse.Builder()
+                .parameters(Arrays.asList("access_token", "token_type", "scope", "expires_in", "id_token"))
+                .build();
+
         PreIssueAccessTokenEvent event = new PreIssueAccessTokenEvent.Builder()
                 .request(tokenRequest)
                 .accessToken(accessTokenInRequest)
+                .response(tokenResponse)
                 .tenant(tenant)
                 .organization(null)
                 .user(user)

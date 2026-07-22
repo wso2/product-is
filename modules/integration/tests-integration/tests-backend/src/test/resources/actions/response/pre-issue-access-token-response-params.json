@@ -1,0 +1,40 @@
+{
+  "actionStatus": "SUCCESS",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/response/parameters/-",
+      "value": {
+        "name": "custom_response_param_object",
+        "value": {
+          "key1": "value1",
+          "key2": 123,
+          "key3": true,
+          "nested": {
+            "innerKey": "innerValue"
+          }
+        }
+      }
+    },
+    {
+      "op": "add",
+      "path": "/response/parameters/-",
+      "value": {
+        "name": "custom_response_param_array",
+        "value": [
+          "item1",
+          "item2",
+          "item3"
+        ]
+      }
+    },
+    {
+      "op": "remove",
+      "path": "/response/parameters/refresh_token"
+    },
+    {
+      "op": "remove",
+      "path": "/response/parameters/id_token"
+    }
+  ]
+}
