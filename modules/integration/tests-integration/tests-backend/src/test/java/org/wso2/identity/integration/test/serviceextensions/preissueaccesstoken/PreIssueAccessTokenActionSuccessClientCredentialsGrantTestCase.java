@@ -109,6 +109,7 @@ public class PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase exte
     private static final String SCIM2_USERS_API = "/o/scim2/Users";
     private static final String CLAIMS_PATH_PREFIX = "/accessToken/claims/";
     private static final String SCOPES_PATH_PREFIX = "/accessToken/scopes/";
+    private static final String RESPONSE_PARAMETERS_PATH_PREFIX = "/response/parameters/";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
 
     private static final int UPDATED_EXPIRY_TIME_PERIOD = 7200;
@@ -367,7 +368,8 @@ public class PreIssueAccessTokenActionSuccessClientCredentialsGrantTestCase exte
 
         List<AllowedOperation> allowedOperations = Arrays.asList(
                 createAllowedOperation(Operation.ADD, Arrays.asList(CLAIMS_PATH_PREFIX, SCOPES_PATH_PREFIX,
-                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
+                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/",
+                        RESPONSE_PARAMETERS_PATH_PREFIX)),
                 createAllowedOperation(Operation.REMOVE, Arrays.asList(SCOPES_PATH_PREFIX,
                         CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
                 createAllowedOperation(Operation.REPLACE, Arrays.asList(SCOPES_PATH_PREFIX,
