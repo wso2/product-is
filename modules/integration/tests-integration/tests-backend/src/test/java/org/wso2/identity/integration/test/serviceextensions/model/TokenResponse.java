@@ -22,8 +22,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * This class models the token endpoint response sent in the event payload of a pre issue access token action
@@ -58,7 +58,7 @@ public class TokenResponse {
     @Override
     public int hashCode() {
 
-        return Objects.hash(parameters);
+        return parameters == null ? 0 : new HashSet<>(parameters).hashCode();
     }
 
     /**
