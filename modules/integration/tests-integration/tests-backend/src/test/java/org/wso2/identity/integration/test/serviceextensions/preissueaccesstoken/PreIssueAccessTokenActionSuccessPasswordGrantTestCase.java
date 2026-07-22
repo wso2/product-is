@@ -56,6 +56,7 @@ import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccess
 import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccessTokenEvent;
 import org.wso2.identity.integration.test.serviceextensions.model.Tenant;
 import org.wso2.identity.integration.test.serviceextensions.model.TokenRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.TokenResponse;
 import org.wso2.identity.integration.test.serviceextensions.model.User;
 import org.wso2.identity.integration.test.serviceextensions.model.UserStore;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionModel;
@@ -128,6 +129,7 @@ public class PreIssueAccessTokenActionSuccessPasswordGrantTestCase extends Actio
 
     private static final String SCIM2_USERS_API = "/o/scim2/Users";
     private static final String CLAIMS_PATH_PREFIX = "/accessToken/claims/";
+    private static final String RESPONSE_PARAMETERS_PATH_PREFIX = "/response/parameters/";
     private static final String SCOPES_PATH_PREFIX = "/accessToken/scopes/";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     private static final int UPDATED_EXPIRY_TIME_PERIOD = 7200;
@@ -384,9 +386,14 @@ public class PreIssueAccessTokenActionSuccessPasswordGrantTestCase extends Actio
                 new UserStore(Base64.getEncoder().encodeToString("PRIMARY".getBytes(StandardCharsets.UTF_8)),
                         "PRIMARY");
 
+        TokenResponse tokenResponse = new TokenResponse.Builder()
+                .parameters(Arrays.asList("access_token", "token_type", "scope", "expires_in"))
+                .build();
+
         PreIssueAccessTokenEvent event = new PreIssueAccessTokenEvent.Builder()
                 .request(tokenRequest)
                 .accessToken(accessTokenInRequest)
+                .response(tokenResponse)
                 .tenant(tenant)
                 .organization(null)
                 .user(user)
@@ -395,7 +402,8 @@ public class PreIssueAccessTokenActionSuccessPasswordGrantTestCase extends Actio
 
         List<AllowedOperation> allowedOperations = Arrays.asList(
                 createAllowedOperation(Operation.ADD, Arrays.asList(CLAIMS_PATH_PREFIX, SCOPES_PATH_PREFIX,
-                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
+                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/",
+                        RESPONSE_PARAMETERS_PATH_PREFIX)),
                 createAllowedOperation(Operation.REMOVE, Arrays.asList(SCOPES_PATH_PREFIX,
                         CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
                 createAllowedOperation(Operation.REPLACE, Arrays.asList(SCOPES_PATH_PREFIX,

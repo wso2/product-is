@@ -33,11 +33,13 @@ public class PreIssueAccessTokenEvent extends Event {
 
     private TokenRequest request;
     private final AccessToken accessToken;
+    private final TokenResponse response;
 
     private PreIssueAccessTokenEvent(Builder builder) {
 
         this.accessToken = builder.accessToken;
         this.request = builder.request;
+        this.response = builder.response;
         this.organization = builder.organization;
         this.tenant = builder.tenant;
         this.user = builder.user;
@@ -54,6 +56,11 @@ public class PreIssueAccessTokenEvent extends Event {
         return accessToken;
     }
 
+    public TokenResponse getResponse() {
+
+        return response;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,6 +70,7 @@ public class PreIssueAccessTokenEvent extends Event {
 
         boolean isEqualGeneral = Objects.equals(request, that.request) &&
                 Objects.equals(accessToken, that.accessToken) &&
+                Objects.equals(response, that.response) &&
                 Objects.equals(tenant, that.tenant);
 
         if (!"client_credentials".equals(that.request.getGrantType())) {
@@ -76,7 +84,7 @@ public class PreIssueAccessTokenEvent extends Event {
     @Override
     public int hashCode() {
 
-        return Objects.hash(request, accessToken, tenant, user, userStore);
+        return Objects.hash(request, accessToken, response, tenant, user, userStore);
     }
 
     /**
@@ -88,6 +96,7 @@ public class PreIssueAccessTokenEvent extends Event {
 
         private AccessToken accessToken;
         private TokenRequest request;
+        private TokenResponse response;
         private Organization organization;
         private Tenant tenant;
         private User user;
@@ -103,6 +112,12 @@ public class PreIssueAccessTokenEvent extends Event {
         public Builder request(TokenRequest request) {
 
             this.request = request;
+            return this;
+        }
+
+        public Builder response(TokenResponse response) {
+
+            this.response = response;
             return this;
         }
 

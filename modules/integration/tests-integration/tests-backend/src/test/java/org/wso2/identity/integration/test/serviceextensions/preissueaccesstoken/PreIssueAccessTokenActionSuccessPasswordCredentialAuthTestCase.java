@@ -61,6 +61,7 @@ import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccess
 import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccessTokenEvent;
 import org.wso2.identity.integration.test.serviceextensions.model.Tenant;
 import org.wso2.identity.integration.test.serviceextensions.model.TokenRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.TokenResponse;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.FileUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -110,6 +111,7 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
 
     private static final String SCIM2_USERS_API = "/o/scim2/Users";
     private static final String CLAIMS_PATH_PREFIX = "/accessToken/claims/";
+    private static final String RESPONSE_PARAMETERS_PATH_PREFIX = "/response/parameters/";
     private static final String SCOPES_PATH_PREFIX = "/accessToken/scopes/";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
 
@@ -385,16 +387,22 @@ public class PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase exte
 
         Tenant tenant = new Tenant(tenantId, tenantInfo.getDomain());
 
+        TokenResponse tokenResponse = new TokenResponse.Builder()
+                .parameters(Arrays.asList("access_token", "token_type", "scope", "expires_in"))
+                .build();
+
         PreIssueAccessTokenEvent event = new PreIssueAccessTokenEvent.Builder()
                 .request(tokenRequest)
                 .accessToken(accessTokenInRequest)
+                .response(tokenResponse)
                 .tenant(tenant)
                 .organization(null)
                 .build();
 
         List<AllowedOperation> allowedOperations = Arrays.asList(
                 createAllowedOperation(Operation.ADD, Arrays.asList(CLAIMS_PATH_PREFIX, SCOPES_PATH_PREFIX,
-                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
+                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/",
+                        RESPONSE_PARAMETERS_PATH_PREFIX)),
                 createAllowedOperation(Operation.REMOVE, Arrays.asList(SCOPES_PATH_PREFIX,
                         CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
                 createAllowedOperation(Operation.REPLACE, Arrays.asList(SCOPES_PATH_PREFIX,

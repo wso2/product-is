@@ -57,6 +57,7 @@ import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccess
 import org.wso2.identity.integration.test.serviceextensions.model.PreIssueAccessTokenEvent;
 import org.wso2.identity.integration.test.serviceextensions.model.Tenant;
 import org.wso2.identity.integration.test.serviceextensions.model.TokenRequest;
+import org.wso2.identity.integration.test.serviceextensions.model.TokenResponse;
 import org.wso2.identity.integration.test.serviceextensions.model.User;
 import org.wso2.identity.integration.test.serviceextensions.model.UserStore;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
@@ -139,6 +140,7 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
     private static final String SCIM2_USERS_API = "/o/scim2/Users";
     private static final String CLAIMS_PATH_PREFIX = "/accessToken/claims/";
     private static final String SCOPES_PATH_PREFIX = "/accessToken/scopes/";
+    private static final String RESPONSE_PARAMETERS_PATH_PREFIX = "/response/parameters/";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     private static final int UPDATED_EXPIRY_TIME_PERIOD = 7200;
     private static final int CURRENT_EXPIRY_TIME_PERIOD = 3600;
@@ -478,9 +480,14 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
                 new UserStore(Base64.getEncoder().encodeToString("PRIMARY".getBytes(StandardCharsets.UTF_8)),
                         "PRIMARY");
 
+        TokenResponse tokenResponse = new TokenResponse.Builder()
+                .parameters(Arrays.asList("access_token", "token_type", "scope", "expires_in", "id_token"))
+                .build();
+
         PreIssueAccessTokenEvent event = new PreIssueAccessTokenEvent.Builder()
                 .request(tokenRequest)
                 .accessToken(accessTokenInRequest)
+                .response(tokenResponse)
                 .tenant(tenant)
                 .organization(null)
                 .user(user)
@@ -489,11 +496,13 @@ public class PreIssueAccessTokenActionSuccessCodeGrantTestCase extends ActionsBa
 
         List<AllowedOperation> allowedOperations = Arrays.asList(
                 createAllowedOperation(Operation.ADD, Arrays.asList(CLAIMS_PATH_PREFIX, SCOPES_PATH_PREFIX,
-                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
+                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/",
+                        RESPONSE_PARAMETERS_PATH_PREFIX)),
                 createAllowedOperation(Operation.REMOVE, Arrays.asList(CLAIMS_PATH_PREFIX + FIRST_NAME_CLAIM,
                         CLAIMS_PATH_PREFIX + LAST_NAME_CLAIM,
                         SCOPES_PATH_PREFIX,
-                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/")),
+                        CLAIMS_PATH_PREFIX + AccessToken.ClaimNames.AUD.getName() + "/",
+                        RESPONSE_PARAMETERS_PATH_PREFIX + "id_token")),
                 createAllowedOperation(Operation.REPLACE, Arrays.asList(CLAIMS_PATH_PREFIX + FIRST_NAME_CLAIM,
                         CLAIMS_PATH_PREFIX + LAST_NAME_CLAIM,
                         SCOPES_PATH_PREFIX,
