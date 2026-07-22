@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.serviceextensions.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
@@ -27,6 +28,7 @@ import java.util.Objects;
  * This class models the Event sent in the request payload to the API endpoint of a pre issue access token action.
  */
 @JsonDeserialize(builder = PreIssueAccessTokenEvent.Builder.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PreIssueAccessTokenEvent extends Event {
 
     private TokenRequest request;
@@ -89,6 +91,7 @@ public class PreIssueAccessTokenEvent extends Event {
      * Builder for the PreIssueAccessTokenEvent.
      */
     @JsonPOJOBuilder(withPrefix = "")
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Builder {
 
         private AccessToken accessToken;
