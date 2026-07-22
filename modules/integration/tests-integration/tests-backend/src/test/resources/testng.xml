@@ -148,6 +148,7 @@
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessPasswordCredentialAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessClientCredentialAuthTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessCodeGrantTestCase"/>
+            <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessResponseParamsTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessRefreshTokenGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase"/>
             <class name="org.wso2.identity.integration.test.serviceextensions.preissueaccesstoken.PreIssueAccessTokenActionFailureCodeGrantTestCase"/>
