@@ -3,9 +3,9 @@ name: Claude Code • Auto PR on Comment
 on:
   issue_comment:
     types: [created]
-  # schedule:
-  #   - cron: "0 * * * *"
-  # workflow_dispatch: {}
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch: {}
 
 concurrency:
   group: doc-fixing-ai-agent
@@ -14,9 +14,11 @@ concurrency:
 jobs:
   get_issue_and_assign:
     runs-on: ubuntu-latest
-    if: false
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Install GitHub CLI
         run: |
@@ -90,7 +92,7 @@ jobs:
 
   run_claude:
     runs-on: ubuntu-latest
-    if: false
+    if: contains(github.event.comment.body, '@wso2-engineering-bot')
     steps:
       - name: Set environment variables
         id: set_env_vars
@@ -106,6 +108,7 @@ jobs:
           token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           path: product-is
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Checkout target repository (docs-is)
         uses: actions/checkout@v4
@@ -114,6 +117,7 @@ jobs:
           token: ${{ secrets.DOC_FIXING_AGENT_GITHUB_TOKEN }}
           path: docs-is
           fetch-depth: 0
+          persist-credentials: false
 
       # Set working directory paths explicitly
       - name: Set repository paths
@@ -123,11 +127,26 @@ jobs:
 
       # Configure git globally in the main workspace first
       - name: Configure git globally
+        env:
+          GIT_USER_NAME: ${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}
+          GIT_USER_EMAIL: ${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}
         run: |
-          git config --global user.name "${{ secrets.DOC_FIXING_AGENT_GIT_USER_NAME }}"
-          git config --global user.email "${{ secrets.DOC_FIXING_AGENT_GIT_USER_EMAIL }}"
+          git config --global user.name "$GIT_USER_NAME"
+          git config --global user.email "$GIT_USER_EMAIL"
 
           cd $GITHUB_WORKSPACE
+
+      - name: Install security pre-commit hook
+        run: |
+          echo "Installing pre-commit hook for path validation in docs-is..."
+
+          # Commits are made in the docs-is repository, so install the hook there.
+          mkdir -p "$DOCS_IS_PATH/.git/hooks"
+          cp "$PRODUCT_IS_PATH/.github/scripts/pre-commit-hook.sh" "$DOCS_IS_PATH/.git/hooks/pre-commit"
+          chmod +x "$DOCS_IS_PATH/.git/hooks/pre-commit"
+
+          echo "✅ Pre-commit hook installed successfully"
+          echo "This hook blocks commits to forbidden paths and commits containing secrets"
 
       - name: Prepare system prompt with environment variables
         id: prepare_prompt
@@ -145,10 +164,13 @@ jobs:
           export PRODUCT_IS_PATH="$PRODUCT_IS_PATH"
           export DOCS_IS_PATH="$DOCS_IS_PATH"
           
-          # Process the system prompt with variable substitution
+          # Process the system prompt with variable substitution.
+          # Restrict envsubst to the intended variables ONLY, so runtime-computed
+          # placeholders like ${BRANCH_NAME} and ${TIMESTAMP} (and any $-prefixed
+          # examples) are preserved instead of being stripped to empty strings.
           cd $PRODUCT_IS_PATH
           pwd
-          SYSTEM_PROMPT=$(envsubst < .github/claude/system_prompt.txt)
+          SYSTEM_PROMPT=$(envsubst '$ISSUE_NUMBER $LATEST_VERSION $GIT_USER_NAME $GIT_USER_EMAIL $PRODUCT_IS_PATH $DOCS_IS_PATH' < .github/claude/system_prompt.txt)
 
           # Save to GitHub env
           echo "SYSTEM_PROMPT<<EOF" >> $GITHUB_ENV
