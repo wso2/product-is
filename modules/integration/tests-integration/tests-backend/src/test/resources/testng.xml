@@ -368,6 +368,12 @@
         </classes>
     </test>
 
+    <test name="is-tests-console-granular-scopes" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.rest.api.server.roles.v2.ConsoleGranularScopeTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-scim2" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/>
