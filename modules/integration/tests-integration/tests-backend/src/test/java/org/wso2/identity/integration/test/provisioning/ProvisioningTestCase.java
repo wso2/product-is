@@ -145,27 +145,40 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        for (int portOff = 0; portOff < 2; portOff++) {
-            ServiceProvider serviceProvider = applicationManagementServiceClients.get(portOff)
-                    .getApplication("wso2carbon-local-sp");
-            if (serviceProvider != null) {
-                serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-                applicationManagementServiceClients.get(portOff).updateApplicationData(serviceProvider);
+        List<Exception> cleanupErrors = new ArrayList<Exception>();
+        try {
+            for (int portOff = 0; portOff < 2; portOff++) {
+                try {
+                    ServiceProvider serviceProvider = applicationManagementServiceClients.get(portOff)
+                            .getApplication("wso2carbon-local-sp");
+                    if (serviceProvider != null) {
+                        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+                        applicationManagementServiceClients.get(portOff).updateApplicationData(serviceProvider);
+                    }
+                    identityProviderMgtServiceClients.get(portOff).deleteIdP(SAMPLE_IDENTITY_PROVIDER_NAME + "_"
+                            + Integer.toString(portOff));
+                } catch (Exception e) {
+                    cleanupErrors.add(e);
+                }
             }
-            identityProviderMgtServiceClients.get(portOff).deleteIdP(SAMPLE_IDENTITY_PROVIDER_NAME + "_" + Integer
-                    .toString(portOff));
+        } finally {
+            deleteUserIfExists(PORT_OFFSET_0, userName, cleanupErrors);
+            deleteUserIfExists(PORT_OFFSET_1, userName2, cleanupErrors);
+            deleteUserIfExists(PORT_OFFSET_2, userName, cleanupErrors);
+            deleteUserIfExists(PORT_OFFSET_2, userName2, cleanupErrors);
         }
 
-        // Remove the users created (directly and via outbound provisioning) so that a shared/persistent
-        // external database does not retain them for subsequent test runs, which would otherwise cause
-        // "UserAlreadyExistingUsername" failures on the next run.
-        deleteUserIfExists(PORT_OFFSET_0, userName);
-        deleteUserIfExists(PORT_OFFSET_1, userName2);
-        deleteUserIfExists(PORT_OFFSET_2, userName);
-        deleteUserIfExists(PORT_OFFSET_2, userName2);
+        if (!cleanupErrors.isEmpty()) {
+            StringBuilder message = new StringBuilder("Errors occurred while cleaning up ProvisioningTestCase: ");
+            for (Exception e : cleanupErrors) {
+                message.append(e.getMessage()).append("; ");
+            }
+            log.error(message.toString());
+            throw new Exception(message.toString(), cleanupErrors.get(0));
+        }
     }
 
-    private void deleteUserIfExists(int portOffset, String userNameToDelete) {
+    private void deleteUserIfExists(int portOffset, String userNameToDelete, List<Exception> cleanupErrors) {
 
         try {
             UserManagementClient userManagementClient = userMgtServiceClients.get(portOffset);
@@ -173,8 +186,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
                 userManagementClient.deleteUser(userNameToDelete);
             }
         } catch (Exception e) {
-            log.warn("Error while deleting user: " + userNameToDelete + " from server with port offset: "
-                    + portOffset, e);
+            cleanupErrors.add(e);
         }
     }
 
