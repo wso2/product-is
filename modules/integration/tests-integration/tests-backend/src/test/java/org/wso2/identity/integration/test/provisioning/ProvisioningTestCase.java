@@ -123,7 +123,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
         createServiceClientsForServers(sessionCookie, PORT_OFFSET_0, new CommonConstants.AdminClients[]{
                 CommonConstants.AdminClients.APPLICATION_MANAGEMENT_SERVICE_CLIENT, CommonConstants.AdminClients
-                .IDENTITY_PROVIDER_MGT_SERVICE_CLIENT});
+                .IDENTITY_PROVIDER_MGT_SERVICE_CLIENT, CommonConstants.AdminClients.USER_MANAGEMENT_CLIENT});
 
         createServiceClientsForServers(null, PORT_OFFSET_1, new CommonConstants.AdminClients[]{
                 CommonConstants.AdminClients.APPLICATION_MANAGEMENT_SERVICE_CLIENT, CommonConstants.AdminClients
@@ -154,6 +154,27 @@ public class ProvisioningTestCase extends ISIntegrationTest {
             }
             identityProviderMgtServiceClients.get(portOff).deleteIdP(SAMPLE_IDENTITY_PROVIDER_NAME + "_" + Integer
                     .toString(portOff));
+        }
+
+        // Remove the users created (directly and via outbound provisioning) so that a shared/persistent
+        // external database does not retain them for subsequent test runs, which would otherwise cause
+        // "UserAlreadyExistingUsername" failures on the next run.
+        deleteUserIfExists(PORT_OFFSET_0, userName);
+        deleteUserIfExists(PORT_OFFSET_1, userName2);
+        deleteUserIfExists(PORT_OFFSET_2, userName);
+        deleteUserIfExists(PORT_OFFSET_2, userName2);
+    }
+
+    private void deleteUserIfExists(int portOffset, String userNameToDelete) {
+
+        try {
+            UserManagementClient userManagementClient = userMgtServiceClients.get(portOffset);
+            if (userManagementClient != null && isUserExists(portOffset, userNameToDelete)) {
+                userManagementClient.deleteUser(userNameToDelete);
+            }
+        } catch (Exception e) {
+            log.warn("Error while deleting user: " + userNameToDelete + " from server with port offset: "
+                    + portOffset, e);
         }
     }
 
@@ -400,7 +421,12 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
     private boolean isUserExists(String userName) throws Exception {
 
-        FlaggedName[] nameList = userMgtServiceClients.get(PORT_OFFSET_2).listAllUsers(userName, 100);
+        return isUserExists(PORT_OFFSET_2, userName);
+    }
+
+    private boolean isUserExists(int portOffset, String userName) throws Exception {
+
+        FlaggedName[] nameList = userMgtServiceClients.get(portOffset).listAllUsers(userName, 100);
         for (FlaggedName name : nameList) {
             if (name.getItemName().contains(userName)) {
                 return true;
