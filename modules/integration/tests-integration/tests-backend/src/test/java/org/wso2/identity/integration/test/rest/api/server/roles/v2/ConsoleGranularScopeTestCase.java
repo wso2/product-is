@@ -43,6 +43,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.testng.Assert.assertEquals;
@@ -109,16 +111,21 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
 
         File defaultTomlFile = getDeploymentTomlFile(Utils.getResidentCarbonHome());
         String content = new String(Files.readAllBytes(defaultTomlFile.toPath()), StandardCharsets.UTF_8);
-        String disabledContent = content.replaceFirst(
-                "(?m)^(\\s*use_granular_console_permissions\\s*=\\s*)(true|false)(\\s*(#.*)?)$",
-                "$1false$3");
-        if (disabledContent.equals(content)) {
+        Pattern knobPattern = Pattern.compile(
+                "(?m)^(\\s*use_granular_console_permissions\\s*=\\s*)(true|false)(\\s*(#.*)?)$");
+        Matcher knobMatcher = knobPattern.matcher(content);
+        if (knobMatcher.find()) {
+            content = knobMatcher.replaceFirst("$1false$3");
+        } else {
             content += System.lineSeparator() + "[console.console_settings]" + System.lineSeparator()
                     + "use_granular_console_permissions = false" + System.lineSeparator();
-        } else {
-            content = disabledContent;
         }
         File disabledTomlFile = File.createTempFile("console-granular-disabled", ".toml");
+        disabledTomlFile.deleteOnExit();
+        disabledTomlFile.setReadable(false, false);
+        disabledTomlFile.setReadable(true, true);
+        disabledTomlFile.setWritable(false, false);
+        disabledTomlFile.setWritable(true, true);
         Files.write(disabledTomlFile.toPath(), content.getBytes(StandardCharsets.UTF_8));
 
         serverConfigurationManager = new ServerConfigurationManager(isServer);
@@ -389,14 +396,6 @@ public class ConsoleGranularScopeTestCase extends ISIntegrationTest {
      */
     private List<String> rolePermissionList(String roleId) throws Exception {
 
-        org.json.simple.JSONObject role = scim2RestClient.getV2Role(roleId);
-        List<String> permissions = new ArrayList<>();
-        org.json.simple.JSONArray permissionArray = (org.json.simple.JSONArray) role.get("permissions");
-        if (permissionArray != null) {
-            for (Object permission : permissionArray) {
-                permissions.add(((org.json.simple.JSONObject) permission).get("value").toString());
-            }
-        }
-        return permissions;
+        return scim2RestClient.getV2RolePermissionList(roleId);
     }
 }

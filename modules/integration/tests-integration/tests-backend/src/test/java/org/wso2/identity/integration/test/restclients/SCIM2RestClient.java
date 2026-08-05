@@ -42,7 +42,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SCIM2RestClient extends RestBaseClient {
@@ -796,8 +798,20 @@ public class SCIM2RestClient extends RestBaseClient {
      */
     public Set<String> getV2RolePermissions(String roleId) throws Exception {
 
+        return new HashSet<>(getV2RolePermissionList(roleId));
+    }
+
+    /**
+     * Get the permission values assigned to a role in v2, preserving duplicates and order.
+     *
+     * @param roleId Role id.
+     * @return List of permission values returned for the role (empty if none).
+     * @throws Exception If an error occurred while retrieving the role.
+     */
+    public List<String> getV2RolePermissionList(String roleId) throws Exception {
+
         JSONObject role = getV2Role(roleId);
-        Set<String> permissions = new HashSet<>();
+        List<String> permissions = new ArrayList<>();
         JSONArray permissionArray = (JSONArray) role.get("permissions");
         if (permissionArray != null) {
             for (Object permission : permissionArray) {
