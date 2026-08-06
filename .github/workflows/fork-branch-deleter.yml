@@ -20,4 +20,6 @@ jobs:
       - name: Owner
         run: echo ${{ github.event.pull_request.head.repo.owner.login }}
       - name: Delete Fork Branch of wso2-jenkins-bot
-        run: git push -d origin ${{ github.event.pull_request.head.ref }}
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: git push -d origin "$HEAD_REF"
