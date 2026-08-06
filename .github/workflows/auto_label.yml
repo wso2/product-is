@@ -59,16 +59,6 @@ jobs:
               exit 0
             fi
 
-            # Only auto-label if the issue creator has write access to the repo.
-            # External contributors can still get issues fixed if an internal maintainer
-            # manually adds the AI-Agent/Queued label after reviewing the issue.
-            AUTHOR_ASSOCIATION="${ISSUE_AUTHOR_ASSOCIATION}"
-            echo "Issue creator association: $AUTHOR_ASSOCIATION"
-            if [[ "$AUTHOR_ASSOCIATION" != "OWNER" && "$AUTHOR_ASSOCIATION" != "MEMBER" && "$AUTHOR_ASSOCIATION" != "COLLABORATOR" && "$AUTHOR_ASSOCIATION" != "CONTRIBUTOR" ]]; then
-              echo "Issue creator does not have write access (association: $AUTHOR_ASSOCIATION). Skipping AI-Agent/Queued label."
-              exit 0
-            fi
-
             echo "Issue passed all checks. Sending issue to Claude for classification..."
 
             # Build JSON payload safely with jq to escape newlines/quotes
