@@ -2701,7 +2701,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.173</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.174</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2784,8 +2784,8 @@
         <provisioning.connector.scim2.version>2.1.6</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
-        <identity.local.auth.basicauth.version>6.11.11</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>6.0.11</identity.local.auth.fido.version>
+        <identity.local.auth.basicauth.version>6.11.12</identity.local.auth.basicauth.version>
+        <identity.local.auth.fido.version>6.0.12</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.5.1</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
