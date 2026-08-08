@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.serviceextensions.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -34,6 +35,7 @@ public class PreUpdateProfileActionRequest {
     private final String flowId;
     private final String requestId;
     private final PreUpdateProfileEvent event;
+    private final List<AllowedOperation> allowedOperations;
 
     public PreUpdateProfileActionRequest(Builder builder) {
 
@@ -41,6 +43,7 @@ public class PreUpdateProfileActionRequest {
         this.flowId = builder.flowId;
         this.requestId = builder.requestId;
         this.event = builder.event;
+        this.allowedOperations = builder.allowedOperations;
     }
 
     public ActionType getActionType() {
@@ -63,6 +66,11 @@ public class PreUpdateProfileActionRequest {
         return event;
     }
 
+    public List<AllowedOperation> getAllowedOperations() {
+
+        return allowedOperations;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -70,13 +78,14 @@ public class PreUpdateProfileActionRequest {
         if (o == null || getClass() != o.getClass()) return false;
         PreUpdateProfileActionRequest that = (PreUpdateProfileActionRequest) o;
         return actionType == that.actionType &&
-                Objects.equals(event, that.event);
+                Objects.equals(event, that.event) &&
+                Objects.equals(allowedOperations, that.allowedOperations);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(actionType, event);
+        return Objects.hash(actionType, event, allowedOperations);
     }
 
     /**
@@ -89,6 +98,7 @@ public class PreUpdateProfileActionRequest {
         private String flowId;
         private String requestId;
         private PreUpdateProfileEvent event;
+        private List<AllowedOperation> allowedOperations;
 
         public Builder actionType(ActionType actionType) {
 
@@ -114,10 +124,15 @@ public class PreUpdateProfileActionRequest {
             return this;
         }
 
+        public Builder allowedOperations(List<AllowedOperation> allowedOperations) {
+
+            this.allowedOperations = allowedOperations;
+            return this;
+        }
+
         public PreUpdateProfileActionRequest build() {
 
             return new PreUpdateProfileActionRequest(this);
         }
     }
 }
-
