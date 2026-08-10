@@ -2701,7 +2701,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.177</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.178</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2722,7 +2722,7 @@
         <carbon.consent.mgt.version>2.9.19</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.16.33</identity.governance.version>
+        <identity.governance.version>1.16.34</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.12.4</identity.carbon.auth.saml2.version>
@@ -2731,12 +2731,12 @@
         <identity.carbon.auth.rest.version>1.12.11</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.5.70</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.5.73</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.7</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.5</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.8.1</identity.inbound.provisioning.scim.version>
-        <identity.inbound.provisioning.scim2.version>3.7.16</identity.inbound.provisioning.scim2.version>
+        <identity.inbound.provisioning.scim2.version>3.7.17</identity.inbound.provisioning.scim2.version>
 
         <!-- Identity User Versions -->
         <identity.user.account.association.version>5.6.0</identity.user.account.association.version>
@@ -2796,7 +2796,7 @@
 
         <!-- OAuth2 Grant Type extensions -->
         <identity.oauth2.jwt.bearer.grant.version>2.4.1</identity.oauth2.jwt.bearer.grant.version>
-        <identity.oauth2.token.exchange.grant.version>1.4.4</identity.oauth2.token.exchange.grant.version>
+        <identity.oauth2.token.exchange.grant.version>1.4.6</identity.oauth2.token.exchange.grant.version>
 
         <identity.oauth.dpop.version>2.1.3</identity.oauth.dpop.version>
 
@@ -2831,7 +2831,7 @@
         <hashprovider.bcrypt.version>1.1.1</hashprovider.bcrypt.version>
 
         <!-- Identity Branding Preference Management Versions -->
-        <identity.branding.preference.management.version>1.4.2</identity.branding.preference.management.version>
+        <identity.branding.preference.management.version>1.4.3</identity.branding.preference.management.version>
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
