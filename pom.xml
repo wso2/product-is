@@ -3006,7 +3006,7 @@
 
         <greenmail.version>2.0.1</greenmail.version>
         <jakarta.mail.version>2.0.1</jakarta.mail.version>
-        <jsoup.version>1.15.3</jsoup.version>
+        <jsoup.version>1.23.1</jsoup.version>
         <nimbus-jose-jwt.version>9.41.2</nimbus-jose-jwt.version>
         
         <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
