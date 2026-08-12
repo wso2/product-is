@@ -713,8 +713,13 @@ public class EmailSenderSuccessTest extends EmailSenderTestBase {
     }
 
     @Test(dependsOnMethods = {"testDeleteHTTPEmailSenderWithPasswordCredentialAuth"})
-    public void testAddSMTPEmailSenderWithPasswordCredentialAuth() throws IOException {
+    public void testAddSMTPEmailSenderWithPasswordCredentialAuthIsRejected() throws IOException {
 
+        // PASSWORD_CREDENTIAL is restricted to HTTP-based email senders (identity-event-handler-notification#394):
+        // the SMTP send path (EmailEventAdapter) only implements CLIENT_CREDENTIAL via XOAUTH2, and accepting
+        // PASSWORD_CREDENTIAL here would leak the resource-owner username/password/clientId/clientSecret into
+        // the generated SMTP publisher config in plaintext (see NotificationSenderManagementServiceImpl
+        // #validateInputs).
         String body = new Gson().toJson(EmailSenderRequestBuilder.createAddSMTPEmailSenderJSON(
                 AUTH_TYPE_PASSWORD_CREDENTIAL, this.getClass()));
         Response response =
@@ -723,53 +728,12 @@ public class EmailSenderSuccessTest extends EmailSenderTestBase {
             response.then()
                     .log().ifValidationFails()
                     .assertThat()
-                    .statusCode(HttpStatus.SC_CREATED)
-                    .header(HttpHeaders.LOCATION, notNullValue());
-            String location = response.getHeader(HttpHeaders.LOCATION);
-            assertNotNull(location);
-            emailNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
-            assertNotNull(emailNotificationSenderName);
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
         } else {
             response.then()
                     .log().ifValidationFails()
                     .assertThat()
                     .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
         }
-    }
-
-    @Test(dependsOnMethods = {"testAddSMTPEmailSenderWithPasswordCredentialAuth"})
-    public void testGetSMTPEmailSenderWithPasswordCredentialAuth() {
-
-        Response response = getResponseOfGet(
-                NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + EMAIL_SENDERS_PATH + PATH_SEPARATOR +
-                        emailNotificationSenderName);
-        if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_OK)
-                    .body("smtpServerHost", equalTo(SMTP_SERVER_HOST))
-                    .body("smtpPort", equalTo(SMTP_PORT))
-                    .body("fromAddress", equalTo(SMTP_FROM_ADDRESS))
-                    .body("authType", equalTo(AUTH_TYPE_PASSWORD_CREDENTIAL))
-                    .body("properties", notNullValue())
-                    .body(PROPERTY_CLIENT_ID, equalTo(PASSWORD_CREDENTIAL_CLIENT_ID))
-                    .body(PROPERTY_USERNAME, equalTo(PASSWORD_CREDENTIAL_USERNAME))
-                    .body(PROPERTY_TOKEN_ENDPOINT, equalTo(PASSWORD_CREDENTIAL_TOKEN_ENDPOINT))
-                    .body(PROPERTY_SCOPES, equalTo(PASSWORD_CREDENTIAL_SCOPES))
-                    .body(PROPERTY_CLIENT_SECRET, nullValue())
-                    .body(PROPERTY_PASSWORD, nullValue());
-        } else {
-            response.then()
-                    .log().ifValidationFails()
-                    .assertThat()
-                    .statusCode(HttpStatus.SC_METHOD_NOT_ALLOWED);
-        }
-    }
-
-    @Test(dependsOnMethods = {"testGetSMTPEmailSenderWithPasswordCredentialAuth"})
-    public void testDeleteSMTPEmailSenderWithPasswordCredentialAuth() {
-
-        deleteEmailSenderAndValidate();
     }
 }
