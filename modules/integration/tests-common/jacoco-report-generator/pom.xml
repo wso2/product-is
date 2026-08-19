@@ -33,7 +33,7 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <org.jacoco.version>0.8.12</org.jacoco.version>
-        <plexus-utils.version>4.0.1</plexus-utils.version>
+        <plexus-utils.version>4.0.3</plexus-utils.version>
         <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     </properties>
 
