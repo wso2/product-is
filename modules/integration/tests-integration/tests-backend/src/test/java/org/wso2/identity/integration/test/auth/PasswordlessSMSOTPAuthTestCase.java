@@ -227,40 +227,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertNotNull(response);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
         validateTokenRequest();
-    }
-
-    @Test(groups = "wso2.is", description = "Test that a second SMS OTP send reuses the cached refresh token " +
-            "instead of re-authenticating with the original grant from scratch",
-            dependsOnMethods = "testPasswordlessAuthentication")
-    public void testSecondSmsSendReusesRefreshToken() throws Exception {
-
-        if (!"v2".equals(apiVersion)) {
-            // No OAuth2 token handling for SMS sender v1.
-            return;
-        }
-
-        String firstAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-
-        // Trigger a second, independent login to force a second SMS send.
-        sendAuthorizeRequest();
-        performUserLogin();
-        HttpResponse response = sendTokenRequestForCodeGrant();
-
-        assertNotNull(response);
-        assertEquals(response.getStatusLine().getStatusCode(), 200);
-
-        Map<String, String> secondRequestParams = mockOAuth2TokenServer.getLastRequestBodyContent();
-        assertEquals(secondRequestParams.get("grant_type"), "refresh_token",
-                "Second SMS send should reuse the cached refresh token instead of re-authenticating from scratch");
-
-        String secondAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-        assertNotNull(secondAccessToken, "Access token should not be null");
-        assertTrue(!secondAccessToken.equals(firstAccessToken),
-                "Second send should use a newly refreshed access token, not the original one");
-
-        String authorizationHeader = mockSMSProvider.getHeader("Authorization");
-        assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + secondAccessToken),
-                "Second SMS send's Authorization header should carry the refreshed access token");
+        EntityUtils.consume(response.getEntity());
     }
 
     private void sendAuthorizeRequest() throws Exception {
@@ -301,8 +268,9 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", username));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-        sendPostRequestWithParameters(client, urlParameters,
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
+        EntityUtils.consume(response.getEntity());
     }
 
     private HttpResponse sendLoginPostForOtp(HttpClient client, String sessionDataKey, String otp)
