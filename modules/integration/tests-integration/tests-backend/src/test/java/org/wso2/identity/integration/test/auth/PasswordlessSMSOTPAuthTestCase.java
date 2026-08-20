@@ -22,12 +22,14 @@ import com.google.gson.Gson;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
@@ -91,6 +93,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     public static final String SMS_SENDER_REQUEST_FORMAT = "{\"content\": {{body}}, \"to\": {{mobile}} }";
 
     private HttpClient client;
+    private final CookieStore cookieStore = new BasicCookieStore();
 
     NotificationSenderRestClient notificationSenderRestClient;
 
@@ -150,6 +153,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         client = HttpClientBuilder.create()
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
+                .setDefaultCookieStore(cookieStore)
                 .setRedirectStrategy(new LaxRedirectStrategy())
                 .build();
 
@@ -241,6 +245,10 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         }
 
         String firstAccessToken = mockOAuth2TokenServer.getLastAccessToken();
+
+        // Clear the session cookie from the first login so this second login is independent (not SSO'd through),
+        // forcing a fresh authentication and a second SMS send.
+        cookieStore.clear();
 
         // Trigger a second, independent login to force a second SMS send.
         sendAuthorizeRequest();
