@@ -44,15 +44,6 @@ public class EmailSenderRequestBuilder {
     public static final String CLIENT_CREDENTIAL_SCOPES =
             "internal_config_mgt_add internal_config_mgt_delete internal_config_mgt_list";
 
-    // Password Credential Auth constants
-    public static final String PASSWORD_CREDENTIAL_CLIENT_ID = "test-password-credential-client-id";
-    public static final String PASSWORD_CREDENTIAL_CLIENT_SECRET = "test-password-credential-client-secret";
-    public static final String PASSWORD_CREDENTIAL_USERNAME = "test-password-credential-username";
-    public static final String PASSWORD_CREDENTIAL_PASSWORD = "test-password-credential-password";
-    public static final String PASSWORD_CREDENTIAL_TOKEN_ENDPOINT = "https://example.com/oauth2/token";
-    public static final String PASSWORD_CREDENTIAL_SCOPES =
-            "internal_config_mgt_add internal_config_mgt_delete internal_config_mgt_list";
-
     // Bearer Auth constants
     public static final String BEARER_ACCESS_TOKEN = "test-bearer-token";
 
@@ -160,14 +151,6 @@ public class EmailSenderRequestBuilder {
                 properties.add(createProperty("clientSecret", CLIENT_CREDENTIAL_CLIENT_SECRET));
                 properties.add(createProperty("tokenEndpoint", CLIENT_CREDENTIAL_TOKEN_ENDPOINT));
                 properties.add(createProperty("scopes", CLIENT_CREDENTIAL_SCOPES));
-                break;
-            case "PASSWORD_CREDENTIAL":
-                properties.add(createProperty("clientId", PASSWORD_CREDENTIAL_CLIENT_ID));
-                properties.add(createProperty("clientSecret", PASSWORD_CREDENTIAL_CLIENT_SECRET));
-                properties.add(createProperty("userName", PASSWORD_CREDENTIAL_USERNAME));
-                properties.add(createProperty("password", PASSWORD_CREDENTIAL_PASSWORD));
-                properties.add(createProperty("tokenEndpoint", PASSWORD_CREDENTIAL_TOKEN_ENDPOINT));
-                properties.add(createProperty("scopes", PASSWORD_CREDENTIAL_SCOPES));
                 break;
             case "BEARER":
                 properties.add(createProperty("accessToken", BEARER_ACCESS_TOKEN));

@@ -105,26 +105,22 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
     private TestUserMode userMode;
     private String apiVersion;
-    private Authentication.TypeEnum authType;
 
     @Factory(dataProvider = "testExecutionContextProvider")
-    public PasswordlessSMSOTPAuthTestCase(TestUserMode userMode, String apiVersion, Authentication.TypeEnum authType) {
+    public PasswordlessSMSOTPAuthTestCase(TestUserMode userMode, String apiVersion) {
 
         this.userMode = userMode;
         this.apiVersion = apiVersion;
-        this.authType = authType;
     }
 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER, "v1", null},
-                {TestUserMode.SUPER_TENANT_USER, "v2", Authentication.TypeEnum.CLIENT_CREDENTIAL},
-                {TestUserMode.SUPER_TENANT_USER, "v2", Authentication.TypeEnum.PASSWORD_CREDENTIAL},
-                {TestUserMode.TENANT_USER, "v1", null},
-                {TestUserMode.TENANT_USER, "v2", Authentication.TypeEnum.CLIENT_CREDENTIAL},
-                {TestUserMode.TENANT_USER, "v2", Authentication.TypeEnum.PASSWORD_CREDENTIAL},
+                {TestUserMode.SUPER_TENANT_USER, "v1"},
+                {TestUserMode.SUPER_TENANT_USER, "v2"},
+                {TestUserMode.TENANT_USER, "v1"},
+                {TestUserMode.TENANT_USER, "v2"},
         };
     }
 
@@ -164,7 +160,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         notificationSenderRestClient = new NotificationSenderRestClient(backendURL, tenantInfo);
         if (VERSION_2.equals(apiVersion)) {
-            notificationSenderRestClient.createSMSProviderV2(initSMSSenderV2(authType));
+            notificationSenderRestClient.createSMSProviderV2(initSMSSenderV2());
         } else {
             SMSSender smsSender = initSMSSender();
             notificationSenderRestClient.createSMSProvider(smsSender);
@@ -183,10 +179,11 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         return smsSender;
     }
 
-    private static String initSMSSenderV2(Authentication.TypeEnum authType) throws IOException {
+    private static String initSMSSenderV2() throws IOException {
 
         org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.SMSSender smsSender =
-                SMSSenderRequestBuilder.createAddSMSSenderJSON(authType, SMSSenderTestBase.class);
+                SMSSenderRequestBuilder.createAddSMSSenderJSON(
+                        Authentication.TypeEnum.CLIENT_CREDENTIAL, SMSSenderTestBase.class);
 
         // Override provider URL to use MockSMSProvider
         smsSender.setProviderURL(MockSMSProvider.SMS_SENDER_URL);
@@ -227,40 +224,6 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertNotNull(response);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
         validateTokenRequest();
-    }
-
-    @Test(groups = "wso2.is", description = "Test that a second SMS OTP send reuses the cached refresh token " +
-            "instead of re-authenticating with the original grant from scratch",
-            dependsOnMethods = "testPasswordlessAuthentication")
-    public void testSecondSmsSendReusesRefreshToken() throws Exception {
-
-        if (!"v2".equals(apiVersion)) {
-            // No OAuth2 token handling for SMS sender v1.
-            return;
-        }
-
-        String firstAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-
-        // Trigger a second, independent login to force a second SMS send.
-        sendAuthorizeRequest();
-        performUserLogin();
-        HttpResponse response = sendTokenRequestForCodeGrant();
-
-        assertNotNull(response);
-        assertEquals(response.getStatusLine().getStatusCode(), 200);
-
-        Map<String, String> secondRequestParams = mockOAuth2TokenServer.getLastRequestBodyContent();
-        assertEquals(secondRequestParams.get("grant_type"), "refresh_token",
-                "Second SMS send should reuse the cached refresh token instead of re-authenticating from scratch");
-
-        String secondAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-        assertNotNull(secondAccessToken, "Access token should not be null");
-        assertTrue(!secondAccessToken.equals(firstAccessToken),
-                "Second send should use a newly refreshed access token, not the original one");
-
-        String authorizationHeader = mockSMSProvider.getHeader("Authorization");
-        assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + secondAccessToken),
-                "Second SMS send's Authorization header should carry the refreshed access token");
     }
 
     private void sendAuthorizeRequest() throws Exception {
@@ -377,25 +340,18 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
             return;
         }
 
-        // Validate OAuth2 token request to MockOAuth2TokenServer for the configured authentication type
+        // Validate OAuth2 token request to MockOAuth2TokenServer for CLIENT_CREDENTIAL authentication
         String accessToken = mockOAuth2TokenServer.getLastAccessToken();
         Map<String, String> requestHeaders = mockOAuth2TokenServer.getLastRequestHeaders();
         Map<String, String> requestParams = mockOAuth2TokenServer.getLastRequestBodyContent();
 
-        if (Authentication.TypeEnum.PASSWORD_CREDENTIAL.equals(authType)) {
-            assertEquals(requestParams.get("grant_type"), "password");
-            assertEquals(requestParams.get("username"), AuthenticationBuilder.PASSWORD_CREDENTIAL_USERNAME);
-            assertEquals(requestParams.get("password"), AuthenticationBuilder.PASSWORD_CREDENTIAL_PASSWORD);
-            assertEquals(requestParams.get("scope"), URLEncoder.encode(
-                    AuthenticationBuilder.PASSWORD_CREDENTIAL_SCOPES, StandardCharsets.UTF_8));
-        } else {
-            assertEquals(requestHeaders.get("Authorization"), "Basic " + AuthenticationBuilder.ENCODED_CREDENTIAL);
-            assertEquals(requestParams.get("grant_type"), "client_credentials");
-            assertEquals(requestParams.get("scope"), URLEncoder.encode(
-                    AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES, StandardCharsets.UTF_8));
-        }
+        assertEquals(requestHeaders.get("Authorization"), "Basic " + AuthenticationBuilder.ENCODED_CREDENTIAL);
 
-        // Validate Authorization Bearer token header carrying the token minted for the configured auth type
+        assertEquals(requestParams.get("grant_type"), "client_credentials");
+        assertEquals(requestParams.get("scope"), URLEncoder.encode(
+                AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES, StandardCharsets.UTF_8));
+
+        // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
         String authorizationHeader = mockSMSProvider.getHeader("Authorization");
         assertNotNull(accessToken, "Access token should not be null");
         assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + accessToken),

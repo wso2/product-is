@@ -36,13 +36,6 @@ public class AuthenticationBuilder {
     public static final String ENCODED_CREDENTIAL = "dGVzdENsaWVudElkOnRlc3RDbGllbnRTZWNyZXQ=";
     public static final String CLIENT_CREDENTIAL_SCOPES = "read+write";
 
-    // Password Credential Auth constants
-    public static final String PASSWORD_CREDENTIAL_CLIENT_ID = "testPasswordCredentialClientId";
-    public static final String PASSWORD_CREDENTIAL_CLIENT_SECRET = "testPasswordCredentialClientSecret";
-    public static final String PASSWORD_CREDENTIAL_USERNAME = "testPasswordCredentialUsername";
-    public static final String PASSWORD_CREDENTIAL_PASSWORD = "testPasswordCredentialPassword";
-    public static final String PASSWORD_CREDENTIAL_SCOPES = "read+write";
-
     // API Key Auth constants
     public static final String API_KEY_HEADER = "test-api-header";
     public static final String API_KEY_VALUE = "test-api-key-12345";
@@ -53,7 +46,7 @@ public class AuthenticationBuilder {
     /**
      * Creates a sample Authentication object based on the specified authentication type.
      *
-     * @param authType the authentication type (BASIC, CLIENT_CREDENTIAL, PASSWORD_CREDENTIAL, API_KEY, BEARER, NONE)
+     * @param authType the authentication type (BASIC, CLIENT_CREDENTIAL, API_KEY, BEARER, NONE)
      * @return Authentication object configured for the specified authentication type with sample values
      */
     public static Authentication createSampleAuth(Authentication.TypeEnum authType) {
@@ -63,10 +56,6 @@ public class AuthenticationBuilder {
             case CLIENT_CREDENTIAL:
                 return createClientCredentialAuth(CLIENT_CREDENTIAL_CLIENT_ID, CLIENT_CREDENTIAL_CLIENT_SECRET,
                         MockOAuth2TokenServer.TOKEN_ENDPOINT_URL, CLIENT_CREDENTIAL_SCOPES);
-            case PASSWORD_CREDENTIAL:
-                return createPasswordCredentialAuth(PASSWORD_CREDENTIAL_CLIENT_ID, PASSWORD_CREDENTIAL_CLIENT_SECRET,
-                        PASSWORD_CREDENTIAL_USERNAME, PASSWORD_CREDENTIAL_PASSWORD,
-                        MockOAuth2TokenServer.TOKEN_ENDPOINT_URL, PASSWORD_CREDENTIAL_SCOPES);
             case API_KEY:
                 return createApiKeyAuth(API_KEY_HEADER, API_KEY_VALUE);
             case BEARER:
@@ -110,33 +99,6 @@ public class AuthenticationBuilder {
         authentication.setType(Authentication.TypeEnum.CLIENT_CREDENTIAL);
         authentication.putPropertiesItem("clientId", clientId);
         authentication.putPropertiesItem("clientSecret", clientSecret);
-        authentication.putPropertiesItem("tokenEndpoint", tokenEndpoint);
-        if (scopes != null && !scopes.isEmpty()) {
-            authentication.putPropertiesItem("scopes", scopes);
-        }
-        return authentication;
-    }
-
-    /**
-     * Create a PASSWORD_CREDENTIAL authentication object
-     *
-     * @param clientId Client ID
-     * @param clientSecret Client secret
-     * @param username Resource owner username
-     * @param password Resource owner password
-     * @param tokenEndpoint Token endpoint URL
-     * @param scopes Scopes (optional)
-     * @return Authentication object configured for PASSWORD_CREDENTIAL auth
-     */
-    public static Authentication createPasswordCredentialAuth(String clientId, String clientSecret, String username,
-                                                                String password, String tokenEndpoint, String scopes) {
-
-        Authentication authentication = new Authentication();
-        authentication.setType(Authentication.TypeEnum.PASSWORD_CREDENTIAL);
-        authentication.putPropertiesItem("clientId", clientId);
-        authentication.putPropertiesItem("clientSecret", clientSecret);
-        authentication.putPropertiesItem("username", username);
-        authentication.putPropertiesItem("password", password);
         authentication.putPropertiesItem("tokenEndpoint", tokenEndpoint);
         if (scopes != null && !scopes.isEmpty()) {
             authentication.putPropertiesItem("scopes", scopes);

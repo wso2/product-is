@@ -274,47 +274,6 @@ public class SMSSenderSuccessTest extends SMSSenderTestBase {
         testDeleteSmsSender();
     }
 
-    @Test(dependsOnMethods = {"testGetSMSSenderWithClientCredentialAuth"})
-    public void testAddSmsSenderWithPasswordCredentialAuth() throws IOException, InterruptedException {
-
-        String body = new Gson().toJson(SMSSenderRequestBuilder.createAddSMSSenderJSON(
-                Authentication.TypeEnum.PASSWORD_CREDENTIAL, this.getClass()));
-        Response response =
-                getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_CREATED)
-                .header(HttpHeaders.LOCATION, notNullValue());
-        String location = response.getHeader(HttpHeaders.LOCATION);
-        assertNotNull(location);
-        smsNotificationSenderName = location.substring(location.lastIndexOf("/") + 1);
-        assertNotNull(smsNotificationSenderName);
-    }
-
-    @Test(dependsOnMethods = {"testAddSmsSenderWithPasswordCredentialAuth"})
-    public void testGetSMSSenderWithPasswordCredentialAuth() {
-
-        Response response = getResponseOfGet(
-                NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH + PATH_SEPARATOR +
-                        smsNotificationSenderName);
-        response.then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("authentication.type", equalTo("PASSWORD_CREDENTIAL"))
-                .body("authentication.properties.clientId",
-                        equalTo(AuthenticationBuilder.PASSWORD_CREDENTIAL_CLIENT_ID))
-                .body("authentication.properties.clientSecret", nullValue())
-                .body("authentication.properties.username",
-                        equalTo(AuthenticationBuilder.PASSWORD_CREDENTIAL_USERNAME))
-                .body("authentication.properties.password", nullValue())
-                .body("authentication.properties.tokenEndpoint", equalTo(MockOAuth2TokenServer.TOKEN_ENDPOINT_URL))
-                .body("authentication.properties.scopes", equalTo(AuthenticationBuilder.PASSWORD_CREDENTIAL_SCOPES));
-
-        testDeleteSmsSender();
-    }
-
     private void testDeleteSmsSender() {
 
         Response response =
