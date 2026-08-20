@@ -227,6 +227,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertNotNull(response);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
         validateTokenRequest();
+        EntityUtils.consume(response.getEntity());
     }
 
     @Test(groups = "wso2.is", description = "Test that a second SMS OTP send reuses the cached refresh token " +
@@ -261,6 +262,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         String authorizationHeader = mockSMSProvider.getHeader("Authorization");
         assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + secondAccessToken),
                 "Second SMS send's Authorization header should carry the refreshed access token");
+        EntityUtils.consume(response.getEntity());
     }
 
     private void sendAuthorizeRequest() throws Exception {
@@ -301,8 +303,9 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", username));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-        sendPostRequestWithParameters(client, urlParameters,
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
+        EntityUtils.consume(response.getEntity());
     }
 
     private HttpResponse sendLoginPostForOtp(HttpClient client, String sessionDataKey, String otp)

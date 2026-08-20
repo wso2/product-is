@@ -163,6 +163,7 @@ public class PasswordLessEmailOTPAuthTestCase extends OIDCAbstractIntegrationTes
         HttpResponse tokenResponse = sendTokenRequestForCodeGrant();
         assertNotNull(tokenResponse);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
+        EntityUtils.consume(tokenResponse.getEntity());
     }
 
     private OIDCApplication initOIDCApplication() {
@@ -227,8 +228,9 @@ public class PasswordLessEmailOTPAuthTestCase extends OIDCAbstractIntegrationTes
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", username));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-        sendPostRequestWithParameters(client, urlParameters,
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
+        EntityUtils.consume(response.getEntity());
     }
 
     private HttpResponse sendLoginPostForOtp(HttpClient client, String sessionDataKey, String otp)
