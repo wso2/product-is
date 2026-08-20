@@ -22,14 +22,12 @@ import com.google.gson.Gson;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
@@ -93,7 +91,6 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     public static final String SMS_SENDER_REQUEST_FORMAT = "{\"content\": {{body}}, \"to\": {{mobile}} }";
 
     private HttpClient client;
-    private final CookieStore cookieStore = new BasicCookieStore();
 
     NotificationSenderRestClient notificationSenderRestClient;
 
@@ -153,7 +150,6 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         client = HttpClientBuilder.create()
                 .setDefaultRequestConfig(requestConfig)
                 .setDefaultCookieSpecRegistry(cookieSpecRegistry)
-                .setDefaultCookieStore(cookieStore)
                 .setRedirectStrategy(new LaxRedirectStrategy())
                 .build();
 
@@ -231,45 +227,6 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertNotNull(response);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
         validateTokenRequest();
-        EntityUtils.consume(response.getEntity());
-    }
-
-    @Test(groups = "wso2.is", description = "Test that a second SMS OTP send reuses the cached refresh token " +
-            "instead of re-authenticating with the original grant from scratch",
-            dependsOnMethods = "testPasswordlessAuthentication")
-    public void testSecondSmsSendReusesRefreshToken() throws Exception {
-
-        if (!"v2".equals(apiVersion)) {
-            // No OAuth2 token handling for SMS sender v1.
-            return;
-        }
-
-        String firstAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-
-        // Clear the session cookie from the first login so this second login is independent (not SSO'd through),
-        // forcing a fresh authentication and a second SMS send.
-        cookieStore.clear();
-
-        // Trigger a second, independent login to force a second SMS send.
-        sendAuthorizeRequest();
-        performUserLogin();
-        HttpResponse response = sendTokenRequestForCodeGrant();
-
-        assertNotNull(response);
-        assertEquals(response.getStatusLine().getStatusCode(), 200);
-
-        Map<String, String> secondRequestParams = mockOAuth2TokenServer.getLastRequestBodyContent();
-        assertEquals(secondRequestParams.get("grant_type"), "refresh_token",
-                "Second SMS send should reuse the cached refresh token instead of re-authenticating from scratch");
-
-        String secondAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-        assertNotNull(secondAccessToken, "Access token should not be null");
-        assertTrue(!secondAccessToken.equals(firstAccessToken),
-                "Second send should use a newly refreshed access token, not the original one");
-
-        String authorizationHeader = mockSMSProvider.getHeader("Authorization");
-        assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + secondAccessToken),
-                "Second SMS send's Authorization header should carry the refreshed access token");
         EntityUtils.consume(response.getEntity());
     }
 

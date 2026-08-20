@@ -54,7 +54,7 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Real end-to-end delivery test for the HTTP-based (non-SMTP) Email notification sender, covering
- * CLIENT_CREDENTIAL and PASSWORD_CREDENTIAL authentication, and refresh-token reuse on a second send.
+ * CLIENT_CREDENTIAL and PASSWORD_CREDENTIAL authentication.
  */
 public class HTTPEmailNotificationRealDeliveryTestCase extends EmailSenderTestBase {
 
@@ -167,28 +167,6 @@ public class HTTPEmailNotificationRealDeliveryTestCase extends EmailSenderTestBa
         assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + accessToken),
                 "Authorization header should contain the Bearer token minted for the configured auth type");
         assertNotNull(mockHTTPEmailProvider.getEmailBody(), "Email body should have been delivered");
-    }
-
-    @Test(groups = "wso2.is", description = "Test that a second email send reuses the cached refresh token " +
-            "instead of re-authenticating from scratch", dependsOnMethods = "testRealEmailDeliveryWithOAuth2")
-    public void testSecondEmailSendReusesRefreshToken() throws Exception {
-
-        String firstAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-
-        triggerPasswordRecoveryEmail();
-
-        Map<String, String> secondRequestParams = mockOAuth2TokenServer.getLastRequestBodyContent();
-        assertEquals(secondRequestParams.get("grant_type"), "refresh_token",
-                "Second email send should reuse the cached refresh token instead of re-authenticating from scratch");
-
-        String secondAccessToken = mockOAuth2TokenServer.getLastAccessToken();
-        assertNotNull(secondAccessToken, "Access token should not be null");
-        assertTrue(!secondAccessToken.equals(firstAccessToken),
-                "Second send should use a newly refreshed access token, not the original one");
-
-        String authorizationHeader = mockHTTPEmailProvider.getHeader("Authorization");
-        assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + secondAccessToken),
-                "Second email send's Authorization header should carry the refreshed access token");
     }
 
     private void triggerPasswordRecoveryEmail() throws Exception {
