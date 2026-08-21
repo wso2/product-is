@@ -2731,7 +2731,7 @@
         <identity.carbon.auth.rest.version>1.12.11</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
-        <identity.inbound.auth.oauth.version>7.5.75</identity.inbound.auth.oauth.version>
+        <identity.inbound.auth.oauth.version>7.5.76</identity.inbound.auth.oauth.version>
         <identity.inbound.auth.saml.version>5.12.7</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.6</identity.inbound.auth.sts.version>
@@ -2785,7 +2785,7 @@
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.11.12</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>6.0.14</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>6.0.15</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.5.1</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
