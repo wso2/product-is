@@ -227,10 +227,10 @@ public class ConsentManagementV2AdminModeTest extends ConsentManagementV2TestBas
     }
 
     @Test
-    public void testAdminListConsentsWithSubjectIdFilter() throws Exception {
+    public void testAdminListConsentsWithUserIdFilter() throws Exception {
 
         String token = getAdminToken(SCOPE_CONSENT_VIEW);
-        getResponseOfGetWithOAuth2(CONSENTS_ENDPOINT + "?subjectId=" + ADMIN_MODE_USER, token)
+        getResponseOfGetWithOAuth2(CONSENTS_ENDPOINT + "?userId=" + ADMIN_MODE_USER + "&relation=SUBJECT", token)
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
