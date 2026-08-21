@@ -779,7 +779,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Test(groups = "wso2.is", dependsOnMethods = {"testDeleteConsentTestUser"})
     public void testConsentsDeletedAfterUserDeletion() {
 
-        getResponseOfGet(CONSENTS_ENDPOINT + "?subjectId=" + CONSENT_TEST_USER_NAME)
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_TEST_USER_NAME + "&relation=SUBJECT")
                 .then()
                 .log().ifValidationFails()
                 .assertThat()
