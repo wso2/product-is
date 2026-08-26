@@ -2732,7 +2732,7 @@
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.oauth.version>7.5.77</identity.inbound.auth.oauth.version>
-        <identity.inbound.auth.saml.version>5.12.7</identity.inbound.auth.saml.version>
+        <identity.inbound.auth.saml.version>5.12.8</identity.inbound.auth.saml.version>
         <identity.inbound.auth.openid.version>5.13.1</identity.inbound.auth.openid.version>
         <identity.inbound.auth.sts.version>5.14.6</identity.inbound.auth.sts.version>
         <identity.inbound.provisioning.scim.version>5.8.1</identity.inbound.provisioning.scim.version>
