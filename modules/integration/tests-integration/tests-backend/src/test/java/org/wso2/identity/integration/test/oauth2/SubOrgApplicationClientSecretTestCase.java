@@ -76,7 +76,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static org.awaitility.Awaitility.await;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
@@ -512,7 +515,11 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         assertEquals(getClientCredentialsTokenStatusCodeAtSubOrg(subOrgClientId, subOrgShortLivedSecretValue),
                 HttpStatus.SC_OK, "A client secret should authenticate before its expiry.");
 
-        Thread.sleep(EXPIRY_WAIT_MILLIS);
+        await().atMost(EXPIRY_WAIT_MILLIS, TimeUnit.MILLISECONDS)
+                .pollDelay(SHORT_EXPIRY_SECONDS, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .until(() -> getClientCredentialsTokenStatusCodeAtSubOrg(subOrgClientId, subOrgShortLivedSecretValue)
+                        == HttpStatus.SC_UNAUTHORIZED);
 
         assertEquals(getClientCredentialsTokenStatusCodeAtSubOrg(subOrgClientId, subOrgShortLivedSecretValue),
                 HttpStatus.SC_UNAUTHORIZED, "An expired client secret should not authenticate.");
@@ -736,25 +743,22 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         restClient.shareApplication(applicationId, applicationSharePOSTRequest);
     }
 
-    private String waitForApplicationSharedToSubOrg(String applicationName, String accessToken) throws Exception {
+    private String waitForApplicationSharedToSubOrg(String applicationName, String accessToken) {
 
-        long deadline = System.currentTimeMillis() + APPLICATION_SHARE_WAIT_MILLIS;
-        long pollInterval = 500;
-        while (System.currentTimeMillis() < deadline) {
-            try {
-                String appId = restClient.getAppIdUsingAppNameInOrganization(applicationName, accessToken);
-                if (StringUtils.isNotBlank(appId)) {
-                    return appId;
-                }
-            } catch (IOException e) {
-                log.debug("Transient error while polling for the shared application '" + applicationName + "'.", e);
-            }
-            Thread.sleep(pollInterval);
-            pollInterval = Math.min(pollInterval * 2, 5000);
-        }
-        Assert.fail("Application '" + applicationName + "' was not shared to the sub-organization within " +
-                APPLICATION_SHARE_WAIT_MILLIS + " ms.");
-        return null;
+        AtomicReference<String> sharedAppId = new AtomicReference<>();
+        await("shared application '" + applicationName + "' in the sub-organization")
+                .atMost(APPLICATION_SHARE_WAIT_MILLIS, TimeUnit.MILLISECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .ignoreExceptions()
+                .until(() -> {
+                    String appId = restClient.getAppIdUsingAppNameInOrganization(applicationName, accessToken);
+                    if (StringUtils.isBlank(appId)) {
+                        return false;
+                    }
+                    sharedAppId.set(appId);
+                    return true;
+                });
+        return sharedAppId.get();
     }
 
     private void createOrgEndUser() throws Exception {

@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -70,6 +72,17 @@ public class ApplicationManagementClientSecretSuccessTest extends ApplicationMan
     public ApplicationManagementClientSecretSuccessTest(TestUserMode userMode) throws Exception {
 
         super(userMode);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void testEnd() {
+
+        /* An application is only present here when a dependent test failed before the test that deletes it ran. */
+        if (StringUtils.isNotBlank(createdAppId)) {
+            RestAssured.basePath = basePath;
+            cleanUpApplications(Collections.singleton(createdAppId));
+            createdAppId = null;
+        }
     }
 
     @Test

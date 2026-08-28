@@ -57,7 +57,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
@@ -289,7 +291,11 @@ public class OAuth2ServiceMultipleClientSecretsTestCase extends OAuth2ServiceAbs
                 requestClientCredentialsToken(expiringConsumerSecret, CLIENT_SECRET_BASIC),
                 "Token request with a client secret that is not expired yet failed.");
 
-        Thread.sleep((expiresAt + CLIENT_SECRET_EXPIRY_BUFFER_IN_SECONDS - System.currentTimeMillis() / 1000) * 1000);
+        await().atMost(CLIENT_SECRET_EXPIRY_IN_SECONDS + CLIENT_SECRET_EXPIRY_BUFFER_IN_SECONDS, TimeUnit.SECONDS)
+                .pollDelay(CLIENT_SECRET_EXPIRY_IN_SECONDS, TimeUnit.SECONDS)
+                .pollInterval(2, TimeUnit.SECONDS)
+                .until(() -> requestClientCredentialsToken(expiringConsumerSecret, CLIENT_SECRET_BASIC).statusCode
+                        == HttpStatus.SC_UNAUTHORIZED);
 
         assertInvalidClient(requestClientCredentialsToken(expiringConsumerSecret, CLIENT_SECRET_BASIC),
                 "Token request with an expired client secret did not fail.");

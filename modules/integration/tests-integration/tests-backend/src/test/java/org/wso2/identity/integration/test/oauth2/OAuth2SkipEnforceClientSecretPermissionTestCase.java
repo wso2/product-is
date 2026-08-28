@@ -123,9 +123,13 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
         Assert.assertTrue(oidcInboundConfig.has(CLIENT_SECRET_EXPIRES_AT), "Client secret expiry is not returned to "
                 + "a caller without the client secret view scope while skip enforce client secret permission is "
                 + "enabled.");
+        Assert.assertFalse(oidcInboundConfig.isNull(CLIENT_SECRET_EXPIRES_AT),
+                "Returned client secret expiry is null.");
         Assert.assertTrue(oidcInboundConfig.has(MULTIPLE_CLIENT_SECRETS_CONFIGURED), "Multiple client secrets "
                 + "configured flag is not returned to a caller without the client secret view scope while skip "
                 + "enforce client secret permission is enabled.");
+        Assert.assertFalse(oidcInboundConfig.isNull(MULTIPLE_CLIENT_SECRETS_CONFIGURED),
+                "Returned multiple client secrets configured flag is null.");
     }
 
     @Test(groups = "wso2.is", description = "Test the OIDC inbound retrieval as the tenant admin while skip enforce "

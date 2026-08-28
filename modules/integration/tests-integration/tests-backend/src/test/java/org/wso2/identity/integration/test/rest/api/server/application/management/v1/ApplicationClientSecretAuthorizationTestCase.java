@@ -252,6 +252,12 @@ public class ApplicationClientSecretAuthorizationTestCase extends ApplicationMan
 
         assertForbidden(getResponseOfPostWithOAuth2(clientSecretsPath, EMPTY_JSON_BODY, clientSecretDeleteToken),
                 "Client secret creation");
+        assertForbidden(getResponseOfGetWithOAuth2(clientSecretsPath, clientSecretDeleteToken),
+                "Client secret listing");
+        assertForbidden(getResponseOfGetWithOAuth2(getClientSecretPath(getClientSecretId(true)),
+                clientSecretDeleteToken), "Client secret retrieval");
+        assertForbidden(getResponseOfPostWithOAuth2(regenerateSecretPath, StringUtils.EMPTY, clientSecretDeleteToken),
+                "Client secret regeneration");
         Assert.assertEquals(getClientSecretList().getInt(COUNT), 1, "The deleted client secret is still listed.");
     }
 

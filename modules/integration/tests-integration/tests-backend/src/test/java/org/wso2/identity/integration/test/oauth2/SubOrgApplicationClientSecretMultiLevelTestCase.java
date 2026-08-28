@@ -72,7 +72,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static org.awaitility.Awaitility.await;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -363,8 +366,8 @@ public class SubOrgApplicationClientSecretMultiLevelTestCase extends OAuth2Servi
         }
     }
 
-    @Test(groups = "wso2.is", priority = 5, description = "Authenticate at the level one and the level two " +
-            "organizations with a client secret deleted at the root organization.",
+    @Test(groups = "wso2.is", priority = 5, description = "Authenticate at every organization in the tree with a " +
+            "client secret deleted at the root organization.",
             dependsOnMethods = "testRegenerateAtRootPropagatesToEveryLevel")
     public void testClientSecretDeletedAtRootIsRejectedAtEveryLevel() throws Exception {
 
@@ -372,12 +375,11 @@ public class SubOrgApplicationClientSecretMultiLevelTestCase extends OAuth2Servi
                 new ClientSecretCreationRequest().expiresAt(0L));
         String secretValueUnderTest = clientSecret.getSecretValue();
 
-        assertEquals(getClientCredentialsTokenStatusCode(level2TokenEndpoint, rootClientId, secretValueUnderTest),
-                HttpStatus.SC_OK, "A client secret created at the root organization should authenticate at the " +
-                        "level two organization.");
-        assertEquals(getClientCredentialsTokenStatusCode(level1TokenEndpoint, rootClientId, secretValueUnderTest),
-                HttpStatus.SC_OK, "A client secret created at the root organization should authenticate at the " +
-                        "level one organization.");
+        for (String tokenEndpoint : organizationTreeTokenEndpoints) {
+            assertEquals(getClientCredentialsTokenStatusCode(tokenEndpoint, rootClientId, secretValueUnderTest),
+                    HttpStatus.SC_OK, "A client secret created at the root organization should authenticate at " +
+                            tokenEndpoint + ".");
+        }
 
         /* Deleting the latest secret is rejected with a conflict by contract, hence the regenerated secret is
            removed and a further secret is created at the root to demote the secret under test. */
@@ -390,12 +392,11 @@ public class SubOrgApplicationClientSecretMultiLevelTestCase extends OAuth2Servi
         assertEquals(restClient.deleteClientSecret(rootApplicationId, clientSecret.getSecretId()),
                 HttpStatus.SC_NO_CONTENT, "Deleting the demoted client secret at the root organization should " +
                         "succeed.");
-        assertEquals(getClientCredentialsTokenStatusCode(level2TokenEndpoint, rootClientId, secretValueUnderTest),
-                HttpStatus.SC_UNAUTHORIZED, "A client secret deleted at the root organization should stop " +
-                        "authenticating at the level two organization immediately.");
-        assertEquals(getClientCredentialsTokenStatusCode(level1TokenEndpoint, rootClientId, secretValueUnderTest),
-                HttpStatus.SC_UNAUTHORIZED, "A client secret deleted at the root organization should stop " +
-                        "authenticating at the level one organization immediately.");
+        for (String tokenEndpoint : organizationTreeTokenEndpoints) {
+            assertEquals(getClientCredentialsTokenStatusCode(tokenEndpoint, rootClientId, secretValueUnderTest),
+                    HttpStatus.SC_UNAUTHORIZED, "A client secret deleted at the root organization should stop " +
+                            "authenticating at " + tokenEndpoint + " immediately.");
+        }
     }
 
     @Test(groups = "wso2.is", priority = 6, description = "Authenticate an application created natively in the " +
@@ -577,28 +578,23 @@ public class SubOrgApplicationClientSecretMultiLevelTestCase extends OAuth2Servi
      * @param applicationName Name of the application shared from the root organization.
      * @param accessToken     Organization switched token of the organization to resolve the application in.
      * @return Application id of the shared application in that organization.
-     * @throws Exception If an error occurred while resolving the shared application.
      */
-    private String waitForApplicationSharedToOrganization(String applicationName, String accessToken)
-            throws Exception {
+    private String waitForApplicationSharedToOrganization(String applicationName, String accessToken) {
 
-        long deadline = System.currentTimeMillis() + APPLICATION_SHARE_WAIT_MILLIS;
-        long pollInterval = 500;
-        while (System.currentTimeMillis() < deadline) {
-            try {
-                String appId = restClient.getAppIdUsingAppNameInOrganization(applicationName, accessToken);
-                if (StringUtils.isNotBlank(appId)) {
-                    return appId;
-                }
-            } catch (IOException e) {
-                log.debug("Transient error while polling for the shared application '" + applicationName + "'.", e);
-            }
-            Thread.sleep(pollInterval);
-            pollInterval = Math.min(pollInterval * 2, 5000);
-        }
-        Assert.fail("Application '" + applicationName + "' was not shared to the organization within " +
-                APPLICATION_SHARE_WAIT_MILLIS + " ms.");
-        return null;
+        AtomicReference<String> sharedAppId = new AtomicReference<>();
+        await("shared application '" + applicationName + "' in the organization")
+                .atMost(APPLICATION_SHARE_WAIT_MILLIS, TimeUnit.MILLISECONDS)
+                .pollInterval(1, TimeUnit.SECONDS)
+                .ignoreExceptions()
+                .until(() -> {
+                    String appId = restClient.getAppIdUsingAppNameInOrganization(applicationName, accessToken);
+                    if (StringUtils.isBlank(appId)) {
+                        return false;
+                    }
+                    sharedAppId.set(appId);
+                    return true;
+                });
+        return sharedAppId.get();
     }
 
     /**
