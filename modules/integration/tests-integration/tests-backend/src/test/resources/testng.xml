@@ -353,6 +353,19 @@
         </classes>
     </test>
 
+    <test name="is-tests-oauth-client-secrets" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementClientSecretSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementClientSecretFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationClientSecretAuthorizationTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationImportExportClientSecretTest"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceMultipleClientSecretsTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMClientSecretExpiryTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.SubOrgApplicationClientSecretTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.SubOrgApplicationClientSecretMultiLevelTestCase"/>
+        </classes>
+    </test>
+
    <test name="is-test-session-mgt" preserve-order="true" parallel="false" group-by-instances="true">
        <classes>
            <class name="org.wso2.identity.integration.test.rest.api.server.session.SessionMgtTest"/>
@@ -542,6 +555,7 @@
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2PersistenceProcessorTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceJWTGrantTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.Oauth2TokenRenewalPerRequestTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.OAuth2SkipEnforceClientSecretPermissionTestCase"/>
             <!--<class name="org.wso2.identity.integration.test.saml.SAMLECPSSOTestCase"/>-->
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.revocationvalidators.RevocationValidatorsSuccessTest"/>
