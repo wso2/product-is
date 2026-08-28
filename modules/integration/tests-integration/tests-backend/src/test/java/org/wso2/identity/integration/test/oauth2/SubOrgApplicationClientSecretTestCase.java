@@ -473,10 +473,10 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
                         createToken), HttpStatus.SC_FORBIDDEN,
                 "The organization client secret create scope should not grant deleting a client secret.");
 
-        /*
-         Regeneration is covered at the root by OAuth2ServiceMultipleClientSecretsTestCase and by
-         testRegenerateAtRootPropagatesToSubOrg.
-        */
+        OpenIDConnectConfiguration regeneratedConfiguration = restClient.regenerateClientSecretOfOrganizationApp(
+                subOrgApplicationId, createToken);
+        assertTrue(StringUtils.isNotBlank(regeneratedConfiguration.getClientSecret()),
+                "The organization client secret create scope should grant regenerating the client secret.");
     }
 
     @Test(groups = "wso2.is", priority = 11, description = "Invoke the client secret endpoints of the " +
@@ -486,6 +486,10 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
 
         String deleteToken = getOrganizationSwitchedToken(ORG_CLIENT_SECRET_DELETE_SCOPE);
 
+        /* The regeneration above left a single secret, hence a further secret is created so that a deletable non
+           latest secret exists. */
+        restClient.createClientSecretOfOrganizationApp(subOrgApplicationId,
+                new ClientSecretCreationRequest().expiresAt(0L), orgAdminToken);
         ClientSecretList clientSecrets = restClient.getClientSecretsOfOrganizationApp(subOrgApplicationId,
                 orgAdminToken);
         String nonLatestSecretId = getNonLatestSecret(clientSecrets).getSecretId();

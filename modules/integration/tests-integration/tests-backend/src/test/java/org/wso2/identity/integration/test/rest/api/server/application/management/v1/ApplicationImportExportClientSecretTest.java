@@ -89,6 +89,8 @@ public class ApplicationImportExportClientSecretTest extends ApplicationManageme
     private static final String CREATE_CLIENT_SECRET_PAYLOAD = "{\"expiresAt\":%d}";
 
     private static final String EXPORTED_LATEST_SECRET_ELEMENT = "oauthConsumerSecret";
+    private static final String EXPORTED_ADDITIONAL_SECRET_ENTRY_ELEMENT = "additionalOauthConsumerSecret";
+    private static final long PAST_EXPIRY_OFFSET_IN_SECONDS = 3600L;
     private static final String EXPORTED_ADDITIONAL_SECRET_VALUE_FIELD = "secretValue";
     private static final String EXPORTED_ADDITIONAL_SECRET_EXPIRY_ELEMENT = "expiryTime";
 
@@ -288,6 +290,63 @@ public class ApplicationImportExportClientSecretTest extends ApplicationManageme
         assertImportRejected(importContent);
     }
 
+    @Test(dependsOnMethods = "testUpdateImportKeepsClientSecretsUntouched")
+    public void testCreateImportExceedingMaximumSecretCount() throws Exception {
+
+        String exportWithSecrets = getExportedApplication(sourceAppId, true, MEDIA_TYPE_XML);
+        String additionalSecretEntry = extractAdditionalSecretEntry(exportWithSecrets);
+        String furtherSecretEntry = additionalSecretEntry.replace(initialSecretValue, newRandomIdentifier());
+
+        String importContent = withNewApplicationIdentity(exportWithSecrets,
+                APPLICATION_NAME_PREFIX + newRandomIdentifier(), newRandomIdentifier())
+                .replace(additionalSecretEntry, additionalSecretEntry + furtherSecretEntry);
+
+        assertImportRejected(importContent);
+    }
+
+    @Test(dependsOnMethods = "testUpdateImportKeepsClientSecretsUntouched")
+    public void testCreateImportRestoresExpiredClientSecret() throws Exception {
+
+        String exportWithSecrets = getExportedApplication(sourceAppId, true, MEDIA_TYPE_XML);
+        String exportedExpiry = element(EXPORTED_ADDITIONAL_SECRET_EXPIRY_ELEMENT,
+                String.valueOf(initialSecretExpiresAt * MILLIS_PER_SECOND));
+        long pastExpiresAt = Instant.now().getEpochSecond() - PAST_EXPIRY_OFFSET_IN_SECONDS;
+        String importedAppName = APPLICATION_NAME_PREFIX + newRandomIdentifier();
+        String importedClientId = newRandomIdentifier();
+        String importContent = withNewApplicationIdentity(exportWithSecrets, importedAppName, importedClientId)
+                .replace(exportedExpiry, element(EXPORTED_ADDITIONAL_SECRET_EXPIRY_ELEMENT,
+                        String.valueOf(pastExpiresAt * MILLIS_PER_SECOND)));
+
+        Path importFile = writeImportFile(importContent, XML_FILE_EXTENSION);
+        Response responseOfImport = getResponseOfImport(importFile, MEDIA_TYPE_XML, false);
+        responseOfImport.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+        String importedAppId = extractApplicationIdFromLocationHeader(responseOfImport.getHeader(HttpHeaders.LOCATION));
+        appsToCleanUp.add(importedAppId);
+
+        Map<String, Object> expiredSecret = null;
+        List<Map<String, Object>> importedSecrets = getClientSecrets(importedAppId);
+        Assert.assertEquals(importedSecrets.size(), 2, "The imported application does not hold both client secrets.");
+        for (Map<String, Object> importedSecret : importedSecrets) {
+            if (initialSecretValue.equals(importedSecret.get("secretValue"))) {
+                expiredSecret = importedSecret;
+            }
+        }
+        Assert.assertNotNull(expiredSecret, "The expired client secret was not restored by the import.");
+        Assert.assertEquals(expiredSecret.get("status"), "EXPIRED",
+                "A client secret imported with a past expiry is not reported as expired.");
+        Assert.assertEquals(((Number) expiredSecret.get("expiresAt")).longValue(), pastExpiresAt,
+                "The past expiry of the imported client secret did not round-trip.");
+
+        Assert.assertEquals(getStatusOfTokenRequest(importedClientId, latestSecretValue), HttpStatus.SC_OK,
+                "The latest client secret of the imported application failed to authenticate.");
+        Assert.assertEquals(getStatusOfTokenRequest(importedClientId, initialSecretValue),
+                HttpStatus.SC_UNAUTHORIZED, "A client secret imported with a past expiry authenticated.");
+    }
+
     /**
      * Assert that an export carrying secrets holds both client secret values with their expiry times in milliseconds
      * and no client secret metadata.
@@ -472,6 +531,17 @@ public class ApplicationImportExportClientSecretTest extends ApplicationManageme
     private static String element(String name, String value) {
 
         return "<" + name + ">" + value + "</" + name + ">";
+    }
+
+    private static String extractAdditionalSecretEntry(String exportedApplication) {
+
+        String openingTag = "<" + EXPORTED_ADDITIONAL_SECRET_ENTRY_ELEMENT + ">";
+        String closingTag = "</" + EXPORTED_ADDITIONAL_SECRET_ENTRY_ELEMENT + ">";
+        int start = exportedApplication.indexOf(openingTag);
+        int end = exportedApplication.indexOf(closingTag);
+        Assert.assertTrue(start >= 0 && end > start,
+                "The exported application does not carry an additional client secret entry.");
+        return exportedApplication.substring(start, end + closingTag.length());
     }
 
     private static String newRandomIdentifier() {

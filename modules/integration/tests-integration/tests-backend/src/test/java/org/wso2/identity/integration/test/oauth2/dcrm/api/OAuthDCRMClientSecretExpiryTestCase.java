@@ -76,6 +76,7 @@ public class OAuthDCRMClientSecretExpiryTestCase extends ISIntegrationTest {
     private static final String NEVER_EXPIRING_APP = "dcrmNeverExpiringSecretApp";
     private static final String PAST_EXPIRY_APP = "dcrmPastSecretExpiryApp";
     private static final String INVALID_EXPIRY_APP = "dcrmInvalidSecretExpiryApp";
+    private static final String OVERFLOWING_EXPIRY_APP = "dcrmOverflowingSecretExpiryApp";
 
     private static final long NEVER_EXPIRES = 0L;
     private static final long EXPIRY_OFFSET_IN_SECONDS = 3600L;
@@ -213,6 +214,22 @@ public class OAuthDCRMClientSecretExpiryTestCase extends ISIntegrationTest {
                 "rejected with the invalid expiry description, but received: " + errorDescription);
         assertFalse(errorDescription.contains(EXPIRY_IN_PAST_ERROR), "A negative client secret expiry should not be " +
                 "reported as a past expiry");
+    }
+
+    @Test(alwaysRun = true, groups = "wso2.is", priority = 5, description = "Register an application with a client " +
+            "secret expiry that overflows the supported range")
+    public void testRegisterApplicationWithOverflowingSecretExpiry() throws IOException {
+
+        JSONObject registrationRequest = buildRegistrationRequest(OVERFLOWING_EXPIRY_APP);
+        registrationRequest.put(EXT_PARAM_CLIENT_SECRET_EXPIRES_AT, Long.MAX_VALUE);
+
+        JSONObject error = assertClientMetadataError(registerApplication(registrationRequest));
+        String errorDescription = getRequiredValue(error, OAuthDCRMConstants.ERROR_DESCRIPTION);
+
+        assertTrue(errorDescription.contains(EXPIRY_INVALID_ERROR), "An overflowing client secret expiry should be " +
+                "rejected with the invalid expiry description, but received: " + errorDescription);
+        assertFalse(errorDescription.contains(EXPIRY_IN_PAST_ERROR), "An overflowing client secret expiry should " +
+                "not be reported as a past expiry");
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", priority = 6, description = "Read an application with a client " +

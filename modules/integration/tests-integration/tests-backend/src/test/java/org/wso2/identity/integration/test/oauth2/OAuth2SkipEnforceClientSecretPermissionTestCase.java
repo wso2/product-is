@@ -33,6 +33,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -70,6 +71,7 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
     private static final String BEARER = "Bearer ";
     private static final String APPLICATIONS_API_BASE_PATH = "api/server/v1/applications/";
     private static final String OIDC_INBOUND_PROTOCOL_PATH = "/inbound-protocols/oidc";
+    private static final String CLIENT_SECRETS_PATH = "/secrets";
     private static final String CLIENT_SECRET = "clientSecret";
     private static final String CLIENT_SECRET_EXPIRES_AT = "clientSecretExpiresAt";
     private static final String MULTIPLE_CLIENT_SECRETS_CONFIGURED = "multipleClientSecretsConfigured";
@@ -80,6 +82,7 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
     private String apiCallerApplicationId;
     private String applicationMgtViewScopedToken;
     private String oidcInboundEndpoint;
+    private String clientSecretsEndpoint;
 
     @BeforeClass(alwaysRun = true)
     public void setup() throws Exception {
@@ -92,6 +95,7 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
 
         applicationId = addOIDCApplication(APPLICATION_NAME);
         oidcInboundEndpoint = serverURL + APPLICATIONS_API_BASE_PATH + applicationId + OIDC_INBOUND_PROTOCOL_PATH;
+        clientSecretsEndpoint = oidcInboundEndpoint + CLIENT_SECRETS_PATH;
 
         apiCallerApplicationId = addOIDCApplication(API_CALLER_APPLICATION_NAME);
         authorizeApplicationManagementViewScope(apiCallerApplicationId);
@@ -224,6 +228,28 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
      * @return OIDC inbound configuration as a json object.
      * @throws Exception If an error occurred while retrieving the OIDC inbound configuration.
      */
+    @Test(groups = "wso2.is", description = "Test the client secret endpoints with a token carrying only the "
+            + "application view scope while skip enforce client secret permission is enabled.",
+            dependsOnMethods = {"testOIDCInboundRetrievalWithApplicationMgtViewScope"})
+    public void testClientSecretEndpointsKeepDedicatedScopes() throws Exception {
+
+        HttpGet listRequest = new HttpGet(clientSecretsEndpoint);
+        listRequest.setHeader(HttpHeaders.AUTHORIZATION, BEARER + applicationMgtViewScopedToken);
+        try (CloseableHttpResponse response = client.execute(listRequest)) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN,
+                    "Listing the client secrets should keep requiring the client secret view scope while skip "
+                            + "enforce client secret permission is enabled.");
+        }
+
+        HttpPost createRequest = new HttpPost(clientSecretsEndpoint);
+        createRequest.setHeader(HttpHeaders.AUTHORIZATION, BEARER + applicationMgtViewScopedToken);
+        try (CloseableHttpResponse response = client.execute(createRequest)) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN,
+                    "Creating a client secret should keep requiring the client secret create scope while skip "
+                            + "enforce client secret permission is enabled.");
+        }
+    }
+
     private JSONObject getOIDCInboundDetailsWithToken(String accessToken) throws Exception {
 
         HttpGet request = new HttpGet(oidcInboundEndpoint);
