@@ -217,6 +217,9 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
 
         createRootApplication();
         createClientSecretManagementApplication();
+        /* The management application is shared before the organization is created, so that the organization
+           accepts the organization switch grant from the moment it exists. */
+        shareApplicationWithAllChildOrganizations(secretMgtApplicationId);
 
         organizationId = orgMgtRestClient.addOrganization(ORGANIZATION_NAME, ORGANIZATION_HANDLE);
         assertNotNull(organizationId, "Organization id should not be null.");
@@ -224,7 +227,6 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
                 organizationId);
 
         shareApplicationWithAllChildOrganizations(rootApplicationId);
-        shareApplicationWithAllChildOrganizations(secretMgtApplicationId);
 
         orgAdminToken = getOrganizationSwitchedToken(SYSTEM_SCOPE);
         sharedApplicationId = waitForApplicationSharedToSubOrg(ROOT_APPLICATION_NAME, orgAdminToken);

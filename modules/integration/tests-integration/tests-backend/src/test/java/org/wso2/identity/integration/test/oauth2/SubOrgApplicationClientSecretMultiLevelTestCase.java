@@ -105,7 +105,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT
  * observed at every level through the sub-organization token endpoints
  * ({@code /t/{tenant}/o/{orgId}/oauth2/token}).
  * <p>
- * The organization tree is created before the applications are shared so that the share reaches the level two
+ * The organization tree is created before the root application is shared so that the share reaches the level two
  * organization by construction, and every organization perspective API call is addressed by switching the management
  * application token into the organization concerned rather than by the request path.
  * <p>
@@ -188,8 +188,11 @@ public class SubOrgApplicationClientSecretMultiLevelTestCase extends OAuth2Servi
 
         createRootApplication();
         createClientSecretManagementApplication();
+        /* The management application is shared before the organizations are created, so that every organization
+           accepts the organization switch grant from the moment it exists. */
+        shareApplicationWithAllChildOrganizations(secretMgtApplicationId);
 
-        /* The whole organization tree is created before the applications are shared so that a share with all child
+        /* The organization tree is created before the root application is shared so that a share with all child
            organizations reaches the level two organization without depending on the propagation of the sharing
            policy to organizations created later. */
         level1OrgId = orgMgtRestClient.addOrganization(LEVEL1_ORGANIZATION_NAME, LEVEL1_ORGANIZATION_HANDLE);
@@ -207,7 +210,6 @@ public class SubOrgApplicationClientSecretMultiLevelTestCase extends OAuth2Servi
                 level1SiblingTokenEndpoint);
 
         shareApplicationWithAllChildOrganizations(rootApplicationId);
-        shareApplicationWithAllChildOrganizations(secretMgtApplicationId);
 
         level1OrgAdminToken = getOrganizationSwitchedToken(SYSTEM_SCOPE, level1OrgId);
         level1SiblingOrgAdminToken = getOrganizationSwitchedToken(SYSTEM_SCOPE, level1SiblingOrgId);
