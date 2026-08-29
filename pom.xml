@@ -2701,7 +2701,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.189</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.192</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2835,7 +2835,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.6.43</identity.server.api.version>
+        <identity.server.api.version>1.6.44</identity.server.api.version>
         <identity.user.api.version>1.5.16</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
@@ -2876,7 +2876,7 @@
         <carbon.identity.agent.version>1.1.1</carbon.identity.agent.version>
 
         <!-- VC Issuance -->
-        <carbon.identity.openid4vc.version>1.1.6</carbon.identity.openid4vc.version>
+        <carbon.identity.openid4vc.version>1.1.7</carbon.identity.openid4vc.version>
 
         <!-- Moesif Integration -->
         <identity.moesif.integration.version>1.0.10</identity.moesif.integration.version>
