@@ -77,6 +77,9 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClientSecretCreationRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClientSecretList;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClientSecretResponse;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.rest.api.server.roles.v2.model.RoleV2;
@@ -110,6 +113,8 @@ public class OAuth2RestClient extends RestBaseClient {
     private static final String SCIM_BASE_PATH = "scim2";
     private static final String ROLE_V2_BASE_PATH = "/v2/Roles";
     private static final String AUTHORIZATION_DETAILS_TYPES_PATH = "/authorization-details-types";
+    private static final String CLIENT_SECRETS_PATH = "/secrets";
+    private static final String REGENERATE_SECRET_PATH = "/regenerate-secret";
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String ORG_ID_PLACEHOLDER = "{orgId}";
@@ -558,6 +563,257 @@ public class OAuth2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
             return response.getStatusLine().getStatusCode() == HttpServletResponse.SC_NO_CONTENT;
         }
+    }
+
+    /**
+     * Create a client secret for an application.
+     *
+     * @param appId   Application id.
+     * @param request Client secret creation request.
+     * @return ClientSecretResponse object with the created client secret details.
+     * @throws Exception If an error occurred while creating the client secret.
+     */
+    public ClientSecretResponse createClientSecret(String appId, ClientSecretCreationRequest request)
+            throws Exception {
+
+        String jsonRequest = toJSONString(request);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getClientSecretsPath(appId), jsonRequest,
+                getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while creating the client secret. Response: " +
+                        responseBody);
+            }
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ClientSecretResponse.class);
+        }
+    }
+
+    /**
+     * Create a client secret for an application in an organization.
+     *
+     * @param appId       Application id.
+     * @param request     Client secret creation request.
+     * @param accessToken Authorized token to create a client secret in the organization.
+     * @return ClientSecretResponse object with the created client secret details.
+     * @throws Exception If an error occurred while creating the client secret.
+     */
+    public ClientSecretResponse createClientSecretOfOrganizationApp(String appId,
+                                                                    ClientSecretCreationRequest request,
+                                                                    String accessToken) throws Exception {
+
+        String jsonRequest = toJSONString(request);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getSubOrgClientSecretsPath(appId), jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while creating the client secret. Response: " +
+                        responseBody);
+            }
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ClientSecretResponse.class);
+        }
+    }
+
+    /**
+     * Get the status code of a client secret creation attempt for an application in an organization.
+     *
+     * @param appId       Application id.
+     * @param request     Client secret creation request.
+     * @param accessToken Authorized token to create a client secret in the organization.
+     * @return Status code of the response.
+     * @throws Exception If an error occurred while creating the client secret.
+     */
+    public int getClientSecretCreationStatusCodeOfOrganizationApp(String appId, ClientSecretCreationRequest request,
+                                                                  String accessToken) throws Exception {
+
+        String jsonRequest = toJSONString(request);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getSubOrgClientSecretsPath(appId), jsonRequest,
+                getHeadersWithBearerToken(accessToken))) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Get the status code of a client secret listing attempt for an application in an organization.
+     *
+     * @param appId       Application id.
+     * @param accessToken Authorized token to list the client secrets of the organization application.
+     * @return Status code of the response.
+     * @throws IOException If an error occurred while listing the client secrets.
+     */
+    public int getClientSecretListStatusCodeOfOrganizationApp(String appId, String accessToken) throws IOException {
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(getSubOrgClientSecretsPath(appId),
+                getHeadersWithBearerToken(accessToken))) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * List client secrets of an application.
+     *
+     * @param appId Application id.
+     * @return ClientSecretList object with the client secret metadata.
+     * @throws Exception If an error occurred while listing the client secrets.
+     */
+    public ClientSecretList getClientSecrets(String appId) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(getClientSecretsPath(appId), getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while retrieving the client secrets. Response: " +
+                        responseBody);
+            }
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ClientSecretList.class);
+        }
+    }
+
+    /**
+     * List client secrets of an application in an organization.
+     *
+     * @param appId       Application id.
+     * @param accessToken Authorized token to list the client secrets of the organization application.
+     * @return ClientSecretList object with the client secret metadata.
+     * @throws Exception If an error occurred while listing the client secrets.
+     */
+    public ClientSecretList getClientSecretsOfOrganizationApp(String appId, String accessToken) throws Exception {
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(getSubOrgClientSecretsPath(appId),
+                getHeadersWithBearerToken(accessToken))) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while retrieving the client secrets. Response: " +
+                        responseBody);
+            }
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ClientSecretList.class);
+        }
+    }
+
+    /**
+     * Get a client secret of an application by id.
+     *
+     * @param appId    Application id.
+     * @param secretId Client secret id.
+     * @return ClientSecretResponse object with the client secret details.
+     * @throws Exception If an error occurred while getting the client secret.
+     */
+    public ClientSecretResponse getClientSecret(String appId, String secretId) throws Exception {
+
+        String endPointUrl = getClientSecretsPath(appId) + PATH_SEPARATOR + secretId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while retrieving the client secret. Response: " +
+                        responseBody);
+            }
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, ClientSecretResponse.class);
+        }
+    }
+
+    /**
+     * Delete a client secret of an application.
+     *
+     * @param appId    Application id.
+     * @param secretId Client secret id.
+     * @return Status code of the response.
+     * @throws IOException If an error occurred while deleting the client secret.
+     */
+    public int deleteClientSecret(String appId, String secretId) throws IOException {
+
+        String endpointUrl = getClientSecretsPath(appId) + PATH_SEPARATOR + secretId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl, getHeaders())) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Delete a client secret of an application in an organization.
+     *
+     * @param appId       Application id.
+     * @param secretId    Client secret id.
+     * @param accessToken Authorized token to delete the client secret of the organization application.
+     * @return Status code of the response.
+     * @throws IOException If an error occurred while deleting the client secret.
+     */
+    public int deleteClientSecretOfOrganizationApp(String appId, String secretId, String accessToken)
+            throws IOException {
+
+        String endpointUrl = getSubOrgClientSecretsPath(appId) + PATH_SEPARATOR + secretId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpDelete(endpointUrl,
+                getHeadersWithBearerToken(accessToken))) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
+     * Regenerate the client secret of an application.
+     *
+     * @param appId Application id.
+     * @return OpenIDConnectConfiguration object with the regenerated client secret.
+     * @throws Exception If an error occurred while regenerating the client secret.
+     */
+    public OpenIDConnectConfiguration regenerateClientSecret(String appId) throws Exception {
+
+        String endPointUrl = applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + OIDC + REGENERATE_SECRET_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, "", getHeaders())) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while regenerating the client secret. Response: " +
+                        responseBody);
+            }
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
+        }
+    }
+
+    /**
+     * Regenerate the client secret of an application in an organization.
+     *
+     * @param appId       Application id.
+     * @param accessToken Authorized token to regenerate the client secret of the organization application.
+     * @return OpenIDConnectConfiguration object with the regenerated client secret.
+     * @throws Exception If an error occurred while regenerating the client secret.
+     */
+    public OpenIDConnectConfiguration regenerateClientSecretOfOrganizationApp(String appId, String accessToken)
+            throws Exception {
+
+        String endPointUrl = subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId +
+                INBOUND_PROTOCOLS_BASE_PATH + PATH_SEPARATOR + OIDC + REGENERATE_SECRET_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, "", getHeadersWithBearerToken(
+                accessToken))) {
+            String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while regenerating the client secret. Response: " +
+                        responseBody);
+            }
+            ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
+            return jsonWriter.readValue(responseBody, OpenIDConnectConfiguration.class);
+        }
+    }
+
+    private String getClientSecretsPath(String appId) {
+
+        return applicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + OIDC + CLIENT_SECRETS_PATH;
+    }
+
+    private String getSubOrgClientSecretsPath(String appId) {
+
+        return subOrgApplicationManagementApiBasePath + PATH_SEPARATOR + appId + INBOUND_PROTOCOLS_BASE_PATH +
+                PATH_SEPARATOR + OIDC + CLIENT_SECRETS_PATH;
     }
 
     /**

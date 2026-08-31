@@ -19,9 +19,12 @@
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -209,4 +212,44 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
             Assert.assertTrue(groups.toString().contains(groupID), "Group ID not found in the response.");
         }
     }
+    /**
+     * Build an application creation payload with an OIDC inbound carrying the given client secret expiry.
+     *
+     * @param appName               Application name.
+     * @param clientSecretExpiresAt Client secret expiry as epoch seconds, or null for none.
+     * @return Application creation payload.
+     * @throws Exception If an error occurred while building the payload.
+     */
+    protected String buildOAuthAppPayload(String appName, Long clientSecretExpiresAt) throws Exception {
+
+        JSONObject payload = new JSONObject(readResource("create-oauth-app.json"));
+        payload.put("name", appName);
+        if (clientSecretExpiresAt != null) {
+            payload.getJSONObject("inboundProtocolConfiguration").getJSONObject("oidc")
+                    .put("clientSecretExpiresAt", clientSecretExpiresAt);
+        }
+        return payload.toString();
+    }
+
+    /**
+     * Build an OIDC inbound update payload from the writable fields of a retrieval response.
+     *
+     * @param responseOfGet Response of the OIDC inbound retrieval.
+     * @return OIDC inbound update payload.
+     * @throws Exception If an error occurred while building the payload.
+     */
+    protected JSONObject buildOIDCUpdatePayload(Response responseOfGet) throws Exception {
+
+        JsonPath currentConfig = responseOfGet.jsonPath();
+        JSONObject payload = new JSONObject();
+        payload.put("clientId", currentConfig.getString("clientId"));
+        payload.put("clientSecret", currentConfig.getString("clientSecret"));
+        payload.put("grantTypes", new JSONArray(currentConfig.getList("grantTypes")));
+        payload.put("callbackURLs", new JSONArray(currentConfig.getList("callbackURLs")));
+        payload.put("publicClient", currentConfig.getBoolean("publicClient"));
+        payload.put("allowedOrigins", new JSONArray(Optional.ofNullable(currentConfig.getList("allowedOrigins"))
+                .orElse(Collections.emptyList())));
+        return payload;
+    }
+
 }
