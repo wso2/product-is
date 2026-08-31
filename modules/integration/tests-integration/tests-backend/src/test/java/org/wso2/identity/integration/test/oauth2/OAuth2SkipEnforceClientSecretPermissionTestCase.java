@@ -105,13 +105,25 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        deleteApp(applicationId);
-        deleteApp(apiCallerApplicationId);
-        restClient.closeHttpClient();
-        client.close();
-
-        log.info("Replacing deployment.toml with default configurations.");
-        serverConfigurationManager.restoreToLastConfiguration(true);
+        try {
+            if (applicationId != null) {
+                deleteApp(applicationId);
+            }
+            if (apiCallerApplicationId != null) {
+                deleteApp(apiCallerApplicationId);
+            }
+            if (restClient != null) {
+                restClient.closeHttpClient();
+            }
+            if (client != null) {
+                client.close();
+            }
+        } finally {
+            if (serverConfigurationManager != null) {
+                log.info("Replacing deployment.toml with default configurations.");
+                serverConfigurationManager.restoreToLastConfiguration(true);
+            }
+        }
     }
 
     @Test(groups = "wso2.is", description = "Test the OIDC inbound retrieval with a token carrying only the "
@@ -149,6 +161,28 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
                 "Client secret expiry is not returned to the tenant admin.");
         Assert.assertNotNull(oidcConfig.getMultipleClientSecretsConfigured(),
                 "Multiple client secrets configured flag is not returned to the tenant admin.");
+    }
+
+    @Test(groups = "wso2.is", description = "Test the client secret endpoints with a token carrying only the "
+            + "application view scope while skip enforce client secret permission is enabled.",
+            dependsOnMethods = {"testOIDCInboundRetrievalWithApplicationMgtViewScope"})
+    public void testClientSecretEndpointsKeepDedicatedScopes() throws Exception {
+
+        HttpGet listRequest = new HttpGet(clientSecretsEndpoint);
+        listRequest.setHeader(HttpHeaders.AUTHORIZATION, BEARER + applicationMgtViewScopedToken);
+        try (CloseableHttpResponse response = client.execute(listRequest)) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN,
+                    "Listing the client secrets should keep requiring the client secret view scope while skip "
+                            + "enforce client secret permission is enabled.");
+        }
+
+        HttpPost createRequest = new HttpPost(clientSecretsEndpoint);
+        createRequest.setHeader(HttpHeaders.AUTHORIZATION, BEARER + applicationMgtViewScopedToken);
+        try (CloseableHttpResponse response = client.execute(createRequest)) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN,
+                    "Creating a client secret should keep requiring the client secret create scope while skip "
+                            + "enforce client secret permission is enabled.");
+        }
     }
 
     /**
@@ -228,28 +262,6 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
      * @return OIDC inbound configuration as a json object.
      * @throws Exception If an error occurred while retrieving the OIDC inbound configuration.
      */
-    @Test(groups = "wso2.is", description = "Test the client secret endpoints with a token carrying only the "
-            + "application view scope while skip enforce client secret permission is enabled.",
-            dependsOnMethods = {"testOIDCInboundRetrievalWithApplicationMgtViewScope"})
-    public void testClientSecretEndpointsKeepDedicatedScopes() throws Exception {
-
-        HttpGet listRequest = new HttpGet(clientSecretsEndpoint);
-        listRequest.setHeader(HttpHeaders.AUTHORIZATION, BEARER + applicationMgtViewScopedToken);
-        try (CloseableHttpResponse response = client.execute(listRequest)) {
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN,
-                    "Listing the client secrets should keep requiring the client secret view scope while skip "
-                            + "enforce client secret permission is enabled.");
-        }
-
-        HttpPost createRequest = new HttpPost(clientSecretsEndpoint);
-        createRequest.setHeader(HttpHeaders.AUTHORIZATION, BEARER + applicationMgtViewScopedToken);
-        try (CloseableHttpResponse response = client.execute(createRequest)) {
-            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_FORBIDDEN,
-                    "Creating a client secret should keep requiring the client secret create scope while skip "
-                            + "enforce client secret permission is enabled.");
-        }
-    }
-
     private JSONObject getOIDCInboundDetailsWithToken(String accessToken) throws Exception {
 
         HttpGet request = new HttpGet(oidcInboundEndpoint);

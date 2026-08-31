@@ -357,7 +357,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementClientSecretSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementClientSecretFailureTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationClientSecretAuthorizationTestCase"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationClientSecretAuthorizationTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationImportExportClientSecretTest"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2ServiceMultipleClientSecretsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMClientSecretExpiryTestCase"/>

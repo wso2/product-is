@@ -18,11 +18,9 @@
 
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -31,9 +29,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -308,46 +304,6 @@ public class ApplicationManagementClientSecretFailureTest extends ApplicationMan
         JSONObject createRequest = new JSONObject();
         createRequest.put("expiresAt", expiresAt);
         return createRequest.toString();
-    }
-
-    /**
-     * Build an OAuth application creation payload carrying the given client secret expiry.
-     *
-     * @param appName               Name of the application.
-     * @param clientSecretExpiresAt Client secret expiry as Unix epoch seconds; null to omit the field.
-     * @return Application creation payload.
-     * @throws Exception If an error occurs while reading or building the payload.
-     */
-    private String buildOAuthAppPayload(String appName, Long clientSecretExpiresAt) throws Exception {
-
-        JSONObject payload = new JSONObject(readResource("create-oauth-app.json"));
-        payload.put("name", appName);
-        if (clientSecretExpiresAt != null) {
-            payload.getJSONObject("inboundProtocolConfiguration").getJSONObject("oidc")
-                    .put("clientSecretExpiresAt", clientSecretExpiresAt);
-        }
-        return payload.toString();
-    }
-
-    /**
-     * Build an OIDC inbound update payload from the current configuration of the application.
-     *
-     * @param responseOfGet Response of the OIDC inbound configuration retrieval.
-     * @return OIDC inbound update payload.
-     * @throws Exception If an error occurs while building the payload.
-     */
-    private JSONObject buildOIDCUpdatePayload(Response responseOfGet) throws Exception {
-
-        JsonPath currentConfig = responseOfGet.jsonPath();
-        JSONObject payload = new JSONObject();
-        payload.put("clientId", currentConfig.getString("clientId"));
-        payload.put("clientSecret", currentConfig.getString("clientSecret"));
-        payload.put("grantTypes", new JSONArray(currentConfig.getList("grantTypes")));
-        payload.put("callbackURLs", new JSONArray(currentConfig.getList("callbackURLs")));
-        payload.put("publicClient", currentConfig.getBoolean("publicClient"));
-        payload.put("allowedOrigins", new JSONArray(Optional.ofNullable(currentConfig.getList("allowedOrigins"))
-                .orElse(Collections.emptyList())));
-        return payload;
     }
 
     private String getOIDCConfigPath(String appId) {

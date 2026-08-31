@@ -64,7 +64,7 @@ import static org.hamcrest.Matchers.notNullValue;
  * REST API. Every scenario authorizes a dedicated machine to machine application to a single scope combination and
  * invokes the client secret endpoints of a separate application with the resulting access token.
  */
-public class ApplicationClientSecretAuthorizationTestCase extends ApplicationManagementBaseTest {
+public class ApplicationClientSecretAuthorizationTest extends ApplicationManagementBaseTest {
 
     private static final String INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH = "/inbound-protocols/oidc";
     private static final String CLIENT_SECRETS_CONTEXT_PATH = INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH + "/secrets";
@@ -113,7 +113,7 @@ public class ApplicationClientSecretAuthorizationTestCase extends ApplicationMan
     private String clientSecretCreateToken;
     private String clientSecretDeleteToken;
 
-    public ApplicationClientSecretAuthorizationTestCase() throws Exception {
+    public ApplicationClientSecretAuthorizationTest() throws Exception {
 
         super(TestUserMode.SUPER_TENANT_ADMIN);
     }
@@ -214,12 +214,11 @@ public class ApplicationClientSecretAuthorizationTestCase extends ApplicationMan
         assertForbidden(getResponseOfDeleteWithOAuth2(getClientSecretPath(secretId), clientSecretCreateToken),
                 "Client secret deletion");
 
-        /* The application holds a single secret at this point, hence the creation is expected to succeed. A conflict
-           is tolerated so that the assertion survives a packaged max secret count of one. */
-        int creationStatusCode = getResponseOfPostWithOAuth2(clientSecretsPath, EMPTY_JSON_BODY,
-                clientSecretCreateToken).getStatusCode();
-        Assert.assertTrue(creationStatusCode == HttpStatus.SC_CREATED || creationStatusCode == HttpStatus.SC_CONFLICT,
-                "Client secret creation with the client secret create scope responded with: " + creationStatusCode);
+        getResponseOfPostWithOAuth2(clientSecretsPath, EMPTY_JSON_BODY, clientSecretCreateToken)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
 
         /* Regeneration is authorized by the client secret create scope. There is no dedicated regeneration scope. */
         getResponseOfPostWithOAuth2(regenerateSecretPath, StringUtils.EMPTY, clientSecretCreateToken)

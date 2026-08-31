@@ -24,23 +24,11 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.config.CookieSpecs;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.config.Lookup;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.cookie.CookieSpecProvider;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -49,87 +37,51 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationSharePOSTRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClientSecretCreationRequest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClientSecretList;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClientSecretResponse;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import org.wso2.identity.integration.test.restclients.RestBaseClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
-import org.wso2.identity.integration.test.utils.CarbonUtils;
-import org.wso2.identity.integration.test.utils.DataExtractUtil;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.awaitility.Awaitility.await;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.API_SERVER_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.AUTHORIZATION_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.BEARER_TOKEN_AUTHORIZATION_ATTRIBUTE;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.CONTENT_TYPE_ATTRIBUTE;
-import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.PATH_SEPARATOR;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.BASIC_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.GRANT_TYPE_NAME;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.INTRO_SPEC_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_ORGANIZATION_SWITCH;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE_OPENID;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 
 /**
- * Integration tests for the multiple client secrets feature on B2B sub-organization applications. Two
- * applications are exercised in a single sub-organization.
- * <p>
- * The client secret contract of the organization perspective API
- * ({@code /o/api/server/v1/applications/{id}/inbound-protocols/oidc/secrets}) is pinned on an application created
- * natively in the sub-organization, since that API always operates on the secret set of the addressed application
- * in the sub-organization tenant.
- * <p>
- * A root organization application shared with the sub-organization covers the cross organization rows. A shared
- * application receives its own client id in the sub-organization, while the client secrets of the root
- * application authenticate at the sub-organization token endpoint
- * ({@code /t/{tenant}/o/{orgId}/oauth2/token}) through the organization hierarchy walk of the client
- * authenticator. Every shared application row therefore drives the change at the root organization and observes
- * it at the sub-organization token endpoint with the root client id.
- * <p>
- * Token introspection is performed at the root introspection endpoint with tenant administrator (user)
- * authentication because the client credential authenticated introspection path is not organization hierarchy
- * aware; only the organization independent assertions are made here.
+ * Tests the multiple client secrets feature on B2B sub-organization applications. The client secret contract of
+ * the organization perspective API is exercised on an application created natively in the sub-organization, while
+ * a root application shared with the sub-organization covers the cross organization rows: secrets are changed at
+ * the root and observed at the sub-organization token endpoint with the root client id.
  */
-public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstractIntegrationTest {
+public class SubOrgApplicationClientSecretTestCase extends SubOrgClientSecretTestBase {
 
     private static final String ROOT_APPLICATION_NAME = "SubOrgClientSecretApp";
     private static final String SUB_ORG_APPLICATION_NAME = "SubOrgClientSecretNativeApp";
@@ -141,16 +93,11 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
     private static final String ORG_END_USER_EMAIL = "suborgsecretuser@wso2.com";
     private static final String MGT_APP_AUTHORIZED_API_RESOURCES = "management-app-authorized-apis.json";
 
-    private static final String ORG_APPLICATION_MGT_API = "/o/api/server/v1/applications";
     private static final String ORG_DCR_API = "/o/api/identity/oauth2/dcr/v1.1/register";
     private static final String ORG_CLIENT_SECRET_CREATE_SCOPE = "internal_org_application_mgt_client_secret_create";
     private static final String ORG_CLIENT_SECRET_VIEW_SCOPE = "internal_org_application_mgt_client_secret_view";
     private static final String ORG_CLIENT_SECRET_DELETE_SCOPE = "internal_org_application_mgt_client_secret_delete";
-    private static final String SYSTEM_SCOPE = "SYSTEM";
 
-    private static final String APPLICATION_MANAGEMENT_PATH = "/applications";
-    private static final String INBOUND_PROTOCOLS_OIDC_PATH = "/inbound-protocols/oidc";
-    private static final String CLIENT_SECRETS_PATH = "/secrets";
     private static final String DCR_REGISTER_ENDPOINT = "https://localhost:9853/api/identity/oauth2/dcr/v1.1/register";
 
     private static final String CLIENT_NAME = "client_name";
@@ -164,29 +111,20 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
     private static final String INVALID_GRANT = "invalid_grant";
     private static final String REFRESH_TOKEN = "refresh_token";
     private static final String ACTIVE = "active";
-    private static final String SWITCHING_ORGANIZATION = "switching_organization";
-    private static final String TOKEN = "token";
     private static final String WRONG_CLIENT_SECRET = "sub-org-wrong-client-secret";
 
     private static final long FUTURE_EXPIRY_SECONDS = 3600L;
-    private static final long SHORT_EXPIRY_SECONDS = 75L;
-    private static final long EXPIRY_WAIT_MILLIS = 80000L;
-    private static final long APPLICATION_SHARE_WAIT_MILLIS = 20000L;
+    private static final long SHORT_EXPIRY_SECONDS = 30L;
+    private static final long EXPIRY_WAIT_MILLIS = 60000L;
     private static final int TOKEN_EXPIRY_SECONDS = 3600;
 
-    private CloseableHttpClient client;
     private RestBaseClient restBaseClient;
     private SCIM2RestClient scim2RestClient;
     private OrgMgtRestClient orgMgtRestClient;
 
     private String organizationId;
     private String orgEndUserId;
-    private String rootApplicationId;
     private String sharedApplicationId;
-    private String rootClientId;
-    private String secretMgtApplicationId;
-    private String secretMgtClientId;
-    private String secretMgtClientSecret;
     private String orgAdminToken;
     private String subOrgTokenEndpoint;
 
@@ -198,7 +136,6 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
     private String subOrgShortLivedSecretId;
     private String subOrgShortLivedSecretValue;
 
-    private String rootInitialSecretValue;
     private String rootCreatedSecretValue;
     private String regeneratedSecretValue;
     private String subOrgAccessToken;
@@ -215,8 +152,9 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         orgMgtRestClient = new OrgMgtRestClient(isServer, tenantInfo, serverURL,
                 new JSONObject(RESTTestBase.readResource(MGT_APP_AUTHORIZED_API_RESOURCES, this.getClass())));
 
-        createRootApplication();
-        createClientSecretManagementApplication();
+        createRootApplication(ROOT_APPLICATION_NAME);
+        createClientSecretManagementApplication(SECRET_MGT_APPLICATION_NAME,
+                Arrays.asList(ORG_APPLICATION_MGT_API, ORG_DCR_API));
         /* The management application is shared before the organization is created, so that the organization
            accepts the organization switch grant from the moment it exists. */
         shareApplicationWithAllChildOrganizations(secretMgtApplicationId);
@@ -228,8 +166,8 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
 
         shareApplicationWithAllChildOrganizations(rootApplicationId);
 
-        orgAdminToken = getOrganizationSwitchedToken(SYSTEM_SCOPE);
-        sharedApplicationId = waitForApplicationSharedToSubOrg(ROOT_APPLICATION_NAME, orgAdminToken);
+        orgAdminToken = getOrganizationSwitchedToken(SYSTEM_SCOPE, organizationId);
+        sharedApplicationId = waitForApplicationSharedToOrganization(ROOT_APPLICATION_NAME, orgAdminToken);
 
         createSubOrgApplication();
         createOrgEndUser();
@@ -439,7 +377,7 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
             dependsOnMethods = "testDeletedClientSecretIsRejectedInSubOrg")
     public void testOrgClientSecretViewScope() throws Exception {
 
-        String viewToken = getOrganizationSwitchedToken(ORG_CLIENT_SECRET_VIEW_SCOPE);
+        String viewToken = getOrganizationSwitchedToken(ORG_CLIENT_SECRET_VIEW_SCOPE, organizationId);
 
         ClientSecretList clientSecrets = restClient.getClientSecretsOfOrganizationApp(subOrgApplicationId, viewToken);
         assertEquals(clientSecrets.getCount(), Integer.valueOf(1),
@@ -459,14 +397,15 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
             dependsOnMethods = "testOrgClientSecretViewScope")
     public void testOrgClientSecretCreateScope() throws Exception {
 
-        String createToken = getOrganizationSwitchedToken(ORG_CLIENT_SECRET_CREATE_SCOPE);
+        String createToken = getOrganizationSwitchedToken(ORG_CLIENT_SECRET_CREATE_SCOPE, organizationId);
 
         ClientSecretResponse clientSecret = restClient.createClientSecretOfOrganizationApp(subOrgApplicationId,
                 new ClientSecretCreationRequest().expiresAt(0L), createToken);
         assertNotNull(clientSecret.getSecretId(),
                 "The organization client secret create scope should grant creating a client secret.");
 
-        assertEquals(getStatusCodeOfListClientSecretsOfOrganizationApp(subOrgApplicationId, createToken),
+        assertEquals(restClient.getClientSecretListStatusCodeOfOrganizationApp(subOrgApplicationId,
+                        createToken),
                 HttpStatus.SC_FORBIDDEN,
                 "The organization client secret create scope should not grant listing the client secrets.");
         assertEquals(restClient.deleteClientSecretOfOrganizationApp(subOrgApplicationId, clientSecret.getSecretId(),
@@ -484,7 +423,7 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
             dependsOnMethods = "testOrgClientSecretCreateScope")
     public void testOrgClientSecretDeleteScope() throws Exception {
 
-        String deleteToken = getOrganizationSwitchedToken(ORG_CLIENT_SECRET_DELETE_SCOPE);
+        String deleteToken = getOrganizationSwitchedToken(ORG_CLIENT_SECRET_DELETE_SCOPE, organizationId);
 
         /* The regeneration above left a single secret, hence a further secret is created so that a deletable non
            latest secret exists. */
@@ -494,7 +433,8 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
                 orgAdminToken);
         String nonLatestSecretId = getNonLatestSecret(clientSecrets).getSecretId();
 
-        assertEquals(getStatusCodeOfListClientSecretsOfOrganizationApp(subOrgApplicationId, deleteToken),
+        assertEquals(restClient.getClientSecretListStatusCodeOfOrganizationApp(subOrgApplicationId,
+                        deleteToken),
                 HttpStatus.SC_FORBIDDEN,
                 "The organization client secret delete scope should not grant listing the client secrets.");
         assertEquals(restClient.getClientSecretCreationStatusCodeOfOrganizationApp(subOrgApplicationId,
@@ -556,7 +496,8 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
             dependsOnMethods = "testClientSecretCreatedAtRootAuthenticatesInSubOrg")
     public void testGrantsOfSharedApplicationAtSubOrgTokenEndpoint() throws Exception {
 
-        String authorizationCode = getAuthorizationCodeFromSubOrgLogin();
+        String authorizationCode = getAuthorizationCodeFromOrgLogin(organizationId, ORG_END_USER_USERNAME,
+                ORG_END_USER_PASSWORD);
         JSONObject codeGrantResponse = getTokenOfAuthorizationCodeGrantAtSubOrg(authorizationCode,
                 rootInitialSecretValue);
         assertTrue(codeGrantResponse.has(ACCESS_TOKEN),
@@ -663,32 +604,6 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
                 "A registration with a past client secret expiry should be rejected as invalid client metadata.");
     }
 
-    private void createRootApplication() throws Exception {
-
-        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
-        oidcConfig.setGrantTypes(Arrays.asList(OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS,
-                OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE, OAUTH2_GRANT_TYPE_REFRESH_TOKEN));
-        oidcConfig.addCallbackURLsItem(CALLBACK_URL);
-
-        InboundProtocols inboundProtocols = new InboundProtocols();
-        inboundProtocols.setOidc(oidcConfig);
-
-        ApplicationModel application = new ApplicationModel()
-                .name(ROOT_APPLICATION_NAME)
-                .enhancedOrgAuthenticationEnabled(true)
-                .inboundProtocolConfiguration(inboundProtocols)
-                .advancedConfigurations(new AdvancedApplicationConfiguration()
-                        .skipLoginConsent(true)
-                        .skipLogoutConsent(true));
-
-        rootApplicationId = addApplication(application);
-        OpenIDConnectConfiguration createdOidcConfig = restClient.getOIDCInboundDetails(rootApplicationId);
-        rootClientId = createdOidcConfig.getClientId();
-        rootInitialSecretValue = createdOidcConfig.getClientSecret();
-        assertNotNull(rootClientId, "Client id of the root application should not be null.");
-        assertNotNull(rootInitialSecretValue, "Client secret of the root application should not be null.");
-    }
-
     /**
      * Creates an application inside the sub-organization through the organization perspective API.
      *
@@ -714,57 +629,8 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         subOrgClientId = oidcConfig.getClientId();
         subOrgInitialSecretValue = oidcConfig.getClientSecret();
         assertNotNull(subOrgClientId, "Client id of the sub-organization application should not be null.");
-        assertNotNull(subOrgInitialSecretValue, "Client secret of the sub-organization application should not be null.");
-    }
-
-    private void createClientSecretManagementApplication() throws Exception {
-
-        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
-        oidcConfig.setGrantTypes(Arrays.asList(OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS,
-                OAUTH2_GRANT_TYPE_ORGANIZATION_SWITCH));
-
-        InboundProtocols inboundProtocols = new InboundProtocols();
-        inboundProtocols.setOidc(oidcConfig);
-
-        ApplicationModel application = new ApplicationModel()
-                .name(SECRET_MGT_APPLICATION_NAME)
-                .isManagementApp(true)
-                .enhancedOrgAuthenticationEnabled(false)
-                .inboundProtocolConfiguration(inboundProtocols);
-
-        secretMgtApplicationId = addApplication(application);
-        if (!CarbonUtils.isLegacyAuthzRuntimeEnabled()) {
-            authorizeSystemAPIs(secretMgtApplicationId, Arrays.asList(ORG_APPLICATION_MGT_API, ORG_DCR_API));
-        }
-
-        OpenIDConnectConfiguration oidcConfigOfMgtApp = restClient.getOIDCInboundDetails(secretMgtApplicationId);
-        secretMgtClientId = oidcConfigOfMgtApp.getClientId();
-        secretMgtClientSecret = oidcConfigOfMgtApp.getClientSecret();
-    }
-
-    private void shareApplicationWithAllChildOrganizations(String applicationId) throws Exception {
-
-        ApplicationSharePOSTRequest applicationSharePOSTRequest = new ApplicationSharePOSTRequest();
-        applicationSharePOSTRequest.setShareWithAllChildren(true);
-        restClient.shareApplication(applicationId, applicationSharePOSTRequest);
-    }
-
-    private String waitForApplicationSharedToSubOrg(String applicationName, String accessToken) {
-
-        AtomicReference<String> sharedAppId = new AtomicReference<>();
-        await("shared application '" + applicationName + "' in the sub-organization")
-                .atMost(APPLICATION_SHARE_WAIT_MILLIS, TimeUnit.MILLISECONDS)
-                .pollInterval(1, TimeUnit.SECONDS)
-                .ignoreExceptions()
-                .until(() -> {
-                    String appId = restClient.getAppIdUsingAppNameInOrganization(applicationName, accessToken);
-                    if (StringUtils.isBlank(appId)) {
-                        return false;
-                    }
-                    sharedAppId.set(appId);
-                    return true;
-                });
-        return sharedAppId.get();
+        assertNotNull(subOrgInitialSecretValue,
+                "Client secret of the sub-organization application should not be null.");
     }
 
     private void createOrgEndUser() throws Exception {
@@ -777,59 +643,10 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         assertNotNull(orgEndUserId, "Sub-organization user id should not be null.");
     }
 
-    /**
-     * Retrieves an organization switched token of the client secret management application for the given scope.
-     *
-     * @param scope Scope requested with the organization switch grant.
-     * @return Organization switched access token.
-     * @throws Exception If an error occurred while retrieving the token.
-     */
-    private String getOrganizationSwitchedToken(String scope) throws Exception {
-
-        List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair(GRANT_TYPE_NAME, OAUTH2_GRANT_TYPE_ORGANIZATION_SWITCH));
-        parameters.add(new BasicNameValuePair(TOKEN, getClientSecretManagementAppToken()));
-        parameters.add(new BasicNameValuePair(OAUTH2_SCOPE, scope));
-        parameters.add(new BasicNameValuePair(SWITCHING_ORGANIZATION, organizationId));
-
-        HttpResponse response = sendPostRequest(client, getTokenRequestHeaders(secretMgtClientId,
-                secretMgtClientSecret), parameters, getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT,
-                tenantInfo.getDomain()));
-        JSONObject tokenResponse = getResponseBody(response, HttpStatus.SC_OK);
-        assertTrue(tokenResponse.has(ACCESS_TOKEN), "Access token is not present in the organization switch " +
-                "grant response.");
-        if (!SYSTEM_SCOPE.equals(scope)) {
-            assertTrue(tokenResponse.optString(OAUTH2_SCOPE, StringUtils.EMPTY).contains(scope),
-                    "The organization switched token does not carry the requested scope: " + scope);
-        }
-        return tokenResponse.getString(ACCESS_TOKEN);
-    }
-
-    private String getClientSecretManagementAppToken() throws Exception {
-
-        List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair(GRANT_TYPE_NAME, OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
-        parameters.add(new BasicNameValuePair(OAUTH2_SCOPE, SYSTEM_SCOPE));
-
-        HttpResponse response = sendPostRequest(client, getTokenRequestHeaders(secretMgtClientId,
-                secretMgtClientSecret), parameters, getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT,
-                tenantInfo.getDomain()));
-        JSONObject tokenResponse = getResponseBody(response, HttpStatus.SC_OK);
-        assertTrue(tokenResponse.has(ACCESS_TOKEN),
-                "Access token is not present in the client credentials grant response.");
-        return tokenResponse.getString(ACCESS_TOKEN);
-    }
-
     private int getClientCredentialsTokenStatusCodeAtSubOrg(String clientId, String clientSecretValue)
             throws Exception {
 
-        List<NameValuePair> parameters = new ArrayList<>();
-        parameters.add(new BasicNameValuePair(GRANT_TYPE_NAME, OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS));
-
-        HttpResponse response = sendTokenRequestToSubOrg(parameters, clientId, clientSecretValue);
-        int statusCode = response.getStatusLine().getStatusCode();
-        EntityUtils.consume(response.getEntity());
-        return statusCode;
+        return getClientCredentialsTokenStatusCode(subOrgTokenEndpoint, clientId, clientSecretValue);
     }
 
     private JSONObject getClientCredentialsTokenAtSubOrg(String clientId, String clientSecretValue) throws Exception {
@@ -855,64 +672,12 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
     private HttpResponse sendTokenRequestToSubOrg(List<NameValuePair> parameters, String clientId,
                                                   String clientSecretValue) throws Exception {
 
-        return sendPostRequest(client, getTokenRequestHeaders(clientId, clientSecretValue), parameters,
-                subOrgTokenEndpoint);
+        return sendTokenRequest(subOrgTokenEndpoint, parameters, clientId, clientSecretValue);
     }
 
     /**
-     * Performs a login of the sub-organization user on the shared application and returns the authorization code.
-     *
-     * @return Authorization code issued at the sub-organization.
-     * @throws Exception If an error occurred while retrieving the authorization code.
-     */
-    private String getAuthorizationCodeFromSubOrgLogin() throws Exception {
-
-        try (CloseableHttpClient loginClient = createHttpClient()) {
-            List<NameValuePair> authorizeParameters = new ArrayList<>();
-            authorizeParameters.add(new BasicNameValuePair("response_type", OAuth2Constant.OAUTH2_GRANT_TYPE_CODE));
-            authorizeParameters.add(new BasicNameValuePair(OAuth2Constant.OAUTH2_CLIENT_ID, rootClientId));
-            authorizeParameters.add(new BasicNameValuePair("redirect_uri", CALLBACK_URL));
-            authorizeParameters.add(new BasicNameValuePair(OAUTH2_SCOPE, OAUTH2_SCOPE_OPENID));
-
-            HttpResponse response = sendPostRequestWithParameters(loginClient, authorizeParameters,
-                    getRootTenantQualifiedOrgURL(AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain(), organizationId));
-            Header locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
-            assertNotNull(locationHeader, "Location header of the authorize request is not available.");
-            EntityUtils.consume(response.getEntity());
-
-            response = sendGetRequest(loginClient, locationHeader.getValue());
-            Map<String, Integer> keyPositionMap = new HashMap<>(1);
-            keyPositionMap.put("name=\"sessionDataKey\"", 1);
-            List<DataExtractUtil.KeyValue> keyValues = DataExtractUtil.extractDataFromResponse(response,
-                    keyPositionMap);
-            assertTrue(keyValues != null && !keyValues.isEmpty(), "No session data key found on the login page.");
-            String sessionDataKey = keyValues.get(0).getValue();
-            EntityUtils.consume(response.getEntity());
-
-            List<NameValuePair> loginParameters = new ArrayList<>();
-            loginParameters.add(new BasicNameValuePair("username", ORG_END_USER_USERNAME));
-            loginParameters.add(new BasicNameValuePair("password", ORG_END_USER_PASSWORD));
-            loginParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-
-            response = sendPostRequestWithParameters(loginClient, loginParameters,
-                    getRootTenantQualifiedOrgURL(COMMON_AUTH_URL, tenantInfo.getDomain(), organizationId));
-            locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
-            assertNotNull(locationHeader, "Location header of the login request is not available.");
-            EntityUtils.consume(response.getEntity());
-
-            response = sendGetRequest(loginClient, locationHeader.getValue());
-            locationHeader = response.getFirstHeader(HTTP_RESPONSE_HEADER_LOCATION);
-            assertNotNull(locationHeader, "Redirection to the application with the authorization code is null.");
-            EntityUtils.consume(response.getEntity());
-
-            String authorizationCode = getAuthorizationCodeFromURL(locationHeader.getValue());
-            assertNotNull(authorizationCode, "Authorization code is null.");
-            return authorizationCode;
-        }
-    }
-
-    /**
-     * Checks whether the given access token is active.
+     * Checks whether the given access token is active. Introspection is performed at the root endpoint with tenant
+     * administrator authentication, since the client credential authenticated path is not organization aware.
      *
      * @param accessToken Access token to introspect.
      * @return True if the token is active.
@@ -924,7 +689,7 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
                 getTenantQualifiedURL(INTRO_SPEC_ENDPOINT, tenantInfo.getDomain()),
                 tenantInfo.getTenantAdmin().getUserName(), tenantInfo.getTenantAdmin().getPassword());
         assertNotNull(introspectionResponse, "Introspection response is null.");
-        return (Boolean) introspectionResponse.get(ACTIVE);
+        return Boolean.TRUE.equals(introspectionResponse.get(ACTIVE));
     }
 
     private JSONObject registerDcrApplicationInSubOrg(String clientName, Long clientSecretExpiresAt,
@@ -957,22 +722,6 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         }
     }
 
-    private int getStatusCodeOfListClientSecretsOfOrganizationApp(String appId, String accessToken)
-            throws IOException {
-
-        try (CloseableHttpResponse response = restBaseClient.getResponseOfHttpGet(getSubOrgClientSecretsPath(appId),
-                getHeadersWithBearerToken(accessToken))) {
-            EntityUtils.consume(response.getEntity());
-            return response.getStatusLine().getStatusCode();
-        }
-    }
-
-    private String getSubOrgClientSecretsPath(String appId) {
-
-        return serverURL + ORGANIZATION_PATH + API_SERVER_PATH + APPLICATION_MANAGEMENT_PATH + PATH_SEPARATOR +
-                appId + INBOUND_PROTOCOLS_OIDC_PATH + CLIENT_SECRETS_PATH;
-    }
-
     private String getSubOrgDcrRegisterEndpoint() {
 
         return getRootTenantQualifiedOrgURL(DCR_REGISTER_ENDPOINT, tenantInfo.getDomain(), organizationId);
@@ -987,39 +736,12 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         return latestSecrets.get(0);
     }
 
-    private ClientSecretResponse getNonLatestSecret(ClientSecretList clientSecrets) {
-
-        return clientSecrets.getList().stream()
-                .filter(clientSecret -> !clientSecret.getLatest())
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("No non latest client secret is present in the list."));
-    }
-
     private ClientSecretResponse getSecretById(ClientSecretList clientSecrets, String secretId) {
 
         return clientSecrets.getList().stream()
                 .filter(clientSecret -> secretId.equals(clientSecret.getSecretId()))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("Client secret is not present in the list: " + secretId));
-    }
-
-    private JSONObject getResponseBody(HttpResponse response, int expectedStatusCode) throws IOException,
-            JSONException {
-
-        String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8.name());
-        assertEquals(response.getStatusLine().getStatusCode(), expectedStatusCode,
-                "Unexpected status code received for the request. Response: " + responseBody);
-        return new JSONObject(responseBody);
-    }
-
-    private List<Header> getTokenRequestHeaders(String clientId, String clientSecretValue) {
-
-        List<Header> headers = new ArrayList<>();
-        headers.add(new BasicHeader(AUTHORIZATION_HEADER, BASIC_HEADER + " " +
-                getBase64EncodedString(clientId, clientSecretValue)));
-        headers.add(new BasicHeader(CONTENT_TYPE_ATTRIBUTE, "application/x-www-form-urlencoded"));
-        headers.add(new BasicHeader(USER_AGENT_ATTRIBUTE, USER_AGENT));
-        return headers;
     }
 
     private Header[] getHeadersWithBearerToken(String accessToken) {
@@ -1031,36 +753,8 @@ public class SubOrgApplicationClientSecretTestCase extends OAuth2ServiceAbstract
         return headerList;
     }
 
-    private String getAuthorizationCodeFromURL(String location) {
-
-        URI uri = URI.create(location);
-        return URLEncodedUtils.parse(uri, StandardCharsets.UTF_8).stream()
-                .filter(parameter -> "code".equals(parameter.getName()))
-                .map(NameValuePair::getValue)
-                .findFirst()
-                .orElse(null);
-    }
-
     private long getCurrentTimeInSeconds() {
 
         return System.currentTimeMillis() / 1000;
-    }
-
-    private CloseableHttpClient createHttpClient() {
-
-        Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
-                .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())
-                .build();
-        return HttpClientBuilder.create()
-                .setDefaultCookieStore(new BasicCookieStore())
-                .setDefaultRequestConfig(RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).build())
-                .setDefaultCookieSpecRegistry(cookieSpecRegistry)
-                .setRedirectStrategy(new DefaultRedirectStrategy() {
-                    @Override
-                    protected boolean isRedirectable(String method) {
-                        return false;
-                    }
-                })
-                .build();
     }
 }

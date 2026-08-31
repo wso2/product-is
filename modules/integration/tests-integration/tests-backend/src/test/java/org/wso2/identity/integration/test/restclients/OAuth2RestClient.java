@@ -618,24 +618,6 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
-     * Get the status code of a client secret creation attempt.
-     *
-     * @param appId   Application id.
-     * @param request Client secret creation request.
-     * @return Status code of the response.
-     * @throws Exception If an error occurred while creating the client secret.
-     */
-    public int getClientSecretCreationStatusCode(String appId, ClientSecretCreationRequest request) throws Exception {
-
-        String jsonRequest = toJSONString(request);
-
-        try (CloseableHttpResponse response = getResponseOfHttpPost(getClientSecretsPath(appId), jsonRequest,
-                getHeaders())) {
-            return response.getStatusLine().getStatusCode();
-        }
-    }
-
-    /**
      * Get the status code of a client secret creation attempt for an application in an organization.
      *
      * @param appId       Application id.
@@ -656,6 +638,22 @@ public class OAuth2RestClient extends RestBaseClient {
     }
 
     /**
+     * Get the status code of a client secret listing attempt for an application in an organization.
+     *
+     * @param appId       Application id.
+     * @param accessToken Authorized token to list the client secrets of the organization application.
+     * @return Status code of the response.
+     * @throws IOException If an error occurred while listing the client secrets.
+     */
+    public int getClientSecretListStatusCodeOfOrganizationApp(String appId, String accessToken) throws IOException {
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(getSubOrgClientSecretsPath(appId),
+                getHeadersWithBearerToken(accessToken))) {
+            return response.getStatusLine().getStatusCode();
+        }
+    }
+
+    /**
      * List client secrets of an application.
      *
      * @param appId Application id.
@@ -666,6 +664,10 @@ public class OAuth2RestClient extends RestBaseClient {
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(getClientSecretsPath(appId), getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while retrieving the client secrets. Response: " +
+                        responseBody);
+            }
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
             return jsonWriter.readValue(responseBody, ClientSecretList.class);
         }
@@ -684,6 +686,10 @@ public class OAuth2RestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpGet(getSubOrgClientSecretsPath(appId),
                 getHeadersWithBearerToken(accessToken))) {
             String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while retrieving the client secrets. Response: " +
+                        responseBody);
+            }
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
             return jsonWriter.readValue(responseBody, ClientSecretList.class);
         }
@@ -703,6 +709,10 @@ public class OAuth2RestClient extends RestBaseClient {
 
         try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
+            if (response.getStatusLine().getStatusCode() >= 400) {
+                throw new RuntimeException("Error occurred while retrieving the client secret. Response: " +
+                        responseBody);
+            }
             ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
             return jsonWriter.readValue(responseBody, ClientSecretResponse.class);
         }

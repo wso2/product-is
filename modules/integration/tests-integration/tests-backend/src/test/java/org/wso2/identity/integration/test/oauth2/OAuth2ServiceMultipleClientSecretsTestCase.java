@@ -77,7 +77,7 @@ public class OAuth2ServiceMultipleClientSecretsTestCase extends OAuth2ServiceAbs
     private static final boolean CLIENT_SECRET_POST = false;
     private static final String INVALID_CLIENT_ERROR = "invalid_client";
     private static final String INVALID_CONSUMER_SECRET = "invalidConsumerSecret";
-    private static final long CLIENT_SECRET_EXPIRY_IN_SECONDS = 75L;
+    private static final long CLIENT_SECRET_EXPIRY_IN_SECONDS = 30L;
     private static final long CLIENT_SECRET_EXPIRY_BUFFER_IN_SECONDS = 10L;
 
     private String applicationId;
@@ -291,7 +291,8 @@ public class OAuth2ServiceMultipleClientSecretsTestCase extends OAuth2ServiceAbs
                 requestClientCredentialsToken(expiringConsumerSecret, CLIENT_SECRET_BASIC),
                 "Token request with a client secret that is not expired yet failed.");
 
-        await().atMost(CLIENT_SECRET_EXPIRY_IN_SECONDS + CLIENT_SECRET_EXPIRY_BUFFER_IN_SECONDS, TimeUnit.SECONDS)
+        await().atMost(CLIENT_SECRET_EXPIRY_IN_SECONDS + 2 * CLIENT_SECRET_EXPIRY_BUFFER_IN_SECONDS,
+                        TimeUnit.SECONDS)
                 .pollDelay(CLIENT_SECRET_EXPIRY_IN_SECONDS, TimeUnit.SECONDS)
                 .pollInterval(2, TimeUnit.SECONDS)
                 .until(() -> requestClientCredentialsToken(expiringConsumerSecret, CLIENT_SECRET_BASIC).statusCode

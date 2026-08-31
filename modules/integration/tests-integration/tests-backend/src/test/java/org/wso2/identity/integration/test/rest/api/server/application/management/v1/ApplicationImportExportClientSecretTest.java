@@ -455,14 +455,10 @@ public class ApplicationImportExportClientSecretTest extends ApplicationManageme
     private Response getResponseOfImport(Path importFile, String mediaType, boolean isUpdate) {
 
         String endpoint = APPLICATION_MANAGEMENT_API_BASE_PATH + APPLICATION_IMPORT_PATH;
-        RequestSpecification requestSpecification = given()
-                .auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .config(RestAssured.config().encoderConfig(new EncoderConfig()
-                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
-                .multiPart(IMPORT_FILE_CONTROL_NAME, importFile.toFile(), mediaType)
-                .log().ifValidationFails()
-                .when();
-        return isUpdate ? requestSpecification.put(endpoint) : requestSpecification.post(endpoint);
+        if (isUpdate) {
+            return getResponseOfMultipartFilePut(endpoint, IMPORT_FILE_CONTROL_NAME, importFile.toString(), mediaType);
+        }
+        return getResponseOfMultipartFilePost(endpoint, IMPORT_FILE_CONTROL_NAME, importFile.toString(), mediaType);
     }
 
     /**
