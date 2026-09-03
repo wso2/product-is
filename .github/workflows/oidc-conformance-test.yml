@@ -78,7 +78,7 @@ jobs:
           cd cloned-product-is
           git clone https://github.com/wso2/product-is
           cd product-is
-          mvn clean install -Dmaven.test.skip=true | tee mvn-build.log
+          mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
 
           REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
           echo "==========================================================="
