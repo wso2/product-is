@@ -14,6 +14,7 @@
 #  limitations under the License.
 
 import re
+import time
 import warnings
 import psutil
 import requests
@@ -36,6 +37,28 @@ headers = {
 path_to_is_zip = str(sys.argv[1])
 path_to_jacoco_agent = str(sys.argv[2])
 path_to_jacoco_exec = str(sys.argv[3])
+
+
+# wait until the server is serving requests before configuring it.
+def wait_for_server_ready():
+    url = constants.BASE_URL + "/api/health-check/v1.0/health"
+    max_attempts = 10
+    retry_interval = 15  # seconds; up to ~150s of readiness tolerance
+    print("\nWaiting for server to be ready")
+    for attempt in range(1, max_attempts + 1):
+        try:
+            response = requests.get(url=url, verify=False, timeout=10)
+            if response.status_code == 200 and "health" in (response.text or ""):
+                print("Server is ready (attempt %d)" % attempt)
+                return
+            print("Server not ready (attempt %d/%d): status=%s"
+                  % (attempt, max_attempts, response.status_code))
+        except Exception as error:
+            print("Server not ready (attempt %d/%d): %s" % (attempt, max_attempts, error))
+        time.sleep(retry_interval)
+
+    print("\nError: Server did not become ready after %d attempts." % max_attempts)
+    exit(1)
 
 
 # use dcr to register a client
@@ -357,6 +380,9 @@ def unpack_and_run(zip_file_name):
                 break
             if output:
                 print(output.strip())
+        # The "WSO2 Carbon started" line only means the OSGi runtime is up; wait
+        # until the web apps are actually serving requests before configuring.
+        wait_for_server_ready()
         rc = process.poll()
         return rc
     except FileNotFoundError:
@@ -485,7 +511,6 @@ if not is_process_running("wso2server"):
     unpack_and_run(path_to_is_zip)
 else:
     print("IS already running")
-
 
 dcr()
 subscribe_apis()
