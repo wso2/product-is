@@ -123,7 +123,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
         createServiceClientsForServers(sessionCookie, PORT_OFFSET_0, new CommonConstants.AdminClients[]{
                 CommonConstants.AdminClients.APPLICATION_MANAGEMENT_SERVICE_CLIENT, CommonConstants.AdminClients
-                .IDENTITY_PROVIDER_MGT_SERVICE_CLIENT});
+                .IDENTITY_PROVIDER_MGT_SERVICE_CLIENT, CommonConstants.AdminClients.USER_MANAGEMENT_CLIENT});
 
         createServiceClientsForServers(null, PORT_OFFSET_1, new CommonConstants.AdminClients[]{
                 CommonConstants.AdminClients.APPLICATION_MANAGEMENT_SERVICE_CLIENT, CommonConstants.AdminClients
@@ -145,15 +145,48 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
-        for (int portOff = 0; portOff < 2; portOff++) {
-            ServiceProvider serviceProvider = applicationManagementServiceClients.get(portOff)
-                    .getApplication("wso2carbon-local-sp");
-            if (serviceProvider != null) {
-                serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
-                applicationManagementServiceClients.get(portOff).updateApplicationData(serviceProvider);
+        List<Exception> cleanupErrors = new ArrayList<Exception>();
+        try {
+            for (int portOff = 0; portOff < 2; portOff++) {
+                try {
+                    ServiceProvider serviceProvider = applicationManagementServiceClients.get(portOff)
+                            .getApplication("wso2carbon-local-sp");
+                    if (serviceProvider != null) {
+                        serviceProvider.setOutboundProvisioningConfig(new OutboundProvisioningConfig());
+                        applicationManagementServiceClients.get(portOff).updateApplicationData(serviceProvider);
+                    }
+                    identityProviderMgtServiceClients.get(portOff).deleteIdP(SAMPLE_IDENTITY_PROVIDER_NAME + "_"
+                            + Integer.toString(portOff));
+                } catch (Exception e) {
+                    cleanupErrors.add(e);
+                }
             }
-            identityProviderMgtServiceClients.get(portOff).deleteIdP(SAMPLE_IDENTITY_PROVIDER_NAME + "_" + Integer
-                    .toString(portOff));
+        } finally {
+            deleteUserIfExists(PORT_OFFSET_0, userName, cleanupErrors);
+            deleteUserIfExists(PORT_OFFSET_1, userName2, cleanupErrors);
+            deleteUserIfExists(PORT_OFFSET_2, userName, cleanupErrors);
+            deleteUserIfExists(PORT_OFFSET_2, userName2, cleanupErrors);
+        }
+
+        if (!cleanupErrors.isEmpty()) {
+            StringBuilder message = new StringBuilder("Errors occurred while cleaning up ProvisioningTestCase: ");
+            for (Exception e : cleanupErrors) {
+                message.append(e.getMessage()).append("; ");
+            }
+            log.error(message.toString());
+            throw new Exception(message.toString(), cleanupErrors.get(0));
+        }
+    }
+
+    private void deleteUserIfExists(int portOffset, String userNameToDelete, List<Exception> cleanupErrors) {
+
+        try {
+            UserManagementClient userManagementClient = userMgtServiceClients.get(portOffset);
+            if (userManagementClient != null && isUserExists(portOffset, userNameToDelete)) {
+                userManagementClient.deleteUser(userNameToDelete);
+            }
+        } catch (Exception e) {
+            cleanupErrors.add(e);
         }
     }
 
@@ -400,7 +433,12 @@ public class ProvisioningTestCase extends ISIntegrationTest {
 
     private boolean isUserExists(String userName) throws Exception {
 
-        FlaggedName[] nameList = userMgtServiceClients.get(PORT_OFFSET_2).listAllUsers(userName, 100);
+        return isUserExists(PORT_OFFSET_2, userName);
+    }
+
+    private boolean isUserExists(int portOffset, String userName) throws Exception {
+
+        FlaggedName[] nameList = userMgtServiceClients.get(portOffset).listAllUsers(userName, 100);
         for (FlaggedName name : nameList) {
             if (name.getItemName().contains(userName)) {
                 return true;
