@@ -95,7 +95,8 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -z "$WORK" ]] && WORK="$(mktemp -d "${TMPDIR:-/tmp}/wso2is-fapi-local.XXXXXX")"
+OWNS_WORK="no"
+[[ -z "$WORK" ]] && { WORK="$(mktemp -d "${TMPDIR:-/tmp}/wso2is-fapi-local.XXXXXX")"; OWNS_WORK="yes"; }
 mkdir -p "$WORK"
 CONF_LOG="$WORK/configure_is_fapi.log"
 RS_LOG="$WORK/resource-server.log"
@@ -130,7 +131,8 @@ info "JAVA_HOME = $JAVA_HOME"
 # Cleanup / traps
 # --------------------------------------------------------------------------- #
 RS_PID=""
-STARTED_NGINX="no"
+NGINX_TOUCHED="no"
+NGINX_WAS_RUNNING="no"
 
 cleanup() {
   local rc=$?
@@ -146,15 +148,21 @@ cleanup() {
   pkill -f "$WORK/product-is/oidc-fapi-conformance-tests/wso2is-" 2>/dev/null || true
   # resource server (Flask) we started
   [[ -n "$RS_PID" ]] && kill "$RS_PID" 2>/dev/null || true
-  # only stop nginx if we're the ones who started it
-  if [[ "$STARTED_NGINX" == "yes" ]]; then
+  # only touch nginx if this run actually got as far as setting it up; remove
+  # the conf we installed, then only stop the service if it wasn't already
+  # running before this script touched it
+  if [[ "$NGINX_TOUCHED" == "yes" ]]; then
     if [[ "$(uname -s)" == "Darwin" ]]; then
-      brew services stop nginx >/dev/null 2>&1 || true
+      rm -f "$(brew --prefix 2>/dev/null)/etc/nginx/servers/fapi-resource.conf" 2>/dev/null
+      [[ "$NGINX_WAS_RUNNING" == "no" ]] && brew services stop nginx >/dev/null 2>&1
     else
-      sudo service nginx stop >/dev/null 2>&1 || true
+      sudo rm -f /etc/nginx/sites-enabled/fapi-resource-nginx.conf 2>/dev/null
+      [[ "$NGINX_WAS_RUNNING" == "no" ]] && sudo service nginx stop >/dev/null 2>&1
     fi
   fi
-  rm -rf "$WORK" 2>/dev/null || true
+  # only remove the work dir if we created it ourselves (mktemp); a user-supplied
+  # --work dir and its contents are theirs to keep
+  [[ "$OWNS_WORK" == "yes" ]] && rm -rf "$WORK" 2>/dev/null
   return $rc
 }
 trap cleanup EXIT
@@ -343,10 +351,19 @@ if [[ "$DO_CONFORMANCE" == "yes" ]]; then
   "$RS_PY" -m pip install --quiet --upgrade pip >/dev/null
   "$RS_PY" -m pip install --quiet -r "$RS_DIR/requirements.txt" || die "resource-server pip install failed"
 
+  # record whether nginx was already running as a service *before* we touch
+  # it, so cleanup only stops it if this script was the one that started it
+  NGINX_TOUCHED="yes"
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    brew services list 2>/dev/null | awk '$1=="nginx"{print $2}' | grep -q '^started$' \
+      && NGINX_WAS_RUNNING="yes" || NGINX_WAS_RUNNING="no"
+  else
+    systemctl is-active --quiet nginx 2>/dev/null && NGINX_WAS_RUNNING="yes" || NGINX_WAS_RUNNING="no"
+  fi
+
   if command -v nginx >/dev/null 2>&1; then
     info "nginx already installed"
   else
-    STARTED_NGINX="yes"
     if [[ "$(uname -s)" == "Darwin" ]]; then
       command -v brew >/dev/null 2>&1 || die "nginx not found and Homebrew unavailable to install it"
       info "Installing nginx via Homebrew..."
@@ -375,19 +392,21 @@ if [[ "$DO_CONFORMANCE" == "yes" ]]; then
     mkdir -p "$NGINX_ETC/servers"
     cp "$NGINX_CONF" "$NGINX_ETC/servers/fapi-resource.conf" \
       || die "Failed to install nginx server conf (Homebrew nginx 'servers/' dir)"
-    STARTED_NGINX="yes"
     brew services restart nginx || die "Failed to (re)start nginx"
   else
     sudo cp "$NGINX_CONF" /etc/nginx/sites-enabled/fapi-resource-nginx.conf \
       || die "Failed to install nginx site conf"
     sudo nginx -t || die "nginx config test failed"
-    STARTED_NGINX="yes"
     sudo service nginx restart || die "Failed to (re)start nginx"
   fi
   info "nginx TLS proxy listening on :443 -> localhost:5002"
 
   info "Starting Flask resource server (port 5002)..."
-  ( cd "$RS_DIR" && "$RS_PY" resource-server.py ) >"$RS_LOG" 2>&1 &
+  # exec replaces the subshell with the python process itself, so $! below is
+  # the actual resource-server.py PID rather than a wrapper subshell's -- a
+  # plain "( cd dir && cmd ) &" would make kill "$RS_PID" in cleanup only
+  # terminate the wrapper, orphaning resource-server.py
+  ( cd "$RS_DIR" && exec "$RS_PY" resource-server.py ) >"$RS_LOG" 2>&1 &
   RS_PID=$!
   sleep 3
   kill -0 "$RS_PID" 2>/dev/null || { cat "$RS_LOG"; die "resource-server.py failed to start (see log above)"; }
@@ -453,7 +472,7 @@ if [[ "$DO_CONFORMANCE" == "yes" ]]; then
   # DOCKER_BUILDKIT=0 forces the legacy (non-buildx) builder. buildx keeps a lock
   # file under ~/.docker/buildx/ that can be left root-owned by an unrelated prior
   # sudo docker invocation on the host; the classic builder avoids that entirely.
-  ( cd "$WORK/conformance-suite" && chmod 777 docker-compose.yml \
+  ( cd "$WORK/conformance-suite" && chmod 644 docker-compose.yml \
       && DOCKER_BUILDKIT=0 docker-compose -f docker-compose.yml up -d --build ) \
     || die "conformance suite start failed"
 

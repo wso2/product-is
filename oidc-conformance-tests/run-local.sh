@@ -93,7 +93,8 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -z "$WORK" ]] && WORK="$(mktemp -d "${TMPDIR:-/tmp}/wso2is-oidc-local.XXXXXX")"
+OWNS_WORK="no"
+[[ -z "$WORK" ]] && { WORK="$(mktemp -d "${TMPDIR:-/tmp}/wso2is-oidc-local.XXXXXX")"; OWNS_WORK="yes"; }
 mkdir -p "$WORK"
 CONF_LOG="$WORK/configure_is.log"
 
@@ -139,7 +140,9 @@ cleanup() {
   done
   # backstop: kill anything still running out of the work dir
   pkill -f "$WORK/product-is/oidc-conformance-tests/wso2is-" 2>/dev/null || true
-  rm -rf "$WORK" 2>/dev/null || true
+  # only remove the work dir if we created it ourselves (mktemp); a user-supplied
+  # --work dir and its contents are theirs to keep
+  [[ "$OWNS_WORK" == "yes" ]] && rm -rf "$WORK" 2>/dev/null
   return $rc
 }
 trap cleanup EXIT
@@ -322,7 +325,7 @@ if [[ "$DO_CONFORMANCE" == "yes" ]]; then
   # DOCKER_BUILDKIT=0 forces the legacy (non-buildx) builder. buildx keeps a lock
   # file under ~/.docker/buildx/ that can be left root-owned by an unrelated prior
   # sudo docker invocation on the host; the classic builder avoids that entirely.
-  ( cd "$WORK/conformance-suite" && chmod 777 docker-compose-dev.yml \
+  ( cd "$WORK/conformance-suite" && chmod 644 docker-compose-dev.yml \
       && DOCKER_BUILDKIT=0 docker-compose -f docker-compose-dev.yml up -d --build ) \
     || die "conformance suite start failed"
 
