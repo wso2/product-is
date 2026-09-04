@@ -184,6 +184,12 @@ def addCertsToKeystore(rootCertPath, issuerCertPath, ISPath):
         os.system("keytool -import -noprompt -trustcacerts -alias obroot -file " + rootCertPath + " -storetype PKCS12 -keystore " + ISPath + "/repository/resources/security/client-truststore.p12 -storepass wso2carbon")
         # add issuer cert to keystore
         os.system("keytool -import -noprompt -trustcacerts -alias obissuer -file " + issuerCertPath + " -storetype PKCS12 -keystore " + ISPath + "/repository/resources/security/client-truststore.p12 -storepass wso2carbon")
+        # add the self-signed mTLS client certs used by client_configs.py's
+        # "mtls"/"mtls2" entries (no reusable CA private key is checked into
+        # the repo, so these leaf certs are trusted directly rather than via
+        # a chain)
+        os.system("keytool -import -noprompt -trustcacerts -alias localfapimtls -file config/sandbox-certs/local-fapi-mtls.cer -storetype PKCS12 -keystore " + ISPath + "/repository/resources/security/client-truststore.p12 -storepass wso2carbon")
+        os.system("keytool -import -noprompt -trustcacerts -alias localfapimtls2 -file config/sandbox-certs/local-fapi-mtls2.cer -storetype PKCS12 -keystore " + ISPath + "/repository/resources/security/client-truststore.p12 -storepass wso2carbon")
     except Exception as error:
         print("\nError occurred: " + str(error))
         exit(1)
