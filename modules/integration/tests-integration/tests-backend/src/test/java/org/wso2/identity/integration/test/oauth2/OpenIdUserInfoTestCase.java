@@ -447,6 +447,25 @@ public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest
                 "Unexpected error message");
     }
 
+    @Test(groups = "wso2.is", description = "Validate UserInfo request with multiple Authorization headers", dependsOnMethods = "testGetAccessToken")
+    public void testUserInfoWithMultipleAuthorizationHeaders() throws Exception {
+
+        String userInfoUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.USER_INFO_ENDPOINT : OAuth2Constant.TENANT_USER_INFO_ENDPOINT;
+        HttpGet request = new HttpGet(userInfoUrl);
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        // Add two separate Authorization headers to simulate the duplicate headers scenario
+        request.addHeader("Authorization", "Bearer " + accessToken);
+        request.addHeader("Authorization", "Bearer invalid_token");
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        HttpResponse response = client.execute(request);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 400,
+                "Request with multiple Authorization headers was not rejected with 400 Bad Request");
+        EntityUtils.consume(response.getEntity());
+    }
+
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
 
