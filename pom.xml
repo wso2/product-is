@@ -2701,7 +2701,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.195</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.199</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2835,8 +2835,8 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.6.45</identity.server.api.version>
-        <identity.user.api.version>1.5.16</identity.user.api.version>
+        <identity.server.api.version>1.6.47</identity.server.api.version>
+        <identity.user.api.version>1.5.17</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
         <identity.tool.samlsso.validator.version>5.5.13</identity.tool.samlsso.validator.version>
@@ -2857,7 +2857,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.51</carbon.kernel.version>
+        <carbon.kernel.version>4.12.53</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.2</identity.verification.version>
