@@ -83,6 +83,8 @@
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi,
                 org.wso2.carbon.identity.api.server.vc.template.management.v1.VcTemplatesApi,
+                org.wso2.carbon.identity.api.server.vp.template.management.v1.PresentationDefinitionsApi,
+                org.wso2.carbon.identity.api.server.vp.verification.v1.VCVerificationsApi,
                 org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
                 org.wso2.carbon.identity.api.server.moesif.publisher.v1.MoesifPublishersApi,
 				org.wso2.carbon.identity.api.server.organization.capability.governance.v1.OrgGovernanceApi
@@ -180,6 +182,8 @@
                 org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi,
                 org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
+                org.wso2.carbon.identity.api.server.vp.template.management.v1.PresentationDefinitionsApi,
+                org.wso2.carbon.identity.api.server.vp.verification.v1.VCVerificationsApi,
                 org.wso2.carbon.identity.api.server.organization.capability.governance.v1.OrgGovernanceApi
             </param-value>
         </init-param>
