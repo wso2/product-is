@@ -62,6 +62,7 @@ import static org.hamcrest.Matchers.is;
 public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase {
 
     private static final String CONSENT_TEST_USER_NAME = "consent_test_user";
+    private static final String CONSENT_AUTHORIZER_USER_NAME = "consent_test_authorizer";
     private static final String CONSENT_TEST_USER_PASSWORD = "Admin@123";
 
     private static String createdElementId;
@@ -73,10 +74,14 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     private static String createdSecondVersionId;
     private static String createdReceiptId;
     private static String expiredReceiptId;
+    private static String delegatedReceiptId;
     private static String testUserId;
+    private static String authorizerUserId;
+    private static long delegatedConsentCreationTime;
 
     private SCIM2RestClient scim2RestClient;
     private String consentTestUserAuthName;
+    private String consentAuthorizerAuthName;
 
     @Factory(dataProvider = "restAPIUserConfigProvider")
     public ConsentManagementV2SuccessTest(TestUserMode userMode) throws Exception {
@@ -96,6 +101,9 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
         consentTestUserAuthName = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)
                 ? CONSENT_TEST_USER_NAME
                 : CONSENT_TEST_USER_NAME + "@" + tenant;
+        consentAuthorizerAuthName = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)
+                ? CONSENT_AUTHORIZER_USER_NAME
+                : CONSENT_AUTHORIZER_USER_NAME + "@" + tenant;
 
         UserObject testUser = new UserObject();
         testUser.setUserName(CONSENT_TEST_USER_NAME);
@@ -103,6 +111,13 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
         testUser.setName(new Name().givenName("Consent").familyName("TestUser"));
         testUser.addEmail(new Email().value("consent_test_user@wso2.com"));
         testUserId = scim2RestClient.createUser(testUser);
+
+        UserObject authorizerUser = new UserObject();
+        authorizerUser.setUserName(CONSENT_AUTHORIZER_USER_NAME);
+        authorizerUser.setPassword(CONSENT_TEST_USER_PASSWORD);
+        authorizerUser.setName(new Name().givenName("Consent").familyName("Authorizer"));
+        authorizerUser.addEmail(new Email().value("consent_test_authorizer@wso2.com"));
+        authorizerUserId = scim2RestClient.createUser(authorizerUser);
     }
 
     @AfterClass(alwaysRun = true)
@@ -114,6 +129,9 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
         try {
             if (scim2RestClient != null && testUserId != null) {
                 scim2RestClient.deleteUser(testUserId);
+            }
+            if (scim2RestClient != null && authorizerUserId != null) {
+                scim2RestClient.deleteUser(authorizerUserId);
             }
             if (createdPurposeId != null) {
                 getResponseOfDelete(PURPOSES_ENDPOINT + "/" + createdPurposeId);
@@ -142,8 +160,13 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
 
     private Response userApiGet(String url) {
 
+        return userApiGet(url, consentTestUserAuthName);
+    }
+
+    private Response userApiGet(String url, String authName) {
+
         return given()
-                .auth().preemptive().basic(consentTestUserAuthName, CONSENT_TEST_USER_PASSWORD)
+                .auth().preemptive().basic(authName, CONSENT_TEST_USER_PASSWORD)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
                 .log().ifValidationFails()
@@ -152,8 +175,13 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
 
     private Response userApiPost(String url, String body) {
 
+        return userApiPost(url, body, consentTestUserAuthName);
+    }
+
+    private Response userApiPost(String url, String body, String authName) {
+
         return given()
-                .auth().preemptive().basic(consentTestUserAuthName, CONSENT_TEST_USER_PASSWORD)
+                .auth().preemptive().basic(authName, CONSENT_TEST_USER_PASSWORD)
                 .contentType(ContentType.JSON)
                 .header(HttpHeaders.ACCEPT, ContentType.JSON)
                 .log().ifValidationFails()
@@ -760,6 +788,269 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .body("findAll { it.state != 'REVOKED' }.size()", equalTo(0));
     }
 
+    /**
+     * Only the admin API accepts authorizations, so the delegated consent is created there with the
+     * test user as the subject and a second user as the authorizer. Supplying authorizations puts the
+     * consent in the PENDING state.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateConsent"})
+    public void testCreateDelegatedConsent() {
+
+        String body = "{\"subjectId\": \"" + CONSENT_TEST_USER_NAME + "\","
+                + " \"serviceId\": \"delegated-integration-service\", \"language\": \"en\","
+                + " \"purposes\": [{\"id\": \"" + createdPurposeId + "\","
+                + " \"elements\": [{\"id\": \"" + createdElementId + "\"}]}],"
+                + " \"authorizations\": [{\"userId\": \"" + CONSENT_AUTHORIZER_USER_NAME + "\","
+                + " \"type\": \"USER\"}],"
+                + " \"properties\": {\"region\": \"EU\"}}";
+        delegatedConsentCreationTime = System.currentTimeMillis();
+        Response response = getResponseOfPost(CONSENTS_ENDPOINT, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("id", notNullValue())
+                .body("subjectId", equalTo(CONSENT_TEST_USER_NAME));
+
+        delegatedReceiptId = response.jsonPath().getString("id");
+    }
+
+    /**
+     * The authorizer is not the subject of the consent, so listing by AUTHORIZER must still return it
+     * and report the subject (not the authorizer) as {@code subjectId}.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testAdminListConsentsWithAuthorizerRelation() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_AUTHORIZER_USER_NAME + "&relation=AUTHORIZER")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", greaterThanOrEqualTo(1))
+                .body("Consents.find { it.id == '" + delegatedReceiptId + "' }.subjectId",
+                        equalTo(CONSENT_TEST_USER_NAME));
+    }
+
+    /**
+     * The authorizer is not the subject of any consent, so the SUBJECT relation must not return the
+     * consent they only authorize.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testAdminListConsentsWithSubjectRelationExcludesAuthorizer() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_AUTHORIZER_USER_NAME + "&relation=SUBJECT")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("totalResults", equalTo(0));
+    }
+
+    /**
+     * ANY matches on either role, so both the subject and the authorizer must see the consent, and
+     * each must see it exactly once.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testAdminListConsentsWithAnyRelation() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_TEST_USER_NAME + "&relation=ANY")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("Consents.findAll { it.id == '" + delegatedReceiptId + "' }.size()", equalTo(1));
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_AUTHORIZER_USER_NAME + "&relation=ANY")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("Consents.findAll { it.id == '" + delegatedReceiptId + "' }.size()", equalTo(1));
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testAdminListConsentsWithAttributes() {
+
+        String consent = "Consents.find { it.id == '" + delegatedReceiptId + "' }";
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_TEST_USER_NAME + "&relation=SUBJECT"
+                + "&attributes=purposes,authorizations,properties")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(consent + ".purposes[0].id", equalTo(createdPurposeId))
+                .body(consent + ".purposes[0].name", equalTo("User Authentication"))
+                .body(consent + ".purposes[0].type", equalTo("Core Identity"))
+                .body(consent + ".purposes[0].versionId", equalTo(createdVersionId))
+                .body(consent + ".purposes[0].version", equalTo(createdVersionLabel))
+                .body(consent + ".authorizations.find { it.userId == '" + CONSENT_AUTHORIZER_USER_NAME
+                        + "' }.state", equalTo("PENDING"))
+                .body(consent + ".properties.region", equalTo("EU"));
+    }
+
+    /**
+     * The optional attributes must not be populated unless requested.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testAdminListConsentsWithoutAttributes() {
+
+        String consent = "Consents.find { it.id == '" + delegatedReceiptId + "' }";
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_TEST_USER_NAME + "&relation=SUBJECT")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(consent + ".id", equalTo(delegatedReceiptId))
+                .body(consent + ".purposes", equalTo(null))
+                .body(consent + ".authorizations", equalTo(null))
+                .body(consent + ".properties", equalTo(null));
+    }
+
+    /**
+     * A window spanning the consent's creation time must return it, and an upper bound that predates
+     * creation must exclude it.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testAdminListConsentsWithTimestampFilter() {
+
+        long lowerBound = delegatedConsentCreationTime - 60_000L;
+        long upperBound = delegatedConsentCreationTime + 60_000L;
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_TEST_USER_NAME + "&relation=SUBJECT"
+                + "&filter=timestamp ge " + lowerBound + " and timestamp le " + upperBound)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("Consents.find { it.id == '" + delegatedReceiptId + "' }", notNullValue());
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_TEST_USER_NAME + "&relation=SUBJECT"
+                + "&filter=timestamp le " + lowerBound)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("Consents.findAll { it.id == '" + delegatedReceiptId + "' }.size()", equalTo(0));
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testListConsentsWithAuthorizerRelation() {
+
+        userApiGet(getUserConsentApiBaseUrl() + "?relation=AUTHORIZER", consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", greaterThanOrEqualTo(1))
+                .body("find { it.id == '" + delegatedReceiptId + "' }.subjectId",
+                        equalTo(CONSENT_TEST_USER_NAME))
+                .body("find { it.id == '" + delegatedReceiptId + "' }.state", equalTo("PENDING"));
+    }
+
+    /**
+     * The relation parameter defaults to SUBJECT, so an authorizer who omits it must not see the
+     * consents they only authorize.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testListConsentsDefaultsToSubjectRelation() {
+
+        userApiGet(getUserConsentApiBaseUrl(), consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("size()", equalTo(0));
+    }
+
+    /**
+     * The requested attributes must be populated in the list response.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testListConsentsWithAttributes() {
+
+        String consent = "find { it.id == '" + delegatedReceiptId + "' }";
+        userApiGet(getUserConsentApiBaseUrl() + "?relation=AUTHORIZER&attributes=purposes,properties",
+                consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(consent + ".purposes[0].id", equalTo(createdPurposeId))
+                .body(consent + ".purposes[0].name", equalTo("User Authentication"))
+                .body(consent + ".purposes[0].type", equalTo("Core Identity"))
+                .body(consent + ".purposes[0].versionId", equalTo(createdVersionId))
+                .body(consent + ".properties.region", equalTo("EU"));
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testGetConsentAsAuthorizer() {
+
+        userApiGet(getUserConsentApiBaseUrl() + "/" + delegatedReceiptId, consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(delegatedReceiptId))
+                .body("subjectId", equalTo(CONSENT_TEST_USER_NAME))
+                .body("state", equalTo("PENDING"));
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testValidateConsentAsAuthorizer() {
+
+        userApiGet(getUserConsentApiBaseUrl() + "/" + delegatedReceiptId + "/validate",
+                consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("state", equalTo("PENDING"));
+    }
+
+    /**
+     * Revoking as the authorizer sets that authorizer's own authorization to REVOKED, which drives the
+     * consent to REVOKED. Ordered after the reads that expect the consent to still be PENDING.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {
+            "testAdminListConsentsWithAuthorizerRelation",
+            "testAdminListConsentsWithAnyRelation",
+            "testAdminListConsentsWithAttributes",
+            "testAdminListConsentsWithoutAttributes",
+            "testAdminListConsentsWithTimestampFilter",
+            "testListConsentsWithAuthorizerRelation",
+            "testListConsentsWithAttributes",
+            "testGetConsentAsAuthorizer",
+            "testValidateConsentAsAuthorizer"
+    })
+    public void testRevokeConsentAsAuthorizer() {
+
+        userApiPost(getUserConsentApiBaseUrl() + "/" + delegatedReceiptId + "/revoke", "",
+                consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        userApiGet(getUserConsentApiBaseUrl() + "/" + delegatedReceiptId, consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("state", equalTo("REVOKED"));
+
+        // The revoked authorization must surface in the list response.
+        userApiGet(getUserConsentApiBaseUrl() + "?relation=AUTHORIZER&attributes=authorizations",
+                consentAuthorizerAuthName)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("find { it.id == '" + delegatedReceiptId + "' }.authorizations"
+                        + ".find { it.userId == '" + CONSENT_AUTHORIZER_USER_NAME + "' }.state",
+                        equalTo("REVOKED"));
+    }
+
     // =========================================================================
     // Cleanup / Delete tests (ordered after all read tests)
     // =========================================================================
@@ -768,12 +1059,18 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
             "testValidateRevokedConsent",
             "testListRevokedConsentsWithStateFilter",
             "testListConsentsWithExpiredStateFilter",
-            "testListActiveConsentsExcludeExpired"
+            "testListActiveConsentsExcludeExpired",
+            "testListConsentsDefaultsToSubjectRelation",
+            "testAdminListConsentsWithSubjectRelationExcludesAuthorizer",
+            "testRevokeConsentAsAuthorizer"
     })
     public void testDeleteConsentTestUser() throws Exception {
 
+        // Deleting the subject cascades the delegated consent too.
         scim2RestClient.deleteUser(testUserId);
         testUserId = null; // Avoid cleanup in @AfterClass since user is already deleted.
+        scim2RestClient.deleteUser(authorizerUserId);
+        authorizerUserId = null; // Avoid cleanup in @AfterClass since user is already deleted.
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = {"testDeleteConsentTestUser"})
