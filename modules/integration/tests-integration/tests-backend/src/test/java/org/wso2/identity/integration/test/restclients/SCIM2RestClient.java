@@ -42,6 +42,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SCIM2RestClient extends RestBaseClient {
 
@@ -765,6 +769,56 @@ public class SCIM2RestClient extends RestBaseClient {
             String[] locationElements = response.getHeaders(LOCATION_HEADER)[0].toString().split(PATH_SEPARATOR);
             return locationElements[locationElements.length - 1];
         }
+    }
+
+    /**
+     * Get the details of a role in v2.
+     *
+     * @param roleId Role id.
+     * @return JSONObject of the role.
+     * @throws Exception If an error occurred while retrieving the role.
+     */
+    public JSONObject getV2Role(String roleId) throws Exception {
+
+        String endPointUrl = getRolesV2Path() + PATH_SEPARATOR + roleId;
+
+        try (CloseableHttpResponse response = getResponseOfHttpGet(endPointUrl, getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role retrieval failed.");
+            return getJSONObject(EntityUtils.toString(response.getEntity()));
+        }
+    }
+
+    /**
+     * Get the permission values assigned to a role in v2.
+     *
+     * @param roleId Role id.
+     * @return Set of permission values returned for the role (empty if none).
+     * @throws Exception If an error occurred while retrieving the role.
+     */
+    public Set<String> getV2RolePermissions(String roleId) throws Exception {
+
+        return new HashSet<>(getV2RolePermissionList(roleId));
+    }
+
+    /**
+     * Get the permission values assigned to a role in v2, preserving duplicates and order.
+     *
+     * @param roleId Role id.
+     * @return List of permission values returned for the role (empty if none).
+     * @throws Exception If an error occurred while retrieving the role.
+     */
+    public List<String> getV2RolePermissionList(String roleId) throws Exception {
+
+        JSONObject role = getV2Role(roleId);
+        List<String> permissions = new ArrayList<>();
+        JSONArray permissionArray = (JSONArray) role.get("permissions");
+        if (permissionArray != null) {
+            for (Object permission : permissionArray) {
+                permissions.add(((JSONObject) permission).get("value").toString());
+            }
+        }
+        return permissions;
     }
 
     /**
