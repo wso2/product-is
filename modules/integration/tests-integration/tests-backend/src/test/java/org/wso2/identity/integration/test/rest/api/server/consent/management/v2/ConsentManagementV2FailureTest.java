@@ -440,6 +440,93 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
+    /**
+     * {@code userId} and {@code relation} are mutually required; the relation parameter carries no
+     * OpenAPI default, so an absent relation is distinguishable from an explicit one.
+     */
+    @Test
+    public void testListConsentsWithUserIdWithoutRelationReturns400() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=consent_fail_crossuser_A")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("code", equalTo("CM_00118"));
+    }
+
+    @Test
+    public void testListConsentsWithRelationWithoutUserIdReturns400() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?relation=SUBJECT")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("code", equalTo("CM_00118"));
+    }
+
+    @Test
+    public void testListConsentsWithUnsupportedAttributeReturns400() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?attributes=purposes,unknown")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("code", equalTo("CM_00118"));
+    }
+
+    /**
+     * Only 'ge' and 'le' are supported on the timestamp attribute; any other operation must be a
+     * client error rather than a server error.
+     */
+    @Test
+    public void testListConsentsWithUnsupportedTimestampOperatorReturns400() {
+
+        getResponseOfGet(CONSENTS_ENDPOINT + "?filter=timestamp eq 1744000000000")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("code", equalTo("CM_00120"));
+    }
+
+    /**
+     * The user API validates query parameters.
+     */
+    @Test
+    public void testUserListConsentsWithUnsupportedAttributeReturns400() {
+
+        given()
+                .auth().preemptive().basic(crossUserUserBAuthName, FAILURE_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .get(getUserConsentApiBaseUrl() + "?attributes=purposes,unknown")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("code", equalTo("CM_00118"));
+    }
+
+    @Test
+    public void testUserListConsentsWithUnsupportedTimestampOperatorReturns400() {
+
+        given()
+                .auth().preemptive().basic(crossUserUserBAuthName, FAILURE_TEST_USER_PASSWORD)
+                .contentType(ContentType.JSON)
+                .header(HttpHeaders.ACCEPT, ContentType.JSON)
+                .log().ifValidationFails()
+                .get(getUserConsentApiBaseUrl() + "?filter=timestamp eq 1744000000000")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_BAD_REQUEST)
+                .body("code", equalTo("CM_00120"));
+    }
+
     // =========================================================================
     // Protected resource tests - deletion with associated resources
     // =========================================================================
