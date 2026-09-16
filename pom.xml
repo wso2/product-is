@@ -2701,11 +2701,11 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.202</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.203</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
-        <identity.notification.push.version>1.2.4</identity.notification.push.version>
+        <identity.notification.push.version>1.2.5</identity.notification.push.version>
         <identity.notification.push.version.range>[1.0.0,2.0.0)</identity.notification.push.version.range>
 
         <identity.notification.push.provider.amazonsns.version>1.0.0</identity.notification.push.provider.amazonsns.version>
