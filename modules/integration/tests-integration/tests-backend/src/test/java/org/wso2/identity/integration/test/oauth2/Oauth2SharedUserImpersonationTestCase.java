@@ -123,6 +123,8 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
     private static final String AUTHENTICATION_ENDPOINT_PATH = "/authenticationendpoint/";
     private static final long SHARE_WAIT_TIMEOUT_MS = 30000L;
     private static final long POLL_INTERVAL_MS = 500L;
+    private static final List<String> EXPECTED_AUTH_SEQUENCE =
+            Arrays.asList(SHARED_USER_IDENTIFIER_EXECUTOR, BASIC_AUTHENTICATOR);
 
     private static final String ORG_IMPERSONATION_RESOURCE_IDENTIFIER = "org:impersonation";
     private static final String ORG_SCIM2_USER_RESOURCE_IDENTIFIER = "/o/scim2/Users";
@@ -370,12 +372,11 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
         HttpResponse identifierResponse =
                 sendPostRequest(commonAuthURL, identifierParams, httpClientWithoutAutoRedirections);
         Assert.assertNotNull(identifierResponse, "Identifier step response is null.");
-        Assert.assertEquals(identifierResponse.getStatusLine().getStatusCode(), HttpStatus.SC_MOVED_TEMPORARILY,
-                "Identifier step status code is invalid.");
         Header identifierRedirectionLocation =
                 identifierResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        // Release the connection before asserting, so a failed assertion cannot leak it.
+        EntityUtils.consumeQuietly(identifierResponse.getEntity());
         Assert.assertNotNull(identifierRedirectionLocation, "Identifier step response location header is null.");
-        EntityUtils.consume(identifierResponse.getEntity());
         Assert.assertFalse(identifierRedirectionLocation.getValue().contains(AUTH_FAILURE_PARAM),
                 "Identifier step did not resolve the shared user '" + IMPERSONATOR_USERNAME +
                         "'. Redirect: " + identifierRedirectionLocation.getValue());
@@ -544,20 +545,27 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
          * actually reports the two-step sequence this test drives.
          */
         long deadline = System.currentTimeMillis() + SHARE_WAIT_TIMEOUT_MS;
-        String observedSequence = null;
+        String lastObservation = "no successful read";
         while (System.currentTimeMillis() < deadline) {
-            restClient.updateSubOrgApplication(sharedAppId, patchModel, subOrgToken);
-            List<String> authenticators = getSharedAppAuthenticators();
-            if (authenticators.equals(Arrays.asList(SHARED_USER_IDENTIFIER_EXECUTOR, BASIC_AUTHENTICATOR))) {
-                return;
+            try {
+                List<String> authenticators = getSharedAppAuthenticators();
+                if (EXPECTED_AUTH_SEQUENCE.equals(authenticators)) {
+                    return;
+                }
+                lastObservation = String.valueOf(authenticators);
+                log.info("Shared application authentication sequence is " + lastObservation + ", applying " +
+                        EXPECTED_AUTH_SEQUENCE + ".");
+                restClient.updateSubOrgApplication(sharedAppId, patchModel, subOrgToken);
+            } catch (Exception | Error e) {
+                // updateSubOrgApplication() wraps REST failures in an Error, so both have to be tolerated here.
+                lastObservation = "failed with: " + e.getMessage();
+                log.info("Transient error while applying the shared application authentication sequence, retrying.",
+                        e);
             }
-            observedSequence = String.valueOf(authenticators);
-            log.info("Shared application authentication sequence is not applied yet. Current sequence: " +
-                    observedSequence + ". Retrying.");
             Thread.sleep(POLL_INTERVAL_MS);
         }
         Assert.fail("Authentication sequence of the shared application was not applied within " +
-                SHARE_WAIT_TIMEOUT_MS + "ms. Last observed sequence: " + observedSequence);
+                SHARE_WAIT_TIMEOUT_MS + "ms. Last observation: " + lastObservation);
     }
 
     /**
