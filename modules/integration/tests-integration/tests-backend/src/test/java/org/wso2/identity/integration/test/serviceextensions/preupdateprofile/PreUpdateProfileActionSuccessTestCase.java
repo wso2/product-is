@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.serviceextensions.preupdateprofile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.JSONArray;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -44,7 +45,10 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.UserItemAdd
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.serviceextensions.model.UpdatingUserClaim;
+import org.wso2.identity.integration.test.serviceextensions.model.UserClaim;
 import org.wso2.identity.integration.test.utils.FileUtils;
+
+import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -112,7 +116,8 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         userId = scim2RestClient.createUser(userInfo);
         currentClaimValue = TEST_USER_GIVEN_NAME;
-        actionId = createPreUpdateProfileAction(ACTION_NAME, ACTION_DESCRIPTION);
+        actionId = createPreUpdateProfileAction(ACTION_NAME, ACTION_DESCRIPTION,
+                getPreUpdateProfileClaimModificationTestAttributes());
 
         userAccessToken = getUserAccessToken(clientId, clientSecret,
                 TEST_USER1_USERNAME, TEST_USER_PASSWORD);
@@ -122,7 +127,8 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         serviceExtensionMockServer.setupStub(MOCK_SERVER_ENDPOINT_RESOURCE_PATH,
                 "Basic " + getBase64EncodedString(MOCK_SERVER_AUTH_BASIC_USERNAME,
                         MOCK_SERVER_AUTH_BASIC_PASSWORD),
-                FileUtils.readFileInClassPathAsString("actions/response/pre-update-profile-response.json"));
+                FileUtils.readFileInClassPathAsString(
+                        "actions/response/pre-update-profile-claim-modification-response.json"));
     }
 
     @BeforeMethod
@@ -302,6 +308,13 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
                 PreUpdateProfileEvent.FlowInitiatorType.APPLICATION, PreUpdateProfileEvent.Action.UPDATE);
     }
 
+    @Test(dependsOnMethods = "testApplicationUpdateProfileWithRemoveOperation",
+            description = "Verify the pre update profile action response can modify user claims")
+    public void testActionResponseClaimModificationOperations() throws Exception {
+
+        assertClaimModificationOperations();
+    }
+
     private void assertUpdatingClaimValue(String claimValue) throws Exception {
 
         org.json.simple.JSONObject userObj = scim2RestClient.getUser(userId, null);
@@ -313,6 +326,20 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
 
         org.json.simple.JSONObject userObj = scim2RestClient.getUser(userId, null);
         Assert.assertNull(userObj.get(NICK_NAME_USER_SCHEMA_NAME));
+    }
+
+    private void assertClaimModificationOperations() throws Exception {
+
+        org.json.simple.JSONObject userObj = scim2RestClient.getUser(userId, null);
+        org.json.simple.JSONObject wso2Schema = (org.json.simple.JSONObject) userObj.get(USER_SYSTEM_SCHEMA_ATTRIBUTE);
+        if (wso2Schema != null) {
+            Assert.assertNull(wso2Schema.get(COUNTRY_SCHEMA_NAME));
+        }
+        Assert.assertNotNull(wso2Schema);
+        JSONArray mobileNumbers = (JSONArray) wso2Schema.get(MOBILE_NUMBERS_SCHEMA_NAME);
+        Assert.assertNotNull(mobileNumbers);
+        Assert.assertTrue(mobileNumbers.contains(TEST_USER_MOBILE_NUMBER));
+        Assert.assertTrue(mobileNumbers.contains(TEST_USER_UPDATED_MOBILE_NUMBER));
     }
 
     private void assertActionRequestPayload(UserItemAddGroupobj.OpEnum operation,String userId, String currentClaimValue,
@@ -334,22 +361,34 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
         ProfileUpdatingUser user = actionRequest.getEvent().getProfileUpdatingUser();
 
         assertEquals(user.getId(), userId);
+        UserClaim userClaim = getClaim(user.getClaims(), NICK_NAME_CLAIM_URI);
         if (operation == UserItemAddGroupobj.OpEnum.ADD) {
-            assertNull(user.getClaims());
+            assertNull(userClaim);
         } else if (operation == UserItemAddGroupobj.OpEnum.REPLACE) {
-            assertEquals(user.getClaims().get(0).getUri(), NICK_NAME_CLAIM_URI);
-            assertEquals(((UpdatingUserClaim) user.getClaims().get(0)).getUpdatingValue(), updateClaimValue);
-            assertEquals(user.getClaims().get(0).getValue(), currentClaimValue);
+            assertNotNull(userClaim);
+            assertEquals(((UpdatingUserClaim) userClaim).getUpdatingValue(), updateClaimValue);
+            assertEquals(userClaim.getValue(), currentClaimValue);
         } else if (operation == UserItemAddGroupobj.OpEnum.REMOVE) {
-            assertEquals(user.getClaims().get(0).getUri(), NICK_NAME_CLAIM_URI);
-            assertEquals(user.getClaims().get(0).getValue(), currentClaimValue);
+            assertNotNull(userClaim);
+            assertEquals(userClaim.getValue(), currentClaimValue);
         }
 
         PreUpdateProfileRequest request = actionRequest.getEvent().getRequest();
+        UserClaim requestClaim = getClaim(request.getClaims(), NICK_NAME_CLAIM_URI);
 
-        assertEquals(request.getClaims().get(0).getUri(), NICK_NAME_CLAIM_URI);
-        assertNull(request.getClaims().get(0).getUpdatingValue());
-        assertEquals(request.getClaims().get(0).getValue(), updateClaimValue);
+        assertNotNull(requestClaim);
+        assertNull(((UpdatingUserClaim) requestClaim).getUpdatingValue());
+        assertEquals(requestClaim.getValue(), updateClaimValue);
+    }
+
+    private UserClaim getClaim(List<? extends UserClaim> claims, String uri) {
+
+        if (claims == null) {
+            return null;
+        }
+        return claims.stream()
+                .filter(claim -> claim != null && uri.equals(claim.getUri()))
+                .findFirst()
+                .orElse(null);
     }
 }
-
