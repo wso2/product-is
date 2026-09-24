@@ -107,7 +107,16 @@ if [ "$REPO" = "product-is" ]; then
   echo ""
   echo "Applying PR $PULL_NUMBER as a diff..."
   echo "=========================================================="
-  wget -q --output-document=diff.diff $PR_LINK.diff
+  curl -fsSL --retry 5 --retry-all-errors --retry-delay 5 -o diff.diff "$PR_LINK.diff" || {
+    echo 'Downloading diff failed. Exiting...'
+    echo "::error::Downloading diff failed."
+    exit 1
+  }
+  if [ ! -s diff.diff ]; then
+    echo 'Downloaded diff is empty. Exiting...'
+    echo "::error::Downloaded diff is empty."
+    exit 1
+  fi
   cat diff.diff
   echo "=========================================================="
   git apply diff.diff || {
@@ -214,7 +223,16 @@ else
   echo ""
   echo "Applying PR $PULL_NUMBER as a diff..."
   echo "=========================================================="
-  wget -q --output-document=diff.diff $PR_LINK.diff
+  curl -fsSL --retry 5 --retry-all-errors --retry-delay 5 -o diff.diff "$PR_LINK.diff" || {
+    echo 'Downloading diff failed. Exiting...'
+    echo "::error::Downloading diff failed."
+    exit 1
+  }
+  if [ ! -s diff.diff ]; then
+    echo 'Downloaded diff is empty. Exiting...'
+    echo "::error::Downloaded diff is empty."
+    exit 1
+  fi
   cat diff.diff
   echo "=========================================================="
   git apply diff.diff || {
