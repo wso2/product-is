@@ -1,0 +1,22 @@
+{
+  "name": "<IDP_NAME>",
+  "description": "IDP without any federated authenticator for debug framework integration tests.",
+  "image": "",
+  "isPrimary": false,
+  "isFederationHub": false,
+  "homeRealmIdentifier": "",
+  "alias": "",
+  "roles": {
+    "mappings": [],
+    "outboundProvisioningRoles": []
+  },
+  "claims": {
+    "userIdClaim": {
+      "uri": ""
+    },
+    "provisioningClaims": [],
+    "roleClaim": {
+      "uri": ""
+    }
+  }
+}
