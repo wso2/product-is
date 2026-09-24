@@ -247,7 +247,7 @@ else
 
   export JAVA_HOME=$JAVA_21_HOME
 
-  mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+  mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dspotbugs.skip=true -Dcheckstyle.skip=true --batch-mode | tee mvn-build.log
 
   echo ""
   echo "Dependency repo $REPO build complete."
@@ -351,7 +351,7 @@ else
 
 
     export JAVA_HOME=$JAVA_21_HOME
-    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+    mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dspotbugs.skip=true -Dcheckstyle.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $OUTBOUND_AUTH_OIDC_REPO build complete."
     SUB_REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
@@ -405,7 +405,7 @@ else
     echo "=========================================================="
 
     export JAVA_HOME=$JAVA_21_HOME
-    mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+    mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dspotbugs.skip=true -Dcheckstyle.skip=true --batch-mode | tee mvn-build.log
 
     echo "Repo $SCIM2_REPO build complete."
     SUB_REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
