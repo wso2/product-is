@@ -2701,7 +2701,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.209</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.210</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2751,7 +2751,7 @@
         <identity.data.publisher.audit.version>1.5.1</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
-        <identity.event.handler.account.lock.version>1.12.0</identity.event.handler.account.lock.version>
+        <identity.event.handler.account.lock.version>1.12.1</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.13.10</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.2.14</org.wso2.identity.webhook.event.handlers.version>
@@ -2819,7 +2819,7 @@
         <authenticator.twitter.version>1.2.0</authenticator.twitter.version>
         <authenticator.x509.version>3.2.2</authenticator.x509.version>
         <identity.extension.utils>1.3.0</identity.extension.utils>
-        <authenticator.auth.otp.commons.version>1.1.6</authenticator.auth.otp.commons.version>
+        <authenticator.auth.otp.commons.version>1.1.7</authenticator.auth.otp.commons.version>
 
         <identity.org.mgt.version>2.5.18</identity.org.mgt.version>
         <identity.org.mgt.core.version>1.5.5</identity.org.mgt.core.version>
@@ -2835,7 +2835,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.6.50</identity.server.api.version>
+        <identity.server.api.version>1.6.51</identity.server.api.version>
         <identity.user.api.version>1.5.18</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
