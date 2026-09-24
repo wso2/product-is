@@ -42,6 +42,11 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
     protected static final String TYPE_VIEW = "VIEW";
     protected static final String TYPE_REDIRECTION = "REDIRECTION";
     protected static final String REGISTRATION_FLOW = "registration-flow.json";
+    protected static final String PASSWORD_RECOVERY_FLOW = "password-recovery-flow.json";
+    protected static final String PASSWORD_RECOVERY_MULTI_ATTRIBUTE_FLOW =
+            "password-recovery-multi-attribute-flow.json";
+    protected static final String PASSWORD_RECOVERY_CONTROLS_DISABLED_FLOW =
+            "password-recovery-controls-disabled-flow.json";
     protected static final String API_DEFINITION_NAME = "flow-execution.yaml";
     protected static final String API_VERSION = "v1";
     protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.flow.execution.v1";
@@ -82,6 +87,46 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
         client.putFlow(flowRequest);
     }
 
+    protected void addPasswordRecoveryFlow(FlowManagementClient client) throws Exception {
+
+        String passwordRecoveryFlowRequestJson = readResource(PASSWORD_RECOVERY_FLOW);
+        FlowRequest flowRequest = new ObjectMapper()
+                .readValue(passwordRecoveryFlowRequestJson, FlowRequest.class);
+        client.putFlow(flowRequest);
+    }
+
+    protected void addPasswordRecoveryMultiAttributeFlow(FlowManagementClient client) throws Exception {
+
+        String passwordRecoveryFlowRequestJson = readResource(PASSWORD_RECOVERY_MULTI_ATTRIBUTE_FLOW);
+        FlowRequest flowRequest = new ObjectMapper()
+                .readValue(passwordRecoveryFlowRequestJson, FlowRequest.class);
+        client.putFlow(flowRequest);
+    }
+
+    protected void addPasswordRecoveryControlsDisabledFlow(FlowManagementClient client) throws Exception {
+
+        String passwordRecoveryFlowRequestJson = readResource(PASSWORD_RECOVERY_CONTROLS_DISABLED_FLOW);
+        FlowRequest flowRequest = new ObjectMapper()
+                .readValue(passwordRecoveryFlowRequestJson, FlowRequest.class);
+        client.putFlow(flowRequest);
+    }
+
+    protected void enablePasswordRecoveryFlow(FlowManagementClient client) throws Exception {
+
+        FlowConfig flowConfigDTO = new FlowConfig();
+        flowConfigDTO.setIsEnabled(true);
+        flowConfigDTO.setFlowType(FlowTypes.PASSWORD_RECOVERY);
+        client.updateFlowConfig(flowConfigDTO);
+    }
+
+    protected void disablePasswordRecoveryFlow(FlowManagementClient client) throws Exception {
+
+        FlowConfig flowConfigDTO = new FlowConfig();
+        flowConfigDTO.setIsEnabled(false);
+        flowConfigDTO.setFlowType(FlowTypes.PASSWORD_RECOVERY);
+        client.updateFlowConfig(flowConfigDTO);
+    }
+
     protected void enableFlow(String flowType, FlowManagementClient client) throws Exception {
 
         FlowConfig flowConfigDTO = new FlowConfig();
@@ -105,5 +150,6 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
     protected static class FlowTypes {
 
         public static final String REGISTRATION = "REGISTRATION";
+        public static final String PASSWORD_RECOVERY = "PASSWORD_RECOVERY";
     }
 }
