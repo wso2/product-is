@@ -132,6 +132,10 @@
         "value": "true"
       },
       {
+        "name": "EmailVerification.DisableNotifyUnlockState",
+        "value": "false"
+      },
+      {
         "name": "EmailVerification.ExpiryTime",
         "value": "1440"
       },
