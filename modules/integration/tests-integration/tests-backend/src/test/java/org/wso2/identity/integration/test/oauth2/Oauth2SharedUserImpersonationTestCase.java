@@ -89,9 +89,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import static org.awaitility.Awaitility.await;
 import static org.testng.Assert.assertEquals;
 import static org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementBaseTest.FIDP_QUERY_PARAM;
 import static org.wso2.identity.integration.test.rest.api.server.organization.management.v1.OrganizationManagementBaseTest.ORGANIZATION_SSO;
@@ -118,6 +117,14 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
     private static final String IMPERSONATOR_ROLE_NAME = "SharedFlowImpersonatorRole";
     private static final String END_USER_ROLE_NAME = "SharedFlowEndUserRole";
     private static final String COUNTRY_CLAIM_VALUE = "USA";
+    private static final String SHARED_USER_IDENTIFIER_EXECUTOR = "SharedUserIdentifierExecutor";
+    private static final String BASIC_AUTHENTICATOR = "BasicAuthenticator";
+    private static final String AUTH_FAILURE_PARAM = "authFailure=true";
+    private static final String AUTHENTICATION_ENDPOINT_PATH = "/authenticationendpoint/";
+    private static final long SHARE_WAIT_TIMEOUT_MS = 30000L;
+    private static final long POLL_INTERVAL_MS = 500L;
+    private static final List<String> EXPECTED_AUTH_SEQUENCE =
+            Arrays.asList(SHARED_USER_IDENTIFIER_EXECUTOR, BASIC_AUTHENTICATOR);
 
     private static final String ORG_IMPERSONATION_RESOURCE_IDENTIFIER = "org:impersonation";
     private static final String ORG_SCIM2_USER_RESOURCE_IDENTIFIER = "/o/scim2/Users";
@@ -365,7 +372,14 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
         HttpResponse identifierResponse =
                 sendPostRequest(commonAuthURL, identifierParams, httpClientWithoutAutoRedirections);
         Assert.assertNotNull(identifierResponse, "Identifier step response is null.");
-        EntityUtils.consume(identifierResponse.getEntity());
+        Header identifierRedirectionLocation =
+                identifierResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
+        // Release the connection before asserting, so a failed assertion cannot leak it.
+        EntityUtils.consumeQuietly(identifierResponse.getEntity());
+        Assert.assertNotNull(identifierRedirectionLocation, "Identifier step response location header is null.");
+        Assert.assertFalse(identifierRedirectionLocation.getValue().contains(AUTH_FAILURE_PARAM),
+                "Identifier step did not resolve the shared user '" + IMPERSONATOR_USERNAME +
+                        "'. Redirect: " + identifierRedirectionLocation.getValue());
 
         // Step 2: Submit the password to the BasicAuthenticator step.
         List<NameValuePair> passwordParams = new ArrayList<>();
@@ -382,11 +396,21 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
                 loginPostResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(childOrgAuthRedirectionLocation, "Login response location header is null.");
         EntityUtils.consume(loginPostResponse.getEntity());
+        /*
+         * A successful password step redirects back to the sub-organization authorize endpoint. A redirect back to
+         * the login page means the step was replayed or rejected; the login page is then answered with a 200, which
+         * otherwise surfaces as an opaque "expected 302 but was 200" failure on the next request.
+         */
+        Assert.assertFalse(childOrgAuthRedirectionLocation.getValue().contains(AUTH_FAILURE_PARAM) ||
+                        childOrgAuthRedirectionLocation.getValue().contains(AUTHENTICATION_ENDPOINT_PATH),
+                "Shared user login did not complete; redirected back to the login page: " +
+                        childOrgAuthRedirectionLocation.getValue());
 
         HttpResponse childOrgAuthRedirectResponse =
                 sendGetRequest(childOrgAuthRedirectionLocation.getValue(), httpClientWithoutAutoRedirections);
         Assert.assertEquals(childOrgAuthRedirectResponse.getStatusLine().getStatusCode(),
-                HttpStatus.SC_MOVED_TEMPORARILY, "Child organization auth redirection status code is invalid.");
+                HttpStatus.SC_MOVED_TEMPORARILY, "Child organization auth redirection status code is invalid. " +
+                        "Requested: " + childOrgAuthRedirectionLocation.getValue());
         Header rootOrgCommonAuthRedirectionLocation =
                 childOrgAuthRedirectResponse.getFirstHeader(OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION);
         Assert.assertNotNull(rootOrgCommonAuthRedirectionLocation,
@@ -480,7 +504,7 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
         restClient.shareApplication(applicationId, applicationSharePOSTRequest);
 
         // Application sharing is asynchronous; wait until the shared application appears in the sub-organization.
-        long deadline = System.currentTimeMillis() + 10000;
+        long deadline = System.currentTimeMillis() + SHARE_WAIT_TIMEOUT_MS;
         while (System.currentTimeMillis() < deadline) {
             try {
                 String id = restClient.getAppIdUsingAppNameInOrganization(APP_NAME, subOrgToken);
@@ -492,13 +516,12 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
                 log.debug("Transient error while polling for shared application '" + APP_NAME +
                         "' in sub-organization, retrying.", e);
             }
-            Thread.sleep(500);
+            Thread.sleep(POLL_INTERVAL_MS);
         }
         Assert.assertNotNull(sharedAppId, "Shared application ID in sub-organization should not be null.");
-        await().atMost(5, TimeUnit.SECONDS).until(() -> true);
     }
 
-    private void updateSharedAppAuthenticationSequence() {
+    private void updateSharedAppAuthenticationSequence() throws Exception {
 
         AuthenticationSequence authSequence = new AuthenticationSequence()
                 .type(AuthenticationSequence.TypeEnum.USER_DEFINED)
@@ -506,17 +529,62 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
                         .id(1)
                         .addOptionsItem(new Authenticator()
                                 .idp("LOCAL")
-                                .authenticator("SharedUserIdentifierExecutor")))
+                                .authenticator(SHARED_USER_IDENTIFIER_EXECUTOR)))
                 .addStepsItem(new AuthenticationStep()
                         .id(2)
                         .addOptionsItem(new Authenticator()
                                 .idp("LOCAL")
-                                .authenticator("BasicAuthenticator")));
+                                .authenticator(BASIC_AUTHENTICATOR)));
 
         ApplicationPatchModel patchModel = new ApplicationPatchModel();
         patchModel.setAuthenticationSequence(authSequence);
 
-        restClient.updateSubOrgApplication(sharedAppId, patchModel, subOrgToken);
+        /*
+         * Application sharing completes asynchronously, so a sequence patched while the share is still being
+         * finalized can be overwritten with the default sequence. Re-apply the patch until the shared application
+         * actually reports the two-step sequence this test drives.
+         */
+        long deadline = System.currentTimeMillis() + SHARE_WAIT_TIMEOUT_MS;
+        String lastObservation = "no successful read";
+        while (System.currentTimeMillis() < deadline) {
+            try {
+                List<String> authenticators = getSharedAppAuthenticators();
+                if (EXPECTED_AUTH_SEQUENCE.equals(authenticators)) {
+                    return;
+                }
+                lastObservation = String.valueOf(authenticators);
+                log.info("Shared application authentication sequence is " + lastObservation + ", applying " +
+                        EXPECTED_AUTH_SEQUENCE + ".");
+                restClient.updateSubOrgApplication(sharedAppId, patchModel, subOrgToken);
+            } catch (Exception | Error e) {
+                // updateSubOrgApplication() wraps REST failures in an Error, so both have to be tolerated here.
+                lastObservation = "failed with: " + e.getMessage();
+                log.info("Transient error while applying the shared application authentication sequence, retrying.",
+                        e);
+            }
+            Thread.sleep(POLL_INTERVAL_MS);
+        }
+        Assert.fail("Authentication sequence of the shared application was not applied within " +
+                SHARE_WAIT_TIMEOUT_MS + "ms. Last observation: " + lastObservation);
+    }
+
+    /**
+     * Read back the authenticator names of the shared application, in step order.
+     *
+     * @return Ordered authenticator names, or an empty list if no sequence is set.
+     */
+    private List<String> getSharedAppAuthenticators() throws IOException {
+
+        ApplicationResponseModel sharedApp = restClient.getOrganizationApplication(sharedAppId, subOrgToken);
+        if (sharedApp == null || sharedApp.getAuthenticationSequence() == null ||
+                sharedApp.getAuthenticationSequence().getSteps() == null) {
+            return Collections.emptyList();
+        }
+        return sharedApp.getAuthenticationSequence().getSteps().stream()
+                .filter(step -> step.getOptions() != null)
+                .flatMap(step -> step.getOptions().stream())
+                .map(Authenticator::getAuthenticator)
+                .collect(Collectors.toList());
     }
 
     private void createRootImpersonator() throws Exception {
