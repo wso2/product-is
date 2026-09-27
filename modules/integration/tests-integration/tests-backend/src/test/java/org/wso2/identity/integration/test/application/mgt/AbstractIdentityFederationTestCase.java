@@ -218,6 +218,18 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
         return applicationManagementRestClients.get(portOffset).getOIDCInboundDetails(appId);
     }
 
+    public void updateInboundDetailsOfApplication(int portOffset, String appId, Object inboundConfig,
+                                                  String inboundType) throws Exception {
+
+        applicationManagementRestClients.get(portOffset).updateInboundDetailsOfApplication(appId, inboundConfig,
+                inboundType);
+    }
+
+    public String getAppIdUsingAppName(int portOffset, String appName) throws Exception {
+
+        return applicationManagementRestClients.get(portOffset).getAppIdUsingAppName(appName);
+    }
+
     public SAML2ServiceProvider getSAMLInboundDetailsOfApplication(int portOffset, String appId) throws Exception {
 
         return applicationManagementRestClients.get(portOffset).getSAMLInboundDetails(appId);
