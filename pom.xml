@@ -2701,7 +2701,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.212</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.213</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2778,14 +2778,14 @@
         <social.authenticator.github.version>1.2.0</social.authenticator.github.version>
 
         <!-- Provisioning connector Versions -->
-        <provisioning.connector.google.version>5.3.2</provisioning.connector.google.version>
+        <provisioning.connector.google.version>5.3.3</provisioning.connector.google.version>
         <provisioning.connector.salesforce.version>5.3.0</provisioning.connector.salesforce.version>
         <provisioning.connector.scim.version>5.4.1</provisioning.connector.scim.version>
         <provisioning.connector.scim2.version>2.1.6</provisioning.connector.scim2.version>
 
         <!-- Local Authenticator Versions -->
         <identity.local.auth.basicauth.version>6.11.14</identity.local.auth.basicauth.version>
-        <identity.local.auth.fido.version>6.0.16</identity.local.auth.fido.version>
+        <identity.local.auth.fido.version>6.0.18</identity.local.auth.fido.version>
         <identity.local.auth.iwa.version>5.5.1</identity.local.auth.iwa.version>
 
         <!-- Custom Authenticator extension adapter -->
@@ -2857,7 +2857,7 @@
         <charon.version>3.4.1</charon.version>
 
         <!-- Carbon Kernel -->
-        <carbon.kernel.version>4.12.55</carbon.kernel.version>
+        <carbon.kernel.version>4.12.56</carbon.kernel.version>
 
         <!-- Identity Verification -->
         <identity.verification.version>1.1.2</identity.verification.version>
