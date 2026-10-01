@@ -51,6 +51,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.base.MockApplicationServer;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
 import org.wso2.identity.integration.test.oidc.OIDCAbstractIntegrationTest;
@@ -640,7 +641,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
                     File.separator + NON_UNIQUE_USER_DISABLE_TOML);
         }
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfiguration(targetTomlFile, defaultTomlFile, true, true);
     }
 

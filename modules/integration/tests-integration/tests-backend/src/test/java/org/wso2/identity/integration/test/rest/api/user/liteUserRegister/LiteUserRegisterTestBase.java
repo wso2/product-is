@@ -29,6 +29,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -69,7 +70,7 @@ public class LiteUserRegisterTestBase extends RESTAPIUserTestBase {
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File emailLoginConfigFile = new File(getISResourceLocation() + File.separator + "user" + File.separator +
                 ENABLE_EMAIL_USERNAME_DEPLOYMENT_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 

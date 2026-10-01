@@ -40,6 +40,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
@@ -126,7 +127,7 @@ public class OAuth2ServiceResourceOwnerLockedTestCase extends OAuth2ServiceAbstr
 		File configuredTomlFile = new File
 					(getISResourceLocation() + File.separator + "oauth" +
 							File.separator + OAUTH_2_SERVICE_RESOURCE_OWNER_TOML);
-		serverConfigurationManager = new ServerConfigurationManager(isServer);
+		serverConfigurationManager = new ISServerConfigurationManager(isServer);
 		serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
 		serverConfigurationManager.restartForcefully();
 	}

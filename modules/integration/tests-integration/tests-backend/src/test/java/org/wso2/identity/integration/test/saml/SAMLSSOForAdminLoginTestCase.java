@@ -31,6 +31,7 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
@@ -185,7 +186,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
      */
     private void changeISConfiguration() throws AutomationUtilException, IOException, XPathExpressionException {
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
 
         // Changing deployment.toml file configs to enable sso for admin login.
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);

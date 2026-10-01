@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.scim2;
 
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -80,7 +81,7 @@ public class SCIM2BaseTestCase extends ISIntegrationTest {
         File scimConfiguredTomlFile = new File(getISResourceLocation() + File.separator + "scim2" + File.separator +
                 "me_unsecured_identity.toml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(scimConfiguredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }

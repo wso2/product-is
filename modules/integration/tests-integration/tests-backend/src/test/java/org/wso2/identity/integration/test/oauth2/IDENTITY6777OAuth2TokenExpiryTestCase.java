@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -250,7 +251,7 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
         File configuredIdentityXml = new File(getISResourceLocation()
                 + File.separator + "oauth" + File.separator + "IDENTITY6777-identity.xml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXml, identityXML, true);
         serverConfigurationManager.restartGracefully();
     }

@@ -26,6 +26,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.xml.sax.SAXException;
 
@@ -52,7 +53,7 @@ public class EventPublisherPasswordEncryptionTestCase extends ISIntegrationTest 
     public void testInit() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
 
         eventPublisherDeploymentDirectory =
                 Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +

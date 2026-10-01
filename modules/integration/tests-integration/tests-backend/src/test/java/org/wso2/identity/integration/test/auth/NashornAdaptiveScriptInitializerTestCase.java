@@ -28,6 +28,7 @@ import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 /**
@@ -43,7 +44,7 @@ public class NashornAdaptiveScriptInitializerTestCase extends AbstractAdaptiveAu
     public void testInit() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         String carbonHome = CarbonUtils.getCarbonHome();
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
 

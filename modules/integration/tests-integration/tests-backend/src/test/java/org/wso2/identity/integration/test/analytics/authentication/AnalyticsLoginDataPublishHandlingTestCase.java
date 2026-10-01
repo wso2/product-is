@@ -30,6 +30,7 @@ import org.wso2.carbon.databridge.core.exception.DataBridgeException;
 import org.wso2.carbon.databridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.analytics.commons.AnalyticsDataHolder;
 import org.wso2.identity.integration.test.analytics.commons.ThriftServer;
 import org.wso2.identity.integration.test.util.Utils;
@@ -96,7 +97,7 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
             File configuredNotificationProperties = new File(analyticsEnabledIdentityEventProperties);
             File configuredAuthnPublisherFile = new File(authnDataPublisherWithOffset);
             File configuredSessionPublisherFile = new File(sessionDataPublisherWithOffset);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
+            serverConfigurationManager = new ISServerConfigurationManager(isServer);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                     defaultIdentityEventProperties, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,

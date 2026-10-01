@@ -40,6 +40,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.ui.integration.test.login.ISLoginTestCase;
 
 import javax.xml.xpath.XPathExpressionException;
@@ -111,7 +112,7 @@ public class TenantDropDownTestCase extends ISLoginTestCase {
                 File.separator + "IS" + File.separator + "tenantDropdown" + File.separator +
                 "EndpointConfigTenantDropdownEnabled.properties");
 
-        userIdentityMgt = new ServerConfigurationManager(isServer);
+        userIdentityMgt = new ISServerConfigurationManager(isServer);
         userIdentityMgt.applyConfigurationWithoutRestart(applicationAuthenticationXmlToCopy,
                 applicationAuthenticationXml, true);
         userIdentityMgt.applyConfigurationWithoutRestart(authenticatorsXmlToCopy, authenticatorsXml, true);

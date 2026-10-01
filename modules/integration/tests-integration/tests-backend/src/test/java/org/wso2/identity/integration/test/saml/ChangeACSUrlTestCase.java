@@ -41,6 +41,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
@@ -108,7 +109,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "saml" + File.separator
                 + "application_authentication_changed_acs.toml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 

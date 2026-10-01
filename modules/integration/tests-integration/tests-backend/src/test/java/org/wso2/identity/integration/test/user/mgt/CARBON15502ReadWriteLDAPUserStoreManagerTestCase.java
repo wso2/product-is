@@ -29,6 +29,7 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -55,7 +56,7 @@ public class CARBON15502ReadWriteLDAPUserStoreManagerTestCase extends ISIntegrat
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                                           + File.separator + "readWriteLdapUserMgtConfigWildCard.xml");
 
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
         scm.restartGracefully();
 

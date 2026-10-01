@@ -53,6 +53,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationPatchModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
@@ -554,7 +555,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }

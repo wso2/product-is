@@ -50,6 +50,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
@@ -458,7 +459,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
                 .separator + "identity" + File.separator + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "saml" + File.separator +
                 "identity-mgt-listener-enabled.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredApplicationXML, applicationXML, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredProperties, properties, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);

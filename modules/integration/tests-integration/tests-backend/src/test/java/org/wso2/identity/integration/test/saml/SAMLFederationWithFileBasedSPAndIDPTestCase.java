@@ -45,6 +45,7 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -112,7 +113,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
 
         super.initTest();
         // Apply file based configurations
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         applyConfigurationsForPrimaryIS();
         // Start secondary IS server
         testDataHolder = TestDataHolder.getInstance();

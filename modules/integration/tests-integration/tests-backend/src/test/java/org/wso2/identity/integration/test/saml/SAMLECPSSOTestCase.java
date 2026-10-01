@@ -35,6 +35,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import java.io.BufferedReader;
 import java.io.File;
@@ -176,7 +177,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "saml" + File.separator
                         + "saml_ecp_consent_management_disabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

@@ -62,6 +62,7 @@ import org.wso2.identity.integration.common.clients.application.mgt.ApplicationM
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 
@@ -240,7 +241,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File emailOTPConfigFile = new File(getISResourceLocation() + File.separator + "email" + File.separator
                 + EmailOTPTestCase.EMAIL_OTP_CONFIG_TOML);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailOTPConfigFile, defaultTomlFile, true);
         changeEmailAdminConfigXml(carbonHome);
         serverConfigurationManager.restartGracefully();

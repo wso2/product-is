@@ -43,6 +43,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
@@ -289,7 +290,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File emailAsUsernameConfigFile = new File(getISResourceLocation() + File.separator +
                 "organizationDiscovery" + File.separator + EMAIL_AS_USERNAME_TOML);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailAsUsernameConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
     }

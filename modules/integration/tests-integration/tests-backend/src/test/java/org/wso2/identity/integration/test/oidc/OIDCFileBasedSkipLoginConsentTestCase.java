@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -81,7 +82,7 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }

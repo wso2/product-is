@@ -32,6 +32,7 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -116,7 +117,7 @@ public class RetrieveResidentIdPEntityIdTestCase extends ISIntegrationTest {
         File configuredIdentityXML = new File(getISResourceLocation()
                                               + File.separator + "identityMgt" + File.separator
                                               + "identity-ssoservice-entityid-changed.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
         serverConfigurationManager.restartGracefully();
     }

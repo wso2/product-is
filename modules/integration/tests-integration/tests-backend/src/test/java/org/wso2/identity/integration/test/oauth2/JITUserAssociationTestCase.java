@@ -69,6 +69,7 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -839,7 +840,7 @@ public class JITUserAssociationTestCase extends AbstractIdentityFederationTestCa
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File emailOTPConfigFile = new File(getISResourceLocation() + File.separator + "jit" + File.separator
                 + "jit_user_association_config.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailOTPConfigFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

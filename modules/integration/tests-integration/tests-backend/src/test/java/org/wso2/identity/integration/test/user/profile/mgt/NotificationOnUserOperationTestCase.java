@@ -27,6 +27,7 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.user.mgt.stub.types.carbon.FlaggedName;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -99,7 +100,7 @@ public class NotificationOnUserOperationTestCase extends ISIntegrationTest {
 
         File configuredNotificationProperties = new File(msgMgtPropertiesFileLocation);
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                 notificationMgtProperties, true);
     }

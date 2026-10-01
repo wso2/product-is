@@ -54,6 +54,7 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.MicroserviceServer;
 import org.wso2.identity.integration.common.utils.MicroserviceUtil;
 import org.wso2.identity.integration.test.util.Utils;
@@ -147,7 +148,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 "successfully. File path: " + authenticatorWarPathString);
 
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl());
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         changeISConfiguration(scriptEngine);
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
 
@@ -217,7 +218,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
                 + identityNewResourceFileName);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

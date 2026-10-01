@@ -33,6 +33,7 @@ import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.Idp.IdentityProviderMgtServiceClient;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -86,7 +87,7 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File challengeQuestionsConfigFile = new File(
                 getISResourceLocation() + File.separator + "challenge-questions" + File.separator + ADD_CHALLENGE_QUESTIONS_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 

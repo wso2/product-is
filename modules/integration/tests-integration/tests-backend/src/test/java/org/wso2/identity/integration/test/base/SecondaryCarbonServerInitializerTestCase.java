@@ -10,6 +10,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -97,7 +98,7 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "provisioning" + File.separator + fileName);
-        serverConfigurationManager = new ServerConfigurationManager(server);
+        serverConfigurationManager = new ISServerConfigurationManager(server);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

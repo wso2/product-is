@@ -49,6 +49,7 @@ import org.wso2.charon.core.client.SCIMClient;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.scim.utils.SCIMUtils;
@@ -95,7 +96,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File scimConfiguredTomlFile = new File(getISResourceLocation() + File.separator + "scim"
                 + File.separator + "IDENTITY4776" + File.separator + "catalina_server_config.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(scimConfiguredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 

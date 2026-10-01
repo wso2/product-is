@@ -32,6 +32,7 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -128,7 +129,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
                                               + File.separator + "oauth" + File.separator
                                               + "web.xml");
 
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredWebXml, webXml, true);
         serverConfigurationManager.restartGracefully();
     }
@@ -140,7 +141,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
      */
     private void resetISConfiguration() throws Exception{
         log.info("Replacing default configurations");
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.restoreToLastConfiguration();
     }
 }

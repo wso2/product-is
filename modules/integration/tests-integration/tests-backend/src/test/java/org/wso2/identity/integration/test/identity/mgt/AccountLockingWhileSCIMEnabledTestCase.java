@@ -36,6 +36,7 @@ import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.identity.integration.common.clients.mgt.UserInformationRecoveryServiceClient;
 import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserStoreManagerServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -81,7 +82,7 @@ public class AccountLockingWhileSCIMEnabledTestCase extends ISIntegrationTest {
                 + File.separator + "userMgt" + File.separator
                 + "scim-enabled-user-mgt.xml");
 
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(identityMgtConfigFile, identityMgtServerFile, true);
         scm.applyConfigurationWithoutRestart(scimEnabledUserMgtCofigFile, userMgtServerFile, true);
         scm.restartGracefully();

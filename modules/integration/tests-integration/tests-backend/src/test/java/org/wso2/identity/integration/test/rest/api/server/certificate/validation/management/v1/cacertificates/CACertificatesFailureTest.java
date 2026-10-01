@@ -28,6 +28,7 @@ import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.certificate.validation.management.v1.cacertificates.model.CACertificateAddRequest;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -65,7 +66,7 @@ public class CACertificatesFailureTest extends CACertificatesTestBase {
         File challengeQuestionsConfigFile = new File(
                 getISResourceLocation() + File.separator + "certificate-validation-mgt" + File.separator +
                         ADD_CA_CERTIFICATE_VALIDATION_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile,
                 true);
         serverConfigurationManager.restartGracefully();

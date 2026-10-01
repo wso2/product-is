@@ -27,6 +27,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
 import java.net.URL;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
 
@@ -42,7 +43,7 @@ public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
         uuidServiceJar = getServiceJar();
         log.info("Copying the service jar to the dropins folder before restarting the server.");
 
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.copyToComponentDropins(uuidServiceJar);
         serverConfigurationManager.restartGracefully();
     }
@@ -59,7 +60,7 @@ public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
     @AfterTest
     public void deInitTest() throws Exception {
 
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.removeFromComponentDropins(uuidServiceJar.getName());
     }
 }

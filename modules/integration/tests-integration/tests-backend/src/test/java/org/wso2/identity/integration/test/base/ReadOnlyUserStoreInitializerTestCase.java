@@ -26,6 +26,7 @@ import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilExcepti
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.ISTestUtils;
 
@@ -90,7 +91,7 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
         log.info("Default TOML: " + defaultConfigFile.toString());
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                 + File.separator + deploymentTomlFile);
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(userMgtConfigFile, defaultConfigFile, true);
         scm.restartGracefully();
     }

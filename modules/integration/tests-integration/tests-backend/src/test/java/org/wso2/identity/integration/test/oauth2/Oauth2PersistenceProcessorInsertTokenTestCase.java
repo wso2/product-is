@@ -36,6 +36,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
@@ -74,7 +75,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
                 + "identity_encryption_enabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);

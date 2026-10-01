@@ -46,6 +46,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
@@ -76,7 +77,7 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File emailLoginConfigFile = new File(
                 getISResourceLocation() + File.separator + "oauth" + File.separator + ADD_SCOPE_DEPLOYMENT_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 

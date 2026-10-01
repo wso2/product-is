@@ -38,6 +38,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.FileUtil;
 import org.wso2.identity.integration.common.clients.user.store.config.UserStoreConfigAdminServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.UserStoreConfigUtils;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -79,7 +80,7 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         keyStoreFilePath =
                 getTestArtifactLocation() + File.separator + "keystores" + File.separator + "products" + File.separator
                         + ISIntegrationTest.KEYSTORE_NAME;

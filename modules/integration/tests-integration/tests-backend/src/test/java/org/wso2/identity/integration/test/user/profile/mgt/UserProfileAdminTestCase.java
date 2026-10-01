@@ -34,6 +34,7 @@ import org.wso2.identity.integration.common.clients.UserProfileMgtServiceClient;
 import org.wso2.carbon.identity.user.profile.stub.types.UserFieldDTO;
 import org.wso2.carbon.identity.user.profile.stub.types.UserProfileDTO;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
@@ -59,7 +60,7 @@ public class UserProfileAdminTestCase extends ISIntegrationTest {
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "user" + File.separator
                         + "enable_federated_association.toml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 

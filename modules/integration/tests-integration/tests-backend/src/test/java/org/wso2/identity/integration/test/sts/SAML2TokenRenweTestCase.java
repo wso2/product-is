@@ -29,6 +29,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import java.io.File;
 
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class SAML2TokenRenweTestCase extends ISIntegrationTest {
 
@@ -43,7 +44,7 @@ public class SAML2TokenRenweTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
         super.init();
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         sasc = new SecurityAdminServiceClient(backendURL, sessionCookie);
         String KeyStoreName = ISIntegrationTest.KEYSTORE_NAME;
         SecurityAdminServiceClient securityAdminServiceClient = new SecurityAdminServiceClient(

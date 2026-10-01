@@ -28,6 +28,7 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
@@ -100,7 +101,7 @@ public class AccountLockWhileCaseInsensitiveUserFalseTestCase extends ISIntegrat
                 + File.separator + "case_insensitive_user_false.toml");
 
         log.info("Applying configured toml file.");
-        configurationManager = new ServerConfigurationManager(isServer);
+        configurationManager = new ISServerConfigurationManager(isServer);
         configurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         configurationManager.restartGracefully();
         log.info("Toml configurations applied.");

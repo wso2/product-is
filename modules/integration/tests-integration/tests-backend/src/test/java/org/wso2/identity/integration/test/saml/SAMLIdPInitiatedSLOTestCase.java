@@ -33,6 +33,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.logging.view.data.xsd.LogEvent;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CommonConstants;
@@ -122,7 +123,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                 + "conf" + File.separator + "log4j2.properties");
         File configuredLo4j2File = new File(getISResourceLocation() + File.separator + "saml" + File.separator
                 + "log4j2_saml_enabled.properties");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredLo4j2File, defaultLog4j2File, true);
         // Waiting to apply the log4j2 changes
         checkForLog(logViewer, "Logging configuration applied successfully");
