@@ -26,9 +26,32 @@ import javax.validation.Valid;
 
 public class FapiMetadata {
 
+    private MetadataProperty allowedFapiProfiles;
     private MetadataProperty allowedSignatureAlgorithms;
     private MetadataProperty allowedEncryptionAlgorithms;
     private ClientAuthenticationMethodMetadata tokenEndpointAuthMethod;
+
+    /**
+     *
+     **/
+    public FapiMetadata allowedFapiProfiles(MetadataProperty allowedFapiProfiles) {
+
+        this.allowedFapiProfiles = allowedFapiProfiles;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("allowedFapiProfiles")
+    @Valid
+    public MetadataProperty getAllowedFapiProfiles() {
+
+        return allowedFapiProfiles;
+    }
+
+    public void setAllowedFapiProfiles(MetadataProperty allowedFapiProfiles) {
+
+        this.allowedFapiProfiles = allowedFapiProfiles;
+    }
 
     /**
      *
@@ -106,7 +129,8 @@ public class FapiMetadata {
             return false;
         }
         FapiMetadata fapiMetadata = (FapiMetadata) o;
-        return Objects.equals(this.allowedSignatureAlgorithms, fapiMetadata.allowedSignatureAlgorithms) &&
+        return Objects.equals(this.allowedFapiProfiles, fapiMetadata.allowedFapiProfiles) &&
+                Objects.equals(this.allowedSignatureAlgorithms, fapiMetadata.allowedSignatureAlgorithms) &&
                 Objects.equals(this.allowedEncryptionAlgorithms, fapiMetadata.allowedEncryptionAlgorithms) &&
                 Objects.equals(this.tokenEndpointAuthMethod, fapiMetadata.tokenEndpointAuthMethod);
     }
@@ -114,7 +138,7 @@ public class FapiMetadata {
     @Override
     public int hashCode() {
 
-        return Objects.hash(allowedSignatureAlgorithms, allowedEncryptionAlgorithms, tokenEndpointAuthMethod);
+        return Objects.hash(allowedFapiProfiles, allowedSignatureAlgorithms, allowedEncryptionAlgorithms, tokenEndpointAuthMethod);
     }
 
     @Override
@@ -123,6 +147,7 @@ public class FapiMetadata {
         StringBuilder sb = new StringBuilder();
         sb.append("class FapiMetadata {\n");
 
+        sb.append("    allowedFapiProfiles: ").append(toIndentedString(allowedFapiProfiles)).append("\n");
         sb.append("    allowedSignatureAlgorithms: ").append(toIndentedString(allowedSignatureAlgorithms)).append("\n");
         sb.append("    allowedEncryptionAlgorithms: ").append(toIndentedString(allowedEncryptionAlgorithms))
                 .append("\n");

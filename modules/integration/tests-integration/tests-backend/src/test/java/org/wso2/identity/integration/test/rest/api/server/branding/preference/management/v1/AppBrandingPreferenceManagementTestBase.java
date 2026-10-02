@@ -61,6 +61,7 @@ public class AppBrandingPreferenceManagementTestBase extends BrandingPreferenceM
         ApplicationModel application = new ApplicationModel();
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setName(TEST_APP_NAME);
+        application.setEnhancedOrgAuthenticationEnabled(false);
 
         return oAuth2RestClient.createApplication(application);
     }

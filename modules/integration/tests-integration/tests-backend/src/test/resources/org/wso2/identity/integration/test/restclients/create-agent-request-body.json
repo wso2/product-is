@@ -1,0 +1,6 @@
+{
+  "urn:scim:wso2:agent:schema": {
+    "DisplayName": "DISPLAY_NAME",
+    "IsUserServingAgent": false
+  }
+}

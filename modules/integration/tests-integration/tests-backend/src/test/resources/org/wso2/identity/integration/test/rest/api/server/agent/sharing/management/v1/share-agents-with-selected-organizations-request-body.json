@@ -1,0 +1,19 @@
+{
+  "agentCriteria": {
+    "agentIds": [
+      "AGENT_ID"
+    ]
+  },
+  "organizations": [
+    {
+      "orgId": "ORG_ID",
+      "policy": "SELECTED_ORG_ONLY",
+      "roleAssignment": {
+        "mode": "SELECTED",
+        "roles": [
+          ROLE
+        ]
+      }
+    }
+  ]
+}

@@ -27,9 +27,11 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.config.Lookup;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.cookie.CookieSpecProvider;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -47,8 +49,14 @@ import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.mode
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AccessTokenConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
+import org.wso2.identity.integration.test.restclients.RestBaseClient;
 import org.wso2.identity.integration.test.serviceextensions.common.ActionsBaseTestCase;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ActionUpdateModel;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ANDRule;
@@ -58,16 +66,22 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.c
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.common.model.ORRule;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PasswordSharing;
 import org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword.model.PreUpdatePasswordActionModel;
-import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
+import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.ScopeGetModel;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthorizedAPICreationModel;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.user.password.v1.model.PasswordChangeRequest;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
+import org.wso2.identity.integration.test.utils.CommonConstants;
+import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -108,6 +122,8 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected static final String ACTION_NAME = "Pre Update Password Action";
     protected static final String ACTION_DESCRIPTION = "This is a test for pre update password action type";
     protected static final String CLIENT_CREDENTIALS_GRANT_TYPE = "client_credentials";
+    protected static final String CHANGE_PASSWORD_PATH = "api/users/v1/me/change-password";
+    protected static final String PASSWORD_UPDATE_SCOPE = "internal_user_password_update";
     protected static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
     protected static final String REGISTRATION_FLOW =
             "/org/wso2/identity/integration/test/rest/api/server/flow/execution/v1/registration-flow.json";
@@ -130,6 +146,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
     protected IdentityGovernanceRestClient identityGovernanceRestClient;
     protected FlowExecutionClient flowExecutionClient;
     protected FlowManagementClient flowManagementClient;
+    protected RestBaseClient restBaseClient;
 
     private final CookieStore cookieStore = new BasicCookieStore();
 
@@ -158,6 +175,7 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
         flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        restBaseClient = new RestBaseClient();
     }
 
     protected void updatePasswordRecoveryFeatureStatus(boolean enable) throws IOException {
@@ -396,6 +414,125 @@ public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
         actionModel.setPasswordSharing(new PasswordSharing().format(PasswordSharing.FormatEnum.PLAIN_TEXT));
 
         return createAction(PRE_UPDATE_PASSWORD_API_PATH, actionModel);
+    }
+
+    /**
+     * Create an OAuth2 application supporting the given grant types.
+     *
+     * @param grantTypes Grant types to enable on the application.
+     * @return ApplicationResponseModel of the created application.
+     * @throws Exception If an error occurred while creating the application.
+     */
+    protected ApplicationResponseModel createApplicationWithGrantTypes(String... grantTypes) throws Exception {
+
+        ApplicationModel appModel = new ApplicationModel();
+        appModel.setName(SERVICE_PROVIDER_NAME);
+        appModel.setIsManagementApp(true);
+
+        OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
+        oidcConfig.setGrantTypes(Arrays.asList(grantTypes));
+        oidcConfig.setCallbackURLs(Collections.singletonList(OAuth2Constant.CALLBACK_URL));
+
+        AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type("JWT");
+        accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);
+        accessTokenConfig.setApplicationAccessTokenExpiryInSeconds(3600L);
+        oidcConfig.setAccessToken(accessTokenConfig);
+
+        InboundProtocols inboundProtocols = new InboundProtocols();
+        inboundProtocols.setOidc(oidcConfig);
+        appModel.setInboundProtocolConfiguration(inboundProtocols);
+
+        String appId = addApplication(appModel);
+        return getApplication(appId);
+    }
+
+    /**
+     * Authorize the change-password API resources for the given application.
+     *
+     * @param applicationId Application ID.
+     * @throws Exception If an error occurred while authorizing the APIs.
+     */
+    protected void authorizeChangePasswordApi(String applicationId) throws Exception {
+
+        List<String> apiIdentifiers = new ArrayList<>();
+        apiIdentifiers.add("/api/users/v1/me/change-password");
+        apiIdentifiers.add("/o/api/users/v1/me/change-password");
+
+        for (String apiIdentifier : apiIdentifiers) {
+            List<APIResourceListItem> filteredAPIResource =
+                    restClient.getAPIResourcesWithFiltering("identifier+eq+" + apiIdentifier);
+            if (filteredAPIResource == null || filteredAPIResource.isEmpty()) {
+                continue;
+            }
+            String apiId = filteredAPIResource.get(0).getId();
+            List<ScopeGetModel> apiResourceScopes = restClient.getAPIResourceScopes(apiId);
+            AuthorizedAPICreationModel authorizedAPICreationModel = new AuthorizedAPICreationModel();
+            authorizedAPICreationModel.setId(apiId);
+            authorizedAPICreationModel.setPolicyIdentifier("No Policy");
+            apiResourceScopes.forEach(scope -> authorizedAPICreationModel.addScopesItem(scope.getName()));
+            restClient.addAPIAuthorizationToApplication(applicationId, authorizedAPICreationModel);
+        }
+    }
+
+    /**
+     * Obtain a user access token via the resource owner password credentials grant, scoped for the
+     * change-password API.
+     *
+     * @param clientId     OAuth2 client ID of the application.
+     * @param clientSecret OAuth2 client secret.
+     * @param username     Username of the authenticating user.
+     * @param password     Password of the authenticating user.
+     * @return User access token string.
+     * @throws Exception If token acquisition fails.
+     */
+    protected String getUserPasswordUpdateToken(String clientId, String clientSecret, String username, String password)
+            throws Exception {
+
+        List<NameValuePair> parameters = new ArrayList<>();
+        parameters.add(new BasicNameValuePair("grant_type", OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER));
+        parameters.add(new BasicNameValuePair("username", username));
+        parameters.add(new BasicNameValuePair("password", password));
+        parameters.add(new BasicNameValuePair("scope", PASSWORD_UPDATE_SCOPE));
+
+        List<Header> headers = new ArrayList<>();
+        headers.add(new BasicHeader(AUTHORIZATION_HEADER, OAuth2Constant.BASIC_HEADER + " " +
+                getBase64EncodedString(clientId, clientSecret)));
+        headers.add(new BasicHeader("Content-Type", "application/x-www-form-urlencoded"));
+        headers.add(new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT));
+
+        HttpResponse response = sendPostRequest(client, headers, parameters,
+                getTenantQualifiedURL(ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain()));
+
+        String responseString = EntityUtils.toString(response.getEntity(), "UTF-8");
+        JSONObject jsonResponse = new JSONObject(responseString);
+        assertTrue(jsonResponse.has("access_token"),
+                "Failed to obtain user access token. Response: " + responseString);
+        return jsonResponse.getString("access_token");
+    }
+
+    /**
+     * Call the change-password API with the given user access token.
+     *
+     * @param accessToken     User access token.
+     * @param currentPassword Current password.
+     * @param newPassword     New password.
+     * @return CloseableHttpResponse from the change-password API.
+     * @throws IOException If the HTTP call fails.
+     */
+    protected CloseableHttpResponse changePassword(String accessToken, String currentPassword, String newPassword)
+            throws IOException {
+
+        Header[] headers = new Header[3];
+        headers[0] = new BasicHeader("Authorization", "Bearer " + accessToken);
+        headers[1] = new BasicHeader("Content-Type", "application/json");
+        headers[2] = new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        PasswordChangeRequest requestBody = new PasswordChangeRequest()
+                .currentPassword(currentPassword)
+                .newPassword(newPassword);
+        return restBaseClient.getResponseOfHttpPost(
+                getTenantQualifiedURL(serverURL + CHANGE_PASSWORD_PATH, tenantInfo.getDomain()),
+                restBaseClient.toJSONString(requestBody),
+                headers);
     }
 
     protected String getTokenWithClientCredentialsGrant(String applicationId, String clientId, String clientSecret) throws Exception {

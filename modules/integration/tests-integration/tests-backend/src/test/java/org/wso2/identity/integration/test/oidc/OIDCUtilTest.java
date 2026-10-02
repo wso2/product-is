@@ -57,6 +57,7 @@ public class OIDCUtilTest {
 
     public static final String playgroundAppOneAppName = MockApplicationServer.Constants.APP1.NAME;
     public static final String playgroundAppOneAppCallBackUri = MockApplicationServer.Constants.APP1.CALLBACK_URL;
+    public static final String playgroundAppOneFCLogoutUri = MockApplicationServer.Constants.APP1.CALLBACK_URL;
 
     public static final String playgroundAppTwoAppName = MockApplicationServer.Constants.APP2.NAME;
     public static final String playgroundAppTwoAppCallBackUri = MockApplicationServer.Constants.APP2.CALLBACK_URL;

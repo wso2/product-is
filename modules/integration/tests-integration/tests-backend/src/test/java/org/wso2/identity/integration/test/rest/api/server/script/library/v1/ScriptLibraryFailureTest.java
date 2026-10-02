@@ -18,7 +18,7 @@ package org.wso2.identity.integration.test.rest.api.server.script.library.v1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;

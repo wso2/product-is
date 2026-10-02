@@ -553,7 +553,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
     private void assertRolesInToken(JWTClaimsSet jwtClaimsSet, int expectedRoleCount, String[] expectedRoles) {
 
-        net.minidev.json.JSONArray rolesInToken = (net.minidev.json.JSONArray) jwtClaimsSet.getClaims().get("roles");
+        java.util.List<?> rolesInToken = (java.util.List<?>) jwtClaimsSet.getClaims().get("roles");
         Assert.assertEquals(rolesInToken.size(), expectedRoleCount, "Incorrect roles count in token.");
 
         for (String expectedRole : expectedRoles) {
@@ -570,7 +570,7 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
     private void assertGroupsInToken(JWTClaimsSet jwtClaimsSet, int expectedGroupCount, String[] expectedGroups) {
 
-        net.minidev.json.JSONArray groupsInToken = (net.minidev.json.JSONArray) jwtClaimsSet.getClaims().get("groups");
+        java.util.List<?> groupsInToken = (java.util.List<?>) jwtClaimsSet.getClaims().get("groups");
         Assert.assertEquals(groupsInToken.size(), expectedGroupCount, "Incorrect groups count in token.");
 
         for (String expectedGroup : expectedGroups) {
@@ -600,7 +600,14 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
 
         org.json.simple.JSONObject sharedUser = scim2RestClient.getSubOrgUser(sharedUserId, null, switchedM2MToken);
         String givenNameOfSharedUser = (String) ((org.json.simple.JSONObject) sharedUser.get("name")).get("givenName");
-        String emailOfSharedUser = (String) ((org.json.simple.JSONArray) sharedUser.get("emails")).get(0);
+        org.json.simple.JSONArray emails = (org.json.simple.JSONArray) sharedUser.get("emails");
+        String emailOfSharedUser = "";
+        for (org.json.simple.JSONObject email : (Iterable<org.json.simple.JSONObject>) emails) {
+            if ((Boolean) email.get("primary")) {
+                emailOfSharedUser = (String) email.get("value");
+                break;
+            }
+        }
         Assert.assertEquals(givenNameOfSharedUser, ROOT_ORG_USER_GIVEN_NAME, "Unexpected given name.");
         Assert.assertEquals(emailOfSharedUser, ROOT_ORG_USER_EMAIL, "Unexpected email.");
     }

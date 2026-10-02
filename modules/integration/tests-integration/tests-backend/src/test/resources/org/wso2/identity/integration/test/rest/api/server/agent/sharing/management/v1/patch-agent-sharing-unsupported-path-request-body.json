@@ -1,0 +1,16 @@
+{
+  "agentCriteria": {
+    "agentIds": [
+      "AGENT_ID"
+    ]
+  },
+  "Operations": [
+    {
+      "op": "remove",
+      "path": "organizations[orgId eq ORG_ID].users",
+      "value": [
+        ROLE
+      ]
+    }
+  ]
+}

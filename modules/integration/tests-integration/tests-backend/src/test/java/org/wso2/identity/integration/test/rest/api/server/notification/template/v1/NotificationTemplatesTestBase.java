@@ -1,7 +1,7 @@
 package org.wso2.identity.integration.test.rest.api.server.notification.template.v1;
 
 import io.restassured.RestAssured;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;

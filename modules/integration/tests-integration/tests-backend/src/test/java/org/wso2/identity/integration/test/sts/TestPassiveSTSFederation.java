@@ -418,6 +418,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
         samlssoServiceProviderDTO.setDoSignAssertions(true);
         samlssoServiceProviderDTO.setDoSignResponse(true);
         samlssoServiceProviderDTO.setDoSingleLogout(true);
+        samlssoServiceProviderDTO.setEnableAttributeProfile(true);
         samlssoServiceProviderDTO.setEnableAttributesByDefault(true);
         return samlssoServiceProviderDTO;
     }

@@ -32,6 +32,7 @@ public class TestDataHolder {
     private Map<Integer, AutomationContext> automationContextMap;
     private MultipleServersManager manager;
     private AutomationContext automationContext;
+    private String secondaryISCarbonHome;
 
     private TestDataHolder(){
 
@@ -72,5 +73,15 @@ public class TestDataHolder {
     public void setAutomationContextMap(Map<Integer, AutomationContext> automationContextMap) {
 
         this.automationContextMap = automationContextMap;
+    }
+
+    public String getSecondaryISCarbonHome() {
+
+        return secondaryISCarbonHome;
+    }
+
+    public void setSecondaryISCarbonHome(String carbonHome) {
+
+        this.secondaryISCarbonHome = carbonHome;
     }
 }

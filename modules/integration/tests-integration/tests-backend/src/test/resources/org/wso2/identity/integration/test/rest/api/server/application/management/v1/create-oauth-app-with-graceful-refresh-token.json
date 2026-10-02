@@ -1,0 +1,18 @@
+{
+  "name": "OAuth Application With Graceful Refresh Token",
+  "inboundProtocolConfiguration": {
+    "oidc": {
+      "clientId": "custom_client_id_1",
+      "clientSecret": "custom_client_secret_1",
+      "grantTypes": [
+        "password",
+        "authorization_code",
+        "refresh_token"
+      ],
+      "callbackURLs": [
+        "https://localhost/callback"
+      ],
+      "publicClient": false
+    }
+  }
+}

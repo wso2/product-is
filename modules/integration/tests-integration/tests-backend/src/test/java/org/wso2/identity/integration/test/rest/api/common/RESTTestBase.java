@@ -28,7 +28,7 @@ import io.restassured.config.EncoderConfig;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.cxf.helpers.HttpHeaderHelper;
@@ -518,6 +518,49 @@ public class RESTTestBase extends ISIntegrationTest {
                 .when()
                 .log().ifValidationFails()
                 .post(endpointUri);
+    }
+
+    /**
+     * Uploads a file to a given endpointUri with a POST request, declaring the given media type for the file part.
+     *
+     * @param endpointUri endpoint to upload the file
+     * @param fileField   control name to be used in form
+     * @param filePath    file path of the file
+     * @param mediaType   media type of the file part
+     * @return response
+     */
+    protected Response getResponseOfMultipartFilePost(String endpointUri, String fileField, String filePath,
+                                                      String mediaType) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .multiPart(fileField, new File(filePath), mediaType)
+                .filter(validationFilter)
+                .log().ifValidationFails()
+                .when()
+                .log().ifValidationFails()
+                .post(endpointUri);
+    }
+
+    /**
+     * Uploads a file to a given endpointUri with a PUT request, declaring the given media type for the file part.
+     *
+     * @param endpointUri endpoint to upload the file
+     * @param fileField   control name to be used in form
+     * @param filePath    file path of the file
+     * @param mediaType   media type of the file part
+     * @return response
+     */
+    protected Response getResponseOfMultipartFilePut(String endpointUri, String fileField, String filePath,
+                                                     String mediaType) {
+
+        return given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+                .config(RestAssured.config().encoderConfig(encoderconfig
+                        .appendDefaultContentCharsetToContentTypeIfUndefined(false)))
+                .multiPart(fileField, new File(filePath), mediaType)
+                .when()
+                .put(endpointUri);
     }
 
     /**

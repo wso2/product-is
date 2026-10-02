@@ -1,11 +1,15 @@
 <a href="http://wso2.com/products/identity-server/">
-<img src="https://wso2.cachefly.net/wso2/sites/all/image_resources/wso2-branding-logos/wso2-logo-orange.png" alt="WSO2 logo" width=30% height=30% />
-
+<picture>
+<source media="(prefers-color-scheme: dark)" srcset="https://wso2.cachefly.net/wso2/sites/all/image_resources/logos/WSO2-Logo-White.png" />
+<source media="(prefers-color-scheme: light)" srcset="https://wso2.cachefly.net/wso2/sites/all/image_resources/logos/WSO2-Logo-Black.png" />
+<img src="https://wso2.cachefly.net/wso2/sites/all/image_resources/logos/WSO2-Logo-Black.png" alt="WSO2 logo" width=30% height=30% />
+</picture>
 </a>
 
 # WSO2 Identity Server
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/wso2/product-is/blob/master/LICENSE)
+[![DPG Badge](https://img.shields.io/badge/Verified-DPG-3333AB?logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iMzEiIGhlaWdodD0iMzMiIHZpZXdCb3g9IjAgMCAzMSAzMyIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE0LjIwMDggMjEuMzY3OEwxMC4xNzM2IDE4LjAxMjRMMTEuNTIxOSAxNi40MDAzTDEzLjk5MjggMTguNDU5TDE5LjYyNjkgMTIuMjExMUwyMS4xOTA5IDEzLjYxNkwxNC4yMDA4IDIxLjM2NzhaTTI0LjYyNDEgOS4zNTEyN0wyNC44MDcxIDMuMDcyOTdMMTguODgxIDUuMTg2NjJMMTUuMzMxNCAtMi4zMzA4MmUtMDVMMTEuNzgyMSA1LjE4NjYyTDUuODU2MDEgMy4wNzI5N0w2LjAzOTA2IDkuMzUxMjdMMCAxMS4xMTc3TDMuODQ1MjEgMTYuMDg5NUwwIDIxLjA2MTJMNi4wMzkwNiAyMi44Mjc3TDUuODU2MDEgMjkuMTA2TDExLjc4MjEgMjYuOTkyM0wxNS4zMzE0IDMyLjE3OUwxOC44ODEgMjYuOTkyM0wyNC44MDcxIDI5LjEwNkwyNC42MjQxIDIyLjgyNzdMMzAuNjYzMSAyMS4wNjEyTDI2LjgxNzYgMTYuMDg5NUwzMC42NjMxIDExLjExNzdMMjQuNjI0MSA5LjM1MTI3WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==)](https://www.digitalpublicgoods.net/r/wso2-identity-server)
 [![Get Support on Stack Overflow](https://img.shields.io/badge/stackoverflow-wso2is-orange)](https://stackoverflow.com/questions/tagged/wso2is)
 [![Join the community on Discord](https://img.shields.io/badge/Join%20us%20on-Discord-%23e01563.svg)](https://discord.com/invite/wso2)
 [![X](https://img.shields.io/twitter/follow/wso2.svg?style=social&label=Follow)](https://twitter.com/intent/follow?screen_name=wso2)
@@ -140,4 +144,4 @@ In addition, we may reach out to a small number of respondents to ask additional
 Survey is available at: https://forms.gle/h5q4M3K7vyXba3bK6
 
 ---------------------------------------------------------------------------
-(c) Copyright 2019 - 2025 WSO2 LLC. All Rights Reserved.
+(c) Copyright 2019 - 2026 WSO2 LLC. All Rights Reserved.

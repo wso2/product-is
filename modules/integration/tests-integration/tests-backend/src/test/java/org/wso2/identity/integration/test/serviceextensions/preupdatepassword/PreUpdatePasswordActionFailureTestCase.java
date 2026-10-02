@@ -21,7 +21,9 @@ package org.wso2.identity.integration.test.serviceextensions.preupdatepassword;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -56,6 +58,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 
 /**
  * Integration test class for testing the pre update password action execution.
@@ -76,6 +81,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     private String clientSecret;
     private String actionId;
     private String userId;
+    private String userAccessToken;
     private ApplicationResponseModel application;
     private ServiceExtensionMockServer serviceExtensionMockServer;
     private final ActionResponse actionResponse;
@@ -126,10 +132,12 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         usersRestClient = new UsersRestClient(serverURL, tenantInfo);
 
-        application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
+        application = createApplicationWithGrantTypes(CLIENT_CREDENTIALS_GRANT_TYPE, OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE,
+                OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
         clientId = oidcConfig.getClientId();
         clientSecret = oidcConfig.getClientSecret();
+        authorizeChangePasswordApi(application.getId());
 
         UserObject userInfo = new UserObject()
                 .userName(TEST_USER1_USERNAME)
@@ -137,6 +145,8 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                 .name(new Name().givenName(TEST_USER_GIVEN_NAME).familyName(TEST_USER_LASTNAME))
                 .addEmail(new Email().value(TEST_USER_EMAIL));
         userId = scim2RestClient.createUser(userInfo);
+        userAccessToken = getUserPasswordUpdateToken(clientId, clientSecret,
+                TEST_USER1_USERNAME, TEST_USER_PASSWORD);
 
         updatePasswordRecoveryFeatureStatus(true);
         updateSelfRegistrationStatus(true);
@@ -184,22 +194,16 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     public void testUserUpdatePassword() throws Exception {
 
         enableRuleConfig(USER_INITIATED_PASSWORD_UPDATE, actionId);
-        Map<String, String> passwordValue = new HashMap<>();
-        passwordValue.put(PASSWORD_PROPERTY, TEST_USER_UPDATED_PASSWORD);
-        PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
-                .addOperations(new UserItemAddGroupobj()
-                        .op(UserItemAddGroupobj.OpEnum.REPLACE)
-                        .value(passwordValue));
-        org.json.simple.JSONObject response = scim2RestClient.updateUserMe(patchUserInfo,
-                TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
-
-        assertNotNull(response);
-        String status = response.get("status").toString();
-        assertEquals(status, String.valueOf(expectedPasswordUpdateResponse.getStatusCode()));
-        if (status.equals(String.valueOf(HttpServletResponse.SC_BAD_REQUEST))) {
-            assertEquals(response.get("scimType"), String.valueOf(expectedPasswordUpdateResponse.getErrorMessage()));
+        try (CloseableHttpResponse response = changePassword(userAccessToken, TEST_USER_PASSWORD, TEST_USER_UPDATED_PASSWORD)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            assertEquals(statusCode, expectedPasswordUpdateResponse.getStatusCode());
+            if (statusCode == HttpServletResponse.SC_BAD_REQUEST) {
+                JSONObject responseJson = new JSONObject(EntityUtils.toString(response.getEntity()));
+                assertEquals(responseJson.getString("code"), "PWD-10004");
+                assertTrue(responseJson.getString("description").contains(
+                        expectedPasswordUpdateResponse.getErrorDetail()));
+            }
         }
-        assertTrue(response.get("detail").toString().contains(expectedPasswordUpdateResponse.getErrorDetail()));
         assertActionRequestPayload(userId, TEST_USER_UPDATED_PASSWORD, PreUpdatePasswordEvent.FlowInitiatorType.USER,
                 PreUpdatePasswordEvent.Action.UPDATE);
     }

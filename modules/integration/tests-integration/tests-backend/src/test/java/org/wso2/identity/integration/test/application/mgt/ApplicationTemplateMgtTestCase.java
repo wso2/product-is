@@ -267,7 +267,6 @@ public class ApplicationTemplateMgtTestCase extends ISIntegrationTest {
             ServiceProvider serviceProvider = new ServiceProvider();
             serviceProvider.setApplicationName(name);
             serviceProvider.setDescription(description);
-            serviceProvider.setSaasApp(true);
             applicationManagementServiceClient.createApplication(serviceProvider);
         } catch (Exception e) {
             fail("Error while trying to create Service Provider", e);

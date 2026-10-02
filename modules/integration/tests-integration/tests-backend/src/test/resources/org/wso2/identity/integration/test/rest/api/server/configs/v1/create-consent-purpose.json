@@ -1,0 +1,7 @@
+{
+  "name": "ConsentPurposeTest",
+  "description": "Test purpose for integration testing",
+  "type": "Test",
+  "version": "1",
+  "elements": [{"id": "ELEMENT_ID_PLACEHOLDER", "mandatory": true}]
+}

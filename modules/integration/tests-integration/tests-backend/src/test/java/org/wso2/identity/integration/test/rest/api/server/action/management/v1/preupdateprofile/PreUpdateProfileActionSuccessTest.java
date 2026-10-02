@@ -105,7 +105,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_ATTRIBUTES.toArray()));
 
         testActionId = responseOfPost.getBody().jsonPath().getString("id");
@@ -147,7 +149,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_ATTRIBUTES.toArray()));
     }
 
@@ -199,7 +203,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_APIKEY_HEADER_AUTH_PROPERTY,
+                        equalTo(TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_APIKEY_VALUE_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
@@ -224,7 +230,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_APIKEY_HEADER_AUTH_PROPERTY,
+                        equalTo(TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_APIKEY_VALUE_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
@@ -249,7 +257,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_APIKEY_HEADER_AUTH_PROPERTY,
+                        equalTo(TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_APIKEY_VALUE_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
@@ -279,7 +289,7 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_ACCESS_TOKEN_AUTH_PROPERTY, nullValue())
                 .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
@@ -309,7 +319,7 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_ACCESS_TOKEN_AUTH_PROPERTY, nullValue())
                 .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
@@ -341,7 +351,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
@@ -373,7 +385,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_UPDATED_ATTRIBUTES.toArray()));
     }
 
@@ -398,7 +412,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", containsInAnyOrder(TEST_ATTRIBUTES.toArray()));
     }
 
@@ -423,7 +439,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", equalTo(Collections.singletonList(TEST_DUPLICATED_ATTRIBUTES.get(0))));
     }
 
@@ -505,7 +523,9 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", not(hasKey(ATTRIBUTES)));
 
         deleteAction(PRE_UPDATE_PROFILE_PATH, responseOfPost.getBody().jsonPath().getString("id"));
@@ -581,9 +601,213 @@ public class PreUpdateProfileActionSuccessTest extends PreUpdateProfileTestBase 
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("attributes", equalTo(Collections.singletonList(TEST_DUPLICATED_ATTRIBUTES.get(0))));
 
         deleteAction(PRE_UPDATE_PROFILE_PATH , responseOfPost.getBody().jsonPath().getString("id"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithDuplicatedAttributes"})
+    public void testCreateActionWithPasswordCredentialAuthentication() {
+
+        PreUpdateProfileActionModel passwordCredentialAction = buildPasswordCredentialAction(true);
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, toJSONString(passwordCredentialAction));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        String createdActionId = responseOfPost.getBody().jsonPath().getString("id");
+
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH + "/" + createdActionId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_UPDATE_PROFILE_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialAuthentication"})
+    public void testCreateActionWithPasswordCredentialAuthenticationWithoutScopes() {
+
+        PreUpdateProfileActionModel passwordCredentialAction = buildPasswordCredentialAction(false);
+
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, toJSONString(passwordCredentialAction));
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_UPDATE_PROFILE_PATH, responseOfPost.getBody().jsonPath().getString("id"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialAuthenticationWithoutScopes"})
+    public void testUpdateActionAuthenticationToPasswordCredential() {
+
+        PreUpdateProfileActionModel basicAuthAction = new PreUpdateProfileActionModel();
+        basicAuthAction.setName(TEST_ACTION_NAME);
+        basicAuthAction.setDescription(TEST_ACTION_DESCRIPTION);
+        basicAuthAction.setEndpoint(new Endpoint()
+                .uri(TEST_ENDPOINT_URI)
+                .authentication(new AuthenticationType()
+                        .type(AuthenticationType.TypeEnum.BASIC)
+                        .properties(new HashMap<String, Object>() {{
+                            put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                            put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                        }})));
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, toJSONString(basicAuthAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(buildPasswordCredentialAuthType(true)));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_UPDATE_PROFILE_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionAuthenticationToPasswordCredential"})
+    public void testUpdatePasswordCredentialAuthenticationProperties() {
+
+        PreUpdateProfileActionModel passwordCredentialAction = buildPasswordCredentialAction(true);
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, toJSONString(passwordCredentialAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_UPDATED_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY,
+                                            TEST_UPDATED_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                                            TEST_UPDATED_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_UPDATED_PASSWORD_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_UPDATED_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_UPDATE_PROFILE_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testUpdatePasswordCredentialAuthenticationProperties"})
+    public void testUpdatePasswordCredentialAddScopes() {
+
+        PreUpdateProfileActionModel passwordCredentialAction = buildPasswordCredentialAction(false);
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH, toJSONString(passwordCredentialAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(buildPasswordCredentialAuthType(true)));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_UPDATE_PROFILE_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE));
+
+        deleteAction(PRE_UPDATE_PROFILE_PATH, createdActionId);
+    }
+
+    private PreUpdateProfileActionModel buildPasswordCredentialAction(boolean includeScopes) {
+
+        PreUpdateProfileActionModel actionModel = new PreUpdateProfileActionModel();
+        actionModel.setName(TEST_ACTION_NAME);
+        actionModel.setDescription(TEST_ACTION_DESCRIPTION);
+        actionModel.setEndpoint(new Endpoint()
+                .uri(TEST_ENDPOINT_URI)
+                .authentication(buildPasswordCredentialAuthType(includeScopes)));
+        return actionModel;
+    }
+
+    private AuthenticationType buildPasswordCredentialAuthType(boolean includeScopes) {
+
+        HashMap<String, Object> properties = new HashMap<>();
+        properties.put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+        properties.put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+        properties.put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+        properties.put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+        properties.put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+        if (includeScopes) {
+            properties.put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+        }
+
+        return new AuthenticationType()
+                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                .properties(properties);
     }
 }

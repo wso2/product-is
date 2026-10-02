@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2023-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -35,7 +35,7 @@ public class AccessTokenConfiguration  {
     private Boolean revokeTokensWhenIDPSessionTerminated;
     private Boolean validateTokenBinding;
     private List<String> accessTokenAttributes = null;
-
+    private Boolean enableJwtScopeAsArray;
 
     /**
      **/
@@ -174,6 +174,25 @@ public class AccessTokenConfiguration  {
         return this;
     }
 
+    /**
+    * If enabled, the scope claim in JWT access tokens will be formatted as a JSON array.
+    **/
+    public AccessTokenConfiguration enableJwtScopeAsArray(Boolean enableJwtScopeAsArray) {
+
+        this.enableJwtScopeAsArray = enableJwtScopeAsArray;
+        return this;
+    }
+    
+    @ApiModelProperty(value = "If enabled, the scope claim in JWT access tokens will be formatted as a JSON array.")
+    @JsonProperty("enableJwtScopeAsArray")
+    @Valid
+    public Boolean getEnableJwtScopeAsArray() {
+        return enableJwtScopeAsArray;
+    }
+    public void setEnableJwtScopeAsArray(Boolean enableJwtScopeAsArray) {
+        this.enableJwtScopeAsArray = enableJwtScopeAsArray;
+    }
+
 
 
     @Override
@@ -192,12 +211,13 @@ public class AccessTokenConfiguration  {
                 Objects.equals(this.bindingType, accessTokenConfiguration.bindingType) &&
                 Objects.equals(this.revokeTokensWhenIDPSessionTerminated, accessTokenConfiguration.revokeTokensWhenIDPSessionTerminated) &&
                 Objects.equals(this.validateTokenBinding, accessTokenConfiguration.validateTokenBinding) &&
-                Objects.equals(this.accessTokenAttributes, accessTokenConfiguration.accessTokenAttributes);
+                Objects.equals(this.accessTokenAttributes, accessTokenConfiguration.accessTokenAttributes) &&
+                Objects.equals(this.enableJwtScopeAsArray, accessTokenConfiguration.enableJwtScopeAsArray);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, userAccessTokenExpiryInSeconds, applicationAccessTokenExpiryInSeconds, bindingType, revokeTokensWhenIDPSessionTerminated, validateTokenBinding, accessTokenAttributes);
+        return Objects.hash(type, userAccessTokenExpiryInSeconds, applicationAccessTokenExpiryInSeconds, bindingType, revokeTokensWhenIDPSessionTerminated, validateTokenBinding, accessTokenAttributes, enableJwtScopeAsArray);
     }
 
     @Override
@@ -213,6 +233,7 @@ public class AccessTokenConfiguration  {
         sb.append("    revokeTokensWhenIDPSessionTerminated: ").append(toIndentedString(revokeTokensWhenIDPSessionTerminated)).append("\n");
         sb.append("    validateTokenBinding: ").append(toIndentedString(validateTokenBinding)).append("\n");
         sb.append("    accessTokenAttributes: ").append(toIndentedString(accessTokenAttributes)).append("\n");
+        sb.append("    enableJwtScopeAsArray: ").append(toIndentedString(enableJwtScopeAsArray)).append("\n");
         sb.append("}");
         return sb.toString();
     }

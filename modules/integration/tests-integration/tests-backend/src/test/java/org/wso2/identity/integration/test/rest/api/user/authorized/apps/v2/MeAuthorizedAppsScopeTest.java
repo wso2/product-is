@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

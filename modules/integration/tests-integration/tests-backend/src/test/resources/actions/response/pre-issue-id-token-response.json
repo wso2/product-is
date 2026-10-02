@@ -1,0 +1,74 @@
+{
+  "actionStatus": "SUCCESS",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/idToken/claims/-",
+      "value": {
+        "name": "custom_claim_string_1",
+        "value": "testCustomClaim1"
+      }
+    },
+    {
+      "op": "add",
+      "path": "/idToken/claims/-",
+      "value": {
+        "name": "custom_claim_number_1",
+        "value": 78
+      }
+    },
+    {
+      "op": "add",
+      "path": "/idToken/claims/-",
+      "value": {
+        "name": "custom_claim_boolean_1",
+        "value": true
+      }
+    },
+    {
+      "op": "add",
+      "path": "/idToken/claims/-",
+      "value": {
+        "name": "custom_claim_string_array_1",
+        "value": [
+          "TestCustomClaim1",
+          "TestCustomClaim2",
+          "TestCustomClaim3"
+        ]
+      }
+    },
+    {
+      "op": "add",
+      "path": "/idToken/claims/aud/-",
+      "value": "zzz1.com"
+    },
+    {
+      "op": "add",
+      "path": "/idToken/claims/aud/-",
+      "value": "zzz2.com"
+    },
+    {
+      "op": "add",
+      "path": "/idToken/claims/aud/-",
+      "value": "zzz3.com"
+    },
+    {
+      "op": "replace",
+      "path": "/idToken/claims/aud/-",
+      "value": "zzzR.com"
+    },
+    {
+      "op": "replace",
+      "path": "/idToken/claims/given_name",
+      "value": "replaced_given_name"
+    },
+    {
+      "op": "remove",
+      "path": "/idToken/claims/aud/0"
+    },
+    {
+      "op": "remove",
+      "path": "/idToken/claims/family_name"
+    }
+  ]
+}

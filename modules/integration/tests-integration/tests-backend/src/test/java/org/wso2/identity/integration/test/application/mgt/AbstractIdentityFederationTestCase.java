@@ -1,12 +1,12 @@
 /*
- *  Copyright (c) 2014 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2014-2026, WSO2 LLC. (http://www.wso2.com).
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -53,19 +53,21 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationResponseModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.SAML2ServiceProvider;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.FederatedAuthenticatorRequest;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.IdentityProviderPOSTRequest;
+import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.PatchRequest;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.utils.CommonConstants;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTest {
@@ -252,6 +254,19 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
     public String addIdentityProvider(int portOffset, IdentityProviderPOSTRequest idp) throws Exception {
 
         return identityProviderMgtRestClients.get(portOffset).createIdentityProvider(idp);
+    }
+
+    public void patchIdentityProvider(int portOffset, String idpId, List<PatchRequest> patchRequests)
+            throws Exception {
+
+        identityProviderMgtRestClients.get(portOffset).patchIdentityProvider(idpId, patchRequests);
+    }
+
+    public void updateFederatedAuthenticator(int portOffset, String idpId, String authenticatorId,
+            FederatedAuthenticatorRequest.FederatedAuthenticator authenticator) throws Exception {
+
+        identityProviderMgtRestClients.get(portOffset).updateFederatedAuthenticator(
+                idpId, authenticatorId, authenticator);
     }
 
     public void deleteIdp(int portOffset, String idpId) throws Exception {

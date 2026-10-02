@@ -44,7 +44,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 /**
  * Mock OAuth2 Token Endpoint for testing OAuth2 flows.
- * Supports client_credentials and refresh_token grant types.
+ * Supports client_credentials, password and refresh_token grant types.
  */
 public class MockOAuth2TokenServer {
 
@@ -52,16 +52,19 @@ public class MockOAuth2TokenServer {
     public static final String TOKEN_ENDPOINT_PATH = "/oauth2/token";
     private static final int TOKEN_ENDPOINT_PORT = 8093;
     private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
+    private static final String GRANT_TYPE_PASSWORD = "password";
     private static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
     private static final int DEFAULT_EXPIRES_IN = 3600;
     private static final int DEFAULT_REFRESH_TOKEN_EXPIRES_IN = 86400;
-    
+
     // OAuth2 parameter names
     private static final String PARAM_GRANT_TYPE = "grant_type";
     private static final String PARAM_REFRESH_TOKEN = "refresh_token";
     private static final String PARAM_SCOPE = "scope";
     private static final String PARAM_CLIENT_ID = "client_id";
     private static final String PARAM_CLIENT_SECRET = "client_secret";
+    private static final String PARAM_USERNAME = "username";
+    private static final String PARAM_PASSWORD = "password";
     
     // OAuth2 response field names
     private static final String RESPONSE_ACCESS_TOKEN = "access_token";
@@ -230,7 +233,7 @@ public class MockOAuth2TokenServer {
             lastRequestHeaders.set(requestHeaders);
 
             String requestBody = request.getBodyAsString();
-            Map<String, String> params = parseJsonBody(requestBody);
+            Map<String, String> params = resolveParam(requestBody);
             lastRequestBodyContent.set(params);
 
             String grantType = params.get(PARAM_GRANT_TYPE);
@@ -242,6 +245,8 @@ public class MockOAuth2TokenServer {
             try {
                 if (GRANT_TYPE_CLIENT_CREDENTIALS.equals(grantType)) {
                     tokenResponse = handleClientCredentialsGrant(params, requestHeaders);
+                } else if (GRANT_TYPE_PASSWORD.equals(grantType)) {
+                    tokenResponse = handlePasswordGrant(params, requestHeaders);
                 } else if (GRANT_TYPE_REFRESH_TOKEN.equals(grantType)) {
                     tokenResponse = handleRefreshTokenGrant(params, requestHeaders);
                 } else {
@@ -265,6 +270,25 @@ public class MockOAuth2TokenServer {
             validateClientAuthentication(params, headers);
 
             // Generate and store new tokens
+            TokenPair tokens = generateAndStoreTokens();
+
+            return buildTokenResponse(tokens.accessToken, tokens.refreshToken, params.get(PARAM_SCOPE));
+        }
+
+        private JSONObject handlePasswordGrant(Map<String, String> params,
+                                                Map<String, String> headers) throws Exception {
+
+            // Validate client authentication.
+            validateClientAuthentication(params, headers);
+
+            // Validate resource owner credentials.
+            String username = params.get(PARAM_USERNAME);
+            String password = params.get(PARAM_PASSWORD);
+            if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+                throw new Exception("username and password are required");
+            }
+
+            // Generate and store new tokens.
             TokenPair tokens = generateAndStoreTokens();
 
             return buildTokenResponse(tokens.accessToken, tokens.refreshToken, params.get(PARAM_SCOPE));
@@ -366,24 +390,17 @@ public class MockOAuth2TokenServer {
             return TOKEN_PREFIX_REFRESH + UUID.randomUUID().toString().replace("-", "");
         }
 
-        private Map<String, String> parseJsonBody(String body) {
+        private Map<String, String> resolveParam(String body) {
 
             Map<String, String> params = new HashMap<>();
             if (body == null || body.isEmpty()) {
                 return params;
             }
 
-            try {
-                JSONObject jsonObject = new JSONObject(body);
-                @SuppressWarnings("unchecked")
-                java.util.Iterator<String> keys = jsonObject.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    Object value = jsonObject.get(key);
-                    params.put(key, value != null ? value.toString() : null);
-                }
-            } catch (JSONException e) {
-                throw new RuntimeException("Failed to parse JSON body: " + body, e);
+            String[] keyValuePair = body.split("&");
+            for (String pair : keyValuePair) {
+                String[] keyValue = pair.split("=");
+                params.put(keyValue[0], keyValue[1]);
             }
             return params;
         }

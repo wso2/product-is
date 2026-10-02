@@ -19,7 +19,7 @@ package org.wso2.identity.integration.test.rest.api.server.permission.management
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.apache.axis2.AxisFault;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.json.JSONException;
 import org.testng.Assert;

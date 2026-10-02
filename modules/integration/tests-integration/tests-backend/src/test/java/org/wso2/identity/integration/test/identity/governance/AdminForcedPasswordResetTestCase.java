@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.identity.governance;
 import com.google.gson.Gson;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import jakarta.mail.Message;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.testng.annotations.AfterClass;

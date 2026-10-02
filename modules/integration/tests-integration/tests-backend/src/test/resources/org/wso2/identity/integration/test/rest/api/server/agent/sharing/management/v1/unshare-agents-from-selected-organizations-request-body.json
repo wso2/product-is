@@ -1,0 +1,10 @@
+{
+  "agentCriteria": {
+    "agentIds": [
+      "AGENT_ID"
+    ]
+  },
+  "orgIds": [
+    "ORG_ID"
+  ]
+}

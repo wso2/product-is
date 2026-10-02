@@ -19,7 +19,7 @@
 package org.wso2.identity.integration.test.scim2.rest.api;
 
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.testng.Assert;
 import org.wso2.carbon.identity.user.store.configuration.stub.dto.PropertyDTO;

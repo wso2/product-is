@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.extension.management.
 
 import io.restassured.RestAssured;
 import java.io.IOException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;

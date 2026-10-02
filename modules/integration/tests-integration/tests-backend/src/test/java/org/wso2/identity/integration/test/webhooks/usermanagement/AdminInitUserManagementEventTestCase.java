@@ -66,7 +66,7 @@ public class AdminInitUserManagementEventTestCase extends ISIntegrationTest {
 
         enableUserAccountDisablingFeature();
 
-        webhookEventTestManager = new WebhookEventTestManager("/scim2/webhook", "WSO2",
+        webhookEventTestManager = new WebhookEventTestManager("/scim2/users/webhook", "WSO2",
                 Arrays.asList("https://schemas.identity.wso2.org/events/user",
                         "https://schemas.identity.wso2.org/events/registration"),
                 "AdminInitUserManagementEventTestCase",
@@ -103,10 +103,10 @@ public class AdminInitUserManagementEventTestCase extends ISIntegrationTest {
     public void testCreateUser() throws Exception {
 
         UserObject userInfo = new UserObject()
-                .userName("test-user")
+                .userName("AdminInitUserManagementEventTestCase-user")
                 .password("TestPassword@123")
                 .name(new Name().givenName("test-user-given-name").familyName("test-user-last-name"))
-                .addEmail(new Email().value("test-user@test.com"));
+                .addEmail(new Email().value("AdminInitUserManagementEventTestCase-user@test.com"));
         userId = scim2RestClient.createUser(userInfo);
         assertNotNull(userId);
 
@@ -153,7 +153,8 @@ public class AdminInitUserManagementEventTestCase extends ISIntegrationTest {
 
         UserItemAddGroupobj replaceEmails = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REPLACE);
         replaceEmails.setPath("urn:scim:wso2:schema:emailAddresses");
-        replaceEmails.setValue(Arrays.asList("test-user-personal@test.com", "test-user-work@test.com"));
+        replaceEmails.setValue(Arrays.asList("AdminInitUserManagementEventTestCase-user-personal@test.com",
+                "AdminInitUserManagementEventTestCase-user-work@test.com"));
         patchRequest.addOperations(replaceEmails);
 
         UserItemAddGroupobj removeGivenName = new UserItemAddGroupobj().op(UserItemAddGroupobj.OpEnum.REMOVE);

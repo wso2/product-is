@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringJoiner;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ALWAYS;
 import static org.wso2.identity.scenarios.commons.util.Constants.APPROVE_ONCE;

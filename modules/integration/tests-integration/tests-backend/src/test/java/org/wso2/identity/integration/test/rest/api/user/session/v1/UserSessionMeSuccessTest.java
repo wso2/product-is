@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.rest.api.user.session.v1;
 
 import io.restassured.RestAssured;
 import org.apache.axis2.AxisFault;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.testng.annotations.AfterClass;

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -93,8 +93,12 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     }
 
     @AfterClass(alwaysRun = true)
-    public void testConclude() {
+    public void testConclude() throws IOException {
 
+        RestAssured.basePath = basePath;
+        String body = readResource("disable-password-expiry.json");
+        getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/" + CATEGORY_PASSWORD_POLICIES
+                + "/connectors/" + CONNECTOR_PASSWORD_EXPIRY, body);
         super.conclude();
     }
 

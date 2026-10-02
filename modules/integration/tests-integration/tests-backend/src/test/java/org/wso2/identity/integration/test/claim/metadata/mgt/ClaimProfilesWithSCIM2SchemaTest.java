@@ -18,7 +18,7 @@
 
 package org.wso2.identity.integration.test.claim.metadata.mgt;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.testng.Assert;

@@ -84,8 +84,19 @@ public class PreUpdatePasswordTestBase extends ActionTestBase {
     protected static final List<String> TEST_UPDATED_ATTRIBUTES = Arrays.asList("http://wso2.org/claims/country",
             "http://wso2.org/claims/created");
 
-    protected static final List<String> INVALID_TEST_ATTRIBUTES_COUNT =  Collections.nCopies(11,
-            "http://wso2.org/claims/active");
+    protected static final List<String> INVALID_TEST_ATTRIBUTES_COUNT =  Arrays.asList(
+            "http://wso2.org/claims/externalid",
+            "http://wso2.org/claims/userType",
+            "http://wso2.org/claims/username",
+            "http://wso2.org/claims/givenname",
+            "http://wso2.org/claims/displayName",
+            "http://wso2.org/claims/emailaddress",
+            "http://wso2.org/claims/identity/lastLoginTime",
+            "http://wso2.org/claims/active",
+            "http://wso2.org/claims/identity/lastPasswordUpdateTime",
+            "http://wso2.org/claims/identity/isLiteUser",
+            "http://wso2.org/claims/identity/accountState");
+
     protected static final List<String> TEST_DUPLICATED_ATTRIBUTES =  Collections.nCopies(2,
             "http://wso2.org/claims/active");
     public static final List<String> INVALID_TEST_ATTRIBUTES = Collections.singletonList("invalidattribute");

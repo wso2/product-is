@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2021-2025, WSO2 LLC. (http://www.wso2.com).
+  ~ Copyright (c) 2021-2026, WSO2 LLC. (http://www.wso2.com).
   ~
   ~ WSO2 LLC. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -64,6 +64,7 @@
                 org.wso2.carbon.identity.api.server.organization.role.management.v1.OrganizationsApi,
                 org.wso2.carbon.identity.api.server.organization.user.invitation.management.v1.GuestsApi,
                 org.wso2.carbon.identity.api.server.organization.user.sharing.management.v1.UsersApi,
+                org.wso2.carbon.identity.api.server.organization.agent.sharing.management.v1.AgentsApi,
                 org.wso2.carbon.identity.api.server.organization.configs.v1.OrganizationConfigsApi,
                 org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
@@ -80,7 +81,11 @@
                 org.wso2.carbon.identity.api.server.flow.execution.v1.FlowApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowsApi,
                 org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowAssociationsApi,
-                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi
+                org.wso2.carbon.identity.rest.api.server.workflow.v1.WorkflowInstancesApi,
+                org.wso2.carbon.identity.api.server.vc.template.management.v1.VcTemplatesApi,
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
+                org.wso2.carbon.identity.api.server.moesif.publisher.v1.MoesifPublishersApi,
+				org.wso2.carbon.identity.api.server.organization.capability.governance.v1.OrgGovernanceApi
             </param-value>
         </init-param>
         <init-param>
@@ -118,7 +123,8 @@
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
                 org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
-                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -172,7 +178,9 @@
                 org.wso2.carbon.identity.api.server.organization.selfservice.v1.SelfServiceApi,
                 org.wso2.carbon.identity.api.expired.password.identification.v1.PasswordExpiredUsersApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.ApiResourcesApi,
-                org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi
+                org.wso2.carbon.identity.api.server.api.resource.v1.ScopesApi,
+                org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
+                org.wso2.carbon.identity.api.server.organization.capability.governance.v1.OrgGovernanceApi
             </param-value>
         </init-param>
         <init-param>
@@ -210,7 +218,8 @@
             <param-name>jaxrs.serviceClasses</param-name>
             <param-value>
                 org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
-                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi
+                org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi,
+                org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -367,7 +376,9 @@
                 org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
-                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi
+                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
+                org.wso2.carbon.identity.api.user.password.v1.MeApi,
+                org.wso2.carbon.identity.api.user.consent.v1.MeApi
             </param-value>
         </init-param>
         <init-param>
@@ -435,7 +446,8 @@
                 org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.UserIdApi,
                 org.wso2.carbon.identity.rest.api.user.authorized.apps.v2.AuthorizedAppsApi,
                 org.wso2.carbon.identity.rest.api.user.recovery.v2.RecoveryApi,
-                org.wso2.carbon.identity.rest.api.user.approval.v2.MeApi
+                org.wso2.carbon.identity.rest.api.user.approval.v2.MeApi,
+                org.wso2.carbon.identity.rest.api.user.credential.v2.UsersApi
             </param-value>
         </init-param>
         <init-param>
@@ -524,7 +536,9 @@
                 org.wso2.carbon.identity.rest.api.user.totp.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.MeApi,
                 org.wso2.carbon.identity.rest.api.user.idv.v1.DefaultApi,
-                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi
+                org.wso2.carbon.identity.api.user.onboard.v1.OfflineInviteLinkApi,
+                org.wso2.carbon.identity.api.user.password.v1.MeApi,
+                org.wso2.carbon.identity.api.user.consent.v1.MeApi
             </param-value>
         </init-param>
         <init-param>
@@ -704,6 +718,45 @@
     <servlet-mapping>
         <servlet-name>IdentityConsentMgtV1ApiServlet</servlet-name>
         <url-pattern>/identity/consent-mgt/v1.0/*</url-pattern>
+    </servlet-mapping>
+
+    <!-- Servlet instance for /identity/consent-mgt/v2.0 -->
+    <servlet>
+        <servlet-name>IdentityConsentMgtV2ApiServlet</servlet-name>
+        <servlet-class>
+            org.wso2.carbon.identity.servlet.mgt.CustomCXFNonSpringJaxrsServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>jaxrs.serviceClasses</param-name>
+            <param-value>
+                org.wso2.carbon.identity.api.server.consent.management.v2.ConsentsApi,
+                org.wso2.carbon.identity.api.server.consent.management.v2.PurposesApi,
+                org.wso2.carbon.identity.api.server.consent.management.v2.ElementsApi
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.providers</param-name>
+            <param-value>
+                org.wso2.carbon.identity.servlet.mgt.CustomJacksonJsonProvider,
+                com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider,
+                org.wso2.carbon.identity.api.dispatcher.core.JsonProcessingExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.APIErrorExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.InputValidationExceptionMapper,
+                org.wso2.carbon.identity.api.dispatcher.core.DefaultExceptionMapper,
+                org.apache.cxf.jaxrs.ext.search.SearchContextProvider
+            </param-value>
+        </init-param>
+        <init-param>
+            <param-name>jaxrs.inInterceptors</param-name>
+            <param-value>
+                org.wso2.carbon.identity.servlet.mgt.CustomBeanValidationInterceptor
+            </param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>IdentityConsentMgtV2ApiServlet</servlet-name>
+        <url-pattern>/identity/consent-mgt/v2.0/*</url-pattern>
     </servlet-mapping>
 
     <!--  Servlet instance for /identity/oauth2/dcr/v1.1 -->

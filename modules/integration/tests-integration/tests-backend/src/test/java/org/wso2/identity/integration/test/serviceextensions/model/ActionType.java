@@ -22,7 +22,9 @@ package org.wso2.identity.integration.test.serviceextensions.model;
  * This class models the Action Type.
  */
 public enum ActionType {
+
     PRE_ISSUE_ACCESS_TOKEN,
+    PRE_ISSUE_ID_TOKEN,
     PRE_UPDATE_PASSWORD,
     PRE_UPDATE_PROFILE
 }

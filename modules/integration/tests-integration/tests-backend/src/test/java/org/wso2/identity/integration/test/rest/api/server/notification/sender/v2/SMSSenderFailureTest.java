@@ -21,7 +21,7 @@ package org.wso2.identity.integration.test.rest.api.server.notification.sender.v
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
@@ -314,6 +314,141 @@ public class SMSSenderFailureTest extends SMSSenderTestBase {
                 + "  \"properties\": {"
                 + "    \"clientId\": \"testClient\","
                 + "    \"clientSecret\": \"testSecret\""
+                + "  }"
+                + "},"
+                + "\"properties\": ["
+                + "  {\"key\": \"body\", \"value\": \"{\\\"content\\\": {{body}}, \\\"to\\\": {{mobile}} }\"}"
+                + "]"
+                + "}";
+
+        Response response =
+                getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60012");
+    }
+
+    @Test
+    public void testAddSmsSenderWithMissingPasswordCredentialClientId() throws IOException {
+
+        // Create SMS sender with PASSWORD_CREDENTIAL auth but missing clientId
+        String body = "{"
+                + "\"provider\": \"Custom\","
+                + "\"providerURL\": \"https://example.sms.sender\","
+                + "\"contentType\": \"JSON\","
+                + "\"authentication\": {"
+                + "  \"type\": \"PASSWORD_CREDENTIAL\","
+                + "  \"properties\": {"
+                + "    \"clientSecret\": \"testSecret\","
+                + "    \"username\": \"testUsername\","
+                + "    \"password\": \"testPassword\","
+                + "    \"tokenEndpoint\": \"https://auth.example.com/token\""
+                + "  }"
+                + "},"
+                + "\"properties\": ["
+                + "  {\"key\": \"body\", \"value\": \"{\\\"content\\\": {{body}}, \\\"to\\\": {{mobile}} }\"}"
+                + "]"
+                + "}";
+
+        Response response =
+                getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60012");
+    }
+
+    @Test
+    public void testAddSmsSenderWithMissingPasswordCredentialClientSecret() throws IOException {
+
+        // Create SMS sender with PASSWORD_CREDENTIAL auth but missing clientSecret
+        String body = "{"
+                + "\"provider\": \"Custom\","
+                + "\"providerURL\": \"https://example.sms.sender\","
+                + "\"contentType\": \"JSON\","
+                + "\"authentication\": {"
+                + "  \"type\": \"PASSWORD_CREDENTIAL\","
+                + "  \"properties\": {"
+                + "    \"clientId\": \"testClient\","
+                + "    \"username\": \"testUsername\","
+                + "    \"password\": \"testPassword\","
+                + "    \"tokenEndpoint\": \"https://auth.example.com/token\""
+                + "  }"
+                + "},"
+                + "\"properties\": ["
+                + "  {\"key\": \"body\", \"value\": \"{\\\"content\\\": {{body}}, \\\"to\\\": {{mobile}} }\"}"
+                + "]"
+                + "}";
+
+        Response response =
+                getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60012");
+    }
+
+    @Test
+    public void testAddSmsSenderWithMissingPasswordCredentialUsername() throws IOException {
+
+        // Create SMS sender with PASSWORD_CREDENTIAL auth but missing username
+        String body = "{"
+                + "\"provider\": \"Custom\","
+                + "\"providerURL\": \"https://example.sms.sender\","
+                + "\"contentType\": \"JSON\","
+                + "\"authentication\": {"
+                + "  \"type\": \"PASSWORD_CREDENTIAL\","
+                + "  \"properties\": {"
+                + "    \"clientId\": \"testClient\","
+                + "    \"clientSecret\": \"testSecret\","
+                + "    \"password\": \"testPassword\","
+                + "    \"tokenEndpoint\": \"https://auth.example.com/token\""
+                + "  }"
+                + "},"
+                + "\"properties\": ["
+                + "  {\"key\": \"body\", \"value\": \"{\\\"content\\\": {{body}}, \\\"to\\\": {{mobile}} }\"}"
+                + "]"
+                + "}";
+
+        Response response =
+                getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60012");
+    }
+
+    @Test
+    public void testAddSmsSenderWithMissingPasswordCredentialPassword() throws IOException {
+
+        // Create SMS sender with PASSWORD_CREDENTIAL auth but missing password
+        String body = "{"
+                + "\"provider\": \"Custom\","
+                + "\"providerURL\": \"https://example.sms.sender\","
+                + "\"contentType\": \"JSON\","
+                + "\"authentication\": {"
+                + "  \"type\": \"PASSWORD_CREDENTIAL\","
+                + "  \"properties\": {"
+                + "    \"clientId\": \"testClient\","
+                + "    \"clientSecret\": \"testSecret\","
+                + "    \"username\": \"testUsername\","
+                + "    \"tokenEndpoint\": \"https://auth.example.com/token\""
+                + "  }"
+                + "},"
+                + "\"properties\": ["
+                + "  {\"key\": \"body\", \"value\": \"{\\\"content\\\": {{body}}, \\\"to\\\": {{mobile}} }\"}"
+                + "]"
+                + "}";
+
+        Response response =
+                getResponseOfPost(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR + SMS_SENDERS_PATH, body);
+        validateErrorResponse(response, HttpStatus.SC_BAD_REQUEST, "NSM-60012");
+    }
+
+    @Test
+    public void testAddSmsSenderWithMissingPasswordCredentialTokenEndpoint() throws IOException {
+
+        // Create SMS sender with PASSWORD_CREDENTIAL auth but missing tokenEndpoint
+        String body = "{"
+                + "\"provider\": \"Custom\","
+                + "\"providerURL\": \"https://example.sms.sender\","
+                + "\"contentType\": \"JSON\","
+                + "\"authentication\": {"
+                + "  \"type\": \"PASSWORD_CREDENTIAL\","
+                + "  \"properties\": {"
+                + "    \"clientId\": \"testClient\","
+                + "    \"clientSecret\": \"testSecret\","
+                + "    \"username\": \"testUsername\","
+                + "    \"password\": \"testPassword\""
                 + "  }"
                 + "},"
                 + "\"properties\": ["

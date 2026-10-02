@@ -42,6 +42,8 @@ public class Authentication {
     public enum TypeEnum {
         @SerializedName("CLIENT_CREDENTIAL")
         CLIENT_CREDENTIAL("CLIENT_CREDENTIAL"),
+        @SerializedName("PASSWORD_CREDENTIAL")
+        PASSWORD_CREDENTIAL("PASSWORD_CREDENTIAL"),
         @SerializedName("BASIC")
         BASIC("BASIC"),
         @SerializedName("API_KEY")

@@ -18,7 +18,7 @@
 
 package org.wso2.identity.integration.common.utils;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
@@ -173,6 +173,32 @@ public class ISIntegrationTest {
             return endpointURL;
         } catch (XPathExpressionException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get the root tenant qualified organization endpoint URL. The URL will be in the format
+     * https://<HOST>:<PORT>/t/<ROOT_TENANT_DOMAIN>/o/<SUB_ORG_ID>/endpointURL
+     *
+     * @param endpointURL The endpoint URL with the hostname.
+     * @param rootTenantDomain Root organization tenant domain.
+     * @param organizationId Sub organization id.
+     * @return Tenant perspective endpoint URL with the root tenant domain and the sub organization id with
+     * above-mentioned format.
+     */
+    public String getRootTenantQualifiedOrgURL(String endpointURL, String rootTenantDomain, String organizationId) {
+
+        if (StringUtils.isEmpty(rootTenantDomain)) {
+            throw new IllegalArgumentException("Tenant domain is null or empty");
+        }
+
+        try {
+            String baseURL = getBaseURL();
+            return endpointURL.replace(baseURL,
+                    baseURL + TENANTED_URL_PATH_SPECIFIER + rootTenantDomain +
+                            ORGANIZATION_PATH_SPECIFIER + "/" + organizationId);
+        } catch (XPathExpressionException e) {
+            throw new IllegalStateException("Failed to retrieve base URL from configuration", e);
         }
     }
 

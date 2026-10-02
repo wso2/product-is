@@ -21,7 +21,7 @@ package org.wso2.identity.integration.test.user.store.config;
 
 import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

@@ -55,6 +55,9 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
+
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 
 /**
  * Integration test class for testing the pre update profile action execution.
@@ -72,6 +75,7 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
     private String clientSecret;
     private String actionId;
     private String userId;
+    private String userAccessToken;
     private ApplicationResponseModel application;
     private ServiceExtensionMockServer serviceExtensionMockServer;
     private final ActionResponse actionResponse;
@@ -121,10 +125,13 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
 
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
-        application = addApplicationWithGrantType(CLIENT_CREDENTIALS_GRANT_TYPE);
+        application = createApplicationWithGrantTypes(CLIENT_CREDENTIALS_GRANT_TYPE, OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE,
+                OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER);
         OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(application.getId());
         clientId = oidcConfig.getClientId();
         clientSecret = oidcConfig.getClientSecret();
+
+        authorizeScim2MeApi(application.getId());
 
         UserObject userInfo = new UserObject()
                 .userName(TEST_USER1_USERNAME)
@@ -134,6 +141,9 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
         userId = scim2RestClient.createUser(userInfo);
 
         actionId = createPreUpdateProfileAction(ACTION_NAME, ACTION_DESCRIPTION);
+
+        userAccessToken = getUserAccessToken(clientId, clientSecret,
+                TEST_USER1_USERNAME, TEST_USER_PASSWORD);
 
         serviceExtensionMockServer = new ServiceExtensionMockServer();
         serviceExtensionMockServer.startServer();
@@ -172,8 +182,7 @@ public class PreUpdateProfileActionFailureTestCase extends PreUpdateProfileActio
         userPatchOp.setValue(TEST_USER_UPDATED_CLAIM_VALUE);
         PatchOperationRequestObject patchUserInfo = new PatchOperationRequestObject()
                 .addOperations(userPatchOp);
-        org.json.simple.JSONObject response = scim2RestClient.updateUserMe(patchUserInfo,
-                TEST_USER1_USERNAME + "@" + tenantInfo.getDomain(), TEST_USER_PASSWORD);
+        org.json.simple.JSONObject response = scim2RestClient.updateUserMeWithToken(patchUserInfo, userAccessToken);
 
         assertNotNull(response);
         String status = response.get("status").toString();

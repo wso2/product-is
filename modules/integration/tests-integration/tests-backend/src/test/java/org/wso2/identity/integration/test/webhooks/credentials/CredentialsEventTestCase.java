@@ -67,7 +67,7 @@ public class CredentialsEventTestCase extends ISIntegrationTest {
                 .addEmail(new Email().value("test-user@test.com"));
         userId = scim2RestClient.createUser(userInfo);
 
-        webhookEventTestManager = new WebhookEventTestManager("/scim2/webhook", "WSO2",
+        webhookEventTestManager = new WebhookEventTestManager("/scim2/credential/webhook", "WSO2",
                 Arrays.asList("https://schemas.identity.wso2.org/events/user",
                         "https://schemas.identity.wso2.org/events/credential"),
                 "CredentialsEventTestCase",

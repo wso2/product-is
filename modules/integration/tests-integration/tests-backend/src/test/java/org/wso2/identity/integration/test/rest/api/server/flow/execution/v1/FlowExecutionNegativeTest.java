@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2025-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -28,9 +28,13 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.Error;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,10 +48,15 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
 
     private static final String ACTION_ID = "button_5zqc";
     public static final String USER = "RegExecNegTestUser";
+    private static final String SECONDARY_TEST_USER = "RegExecNegSecondaryUser";
+    private static final String SECONDARY_TEST_USER_EMAIL = "reg.exec.neg.dup@example.com";
+    private static final String SECONDARY_TEST_USER_PASSWORD = "Wso2@Test1";
     private FlowExecutionClient flowExecutionClient;
     private FlowManagementClient flowManagementClient;
     private IdentityGovernanceRestClient identityGovernanceRestClient;
+    private SCIM2RestClient scim2RestClient;
     private static String flowId;
+    private String secondaryTestUserId;
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
@@ -75,7 +84,15 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
         flowExecutionClient = new FlowExecutionClient(serverURL, tenantInfo);
         flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         identityGovernanceRestClient = new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         addRegistrationFlow(flowManagementClient);
+
+        UserObject secondaryUser = new UserObject()
+                .userName(SECONDARY_TEST_USER)
+                .password(SECONDARY_TEST_USER_PASSWORD)
+                .name(new Name().givenName("Secondary").familyName("User"))
+                .addEmail(new Email().value(SECONDARY_TEST_USER_EMAIL));
+        secondaryTestUserId = scim2RestClient.createUser(secondaryUser);
     }
 
     @AfterClass(alwaysRun = true)
@@ -83,9 +100,13 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
 
         super.conclude();
         disableFlow(REGISTRATION, flowManagementClient);
+        if (secondaryTestUserId != null) {
+            scim2RestClient.deleteUser(secondaryTestUserId);
+        }
         identityGovernanceRestClient.closeHttpClient();
         flowManagementClient.closeHttpClient();
         flowExecutionClient.closeHttpClient();
+        scim2RestClient.closeHttpClient();
     }
 
     @Test
@@ -185,6 +206,33 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
         Assert.assertNotNull(error);
         Assert.assertNotNull(error.getCode());
         Assert.assertEquals(error.getCode(), "FE-60008");
+    }
+
+    @Test(dependsOnMethods = "testExecuteFlowWithInvalidInputs")
+    public void testExecuteFlowWithDuplicateUsername() throws Exception {
+
+        initiateFlow();
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("http://wso2.org/claims/username", SECONDARY_TEST_USER);
+        inputs.put("password", "Wso2@Test2");
+        inputs.put("http://wso2.org/claims/emailaddress", "another.dup@example.com");
+        inputs.put("http://wso2.org/claims/givenname", "Another");
+        inputs.put("http://wso2.org/claims/lastname", "User");
+        Object responseObj = flowExecutionClient.executeFlow(getFlowExecutionRequest(flowId, inputs));
+        Assert.assertTrue(responseObj instanceof FlowExecutionResponse,
+                "Expected FlowExecutionResponse for duplicate username but got: " +
+                        (responseObj != null ? responseObj.getClass().getName() : "null"));
+        FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
+        Assert.assertNotNull(response);
+        Assert.assertEquals(response.getFlowStatus(), STATUS_INCOMPLETE,
+                "Expected INCOMPLETE status when duplicate username is submitted.");
+        Assert.assertEquals(response.getType().toString(), TYPE_VIEW,
+                "Expected VIEW type when duplicate username is submitted.");
+        Assert.assertNotNull(response.getData());
+        Assert.assertNotNull(response.getData().getAdditionalData(),
+                "Expected additionalData with validation error for duplicate username.");
+        Assert.assertNotNull(response.getData().getAdditionalData().get("error"),
+                "Expected 'error' key in additionalData for duplicate username.");
     }
 
     private static FlowExecutionRequest getFlowExecutionRequest(String flowId,

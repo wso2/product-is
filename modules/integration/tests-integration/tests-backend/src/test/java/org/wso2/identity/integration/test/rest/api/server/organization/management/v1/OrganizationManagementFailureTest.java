@@ -19,7 +19,7 @@
 package org.wso2.identity.integration.test.rest.api.server.organization.management.v1;
 
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -353,7 +353,7 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
                 // User email with invalid email domain.
                 {"johndoe@cde.com", EMAIL_DOMAIN_DISCOVERY, "Can't+identify+organization"},
                 // Invalid organization discovery type.
-                {B2B_USER_EMAIL, "invalidDiscovery", "invalid.organization.discovery.type"},
+                {B2B_USER_EMAIL, "invalidDiscovery", null},
         };
     }
 

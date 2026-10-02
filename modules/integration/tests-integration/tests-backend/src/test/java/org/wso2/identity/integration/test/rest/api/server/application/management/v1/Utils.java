@@ -15,7 +15,7 @@
  */
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 
 /**

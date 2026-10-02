@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -43,6 +43,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.nullValue;
 
 /**
  * Tests for happy paths of the Action Management REST API.
@@ -111,7 +112,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)));
 
         testActionId = responseOfPost.getBody().jsonPath().getString("id");
     }
@@ -152,7 +155,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)));
     }
 
     @Test(dependsOnMethods = {"testGetActionByActionId"})
@@ -202,7 +207,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_APIKEY_HEADER_AUTH_PROPERTY,
+                        equalTo(TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_APIKEY_VALUE_AUTH_PROPERTY)));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAllProperties"})
@@ -225,7 +232,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_APIKEY_HEADER_AUTH_PROPERTY,
+                        equalTo(TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_APIKEY_VALUE_AUTH_PROPERTY)));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingName"})
@@ -249,7 +258,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.API_KEY.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_APIKEY_HEADER_AUTH_PROPERTY,
+                        equalTo(TEST_APIKEY_HEADER_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_APIKEY_VALUE_AUTH_PROPERTY)));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingEndpoint"})
@@ -278,7 +289,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_ACCESS_TOKEN_AUTH_PROPERTY, nullValue());
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAuthentication"})
@@ -307,7 +318,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BEARER.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_ACCESS_TOKEN_AUTH_PROPERTY, nullValue());
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingAuthenticationProperties"})
@@ -338,7 +349,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_UPDATED_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingEndpointUriAndAuthentication"})
@@ -369,7 +382,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)));
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)));
     }
 
     @Test(dependsOnMethods = {"testUpdateActionUpdatingEndpointUriAndAuthenticationProperties"})
@@ -400,7 +415,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("rule.condition", equalTo("OR"))
                 .body("rule.rules[0].condition", equalTo("AND"))
                 .body("rule.rules[0].expressions[0].field", equalTo("application"))
@@ -442,7 +459,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("rule.condition", equalTo("OR"))
                 .body("rule.rules[0].condition", equalTo("AND"))
                 .body("rule.rules[0].expressions[0].field", equalTo("application"))
@@ -479,7 +498,9 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
                 .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
                 .body("endpoint.authentication.type", equalTo(AuthenticationType.TypeEnum.BASIC.toString()))
-                .body("endpoint.authentication", not(hasKey(TEST_PROPERTIES_AUTH_ATTRIBUTE)))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties", not(hasKey(TEST_PASSWORD_AUTH_PROPERTY)))
                 .body("$", not(hasKey("rule")));
     }
 
@@ -613,5 +634,490 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
                 .body("rule.rules[0].expressions[1].value", equalTo("authorization_code"));
 
         deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, responseOfPost.getBody().jsonPath().getString("id"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithRule"})
+    public void testCreateActionWithClientCredentialAuthentication() {
+
+        ActionModel clientCredentialAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(clientCredentialAction);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("id", notNullValue())
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("version", equalTo(TEST_ACTION_VERSION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue());
+
+        String createdActionId = responseOfPost.getBody().jsonPath().getString("id");
+
+        // Verify GET by id returns the same auth properties (and clientSecret is still hidden).
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(createdActionId))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialAuthentication"})
+    public void testCreateActionWithClientCredentialAuthenticationWithoutScopes() {
+
+        ActionModel clientCredentialAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(clientCredentialAction);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, responseOfPost.getBody().jsonPath().getString("id"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithClientCredentialAuthenticationWithoutScopes"})
+    public void testUpdateActionAuthenticationToClientCredential() {
+
+        // Start with a BASIC auth action and update its endpoint auth to CLIENT_CREDENTIAL.
+        ActionModel basicAuthAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(basicAuthAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(createdActionId))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionAuthenticationToClientCredential"})
+    public void testUpdateClientCredentialAuthenticationProperties() {
+
+        // Create an action with CLIENT_CREDENTIAL auth and update each property (including secret and scopes).
+        ActionModel clientCredentialAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(clientCredentialAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_UPDATED_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY,
+                                            TEST_UPDATED_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                                            TEST_UPDATED_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_UPDATED_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(createdActionId))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testUpdateClientCredentialAuthenticationProperties"})
+    public void testCreateActionWithPasswordCredentialAuthentication() {
+
+        ActionModel passwordCredentialAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(passwordCredentialAction);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("id", notNullValue())
+                .body("name", equalTo(TEST_ACTION_NAME))
+                .body("description", equalTo(TEST_ACTION_DESCRIPTION))
+                .body("version", equalTo(TEST_ACTION_VERSION))
+                .body("status", equalTo(TEST_ACTION_INACTIVE_STATUS))
+                .body("endpoint.uri", equalTo(TEST_ENDPOINT_URI))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        String createdActionId = responseOfPost.getBody().jsonPath().getString("id");
+
+        Response responseOfGet = getResponseOfGet(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId);
+        responseOfGet.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(createdActionId))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialAuthentication"})
+    public void testCreateActionWithPasswordCredentialAuthenticationWithoutScopes() {
+
+        ActionModel passwordCredentialAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        String body = toJSONString(passwordCredentialAction);
+        Response responseOfPost = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, responseOfPost.getBody().jsonPath().getString("id"));
+    }
+
+    @Test(dependsOnMethods = {"testCreateActionWithPasswordCredentialAuthenticationWithoutScopes"})
+    public void testUpdateActionAuthenticationToPasswordCredential() {
+
+        ActionModel basicAuthAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.BASIC)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(basicAuthAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(createdActionId))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testUpdateActionAuthenticationToPasswordCredential"})
+    public void testUpdatePasswordCredentialAuthenticationProperties() {
+
+        ActionModel passwordCredentialAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(passwordCredentialAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_UPDATED_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY,
+                                            TEST_UPDATED_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                                            TEST_UPDATED_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY,
+                                            TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY,
+                                            TEST_UPDATED_PASSWORD_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_UPDATED_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(createdActionId))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_ID_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_CLIENT_ID_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_TOKEN_ENDPOINT_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_USERNAME_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_USERNAME_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_UPDATED_SCOPES_AUTH_PROPERTY_VALUE))
+                .body("endpoint.authentication.properties." + TEST_CLIENT_SECRET_AUTH_PROPERTY, nullValue())
+                .body("endpoint.authentication.properties." + TEST_PASSWORD_AUTH_PROPERTY, nullValue());
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
+    }
+
+    @Test(dependsOnMethods = {"testUpdatePasswordCredentialAuthenticationProperties"})
+    public void testUpdatePasswordCredentialAddScopes() {
+
+        ActionModel passwordCredentialAction = new ActionModel()
+                .name(TEST_ACTION_NAME)
+                .description(TEST_ACTION_DESCRIPTION)
+                .endpoint(new Endpoint()
+                        .uri(TEST_ENDPOINT_URI)
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response createResponse = getResponseOfPost(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH, toJSONString(passwordCredentialAction));
+        createResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
+        String createdActionId = createResponse.getBody().jsonPath().getString("id");
+
+        ActionUpdateModel actionUpdateModel = new ActionUpdateModel()
+                .endpoint(new EndpointUpdateModel()
+                        .authentication(new AuthenticationType()
+                                .type(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL)
+                                .properties(new HashMap<String, Object>() {{
+                                    put(TEST_CLIENT_ID_AUTH_PROPERTY, TEST_CLIENT_ID_AUTH_PROPERTY_VALUE);
+                                    put(TEST_CLIENT_SECRET_AUTH_PROPERTY, TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE);
+                                    put(TEST_TOKEN_ENDPOINT_AUTH_PROPERTY, TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE);
+                                    put(TEST_USERNAME_AUTH_PROPERTY, TEST_USERNAME_AUTH_PROPERTY_VALUE);
+                                    put(TEST_PASSWORD_AUTH_PROPERTY, TEST_PASSWORD_AUTH_PROPERTY_VALUE);
+                                    put(TEST_SCOPES_AUTH_PROPERTY, TEST_SCOPES_AUTH_PROPERTY_VALUE);
+                                }})));
+
+        Response responseOfPatch = getResponseOfPatch(ACTION_MANAGEMENT_API_BASE_PATH +
+                PRE_ISSUE_ACCESS_TOKEN_PATH + "/" + createdActionId, toJSONString(actionUpdateModel));
+        responseOfPatch.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(createdActionId))
+                .body("endpoint.authentication.type",
+                        equalTo(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL.toString()))
+                .body("endpoint.authentication.properties." + TEST_SCOPES_AUTH_PROPERTY,
+                        equalTo(TEST_SCOPES_AUTH_PROPERTY_VALUE));
+
+        deleteAction(PRE_ISSUE_ACCESS_TOKEN_PATH, createdActionId);
     }
 }

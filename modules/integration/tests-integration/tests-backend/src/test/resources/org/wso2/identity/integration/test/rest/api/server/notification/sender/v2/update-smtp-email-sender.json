@@ -1,0 +1,23 @@
+{
+    "smtpServerHost": "smtp.outlook.com",
+    "smtpPort": 587,
+    "fromAddress": "updated@outlook.com",
+    "properties": [
+        {
+            "key": "mail.smtp.starttls.enable",
+            "value": "true"
+        },
+        {
+            "key": "minThread",
+            "value": "20"
+        },
+        {
+            "key": "mail.smtp.replyTo",
+            "value": "updated@outlook.com"
+        },
+        {
+            "key": "mail.smtp.signature",
+            "value": "Updated Identity Server"
+        }
+    ]
+}

@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -138,6 +139,9 @@ public class ReportGenerator {
         final CoverageBuilder coverageBuilder = new CoverageBuilder();
         final Analyzer analyzer = new Analyzer(execFileLoader.getExecutionDataStore(), coverageBuilder);
 
+        // Track analyzed classes to avoid duplicates
+        Set<String> analyzedClasses = new HashSet<>();
+
         List<File> jarFilesToAnalyze = new ArrayList<>();
         List<File> classFilesToAnalyze = new ArrayList<>();
 
@@ -165,13 +169,30 @@ public class ReportGenerator {
             String[] classFiles = scanDirectory(extractedDir, includes, excludes);
 
             for (String classFile : classFiles) {
-                analyzer.analyzeAll(new File(extractedDir + File.separator + classFile));
+                File file = new File(extractedDir + File.separator + classFile);
+                String className = getClassNameFromFile(file);
+                if (!analyzedClasses.contains(className)) {
+                    try (InputStream input = new FileInputStream(file)) {
+                        analyzer.analyzeClass(input, className);
+                        analyzedClasses.add(className);
+                    } catch (Exception e) {
+                        System.err.println("Skipping duplicate or invalid class: " + className);
+                    }
+                }
             }
             FileUtils.forceDelete(new File(extractedDir));
         }
 
         for (final File classFile : classFilesToAnalyze) {
-            analyzer.analyzeAll(classFile);
+            String className = getClassNameFromFile(classFile);
+            if (!analyzedClasses.contains(className)) {
+                try (InputStream input = new FileInputStream(classFile)) {
+                    analyzer.analyzeClass(input, className);
+                    analyzedClasses.add(className);
+                } catch (Exception e) {
+                    System.err.println("Skipping duplicate or invalid class: " + className);
+                }
+            }
         }
 
         return coverageBuilder.getBundle(title);
@@ -284,5 +305,29 @@ public class ReportGenerator {
         } catch (IOException e) {
             throw new IOException(EXTRACTION_ERROR, e);
         }
+    }
+
+    /**
+     * Get the class name from a class file. Converts file path to fully qualified class name.
+     *
+     * @param classFile - The class file
+     * @return - The fully qualified class name
+     */
+    private String getClassNameFromFile(File classFile) {
+        String path = classFile.getAbsolutePath();
+        // Extract the class name by finding the package structure
+        // This works by removing .class extension and converting path separators to dots
+        int classIndex = path.indexOf("/org/wso2/");
+        if (classIndex == -1) {
+            classIndex = path.indexOf("\\org\\wso2\\");
+        }
+        if (classIndex != -1) {
+            String className = path.substring(classIndex + 1);
+            className = className.replace(".class", "");
+            className = className.replace(File.separator, "/");
+            return className;
+        }
+        // Fallback: use the absolute path
+        return path;
     }
 }

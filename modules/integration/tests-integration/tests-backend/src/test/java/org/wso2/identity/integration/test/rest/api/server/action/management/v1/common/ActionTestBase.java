@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, WSO2 LLC. (http://www.wso2.com).
+ * Copyright (c) 2024-2026, WSO2 LLC. (http://www.wso2.com).
  *
  * WSO2 LLC. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -59,7 +59,6 @@ public class ActionTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_ACTION_UPDATED_NAME = "Action name Updated";
     protected static final String TEST_ACTION_UPDATED_DESCRIPTION = "This is the updated configuration of action.";
     protected static final String TEST_UPDATED_ENDPOINT_URI = "https://abc.com/tokenUpdated";
-    protected static final String TEST_PROPERTIES_AUTH_ATTRIBUTE = "properties";
     protected static final String TEST_ACCESS_TOKEN_AUTH_PROPERTY = "accessToken";
     protected static final String TEST_ACCESS_TOKEN_AUTH_PROPERTY_VALUE = "24f64d17-9824-4e28-8413-de45728d8e84";
     protected static final String TEST_UPDATED_ACCESS_TOKEN_AUTH_PROPERTY_VALUE = "88f63a16-9824-4e28-e463-de11118d8e84";
@@ -68,6 +67,20 @@ public class ActionTestBase extends RESTAPIServerTestBase {
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY = "value";
     protected static final String TEST_APIKEY_VALUE_AUTH_PROPERTY_VALUE = "secret";
     protected static final String TEST_USERNAME_INVALID_AUTH_PROPERTY = "invalidUsername";
+    protected static final String TEST_CLIENT_ID_AUTH_PROPERTY = "clientId";
+    protected static final String TEST_CLIENT_ID_AUTH_PROPERTY_VALUE = "3e172dd2-901b-43a9-a26a-728466795f01";
+    protected static final String TEST_UPDATED_CLIENT_ID_AUTH_PROPERTY_VALUE = "9a1da123-7f12-4cd1-bbb4-31e5d9f5e2b3";
+    protected static final String TEST_CLIENT_SECRET_AUTH_PROPERTY = "clientSecret";
+    protected static final String TEST_CLIENT_SECRET_AUTH_PROPERTY_VALUE = "83cdc120-ccf6-4163-a4a8-c1ba3e872daa";
+    protected static final String TEST_UPDATED_CLIENT_SECRET_AUTH_PROPERTY_VALUE =
+            "ab12c45e-bd0a-4e1c-9f5e-7d4ab612b8c2";
+    protected static final String TEST_TOKEN_ENDPOINT_AUTH_PROPERTY = "tokenEndpoint";
+    protected static final String TEST_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE = "https://custom.idp.com/token";
+    protected static final String TEST_UPDATED_TOKEN_ENDPOINT_AUTH_PROPERTY_VALUE =
+            "https://custom.idp.com/token/updated";
+    protected static final String TEST_SCOPES_AUTH_PROPERTY = "scopes";
+    protected static final String TEST_SCOPES_AUTH_PROPERTY_VALUE = "send_scope";
+    protected static final String TEST_UPDATED_SCOPES_AUTH_PROPERTY_VALUE = "send_scope read_scope";
     protected static final String TEST_ACTION_INVALID_ID = "invalid_id";
     protected static final String TEST_ACTION_VERSION = "v1";
     protected static final String TEST_ACTION_VERSION_V2 = "v2";

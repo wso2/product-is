@@ -1,0 +1,23 @@
+{
+    "provider": "HTTP",
+    "providerURL": "https://example.email.sender/updated",
+    "fromAddress": "updated@gmail.com",
+    "properties": [
+        {
+            "key": "http.client.method",
+            "value": "POST"
+        },
+        {
+            "key": "http.headers",
+            "value": "X-Version: 2, Accept: application/json, Content-Type: application/json"
+        },
+        {
+            "key": "contentType",
+            "value": "JSON"
+        },
+        {
+            "key": "body",
+            "value": "{\"eventData\":{\"source\":\"{{subject}}\",\"content\":{{body}}},\"messages\":{\"email\":[{\"to\":{\"email\":\"{{send-to}}\"}}]}}"
+        }
+    ]
+}

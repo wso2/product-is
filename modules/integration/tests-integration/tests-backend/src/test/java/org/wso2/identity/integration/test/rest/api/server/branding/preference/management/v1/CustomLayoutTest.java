@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.branding.preference.m
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -215,6 +215,7 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
         oidcConfig.setCallbackURLs(new ArrayList<>(Collections.singletonList(CALLBACK_URL)));
         inboundProtocols.setOidc(oidcConfig);
         applicationModel.setInboundProtocolConfiguration(inboundProtocols);
+        applicationModel.setEnhancedOrgAuthenticationEnabled(false);
         appId1 = restClient.createApplication(applicationModel);
         restClient.shareApplication(appId1, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
         Thread.sleep(3000);
@@ -229,6 +230,7 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
         oidcConfig.setCallbackURLs(new ArrayList<>(Collections.singletonList(CALLBACK_URL)));
         inboundProtocols.setOidc(oidcConfig);
         applicationModel.setInboundProtocolConfiguration(inboundProtocols);
+        applicationModel.setEnhancedOrgAuthenticationEnabled(false);
         appId2 = restClient.createApplication(applicationModel);
         restClient.shareApplication(appId2, new ApplicationSharePOSTRequest().shareWithAllChildren(true));
         Thread.sleep(3000);

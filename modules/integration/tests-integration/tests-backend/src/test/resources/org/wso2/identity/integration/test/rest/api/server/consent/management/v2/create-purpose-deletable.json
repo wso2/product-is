@@ -1,0 +1,7 @@
+{
+  "name": "Data Cleanup",
+  "description": "To remove user data upon account deletion",
+  "type": "Core Identity",
+  "version": "1",
+  "elements": [{"id": "1", "mandatory": false}]
+}

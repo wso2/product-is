@@ -142,12 +142,44 @@ public class EventPayloadValidator {
                     ", but found " + actualArray.length());
         }
 
+        if (expectedArray.length() > 0 && expectedArray.get(0) instanceof JSONObject) {
+            boolean[] matchedActuals = new boolean[actualArray.length()];
+            for (int i = 0; i < expectedArray.length(); i++) {
+                JSONObject expectedObject = expectedArray.getJSONObject(i);
+                boolean matched = false;
+                for (int j = 0; j < actualArray.length(); j++) {
+                    if (matchedActuals[j]) {
+                        continue;
+                    }
+                    if (matchesEventField(actualArray.getJSONObject(j), expectedObject)) {
+                        matchedActuals[j] = true;
+                        matched = true;
+                        break;
+                    }
+                }
+                if (!matched) {
+                    throw new IllegalArgumentException("No matching array element found for: " + expectedObject);
+                }
+            }
+            return;
+        }
+
         Set<String> actualSet = convertArrayToSet(actualArray);
         Set<String> expectedSet = convertArrayToSet(expectedArray);
 
         if (!actualSet.equals(expectedSet)) {
             throw new IllegalArgumentException("Array content mismatch: expected " + expectedSet +
                     ", but found " + actualSet);
+        }
+    }
+
+    private static boolean matchesEventField(JSONObject actualEvent, JSONObject expectedEvent) {
+
+        try {
+            validateEventField(actualEvent, expectedEvent);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

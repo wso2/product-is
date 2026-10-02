@@ -34,6 +34,9 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.util.UserDefinedLocalAuthenticatorPayload;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 /**
@@ -66,9 +69,38 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
         UserDefinedLocalAuthenticatorConfig testAuthenticatorConfig =
                 createUserDefinedInternalUserAuthenticator(authenticatorName, displayName, endpointUri,
                         endpointAuthUsername, endpointAuthPassword);
+        return postAuthenticator(testAuthenticatorConfig);
+    }
+
+    public String createCustomInternalUserAuthenticatorWithClientCredentials(String authenticatorName,
+                                                                             String displayName, String endpointUri,
+                                                                             String clientId, String clientSecret,
+                                                                             String tokenEndpoint, String scopes)
+            throws Exception {
+
+        UserDefinedLocalAuthenticatorConfig testAuthenticatorConfig =
+                createClientCredentialUserDefinedAuthenticator(authenticatorName, displayName, endpointUri, clientId,
+                        clientSecret, tokenEndpoint, scopes);
+        return postAuthenticator(testAuthenticatorConfig);
+    }
+
+    public String createCustomInternalUserAuthenticatorWithPasswordCredentials(String authenticatorName,
+                                                                               String displayName, String endpointUri,
+                                                                               String username, String password,
+                                                                               String tokenEndpoint, String clientId,
+                                                                               String clientSecret, String scopes)
+            throws Exception {
+
+        UserDefinedLocalAuthenticatorConfig testAuthenticatorConfig =
+                createPasswordCredentialUserDefinedAuthenticator(authenticatorName, displayName, endpointUri, username,
+                        password, tokenEndpoint, clientId, clientSecret, scopes);
+        return postAuthenticator(testAuthenticatorConfig);
+    }
+
+    private String postAuthenticator(UserDefinedLocalAuthenticatorConfig testAuthenticatorConfig) throws Exception {
+
         UserDefinedLocalAuthenticatorCreation authenticatorCreationPayload = UserDefinedLocalAuthenticatorPayload
                 .getBasedUserDefinedLocalAuthenticatorCreation(testAuthenticatorConfig);
-
         try {
             String jsonRequestBody =
                     UserDefinedLocalAuthenticatorPayload.convertToJasonPayload(authenticatorCreationPayload);
@@ -106,11 +138,7 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
                                                                                            String username,
                                                                                            String password) {
 
-        UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(
-                AuthenticatorPropertyConstants.AuthenticationType.IDENTIFICATION);
-        config.setName(name);
-        config.setDisplayName(displayName);
-        config.setEnabled(true);
+        UserDefinedLocalAuthenticatorConfig config = baseInternalUserAuthenticator(name, displayName);
 
         UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =
                 new UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder();
@@ -120,8 +148,75 @@ public class CustomAuthenticatorManagementClient extends RestBaseClient {
             put("username", username);
             put("password", password);
         }});
+        endpointConfig.allowedParameters((new ArrayList<>(Collections.singletonList("testParam"))));
         config.setEndpointConfig(endpointConfig.build());
 
+        return config;
+    }
+
+    private UserDefinedLocalAuthenticatorConfig createClientCredentialUserDefinedAuthenticator(String name,
+                                                                                               String displayName,
+                                                                                               String endpointUri,
+                                                                                               String clientId,
+                                                                                               String clientSecret,
+                                                                                               String tokenEndpoint,
+                                                                                               String scopes) {
+
+        UserDefinedLocalAuthenticatorConfig config = baseInternalUserAuthenticator(name, displayName);
+
+        UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =
+                new UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder();
+        endpointConfig.uri(endpointUri);
+        endpointConfig.authenticationType(String.valueOf(AuthenticationType.TypeEnum.CLIENT_CREDENTIAL));
+        endpointConfig.authenticationProperties(new HashMap<String, String>() {{
+            put("clientId", clientId);
+            put("clientSecret", clientSecret);
+            put("tokenEndpoint", tokenEndpoint);
+            put("scopes", scopes);
+        }});
+        endpointConfig.allowedParameters((new ArrayList<>(Collections.singletonList("testParam"))));
+        config.setEndpointConfig(endpointConfig.build());
+
+        return config;
+    }
+
+    private UserDefinedLocalAuthenticatorConfig createPasswordCredentialUserDefinedAuthenticator(String name,
+                                                                                                 String displayName,
+                                                                                                 String endpointUri,
+                                                                                                 String username,
+                                                                                                 String password,
+                                                                                                 String tokenEndpoint,
+                                                                                                 String clientId,
+                                                                                                 String clientSecret,
+                                                                                                 String scopes) {
+
+        UserDefinedLocalAuthenticatorConfig config = baseInternalUserAuthenticator(name, displayName);
+
+        UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder endpointConfig =
+                new UserDefinedAuthenticatorEndpointConfig.UserDefinedAuthenticatorEndpointConfigBuilder();
+        endpointConfig.uri(endpointUri);
+        endpointConfig.authenticationType(String.valueOf(AuthenticationType.TypeEnum.PASSWORD_CREDENTIAL));
+        endpointConfig.authenticationProperties(new HashMap<String, String>() {{
+            put("username", username);
+            put("password", password);
+            put("tokenEndpoint", tokenEndpoint);
+            put("clientId", clientId);
+            put("clientSecret", clientSecret);
+            put("scopes", scopes);
+        }});
+        endpointConfig.allowedParameters((new ArrayList<>(Collections.singletonList("testParam"))));
+        config.setEndpointConfig(endpointConfig.build());
+
+        return config;
+    }
+
+    private UserDefinedLocalAuthenticatorConfig baseInternalUserAuthenticator(String name, String displayName) {
+
+        UserDefinedLocalAuthenticatorConfig config = new UserDefinedLocalAuthenticatorConfig(
+                AuthenticatorPropertyConstants.AuthenticationType.IDENTIFICATION);
+        config.setName(name);
+        config.setDisplayName(displayName);
+        config.setEnabled(true);
         return config;
     }
 

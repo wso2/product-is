@@ -19,7 +19,7 @@
 
 package org.wso2.identity.integration.test.listeners;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testng.IExecutionListener;
 
 public class IdentityTestListener implements IExecutionListener {

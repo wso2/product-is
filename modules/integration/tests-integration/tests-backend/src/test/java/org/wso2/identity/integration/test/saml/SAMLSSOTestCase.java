@@ -18,7 +18,7 @@
 package org.wso2.identity.integration.test.saml;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
@@ -160,7 +160,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
             }
 
             String redirectUrl = Utils.getRedirectUrl(response);
-            if(StringUtils.isNotBlank(redirectUrl)) {
+            if (StringUtils.isNotBlank(redirectUrl)) {
                 response = Utils.sendRedirectRequest(response, USER_AGENT, ACS_URL, config.getApp().getArtifact(),
                         httpClient);
             }

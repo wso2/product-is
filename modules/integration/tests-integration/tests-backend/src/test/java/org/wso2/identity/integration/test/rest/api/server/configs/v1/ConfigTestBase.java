@@ -17,7 +17,7 @@
 package org.wso2.identity.integration.test.rest.api.server.configs.v1;
 
 import io.restassured.RestAssured;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -50,6 +50,9 @@ public class ConfigTestBase extends RESTAPIServerTestBase {
     public static final String SAML_SSO_URL_TENANT = "https://localhost:9853/t/wso2.com/samlsso";
     public static final String PASSIVE_STS_URL_SUPER_TENANT = "https://localhost:9853/passivests";
     public static final String PASSIVE_STS_URL_TENANT = "https://localhost:9853/t/wso2.com/passivests";
+    public static final String CONFIGS_COMPATIBILITY_SETTINGS_API_BASE_PATH = "/configs/compatibility-settings";
+    public static final String CONFIGS_AGENT_API_BASE_PATH = "/configs/agent";
+    public static final String FAPI_CONFIGS_API_BASE_PATH = "/configs/fapi";
 
     public static final String PATH_SEPARATOR = "/";
     public static final String SAMPLE_AUTHENTICATOR_ID = "QmFzaWNBdXRoZW50aWNhdG9y";

@@ -64,6 +64,8 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,22 +105,26 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
     private TestUserMode userMode;
     private String apiVersion;
+    private Authentication.TypeEnum authType;
 
     @Factory(dataProvider = "testExecutionContextProvider")
-    public PasswordlessSMSOTPAuthTestCase(TestUserMode userMode, String apiVersion) {
+    public PasswordlessSMSOTPAuthTestCase(TestUserMode userMode, String apiVersion, Authentication.TypeEnum authType) {
 
         this.userMode = userMode;
         this.apiVersion = apiVersion;
+        this.authType = authType;
     }
 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
         return new Object[][]{
-                {TestUserMode.SUPER_TENANT_USER, "v1"},
-                {TestUserMode.SUPER_TENANT_USER, "v2"},
-                {TestUserMode.TENANT_USER, "v1"},
-                {TestUserMode.TENANT_USER, "v2"},
+                {TestUserMode.SUPER_TENANT_USER, "v1", null},
+                {TestUserMode.SUPER_TENANT_USER, "v2", Authentication.TypeEnum.CLIENT_CREDENTIAL},
+                {TestUserMode.SUPER_TENANT_USER, "v2", Authentication.TypeEnum.PASSWORD_CREDENTIAL},
+                {TestUserMode.TENANT_USER, "v1", null},
+                {TestUserMode.TENANT_USER, "v2", Authentication.TypeEnum.CLIENT_CREDENTIAL},
+                {TestUserMode.TENANT_USER, "v2", Authentication.TypeEnum.PASSWORD_CREDENTIAL},
         };
     }
 
@@ -158,7 +164,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
 
         notificationSenderRestClient = new NotificationSenderRestClient(backendURL, tenantInfo);
         if (VERSION_2.equals(apiVersion)) {
-            notificationSenderRestClient.createSMSProviderV2(initSMSSenderV2());
+            notificationSenderRestClient.createSMSProviderV2(initSMSSenderV2(authType));
         } else {
             SMSSender smsSender = initSMSSender();
             notificationSenderRestClient.createSMSProvider(smsSender);
@@ -177,11 +183,10 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         return smsSender;
     }
 
-    private static String initSMSSenderV2() throws IOException {
+    private static String initSMSSenderV2(Authentication.TypeEnum authType) throws IOException {
 
         org.wso2.identity.integration.test.rest.api.server.notification.sender.v2.model.SMSSender smsSender =
-                SMSSenderRequestBuilder.createAddSMSSenderJSON(
-                        Authentication.TypeEnum.CLIENT_CREDENTIAL, SMSSenderTestBase.class);
+                SMSSenderRequestBuilder.createAddSMSSenderJSON(authType, SMSSenderTestBase.class);
 
         // Override provider URL to use MockSMSProvider
         smsSender.setProviderURL(MockSMSProvider.SMS_SENDER_URL);
@@ -222,6 +227,7 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         assertNotNull(response);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
         validateTokenRequest();
+        EntityUtils.consume(response.getEntity());
     }
 
     private void sendAuthorizeRequest() throws Exception {
@@ -262,8 +268,9 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair("username", username));
         urlParameters.add(new BasicNameValuePair("sessionDataKey", sessionDataKey));
-        sendPostRequestWithParameters(client, urlParameters,
+        HttpResponse response = sendPostRequestWithParameters(client, urlParameters,
                 getTenantQualifiedURL(OAuth2Constant.COMMON_AUTH_URL, tenantInfo.getDomain()));
+        EntityUtils.consume(response.getEntity());
     }
 
     private HttpResponse sendLoginPostForOtp(HttpClient client, String sessionDataKey, String otp)
@@ -338,19 +345,25 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
             return;
         }
 
-        // Validate OAuth2 token request to MockOAuth2TokenServer for CLIENT_CREDENTIAL authentication
+        // Validate OAuth2 token request to MockOAuth2TokenServer for the configured authentication type
         String accessToken = mockOAuth2TokenServer.getLastAccessToken();
         Map<String, String> requestHeaders = mockOAuth2TokenServer.getLastRequestHeaders();
         Map<String, String> requestParams = mockOAuth2TokenServer.getLastRequestBodyContent();
 
-        assertEquals(requestHeaders.get("Authorization"), "Basic " + AuthenticationBuilder.ENCODED_CREDENTIAL);
+        if (Authentication.TypeEnum.PASSWORD_CREDENTIAL.equals(authType)) {
+            assertEquals(requestParams.get("grant_type"), "password");
+            assertEquals(requestParams.get("username"), AuthenticationBuilder.PASSWORD_CREDENTIAL_USERNAME);
+            assertEquals(requestParams.get("password"), AuthenticationBuilder.PASSWORD_CREDENTIAL_PASSWORD);
+            assertEquals(requestParams.get("scope"), URLEncoder.encode(
+                    AuthenticationBuilder.PASSWORD_CREDENTIAL_SCOPES, StandardCharsets.UTF_8));
+        } else {
+            assertEquals(requestHeaders.get("Authorization"), "Basic " + AuthenticationBuilder.ENCODED_CREDENTIAL);
+            assertEquals(requestParams.get("grant_type"), "client_credentials");
+            assertEquals(requestParams.get("scope"), URLEncoder.encode(
+                    AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES, StandardCharsets.UTF_8));
+        }
 
-        assertEquals(requestParams.get("grant_type"), "client_credentials");
-        assertEquals(requestParams.get("client_id"), AuthenticationBuilder.CLIENT_CREDENTIAL_CLIENT_ID);
-        assertEquals(requestParams.get("client_secret"), AuthenticationBuilder.CLIENT_CREDENTIAL_CLIENT_SECRET);
-        assertEquals(requestParams.get("scope"), AuthenticationBuilder.CLIENT_CREDENTIAL_SCOPES);
-
-        // Validate Authorization Bearer token header for CLIENT_CREDENTIAL authentication
+        // Validate Authorization Bearer token header carrying the token minted for the configured auth type
         String authorizationHeader = mockSMSProvider.getHeader("Authorization");
         assertNotNull(accessToken, "Access token should not be null");
         assertTrue(authorizationHeader != null && authorizationHeader.startsWith("Bearer " + accessToken),

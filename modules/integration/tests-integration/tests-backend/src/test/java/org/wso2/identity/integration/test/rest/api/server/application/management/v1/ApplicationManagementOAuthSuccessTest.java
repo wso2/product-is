@@ -281,4 +281,96 @@ public class ApplicationManagementOAuthSuccessTest extends ApplicationManagement
         getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
         createdAppId = null;
     }
+
+    @Test(dependsOnMethods = "testDeleteOAuthAppWithAdditionalOIDCAttributes")
+    public void testCreateOAuthAppForGracefulRefreshToken() throws Exception {
+
+        String body = readResource("create-oauth-app-with-graceful-refresh-token.json");
+        Response responseOfPost = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, body);
+        responseOfPost.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED)
+                .header(HttpHeaders.LOCATION, notNullValue());
+
+        String location = responseOfPost.getHeader(HttpHeaders.LOCATION);
+        createdAppId = extractApplicationIdFromLocationHeader(location);
+        assertNotBlank(createdAppId);
+    }
+
+    @Test(dependsOnMethods = "testCreateOAuthAppForGracefulRefreshToken")
+    public void testGetGracefulRefreshTokenDefaults() throws Exception {
+
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+
+        getResponseOfGet(path)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("refreshToken.gracefulRefreshTokenRotationEnabled", equalTo(false))
+                .body("refreshToken.gracefulRefreshTokenRotationValidityPeriod", equalTo(30))
+                .body("refreshToken.gracefulRefreshTokenReuseLimit", equalTo(1));
+    }
+
+    @Test(dependsOnMethods = "testGetGracefulRefreshTokenDefaults")
+    public void testUpdateGracefulRefreshTokenWithInvalidValues() throws Exception {
+
+        String body = readResource("update-oauth-app-with-invalid-graceful-refresh-token.json");
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+
+        getResponseOfPut(path, body)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        // Validity period 120 is clamped to max 60; reuse limit 10 is clamped to max 5.
+        getResponseOfGet(path)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("refreshToken.gracefulRefreshTokenRotationEnabled", equalTo(true))
+                .body("refreshToken.gracefulRefreshTokenRotationValidityPeriod", equalTo(60))
+                .body("refreshToken.gracefulRefreshTokenReuseLimit", equalTo(5));
+    }
+
+    @Test(dependsOnMethods = "testUpdateGracefulRefreshTokenWithInvalidValues")
+    public void testUpdateGracefulRefreshTokenWithValidValues() throws Exception {
+
+        String body = readResource("update-oauth-app-with-valid-graceful-refresh-token.json");
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId + INBOUND_PROTOCOLS_OIDC_CONTEXT_PATH;
+
+        getResponseOfPut(path, body)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        getResponseOfGet(path)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("refreshToken.gracefulRefreshTokenRotationEnabled", equalTo(true))
+                .body("refreshToken.gracefulRefreshTokenRotationValidityPeriod", equalTo(45))
+                .body("refreshToken.gracefulRefreshTokenReuseLimit", equalTo(3));
+    }
+
+    @Test(dependsOnMethods = "testUpdateGracefulRefreshTokenWithValidValues")
+    public void testDeleteAppWithGracefulRefreshToken() throws Exception {
+
+        String path = APPLICATION_MANAGEMENT_API_BASE_PATH + "/" + createdAppId;
+
+        Response responseOfDelete = getResponseOfDelete(path);
+        responseOfDelete.then()
+                .log()
+                .ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        getResponseOfGet(path).then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
+        createdAppId = null;
+    }
 }

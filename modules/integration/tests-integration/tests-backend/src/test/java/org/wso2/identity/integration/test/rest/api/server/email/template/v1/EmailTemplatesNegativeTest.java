@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.email.template.v1;
 
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -40,7 +40,7 @@ import java.util.Map;
  */
 public class EmailTemplatesNegativeTest extends EmailTemplatesTestBase {
 
-    private static final String INCORRECT_TEMPLATE_TYPE_ID = "QWNjb3VudEVuYWJsZQqwSa";
+    private static final String INCORRECT_TEMPLATE_TYPE_ID = "Tm9uRXhpc3RlbnRUeXBl";
     private static final String UNDECODABLE_TEMPLATE_TYPE_ID = "QWNjb3VudEVuYWJsZQ111";
     private static final String INCORRECT_TEMPLATE_ID = "en_FR";
 

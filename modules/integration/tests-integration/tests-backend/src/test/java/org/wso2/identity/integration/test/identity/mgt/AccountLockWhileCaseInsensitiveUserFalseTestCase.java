@@ -32,7 +32,7 @@ import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.user.common.model.ListObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.PatchOperationRequestObject;
 import org.wso2.identity.integration.test.rest.api.user.common.model.RoleItemAddGroupobj;
-import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionEnterprise;
+import org.wso2.identity.integration.test.rest.api.user.common.model.ScimSchemaExtensionSystem;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.AuthenticatorRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -113,7 +113,7 @@ public class AccountLockWhileCaseInsensitiveUserFalseTestCase extends ISIntegrat
         UserObject userInfo = new UserObject();
         userInfo.setUserName(TEST_USER_1);
         userInfo.setPassword(TEST_USER_1_PASSWORD);
-        userInfo.setScimSchemaExtensionEnterprise(new ScimSchemaExtensionEnterprise().accountLocked(true));
+        userInfo.setScimSchemaExtensionSystem(new ScimSchemaExtensionSystem().accountLocked(true));
 
         String userId = scim2RestClient.createUser(userInfo);
         String roleId = scim2RestClient.getRoleIdByName("admin");

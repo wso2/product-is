@@ -20,7 +20,7 @@ package org.wso2.identity.integration.test.restclients;
 
 import io.restassured.http.ContentType;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -41,10 +41,12 @@ import java.io.IOException;
 public class ActionsRestClient extends RestBaseClient {
 
     private static final String PRE_ISSUE_ACCESS_TOKEN_TYPE = "preIssueAccessToken";
+    private static final String PRE_ISSUE_ID_TOKEN_TYPE = "preIssueIdToken";
     private static final String PRE_UPDATE_PASSWORD_TYPE = "preUpdatePassword";
     private static final String PRE_UPDATE_PROFILE_TYPE = "preUpdateProfile";
     private static final String ACTIONS_PATH = "/actions";
     private static final String PRE_ISSUE_ACCESS_TOKEN_PATH = "/preIssueAccessToken";
+    private static final String PRE_ISSUE_ID_TOKEN_PATH = "/preIssueIdToken";
     private static final String PRE_UPDATE_PASSWORD_PATH = "/preUpdatePassword";
     private static final String PRE_UPDATE_PROFILE_PATH = "/preUpdateProfile";
     private static final String ACTION_ACTIVATE_PATH = "/activate";
@@ -167,6 +169,8 @@ public class ActionsRestClient extends RestBaseClient {
         switch (actionType) {
             case PRE_ISSUE_ACCESS_TOKEN_TYPE:
                 return actionsBasePath + PRE_ISSUE_ACCESS_TOKEN_PATH;
+            case PRE_ISSUE_ID_TOKEN_TYPE:
+                return actionsBasePath + PRE_ISSUE_ID_TOKEN_PATH;
             case PRE_UPDATE_PASSWORD_TYPE:
                 return actionsBasePath + PRE_UPDATE_PASSWORD_PATH;
             case PRE_UPDATE_PROFILE_TYPE:
