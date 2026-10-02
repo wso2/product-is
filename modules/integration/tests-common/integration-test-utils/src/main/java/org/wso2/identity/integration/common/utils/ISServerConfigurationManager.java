@@ -59,7 +59,7 @@ public class ISServerConfigurationManager extends ServerConfigurationManager {
 
     private static final long DEFAULT_SETTLE_TIME_MILLIS = 5000L;
     private static final long TIME_OUT = 600000L;
-    private static final long PORT_CLOSE_TIME_OUT = 60000L;
+    private static final long PORT_CLOSE_TIME_OUT = 120000L;
 
     private static final Log log = LogFactory.getLog(ISServerConfigurationManager.class);
 
@@ -109,6 +109,9 @@ public class ISServerConfigurationManager extends ServerConfigurationManager {
             settle();
             ClientConnectionUtil.waitForPort(port, TIME_OUT, true, hostname);
             ClientConnectionUtil.waitForLogin(automationContext);
+        } catch (AutomationUtilException e) {
+            // Already carries a specific diagnosis, such as an unconfirmed shutdown. Do not bury it.
+            throw e;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new AutomationUtilException("Interrupted while restarting the server " + mode, e);
@@ -128,22 +131,29 @@ public class ISServerConfigurationManager extends ServerConfigurationManager {
     }
 
     /**
-     * Waits for the server port to close, so that the readiness poll which follows cannot observe the server that is
-     * still shutting down. The framework's {@code restartForcefully()} sleeps instead of waiting for the close, which
-     * is why that path in particular needs this.
+     * Waits for the server port to close, confirming that the restart request actually took the old server down.
      * <p>
-     * A server that rebinds quickly can come back up before the poll below sees the port closed, in which case
-     * waiting for the full {@link #TIME_OUT} would turn a healthy restart into a ten minute hang and then a failure.
-     * The shutdown observation is therefore bounded and advisory: if it does not complete, the restart continues and
-     * the {@code waitForPort} and {@code waitForLogin} calls that follow remain the authoritative readiness gates.
+     * This observation is authoritative, not advisory. {@code ServerAdminClient.restartGracefully()} and
+     * {@code restart()} return as soon as the request is accepted and do not wait for the shutdown to complete, so if
+     * the old server stays up, the {@code waitForPort} and {@code waitForLogin} calls that follow will happily succeed
+     * against it. The restart would then be reported as complete while the server is still running the previous
+     * configuration, and every configuration-dependent test after it would silently run against the wrong state. A
+     * loud failure here is much cheaper than that.
+     * <p>
+     * The wait is bounded well below the inherited {@link #TIME_OUT} so that a restart which never happens fails in
+     * about two minutes rather than ten. The framework's {@code restartForcefully()} does not wait for the close at
+     * all, so that path gains this check.
+     *
+     * @throws AutomationUtilException if the server is not observed to go down.
      */
-    private void waitForShutdown() {
+    private void waitForShutdown() throws AutomationUtilException {
 
         try {
             ClientConnectionUtil.waitForPortClose(port, PORT_CLOSE_TIME_OUT, true, hostname);
         } catch (RuntimeException e) {
-            log.warn("Port " + port + " on " + hostname + " was not observed to close within " + PORT_CLOSE_TIME_OUT
-                    + " ms. Continuing to wait for the server to become available.", e);
+            throw new AutomationUtilException("Port " + port + " on " + hostname + " was not observed to close within "
+                    + PORT_CLOSE_TIME_OUT + " ms, so the server cannot be confirmed to have restarted. It may still be "
+                    + "serving the previous configuration.", e);
         }
     }
 
