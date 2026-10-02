@@ -26,9 +26,11 @@ import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.carbon.server.admin.stub.ServerAdminException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.rmi.RemoteException;
 
 import javax.xml.xpath.XPathExpressionException;
 
@@ -122,7 +124,7 @@ public class ISServerConfigurationManager extends ServerConfigurationManager {
     @FunctionalInterface
     private interface RestartAction {
 
-        void execute(ServerAdminClient serverAdmin) throws Exception;
+        void execute(ServerAdminClient serverAdmin) throws ServerAdminException, RemoteException;
     }
 
     /**
