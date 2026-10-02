@@ -23,9 +23,9 @@ import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 import java.io.File;
-import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Initialize a read-write LDAP user store for the tests in the test suite.

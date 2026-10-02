@@ -22,10 +22,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 import java.io.File;
 import java.io.IOException;
-import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class JDBCUUIDUMTestCase extends AbstractUUIDUMTestCase {
 

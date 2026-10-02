@@ -24,10 +24,10 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 import java.io.File;
 import java.net.URL;
-import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class UUIDUserManagerInitializerTestCase extends ISIntegrationTest {
 

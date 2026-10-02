@@ -28,11 +28,11 @@ import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 import java.io.File;
 
 import static java.io.File.separator;
-import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
 

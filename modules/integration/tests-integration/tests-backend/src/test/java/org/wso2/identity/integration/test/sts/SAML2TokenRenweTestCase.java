@@ -25,11 +25,11 @@ import org.wso2.carbon.integration.common.admin.client.SecurityAdminServiceClien
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 import java.io.File;
 
 import static org.testng.Assert.assertTrue;
-import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class SAML2TokenRenweTestCase extends ISIntegrationTest {
 

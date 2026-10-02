@@ -31,6 +31,7 @@ import org.wso2.carbon.security.mgt.stub.keystore.xsd.KeyStoreData;
 import org.wso2.identity.integration.common.clients.KeyStoreAdminClient;
 import org.wso2.identity.integration.common.clients.sso.saml.SAMLSSOConfigServiceClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +39,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.Arrays;
-import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Test case for adding a meta data file in tenant domain.
