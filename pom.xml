@@ -2595,6 +2595,31 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.common</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.core</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.verification</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.authenticator</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.endpoint</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.openid4vc.template.management.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
                 <type>zip</type>
@@ -2632,6 +2657,36 @@
             <dependency>
                 <groupId>org.wso2.carbon.identity.openid4vc</groupId>
                 <artifactId>org.wso2.carbon.identity.sdjwt.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.common.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.core.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.verification.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.authenticator.server.feature</artifactId>
+                <version>${carbon.identity.openid4vc.version}</version>
+                <type>zip</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.openid4vc</groupId>
+                <artifactId>org.wso2.carbon.identity.openid4vc.presentation.endpoint.server.feature</artifactId>
                 <version>${carbon.identity.openid4vc.version}</version>
                 <type>zip</type>
             </dependency>
@@ -2876,7 +2931,7 @@
         <carbon.identity.agent.version>1.1.2</carbon.identity.agent.version>
 
         <!-- VC Issuance -->
-        <carbon.identity.openid4vc.version>1.1.12</carbon.identity.openid4vc.version>
+        <carbon.identity.openid4vc.version>1.1.13</carbon.identity.openid4vc.version>
 
         <!-- Moesif Integration -->
         <identity.moesif.integration.version>1.0.11</identity.moesif.integration.version>
