@@ -60,6 +60,8 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.identity.integration.common.clients.oauth.OauthAdminClient;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.oidc.bean.OIDCApplication;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.TokenExchangeConfiguration;
 import org.wso2.identity.integration.test.utils.IdentityConstants;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.UserUtil;
@@ -68,6 +70,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest.OIDC;
 
 public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFederationTestCase {
 
@@ -137,6 +141,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
                         IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT,
                         IdentityConstants.ServiceClientType.USER_MGT,
                         IdentityConstants.ServiceClientType.OAUTH_ADMIN});
+
+        super.createServiceClients(PORT_OFFSET_0, new IdentityConstants.ServiceClientType[]{
+                IdentityConstants.ServiceClientType.APPLICATION_MANAGEMENT});
 
         createServiceProviderInSecondaryIS();
         createServiceProviderInPrimaryIS();
@@ -267,6 +274,40 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         Assert.assertEquals(responseCode, 400, "400 response expected but got: " + responseCode);
     }
 
+    @Test(groups = "wso2.is", description = "Exchange access token for federated user with scope issuance restricted",
+            dependsOnMethods = "testTokenExchangeForLocalUserWithNoLocalAccount")
+    public void testTokenExchangeForFederatedUserWithRestrictedScopeIssuance() throws Exception {
+
+        updateAssertLocalSubjectIdentifierConfig(IdentityConstants.AssertLocalSubjectMode.OPTIONAL);
+        List<NameValuePair> postParameters = getTokenExchangePostParameters();
+        postParameters.add(new BasicNameValuePair("scope", OAuth2Constant.OAUTH2_SCOPE_OPENID));
+
+        JSONObject responseObject = sendPOSTMessage(PRIMARY_IS_TOKEN_ENDPOINT, primaryISClientID,
+                primaryISClientSecret, postParameters);
+        Assert.assertNotNull(responseObject.get("scope"), "Requested scope is not issued for the federated subject " +
+                "token when the scope issuance is not restricted.");
+
+        updateRestrictScopeIssuanceForFederatedTokensConfig(true);
+
+        responseObject = sendPOSTMessage(PRIMARY_IS_TOKEN_ENDPOINT, primaryISClientID, primaryISClientSecret,
+                postParameters);
+        Assert.assertNull(responseObject.get("scope"), "Scopes are issued for the federated subject token when the " +
+                "scope issuance is restricted.");
+    }
+
+    private void updateRestrictScopeIssuanceForFederatedTokensConfig(boolean restricted) throws Exception {
+
+        String appId = getAppIdUsingAppName(PORT_OFFSET_0, PRIMARY_IS_SP_NAME);
+        if (StringUtils.isBlank(appId)) {
+            throw new Exception("Failed to get application 'primarySP' in primary IS");
+        }
+
+        OpenIDConnectConfiguration oidcConfig = getOIDCInboundDetailsOfApplication(PORT_OFFSET_0, appId);
+        oidcConfig.setTokenExchange(new TokenExchangeConfiguration()
+                .restrictScopeIssuanceForFederatedTokens(restricted));
+        updateInboundDetailsOfApplication(PORT_OFFSET_0, appId, oidcConfig, OIDC);
+    }
+
     private List<NameValuePair> getTokenExchangePostParameters() {
 
         List<NameValuePair> postParameters = new ArrayList<>();
@@ -296,7 +337,9 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
         httpPost.setHeader("Content-Type", "application/x-www-form-urlencoded");
         httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
         HttpResponse response = client.execute(httpPost);
-        return response.getStatusLine().getStatusCode();
+        int responseStatus = response.getStatusLine().getStatusCode();
+        EntityUtils.consume(response.getEntity());
+        return responseStatus;
     }
 
     private String getTokenSubject(String token) throws Exception {
