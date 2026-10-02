@@ -55,6 +55,7 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
@@ -1137,7 +1138,7 @@ public class OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase exten
         File introspectionConfigFile = new File(getISResourceLocation() + File.separator + "oauth" +
                 File.separator + "introspection-config.toml");
 
-        staticServerConfigurationManager = new ServerConfigurationManager(isServer);
+        staticServerConfigurationManager = new ISServerConfigurationManager(isServer);
         staticServerConfigurationManager.applyConfigurationWithoutRestart(introspectionConfigFile, defaultTomlFile, true);
         staticServerConfigurationManager.restartForcefully();
     }

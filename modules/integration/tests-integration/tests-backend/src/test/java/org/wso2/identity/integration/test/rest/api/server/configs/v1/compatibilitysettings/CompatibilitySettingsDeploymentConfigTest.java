@@ -29,6 +29,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigTestBase;
 import org.wso2.identity.integration.test.util.Utils;
 
@@ -84,7 +85,7 @@ public class CompatibilitySettingsDeploymentConfigTest extends ConfigTestBase {
         Files.write(mergedTomlFile.toPath(), mergedContent.getBytes(StandardCharsets.UTF_8));
 
         log.info("Merging compatibility-settings fragment into existing deployment.toml and restarting the server.");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(mergedTomlFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 

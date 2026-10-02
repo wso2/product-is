@@ -53,6 +53,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.ApplicationConfig;
 import org.wso2.identity.integration.test.oauth2.dataprovider.model.UserClaimConfig;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
@@ -1124,7 +1125,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         File introspectionConfigFile = new File(getISResourceLocation() + File.separator + "oauth" +
                 File.separator + "introspection-config.toml");
 
-        staticServerConfigurationManager = new ServerConfigurationManager(isServer);
+        staticServerConfigurationManager = new ISServerConfigurationManager(isServer);
         staticServerConfigurationManager.applyConfigurationWithoutRestart(introspectionConfigFile, defaultTomlFile, true);
         staticServerConfigurationManager.restartForcefully();
     }

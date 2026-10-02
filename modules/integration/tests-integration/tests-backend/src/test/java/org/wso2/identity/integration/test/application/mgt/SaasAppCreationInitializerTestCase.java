@@ -23,6 +23,7 @@ import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +43,7 @@ public class SaasAppCreationInitializerTestCase extends ISIntegrationTest {
     public void enableSaasAppCreation() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         defaultConfigFile = getDeploymentTomlFile(CarbonUtils.getCarbonHome());
 
         File fragmentFile = new File(getISResourceLocation() + File.separator

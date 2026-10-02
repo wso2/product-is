@@ -52,6 +52,7 @@ import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.clients.application.mgt.ApplicationManagementServiceClient;
 import org.wso2.identity.integration.common.utils.CarbonTestServerManager;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.scim.utils.SCIMResponseHandler;
 import org.wso2.identity.integration.test.utils.BasicAuthHandler;
@@ -435,7 +436,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         File defaultTomlFile = getDeploymentTomlFile(server2CarbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "provisioning"
                 + File.separator + DEFAULT_H2_DATABASE_CONFIG);
-        ServerConfigurationManager server2ConfigManager = new ServerConfigurationManager(context2);
+        ServerConfigurationManager server2ConfigManager = new ISServerConfigurationManager(context2);
         server2ConfigManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         server2ConfigManager.restartGracefully();
     }

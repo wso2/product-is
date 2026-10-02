@@ -40,6 +40,7 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 import org.wso2.identity.integration.test.application.mgt.AbstractIdentityFederationTestCase;
 import org.wso2.identity.integration.test.base.TestDataHolder;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
@@ -599,7 +600,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
                         + File.separator + "IS"
                         + File.separator + "saml"
                         + File.separator + SAML_KEYSTORE_TOML_CONFIG);
-        secondaryISConfigManager = new ServerConfigurationManager(TestDataHolder.getInstance().getAutomationContext());
+        secondaryISConfigManager = new ISServerConfigurationManager(TestDataHolder.getInstance().getAutomationContext());
         secondaryISConfigManager.applyConfiguration(configuredTomlFile, defaultTomlFile, true, true);
     }
 
