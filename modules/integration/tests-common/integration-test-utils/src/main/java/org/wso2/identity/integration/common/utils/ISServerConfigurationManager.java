@@ -82,49 +82,53 @@ public class ISServerConfigurationManager extends ServerConfigurationManager {
     @Override
     public void restartGracefully() throws AutomationUtilException {
 
-        long start = System.currentTimeMillis();
-        try {
-            ServerAdminClient serverAdmin = new ServerAdminClient(backEndUrl, loginLogoutClient.login());
-            serverAdmin.restartGracefully();
-            waitForShutdown();
-            settle();
-            ClientConnectionUtil.waitForPort(port, TIME_OUT, true, hostname);
-            ClientConnectionUtil.waitForLogin(automationContext);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new AutomationUtilException("Interrupted while gracefully restarting the server", e);
-        } catch (Exception e) {
-            throw new AutomationUtilException("Error while gracefully restarting the server", e);
-        }
-        log.info("Server restarted gracefully in " + (System.currentTimeMillis() - start) + " ms.");
+        restart("gracefully", ServerAdminClient::restartGracefully);
     }
 
     @Override
     public void restartForcefully() throws AutomationUtilException {
 
+        restart("forcefully", ServerAdminClient::restart);
+    }
+
+    /**
+     * Issues a restart through the server admin service and then waits until the server is serving requests again.
+     *
+     * @param mode   How the restart was requested, used for logging and error messages.
+     * @param action The server admin call that performs the restart.
+     */
+    private void restart(String mode, RestartAction action) throws AutomationUtilException {
+
         long start = System.currentTimeMillis();
         try {
             ServerAdminClient serverAdmin = new ServerAdminClient(backEndUrl, loginLogoutClient.login());
-            serverAdmin.restart();
-            // The framework implementation sleeps here instead of waiting for the port to close, which means the
-            // subsequent waitForPort can succeed against the server that is still shutting down. Wait for the close
-            // explicitly so the poll below can only observe the restarted server.
+            action.execute(serverAdmin);
             waitForShutdown();
             settle();
             ClientConnectionUtil.waitForPort(port, TIME_OUT, true, hostname);
             ClientConnectionUtil.waitForLogin(automationContext);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new AutomationUtilException("Interrupted while forcefully restarting the server", e);
+            throw new AutomationUtilException("Interrupted while restarting the server " + mode, e);
         } catch (Exception e) {
-            throw new AutomationUtilException("Error while forcefully restarting the server", e);
+            throw new AutomationUtilException("Error while restarting the server " + mode, e);
         }
-        log.info("Server restarted forcefully in " + (System.currentTimeMillis() - start) + " ms.");
+        log.info("Server restarted " + mode + " in " + (System.currentTimeMillis() - start) + " ms.");
+    }
+
+    /**
+     * The server admin call that triggers a restart.
+     */
+    @FunctionalInterface
+    private interface RestartAction {
+
+        void execute(ServerAdminClient serverAdmin) throws Exception;
     }
 
     /**
      * Waits for the server port to close, so that the readiness poll which follows cannot observe the server that is
-     * still shutting down.
+     * still shutting down. The framework's {@code restartForcefully()} sleeps instead of waiting for the close, which
+     * is why that path in particular needs this.
      * <p>
      * A server that rebinds quickly can come back up before the poll below sees the port closed, in which case
      * waiting for the full {@link #TIME_OUT} would turn a healthy restart into a ten minute hang and then a failure.
