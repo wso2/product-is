@@ -680,6 +680,22 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.sdjwt.server.feature:${carbon.identity.openid4vc.version}
                                 </featureArtifactDef>
+                                <!-- VP Presentation Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.presentation.common.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.presentation.core.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.presentation.verification.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.presentation.authenticator.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.openid4vc:org.wso2.carbon.identity.openid4vc.presentation.endpoint.server.feature:${carbon.identity.openid4vc.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.moesif:org.wso2.carbon.identity.moesif.server.feature:${identity.moesif.integration.version}
                                 </featureArtifactDef>
@@ -1392,6 +1408,26 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.openid4vc.issuance.offer.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.presentation.common.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.presentation.core.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.presentation.verification.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.presentation.authenticator.server.feature.group</id>
+                                    <version>${carbon.identity.openid4vc.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.openid4vc.presentation.endpoint.server.feature.group</id>
                                     <version>${carbon.identity.openid4vc.version}</version>
                                 </feature>
                                 <feature>
