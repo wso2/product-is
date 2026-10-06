@@ -996,6 +996,30 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                 .body("state", equalTo("PENDING"));
     }
 
+    /**
+     * A PENDING authorization must surface in both the GET and the list response.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
+    public void testGetConsentReturnsPendingAuthorization() {
+
+        userApiGet(getUserConsentApiBaseUrl() + "/" + delegatedReceiptId)
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("authorizations.find { it.userId == '" + CONSENT_AUTHORIZER_USER_NAME + "' }.state",
+                        equalTo("PENDING"));
+
+        userApiGet(getUserConsentApiBaseUrl() + "?attributes=authorizations")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("find { it.id == '" + delegatedReceiptId + "' }.authorizations"
+                        + ".find { it.userId == '" + CONSENT_AUTHORIZER_USER_NAME + "' }.state",
+                        equalTo("PENDING"));
+    }
+
     @Test(groups = "wso2.is", dependsOnMethods = {"testCreateDelegatedConsent"})
     public void testValidateConsentAsAuthorizer() {
 
@@ -1021,6 +1045,7 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
             "testListConsentsWithAuthorizerRelation",
             "testListConsentsWithAttributes",
             "testGetConsentAsAuthorizer",
+            "testGetConsentReturnsPendingAuthorization",
             "testValidateConsentAsAuthorizer"
     })
     public void testRevokeConsentAsAuthorizer() {
@@ -1051,6 +1076,53 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
                         equalTo("REVOKED"));
     }
 
+    /**
+     * Revoking through the admin API must revoke a delegated consent even when some of its
+     * authorizers have approved, leaving every authorization REVOKED.
+     */
+    @Test(groups = "wso2.is", dependsOnMethods = {"testCreateConsent"})
+    public void testAdminRevokeConsentRevokesAllAuthorizations() {
+
+        String body = "{\"subjectId\": \"" + CONSENT_TEST_USER_NAME + "\","
+                + " \"serviceId\": \"admin-revoke-integration-service\", \"language\": \"en\","
+                + " \"purposes\": [{\"id\": \"" + createdPurposeId + "\","
+                + " \"elements\": [{\"id\": \"" + createdElementId + "\"}]}],"
+                + " \"authorizations\": [{\"userId\": \"" + CONSENT_TEST_USER_NAME + "\", \"type\": \"USER\"},"
+                + " {\"userId\": \"" + CONSENT_AUTHORIZER_USER_NAME + "\", \"type\": \"USER\"}]}";
+        Response response = getResponseOfPost(CONSENTS_ENDPOINT, body);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_CREATED);
+        String consentId = response.jsonPath().getString("id");
+
+        userApiPost(getUserConsentApiBaseUrl() + "/" + consentId + "/authorize", "{\"state\": \"APPROVED\"}")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        getResponseOfPost(CONSENTS_ENDPOINT + "/" + consentId + "/revoke", "")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_NO_CONTENT);
+
+        String consent = "Consents.find { it.id == '" + consentId + "' }";
+        getResponseOfGet(CONSENTS_ENDPOINT + "?userId=" + CONSENT_TEST_USER_NAME + "&relation=SUBJECT"
+                + "&attributes=authorizations")
+                .then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body(consent + ".state", equalTo("REVOKED"))
+                .body(consent + ".authorizations.find { it.userId == '" + CONSENT_TEST_USER_NAME + "' }.state",
+                        equalTo("REVOKED"))
+                .body(consent + ".authorizations.find { it.userId == '" + CONSENT_AUTHORIZER_USER_NAME + "' }.state",
+                        equalTo("REVOKED"))
+                .body(consent + ".authorizations.findAll { it.state != 'REVOKED' }.size()", equalTo(0));
+    }
+
     // =========================================================================
     // Cleanup / Delete tests (ordered after all read tests)
     // =========================================================================
@@ -1062,7 +1134,8 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
             "testListActiveConsentsExcludeExpired",
             "testListConsentsDefaultsToSubjectRelation",
             "testAdminListConsentsWithSubjectRelationExcludesAuthorizer",
-            "testRevokeConsentAsAuthorizer"
+            "testRevokeConsentAsAuthorizer",
+            "testAdminRevokeConsentRevokesAllAuthorizations"
     })
     public void testDeleteConsentTestUser() throws Exception {
 
