@@ -1,0 +1,49 @@
+{
+  "name": "<IDP_NAME>",
+  "description": "GitHub IDP for debug framework integration tests.",
+  "image": "github-logo-url",
+  "isPrimary": false,
+  "isFederationHub": false,
+  "homeRealmIdentifier": "",
+  "alias": "",
+  "roles": {
+    "mappings": [],
+    "outboundProvisioningRoles": []
+  },
+  "claims": {
+    "userIdClaim": {
+      "uri": ""
+    },
+    "provisioningClaims": [],
+    "roleClaim": {
+      "uri": ""
+    }
+  },
+  "federatedAuthenticators": {
+    "defaultAuthenticatorId": "R2l0SHViQXV0aGVudGljYXRvcg",
+    "authenticators": [
+      {
+        "authenticatorId": "R2l0SHViQXV0aGVudGljYXRvcg",
+        "isEnabled": true,
+        "properties": [
+          {
+            "key": "ClientId",
+            "value": "debug-test-github-client-id"
+          },
+          {
+            "key": "ClientSecret",
+            "value": "debug-test-github-secret"
+          },
+          {
+            "key": "callbackUrl",
+            "value": "https://localhost:9443/commonauth"
+          },
+          {
+            "key": "Scopes",
+            "value": "user"
+          }
+        ]
+      }
+    ]
+  }
+}
