@@ -2905,7 +2905,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>4.17.1</identity.apps.console.version>
         <identity.apps.myaccount.version>4.4.0</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.5.1</identity.apps.core.version>
+        <identity.apps.core.version>5.5.3</identity.apps.core.version>
         <identity.apps.tests.version>1.6.392</identity.apps.tests.version>
 
         <!-- Charon -->
