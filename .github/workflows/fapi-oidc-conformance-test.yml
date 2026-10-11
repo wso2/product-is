@@ -41,6 +41,13 @@ jobs:
       with:
         java-version: 21
         distribution: temurin
+    - name: Set up Maven 3.9.x
+      # Maven 3.10.0 (ubuntu-latest image 20261004+) breaks the Tycho-based carbon-p2-plugin.
+      run: |
+        MAVEN_VERSION=3.9.11
+        curl -fsSL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz | tar -xz -C "$RUNNER_TEMP"
+        echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
+        "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin/mvn" --version
     
     - name: Setup Python
       run: |
