@@ -29,6 +29,17 @@ jobs:
         with:
           java-version: "21"
           distribution: "adopt"
+      - name: Set up Maven 3.9.x
+        # Maven 3.10.0 (ubuntu-latest image 20261004+) breaks the Tycho-based carbon-p2-plugin.
+        run: |
+          MAVEN_VERSION=3.9.11
+          MAVEN_SHA512=bcfe4fe305c962ace56ac7b5fc7a08b87d5abd8b7e89027ab251069faebee516b0ded8961445d6d91ec1985dfe30f8153268843c89aa392733d1a3ec956c9978
+          MAVEN_ARCHIVE="$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+          curl -fsSL -o "$MAVEN_ARCHIVE" https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          echo "${MAVEN_SHA512}  ${MAVEN_ARCHIVE}" | sha512sum -c -
+          tar -xzf "$MAVEN_ARCHIVE" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin/mvn" --version
       - name: Check $JAVA_HOME
         run: |
           echo $JAVA_HOME
