@@ -245,8 +245,9 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
     }
 
     /**
-     * Waits for the OTP email already triggered to arrive, then clears the mailbox. Emails are sent
-     * asynchronously, so purging without waiting lets a late email leak into a later test.
+     * Waits for the OTP email already triggered to arrive (up to 10 s), then clears the mailbox.
+     * Emails are sent asynchronously, so purging without waiting lets a late email leak into a
+     * later test.
      */
     private void drainEmails() throws Exception {
 
