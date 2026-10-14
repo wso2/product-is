@@ -115,7 +115,7 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
     public void testEmailOTPFirstWrongOTPReturnsFAIL_INCOMPLETE() throws Exception {
 
         initiateAuthFlow(appConsumerKey);
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
+        drainEmails();
         ExtractableResponse<Response> resp = submitOTPCode(WRONG_OTP, HttpStatus.SC_OK);
         String status = resp.jsonPath().getString(FLOW_STATUS);
         Assert.assertEquals(status, FAIL_INCOMPLETE,
@@ -141,8 +141,9 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
 
         // Fresh flow for the resend scenario (independent of retry tests above).
         initiateAuthFlow(appConsumerKey);
-        Utils.getMailServer().purgeEmailFromAllMailboxes();
+        drainEmails();
         ExtractableResponse<Response> resp = triggerResend(HttpStatus.SC_OK);
+        drainEmails();
         String status = resp.jsonPath().getString(FLOW_STATUS);
         Assert.assertEquals(status, INCOMPLETE,
                 "Email OTP resend #1: expected INCOMPLETE but got: " + status);
@@ -240,6 +241,17 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
                 "Email OTP resend: authData.code must be present in SUCCESS_COMPLETED response.");
         Assert.assertFalse(authCode.trim().isEmpty(),
                 "Email OTP resend: authData.code must not be blank.");
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
+    }
+
+    /**
+     * Waits for the OTP email already triggered to arrive, then clears the mailbox. Emails are sent
+     * asynchronously, so purging without waiting lets a late email leak into a later test.
+     */
+    private void drainEmails() throws Exception {
+
+        Assert.assertTrue(Utils.getMailServer().waitForIncomingEmail(10000, 1),
+                "Timed out waiting for OTP email from GreenMail.");
         Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 
