@@ -114,6 +114,7 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
           dependsOnMethods = "testRegisterEmailOTPApplication")
     public void testEmailOTPFirstWrongOTPReturnsFAIL_INCOMPLETE() throws Exception {
 
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
         initiateAuthFlow(appConsumerKey);
         drainEmails();
         ExtractableResponse<Response> resp = submitOTPCode(WRONG_OTP, HttpStatus.SC_OK);
@@ -140,6 +141,7 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
     public void testEmailOTPFirstResendReturnsINCOMPLETE() throws Exception {
 
         // Fresh flow for the resend scenario (independent of retry tests above).
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
         initiateAuthFlow(appConsumerKey);
         drainEmails();
         ExtractableResponse<Response> resp = triggerResend(HttpStatus.SC_OK);
@@ -245,9 +247,12 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
     }
 
     /**
-     * Waits for the OTP email already triggered to arrive (up to 10 s), then clears the mailbox.
-     * Emails are sent asynchronously, so purging without waiting lets a late email leak into a
-     * later test.
+     * Waits for the OTP email triggered by the preceding call to arrive (up to 10 s), then clears
+     * the mailbox. Emails are sent asynchronously, so purging without waiting lets a late email
+     * leak into a later test.
+     * <p>
+     * GreenMail's wait is satisfied by any message already in a mailbox, so the caller must purge
+     * before triggering the email; only then is the message this waits for the one it just sent.
      */
     private void drainEmails() throws Exception {
 
