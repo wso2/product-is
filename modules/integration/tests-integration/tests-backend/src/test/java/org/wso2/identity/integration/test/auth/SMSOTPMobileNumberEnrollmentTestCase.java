@@ -59,8 +59,10 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
     private static final String SMS_OTP_AUTHENTICATOR = "sms-otp-authenticator";
     private static final String MFA_GOVERNANCE_CATEGORY_ID = "TXVsdGkgRmFjdG9yIEF1dGhlbnRpY2F0b3Jz";
     private static final String SMS_OTP_CONNECTOR_ID = "c21zLW90cC1hdXRoZW50aWNhdG9y";
-    private static final String ENROL_USER_IN_AUTHENTICATION_FLOW = "SmsOTP.EnrolUserInAuthenticationFlow";
+    private static final String ENROLL_USER_IN_AUTHENTICATION_FLOW = "SmsOTP.EnrollUserInAuthenticationFlow";
     private static final String MOBILE_NUMBER_REGEX = "SmsOTP.MobileNumberRegex";
+    private static final String RESEND_ATTEMPTS_COUNT = "SmsOTP.ResendAttemptsCount";
+    private static final String DEFAULT_RESEND_ATTEMPTS_COUNT = "5";
     private static final String MOBILE_NUMBER_PARAM = "MOBILE_NUMBER";
     private static final String OTP_CODE_PARAM = "OTPcode";
     private static final String MOBILE_NUMBER_REQUEST_PAGE = "mobile.jsp";
@@ -68,6 +70,7 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
     private static final String SMS_OTP_ERROR_PAGE = "smsOtpError.jsp";
     private static final String INVALID_MOBILE_NUMBER_ERROR = "authFailureMsg=sms.otp.mobile.number.invalid";
     private static final String MOBILE_NOT_FOUND_ERROR = "authFailureMsg=user.mobile.not.found";
+    private static final String RESEND_LIMIT_EXCEEDED_ERROR = "authFailureMsg=resent.count.exceeded";
     private static final String WSO2_SCIM_SCHEMA = "urn:scim:wso2:schema";
     private static final String USER_PASSWORD = "User@123SmsOtp!";
     private static final int MAX_REDIRECTS = 10;
@@ -119,7 +122,7 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
     @AfterClass(alwaysRun = true)
     public void testTearDown() throws Exception {
 
-        updateSmsOtpConnectorProperty(ENROL_USER_IN_AUTHENTICATION_FLOW, "false");
+        updateSmsOtpConnectorProperty(ENROLL_USER_IN_AUTHENTICATION_FLOW, "false");
         updateSmsOtpConnectorProperty(MOBILE_NUMBER_REGEX, "");
 
         if (appId != null) {
@@ -157,7 +160,7 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
             description = "A user enrolls a mobile number, which is saved only after the OTP sent to it is verified.")
     public void testEnrollMobileNumber() throws Exception {
 
-        updateSmsOtpConnectorProperty(ENROL_USER_IN_AUTHENTICATION_FLOW, "true");
+        updateSmsOtpConnectorProperty(ENROLL_USER_IN_AUTHENTICATION_FLOW, "true");
         String userId = createUserWithoutMobileNumber("sms_otp_enroll_user");
         String mobileNumber = "+94771112233";
 
@@ -266,6 +269,45 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
             Assert.assertNull(getMobileNumber(userId));
         } finally {
             updateSmsOtpConnectorProperty(MOBILE_NUMBER_REGEX, "");
+        }
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testEnrollMobileNumber",
+            description = "Submitting the same mobile number again counts as a resend, so the resend limit applies.")
+    public void testResubmittingSameNumberIsLimitedByResendLimit() throws Exception {
+
+        // One OTP is sent for the first submission, and one for each allowed resend.
+        int allowedResends = 2;
+        updateSmsOtpConnectorProperty(RESEND_ATTEMPTS_COUNT, String.valueOf(allowedResends));
+        try {
+            String userId = createUserWithoutMobileNumber("sms_otp_enroll_resubmit");
+            String mobileNumber = "+94773334455";
+
+            try (CloseableHttpClient http = createSessionHttpClient()) {
+                String pageUrl = loginWithPassword(http, "sms_otp_enroll_resubmit");
+                Assert.assertTrue(pageUrl.contains(MOBILE_NUMBER_REQUEST_PAGE), "Unexpected page: " + pageUrl);
+                String sessionDataKey = extractUrlParam(pageUrl, "sessionDataKey");
+
+                for (int submission = 1; submission <= allowedResends + 1; submission++) {
+                    mockSMSProvider.clearSmsContent();
+                    pageUrl = submitMobileNumber(http, sessionDataKey, mobileNumber);
+                    Assert.assertTrue(pageUrl.contains(SMS_OTP_PAGE),
+                            "The OTP page is expected for submission " + submission + ": " + pageUrl);
+                    Assert.assertEquals(mockSMSProvider.getRecipient(), mobileNumber,
+                            "An SMS is expected for submission " + submission);
+                }
+
+                // Once the resend limit is reached, submitting the same number again sends no SMS.
+                mockSMSProvider.clearSmsContent();
+                pageUrl = submitMobileNumber(http, sessionDataKey, mobileNumber);
+                Assert.assertTrue(pageUrl.contains(SMS_OTP_ERROR_PAGE), "The error page is expected: " + pageUrl);
+                Assert.assertTrue(pageUrl.contains(RESEND_LIMIT_EXCEEDED_ERROR), "Unexpected error: " + pageUrl);
+                Assert.assertNull(mockSMSProvider.getRecipient(),
+                        "No SMS should be sent once the resend limit is reached.");
+            }
+            Assert.assertNull(getMobileNumber(userId), "The number must not be saved without verifying the OTP.");
+        } finally {
+            updateSmsOtpConnectorProperty(RESEND_ATTEMPTS_COUNT, DEFAULT_RESEND_ATTEMPTS_COUNT);
         }
     }
 
