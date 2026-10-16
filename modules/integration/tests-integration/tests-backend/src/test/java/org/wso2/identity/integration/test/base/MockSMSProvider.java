@@ -51,6 +51,7 @@ public class MockSMSProvider {
     private WireMockServer wireMockServer;
     private final AtomicReference<String> otp = new AtomicReference<>();
     private final AtomicReference<String> smsContent = new AtomicReference<>();
+    private final AtomicReference<String> recipient = new AtomicReference<>();
     private final AtomicReference<Map<String, String>> headers = new AtomicReference<>(new HashMap<>());
 
     public void start() {
@@ -74,6 +75,8 @@ public class MockSMSProvider {
 
                                 // Store the content value for later use.
                                 smsContent.set(content);
+                                Object to = JsonPath.parse(serveEvent.getRequest().getBodyAsString()).read("$.to");
+                                recipient.set(to != null ? to.toString() : null);
 
                                 // Capture headers from the request.
                                 clearHeaders();
@@ -144,9 +147,20 @@ public class MockSMSProvider {
         return smsContent.get();
     }
 
+    /**
+     * Get the mobile number to which the last SMS was sent.
+     *
+     * @return The recipient mobile number, or null if no SMS was sent after the content was last cleared.
+     */
+    public String getRecipient() {
+
+        return recipient.get();
+    }
+
     public void clearSmsContent() {
 
         smsContent.set(null);
+        recipient.set(null);
     }
 
     /**

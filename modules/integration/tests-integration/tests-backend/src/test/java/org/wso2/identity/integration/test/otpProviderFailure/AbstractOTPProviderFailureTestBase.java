@@ -389,6 +389,16 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
         return postToAuthn(state.flowId, body);
     }
 
+    protected AuthnFlowState submitAuthenticatorParam(AuthnFlowState state, String paramName, String value)
+            throws Exception {
+
+        String body = "{\"flowId\":\"" + state.flowId + "\","
+                + "\"selectedAuthenticator\":{"
+                + "\"authenticatorId\":\"" + state.authenticatorId + "\","
+                + "\"params\":{\"" + paramName + "\":\"" + value + "\"}}}";
+        return postToAuthn(state.flowId, body);
+    }
+
     protected AuthnFlowState resendOTP(AuthnFlowState state) throws Exception {
 
         String body = "{\"flowId\":\"" + state.flowId + "\","
