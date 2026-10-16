@@ -84,6 +84,11 @@ jobs:
           echo "Updating dependencies"
           echo "=========================================================="
           mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck,org.wso2.carbon.analytics-common,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*,org.wso2.carbon.multitenancy:*,org.wso2.carbon.registry:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          echo "Updating identity-apps versions"
+          echo "=========================================================="
+          # The identity-apps features roll to a new minor line on each console release, so they are
+          # updated with minor updates allowed. The run above keeps every other dependency on its line.
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=true -Dincludes=org.wso2.identity.apps -DincludeProperties=identity.apps.console.version,identity.apps.core.version,identity.apps.myaccount.version
           echo "Checking carbon kernel updates"
           echo "=========================================================="
           CURRENT_KERNEL_VERSION=$(sed -n 's|.*<carbon.kernel.version>\(.*\)</carbon.kernel.version>.*|\1|p' pom.xml | head -1)
