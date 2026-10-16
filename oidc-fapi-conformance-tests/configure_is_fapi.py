@@ -45,7 +45,8 @@ def wait_for_server_ready():
 def dcr(app_json):
     print(">>> Making DCR Request.")
     print(">>> SP Name: " + app_json.get("client_name"))
-    DCR_BODY = constants.DCR_BODY
+    # copy, so that per-app overrides do not leak into the next registration
+    DCR_BODY = dict(constants.DCR_BODY)
     DCR_BODY['client_name'] = app_json.get("client_name")
     DCR_BODY['redirect_uris'] = app_json.get("redirect_uris")
     DCR_BODY['jwks_uri'] = app_json.get("jwks_uri")
@@ -54,6 +55,8 @@ def dcr(app_json):
     DCR_BODY['ext_param_client_id'] = app_json.get("client_id")
     DCR_BODY['ext_param_client_secret'] = app_json.get("client_secret")
     DCR_BODY['require_pushed_authorization_requests'] = app_json.get("require_pushed_authorization_requests")
+    if app_json.get("require_signed_request_object") is not None:
+        DCR_BODY['require_signed_request_object'] = app_json.get("require_signed_request_object")
     try:
         response = requests.post(url=constants.DCR_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
                                  data=json.dumps(DCR_BODY), verify=False)
@@ -124,6 +127,54 @@ def set_hybridFlow_config(application_id):
     else:
         print(">>> Hybrid flow configuration added successfully.")
 
+# FAPI profiles that applications can use are restricted per tenant (FAPI1_ADVANCED only by default),
+# so allow both FAPI 1.0 Advanced and FAPI 2.0 Security profiles.
+def set_supported_fapi_profiles():
+    print(">>> Setting tenant supported FAPI profiles.")
+    try:
+        response = requests.get(url=constants.FAPI_CONFIG_ENDPOINT, headers=constants.HEADERS_WITH_AUTH, verify=False,
+                                timeout=constants.REQUEST_TIMEOUT)
+        response.raise_for_status()
+        fapi_config = json.loads(response.content)
+        fapi_config['supportedProfiles'] = constants.FAPI_SUPPORTED_PROFILES
+        response = requests.put(url=constants.FAPI_CONFIG_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
+                                data=json.dumps(fapi_config), verify=False, timeout=constants.REQUEST_TIMEOUT)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> Supported FAPI profiles set to: " + ", ".join(constants.FAPI_SUPPORTED_PROFILES))
+
+# DCR registers apps with the tenant level DCR FAPI profile (FAPI1_ADVANCED by default), so switch the
+# application to the given FAPI profile and enforce S256 PKCE. Hybrid flow is left disabled as FAPI 2.0
+# only allows the code response type.
+def set_fapi_profile_config(application_id, fapi_profile):
+    print(">>> Setting FAPI profile to " + fapi_profile + ".")
+    try:
+        app_details = get_service_provider_details(application_id)
+        app_details['isFAPIApplication'] = True
+        app_details['fapiProfile'] = fapi_profile
+        app_details['pkce'] = constants.FAPI2_PKCE_CONFIG
+        body = json.dumps(app_details)
+        response = requests.put(url=constants.APPLICATION_ENDPOINT + "/" + application_id + "/inbound-protocols/oidc",
+                                headers=constants.HEADERS_WITH_AUTH, data=body, verify=False,
+                                timeout=constants.REQUEST_TIMEOUT)
+        response.raise_for_status()
+    except HTTPError as http_error:
+        print(http_error)
+        print(response.text)
+        exit(1)
+    except Exception as error:
+        print("\nError occurred: " + str(error))
+        exit(1)
+    else:
+        print(">>> FAPI profile configuration added successfully.")
+
 # Skip login consent is true by default, here we disable it to go consent flows
 def disable_skipping_consent(application_id):
     print(">>> Setting Skip Login consent to false.")
@@ -146,7 +197,7 @@ def disable_skipping_consent(application_id):
 def get_service_provider_details(application_id):
     try:
         response = requests.get(url=constants.APPLICATION_ENDPOINT + "/" + application_id + "/inbound-protocols/oidc",
-                                headers=constants.HEADERS_WITH_AUTH, verify=False)
+                                headers=constants.HEADERS_WITH_AUTH, verify=False, timeout=constants.REQUEST_TIMEOUT)
         response.raise_for_status()
         response_json = json.loads(response.content)
         return response_json
@@ -249,7 +300,7 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
         "alias": constants.ALIAS,
         "description": plan_name,
         "server": {
-            "discoveryUrl": constants.BASE_URL + "/oauth2/token/.well-known/openid-configuration"
+            "discoveryUrl": constants.DISCOVERY_URL
         },
         "resource": {
             "resourceUrl": constants.RESOURCE_ENDPOINT_URL
@@ -276,19 +327,36 @@ def json_config_builder(service_provider_1, service_provider_2, output_file_path
     f.close()
 
 def createNewUser(username, password):
-    try:
-        body = {"userName":username,"password":password}
-        response = requests.post(url=constants.CREATE_USER_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
-                                 data=json.dumps(body), verify=False)
-        response.raise_for_status()
-        print("\n>>> User created successfully.")
-    except HTTPError as http_error:
-        print(http_error)
-        print(response.text)
-        exit(1)
-    except Exception as error:
-        print("\nError occurred: " + str(error))
-        exit(1)
+    # The SCIM endpoint can answer with a 200 and an empty body before it is fully deployed, without creating the
+    # user, so retry until the user is actually created (201) or already exists (409).
+    max_attempts = 10
+    retry_interval = 10  # seconds
+    body = {"userName":username,"password":password}
+    for attempt in range(1, max_attempts + 1):
+        try:
+            response = requests.post(url=constants.CREATE_USER_ENDPOINT, headers=constants.HEADERS_WITH_AUTH,
+                                     data=json.dumps(body), verify=False, timeout=constants.REQUEST_TIMEOUT)
+            response.raise_for_status()
+            if response.status_code == 201:
+                print("\n>>> User created successfully.")
+                return
+            print(">>> User not created (attempt %d/%d): status=%s" % (attempt, max_attempts, response.status_code))
+        except HTTPError as http_error:
+            if response.status_code == 409:
+                print("\n>>> User already exists.")
+                return
+            print(http_error)
+            print(response.text)
+            exit(1)
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as error:
+            print(">>> User not created (attempt %d/%d): %s" % (attempt, max_attempts, error))
+        except Exception as error:
+            print("\nError occurred: " + str(error))
+            exit(1)
+        time.sleep(retry_interval)
+
+    print("\nError: User " + username + " was not created after %d attempts." % max_attempts)
+    exit(1)
 
 # returns true if the process with given name is running
 def is_process_running(process_name):
@@ -320,6 +388,8 @@ print ("==============================================\n")
 # Create a new user to reject consent
 createNewUser("user1", "User1@password")
 
+set_supported_fapi_profiles()
+
 def createSPApp(app_json):
     print("\n")
     dcr(app_json)
@@ -327,7 +397,10 @@ def createSPApp(app_json):
     app_details = get_service_provider_details(app_id)
     set_application_scopes_for_consent(app_id)
     disable_skipping_consent(app_id)
-    set_hybridFlow_config(app_id)
+    if app_json.get("fapi_profile") is not None:
+        set_fapi_profile_config(app_id, app_json.get("fapi_profile"))
+    else:
+        set_hybridFlow_config(app_id)
     configure_acr(app_id)
     return app_details
 
@@ -347,3 +420,9 @@ generateConfigForPlan(constants.PVTKEYJWT_PAR_APP1, constants.PVTKEYJWT_PAR_APP2
 
 print("\n>>> Configs for mtls par test plan")
 generateConfigForPlan(constants.MTLS_PAR_APP1, constants.MTLS_PAR_APP2, "config/IS_config_fapi_mtls_par.json", "mtls_par")
+
+print("\n>>> Configs for FAPI 2.0 pvtkeyjwt test plan")
+generateConfigForPlan(constants.FAPI2_PVTKEYJWT_APP1, constants.FAPI2_PVTKEYJWT_APP2, "config/IS_config_fapi2_pvtkeyjwt.json", "fapi2_pvtkeyjwt")
+
+print("\n>>> Configs for FAPI 2.0 mtls test plan")
+generateConfigForPlan(constants.FAPI2_MTLS_APP1, constants.FAPI2_MTLS_APP2, "config/IS_config_fapi2_mtls.json", "fapi2_mtls")

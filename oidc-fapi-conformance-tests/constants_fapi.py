@@ -5,6 +5,10 @@ BASE_URL = "https://iam:9443"
 DCR_ENDPOINT = BASE_URL + "/api/identity/oauth2/dcr/v1.1/register"
 TOKEN_ENDPOINT = BASE_URL + "/oauth2/token"
 APPLICATION_ENDPOINT = BASE_URL + "/api/server/v1/applications"
+FAPI_CONFIG_ENDPOINT = BASE_URL + "/api/server/v1/configs/fapi"
+# Allowing FAPI 2.0 for the tenant makes the issuer the server base URL, so the discovery document is served from
+# the issuer identifier.
+DISCOVERY_URL = BASE_URL + "/.well-known/openid-configuration"
 CREATE_USER_ENDPOINT = BASE_URL + "/scim2/Users"
 RESOURCE_ENDPOINT_URL = "https://iam/resource"
 
@@ -33,6 +37,9 @@ DISABLE_SKIP_CONSENT_BODY_PAYLOAD = {
 
 HEADERS_WITH_AUTH = {'Content-Type': 'application/json', 'Connection': 'keep-alive',
                'Authorization': 'Basic YWRtaW46YWRtaW4='}
+
+# (connect, read) timeouts in seconds for the IS configuration requests
+REQUEST_TIMEOUT = (10, 60)
 
 # SP App common configs
 
@@ -159,6 +166,67 @@ MTLS_PAR_APP2 = {
     "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
     "jwks_uri": JWKS_2,
     "require_pushed_authorization_requests" : "true",
+}
+
+# FAPI 2.0 Security Profile SP App configs
+# FAPI 2.0 mandates PAR and the test plan sends unsigned PAR requests.
+
+FAPI2_PROFILE = "FAPI2_SECURITY"
+FAPI_SUPPORTED_PROFILES = ["FAPI1_ADVANCED", FAPI2_PROFILE]
+
+FAPI2_PVTKEYJWT_APP1 = {
+    "client_name": "fapi2sp_pvtkeyjwt_app1",
+    "token_endpoint_auth_method": "private_key_jwt",
+    "token_endpoint_allow_reuse_pvt_key_jwt": "false",
+    "client_id": "fapi2_pvtkeyjwt1_client_id",
+    "client_secret": "fapi2_pvtkeyjwt1_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
+    "jwks_uri": JWKS_1,
+    "require_pushed_authorization_requests" : "true",
+    "require_signed_request_object" : "false",
+    "fapi_profile": FAPI2_PROFILE,
+}
+
+FAPI2_PVTKEYJWT_APP2 = {
+    "client_name": "fapi2sp_pvtkeyjwt_app2",
+    "token_endpoint_auth_method": "private_key_jwt",
+    "token_endpoint_allow_reuse_pvt_key_jwt": "false",
+    "client_id": "fapi2_pvtkeyjwt2_client_id",
+    "client_secret": "fapi2_pvtkeyjwt2_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
+    "jwks_uri": JWKS_2,
+    "require_pushed_authorization_requests" : "true",
+    "require_signed_request_object" : "false",
+    "fapi_profile": FAPI2_PROFILE,
+}
+
+FAPI2_MTLS_APP1 = {
+    "client_name": "fapi2sp_mtls_app1",
+    "token_endpoint_auth_method": "tls_client_auth",
+    "client_id": "fapi2_mtls1_client_id",
+    "client_secret": "fapi2_mtls1_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback"],
+    "jwks_uri": JWKS_1,
+    "require_pushed_authorization_requests" : "true",
+    "require_signed_request_object" : "false",
+    "fapi_profile": FAPI2_PROFILE,
+}
+
+FAPI2_MTLS_APP2 = {
+    "client_name": "fapi2sp_mtls_app2",
+    "token_endpoint_auth_method": "tls_client_auth",
+    "client_id": "fapi2_mtls2_client_id",
+    "client_secret": "fapi2_mtls2_client_secret",
+    "redirect_uris": ["https://localhost.emobix.co.uk:8443/test/a/fapi-wso2is/callback?dummy1=lorem&dummy2=ipsum"],
+    "jwks_uri": JWKS_2,
+    "require_pushed_authorization_requests" : "true",
+    "require_signed_request_object" : "false",
+    "fapi_profile": FAPI2_PROFILE,
+}
+
+FAPI2_PKCE_CONFIG = {
+    "mandatory": True,
+    "supportPlainTransformAlgorithm": False
 }
 
 ENABLE_HYBRID_FLOW = {
