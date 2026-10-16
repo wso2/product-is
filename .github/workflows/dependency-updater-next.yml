@@ -84,6 +84,30 @@ jobs:
           echo "Updating dependencies"
           echo "=========================================================="
           mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*,org.wso2.carbon.multitenancy:*,org.wso2.carbon.registry:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          echo "Checking carbon kernel updates"
+          echo "=========================================================="
+          CURRENT_KERNEL_VERSION=$(sed -n 's|.*<carbon.kernel.version>\(.*\)</carbon.kernel.version>.*|\1|p' pom.xml | head -1)
+          if [ -z "$CURRENT_KERNEL_VERSION" ]; then
+            echo "::error::Could not read carbon.kernel.version from pom.xml."
+            exit 1
+          fi
+          KERNEL_VERSION_LINE=${CURRENT_KERNEL_VERSION%.*}
+          KERNEL_METADATA=$(curl -fsSL https://maven.wso2.org/nexus/content/groups/public/org/wso2/carbon/org.wso2.carbon.core/maven-metadata.xml)
+          LATEST_KERNEL_VERSION=$(printf '%s\n' "$KERNEL_METADATA" \
+            | sed -n "s|.*<version>\(${KERNEL_VERSION_LINE//./\\.}\.[0-9][0-9]*\)</version>.*|\1|p" \
+            | sort -t. -k3,3n | tail -1)
+          if [ -z "$LATEST_KERNEL_VERSION" ]; then
+            echo "::error::Could not resolve the latest carbon kernel version on the ${KERNEL_VERSION_LINE} line."
+            exit 1
+          fi
+          NEWEST_KERNEL_VERSION=$(printf '%s\n%s\n' "$CURRENT_KERNEL_VERSION" "$LATEST_KERNEL_VERSION" | sort -t. -k3,3n | tail -1)
+          if [ "$NEWEST_KERNEL_VERSION" != "$CURRENT_KERNEL_VERSION" ]; then
+            sed -i "s|<carbon.kernel.version>${CURRENT_KERNEL_VERSION}</carbon.kernel.version>|<carbon.kernel.version>${LATEST_KERNEL_VERSION}</carbon.kernel.version>|" pom.xml
+            sed -i "s|version=\"${CURRENT_KERNEL_VERSION}\"|version=\"${LATEST_KERNEL_VERSION}\"|g" modules/p2-profile-gen/carbon.product
+            echo "Bumped carbon kernel version: ${CURRENT_KERNEL_VERSION} -> ${LATEST_KERNEL_VERSION}"
+          else
+            echo "Carbon kernel version is up to date: ${CURRENT_KERNEL_VERSION}"
+          fi
           echo "Available updates"
           echo "=========================================================="
           git diff --color > dependency_updates.diff
