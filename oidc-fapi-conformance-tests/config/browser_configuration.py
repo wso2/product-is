@@ -306,6 +306,81 @@ CONFIG = {
                     }
                 ]
             },
+            "fapi2-security-profile-final-happy-flow": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BEFORE_CONSENT,
+                            CONSENT_APPROVE,
+                            VERIFY_COMPLETE
+
+                        ]
+                    }
+                ]
+            },
+            "fapi2-security-profile-final-user-rejects-authentication": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BEFORE_CONSENT_USER1,
+                            CONSENT_DENY,
+                            VERIFY_COMPLETE
+
+                        ]
+                    }
+                ]
+            },
+            "fapi2-security-profile-final-ensure-registered-redirect-uri": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            VERIFY_ERROR
+                        ]
+                    }
+                ]
+            },
+            "fapi2-security-profile-final-plain-fapi-ensure-registered-redirect-uri": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            VERIFY_ERROR
+                        ]
+                    }
+                ]
+            },
+            "fapi2-security-profile-final-ensure-redirect-uri-in-authorization-request": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            VERIFY_ERROR
+                        ]
+                    }
+                ]
+            },
+            "fapi2-security-profile-final-par-ensure-reused-request-uri-prior-to-auth-completion-succeeds": {
+                "browser": [
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "match-limit": 1,
+                        "tasks": [
+                            JUST_SCREENSHOT
+                        ]
+                    },
+                    {
+                        "match": constants.BASE_URL + "/oauth2/authorize*",
+                        "tasks": [
+                            LOGIN_BEFORE_CONSENT,
+                            CONSENT_APPROVE,
+                            VERIFY_COMPLETE
+                        ]
+                    }
+                ]
+            },
         }
     },
 }
