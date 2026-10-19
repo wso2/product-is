@@ -23,6 +23,7 @@ declare -a ALL_TESTS=(
     "is-tests-uuid-user-store"
     "is-tests-federation"
     "is-tests-federation-restart"
+    "is-tests-connection-sharing"
     "is-tests-jdbc-userstore"
     "is-tests-read-only-userstore"
     "is-tests-oauth-jwt-token-gen-enabled"

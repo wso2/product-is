@@ -1,0 +1,34 @@
+{
+  "name": "<IDP_NAME>",
+  "description": "Identity provider with a user defined federated authenticator",
+  "isPrimary": false,
+  "claims": {
+    "userIdClaim": {
+      "uri": ""
+    },
+    "provisioningClaims": [],
+    "roleClaim": {
+      "uri": ""
+    }
+  },
+  "federatedAuthenticators": {
+    "defaultAuthenticatorId": "<AUTHENTICATOR_ID>",
+    "authenticators": [
+      {
+        "isEnabled": true,
+        "authenticatorId": "<AUTHENTICATOR_ID>",
+        "definedBy": "USER",
+        "endpoint": {
+          "uri": "https://abc.com/authenticate",
+          "authentication": {
+            "type": "BASIC",
+            "properties": {
+              "username": "testUser",
+              "password": "testPassword"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

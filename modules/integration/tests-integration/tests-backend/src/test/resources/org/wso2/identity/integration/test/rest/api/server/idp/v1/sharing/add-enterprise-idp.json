@@ -1,0 +1,65 @@
+{
+  "name": "<IDP_NAME>",
+  "alias": "https://enterprise.idp.test/token",
+  "description": "Enterprise OIDC connection shared with organizations.",
+  "image": "assets/images/logos/enterprise.svg",
+  "isPrimary": false,
+  "roles": {
+    "mappings": [],
+    "outboundProvisioningRoles": []
+  },
+  "certificate": {
+    "jwksUri": "https://enterprise.idp.test/jwks"
+  },
+  "claims": {
+    "userIdClaim": {
+      "uri": ""
+    },
+    "provisioningClaims": [],
+    "roleClaim": {
+      "uri": ""
+    }
+  },
+  "federatedAuthenticators": {
+    "defaultAuthenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
+    "authenticators": [
+      {
+        "isEnabled": true,
+        "authenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
+        "properties": [
+          {
+            "key": "ClientId",
+            "value": "enterprise-idp-client-id"
+          },
+          {
+            "key": "ClientSecret",
+            "value": "enterprise-idp-client-secret"
+          },
+          {
+            "key": "OAuth2AuthzEPUrl",
+            "value": "https://enterprise.idp.test/authorize"
+          },
+          {
+            "key": "OAuth2TokenEPUrl",
+            "value": "https://enterprise.idp.test/token"
+          },
+          {
+            "key": "callbackUrl",
+            "value": "https://localhost:9853/commonauth"
+          }
+        ]
+      }
+    ]
+  },
+  "provisioning": {
+    "jit": {
+      "isEnabled": false,
+      "scheme": "PROVISION_SILENTLY",
+      "userstore": "PRIMARY"
+    }
+  },
+  "homeRealmIdentifier": "enterprise-idp-home-realm",
+  "isFederationHub": false,
+  "idpIssuerName": "",
+  "templateId": "enterprise-oidc-idp"
+}
