@@ -1,0 +1,12 @@
+{
+  "identifier": "test-vp-auth-flow-definition",
+  "displayName": "Test VP Auth Flow Definition",
+  "description": "Presentation definition for VP authenticator end-to-end flow integration tests",
+  "credentials": [
+    {
+      "id": "PersonCredential",
+      "type": "PersonCredential",
+      "format": "dc+sd-jwt"
+    }
+  ]
+}

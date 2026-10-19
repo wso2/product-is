@@ -1,0 +1,446 @@
+/*
+ * Copyright (c) 2026, WSO2 LLC. (http://www.wso2.com).
+ *
+ * WSO2 LLC. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.wso2.identity.integration.test.oid4vp;
+
+import com.nimbusds.jose.jwk.ECKey;
+import com.nimbusds.jwt.SignedJWT;
+import io.restassured.http.ContentType;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
+import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.utils.SDJwtVcTestBuilder;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Integration tests for the VP-based self-registration flow using PresentationExecutor.
+ *
+ * <p>This test class validates the wallet-based user self-registration path:
+ * <ol>
+ *   <li>A registration flow is configured with {@code PresentationExecutor} referencing a
+ *       digital-wallet-connection IDP.</li>
+ *   <li>The flow engine initiates a VP session and returns a wallet redirect URL
+ *       ({@code type=REDIRECTION}).</li>
+ *   <li>A synthetic wallet submits a valid SD-JWT-VC via the direct_post endpoint.</li>
+ *   <li>The flow is resumed and completes with {@code flowStatus=COMPLETE}.</li>
+ * </ol>
+ */
+public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBase {
+
+    // Definition resource used by this test — distinct from the auth-flow definition to avoid 409 conflicts.
+    private static final String FLOW_DEFINITION_RESOURCE =
+            "org/wso2/identity/integration/test/oid4vp/create-vp-presentation-definition-registration.json";
+
+    private static final String CREDENTIAL_IDENTIFIER = "PersonCredential";
+    private static final String ISSUER_URL = "https://test-issuer.example.com";
+
+    private static final String WALLET_IDP_NAME = "VP-SelfReg-Test-IDP";
+
+    private static final int    POLL_MAX_RETRIES = 15;
+    private static final long   POLL_INTERVAL_MS = 500L;
+
+    private static final String FLOW_TYPE_REGISTRATION = "REGISTRATION";
+    private static final String FLOW_STATUS_INCOMPLETE  = "INCOMPLETE";
+    private static final String FLOW_STATUS_COMPLETE    = "COMPLETE";
+    private static final String FLOW_RESP_TYPE_REDIRECTION = "REDIRECTION";
+
+    private ECKey issuerSigningKey;
+    private String presentationDefinitionId;
+    private String walletConnectionIdpId;
+
+    private FlowExecutionClient flowExecutionClient;
+
+    // Shared state across chained tests.
+    private String sharedFlowId;
+    private String sharedRequestId;
+    private String sharedNonce;
+    private String sharedAudience;
+
+    // ------------------------------------------------------------------
+    // @BeforeClass / @AfterClass
+    // ------------------------------------------------------------------
+
+    @BeforeClass(alwaysRun = true)
+    public void setUp() throws Exception {
+
+        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        issuerSigningKey = SDJwtVcTestBuilder.generateSigningKey();
+
+        configureVPResponseMode("direct_post");
+        presentationDefinitionId = createPresentationDefinitionFromResource(FLOW_DEFINITION_RESOURCE);
+        walletConnectionIdpId = createWalletConnectionIdpWithDefinitionId(WALLET_IDP_NAME, presentationDefinitionId);
+        configureTrustedIssuer(presentationDefinitionId, CREDENTIAL_IDENTIFIER, ISSUER_URL, issuerSigningKey);
+        configureIdpSubjectClaim(walletConnectionIdpId);
+        configureRegistrationFlow(WALLET_IDP_NAME);
+        enableRegistrationFlow();
+
+        flowExecutionClient = new FlowExecutionClient(serverURL, isServer.getContextTenant());
+        initVPSessionClient();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDown() throws Exception {
+
+        disableRegistrationFlow();
+        deleteDigitalWalletConnection(walletConnectionIdpId);
+        deletePresentationDefinition(presentationDefinitionId);
+        closeVPSessionClient();
+        if (flowExecutionClient != null) {
+            flowExecutionClient.closeHttpClient();
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Test 1 — Initiate self-registration; expect REDIRECTION with wallet URL
+    // ------------------------------------------------------------------
+
+    @Test(groups = "wso2.is",
+            description = "Initiating a VP registration flow returns REDIRECTION type with wallet URL and requestId.")
+    public void testInitiateSelfRegistrationViaVP() throws Exception {
+
+        Object responseObj = flowExecutionClient.initiateFlowExecution(FLOW_TYPE_REGISTRATION);
+        Assert.assertTrue(responseObj instanceof FlowExecutionResponse,
+                "Expected FlowExecutionResponse but got: " + responseObj.getClass().getSimpleName());
+
+        FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
+        sharedFlowId = response.getFlowId();
+        Assert.assertNotNull(sharedFlowId, "flowId must not be null.");
+        Assert.assertEquals(response.getFlowStatus(), FLOW_STATUS_INCOMPLETE,
+                "Flow status must be INCOMPLETE after initiation.");
+        Assert.assertEquals(response.getType().toString(), FLOW_RESP_TYPE_REDIRECTION,
+                "Flow type must be REDIRECTION for VP-based registration.");
+
+        Assert.assertNotNull(response.getData(), "Response data must not be null.");
+        Map<String, Object> additionalData = response.getData().getAdditionalData();
+        Assert.assertNotNull(additionalData, "additionalData must be present in REDIRECTION response.");
+
+        Object requestIdObj = additionalData.get("vp_request_id");
+        Assert.assertNotNull(requestIdObj, "additionalData must contain 'vp_request_id'.");
+        sharedRequestId = requestIdObj.toString();
+        Assert.assertFalse(sharedRequestId.trim().isEmpty(), "'vp_request_id' must not be blank.");
+
+        String redirectURL = response.getData().getRedirectURL();
+        if (redirectURL == null || redirectURL.isEmpty()) {
+            Object walletUrlObj = additionalData.get("redirectURL");
+            Assert.assertNotNull(walletUrlObj,
+                    "REDIRECTION response must contain a redirect URL (either data.redirectURL or additionalData.redirectURL).");
+            redirectURL = walletUrlObj.toString();
+        }
+        Assert.assertTrue(redirectURL.startsWith("openid4vp://"),
+                "Redirect URL must be a wallet deep-link starting with 'openid4vp://', but was: " + redirectURL);
+    }
+
+    // ------------------------------------------------------------------
+    // Test 2 — Fetch the presentation request JWT (to extract nonce + audience)
+    // ------------------------------------------------------------------
+
+    @Test(groups = "wso2.is",
+            description = "GET /requests/{id} returns a compact JWT with nonce and client_id.",
+            dependsOnMethods = "testInitiateSelfRegistrationViaVP")
+    public void testFetchPresentationRequestJwt() throws Exception {
+
+        try (CloseableHttpResponse response = vpSessionRestClient.getPresentationRequestJwt(sharedRequestId)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String body = EntityUtils.toString(response.getEntity()).trim();
+
+            Assert.assertEquals(statusCode, HttpStatus.SC_OK,
+                    "GET /requests/{id} must return 200.  Body: " + body);
+            Assert.assertTrue(body.split("\\.").length >= 3,
+                    "Presentation request response must be a compact JWT (at least two dots).");
+
+            SignedJWT requestJwt = SignedJWT.parse(body);
+            sharedNonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
+            sharedAudience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
+            Assert.assertNotNull(sharedNonce, "Presentation request JWT must contain a 'nonce' claim.");
+            Assert.assertNotNull(sharedAudience, "Presentation request JWT must contain a 'client_id' claim.");
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Test 3 — Submit a valid VP token via direct_post
+    // ------------------------------------------------------------------
+
+    @Test(groups = "wso2.is",
+            description = "Submitting a valid SD-JWT-VC VP token via direct_post returns 200.",
+            dependsOnMethods = "testFetchPresentationRequestJwt")
+    public void testSubmitValidVPForSelfRegistration() throws Exception {
+
+        String vpToken = SDJwtVcTestBuilder.builder()
+                .vct("PersonCredential")
+                .issuer(ISSUER_URL)
+                .claim("given_name", "Alice")
+                .claim("family_name", "Smith")
+                .nonce(sharedNonce)
+                .audience(sharedAudience)
+                .signingKey(issuerSigningKey)
+                .buildVpToken(CREDENTIAL_IDENTIFIER);
+
+        try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(sharedRequestId, vpToken)) {
+            int statusCode = response.getStatusLine().getStatusCode();
+            String body = EntityUtils.toString(response.getEntity());
+            Assert.assertEquals(statusCode, HttpStatus.SC_OK,
+                    "Submitting a valid VP via direct_post must return 200.  Body: " + body);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Test 4 — Poll VP session until VERIFIED
+    // ------------------------------------------------------------------
+
+    @Test(groups = "wso2.is",
+            description = "After VP submission the verification session transitions to VERIFIED.",
+            dependsOnMethods = "testSubmitValidVPForSelfRegistration")
+    public void testVPSessionTransitionsToVerified() throws Exception {
+
+        String finalStatus = pollStatusUntilNotActive(sharedRequestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
+        Assert.assertEquals(finalStatus, STATUS_VERIFIED,
+                "VP session must be VERIFIED before the registration flow can complete.");
+    }
+
+    // ------------------------------------------------------------------
+    // Test 5 — Resume registration flow; expect COMPLETE
+    // ------------------------------------------------------------------
+
+    @Test(groups = "wso2.is",
+            description = "Resuming the registration flow after VP verification returns flowStatus=COMPLETE.",
+            dependsOnMethods = "testVPSessionTransitionsToVerified")
+    public void testRegistrationFlowCompletesAfterVPVerified() throws Exception {
+
+        FlowExecutionRequest request = new FlowExecutionRequest();
+        request.setFlowId(sharedFlowId);
+        request.setFlowType(FLOW_TYPE_REGISTRATION);
+        Map<String, String> inputs = new HashMap<>();
+        inputs.put("vp_request_id", sharedRequestId);
+        request.setInputs(inputs);
+
+        Object responseObj = flowExecutionClient.executeFlow(request);
+        Assert.assertTrue(responseObj instanceof FlowExecutionResponse,
+                "Expected FlowExecutionResponse on flow resume but got: "
+                        + (responseObj != null ? responseObj.getClass().getSimpleName() : "null"));
+
+        FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
+        Assert.assertEquals(response.getFlowStatus(), FLOW_STATUS_COMPLETE,
+                "Registration flow must be COMPLETE after successful VP verification.");
+    }
+
+    // ------------------------------------------------------------------
+    // Private setup helpers
+    // ------------------------------------------------------------------
+
+    /**
+     * Creates a digital wallet connection IDP with the given fixed name (instead of a random UUID
+     * suffix) so the name can be referenced in the registration flow step's meta.
+     * The {@code definitionId} must be the server-assigned UUID returned at definition creation time,
+     * since {@code PresentationExecutor} looks up the definition by UUID via
+     * {@code startPresentationSession}.
+     */
+    private String createWalletConnectionIdpWithDefinitionId(String idpName, String definitionId) throws Exception {
+
+        String idpJson = "{"
+                + "\"name\": \"" + idpName + "\","
+                + "\"description\": \"VP self-registration test IDP\","
+                + "\"federatedAuthenticators\": {"
+                + "  \"defaultAuthenticatorId\": \"UHJlc2VudGF0aW9uQXV0aGVudGljYXRvcg\","
+                + "  \"authenticators\": [{"
+                + "    \"authenticatorId\": \"UHJlc2VudGF0aW9uQXV0aGVudGljYXRvcg\","
+                + "    \"isEnabled\": true,"
+                + "    \"properties\": [{"
+                + "      \"key\": \"presentationDefinitionId\","
+                + "      \"value\": \"" + definitionId + "\""
+                + "    }]"
+                + "  }]"
+                + "}"
+                + "}";
+
+        String url = serverURL + "/api/server/v1/identity-providers";
+        try (CloseableHttpResponse response = doPostJson(url, idpJson)) {
+            String body = EntityUtils.toString(response.getEntity());
+            int status = response.getStatusLine().getStatusCode();
+            Assert.assertEquals(status, HttpStatus.SC_CREATED,
+                    "Failed to create wallet connection IDP (status " + status + "): " + body);
+            JSONObject json = (JSONObject) new JSONParser().parse(body);
+            Object idObj = json.get("id");
+            Assert.assertNotNull(idObj, "IDP creation response must contain 'id'.");
+            return idObj.toString();
+        }
+    }
+
+    /**
+     * Sets the IDP's subject claim to {@code "given_name"} so that {@code PresentationExecutor}
+     * can resolve a non-blank subject identifier from the VP credential claim {@code given_name}.
+     */
+    private void configureIdpSubjectClaim(String idpId) throws IOException {
+
+        String claimsJson = "{"
+                + "\"userIdClaim\": {\"uri\": \"given_name\"},"
+                + "\"mappings\": [{"
+                + "  \"idpClaim\": \"given_name\","
+                + "  \"localClaim\": {\"uri\": \"http://wso2.org/claims/lastname\"}"
+                + "}]"
+                + "}";
+        String url = serverURL + "/api/server/v1/identity-providers/" + idpId + "/claims";
+        try (CloseableHttpResponse response = doPutJson(url, claimsJson)) {
+            int status = response.getStatusLine().getStatusCode();
+            Assert.assertEquals(status, HttpStatus.SC_OK,
+                    "IDP claim configuration update failed with status: " + status);
+        }
+    }
+
+    /**
+     * Registers a registration flow that uses {@code PresentationExecutor} referencing the
+     * given IDP connection name, followed by {@code UserProvisioningExecutor} at END.
+     */
+    private void configureRegistrationFlow(String idpName) throws IOException {
+
+        String flowJson = "{"
+                + "\"flowType\": \"REGISTRATION\","
+                + "\"steps\": ["
+                + "  {"
+                + "    \"id\": \"vp_exec_step\","
+                + "    \"type\": \"EXECUTION\","
+                + "    \"data\": {"
+                + "      \"action\": {"
+                + "        \"type\": \"EXECUTOR\","
+                + "        \"executor\": {"
+                + "          \"name\": \"PresentationExecutor\","
+                + "          \"meta\": {\"idpName\": \"" + idpName + "\"}"
+                + "        },"
+                + "        \"next\": \"END\""
+                + "      }"
+                + "    },"
+                + "    \"size\": {\"width\": 206, \"height\": 70},"
+                + "    \"position\": {\"x\": 200, \"y\": 200}"
+                + "  },"
+                + "  {"
+                + "    \"id\": \"END\","
+                + "    \"type\": \"END\","
+                + "    \"data\": {"
+                + "      \"action\": {"
+                + "        \"type\": \"EXECUTOR\","
+                + "        \"executor\": {\"name\": \"UserProvisioningExecutor\"}"
+                + "      }"
+                + "    },"
+                + "    \"size\": {\"width\": 350, \"height\": 277},"
+                + "    \"position\": {\"x\": 700, \"y\": 200}"
+                + "  }"
+                + "]"
+                + "}";
+
+        String url = serverURL + "/api/server/v1/flow";
+        try (CloseableHttpResponse response = doPutJson(url, flowJson)) {
+            int status = response.getStatusLine().getStatusCode();
+            Assert.assertEquals(status, HttpStatus.SC_OK,
+                    "Registration flow configuration failed with status: " + status);
+        }
+    }
+
+    /**
+     * Enables the REGISTRATION flow orchestration via the flow config API.
+     */
+    private void enableRegistrationFlow() throws IOException {
+
+        String body = "{\"flowType\":\"REGISTRATION\",\"isEnabled\":true}";
+        String url = serverURL + "/api/server/v1/flow/config";
+        try (CloseableHttpResponse response = doPatchJson(url, body)) {
+            int status = response.getStatusLine().getStatusCode();
+            Assert.assertEquals(status, HttpStatus.SC_OK,
+                    "Enabling registration flow failed with status: " + status);
+        }
+    }
+
+    /**
+     * Disables the REGISTRATION flow orchestration. Called from @AfterClass.
+     */
+    private void disableRegistrationFlow() throws IOException {
+
+        String body = "{\"flowType\":\"REGISTRATION\",\"isEnabled\":false}";
+        String url = serverURL + "/api/server/v1/flow/config";
+        try (CloseableHttpResponse response = doPatchJson(url, body)) {
+            int status = response.getStatusLine().getStatusCode();
+            // Tolerate 200 or 404 (server may already have cleared state).
+            Assert.assertTrue(status == HttpStatus.SC_OK || status == HttpStatus.SC_NOT_FOUND,
+                    "Unexpected status disabling registration flow: " + status);
+        }
+    }
+
+    // ------------------------------------------------------------------
+    // Low-level HTTP helpers (admin-authenticated)
+    // ------------------------------------------------------------------
+
+    private CloseableHttpResponse doPostJson(String url, String json) throws IOException {
+
+        org.apache.http.impl.client.CloseableHttpClient httpClient =
+                org.apache.http.impl.client.HttpClients.createDefault();
+        org.apache.http.client.methods.HttpPost post =
+                new org.apache.http.client.methods.HttpPost(url);
+        post.setHeaders(buildAdminHeaders());
+        post.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
+        return httpClient.execute(post);
+    }
+
+    private CloseableHttpResponse doPutJson(String url, String json) throws IOException {
+
+        org.apache.http.impl.client.CloseableHttpClient httpClient =
+                org.apache.http.impl.client.HttpClients.createDefault();
+        org.apache.http.client.methods.HttpPut put =
+                new org.apache.http.client.methods.HttpPut(url);
+        put.setHeaders(buildAdminHeaders());
+        put.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
+        return httpClient.execute(put);
+    }
+
+    private CloseableHttpResponse doPatchJson(String url, String json) throws IOException {
+
+        org.apache.http.impl.client.CloseableHttpClient httpClient =
+                org.apache.http.impl.client.HttpClients.createDefault();
+        org.apache.http.client.methods.HttpPatch patch =
+                new org.apache.http.client.methods.HttpPatch(url);
+        patch.setHeaders(buildAdminHeaders());
+        patch.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
+        return httpClient.execute(patch);
+    }
+
+    private Header[] buildAdminHeaders() {
+
+        String credentials = userInfo.getUserName() + ":" + userInfo.getPassword();
+        String encoded = Base64.encodeBase64String(credentials.getBytes(StandardCharsets.UTF_8)).trim();
+        return new Header[]{
+                new BasicHeader("Authorization", "Basic " + encoded),
+                new BasicHeader("Content-Type", String.valueOf(ContentType.JSON)),
+                new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT)
+        };
+    }
+}
