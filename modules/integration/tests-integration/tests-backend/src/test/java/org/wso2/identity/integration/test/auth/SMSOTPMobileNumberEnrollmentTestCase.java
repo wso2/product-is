@@ -35,11 +35,15 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.base.MockSMSProvider;
 import org.wso2.identity.integration.test.otpProviderFailure.AbstractOTPProviderFailureTestBase;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimReq;
+import org.wso2.identity.integration.test.rest.api.server.claim.management.v1.model.LocalClaimRes;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Name;
+import org.wso2.identity.integration.test.rest.api.user.common.model.PhoneNumbers;
 import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.ClaimManagementRestClient;
 import org.wso2.identity.integration.test.restclients.IdentityGovernanceRestClient;
 import org.wso2.identity.integration.test.restclients.NotificationSenderRestClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
@@ -48,6 +52,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -71,6 +76,8 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
     private static final String INVALID_MOBILE_NUMBER_ERROR = "authFailureMsg=sms.otp.mobile.number.invalid";
     private static final String MOBILE_NOT_FOUND_ERROR = "authFailureMsg=user.mobile.not.found";
     private static final String RESEND_LIMIT_EXCEEDED_ERROR = "authFailureMsg=resent.count.exceeded";
+    private static final String ENROLLMENT_FAILED_ERROR = "authFailureMsg=sms.otp.mobile.number.enrollment.failed";
+    private static final String MOBILE_CLAIM_URI = "http://wso2.org/claims/mobile";
     private static final String WSO2_SCIM_SCHEMA = "urn:scim:wso2:schema";
     private static final String USER_PASSWORD = "User@123SmsOtp!";
     private static final int MAX_REDIRECTS = 10;
@@ -312,6 +319,44 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
     }
 
     @Test(groups = "wso2.is", dependsOnMethods = "testEnrollMobileNumber",
+            description = "The authentication fails when the verified mobile number cannot be saved to the profile.")
+    public void testAuthenticationFailsWhenMobileNumberCannotBeSaved() throws Exception {
+
+        String mobileNumber = "+94776667788";
+        ClaimManagementRestClient claimClient = new ClaimManagementRestClient(serverURL, tenantInfo);
+        LocalClaimRes mobileClaim = claimClient.getLocalClaimByUri(MOBILE_CLAIM_URI);
+        try {
+            // The number of another user cannot be saved, since the mobile number is required to be unique.
+            updateMobileClaimUniqueness(claimClient, mobileClaim, LocalClaimReq.UniquenessScopeEnum.ACROSS_USERSTORES);
+            createUserWithMobileNumber("sms_otp_enroll_taken_owner", mobileNumber);
+            String userId = createUserWithoutMobileNumber("sms_otp_enroll_taken");
+
+            try (CloseableHttpClient http = createSessionHttpClient()) {
+                String pageUrl = loginWithPassword(http, "sms_otp_enroll_taken");
+                String sessionDataKey = extractUrlParam(pageUrl, "sessionDataKey");
+
+                mockSMSProvider.clearSmsContent();
+                pageUrl = submitMobileNumber(http, sessionDataKey, mobileNumber);
+                Assert.assertTrue(pageUrl.contains(SMS_OTP_PAGE), "The OTP page is expected: " + pageUrl);
+                Assert.assertEquals(mockSMSProvider.getRecipient(), mobileNumber);
+
+                // The OTP is verified, but the number cannot be saved. Hence, the authentication does not complete.
+                pageUrl = followToPage(http, sendOTPCode(http, extractUrlParam(pageUrl, "sessionDataKey"),
+                        mockSMSProvider.getOTP()));
+                Assert.assertTrue(pageUrl.contains(MOBILE_NUMBER_REQUEST_PAGE),
+                        "The mobile number request page is expected: " + pageUrl);
+                Assert.assertTrue(pageUrl.contains(ENROLLMENT_FAILED_ERROR), "Unexpected error: " + pageUrl);
+            }
+            Assert.assertNull(getMobileNumber(userId), "The number must not be saved.");
+        } finally {
+            updateMobileClaimUniqueness(claimClient, mobileClaim, mobileClaim.getUniquenessScope() == null ?
+                    LocalClaimReq.UniquenessScopeEnum.NONE :
+                    LocalClaimReq.UniquenessScopeEnum.valueOf(mobileClaim.getUniquenessScope().name()));
+            claimClient.closeHttpClient();
+        }
+    }
+
+    @Test(groups = "wso2.is", dependsOnMethods = "testEnrollMobileNumber",
             description = "A user enrolls a mobile number through app native authentication.")
     public void testEnrollMobileNumberWithAppNativeAuthentication() throws Exception {
 
@@ -345,6 +390,36 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
         String userId = scim2RestClient.createUser(user);
         userIds.add(userId);
         return userId;
+    }
+
+    private void createUserWithMobileNumber(String username, String mobileNumber) throws Exception {
+
+        UserObject user = new UserObject();
+        user.setUserName(username);
+        user.setPassword(USER_PASSWORD);
+        user.setName(new Name().givenName("SmsOtp").familyName("Enrollment"));
+        user.addEmail(new Email().value(username + "@example.com"));
+        user.phoneNumbers(Collections.singletonList(new PhoneNumbers().type("mobile").value(mobileNumber)));
+        userIds.add(scim2RestClient.createUser(user));
+    }
+
+    private static void updateMobileClaimUniqueness(ClaimManagementRestClient claimClient, LocalClaimRes mobileClaim,
+                                                    LocalClaimReq.UniquenessScopeEnum uniquenessScope)
+            throws IOException {
+
+        LocalClaimReq claimReq = new LocalClaimReq();
+        claimReq.setClaimURI(mobileClaim.getClaimURI());
+        claimReq.setDisplayName(mobileClaim.getDisplayName());
+        claimReq.setDescription(mobileClaim.getDescription());
+        claimReq.setDisplayOrder(mobileClaim.getDisplayOrder());
+        claimReq.setReadOnly(mobileClaim.getReadOnly());
+        claimReq.setRegEx(mobileClaim.getRegEx());
+        claimReq.setRequired(mobileClaim.getRequired());
+        claimReq.setSupportedByDefault(mobileClaim.getSupportedByDefault());
+        claimReq.setDataType(mobileClaim.getDataType());
+        claimReq.setAttributeMapping(mobileClaim.getAttributeMapping());
+        claimReq.setUniquenessScope(uniquenessScope);
+        claimClient.updateLocalClaim(mobileClaim.getId(), claimReq);
     }
 
     private String loginWithPassword(CloseableHttpClient http, String username) throws Exception {
