@@ -381,6 +381,7 @@
             <class name="org.wso2.identity.integration.test.webhooks.credentials.CredentialsEventTestCase"/>
             <class name="org.wso2.identity.integration.test.webhooks.rolemanagement.AdminInitRoleManagementEventTestCase"/>
             <class name="org.wso2.identity.integration.test.webhooks.usermanagement.AdminInitUserManagementEventTestCase"/>
+            <class name="org.wso2.identity.integration.test.webhooks.organizationManagement.OrganizationManagementEventTestCase"/>
         </classes>
     </test>
 
