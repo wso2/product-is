@@ -1,0 +1,4 @@
+{
+  "clientIdScheme": "x509_san_dns",
+  "responseMode": "direct_post"
+}
