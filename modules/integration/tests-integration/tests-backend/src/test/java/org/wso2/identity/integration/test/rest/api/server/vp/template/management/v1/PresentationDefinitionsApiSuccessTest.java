@@ -424,7 +424,7 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
                 .body("presentationDefinitions.size()", greaterThanOrEqualTo(1));
     }
 
-    @Test(dependsOnMethods = {"testReplaceIssuerConfigs"})
+    @Test(dependsOnMethods = {"testReplaceIssuerConfigs", "testListWithFilter"})
     public void testDeletePresentationDefinition() {
 
         getResponseOfDelete(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR + presentationDefinitionId)

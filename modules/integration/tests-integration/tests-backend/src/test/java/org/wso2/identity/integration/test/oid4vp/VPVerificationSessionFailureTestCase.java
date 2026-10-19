@@ -41,8 +41,9 @@ import java.util.UUID;
  */
 public class VPVerificationSessionFailureTestCase extends VPVerificationSessionTestBase {
 
-    private static final int   POLL_MAX_RETRIES = 15;
-    private static final long  POLL_INTERVAL_MS = 500L;
+    private static final int    POLL_MAX_RETRIES   = 15;
+    private static final long   POLL_INTERVAL_MS   = 500L;
+    private static final String TRUSTED_ISSUER_URL = "https://test-issuer.example.com";
 
     /**
      * A trusted issuer key registered in @BeforeClass.  Credentials built with this key
@@ -64,12 +65,8 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         walletConnectionIdpId = createDigitalWalletConnection();
         presentationDefinitionId = createPresentationDefinition();
         initVPSessionClient();
-        // NOTE: Registering trustedIssuerKey as a trusted issuer for PersonCredential would be
-        // done via the presentation-definition's credential issuer-configs API.  That API is not
-        // yet modelled here; as a result, tests 11-16 that rely on trusted-issuer validation will
-        // expect FAILED status regardless of whether the key is trusted, because the server will
-        // reject any credential whose issuer key is not configured.  The tests are written to
-        // assert the status transition to FAILED in those cases.
+        configureVPResponseMode("direct_post");
+        configureTrustedIssuer(presentationDefinitionId, CREDENTIAL_IDENTIFIER, TRUSTED_ISSUER_URL, trustedIssuerKey);
     }
 
     @AfterClass(alwaysRun = true)
@@ -177,12 +174,14 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        // Build VP with the wrong nonce.
+        String audience = fetchRequestParams(requestId)[1];
+
+        // Build VP with the wrong nonce so only the nonce check causes the failure.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
                 .nonce("wrong-nonce-" + UUID.randomUUID())
-                .audience("https://verifier.example.com")
+                .audience(audience)
                 .signingKey(trustedIssuerKey)
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
@@ -202,14 +201,15 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        // Fetch nonce for a structurally valid KB-JWT.
-        String nonce = fetchNonce(requestId);
+        String[] params = fetchRequestParams(requestId);
+        String nonce    = params[0];
+        String audience = params[1];
 
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
                 .nonce(nonce)
-                .audience("https://verifier.example.com")
+                .audience(audience)
                 .expiresInSeconds(-3600L)    // expired 1 hour ago
                 .signingKey(trustedIssuerKey)
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
@@ -230,7 +230,9 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        String nonce = fetchNonce(requestId);
+        String[] params = fetchRequestParams(requestId);
+        String nonce    = params[0];
+        String audience = params[1];
 
         // Generate a fresh key that is NOT registered as a trusted issuer.
         ECKey untrustedKey = SDJwtVcTestBuilder.generateSigningKey();
@@ -239,7 +241,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
                 .nonce(nonce)
-                .audience("https://verifier.example.com")
+                .audience(audience)
                 .signingKey(untrustedKey)
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
@@ -259,13 +261,15 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        String nonce = fetchNonce(requestId);
+        String[] params = fetchRequestParams(requestId);
+        String nonce    = params[0];
+        String audience = params[1];
 
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("WrongCredentialType")   // does not match the definition requirement
                 .claim("given_name", "Alice")
                 .nonce(nonce)
-                .audience("https://verifier.example.com")
+                .audience(audience)
                 .signingKey(trustedIssuerKey)
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
@@ -304,13 +308,15 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        String nonce = fetchNonce(requestId);
+        String[] params = fetchRequestParams(requestId);
+        String nonce    = params[0];
+        String audience = params[1];
 
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
                 .nonce(nonce)
-                .audience("https://verifier.example.com")
+                .audience(audience)
                 .signingKey(trustedIssuerKey)
                 .corruptDisclosure(true)      // first disclosure is corrupted
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
@@ -377,15 +383,17 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        // Step 2: fetch nonce from presentation request.
-        String nonce = fetchNonce(requestId);
+        // Step 2: fetch nonce and audience from presentation request.
+        String[] params = fetchRequestParams(requestId);
+        String nonce    = params[0];
+        String audience = params[1];
 
-        // Step 3: build and submit a valid VP.
+        // Step 3: build and submit a valid VP using the registered trusted issuer key.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
                 .nonce(nonce)
-                .audience("https://verifier.example.com")
+                .audience(audience)
                 .signingKey(trustedIssuerKey)
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
@@ -393,9 +401,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
             EntityUtils.consume(firstResponse.getEntity());
         }
 
-        // Step 4: wait for VERIFIED (may not actually verify without registered issuer key, but
-        // the session leaves ACTIVE either way — we then attempt a second submission).
-        pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
+        // Step 4: the VP is valid — wait for VERIFIED.
+        String terminalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
+        Assert.assertEquals(terminalStatus, STATUS_VERIFIED,
+                "A valid VP signed by the registered trusted issuer must reach VERIFIED.");
 
         // Step 5: submit again — expect 400 because the session is no longer ACTIVE.
         try (CloseableHttpResponse secondResponse = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
@@ -438,23 +447,26 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
     }
 
     /**
-     * Fetch the nonce from the presentation request JWT for the given session.
-     * Returns a fallback nonce if parsing fails (for tests that only need a non-null nonce).
+     * Returns {nonce, audience} extracted from the presentation request JWT for the given session.
+     * The audience is the verifier's {@code client_id} claim, which the KB-JWT {@code aud} must match.
+     * Falls back to placeholder strings if the JWT cannot be parsed.
      */
-    private String fetchNonce(String requestId) {
+    private String[] fetchRequestParams(String requestId) {
 
         try (CloseableHttpResponse response = vpSessionRestClient.getPresentationRequestJwt(requestId)) {
             String body = EntityUtils.toString(response.getEntity()).trim();
             if (body.contains(".")) {
                 SignedJWT requestJwt = SignedJWT.parse(body);
-                String nonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
-                if (nonce != null) {
-                    return nonce;
-                }
+                String nonce    = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
+                String audience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
+                return new String[]{
+                        nonce    != null ? nonce    : "fallback-nonce-" + UUID.randomUUID(),
+                        audience != null ? audience : "fallback-audience"
+                };
             }
         } catch (Exception e) {
-            log.warn("Could not fetch nonce from presentation request JWT: " + e.getMessage());
+            log.warn("Could not fetch request params from presentation request JWT: " + e.getMessage());
         }
-        return "fallback-nonce-" + UUID.randomUUID();
+        return new String[]{"fallback-nonce-" + UUID.randomUUID(), "fallback-audience"};
     }
 }

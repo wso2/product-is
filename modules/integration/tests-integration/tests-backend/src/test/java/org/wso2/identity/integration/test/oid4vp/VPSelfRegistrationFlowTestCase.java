@@ -34,9 +34,13 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowConfig;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionRequest;
 import org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.model.FlowExecutionResponse;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowRequest;
+import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowResponse;
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
+import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.SDJwtVcTestBuilder;
 
@@ -82,6 +86,11 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     private String walletConnectionIdpId;
 
     private FlowExecutionClient flowExecutionClient;
+    private FlowManagementClient flowManagementClient;
+
+    // Snapshot of the REGISTRATION flow before setUp overwrites it — restored in tearDown.
+    private FlowResponse originalFlowSteps;
+    private FlowConfig originalFlowConfig;
 
     // Shared state across chained tests.
     private String sharedFlowId;
@@ -94,6 +103,20 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         issuerSigningKey = SDJwtVcTestBuilder.generateSigningKey();
+
+        flowManagementClient = new FlowManagementClient(serverURL, isServer.getContextTenant());
+
+        // Snapshot the current REGISTRATION flow before overwriting it so tearDown can restore it.
+        try {
+            originalFlowSteps = flowManagementClient.getFlow(FLOW_TYPE_REGISTRATION);
+        } catch (Exception e) {
+            log.warn("No existing REGISTRATION flow to save: " + e.getMessage());
+        }
+        try {
+            originalFlowConfig = flowManagementClient.getFlowConfig(FLOW_TYPE_REGISTRATION);
+        } catch (Exception e) {
+            log.warn("No existing REGISTRATION flow config to save: " + e.getMessage());
+        }
 
         configureVPResponseMode("direct_post");
         presentationDefinitionId = createPresentationDefinitionFromResource(FLOW_DEFINITION_RESOURCE);
@@ -108,14 +131,46 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     }
 
     @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
-        disableRegistrationFlow();
-        deleteDigitalWalletConnection(walletConnectionIdpId);
-        deletePresentationDefinition(presentationDefinitionId);
-        closeVPSessionClient();
+        try {
+            disableRegistrationFlow();
+        } catch (Exception e) {
+            log.warn("Failed to disable registration flow during teardown: " + e.getMessage());
+        }
+        try {
+            restoreOriginalRegistrationFlow();
+        } catch (Exception e) {
+            log.warn("Failed to restore original registration flow during teardown: " + e.getMessage());
+        }
+        try {
+            deleteDigitalWalletConnection(walletConnectionIdpId);
+        } catch (Exception e) {
+            log.warn("Failed to delete wallet connection IDP during teardown: " + e.getMessage());
+        }
+        try {
+            deletePresentationDefinition(presentationDefinitionId);
+        } catch (Exception e) {
+            log.warn("Failed to delete presentation definition during teardown: " + e.getMessage());
+        }
+        try {
+            closeVPSessionClient();
+        } catch (Exception e) {
+            log.warn("Failed to close VP session client during teardown: " + e.getMessage());
+        }
+        if (flowManagementClient != null) {
+            try {
+                flowManagementClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close flow management client during teardown: " + e.getMessage());
+            }
+        }
         if (flowExecutionClient != null) {
-            flowExecutionClient.closeHttpClient();
+            try {
+                flowExecutionClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close flow execution client during teardown: " + e.getMessage());
+            }
         }
     }
 
@@ -230,6 +285,23 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertEquals(response.getFlowStatus(), FLOW_STATUS_COMPLETE,
                 "Registration flow must be COMPLETE after successful VP verification.");
+    }
+
+    /**
+     * Restores the REGISTRATION flow steps and enabled state to the values captured before setUp ran.
+     * No-ops if no snapshot was saved (fresh IS install with no pre-existing flow).
+     */
+    private void restoreOriginalRegistrationFlow() throws Exception {
+
+        if (originalFlowSteps != null) {
+            FlowRequest restoreRequest = new FlowRequest();
+            restoreRequest.setFlowType(FLOW_TYPE_REGISTRATION);
+            restoreRequest.setSteps(originalFlowSteps.getSteps());
+            flowManagementClient.putFlow(restoreRequest);
+        }
+        if (originalFlowConfig != null) {
+            flowManagementClient.updateFlowConfig(originalFlowConfig);
+        }
     }
 
     /**
