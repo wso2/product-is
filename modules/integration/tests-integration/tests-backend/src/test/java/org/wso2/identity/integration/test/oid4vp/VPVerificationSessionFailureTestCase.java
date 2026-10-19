@@ -56,10 +56,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
     /** IDP with PresentationAuthenticator — triggers ECDSA key provisioning via VPIdPMgtListener. */
     private String walletConnectionIdpId;
 
-    // ------------------------------------------------------------------
-    // @BeforeClass / @AfterClass
-    // ------------------------------------------------------------------
-
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
 
@@ -84,10 +80,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         closeVPSessionClient();
     }
 
-    // ------------------------------------------------------------------
-    // Test 1 — POST /verification-sessions with empty body → 400
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Starting a session with an empty body returns 400.")
     public void testStartSessionMissingBody() throws Exception {
@@ -100,10 +92,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 2 — POST /verification-sessions with {} body → 400
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Starting a session with an empty JSON object (missing identifier) returns 400.")
     public void testStartSessionMissingIdentifier() throws Exception {
@@ -115,10 +103,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                     "Missing presentationDefinitionIdentifier must result in 400.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 3 — POST /verification-sessions with unknown identifier → 400
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Starting a session with an unknown presentation definition identifier returns 400.")
@@ -133,10 +117,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 4 — GET status for non-existent session → 404
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Polling status for a non-existent session returns 404.")
     public void testGetStatusNonExistentSession() throws Exception {
@@ -149,10 +129,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                     "Non-existent session status must return 404.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 5 — GET result for non-existent session → 404
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Fetching the result for a non-existent session returns 404.")
@@ -167,10 +143,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 6 — GET /requests/{random} for non-existent session → 404
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Fetching the presentation request JWT for a non-existent session returns 404.")
     public void testGetRequestNonExistentSession() throws Exception {
@@ -183,10 +155,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                     "Presentation request for non-existent session must return 404.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 7 — Submit with wrong state → 400
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Submitting a VP response with a non-existent state value returns 400.")
@@ -201,10 +169,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                     "Submitting with a non-existent state must return 400.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 8 — Nonce mismatch → session FAILED
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "A VP with a nonce that does not match the session nonce causes FAILED status.")
@@ -230,10 +194,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with nonce-mismatched VP must transition to FAILED.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 9 — Expired credential → session FAILED
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "A VP containing an already-expired SD-JWT-VC causes FAILED status.")
@@ -262,10 +222,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with an expired credential must transition to FAILED.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 10 — Untrusted issuer → session FAILED
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "A VP signed by an issuer key not in the trusted-issuer config causes FAILED status.")
@@ -296,10 +252,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 "Session with an untrusted issuer key must transition to FAILED.");
     }
 
-    // ------------------------------------------------------------------
-    // Test 11 — Wrong credential type (vct) → session FAILED
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "A VP containing a credential with the wrong 'vct' causes FAILED status.")
     public void testSubmitWrongCredentialType() throws Exception {
@@ -326,10 +278,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 "Session with wrong credential type must transition to FAILED.");
     }
 
-    // ------------------------------------------------------------------
-    // Test 12 — Malformed SD-JWT token → session FAILED
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Submitting a structurally malformed VP token causes FAILED status.")
     public void testSubmitInvalidSdJwtFormat() throws Exception {
@@ -348,10 +296,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with a malformed VP token must transition to FAILED.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 13 — Corrupted disclosure hash → session FAILED
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "A VP with a disclosure whose SHA-256 hash does not match the issuer JWT causes FAILED.")
@@ -380,10 +324,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 "Session with a corrupted disclosure hash must transition to FAILED.");
     }
 
-    // ------------------------------------------------------------------
-    // Test 14 — Missing KB-JWT → session FAILED
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "A VP that is an SD-JWT without a key-binding JWT (KB-JWT) causes FAILED status.")
     public void testSubmitInvalidKbJwt() throws Exception {
@@ -409,10 +349,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 "Session with a VP missing the KB-JWT must transition to FAILED.");
     }
 
-    // ------------------------------------------------------------------
-    // Test 15 — Wallet reports access_denied error → session FAILED
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "A wallet error submission (access_denied) causes the session to transition to FAILED.")
     public void testSubmitWalletError() throws Exception {
@@ -432,10 +368,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session after wallet access_denied must transition to FAILED.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 16 — Submit to already-VERIFIED session → 400
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "A second VP submission to an already-VERIFIED session returns 400.")
@@ -474,10 +406,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 17 — Submit to already-FAILED session → 400
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "A VP submission to an already-FAILED session returns 400.")
     public void testSubmitToAlreadyFailedSession() throws Exception {
@@ -508,10 +436,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                     "Submitting a VP to an already-FAILED session must return 400.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Private helpers
-    // ------------------------------------------------------------------
 
     /**
      * Fetch the nonce from the presentation request JWT for the given session.

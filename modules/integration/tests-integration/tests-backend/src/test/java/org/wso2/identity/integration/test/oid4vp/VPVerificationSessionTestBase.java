@@ -59,33 +59,17 @@ import java.util.UUID;
  */
 public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
 
-    // ---------------------------------------------------------------
-    // Presentation definition constants
-    // ---------------------------------------------------------------
-
     /** Identifier of the test presentation definition used across session tests. */
     protected static final String DEFINITION_IDENTIFIER = "test-vp-session-definition";
 
     /** Credential query ID used inside the presentation definition. */
     protected static final String CREDENTIAL_IDENTIFIER = "PersonCredential";
 
-    // ---------------------------------------------------------------
-    // Session status values
-    // ---------------------------------------------------------------
-
     protected static final String STATUS_ACTIVE   = "ACTIVE";
     protected static final String STATUS_VERIFIED = "VERIFIED";
     protected static final String STATUS_FAILED   = "FAILED";
 
-    // ---------------------------------------------------------------
-    // Admin API path constant
-    // ---------------------------------------------------------------
-
     private static final String PRESENTATION_DEFINITIONS_PATH = "/api/server/v1/presentation-definitions";
-
-    // ---------------------------------------------------------------
-    // Protected state set up by subclasses
-    // ---------------------------------------------------------------
 
     /** Client for the OID4VP verification-session API. */
     protected VPSessionRestClient vpSessionRestClient;
@@ -93,10 +77,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
     /** Resource path that locates the JSON file used to create the presentation definition. */
     protected static final String CREATE_DEFINITION_RESOURCE =
             "org/wso2/identity/integration/test/oid4vp/create-vp-presentation-definition.json";
-
-    // ---------------------------------------------------------------
-    // Lifecycle helpers
-    // ---------------------------------------------------------------
 
     /**
      * Initialise the {@link VPSessionRestClient}.
@@ -174,11 +154,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
             }
         }
     }
-
-    // ---------------------------------------------------------------
-    // Digital wallet connection IDP helpers
-    // (creates an IDP with PresentationAuthenticator, triggering ECDSA key provisioning)
-    // ---------------------------------------------------------------
 
     /**
      * Create a "digital wallet connection" IDP that has the PresentationAuthenticator as its
@@ -326,10 +301,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         }
     }
 
-    // ---------------------------------------------------------------
-    // Status polling helper
-    // ---------------------------------------------------------------
-
     /**
      * Poll the session status until it leaves the {@code ACTIVE} state or the retry
      * budget is exhausted.
@@ -355,10 +326,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         }
         return status;
     }
-
-    // ---------------------------------------------------------------
-    // Low-level HTTP helpers (share the VPSessionRestClient's httpclient)
-    // ---------------------------------------------------------------
 
     private CloseableHttpResponse postJson(String url, String json) throws IOException {
 
@@ -399,10 +366,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
                 new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT)
         };
     }
-
-    // ---------------------------------------------------------------
-    // Classpath resource reader
-    // ---------------------------------------------------------------
 
     /**
      * Read a classpath resource into a String (UTF-8).

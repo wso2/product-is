@@ -58,7 +58,6 @@ import java.util.Set;
  * Integration tests covering the happy-path scenarios for the VP verification session API.
  *
  * <p>Tests are ordered and chained where session state carries over between steps.
- * Test 10 is disabled because it requires cross-tenant listing which needs additional infrastructure.
  */
 public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionTestBase {
 
@@ -99,10 +98,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
 
     /** Audience (verifier URI) returned with the presentation request JWT (test 4). */
     private String sharedAudience;
-
-    // ------------------------------------------------------------------
-    // @BeforeClass / @AfterClass
-    // ------------------------------------------------------------------
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -159,10 +154,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 1 — Start a verification session
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Starting a VP verification session returns requestId, walletUrl and requestUri.")
     public void testStartVerificationSession() throws Exception {
@@ -188,10 +179,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                 "'requestUri' must not be blank.");
     }
 
-    // ------------------------------------------------------------------
-    // Test 2 — Poll status while ACTIVE
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Polling session status before any VP submission returns ACTIVE.",
             dependsOnMethods = "testStartVerificationSession")
@@ -203,10 +190,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         Assert.assertEquals(status, STATUS_ACTIVE,
                 "Session status must be ACTIVE before any VP is submitted.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 3 — GET result while ACTIVE returns 400
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Fetching the session result while the session is still ACTIVE returns 400.",
@@ -220,10 +203,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                     "Fetching result of an ACTIVE session must return 400.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 4 — Fetch presentation request JWT
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "GET /requests/{id} returns a compact JWT with the presentation request.",
@@ -255,10 +234,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 5 — Submit a valid VP via direct_post
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Submitting a structurally valid SD-JWT-VC via direct_post returns 200.",
             dependsOnMethods = "testFetchPresentationRequestJwt")
@@ -282,10 +257,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 6 — Poll status after verification
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "After a valid VP is submitted the session status transitions to VERIFIED.",
             dependsOnMethods = "testSubmitValidVPDirectPost")
@@ -295,10 +266,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         Assert.assertEquals(finalStatus, STATUS_VERIFIED,
                 "Session status must be VERIFIED after a valid VP is submitted.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 7 — GET verified result
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "GET /verification-sessions/{id} on a VERIFIED session returns 200 with status=VERIFIED.",
@@ -318,10 +285,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                     "Session result 'status' field must be VERIFIED.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 8 — Multiple concurrent sessions have distinct requestIds
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Two simultaneously started sessions receive distinct requestId values.")
@@ -346,10 +309,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                 "Both newly started sessions must be ACTIVE.");
     }
 
-    // ------------------------------------------------------------------
-    // Test 9 — Cross-tenant session isolation
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "A session started in the super tenant is not visible from a secondary tenant (returns 404).")
     public void testSessionForTenantA_NotVisibleFromTenantB() throws Exception {
@@ -367,24 +326,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                     "A super-tenant session must not be visible from tenant B (expected 404).");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 10 — Presentation definition tenant isolation (disabled)
-    // ------------------------------------------------------------------
-
-    @Test(groups = "wso2.is",
-            description = "A presentation definition created in the super tenant is not listed for a secondary tenant.",
-            enabled = false)
-    public void testPresentationDefinitionTenantIsolation() throws Exception {
-        // TODO: Enable once multi-tenant infrastructure is available in the test harness.
-        // Steps:
-        //   1. List presentation definitions via secondary tenant admin credentials.
-        //   2. Assert that DEFINITION_IDENTIFIER is absent from the list.
-    }
-
-    // ------------------------------------------------------------------
-    // Test 11 — Submit valid VP via direct_post.jwt
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Submitting a VP via the direct_post.jwt response mode returns 200 and session reaches VERIFIED.")
@@ -460,10 +401,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             configureVPResponseMode("direct_post");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Private helpers
-    // ------------------------------------------------------------------
 
     /**
      * Extracts the ephemeral EC public key embedded in the request JWT's

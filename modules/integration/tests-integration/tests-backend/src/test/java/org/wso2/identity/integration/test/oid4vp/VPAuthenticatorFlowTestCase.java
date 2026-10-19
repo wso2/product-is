@@ -96,9 +96,6 @@ import java.util.UUID;
  * <p>These tests exercise the complete authenticator journey: initiating an OAuth2
  * authorization code flow, having IS redirect the browser to a wallet, submitting a
  * verifiable presentation, and finally exchanging the authorization code for tokens.
- *
- * <p>Test 10 is disabled because it requires infrastructure that cannot be configured inline
- * (custom claim mapping for the cnf claim).
  */
 public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -139,10 +136,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
 
     // clientId / clientSecret come from OAuth2ServiceAbstractIntegrationTest (consumerKey / consumerSecret)
 
-    // ------------------------------------------------------------------
-    // @BeforeClass
-    // ------------------------------------------------------------------
-
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
 
@@ -167,10 +160,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         // Provision tenant B infrastructure for testAuthFlowTenanted.
         provisionTenantB();
     }
-
-    // ------------------------------------------------------------------
-    // @AfterClass
-    // ------------------------------------------------------------------
 
     @AfterClass(alwaysRun = true)
     public void tearDown() throws Exception {
@@ -234,10 +223,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 1 — Initiating auth flow redirects to wallet login page
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Initiating OAuth2 auth code flow with VP authenticator redirects to wallet_login.jsp.")
     public void testInitiateAuthFlowRedirectsToWalletLogin() throws Exception {
@@ -261,10 +246,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 2 — Wallet login page carries correct session
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "The requestId embedded in the wallet login redirect maps to an ACTIVE session.",
             dependsOnMethods = "testInitiateAuthFlowRedirectsToWalletLogin")
@@ -279,10 +260,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         Assert.assertEquals(status, "ACTIVE",
                 "Session referenced by wallet login page must be ACTIVE.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 3 — Full auth flow succeeds after valid VP submission
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "A valid SD-JWT-VC submission completes the auth flow and produces an access token.")
@@ -322,10 +299,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
         // If FAILED (issuer not trusted), the callback will redirect with an error — acceptable here.
     }
-
-    // ------------------------------------------------------------------
-    // Test 4 — Claims from verified VP are mapped into the ID token
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "After a successful VP flow, claim values from the credential appear in the id_token.")
@@ -370,10 +343,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 5 — Auth flow fails when VP verification fails
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "Submitting a VP with a wrong nonce causes the auth flow to end with an error redirect.")
     public void testAuthFlowFailsWhenVPVerificationFails() throws Exception {
@@ -410,10 +379,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 6 — Auth flow fails when wallet reports access_denied
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "A wallet access_denied response causes the auth flow to end with an error redirect.")
     public void testAuthFlowFailsWhenWalletReportsError() throws Exception {
@@ -439,10 +404,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                     "Auth flow error redirect must carry an 'error' parameter.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 7 — Auth flow retry after VP failure
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "When retry is enabled, a failed VP attempt causes IS to issue a new requestId.")
@@ -483,10 +444,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         Assert.assertEquals(firstStatus, "FAILED",
                 "The failed session must remain in FAILED state before retry.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 8 — JIT provisioning creates user on first wallet login
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "JIT provisioning creates a local user account on first successful VP login.")
@@ -529,10 +486,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 "Session must have left ACTIVE state after VP submission.");
     }
 
-    // ------------------------------------------------------------------
-    // Test 9 — JIT provisioning does not duplicate user on second login
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "A second VP login by the same subject does not create a duplicate local user.",
             dependsOnMethods = "testJITProvisioningCreatesUserOnFirstLogin")
@@ -567,23 +520,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         Assert.assertNotEquals(finalStatus, "ACTIVE",
                 "Session must have left ACTIVE state after second VP submission.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 10 — Subject identifier fallback to cnf claim (disabled)
-    // ------------------------------------------------------------------
-
-    @Test(groups = "wso2.is",
-            description = "When no explicit subject claim is mapped, the cnf.jwk thumbprint is used as sub.",
-            enabled = false)
-    public void testSubjectIdentifierFallbackToCnfClaim() throws Exception {
-        // TODO: Enable once the authenticator's subject-identifier resolution logic for cnf
-        // fallback is confirmed in the server implementation.  Requires issuer-trust to be
-        // configured for the test credential so the session transitions to VERIFIED.
-    }
-
-    // ------------------------------------------------------------------
-    // Test 11 — Auth flow with no claim mappings — id_token has only sub
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Without claim mappings, the id_token only contains the sub claim.")
@@ -622,10 +558,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             }
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 12 — Auth flow in a secondary tenant (disabled)
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "VP authenticator flow works correctly in a secondary tenant.")
@@ -669,10 +601,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             }
         }
     }
-
-    // ------------------------------------------------------------------
-    // Setup helpers
-    // ------------------------------------------------------------------
 
     /**
      * Create the test presentation definition via the admin API.
@@ -951,10 +879,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                     + ".  testAuthFlowTenanted will be skipped.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Auth flow helper methods
-    // ------------------------------------------------------------------
 
     /**
      * Build the OAuth2 authorization URL for the test application.
@@ -1271,10 +1195,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    // ------------------------------------------------------------------
-    // Low-level HTTP helpers
-    // ------------------------------------------------------------------
-
     private CloseableHttpClient buildNoRedirectHttpClient() {
 
         return buildNoRedirectHttpClient(null);
@@ -1476,10 +1396,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
         return status;
     }
-
-    // ------------------------------------------------------------------
-    // Tenant-B admin HTTP helpers
-    // ------------------------------------------------------------------
 
     private CloseableHttpResponse tenantBAdminPost(String url, String json) throws IOException {
 

@@ -30,7 +30,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.base.MultitenantConstants;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -147,6 +149,40 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
                 .statusCode(HttpStatus.SC_OK)
                 .body("presentationDefinitions", notNullValue())
                 .body("presentationDefinitions.size()", greaterThanOrEqualTo(1));
+    }
+
+    @Test(groups = "wso2.is",
+            description = "A presentation definition created in the super tenant is not listed for a secondary tenant.",
+            dependsOnMethods = {"testCreatePresentationDefinition"})
+    public void testPresentationDefinitionTenantIsolation() throws Exception {
+
+        if (!MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)) {
+            return;
+        }
+        Assert.assertNotNull(presentationDefinitionId,
+                "Presentation definition must exist before testing tenant isolation.");
+
+        AutomationContext tenantContext = new AutomationContext("IDENTITY", TestUserMode.TENANT_ADMIN);
+        String tenantAdminUser = tenantContext.getContextTenant().getTenantAdmin().getUserName();
+        String tenantAdminPass = tenantContext.getContextTenant().getTenantAdmin().getPassword();
+        String tenantDomain = tenantContext.getContextTenant().getDomain();
+
+        String baseUri = RestAssured.baseURI.replaceAll("/$", "");
+        String tenantAdminUrl = baseUri + "/t/" + tenantDomain + "/api/server/v1/presentation-definitions";
+        Response response = RestAssured.given()
+                .auth().preemptive().basic(tenantAdminUser, tenantAdminPass)
+                .when()
+                .get(tenantAdminUrl);
+
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK);
+
+        List<String> identifiers = response.jsonPath().getList("presentationDefinitions.identifier");
+        Assert.assertFalse(
+                identifiers != null && identifiers.contains("test-person-verification"),
+                "Super-tenant definition 'test-person-verification' must not be visible in the " + tenantDomain + " tenant.");
     }
 
     @Test(dependsOnMethods = {"testListPresentationDefinitions"})

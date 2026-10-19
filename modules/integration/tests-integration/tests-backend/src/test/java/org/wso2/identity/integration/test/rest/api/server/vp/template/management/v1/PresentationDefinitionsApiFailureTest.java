@@ -217,17 +217,6 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
                 .statusCode(HttpStatus.SC_NOT_FOUND);
     }
 
-    /**
-     * Skipped: Testing deletion of a definition in use by an IDP requires full IDP setup.
-     * This scenario should be covered in a dedicated end-to-end test.
-     */
-    @Test(enabled = false)
-    public void testDeleteDefinitionInUseByIdp() {
-
-        // This test requires creating a full IDP configuration that references the presentation definition.
-        // It is intentionally skipped here; covered in a dedicated E2E test.
-    }
-
     @Test
     public void testGetIssuerConfigsNonExistentCredential() {
 

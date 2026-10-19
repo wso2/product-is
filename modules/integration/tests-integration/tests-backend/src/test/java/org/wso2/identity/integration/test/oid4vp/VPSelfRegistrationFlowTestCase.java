@@ -89,10 +89,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     private String sharedNonce;
     private String sharedAudience;
 
-    // ------------------------------------------------------------------
-    // @BeforeClass / @AfterClass
-    // ------------------------------------------------------------------
-
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
 
@@ -122,10 +118,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
             flowExecutionClient.closeHttpClient();
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 1 — Initiate self-registration; expect REDIRECTION with wallet URL
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Initiating a VP registration flow returns REDIRECTION type with wallet URL and requestId.")
@@ -163,10 +155,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 "Redirect URL must be a wallet deep-link starting with 'openid4vp://', but was: " + redirectURL);
     }
 
-    // ------------------------------------------------------------------
-    // Test 2 — Fetch the presentation request JWT (to extract nonce + audience)
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "GET /requests/{id} returns a compact JWT with nonce and client_id.",
             dependsOnMethods = "testInitiateSelfRegistrationViaVP")
@@ -188,10 +176,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
             Assert.assertNotNull(sharedAudience, "Presentation request JWT must contain a 'client_id' claim.");
         }
     }
-
-    // ------------------------------------------------------------------
-    // Test 3 — Submit a valid VP token via direct_post
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Submitting a valid SD-JWT-VC VP token via direct_post returns 200.",
@@ -216,10 +200,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         }
     }
 
-    // ------------------------------------------------------------------
-    // Test 4 — Poll VP session until VERIFIED
-    // ------------------------------------------------------------------
-
     @Test(groups = "wso2.is",
             description = "After VP submission the verification session transitions to VERIFIED.",
             dependsOnMethods = "testSubmitValidVPForSelfRegistration")
@@ -229,10 +209,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         Assert.assertEquals(finalStatus, STATUS_VERIFIED,
                 "VP session must be VERIFIED before the registration flow can complete.");
     }
-
-    // ------------------------------------------------------------------
-    // Test 5 — Resume registration flow; expect COMPLETE
-    // ------------------------------------------------------------------
 
     @Test(groups = "wso2.is",
             description = "Resuming the registration flow after VP verification returns flowStatus=COMPLETE.",
@@ -255,10 +231,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         Assert.assertEquals(response.getFlowStatus(), FLOW_STATUS_COMPLETE,
                 "Registration flow must be COMPLETE after successful VP verification.");
     }
-
-    // ------------------------------------------------------------------
-    // Private setup helpers
-    // ------------------------------------------------------------------
 
     /**
      * Creates a digital wallet connection IDP with the given fixed name (instead of a random UUID
@@ -395,10 +367,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                     "Unexpected status disabling registration flow: " + status);
         }
     }
-
-    // ------------------------------------------------------------------
-    // Low-level HTTP helpers (admin-authenticated)
-    // ------------------------------------------------------------------
 
     private CloseableHttpResponse doPostJson(String url, String json) throws IOException {
 
