@@ -29,6 +29,17 @@ jobs:
         with:
           java-version: "21"
           distribution: "adopt"
+      - name: Set up Maven 3.9.x
+        # Maven 3.10.0 (ubuntu-latest image 20261004+) breaks the Tycho-based carbon-p2-plugin.
+        run: |
+          MAVEN_VERSION=3.9.11
+          MAVEN_SHA512=bcfe4fe305c962ace56ac7b5fc7a08b87d5abd8b7e89027ab251069faebee516b0ded8961445d6d91ec1985dfe30f8153268843c89aa392733d1a3ec956c9978
+          MAVEN_ARCHIVE="$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+          curl -fsSL -o "$MAVEN_ARCHIVE" https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
+          echo "${MAVEN_SHA512}  ${MAVEN_ARCHIVE}" | sha512sum -c -
+          tar -xzf "$MAVEN_ARCHIVE" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin/mvn" --version
       - name: Check $JAVA_HOME
         run: |
           echo $JAVA_HOME
@@ -72,7 +83,36 @@ jobs:
         run: |
           echo "Updating dependencies"
           echo "=========================================================="
-          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck.*,org.wso2.carbon.utils,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*,org.wso2.carbon.multitenancy:*,org.wso2.carbon.registry:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=false -Dincludes=org.wso2.carbon.identity.*,org.wso2.carbon.extension.identity.*,org.wso2.identity.*,org.wso2.carbon.consent.*,org.wso2.carbon.healthcheck,org.wso2.carbon.analytics-common,org.wso2.charon,org.apache.rampart.wso2,org.apache.ws.security.wso2,org.wso2.carbon.identity.framework:*,org.wso2.carbon.multitenancy:*,org.wso2.carbon.registry:* -Dexcludes=org.wso2.carbon.extension.identity.authenticator.utils
+          echo "Updating identity-apps versions"
+          echo "=========================================================="
+          # The identity-apps features roll to a new minor line on each console release, so they are
+          # updated with minor updates allowed. The run above keeps every other dependency on its line.
+          mvn versions:update-properties -U -DgenerateBackupPoms=false -DallowMajorUpdates=false -DallowMinorUpdates=true -Dincludes=org.wso2.identity.apps -DincludeProperties=identity.apps.console.version,identity.apps.core.version,identity.apps.myaccount.version
+          echo "Checking carbon kernel updates"
+          echo "=========================================================="
+          CURRENT_KERNEL_VERSION=$(sed -n 's|.*<carbon.kernel.version>\(.*\)</carbon.kernel.version>.*|\1|p' pom.xml | head -1)
+          if [ -z "$CURRENT_KERNEL_VERSION" ]; then
+            echo "::error::Could not read carbon.kernel.version from pom.xml."
+            exit 1
+          fi
+          KERNEL_VERSION_LINE=${CURRENT_KERNEL_VERSION%.*}
+          KERNEL_METADATA=$(curl -fsSL https://maven.wso2.org/nexus/content/groups/public/org/wso2/carbon/org.wso2.carbon.core/maven-metadata.xml)
+          LATEST_KERNEL_VERSION=$(printf '%s\n' "$KERNEL_METADATA" \
+            | sed -n "s|.*<version>\(${KERNEL_VERSION_LINE//./\\.}\.[0-9][0-9]*\)</version>.*|\1|p" \
+            | sort -t. -k3,3n | tail -1)
+          if [ -z "$LATEST_KERNEL_VERSION" ]; then
+            echo "::error::Could not resolve the latest carbon kernel version on the ${KERNEL_VERSION_LINE} line."
+            exit 1
+          fi
+          NEWEST_KERNEL_VERSION=$(printf '%s\n%s\n' "$CURRENT_KERNEL_VERSION" "$LATEST_KERNEL_VERSION" | sort -t. -k3,3n | tail -1)
+          if [ "$NEWEST_KERNEL_VERSION" != "$CURRENT_KERNEL_VERSION" ]; then
+            sed -i "s|<carbon.kernel.version>${CURRENT_KERNEL_VERSION}</carbon.kernel.version>|<carbon.kernel.version>${LATEST_KERNEL_VERSION}</carbon.kernel.version>|" pom.xml
+            sed -i "s|version=\"${CURRENT_KERNEL_VERSION}\"|version=\"${LATEST_KERNEL_VERSION}\"|g" modules/p2-profile-gen/carbon.product
+            echo "Bumped carbon kernel version: ${CURRENT_KERNEL_VERSION} -> ${LATEST_KERNEL_VERSION}"
+          else
+            echo "Carbon kernel version is up to date: ${CURRENT_KERNEL_VERSION}"
+          fi
           echo "Available updates"
           echo "=========================================================="
           git diff --color > dependency_updates.diff

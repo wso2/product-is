@@ -114,8 +114,9 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
           dependsOnMethods = "testRegisterEmailOTPApplication")
     public void testEmailOTPFirstWrongOTPReturnsFAIL_INCOMPLETE() throws Exception {
 
-        initiateAuthFlow(appConsumerKey);
         Utils.getMailServer().purgeEmailFromAllMailboxes();
+        initiateAuthFlow(appConsumerKey);
+        drainEmails();
         ExtractableResponse<Response> resp = submitOTPCode(WRONG_OTP, HttpStatus.SC_OK);
         String status = resp.jsonPath().getString(FLOW_STATUS);
         Assert.assertEquals(status, FAIL_INCOMPLETE,
@@ -140,9 +141,11 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
     public void testEmailOTPFirstResendReturnsINCOMPLETE() throws Exception {
 
         // Fresh flow for the resend scenario (independent of retry tests above).
-        initiateAuthFlow(appConsumerKey);
         Utils.getMailServer().purgeEmailFromAllMailboxes();
+        initiateAuthFlow(appConsumerKey);
+        drainEmails();
         ExtractableResponse<Response> resp = triggerResend(HttpStatus.SC_OK);
+        drainEmails();
         String status = resp.jsonPath().getString(FLOW_STATUS);
         Assert.assertEquals(status, INCOMPLETE,
                 "Email OTP resend #1: expected INCOMPLETE but got: " + status);
@@ -240,6 +243,21 @@ public class EmailOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthT
                 "Email OTP resend: authData.code must be present in SUCCESS_COMPLETED response.");
         Assert.assertFalse(authCode.trim().isEmpty(),
                 "Email OTP resend: authData.code must not be blank.");
+        Utils.getMailServer().purgeEmailFromAllMailboxes();
+    }
+
+    /**
+     * Waits for the OTP email triggered by the preceding call to arrive (up to 10 s), then clears
+     * the mailbox. Emails are sent asynchronously, so purging without waiting lets a late email
+     * leak into a later test.
+     * <p>
+     * GreenMail's wait is satisfied by any message already in a mailbox, so the caller must purge
+     * before triggering the email; only then is the message this waits for the one it just sent.
+     */
+    private void drainEmails() throws Exception {
+
+        Assert.assertTrue(Utils.getMailServer().waitForIncomingEmail(10000, 1),
+                "Timed out waiting for OTP email from GreenMail.");
         Utils.getMailServer().purgeEmailFromAllMailboxes();
     }
 

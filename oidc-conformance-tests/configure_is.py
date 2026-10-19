@@ -248,7 +248,13 @@ def set_user_claim_values(config_file_path):
 
     print("\nSetting user claim values")
     try:
-        response = requests.patch(url=constants.BASE_URL + "/scim2/Me", headers=headers, data=json.dumps(body), verify=False)
+        # /scim2/Me blocks self-updates of identity claims such as emailVerified and phoneVerified,
+        # so patch the admin user through the /scim2/Users endpoint with admin credentials.
+        response = requests.get(url=constants.BASE_URL + "/scim2/Me", headers=headers, verify=False)
+        response.raise_for_status()
+        user_id = json.loads(response.content)["id"]
+        response = requests.patch(url=constants.BASE_URL + "/scim2/Users/" + user_id, headers=constants.DCR_HEADERS,
+                                  data=json.dumps(body), verify=False)
         response.raise_for_status()
     except HTTPError as http_error:
         print(http_error)
