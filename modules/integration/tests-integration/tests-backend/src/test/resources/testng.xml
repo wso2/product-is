@@ -293,6 +293,14 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.oidc.scope.management.v1.OIDCScopeManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1.PresentationDefinitionsApiSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1.PresentationDefinitionsApiFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.OpenID4VPConfigSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.OpenID4VPConfigFailureTest"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionSuccessTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionFailureTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPSelfRegistrationFlowTestCase"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings.CompatibilitySettingsSubOrgInheritanceTest"/>
