@@ -161,6 +161,7 @@ public class MockSMSProvider {
 
         smsContent.set(null);
         recipient.set(null);
+        otp.set(null);
     }
 
     /**
