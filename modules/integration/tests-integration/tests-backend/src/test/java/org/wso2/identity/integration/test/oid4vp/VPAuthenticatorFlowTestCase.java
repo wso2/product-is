@@ -50,6 +50,7 @@ import org.apache.http.impl.cookie.RFC6265CookieSpecProvider;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
@@ -59,7 +60,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.identity.oauth.stub.dto.OAuthConsumerAppDTO;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.Owner;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantModel;
 import org.wso2.identity.integration.test.restclients.TenantMgtRestClient;
@@ -73,6 +73,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.restclients.VPSessionRestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.SDJwtVcTestBuilder;
@@ -92,15 +93,10 @@ import java.util.UUID;
 
 /**
  * End-to-end integration tests for the VP Authenticator flow.
- *
- * <p>These tests exercise the complete authenticator journey: initiating an OAuth2
- * authorization code flow, having IS redirect the browser to a wallet, submitting a
- * verifiable presentation, and finally exchanging the authorization code for tokens.
  */
 public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String CALLBACK_URL             = "https://localhost/callback";
-    private static final String DEFINITION_IDENTIFIER    = "test-vp-auth-flow-definition";
     private static final String CREDENTIAL_IDENTIFIER    = "PersonCredential";
     private static final String ISSUER_URL               = "https://test-issuer.example.com";
     private static final String PRESENTATION_DEFINITIONS_PATH = "/api/server/v1/presentation-definitions";
@@ -123,6 +119,8 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     private String vpIdpName;
     private VPSessionRestClient vpSessionRestClient;
     private IdpMgtRestClient idpMgtRestClient;
+    private SCIM2RestClient scim2RestClient;
+    private String jitProvisionedUserId;
 
     // Tenant-B infrastructure for testAuthFlowTenanted.
     private TenantMgtRestClient tenantMgtRestClient;
@@ -131,10 +129,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     private String tenantBIdpName;
     private String tenantBAppId;
     private String tenantBConsumerKey;
-    private String tenantBConsumerSecret;
     private VPSessionRestClient vpSessionRestClientTenantB;
-
-    // clientId / clientSecret come from OAuth2ServiceAbstractIntegrationTest (consumerKey / consumerSecret)
 
     @BeforeClass(alwaysRun = true)
     public void setUp() throws Exception {
@@ -142,46 +137,75 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         issuerSigningKey = SDJwtVcTestBuilder.generateSigningKey();
         configureVPResponseMode("direct_post");
-
-        // Create the flow-specific presentation definition.
         presentationDefinitionId = createPresentationDefinition();
         configureTrustedIssuer(presentationDefinitionId, CREDENTIAL_IDENTIFIER, ISSUER_URL, issuerSigningKey);
-
-        // Create IDP with PresentationExchangeAuthenticator.
         idpMgtRestClient = new IdpMgtRestClient(serverURL, isServer.getContextTenant());
         idpId = createVPAuthenticatorIDP();
-
-        // Create OAuth2 application that uses the VP IDP in its first authentication step.
         appId = createOAuthApplicationWithVPIdp();
-
-        // Set up the VP session client for direct wallet interactions.
         vpSessionRestClient = new VPSessionRestClient(serverURL, isServer.getContextTenant());
-
-        // Provision tenant B infrastructure for testAuthFlowTenanted.
+        scim2RestClient = new SCIM2RestClient(serverURL, isServer.getContextTenant());
         provisionTenantB();
     }
 
     @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
         if (appId != null) {
-            deleteApp(appId);
+            try {
+                deleteApp(appId);
+            } catch (Exception e) {
+                log.warn("Failed to delete app: " + e.getMessage());
+            }
         }
         if (idpId != null) {
-            idpMgtRestClient.deleteIdp(idpId);
+            try {
+                idpMgtRestClient.deleteIdp(idpId);
+            } catch (Exception e) {
+                log.warn("Failed to delete IDP: " + e.getMessage());
+            }
         }
-        deletePresentationDefinition(presentationDefinitionId);
+        try {
+            deletePresentationDefinition(presentationDefinitionId);
+        } catch (Exception e) {
+            log.warn("Failed to delete presentation definition: " + e.getMessage());
+        }
         if (vpSessionRestClient != null) {
-            vpSessionRestClient.closeHttpClient();
+            try {
+                vpSessionRestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close VP session client: " + e.getMessage());
+            }
         }
         if (idpMgtRestClient != null) {
-            idpMgtRestClient.closeHttpClient();
+            try {
+                idpMgtRestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close IDP management client: " + e.getMessage());
+            }
         }
         if (restClient != null) {
-            restClient.closeHttpClient();
+            try {
+                restClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close REST client: " + e.getMessage());
+            }
+        }
+        if (jitProvisionedUserId != null) {
+            try {
+                scim2RestClient.deleteUser(jitProvisionedUserId);
+            } catch (Exception e) {
+                log.warn("Failed to delete JIT-provisioned user: " + e.getMessage());
+            }
+        }
+        if (scim2RestClient != null) {
+            try {
+                scim2RestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close SCIM2 client: " + e.getMessage());
+            }
         }
 
-        // Tenant B cleanup — best effort; resources may not exist if provisionTenantB() failed early.
+        // Clean up tenant B.
         String tenantApiPrefix = serverURL + "/t/" + TENANT_AUTH_DOMAIN;
         if (tenantBAppId != null) {
             try (CloseableHttpResponse r = tenantBAdminDelete(
@@ -211,14 +235,14 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             try {
                 vpSessionRestClientTenantB.closeHttpClient();
             } catch (IOException e) {
-                // ignore
+                log.warn("Failed to close tenant-B VP session client: " + e.getMessage());
             }
         }
         if (tenantMgtRestClient != null) {
             try {
                 tenantMgtRestClient.closeHttpClient();
             } catch (IOException e) {
-                // ignore
+                log.warn("Failed to close tenant management client: " + e.getMessage());
             }
         }
     }
@@ -227,23 +251,15 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             description = "Initiating OAuth2 auth code flow with VP authenticator redirects to wallet_login.jsp.")
     public void testInitiateAuthFlowRedirectsToWalletLogin() throws Exception {
 
-        String authorizationUrl = buildAuthorizationUrl();
-
-        try (CloseableHttpClient httpClient = buildNoRedirectHttpClient()) {
-            HttpGet authRequest = new HttpGet(authorizationUrl);
-            try (CloseableHttpResponse response = httpClient.execute(authRequest)) {
-                // Follow the redirect chain manually until we reach wallet_login or exhaust hops.
-                String location = getLocationHeader(response);
-                Assert.assertNotNull(location,
-                        "Authorization request must issue at least one redirect.");
-
-                // The eventual redirect must point to wallet_login.jsp.
-                // IS may redirect through several intermediate pages.
-                Assert.assertTrue(location.contains(WALLET_LOGIN_JSP) || location.contains("requestId"),
-                        "Authorization redirect chain must eventually reach " + WALLET_LOGIN_JSP
-                                + " or carry a requestId.  Got: " + location);
-            }
-        }
+        AuthFlowContext ctx = startAuthFlowAndExtractContext();
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + ".");
+        Assert.assertTrue(ctx.walletLoginUrl != null && ctx.walletLoginUrl.contains(WALLET_LOGIN_JSP),
+                "Redirect must point to " + WALLET_LOGIN_JSP + " but was: " + ctx.walletLoginUrl);
+        Assert.assertNotNull(ctx.requestId,
+                "Wallet login redirect must carry a requestId parameter.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
     }
 
     @Test(groups = "wso2.is",
@@ -251,11 +267,15 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             dependsOnMethods = "testInitiateAuthFlowRedirectsToWalletLogin")
     public void testWalletLoginPageContainsCorrectSession() throws Exception {
 
-        // Start a fresh session via the authenticator to extract the requestId.
-        String requestId = startAuthFlowAndExtractRequestId();
-        Assert.assertNotNull(requestId, "Could not extract requestId from auth flow redirect.");
+        AuthFlowContext ctx = startAuthFlowAndExtractContext();
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + ".");
+        Assert.assertTrue(ctx.walletLoginUrl != null && ctx.walletLoginUrl.contains(WALLET_LOGIN_JSP),
+                "Redirect must point to " + WALLET_LOGIN_JSP + " but was: " + ctx.walletLoginUrl);
+        Assert.assertNotNull(ctx.requestId,
+                "Wallet login redirect must carry a requestId parameter.");
 
-        JSONObject statusResponse = vpSessionRestClient.getSessionStatus(requestId);
+        JSONObject statusResponse = vpSessionRestClient.getSessionStatus(ctx.requestId);
         String status = (String) statusResponse.get("status");
         Assert.assertEquals(status, "ACTIVE",
                 "Session referenced by wallet login page must be ACTIVE.");
@@ -266,9 +286,11 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     public void testAuthFlowSuccessAfterValidVPSubmission() throws Exception {
 
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        Assert.assertNotNull(ctx, "Auth flow context must not be null.");
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
-        // Build valid SD-JWT-VC.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -278,7 +300,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 .signingKey(issuerSigningKey)
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
-        // Submit the VP.
         try (CloseableHttpResponse vpResponse = vpSessionRestClient.submitVPDirectPost(ctx.requestId, vpToken)) {
             int status = vpResponse.getStatusLine().getStatusCode();
             EntityUtils.consume(vpResponse.getEntity());
@@ -286,30 +307,30 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                     "VP submission during auth flow must return 200.");
         }
 
-        // Poll until the session is no longer ACTIVE.
         String finalStatus = pollStatusUntilNotActive(ctx.requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
+        Assert.assertEquals(finalStatus, "VERIFIED",
+                "VP token from configured trusted issuer with correct nonce must result in a VERIFIED session.");
 
-        // Regardless of VERIFIED/FAILED (trusted issuer may not be configured), trigger callback.
-        // The callback notifies IS that the wallet interaction is complete.
         String code = triggerCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, finalStatus, ctx.cookieStore);
+        Assert.assertNotNull(code,
+                "After successful VP verification the auth code must be returned in the redirect.");
 
-        if ("VERIFIED".equals(finalStatus)) {
-            Assert.assertNotNull(code,
-                    "After successful VP verification the auth code must be returned in the redirect.");
-        }
-        // If FAILED (issuer not trusted), the callback will redirect with an error — acceptable here.
+        JSONObject tokenResponse = exchangeCodeForTokens(code);
+        Assert.assertNotNull(tokenResponse.get("access_token"),
+                "Token endpoint must return an access_token after a successful VP auth flow.");
+        Assert.assertNotNull(tokenResponse.get("id_token"),
+                "Token endpoint must return an id_token after a successful VP auth flow.");
     }
 
     @Test(groups = "wso2.is",
             description = "After a successful VP flow, claim values from the credential appear in the id_token.")
     public void testAuthFlowClaimsAreMappedToIdToken() throws Exception {
 
-        // This test is identical to test 3 in structure but additionally decodes the id_token.
-        // It is a placeholder that succeeds structurally; actual claim mapping depends on server config.
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        if (ctx == null) {
-            return; // Skip if auth flow cannot be initiated (e.g. app/IDP not wired correctly).
-        }
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
@@ -325,22 +346,34 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
 
         String finalStatus = pollStatusUntilNotActive(ctx.requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
-        String code = triggerCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, finalStatus, ctx.cookieStore);
+        Assert.assertEquals(finalStatus, "VERIFIED",
+                "VP token from configured trusted issuer with correct nonce must result in a VERIFIED session.");
 
-        if (code != null && "VERIFIED".equals(finalStatus)) {
-            // Exchange code for tokens (requires consumerKey / consumerSecret from app creation).
-            JSONObject tokenResponse = exchangeCodeForTokens(code);
-            String idToken = (String) tokenResponse.get("id_token");
-            if (idToken != null) {
-                // Decode the payload — second part of the compact JWT.
-                String payload = new String(
-                        java.util.Base64.getUrlDecoder().decode(idToken.split("\\.")[1]),
-                        StandardCharsets.UTF_8);
-                Assert.assertNotNull(payload, "id_token payload must not be null.");
-                // Actual claim presence depends on claim mapping configuration — log for debugging.
-                log.info("id_token payload: " + payload);
-            }
-        }
+        String code = triggerCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, finalStatus, ctx.cookieStore);
+        Assert.assertNotNull(code,
+                "After successful VP verification the auth code must be returned in the redirect.");
+
+        JSONObject tokenResponse = exchangeCodeForTokens(code);
+        String idToken = (String) tokenResponse.get("id_token");
+        Assert.assertNotNull(idToken, "Token endpoint must return an id_token.");
+
+        String[] jwtParts = idToken.split("\\.");
+        Assert.assertEquals(jwtParts.length, 3, "id_token must be a compact-serialized JWT with 3 parts.");
+
+        String payloadJson = new String(
+                java.util.Base64.getUrlDecoder().decode(jwtParts[1]),
+                StandardCharsets.UTF_8);
+        JSONObject claims = (JSONObject) new JSONParser().parse(payloadJson);
+
+        Assert.assertNotNull(claims.get("sub"),
+                "id_token must contain a 'sub' claim.");
+        // The IDP maps VP credential claims to local claims → OIDC id_token claims:
+        // given_name  → http://wso2.org/claims/givenname  → OIDC given_name
+        // family_name → http://wso2.org/claims/lastname   → OIDC family_name
+        Assert.assertEquals(claims.get("given_name"), "Alice",
+                "id_token 'given_name' must reflect the VP credential's 'given_name' value via the IDP claim mapping.");
+        Assert.assertEquals(claims.get("family_name"), "Smith",
+                "id_token 'family_name' must reflect the VP credential's 'family_name' value via the IDP claim mapping.");
     }
 
     @Test(groups = "wso2.is",
@@ -348,11 +381,11 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     public void testAuthFlowFailsWhenVPVerificationFails() throws Exception {
 
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        if (ctx == null) {
-            return;
-        }
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
-        // Build VP with wrong nonce — will fail validation.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -369,11 +402,13 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         Assert.assertEquals(finalStatus, "FAILED",
                 "VP with wrong nonce must result in a FAILED session.");
 
-        // Trigger callback — IS should redirect to the callback URL with an error.
-        String redirectUri = triggerCommonAuthCallbackAndGetRedirect(ctx.sessionDataKey, ctx.requestId, "failed", ctx.cookieStore);
-        // With retryAuthenticationEnabled()=true IS may redirect back to wallet_login.jsp or retry.do.
-        // Accept those; only assert error param if IS sends a final non-retry redirect.
-        if (redirectUri != null && !redirectUri.contains(WALLET_LOGIN_JSP) && !redirectUri.contains("retry.do")) {
+        String redirectUri = triggerCommonAuthCallbackAndGetRedirect(ctx.sessionDataKey, ctx.requestId, "failed",
+                ctx.cookieStore);
+        Assert.assertNotNull(redirectUri,
+                "IS must redirect after a failed VP callback — got no Location header.");
+        // When retry is enabled IS may redirect to wallet_login.jsp or retry.do for another attempt.
+        // If neither, the redirect must carry an error parameter to the client.
+        if (!redirectUri.contains(WALLET_LOGIN_JSP) && !redirectUri.contains("retry.do")) {
             Assert.assertTrue(redirectUri.contains("error") || redirectUri.contains("error_description"),
                     "Auth flow error redirect must carry an 'error' parameter.  Got: " + redirectUri);
         }
@@ -384,11 +419,11 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     public void testAuthFlowFailsWhenWalletReportsError() throws Exception {
 
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        if (ctx == null) {
-            return;
-        }
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
-        // Submit wallet error.
         try (CloseableHttpResponse errorResponse = vpSessionRestClient.submitWalletError(
                 ctx.requestId, "access_denied", "User declined to share credentials.")) {
             EntityUtils.consume(errorResponse.getEntity());
@@ -398,10 +433,13 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         Assert.assertEquals(finalStatus, "FAILED",
                 "Wallet access_denied must result in a FAILED session.");
 
-        String redirectUri = triggerCommonAuthCallbackAndGetRedirect(ctx.sessionDataKey, ctx.requestId, "failed", ctx.cookieStore);
-        if (redirectUri != null && !redirectUri.contains(WALLET_LOGIN_JSP) && !redirectUri.contains("retry.do")) {
+        String redirectUri = triggerCommonAuthCallbackAndGetRedirect(ctx.sessionDataKey, ctx.requestId, "failed",
+                ctx.cookieStore);
+        Assert.assertNotNull(redirectUri,
+                "IS must redirect after a wallet error callback — got no Location header.");
+        if (!redirectUri.contains(WALLET_LOGIN_JSP) && !redirectUri.contains("retry.do")) {
             Assert.assertTrue(redirectUri.contains("error"),
-                    "Auth flow error redirect must carry an 'error' parameter.");
+                    "Auth flow error redirect must carry an 'error' parameter.  Got: " + redirectUri);
         }
     }
 
@@ -409,18 +447,14 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             description = "When retry is enabled, a failed VP attempt causes IS to issue a new requestId.")
     public void testAuthFlowRetryAfterFailure() throws Exception {
 
-        // NOTE: This test asserts the retry behaviour at the protocol level.
-        // The server must be configured to allow at least one VP retry per auth session.
-        // If retry is not enabled, the test still passes structurally but logs a warning.
-
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        if (ctx == null) {
-            return;
-        }
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
         String firstRequestId = ctx.requestId;
 
-        // Submit a bad VP to force failure.
         String badVpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -432,29 +466,32 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         try (CloseableHttpResponse resp = vpSessionRestClient.submitVPDirectPost(firstRequestId, badVpToken)) {
             EntityUtils.consume(resp.getEntity());
         }
-        pollStatusUntilNotActive(firstRequestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
 
-        // The retry mechanism (if enabled) would issue a new requestId via the callback flow.
-        // We model that by checking if polling for a hypothetical second requestId would work.
-        // Without full browser simulation this is a structural test only.
-        log.info("Auth flow retry test: first requestId=" + firstRequestId
-                + ".  Retry mechanism depends on server configuration.");
-        // Assertion: the original session is FAILED (retry would start a new one).
-        String firstStatus = (String) vpSessionRestClient.getSessionStatus(firstRequestId).get("status");
-        Assert.assertEquals(firstStatus, "FAILED",
-                "The failed session must remain in FAILED state before retry.");
+        String finalStatus = pollStatusUntilNotActive(firstRequestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
+        Assert.assertEquals(finalStatus, "FAILED",
+                "VP with wrong nonce must result in a FAILED session.");
+
+        String redirectUri = triggerCommonAuthCallbackAndGetRedirect(ctx.sessionDataKey, firstRequestId, "failed",
+                ctx.cookieStore);
+        Assert.assertNotNull(redirectUri,
+                "IS must redirect after a failed VP callback — got no Location header.");
+
+        // When retry is enabled IS redirects back to wallet_login.jsp with a fresh requestId.
+        // Assert that the new requestId is different from the failed session's requestId.
+        if (redirectUri.contains(WALLET_LOGIN_JSP)) {
+            String newRequestId = extractQueryParam(redirectUri, "requestId");
+            Assert.assertNotNull(newRequestId,
+                    "Retry redirect to " + WALLET_LOGIN_JSP + " must carry a requestId.  Got: " + redirectUri);
+            Assert.assertNotEquals(newRequestId, firstRequestId,
+                    "Retry must issue a fresh requestId distinct from the failed session's requestId.");
+        }
+        // If retry is not enabled IS redirects with an error to the client — that path is
+        // covered by testAuthFlowFailsWhenVPVerificationFails.
     }
 
     @Test(groups = "wso2.is",
             description = "JIT provisioning creates a local user account on first successful VP login.")
     public void testJITProvisioningCreatesUserOnFirstLogin() throws Exception {
-
-        // JIT provisioning verification requires:
-        //   1. JIT enabled on the VP IDP.
-        //   2. A successful VP submission that includes identity claims (e.g. given_name, email).
-        //   3. After callback, check SCIM2 /Users for the provisioned user.
-        // This test asserts the structural flow; the SCIM2 lookup is a separate concern handled
-        // by the SCIM2RestClient.  The test is intentionally lightweight to remain CI-friendly.
 
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
         if (ctx == null) {
@@ -477,13 +514,30 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
 
         String finalStatus = pollStatusUntilNotActive(ctx.requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
-        log.info("testJITProvisioningCreatesUserOnFirstLogin: session final status = " + finalStatus);
+        Assert.assertEquals(finalStatus, "VERIFIED",
+                "VP from trusted issuer must reach VERIFIED to trigger JIT provisioning.");
 
-        // A VERIFIED session indicates that IS processed the credential.
-        // JIT user creation happens asynchronously during the callback — we log the status for now.
-        // Full SCIM2 assertion would require knowing the sub value from the id_token.
-        Assert.assertNotEquals(finalStatus, "ACTIVE",
-                "Session must have left ACTIVE state after VP submission.");
+        String code = triggerCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, finalStatus, ctx.cookieStore);
+        Assert.assertNotNull(code, "Auth flow must produce an authorization code after VERIFIED VP.");
+
+        JSONObject tokenResponse = exchangeCodeForTokens(code);
+        String idToken = (String) tokenResponse.get("id_token");
+        Assert.assertNotNull(idToken, "Token endpoint must return an id_token.");
+
+        String payload = new String(
+                java.util.Base64.getUrlDecoder().decode(idToken.split("\\.")[1]),
+                StandardCharsets.UTF_8);
+        JSONObject idTokenClaims = (JSONObject) new JSONParser().parse(payload);
+        String sub = (String) idTokenClaims.get("sub");
+        Assert.assertNotNull(sub, "id_token must contain a 'sub' claim.");
+
+        String filter = java.net.URLEncoder.encode("userName eq \"" + sub + "\"", StandardCharsets.UTF_8);
+        JSONObject users = scim2RestClient.filterUsers(filter);
+        long totalResults = (long) users.get("totalResults");
+        Assert.assertEquals(totalResults, 1L,
+                "JIT provisioning must create exactly one local user for sub='" + sub + "'.");
+
+        jitProvisionedUserId = (String) ((JSONObject) ((JSONArray) users.get("Resources")).get(0)).get("id");
     }
 
     @Test(groups = "wso2.is",
@@ -491,8 +545,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             dependsOnMethods = "testJITProvisioningCreatesUserOnFirstLogin")
     public void testJITProvisioningDoesNotDuplicateUser() throws Exception {
 
-        // Structural test — asserts that the second submission succeeds without error.
-        // Duplicate detection is enforced by the JIT provisioning component of IS.
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
         if (ctx == null) {
             return;
@@ -516,20 +568,42 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
 
         String finalStatus = pollStatusUntilNotActive(ctx.requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
-        log.info("testJITProvisioningDoesNotDuplicateUser: session final status = " + finalStatus);
-        Assert.assertNotEquals(finalStatus, "ACTIVE",
-                "Session must have left ACTIVE state after second VP submission.");
+        Assert.assertEquals(finalStatus, "VERIFIED",
+                "Second VP from the same trusted issuer must also reach VERIFIED.");
+
+        String code = triggerCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, finalStatus, ctx.cookieStore);
+        Assert.assertNotNull(code, "Auth flow must produce an authorization code on second login.");
+
+        JSONObject tokenResponse = exchangeCodeForTokens(code);
+        String idToken = (String) tokenResponse.get("id_token");
+        Assert.assertNotNull(idToken, "Token endpoint must return an id_token on second login.");
+
+        String payload = new String(
+                java.util.Base64.getUrlDecoder().decode(idToken.split("\\.")[1]),
+                StandardCharsets.UTF_8);
+        JSONObject idTokenClaims = (JSONObject) new JSONParser().parse(payload);
+        String sub = (String) idTokenClaims.get("sub");
+        Assert.assertNotNull(sub, "id_token must contain a 'sub' claim.");
+
+        String filter = java.net.URLEncoder.encode("userName eq \"" + sub + "\"", StandardCharsets.UTF_8);
+        JSONObject users = scim2RestClient.filterUsers(filter);
+        long totalResults = (long) users.get("totalResults");
+        Assert.assertEquals(totalResults, 1L,
+                "A second login by the same subject must not create a duplicate user — found " + totalResults + ".");
     }
 
     @Test(groups = "wso2.is",
-            description = "Without claim mappings, the id_token only contains the sub claim.")
-    public void testAuthFlowWithNoClaimMappings() throws Exception {
+            description = "A VP credential with only a subset of mapped claims still produces a VERIFIED flow "
+                    + "and an id_token that contains sub and the claims present in the credential.")
+    public void testAuthFlowWithPartialCredentialClaims() throws Exception {
 
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        if (ctx == null) {
-            return;
-        }
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
+        // VP credential with only given_name — family_name is intentionally omitted.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -543,20 +617,27 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
 
         String finalStatus = pollStatusUntilNotActive(ctx.requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
-        String code = triggerCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, finalStatus, ctx.cookieStore);
+        Assert.assertEquals(finalStatus, "VERIFIED",
+                "VP from trusted issuer with correct nonce must reach VERIFIED even with partial claims.");
 
-        if (code != null && "VERIFIED".equals(finalStatus)) {
-            JSONObject tokenResponse = exchangeCodeForTokens(code);
-            String idToken = (String) tokenResponse.get("id_token");
-            if (idToken != null) {
-                String payload = new String(
-                        java.util.Base64.getUrlDecoder().decode(idToken.split("\\.")[1]),
-                        StandardCharsets.UTF_8);
-                JSONObject claims = (JSONObject) new JSONParser().parse(payload);
-                Assert.assertNotNull(claims.get("sub"),
-                        "id_token must contain a 'sub' claim even without explicit claim mappings.");
-            }
-        }
+        String code = triggerCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, finalStatus, ctx.cookieStore);
+        Assert.assertNotNull(code,
+                "Auth code must be returned after a VERIFIED VP submission.");
+
+        JSONObject tokenResponse = exchangeCodeForTokens(code);
+        String idToken = (String) tokenResponse.get("id_token");
+        Assert.assertNotNull(idToken, "Token endpoint must return an id_token.");
+
+        String[] jwtParts = idToken.split("\\.");
+        Assert.assertEquals(jwtParts.length, 3, "id_token must be a compact-serialized JWT with 3 parts.");
+
+        JSONObject claims = (JSONObject) new JSONParser().parse(
+                new String(java.util.Base64.getUrlDecoder().decode(jwtParts[1]), StandardCharsets.UTF_8));
+
+        Assert.assertNotNull(claims.get("sub"),
+                "id_token must contain a 'sub' claim.");
+        Assert.assertEquals(claims.get("given_name"), "Alice",
+                "id_token must contain 'given_name' mapped from the VP credential.");
     }
 
     @Test(groups = "wso2.is",
@@ -602,9 +683,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    /**
-     * Create the test presentation definition via the admin API.
-     */
     private String createPresentationDefinition() throws Exception {
 
         String json = readResourceAsString(
@@ -621,9 +699,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    /**
-     * Delete the presentation definition.
-     */
     private void deletePresentationDefinition(String defId) throws IOException {
 
         if (defId == null) {
@@ -657,6 +732,13 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 + "      \"value\": \"" + presentationDefinitionId + "\""
                 + "    }]"
                 + "  }]"
+                + "},"
+                + "\"provisioning\": {"
+                + "  \"jit\": {"
+                + "    \"isEnabled\": true,"
+                + "    \"userstore\": \"PRIMARY\","
+                + "    \"scheme\": \"PROVISION_SILENTLY\""
+                + "  }"
                 + "}"
                 + "}";
 
@@ -666,21 +748,21 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             int status = response.getStatusLine().getStatusCode();
             if (status == HttpStatus.SC_CREATED || status == HttpStatus.SC_OK) {
                 JSONObject jsonResponse = (JSONObject) new JSONParser().parse(body);
-                String idpId = jsonResponse.get("id").toString();
+                String createdIdpId = jsonResponse.get("id").toString();
                 vpIdpName = generatedIdpName;
-                // Custom dialect mode: userIdClaim.uri must appear as an idpClaim in the
-                // mappings list, and localClaim.uri must be a real local claim.
-                // This lets getUserClaimURI() return "given_name" so it matches the
-                // SD-JWT disclosed claim key in subjectClaims.
+                // Maps the IDP's "given_name" claim so the subject identifier resolves to it.
                 Claims.ClaimMapping givenNameMapping = new Claims.ClaimMapping()
                         .idpClaim("given_name")
+                        .localClaim(new Claims.Claim().uri("http://wso2.org/claims/givenname"));
+                Claims.ClaimMapping familyNameMapping = new Claims.ClaimMapping()
+                        .idpClaim("family_name")
                         .localClaim(new Claims.Claim().uri("http://wso2.org/claims/lastname"));
                 Claims claimConfig = new Claims()
                         .userIdClaim(new Claims.Claim().uri("given_name"))
                         .provisioningClaims(new ArrayList<>());
-                claimConfig.setMappings(new ArrayList<>(java.util.Collections.singletonList(givenNameMapping)));
-                idpMgtRestClient.updateIdpClaimConfig(idpId, claimConfig);
-                return idpId;
+                claimConfig.setMappings(new ArrayList<>(java.util.Arrays.asList(givenNameMapping, familyNameMapping)));
+                idpMgtRestClient.updateIdpClaimConfig(createdIdpId, claimConfig);
+                return createdIdpId;
             }
             log.warn("IDP creation returned " + status + ": " + body
                     + ".  Auth flow tests may not fully exercise the authenticator.");
@@ -762,15 +844,12 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             vpSessionRestClientTenantB = new VPSessionRestClient(serverURL, tenantB);
 
             String tenantApiPrefix = serverURL + "/t/" + TENANT_AUTH_DOMAIN;
-
-            // Configure VP response mode to direct_post for tenant B.
             String responseModeBody = "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"direct_post\"}";
             try (CloseableHttpResponse r = tenantBAdminPut(
                     tenantApiPrefix + "/api/server/v1/configs/openid4vp", responseModeBody)) {
                 EntityUtils.consume(r.getEntity());
             }
 
-            // Create presentation definition in tenant B.
             String defJson = readResourceAsString(
                     "org/wso2/identity/integration/test/oid4vp/create-vp-presentation-definition-flow.json");
             try (CloseableHttpResponse r = tenantBAdminPost(
@@ -784,7 +863,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 tenantBDefinitionId = ((JSONObject) new JSONParser().parse(body)).get("id").toString();
             }
 
-            // Configure trusted issuer for tenant B.
             String pemCert = buildSelfSignedPemCertificate(issuerSigningKey);
             String base64Pem = java.util.Base64.getEncoder()
                     .encodeToString(pemCert.getBytes(StandardCharsets.UTF_8));
@@ -799,7 +877,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 EntityUtils.consume(r.getEntity());
             }
 
-            // Create VP authenticator IDP in tenant B.
             tenantBIdpName = "VPTestIDP-TenantB-" + UUID.randomUUID();
             String idpJson = "{"
                     + "\"name\": \"" + tenantBIdpName + "\","
@@ -827,7 +904,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 tenantBIdpId = ((JSONObject) new JSONParser().parse(body)).get("id").toString();
             }
 
-            // Create OAuth2 app in tenant B.
             String appName = "vp-auth-flow-tenant-b-app-" + UUID.randomUUID();
             String appJson = "{"
                     + "\"name\": \"" + appName + "\","
@@ -859,7 +935,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 tenantBAppId = ((JSONObject) new JSONParser().parse(body)).get("id").toString();
             }
 
-            // Retrieve tenant B OIDC client credentials.
             String oidcUrl = tenantApiPrefix + "/api/server/v1/applications/" + tenantBAppId
                     + "/inbound-protocols/oidc";
             try (CloseableHttpResponse r = tenantBAdminGet(oidcUrl)) {
@@ -871,7 +946,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 }
                 JSONObject oidcConfig = (JSONObject) new JSONParser().parse(body);
                 tenantBConsumerKey = (String) oidcConfig.get("clientId");
-                tenantBConsumerSecret = (String) oidcConfig.get("clientSecret");
             }
 
         } catch (Exception e) {
@@ -880,9 +954,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    /**
-     * Build the OAuth2 authorization URL for the test application.
-     */
     private String buildAuthorizationUrl() {
 
         String base = getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain());
@@ -900,6 +971,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     private static class AuthFlowContext {
         String requestId;
         String sessionDataKey;
+        String walletLoginUrl;
         String nonce;
         String audience;
         BasicCookieStore cookieStore;
@@ -917,7 +989,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             return null;
         }
 
-        // Fetch the nonce from the presentation request JWT.
         try (CloseableHttpResponse jwtResponse = vpSessionRestClient.getPresentationRequestJwt(ctx.requestId)) {
             String jwtBody = EntityUtils.toString(jwtResponse.getEntity()).trim();
             if (jwtBody.contains(".")) {
@@ -962,6 +1033,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                             AuthFlowContext ctx = new AuthFlowContext();
                             ctx.requestId = extractQueryParam(location, "requestId");
                             ctx.sessionDataKey = extractQueryParam(location, "sessionDataKey");
+                            ctx.walletLoginUrl = location;
                             ctx.cookieStore = cookieStore;
                             return ctx;
                         }
@@ -975,29 +1047,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return null;
     }
 
-    /**
-     * Follow the auth redirect chain and extract only the {@code requestId}.
-     * Used by tests that only need the requestId (not sessionDataKey).
-     */
-    private String startAuthFlowAndExtractRequestId() {
-
-        AuthFlowContext ctx = startAuthFlowAndExtractContext();
-        if (ctx != null && ctx.requestId != null) {
-            return ctx.requestId;
-        }
-        // Fall back to starting a session directly for tests that only need the requestId.
-        try {
-            JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
-            return (String) session.get("requestId");
-        } catch (Exception e) {
-            log.warn("Direct session start also failed: " + e.getMessage());
-        }
-        return null;
-    }
-
-    /**
-     * Build the OAuth2 authorization URL for the tenant-B application.
-     */
     private String buildTenantBAuthorizationUrl() {
 
         String base = getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, TENANT_AUTH_DOMAIN);
@@ -1033,6 +1082,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                         ctx = new AuthFlowContext();
                         ctx.requestId = extractQueryParam(location, "requestId");
                         ctx.sessionDataKey = extractQueryParam(location, "sessionDataKey");
+                        ctx.walletLoginUrl = location;
                         ctx.cookieStore = cookieStore;
                         break;
                     }
@@ -1167,9 +1217,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    /**
-     * Exchange an authorization code for tokens via the token endpoint.
-     */
     private JSONObject exchangeCodeForTokens(String code) throws Exception {
 
         String tokenEndpoint = getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain());
@@ -1372,9 +1419,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
-    /**
-     * Poll a session (via vpSessionRestClient) until it leaves ACTIVE or the budget is exhausted.
-     */
     private String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs) throws Exception {
 
         return pollStatusUntilNotActive(requestId, maxRetries, intervalMs, vpSessionRestClient);

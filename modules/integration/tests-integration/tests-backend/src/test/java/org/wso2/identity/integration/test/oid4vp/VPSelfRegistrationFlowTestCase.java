@@ -50,17 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Integration tests for the VP-based self-registration flow using PresentationExecutor.
- *
- * <p>This test class validates the wallet-based user self-registration path:
- * <ol>
- *   <li>A registration flow is configured with {@code PresentationExecutor} referencing a
- *       digital-wallet-connection IDP.</li>
- *   <li>The flow engine initiates a VP session and returns a wallet redirect URL
- *       ({@code type=REDIRECTION}).</li>
- *   <li>A synthetic wallet submits a valid SD-JWT-VC via the direct_post endpoint.</li>
- *   <li>The flow is resumed and completes with {@code flowStatus=COMPLETE}.</li>
- * </ol>
+ * Integration tests for the VP-based self-registration flow using {@code PresentationExecutor}.
  */
 public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBase {
 
@@ -69,16 +59,16 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
             "org/wso2/identity/integration/test/oid4vp/create-vp-presentation-definition-registration.json";
 
     private static final String CREDENTIAL_IDENTIFIER = "PersonCredential";
-    private static final String ISSUER_URL = "https://test-issuer.example.com";
+    private static final String ISSUER_URL             = "https://test-issuer.example.com";
 
     private static final String WALLET_IDP_NAME = "VP-SelfReg-Test-IDP";
 
     private static final int    POLL_MAX_RETRIES = 15;
     private static final long   POLL_INTERVAL_MS = 500L;
 
-    private static final String FLOW_TYPE_REGISTRATION = "REGISTRATION";
-    private static final String FLOW_STATUS_INCOMPLETE  = "INCOMPLETE";
-    private static final String FLOW_STATUS_COMPLETE    = "COMPLETE";
+    private static final String FLOW_TYPE_REGISTRATION     = "REGISTRATION";
+    private static final String FLOW_STATUS_INCOMPLETE     = "INCOMPLETE";
+    private static final String FLOW_STATUS_COMPLETE       = "COMPLETE";
     private static final String FLOW_RESP_TYPE_REDIRECTION = "REDIRECTION";
 
     private ECKey issuerSigningKey;
