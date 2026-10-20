@@ -70,7 +70,10 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationStep;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Authenticator;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.InboundProtocols;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
+import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
@@ -144,6 +147,9 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         appId = createOAuthApplicationWithVPIdp();
         vpSessionRestClient = new VPSessionRestClient(serverURL, isServer.getContextTenant());
         scim2RestClient = new SCIM2RestClient(serverURL, isServer.getContextTenant());
+        // Delete any users left by a previous test run so JIT provisioning starts clean.
+        deleteUserIfExists("Alice");
+        deleteUserIfExists("JIT");
         provisionTenantB();
     }
 
@@ -494,10 +500,10 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     public void testJITProvisioningCreatesUserOnFirstLogin() throws Exception {
 
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        if (ctx == null) {
-            log.warn("testJITProvisioningCreatesUserOnFirstLogin: could not initiate auth flow — skipping.");
-            return;
-        }
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
@@ -531,11 +537,14 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         String sub = (String) idTokenClaims.get("sub");
         Assert.assertNotNull(sub, "id_token must contain a 'sub' claim.");
 
-        String filter = java.net.URLEncoder.encode("userName eq \"" + sub + "\"", StandardCharsets.UTF_8);
+        // IS 7.x uses a UUID-based sub in the id_token, not the local username.
+        // The JIT-provisioned username is derived from the userIdClaim ("given_name"), which is "JIT".
+        String jitUsername = "JIT";
+        String filter = java.net.URLEncoder.encode("userName eq \"" + jitUsername + "\"", StandardCharsets.UTF_8);
         JSONObject users = scim2RestClient.filterUsers(filter);
         long totalResults = (long) users.get("totalResults");
         Assert.assertEquals(totalResults, 1L,
-                "JIT provisioning must create exactly one local user for sub='" + sub + "'.");
+                "JIT provisioning must create exactly one local user with userName='" + jitUsername + "'.");
 
         jitProvisionedUserId = (String) ((JSONObject) ((JSONArray) users.get("Resources")).get(0)).get("id");
     }
@@ -546,9 +555,10 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     public void testJITProvisioningDoesNotDuplicateUser() throws Exception {
 
         AuthFlowContext ctx = initiateAuthFlowAndFetchNonce();
-        if (ctx == null) {
-            return;
-        }
+        Assert.assertNotNull(ctx,
+                "Authorization redirect chain must reach " + WALLET_LOGIN_JSP + " with a valid requestId.");
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Wallet login redirect must carry a sessionDataKey parameter.");
 
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
@@ -585,7 +595,8 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         String sub = (String) idTokenClaims.get("sub");
         Assert.assertNotNull(sub, "id_token must contain a 'sub' claim.");
 
-        String filter = java.net.URLEncoder.encode("userName eq \"" + sub + "\"", StandardCharsets.UTF_8);
+        String jitUsername = "JIT";
+        String filter = java.net.URLEncoder.encode("userName eq \"" + jitUsername + "\"", StandardCharsets.UTF_8);
         JSONObject users = scim2RestClient.filterUsers(filter);
         long totalResults = (long) users.get("totalResults");
         Assert.assertEquals(totalResults, 1L,
@@ -789,6 +800,8 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             ApplicationModel app = new ApplicationModel()
                     .name("vp-auth-flow-app-" + UUID.randomUUID())
                     .inboundProtocolConfiguration(new InboundProtocols().oidc(oidcConfig))
+                    .advancedConfigurations(new AdvancedApplicationConfiguration().skipLoginConsent(true))
+                    .claimConfiguration(buildClaimConfiguration())
                     .authenticationSequence(new AuthenticationSequence()
                             .type(TypeEnum.USER_DEFINED)
                             .addStepsItem(new AuthenticationStep()
@@ -1417,6 +1430,45 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             Assert.assertNotNull(in, "Test resource not found on classpath: " + resourcePath);
             return new String(in.readAllBytes(), StandardCharsets.UTF_8);
         }
+    }
+
+    private void deleteUserIfExists(String userName) {
+
+        try {
+            String filter = java.net.URLEncoder.encode("userName eq \"" + userName + "\"", StandardCharsets.UTF_8);
+            JSONObject result = scim2RestClient.filterUsers(filter);
+            Object total = result.get("totalResults");
+            if (!(total instanceof Long) || (Long) total == 0) {
+                return;
+            }
+            JSONArray resources = (JSONArray) result.get("Resources");
+            if (resources == null) {
+                return;
+            }
+            for (Object r : resources) {
+                String userId = (String) ((JSONObject) r).get("id");
+                scim2RestClient.deleteUser(userId);
+            }
+        } catch (Exception e) {
+            log.warn("Pre-cleanup: could not delete user '" + userName + "': " + e.getMessage());
+        }
+    }
+
+    private ClaimConfiguration buildClaimConfiguration() {
+
+        ClaimConfiguration claimConfig = new ClaimConfiguration();
+        claimConfig.addRequestedClaimsItem(getRequestedClaim("http://wso2.org/claims/givenname"));
+        claimConfig.addRequestedClaimsItem(getRequestedClaim("http://wso2.org/claims/lastname"));
+        return claimConfig;
+    }
+
+    private RequestedClaimConfiguration getRequestedClaim(String claimUri) {
+
+        RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
+        requestedClaim.setClaim(
+                new org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.Claim()
+                        .uri(claimUri));
+        return requestedClaim;
     }
 
     private String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs) throws Exception {
