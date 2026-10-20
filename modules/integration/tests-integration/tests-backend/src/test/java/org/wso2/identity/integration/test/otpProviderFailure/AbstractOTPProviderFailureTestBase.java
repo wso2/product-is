@@ -55,6 +55,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.OpenIDConnectConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.ConnectorsPatchReq;
 import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyReq;
+import org.wso2.identity.integration.test.rest.api.server.identity.governance.v1.dto.PropertyRevertReq;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.model.Properties;
 import org.wso2.identity.integration.test.rest.api.server.notification.sender.v1.model.SMSSender;
 import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
@@ -72,6 +73,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -122,7 +124,7 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
                 Constants.PROPERTY_DISABLED);
     }
 
-    private void updateOTPConnectorProperty(String connectorId, String propertyName, String value)
+    protected void updateOTPConnectorProperty(String connectorId, String propertyName, String value)
             throws IOException {
 
         PropertyReq property = new PropertyReq();
@@ -140,6 +142,19 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
         }
     }
 
+    protected void revertOTPConnectorProperties(String connectorId, String... propertyNames) throws IOException {
+
+        PropertyRevertReq revertReq = new PropertyRevertReq();
+        revertReq.setProperties(Arrays.asList(propertyNames));
+
+        IdentityGovernanceRestClient client = new IdentityGovernanceRestClient(serverURL, tenantInfo);
+        try {
+            client.revertConnectorProperties(Constants.MFA_GOVERNANCE_CATEGORY_ID, connectorId, revertReq);
+        } finally {
+            client.closeHttpClient();
+        }
+    }
+
     protected String addTwoStepOIDCApp(String appName, String otpAuthenticatorName) throws Exception {
 
         return addApplication(buildTwoStepAppModel(appName, otpAuthenticatorName, false));
@@ -150,7 +165,7 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
         return addApplication(buildTwoStepAppModel(appName, otpAuthenticatorName, true));
     }
 
-    private ApplicationModel buildTwoStepAppModel(String appName, String otpAuthenticatorName, boolean apiNative) {
+    protected ApplicationModel buildTwoStepAppModel(String appName, String otpAuthenticatorName, boolean apiNative) {
 
         ApplicationModel application = new ApplicationModel();
         application.setName(appName);
@@ -386,6 +401,16 @@ public abstract class AbstractOTPProviderFailureTestBase extends OAuth2ServiceAb
                 + "\"selectedAuthenticator\":{"
                 + "\"authenticatorId\":\"" + state.authenticatorId + "\","
                 + "\"params\":{\"OTPcode\":\"" + otpCode + "\"}}}";
+        return postToAuthn(state.flowId, body);
+    }
+
+    protected AuthnFlowState submitAuthenticatorParam(AuthnFlowState state, String paramName, String value)
+            throws Exception {
+
+        String body = "{\"flowId\":\"" + state.flowId + "\","
+                + "\"selectedAuthenticator\":{"
+                + "\"authenticatorId\":\"" + state.authenticatorId + "\","
+                + "\"params\":{\"" + paramName + "\":\"" + value + "\"}}}";
         return postToAuthn(state.flowId, body);
     }
 

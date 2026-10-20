@@ -213,6 +213,7 @@
             <class name="org.wso2.identity.integration.test.otpProviderFailure.email.EmailOTPProviderFailureLoginNativeTest"/>
             <class name="org.wso2.identity.integration.test.otpProviderFailure.sms.SMSOTPProviderFailureLoginRedirectTest"/>
             <class name="org.wso2.identity.integration.test.otpProviderFailure.sms.SMSOTPProviderFailureLoginNativeTest"/>
+            <class name="org.wso2.identity.integration.test.auth.SMSOTPMobileNumberEnrollmentTestCase"/>
         </classes>
     </test>
 
