@@ -29,7 +29,7 @@ jobs:
           - runner_id: 1
             tests: "is-tests-default-configuration,is-test-rest-api,is-test-webhooks,is-tests-scim2,is-test-adaptive-authentication"
           - runner_id: 2
-            tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart"
+            tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart,is-tests-connection-sharing"
           - runner_id: 3
             tests: "is-tests-oauth-client-secrets,is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption,is-test-session-mgt,is-tests-password-update-api"
           - runner_id: 4
@@ -263,6 +263,7 @@ jobs:
             "is-tests-uuid-user-store"
             "is-tests-federation"
             "is-tests-federation-restart"
+            "is-tests-connection-sharing"
             "is-tests-jdbc-userstore"
             "is-tests-read-only-userstore"
             "is-tests-oauth-jwt-token-gen-enabled"

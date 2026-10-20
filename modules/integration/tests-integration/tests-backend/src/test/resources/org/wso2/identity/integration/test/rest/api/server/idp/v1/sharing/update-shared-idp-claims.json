@@ -1,0 +1,23 @@
+{
+  "userIdClaim": {
+    "uri": "sub"
+  },
+  "roleClaim": {
+    "uri": ""
+  },
+  "mappings": [
+    {
+      "idpClaim": "sub",
+      "localClaim": {
+        "uri": "http://wso2.org/claims/username"
+      }
+    },
+    {
+      "idpClaim": "email",
+      "localClaim": {
+        "uri": "http://wso2.org/claims/emailaddress"
+      }
+    }
+  ],
+  "provisioningClaims": []
+}

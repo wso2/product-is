@@ -1,0 +1,6 @@
+{
+  "isEnabled": true,
+  "scheme": "PROVISION_SILENTLY",
+  "userstore": "PRIMARY",
+  "associateLocalUser": true
+}

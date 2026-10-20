@@ -1,0 +1,29 @@
+{
+  "/api/server/v1/organizations": [
+    "internal_organization_view",
+    "internal_organization_create",
+    "internal_organization_delete"
+  ],
+  "/o/api/server/v1/organizations": [
+    "internal_org_organization_view",
+    "internal_org_organization_create",
+    "internal_org_organization_delete"
+  ],
+  "/o/api/server/v1/identity-providers": [
+    "internal_org_idp_view",
+    "internal_org_idp_create",
+    "internal_org_idp_update",
+    "internal_org_idp_delete"
+  ],
+  "/o/api/server/v1/identity-providers/share": [
+    "internal_org_idp_share",
+    "internal_org_idp_unshare",
+    "internal_org_idp_shared_access_view"
+  ],
+  "/o/api/server/v1/applications": [
+    "internal_org_application_mgt_view",
+    "internal_org_application_mgt_create",
+    "internal_org_application_mgt_update",
+    "internal_org_application_mgt_delete"
+  ]
+}

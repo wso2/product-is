@@ -520,6 +520,12 @@
             <class name="org.wso2.identity.integration.test.oauth2.JITUserAssociationTestCase"/>
         </classes>
     </test>
+    <test name="is-tests-connection-sharing" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.sharing.IdPSharingSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.sharing.IdPSharingFailureTest"/>
+        </classes>
+    </test>
     <test name="is-tests-jdbc-userstore" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.base.JDBCUserStoreInitializerTestCase"/>
