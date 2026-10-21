@@ -35,9 +35,6 @@ import java.util.UUID;
 
 /**
  * Integration tests covering failure and error-path scenarios for the VP verification session API.
- *
- * <p>Each test in this class is <em>independent</em>; no {@code dependsOnMethods} chains are used
- * unless the test explicitly needs the session created in a prior step of the <em>same</em> test.
  */
 public class VPVerificationSessionFailureTestCase extends VPVerificationSessionTestBase {
 
@@ -46,15 +43,13 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
     private static final String TRUSTED_ISSUER_URL = "https://test-issuer.example.com";
 
     /**
-     * A trusted issuer key registered in @BeforeClass.  Credentials built with this key
-     * will pass issuer-trust validation; credentials built with a freshly generated key will fail.
+     * A trusted issuer key registered in @BeforeClass.
      */
     private static ECKey trustedIssuerKey;
 
-    /** Server-assigned ID of the test presentation definition — deleted in @AfterClass. */
     private String presentationDefinitionId;
 
-    /** IDP with PresentationAuthenticator — triggers ECDSA key provisioning via VPIdPMgtListener. */
+    /** IDP with PresentationAuthenticator which triggers ECDSA key provisioning via VPIdPMgtListener. */
     private String walletConnectionIdpId;
 
     @BeforeClass(alwaysRun = true)
@@ -79,7 +74,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
 
     @Test(groups = "wso2.is",
             description = "Starting a session with an empty body returns 400.")
-    public void testStartSessionMissingBody() throws Exception {
+    public void testStartSessionEmptyBody() throws Exception {
 
         try (CloseableHttpResponse response = vpSessionRestClient.startVerificationSessionWithBody("")) {
             int status = response.getStatusLine().getStatusCode();
@@ -186,7 +181,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
         try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
+            int submitStatus = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
+            Assert.assertEquals(submitStatus, HttpStatus.SC_OK,
+                    "VP submission must be accepted (200) before IS evaluates the nonce.");
         }
 
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
@@ -215,7 +213,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
         try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
+            int submitStatus = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
+            Assert.assertEquals(submitStatus, HttpStatus.SC_OK,
+                    "VP submission must be accepted (200) before IS evaluates expiry.");
         }
 
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
@@ -246,7 +247,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
         try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
+            int submitStatus = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
+            Assert.assertEquals(submitStatus, HttpStatus.SC_OK,
+                    "VP submission must be accepted (200) before IS evaluates the issuer key.");
         }
 
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
@@ -266,7 +270,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String audience = params[1];
 
         String vpToken = SDJwtVcTestBuilder.builder()
-                .vct("WrongCredentialType")   // does not match the definition requirement
+                .vct("WrongCredentialType")
                 .claim("given_name", "Alice")
                 .nonce(nonce)
                 .audience(audience)
@@ -274,7 +278,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
         try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
+            int submitStatus = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
+            Assert.assertEquals(submitStatus, HttpStatus.SC_OK,
+                    "VP submission must be accepted (200) before IS evaluates the credential type.");
         }
 
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
@@ -289,11 +296,14 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        // Completely invalid token — not even a compact JWT.
+        // Completely invalid token.
         String malformedToken = "{\"" + CREDENTIAL_IDENTIFIER + "\": \"not.a.valid.sd.jwt.token\"}";
 
         try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(requestId, malformedToken)) {
+            int submitStatus = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
+            Assert.assertEquals(submitStatus, HttpStatus.SC_OK,
+                    "VP submission must be accepted (200) before IS evaluates the token format.");
         }
 
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
@@ -322,7 +332,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
         try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
+            int submitStatus = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
+            Assert.assertEquals(submitStatus, HttpStatus.SC_OK,
+                    "VP submission must be accepted (200) before IS evaluates the disclosure hashes.");
         }
 
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
@@ -337,7 +350,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        // Build a token that has no KB-JWT tail — structurally invalid for VP presentation.
+        // Build a token that has no KB-JWT tail.
         String sdJwtWithoutKb = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -347,7 +360,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String vpToken = "{\"" + CREDENTIAL_IDENTIFIER + "\": \"" + sdJwtWithoutKb + "\"}";
 
         try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
+            int submitStatus = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
+            Assert.assertEquals(submitStatus, HttpStatus.SC_OK,
+                    "VP submission must be accepted (200) before IS evaluates KB-JWT presence.");
         }
 
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
@@ -379,16 +395,16 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
             description = "A second VP submission to an already-VERIFIED session returns 400.")
     public void testSubmitToAlreadyVerifiedSession() throws Exception {
 
-        // Step 1: start session.
+        // Start session.
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        // Step 2: fetch nonce and audience from presentation request.
+        // Fetch nonce and audience from presentation request.
         String[] params = fetchRequestParams(requestId);
         String nonce    = params[0];
         String audience = params[1];
 
-        // Step 3: build and submit a valid VP using the registered trusted issuer key.
+        // Build and submit a valid VP using the registered trusted issuer key.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -398,15 +414,18 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                 .buildVpToken(CREDENTIAL_IDENTIFIER);
 
         try (CloseableHttpResponse firstResponse = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
+            int firstStatus = firstResponse.getStatusLine().getStatusCode();
             EntityUtils.consume(firstResponse.getEntity());
+            Assert.assertEquals(firstStatus, HttpStatus.SC_OK,
+                    "First VP submission must be accepted (200) before the session can reach VERIFIED.");
         }
 
-        // Step 4: the VP is valid — wait for VERIFIED.
+        // VP is valid and wait for VERIFIED.
         String terminalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(terminalStatus, STATUS_VERIFIED,
                 "A valid VP signed by the registered trusted issuer must reach VERIFIED.");
 
-        // Step 5: submit again — expect 400 because the session is no longer ACTIVE.
+        // Submit again and expect 400 because the session is no longer ACTIVE.
         try (CloseableHttpResponse secondResponse = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
             int status = secondResponse.getStatusLine().getStatusCode();
             EntityUtils.consume(secondResponse.getEntity());
@@ -419,19 +438,24 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
             description = "A VP submission to an already-FAILED session returns 400.")
     public void testSubmitToAlreadyFailedSession() throws Exception {
 
-        // Step 1: start session and immediately report an error from the wallet.
+        // Start session and immediately report an error from the wallet.
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
         try (CloseableHttpResponse errorResponse = vpSessionRestClient.submitWalletError(
                 requestId, "access_denied", "User declined.")) {
+            int errorStatus = errorResponse.getStatusLine().getStatusCode();
             EntityUtils.consume(errorResponse.getEntity());
+            Assert.assertEquals(errorStatus, HttpStatus.SC_OK,
+                    "Wallet error submission must be accepted (200) to transition the session to FAILED.");
         }
 
-        // Step 2: wait for FAILED.
-        pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
+        // Wait for FAILED and assert the session is actually in FAILED state.
+        String failedStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
+        Assert.assertEquals(failedStatus, STATUS_FAILED,
+                "Session must be FAILED before testing that a second VP submission is rejected.");
 
-        // Step 3: now try to submit a valid VP — expect 400.
+        // Try to submit a valid VP and expect 400.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")

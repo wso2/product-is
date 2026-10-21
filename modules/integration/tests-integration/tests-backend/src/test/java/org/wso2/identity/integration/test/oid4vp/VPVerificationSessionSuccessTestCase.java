@@ -48,16 +48,12 @@ import org.wso2.identity.integration.test.restclients.VPSessionRestClient;
 import org.wso2.identity.integration.test.utils.SDJwtVcTestBuilder;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Integration tests covering the happy-path scenarios for the VP verification session API.
- *
- * <p>Tests are ordered and chained where session state carries over between steps.
  */
 public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionTestBase {
 
@@ -112,6 +108,7 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         provisionTenantB();
     }
 
+    /** Creates the secondary tenant (tenant-B) and initialises the tenant-scoped VP session client used by the cross-tenant isolation test. */
     private void provisionTenantB() throws Exception {
 
         tenantMgtRestClient = new TenantMgtRestClient(serverURL, isServer.getContextTenant());
@@ -175,8 +172,8 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         String requestUri = (String) sessionResponse.get("requestUri");
         Assert.assertNotNull(requestUri,
                 "startVerificationSession response must contain 'requestUri'.");
-        Assert.assertFalse(requestUri.trim().isEmpty(),
-                "'requestUri' must not be blank.");
+        Assert.assertTrue(requestUri.startsWith("https://"),
+                "'requestUri' must be an HTTPS URL but was: " + requestUri);
     }
 
     @Test(groups = "wso2.is",
@@ -216,21 +213,22 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             Assert.assertEquals(statusCode, HttpStatus.SC_OK,
                     "GET /requests/{id} must return 200.  Body: " + body);
 
-            // The response must be a compact JWT (two dots → three parts).
+            // The response must be a compact JWT (exactly two dots → three parts).
             String compactJwt = body.trim();
-            String[] parts = compactJwt.split("\\.");
-            Assert.assertTrue(parts.length >= 3,
-                    "Presentation request response must be a compact JWT (at least two dots).");
+            Assert.assertEquals(compactJwt.split("\\.").length, 3,
+                    "Presentation request response must be a compact JWT with exactly 3 parts (header.payload.signature).");
 
             // Parse and extract nonce + audience for use in the VP submission test.
             SignedJWT requestJwt = SignedJWT.parse(compactJwt);
             sharedNonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
             Assert.assertNotNull(sharedNonce, "Presentation request JWT must contain a 'nonce' claim.");
+            Assert.assertFalse(sharedNonce.trim().isEmpty(), "'nonce' claim must not be blank.");
 
             // The KB-JWT aud must be the verifier's client_id, not the request JWT's aud
             // (which is the fixed protocol audience "https://self-issued.me/v2").
             sharedAudience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
             Assert.assertNotNull(sharedAudience, "Presentation request JWT must contain a 'client_id' claim.");
+            Assert.assertFalse(sharedAudience.trim().isEmpty(), "'client_id' claim must not be blank.");
         }
     }
 
@@ -302,11 +300,12 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                 "Two distinct sessions must not share the same requestId.");
 
         // Both sessions should be ACTIVE immediately.
-        Set<String> activeStatuses = new HashSet<>();
-        activeStatuses.add((String) vpSessionRestClient.getSessionStatus(requestId1).get("status"));
-        activeStatuses.add((String) vpSessionRestClient.getSessionStatus(requestId2).get("status"));
-        Assert.assertTrue(activeStatuses.stream().allMatch(STATUS_ACTIVE::equals),
-                "Both newly started sessions must be ACTIVE.");
+        String status1 = (String) vpSessionRestClient.getSessionStatus(requestId1).get("status");
+        String status2 = (String) vpSessionRestClient.getSessionStatus(requestId2).get("status");
+        Assert.assertEquals(status1, STATUS_ACTIVE,
+                "Session 1 (requestId=" + requestId1 + ") must be ACTIVE immediately after creation.");
+        Assert.assertEquals(status2, STATUS_ACTIVE,
+                "Session 2 (requestId=" + requestId2 + ") must be ACTIVE immediately after creation.");
     }
 
     @Test(groups = "wso2.is",
@@ -317,6 +316,7 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         JSONObject sessionResponse = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) sessionResponse.get("requestId");
         Assert.assertNotNull(requestId, "Super-tenant session must return a requestId.");
+        Assert.assertFalse(requestId.trim().isEmpty(), "Super-tenant session requestId must not be blank.");
 
         // Attempt to poll status through tenant-B credentials — session must be invisible.
         try (CloseableHttpResponse response = vpSessionRestClientTenantB.getSessionStatusRaw(requestId)) {
@@ -337,6 +337,7 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             JSONObject sessionResponse = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
             String requestId = (String) sessionResponse.get("requestId");
             Assert.assertNotNull(requestId, "requestId must be present for direct_post.jwt session.");
+            Assert.assertFalse(requestId.trim().isEmpty(), "requestId must not be blank.");
 
             // Fetch the request JWT.
             String compactJwt;
@@ -348,7 +349,11 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             SignedJWT requestJwt = SignedJWT.parse(compactJwt);
             JWTClaimsSet requestClaims = requestJwt.getJWTClaimsSet();
             String nonce = requestClaims.getStringClaim("nonce");
+            Assert.assertNotNull(nonce, "Presentation request JWT must contain a 'nonce' claim.");
+            Assert.assertFalse(nonce.trim().isEmpty(), "'nonce' claim must not be blank.");
             String audience = requestClaims.getStringClaim("client_id");
+            Assert.assertNotNull(audience, "Presentation request JWT must contain a 'client_id' claim.");
+            Assert.assertFalse(audience.trim().isEmpty(), "'client_id' claim must not be blank.");
 
             // Extract the ephemeral encryption public key from client_metadata.jwks.keys[0].
             Map<String, Object> clientMetadata = requestClaims.getJSONObjectClaim("client_metadata");
@@ -422,6 +427,7 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         return ECKey.parse(new net.minidev.json.JSONObject(keyMap).toJSONString());
     }
 
+    /** Parses a JSON response body and asserts it is a JSON object, failing with a descriptive message otherwise. */
     private JSONObject getJSONObject(String body) throws Exception {
 
         Object parsed = new org.json.simple.parser.JSONParser().parse(body);
