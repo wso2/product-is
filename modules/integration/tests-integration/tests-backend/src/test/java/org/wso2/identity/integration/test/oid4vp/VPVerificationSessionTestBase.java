@@ -91,7 +91,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
     protected String createPresentationDefinitionFromResource(String resourcePath) throws Exception {
 
         String json = readResourceAsString(resourcePath);
-        String url = serverURL + PRESENTATION_DEFINITIONS_PATH;
+        String url = serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH;
         Response response = adminPost(url, json);
         String body = response.getBody().asString();
         int status = response.getStatusCode();
@@ -114,7 +114,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         if (definitionId == null) {
             return;
         }
-        String url = serverURL + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId;
+        String url = serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId;
         Response response = adminDelete(url);
         int status = response.getStatusCode();
         Assert.assertTrue(status == HttpStatus.SC_NO_CONTENT || status == HttpStatus.SC_NOT_FOUND,
@@ -159,7 +159,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
                 + "  }]"
                 + "}"
                 + "}";
-        String url = serverURL + "/api/server/v1/identity-providers";
+        String url = serverBaseUrl() + "/api/server/v1/identity-providers";
         Response response = adminPost(url, idpJson);
         String body = response.getBody().asString();
         int status = response.getStatusCode();
@@ -184,7 +184,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
     protected void configureVPResponseMode(String responseMode) throws IOException {
 
         String json = "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"" + responseMode + "\"}";
-        String url = serverURL + "/api/server/v1/configs/openid4vp";
+        String url = serverBaseUrl() + "/api/server/v1/configs/openid4vp";
         Response response = adminPut(url, json);
         int status = response.getStatusCode();
         String responseBody = response.getBody().asString();
@@ -213,7 +213,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
                 + "\"keySourceType\":\"pem\","
                 + "\"keySource\":\"" + base64Pem + "\""
                 + "}]}";
-        String url = serverURL + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId
+        String url = serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId
                 + "/credentials/" + credentialId + "/issuer-configs";
         Response response = adminPut(url, body);
         int status = response.getStatusCode();
@@ -237,7 +237,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         if (idpId == null) {
             return;
         }
-        String url = serverURL + "/api/server/v1/identity-providers/" + idpId;
+        String url = serverBaseUrl() + "/api/server/v1/identity-providers/" + idpId;
         Response response = adminDelete(url);
         int status = response.getStatusCode();
         Assert.assertTrue(status == HttpStatus.SC_NO_CONTENT || status == HttpStatus.SC_NOT_FOUND,
@@ -304,6 +304,18 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
                 .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
                 .header("User-Agent", OAuth2Constant.USER_AGENT)
                 .delete(url);
+    }
+
+    /**
+     * Returns the server base URL without a trailing slash.
+     * ISIntegrationTest sets {@code serverURL} by stripping {@code "services/"} from the backend
+     * URL, which leaves a trailing slash (e.g. {@code https://localhost:9853/}).  Path constants
+     * in this class already start with {@code /}, so naively concatenating them yields a
+     * double-slash that Apache HttpClient normalises silently but RestAssured sends verbatim —
+     * causing Tomcat to reject the request with HTTP 400.
+     */
+    protected String serverBaseUrl() {
+        return serverURL.endsWith("/") ? serverURL.substring(0, serverURL.length() - 1) : serverURL;
     }
 
     /**

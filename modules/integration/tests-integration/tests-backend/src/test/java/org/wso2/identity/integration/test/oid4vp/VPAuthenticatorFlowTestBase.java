@@ -102,7 +102,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
 
         String json = VPTestUtils.readResourceAsString(
                 "org/wso2/identity/integration/test/oid4vp/create-vp-presentation-definition-flow.json");
-        String url = serverURL + PRESENTATION_DEFINITIONS_PATH;
+        String url = serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH;
         Response response = adminPost(url, json);
         String body = response.getBody().asString();
         int status = response.getStatusCode();
@@ -118,7 +118,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         if (defId == null) {
             return;
         }
-        adminDelete(serverURL + PRESENTATION_DEFINITIONS_PATH + "/" + defId);
+        adminDelete(serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH + "/" + defId);
     }
 
     /**
@@ -152,7 +152,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
                 + "}"
                 + "}";
 
-        String url = serverURL + "/api/server/v1/identity-providers";
+        String url = serverBaseUrl() + "/api/server/v1/identity-providers";
         Response response = adminPost(url, idpJson);
         String body = response.getBody().asString();
         int status = response.getStatusCode();
@@ -464,7 +464,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
                 + "\"keySourceType\":\"pem\","
                 + "\"keySource\":\"" + base64Pem + "\""
                 + "}]}";
-        String url = serverURL + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId
+        String url = serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId
                 + "/credentials/" + credentialId + "/issuer-configs";
         Response response = adminPut(url, body);
         int status = response.getStatusCode();
@@ -477,12 +477,22 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
     protected void configureVPResponseMode(String responseMode) {
 
         String json = "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"" + responseMode + "\"}";
-        String url = serverURL + "/api/server/v1/configs/openid4vp";
+        String url = serverBaseUrl() + "/api/server/v1/configs/openid4vp";
         Response response = adminPut(url, json);
         int status = response.getStatusCode();
         String responseBody = response.getBody().asString();
         Assert.assertEquals(status, HttpStatus.SC_OK,
                 "Failed to configure VP response mode (status " + status + "): " + responseBody);
+    }
+
+    /**
+     * Returns the server base URL without a trailing slash.
+     * {@code serverURL} is derived from {@code backendURL} by stripping {@code "services/"}, which leaves a
+     * trailing slash.  Path constants start with {@code /}, so concatenating them directly yields a double-slash
+     * that RestAssured sends verbatim — Tomcat rejects it with HTTP 400.
+     */
+    protected String serverBaseUrl() {
+        return serverURL.endsWith("/") ? serverURL.substring(0, serverURL.length() - 1) : serverURL;
     }
 
     protected Response adminPost(String url, String json) {
@@ -497,7 +507,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
                 .contentType(ContentType.JSON)
                 .header("User-Agent", OAuth2Constant.USER_AGENT)
                 .body(json)
-                .post(url);
+                .post(normalizeUrl(url));
     }
 
     protected Response adminPut(String url, String json) {
@@ -512,7 +522,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
                 .contentType(ContentType.JSON)
                 .header("User-Agent", OAuth2Constant.USER_AGENT)
                 .body(json)
-                .put(url);
+                .put(normalizeUrl(url));
     }
 
     protected Response adminDelete(String url) {
@@ -525,7 +535,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         return RestAssured.given()
                 .auth().preemptive().basic(user, pass)
                 .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .delete(url);
+                .delete(normalizeUrl(url));
     }
 
     protected Response adminGet(String url, String user, String pass) {
@@ -533,7 +543,11 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         return RestAssured.given()
                 .auth().preemptive().basic(user, pass)
                 .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .get(url);
+                .get(normalizeUrl(url));
+    }
+
+    private static String normalizeUrl(String url) {
+        return url.replaceAll("([^:])//+", "$1/");
     }
 
     /** Returns the value of the Location header from the response, or null if absent. */

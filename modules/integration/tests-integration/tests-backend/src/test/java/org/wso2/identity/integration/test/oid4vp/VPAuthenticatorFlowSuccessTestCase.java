@@ -117,7 +117,7 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
         }
 
         // Clean up tenant B.
-        String tenantApiPrefix = serverURL + "/t/" + TENANT_AUTH_DOMAIN;
+        String tenantApiPrefix = serverBaseUrl() + "/t/" + TENANT_AUTH_DOMAIN;
         if (tenantBAppId != null) {
             try {
                 adminDelete(tenantApiPrefix + "/api/server/v1/applications/" + tenantBAppId,
@@ -518,7 +518,7 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
             tenantB.setContextUser(tenantBUser);
             vpSessionRestClientTenantB = new VPSessionRestClient(serverURL, tenantB);
 
-            String tenantApiPrefix = serverURL + "/t/" + TENANT_AUTH_DOMAIN;
+            String tenantApiPrefix = serverBaseUrl() + "/t/" + TENANT_AUTH_DOMAIN;
             Response r;
             String body;
             int status;

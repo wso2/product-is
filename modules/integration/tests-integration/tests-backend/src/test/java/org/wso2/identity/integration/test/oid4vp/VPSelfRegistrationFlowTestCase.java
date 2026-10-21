@@ -338,7 +338,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 + "}"
                 + "}";
 
-        String url = serverURL + "/api/server/v1/identity-providers";
+        String url = serverBaseUrl() + "/api/server/v1/identity-providers";
         Response response = adminPost(url, idpJson);
         String body = response.getBody().asString();
         int status = response.getStatusCode();
@@ -365,7 +365,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/lastname\"}}"
                 + "]"
                 + "}";
-        String url = serverURL + "/api/server/v1/identity-providers/" + idpId + "/claims";
+        String url = serverBaseUrl() + "/api/server/v1/identity-providers/" + idpId + "/claims";
         Response response = adminPut(url, claimsJson);
         int status = response.getStatusCode();
         Assert.assertEquals(status, HttpStatus.SC_OK,
@@ -412,7 +412,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 + "]"
                 + "}";
 
-        String url = serverURL + "/api/server/v1/flow";
+        String url = serverBaseUrl() + "/api/server/v1/flow";
         Response response = adminPut(url, flowJson);
         int status = response.getStatusCode();
         Assert.assertEquals(status, HttpStatus.SC_OK,
@@ -425,7 +425,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     private void enableRegistrationFlow() throws IOException {
 
         String requestBody = "{\"flowType\":\"REGISTRATION\",\"isEnabled\":true}";
-        String url = serverURL + "/api/server/v1/flow/config";
+        String url = serverBaseUrl() + "/api/server/v1/flow/config";
         Response response = adminPatch(url, requestBody);
         int status = response.getStatusCode();
         Assert.assertEquals(status, HttpStatus.SC_OK,
@@ -438,7 +438,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     private void disableRegistrationFlow() throws IOException {
 
         String requestBody = "{\"flowType\":\"REGISTRATION\",\"isEnabled\":false}";
-        String url = serverURL + "/api/server/v1/flow/config";
+        String url = serverBaseUrl() + "/api/server/v1/flow/config";
         Response response = adminPatch(url, requestBody);
         int status = response.getStatusCode();
         // Tolerate 200 or 404 (server may already have cleared state).
