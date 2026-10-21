@@ -23,7 +23,7 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -65,11 +65,23 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
     }
 
     @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
-        deletePresentationDefinition(presentationDefinitionId);
-        deleteDigitalWalletConnection(walletConnectionIdpId);
-        closeVPSessionClient();
+        try {
+            deletePresentationDefinition(presentationDefinitionId);
+        } catch (Exception e) {
+            log.warn("Failed to delete presentation definition: " + e.getMessage());
+        }
+        try {
+            deleteDigitalWalletConnection(walletConnectionIdpId);
+        } catch (Exception e) {
+            log.warn("Failed to delete wallet connection IDP: " + e.getMessage());
+        }
+        try {
+            closeVPSessionClient();
+        } catch (Exception e) {
+            log.warn("Failed to close VP session client: " + e.getMessage());
+        }
     }
 
     @Test(groups = "wso2.is",

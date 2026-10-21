@@ -363,7 +363,8 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.OpenID4VPConfigFailureTest"/>
             <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionSuccessTestCase"/>
             <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionFailureTestCase"/>
-            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowSuccessTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowFailureTestCase"/>
             <class name="org.wso2.identity.integration.test.oid4vp.VPSelfRegistrationFlowTestCase"/>
         </classes>
     </test>

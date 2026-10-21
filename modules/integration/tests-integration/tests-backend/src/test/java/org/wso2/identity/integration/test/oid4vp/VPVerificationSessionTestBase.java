@@ -19,36 +19,23 @@
 package org.wso2.identity.integration.test.oid4vp;
 
 import com.nimbusds.jose.jwk.ECKey;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.Header;
+import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.message.BasicHeader;
-import org.apache.http.util.EntityUtils;
-import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1Integer;
-import org.bouncycastle.asn1.DERBitString;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERTaggedObject;
-import org.bouncycastle.asn1.DERUTCTime;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.asn1.x9.X9ObjectIdentifiers;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.restclients.VPSessionRestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.awaitility.Awaitility.await;
 
 /**
  * Base class for VP verification session integration tests.
@@ -105,17 +92,15 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
 
         String json = readResourceAsString(resourcePath);
         String url = serverURL + PRESENTATION_DEFINITIONS_PATH;
-
-        try (CloseableHttpResponse response = postJson(url, json)) {
-            String body = EntityUtils.toString(response.getEntity());
-            int status = response.getStatusLine().getStatusCode();
-            Assert.assertTrue(status == HttpStatus.SC_CREATED || status == HttpStatus.SC_OK,
-                    "Failed to create presentation definition (status " + status + "): " + body);
-            JSONObject jsonResponse = (JSONObject) new JSONParser().parse(body);
-            Object idObj = jsonResponse.get("id");
-            Assert.assertNotNull(idObj, "Presentation definition response does not contain 'id'.");
-            return idObj.toString();
-        }
+        Response response = adminPost(url, json);
+        String body = response.getBody().asString();
+        int status = response.getStatusCode();
+        Assert.assertTrue(status == HttpStatus.SC_CREATED || status == HttpStatus.SC_OK,
+                "Failed to create presentation definition (status " + status + "): " + body);
+        JSONObject jsonResponse = new JSONObject(body);
+        Object idObj = jsonResponse.opt("id");
+        Assert.assertNotNull(idObj, "Presentation definition response does not contain 'id'.");
+        return idObj.toString();
     }
 
     /**
@@ -130,11 +115,10 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
             return;
         }
         String url = serverURL + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId;
-        try (CloseableHttpResponse response = deleteResource(url)) {
-            int status = response.getStatusLine().getStatusCode();
-            Assert.assertTrue(status == HttpStatus.SC_NO_CONTENT || status == HttpStatus.SC_NOT_FOUND,
-                    "Unexpected status when deleting presentation definition: " + status);
-        }
+        Response response = adminDelete(url);
+        int status = response.getStatusCode();
+        Assert.assertTrue(status == HttpStatus.SC_NO_CONTENT || status == HttpStatus.SC_NOT_FOUND,
+                "Unexpected status when deleting presentation definition: " + status);
     }
 
     /**
@@ -176,17 +160,18 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
                 + "}"
                 + "}";
         String url = serverURL + "/api/server/v1/identity-providers";
-        try (CloseableHttpResponse response = postJson(url, idpJson)) {
-            String body = EntityUtils.toString(response.getEntity());
-            int status = response.getStatusLine().getStatusCode();
-            Assert.assertEquals(status, HttpStatus.SC_CREATED,
-                    "Failed to create digital wallet connection IDP (status " + status + "): " + body);
-            JSONObject json = (JSONObject) new JSONParser().parse(body);
-            Object idObj = json.get("id");
+        Response response = adminPost(url, idpJson);
+        String body = response.getBody().asString();
+        int status = response.getStatusCode();
+        Assert.assertEquals(status, HttpStatus.SC_CREATED,
+                "Failed to create digital wallet connection IDP (status " + status + "): " + body);
+        try {
+            JSONObject json = new JSONObject(body);
+            Object idObj = json.opt("id");
             Assert.assertNotNull(idObj, "IDP creation response does not contain 'id'.");
             return idObj.toString();
         } catch (Exception e) {
-            throw new IOException("Failed to create digital wallet connection IDP: " + e.getMessage(), e);
+            throw new IOException("Failed to parse IDP creation response: " + e.getMessage(), e);
         }
     }
 
@@ -198,14 +183,13 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
      */
     protected void configureVPResponseMode(String responseMode) throws IOException {
 
-        String body = "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"" + responseMode + "\"}";
+        String json = "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"" + responseMode + "\"}";
         String url = serverURL + "/api/server/v1/configs/openid4vp";
-        try (CloseableHttpResponse response = putJson(url, body)) {
-            int status = response.getStatusLine().getStatusCode();
-            String responseBody = EntityUtils.toString(response.getEntity());
-            Assert.assertEquals(status, HttpStatus.SC_OK,
-                    "Failed to configure VP response mode (status " + status + "): " + responseBody);
-        }
+        Response response = adminPut(url, json);
+        int status = response.getStatusCode();
+        String responseBody = response.getBody().asString();
+        Assert.assertEquals(status, HttpStatus.SC_OK,
+                "Failed to configure VP response mode (status " + status + "): " + responseBody);
     }
 
     /**
@@ -231,52 +215,16 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
                 + "}]}";
         String url = serverURL + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId
                 + "/credentials/" + credentialId + "/issuer-configs";
-        try (CloseableHttpResponse response = putJson(url, body)) {
-            int status = response.getStatusLine().getStatusCode();
-            String responseBody = EntityUtils.toString(response.getEntity());
-            Assert.assertEquals(status, HttpStatus.SC_OK,
-                    "Failed to configure trusted issuer (status " + status + "): " + responseBody);
-        }
+        Response response = adminPut(url, body);
+        int status = response.getStatusCode();
+        String responseBody = response.getBody().asString();
+        Assert.assertEquals(status, HttpStatus.SC_OK,
+                "Failed to configure trusted issuer (status " + status + "): " + responseBody);
     }
 
     private static String buildSelfSignedPemCertificate(ECKey ecKey) throws Exception {
 
-        X500Name dn = new X500Name("CN=test-issuer");
-        AlgorithmIdentifier sigAlgId = new AlgorithmIdentifier(X9ObjectIdentifiers.ecdsa_with_SHA256);
-        SubjectPublicKeyInfo spki = SubjectPublicKeyInfo.getInstance(ecKey.toECPublicKey().getEncoded());
-
-        Date notBefore = new Date(System.currentTimeMillis() - 86400000L);
-        Date notAfter = new Date(System.currentTimeMillis() + 365L * 86400000L);
-        ASN1EncodableVector validityVec = new ASN1EncodableVector();
-        validityVec.add(new DERUTCTime(notBefore));
-        validityVec.add(new DERUTCTime(notAfter));
-
-        // TBSCertificate (v3, serial=1, ecdsa-with-SHA256, same issuer/subject, validity, spki)
-        ASN1EncodableVector tbsVec = new ASN1EncodableVector();
-        tbsVec.add(new DERTaggedObject(true, 0, new ASN1Integer(2)));
-        tbsVec.add(new ASN1Integer(BigInteger.ONE));
-        tbsVec.add(sigAlgId);
-        tbsVec.add(dn);
-        tbsVec.add(new DERSequence(validityVec));
-        tbsVec.add(dn);
-        tbsVec.add(spki);
-        DERSequence tbsCert = new DERSequence(tbsVec);
-
-        // Sign with JCA — no bcpkix involved
-        java.security.Signature sig = java.security.Signature.getInstance("SHA256withECDSA");
-        sig.initSign(ecKey.toECPrivateKey());
-        sig.update(tbsCert.getEncoded());
-        byte[] sigBytes = sig.sign();
-
-        // Certificate ::= SEQUENCE { tbsCertificate, signatureAlgorithm, signatureValue }
-        ASN1EncodableVector certVec = new ASN1EncodableVector();
-        certVec.add(tbsCert);
-        certVec.add(sigAlgId);
-        certVec.add(new DERBitString(sigBytes));
-        byte[] certBytes = new DERSequence(certVec).getEncoded();
-
-        String base64 = java.util.Base64.getMimeEncoder(64, new byte[]{'\n'}).encodeToString(certBytes);
-        return "-----BEGIN CERTIFICATE-----\n" + base64 + "\n-----END CERTIFICATE-----";
+        return VPTestUtils.buildSelfSignedPemCertificate(ecKey);
     }
 
     /**
@@ -290,91 +238,76 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
             return;
         }
         String url = serverURL + "/api/server/v1/identity-providers/" + idpId;
-        try (CloseableHttpResponse response = deleteResource(url)) {
-            int status = response.getStatusLine().getStatusCode();
-            Assert.assertTrue(status == HttpStatus.SC_NO_CONTENT || status == HttpStatus.SC_NOT_FOUND,
-                    "Unexpected status when deleting digital wallet connection IDP: " + status);
-        }
+        Response response = adminDelete(url);
+        int status = response.getStatusCode();
+        Assert.assertTrue(status == HttpStatus.SC_NO_CONTENT || status == HttpStatus.SC_NOT_FOUND,
+                "Unexpected status when deleting digital wallet connection IDP: " + status);
     }
 
     /**
-     * Poll the session status until it leaves the {@code ACTIVE} state or the retry
-     * budget is exhausted.
+     * Poll the session status until it leaves the {@code ACTIVE} state or the overall
+     * timeout ({@code maxRetries * intervalMs}) is exhausted.
      *
      * @param requestId     The session ID to poll.
-     * @param maxRetries    Maximum number of polling attempts.
+     * @param maxRetries    Number of polling attempts the timeout budget is sized for.
      * @param intervalMs    Wait in milliseconds between attempts.
      * @return The last observed status string.
-     * @throws Exception If any HTTP call fails.
+     * @throws Exception If any HTTP call fails, or if the status is still {@code ACTIVE} once the timeout elapses.
      */
     protected String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs) throws Exception {
 
-        String status = STATUS_ACTIVE;
-        for (int i = 0; i < maxRetries; i++) {
-            JSONObject statusResponse = vpSessionRestClient.getSessionStatus(requestId);
-            status = (String) statusResponse.get("status");
-            if (!STATUS_ACTIVE.equals(status)) {
-                break;
-            }
-            if (i < maxRetries - 1) {
-                Thread.sleep(intervalMs);
-            }
-        }
-        return status;
+        AtomicReference<String> lastStatus = new AtomicReference<>(STATUS_ACTIVE);
+        await().atMost((long) maxRetries * intervalMs, TimeUnit.MILLISECONDS)
+                .pollInterval(intervalMs, TimeUnit.MILLISECONDS)
+                .until(() -> {
+                    JSONObject statusResponse = vpSessionRestClient.getSessionStatus(requestId);
+                    String status = (String) statusResponse.get("status");
+                    lastStatus.set(status);
+                    return !STATUS_ACTIVE.equals(status);
+                });
+        return lastStatus.get();
     }
 
-    protected CloseableHttpResponse postJson(String url, String json) throws IOException {
+    protected Response adminPost(String url, String json) {
 
-        org.apache.http.impl.client.CloseableHttpClient httpClient =
-                org.apache.http.impl.client.HttpClients.createDefault();
-        org.apache.http.client.methods.HttpPost post = new org.apache.http.client.methods.HttpPost(url);
-        post.setHeaders(buildAdminHeaders());
-        post.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
-        return httpClient.execute(post);
+        return RestAssured.given()
+                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
+                .contentType(ContentType.JSON)
+                .header("User-Agent", OAuth2Constant.USER_AGENT)
+                .body(json)
+                .post(url);
     }
 
-    protected CloseableHttpResponse putJson(String url, String json) throws IOException {
+    protected Response adminPut(String url, String json) {
 
-        org.apache.http.impl.client.CloseableHttpClient httpClient =
-                org.apache.http.impl.client.HttpClients.createDefault();
-        org.apache.http.client.methods.HttpPut put = new org.apache.http.client.methods.HttpPut(url);
-        put.setHeaders(buildAdminHeaders());
-        put.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
-        return httpClient.execute(put);
+        return RestAssured.given()
+                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
+                .contentType(ContentType.JSON)
+                .header("User-Agent", OAuth2Constant.USER_AGENT)
+                .body(json)
+                .put(url);
     }
 
-    protected CloseableHttpResponse patchJson(String url, String json) throws IOException {
+    protected Response adminPatch(String url, String json) {
 
-        org.apache.http.impl.client.CloseableHttpClient httpClient =
-                org.apache.http.impl.client.HttpClients.createDefault();
-        org.apache.http.client.methods.HttpPatch patch = new org.apache.http.client.methods.HttpPatch(url);
-        patch.setHeaders(buildAdminHeaders());
-        patch.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
-        return httpClient.execute(patch);
+        return RestAssured.given()
+                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
+                .contentType(ContentType.JSON)
+                .header("User-Agent", OAuth2Constant.USER_AGENT)
+                .body(json)
+                .patch(url);
     }
 
-    protected CloseableHttpResponse deleteResource(String url) throws IOException {
+    protected Response adminDelete(String url) {
 
-        org.apache.http.impl.client.CloseableHttpClient httpClient =
-                org.apache.http.impl.client.HttpClients.createDefault();
-        org.apache.http.client.methods.HttpDelete delete = new org.apache.http.client.methods.HttpDelete(url);
-        delete.setHeaders(buildAdminHeaders());
-        return httpClient.execute(delete);
-    }
-
-    protected Header[] buildAdminHeaders() {
-
-        String credentials = userInfo.getUserName() + ":" + userInfo.getPassword();
-        String encoded = Base64.encodeBase64String(credentials.getBytes(StandardCharsets.UTF_8)).trim();
-        return new Header[]{
-                new BasicHeader("Authorization", "Basic " + encoded),
-                new BasicHeader("Content-Type", String.valueOf(ContentType.JSON)),
-                new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT)
-        };
+        return RestAssured.given()
+                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
+                .header("User-Agent", OAuth2Constant.USER_AGENT)
+                .delete(url);
     }
 
     /**
-     * Read a classpath resource into a String (UTF-8).
+     * Reads a classpath resource into a UTF-8 string.
      *
      * @param resourcePath Classpath-relative path.
      * @return Content as a String.
@@ -382,13 +315,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
      */
     protected static String readResourceAsString(String resourcePath) throws Exception {
 
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        if (cl == null) {
-            cl = VPVerificationSessionTestBase.class.getClassLoader();
-        }
-        try (InputStream in = cl.getResourceAsStream(resourcePath)) {
-            Assert.assertNotNull(in, "Test resource not found on classpath: " + resourcePath);
-            return new String(in.readAllBytes(), StandardCharsets.UTF_8);
-        }
+        return VPTestUtils.readResourceAsString(resourcePath);
     }
 }

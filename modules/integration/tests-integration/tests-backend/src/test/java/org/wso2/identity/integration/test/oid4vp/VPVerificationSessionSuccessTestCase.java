@@ -33,7 +33,7 @@ import com.nimbusds.jwt.SignedJWT;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -138,16 +138,36 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
     }
 
     @AfterClass(alwaysRun = true)
-    public void tearDown() throws Exception {
+    public void tearDown() {
 
-        deletePresentationDefinition(presentationDefinitionId);
-        deleteDigitalWalletConnection(walletConnectionIdpId);
-        closeVPSessionClient();
+        try {
+            deletePresentationDefinition(presentationDefinitionId);
+        } catch (Exception e) {
+            log.warn("Failed to delete presentation definition: " + e.getMessage());
+        }
+        try {
+            deleteDigitalWalletConnection(walletConnectionIdpId);
+        } catch (Exception e) {
+            log.warn("Failed to delete wallet connection IDP: " + e.getMessage());
+        }
+        try {
+            closeVPSessionClient();
+        } catch (Exception e) {
+            log.warn("Failed to close VP session client: " + e.getMessage());
+        }
         if (vpSessionRestClientTenantB != null) {
-            vpSessionRestClientTenantB.closeHttpClient();
+            try {
+                vpSessionRestClientTenantB.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close tenant-B VP session client: " + e.getMessage());
+            }
         }
         if (tenantMgtRestClient != null) {
-            tenantMgtRestClient.closeHttpClient();
+            try {
+                tenantMgtRestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close tenant management client: " + e.getMessage());
+            }
         }
     }
 
@@ -277,7 +297,7 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             Assert.assertEquals(statusCode, HttpStatus.SC_OK,
                     "GET result of a VERIFIED session must return 200.  Body: " + body);
 
-            JSONObject resultJson = getJSONObject(body);
+            JSONObject resultJson = new JSONObject(body);
             String resultStatus = (String) resultJson.get("status");
             Assert.assertEquals(resultStatus, STATUS_VERIFIED,
                     "Session result 'status' field must be VERIFIED.");
@@ -420,19 +440,7 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
         List<?> keys = (List<?>) jwks.get("keys");
         Assert.assertNotNull(keys, "'jwks' must contain 'keys'.");
         Assert.assertFalse(keys.isEmpty(), "'keys' array must not be empty.");
-        // keys.get(0) is a java.util.Map — toString() gives {k=v} not {"k":"v"}.
-        // Wrap with net.minidev.json.JSONObject (nimbus's own type) to get valid JSON.
-        @SuppressWarnings("unchecked")
         Map<String, Object> keyMap = (Map<String, Object>) keys.get(0);
         return ECKey.parse(new net.minidev.json.JSONObject(keyMap).toJSONString());
-    }
-
-    /** Parses a JSON response body and asserts it is a JSON object, failing with a descriptive message otherwise. */
-    private JSONObject getJSONObject(String body) throws Exception {
-
-        Object parsed = new org.json.simple.parser.JSONParser().parse(body);
-        Assert.assertTrue(parsed instanceof JSONObject,
-                "Expected JSON object but got: " + (parsed == null ? "null" : parsed.getClass().getSimpleName()));
-        return (JSONObject) parsed;
     }
 }

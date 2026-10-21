@@ -25,7 +25,8 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import org.json.simple.JSONObject;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -82,11 +83,11 @@ public class VPSessionRestClient extends RestBaseClient {
         body.put("presentationDefinitionIdentifier", definitionIdentifier);
 
         String url = baseUrl + PATH_SEPARATOR + VERIFICATION_SESSIONS_PATH;
-        try (CloseableHttpResponse response = getResponseOfHttpPost(url, body.toJSONString(), getAdminHeaders())) {
+        try (CloseableHttpResponse response = getResponseOfHttpPost(url, body.toString(), getAdminHeaders())) {
             String responseBody = EntityUtils.toString(response.getEntity());
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_CREATED,
                     "Start verification session failed: " + responseBody);
-            return getJSONObject(responseBody);
+            return new JSONObject(responseBody);
         }
     }
 
@@ -96,14 +97,16 @@ public class VPSessionRestClient extends RestBaseClient {
      * @param definitionIdentifier Presentation definition identifier.
      * @return Raw {@link CloseableHttpResponse} — caller must close.
      * @throws IOException If the HTTP request fails.
+     * @throws JSONException If the request body cannot be built.
      */
-    public CloseableHttpResponse startVerificationSessionRaw(String definitionIdentifier) throws IOException {
+    public CloseableHttpResponse startVerificationSessionRaw(String definitionIdentifier)
+            throws IOException, JSONException {
 
         JSONObject body = new JSONObject();
         body.put("presentationDefinitionIdentifier", definitionIdentifier);
 
         String url = baseUrl + PATH_SEPARATOR + VERIFICATION_SESSIONS_PATH;
-        return getResponseOfHttpPost(url, body.toJSONString(), getAdminHeaders());
+        return getResponseOfHttpPost(url, body.toString(), getAdminHeaders());
     }
 
     /**
@@ -131,7 +134,7 @@ public class VPSessionRestClient extends RestBaseClient {
         String url = baseUrl + PATH_SEPARATOR + VERIFICATION_SESSIONS_PATH
                 + PATH_SEPARATOR + requestId + PATH_SEPARATOR + STATUS_PATH;
         try (CloseableHttpResponse response = getResponseOfHttpGet(url, getAdminHeaders())) {
-            return getJSONObject(EntityUtils.toString(response.getEntity()));
+            return new JSONObject(EntityUtils.toString(response.getEntity()));
         }
     }
 
