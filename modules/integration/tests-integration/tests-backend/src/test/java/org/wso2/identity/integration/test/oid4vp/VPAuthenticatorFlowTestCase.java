@@ -95,7 +95,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * End-to-end integration tests for the VP Authenticator flow.
+ * Integration tests for the VP Authenticator flow.
  */
 public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -374,8 +374,8 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         Assert.assertNotNull(claims.get("sub"),
                 "id_token must contain a 'sub' claim.");
         // The IDP maps VP credential claims to local claims → OIDC id_token claims:
-        // given_name  → http://wso2.org/claims/givenname  → OIDC given_name
-        // family_name → http://wso2.org/claims/lastname   → OIDC family_name
+        // given_name  → http://wso2.org/claims/givenname
+        // family_name → http://wso2.org/claims/lastname 
         Assert.assertEquals(claims.get("given_name"), "Alice",
                 "id_token 'given_name' must reflect the VP credential's 'given_name' value via the IDP claim mapping.");
         Assert.assertEquals(claims.get("family_name"), "Smith",
@@ -412,8 +412,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 ctx.cookieStore);
         Assert.assertNotNull(redirectUri,
                 "IS must redirect after a failed VP callback — got no Location header.");
-        // When retry is enabled IS may redirect to wallet_login.jsp or retry.do for another attempt.
-        // If neither, the redirect must carry an error parameter to the client.
+
         if (!redirectUri.contains(WALLET_LOGIN_JSP) && !redirectUri.contains("retry.do")) {
             Assert.assertTrue(redirectUri.contains("error") || redirectUri.contains("error_description"),
                     "Auth flow error redirect must carry an 'error' parameter.  Got: " + redirectUri);
@@ -483,7 +482,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 "IS must redirect after a failed VP callback — got no Location header.");
 
         // When retry is enabled IS redirects back to wallet_login.jsp with a fresh requestId.
-        // Assert that the new requestId is different from the failed session's requestId.
         if (redirectUri.contains(WALLET_LOGIN_JSP)) {
             String newRequestId = extractQueryParam(redirectUri, "requestId");
             Assert.assertNotNull(newRequestId,
@@ -491,8 +489,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             Assert.assertNotEquals(newRequestId, firstRequestId,
                     "Retry must issue a fresh requestId distinct from the failed session's requestId.");
         }
-        // If retry is not enabled IS redirects with an error to the client — that path is
-        // covered by testAuthFlowFailsWhenVPVerificationFails.
     }
 
     @Test(groups = "wso2.is",
@@ -537,8 +533,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         String sub = (String) idTokenClaims.get("sub");
         Assert.assertNotNull(sub, "id_token must contain a 'sub' claim.");
 
-        // IS 7.x uses a UUID-based sub in the id_token, not the local username.
-        // The JIT-provisioned username is derived from the userIdClaim ("given_name"), which is "JIT".
         String jitUsername = "JIT";
         String filter = java.net.URLEncoder.encode("userName eq \"" + jitUsername + "\"", StandardCharsets.UTF_8);
         JSONObject users = scim2RestClient.filterUsers(filter);
@@ -614,7 +608,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         Assert.assertNotNull(ctx.sessionDataKey,
                 "Wallet login redirect must carry a sessionDataKey parameter.");
 
-        // VP credential with only given_name — family_name is intentionally omitted.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -694,6 +687,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Creates the presentation definition from the test resource JSON and returns its server-assigned ID. */
     private String createPresentationDefinition() throws Exception {
 
         String json = readResourceAsString(
@@ -710,6 +704,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Deletes the presentation definition with the given ID; no-op if {@code defId} is null. */
     private void deletePresentationDefinition(String defId) throws IOException {
 
         if (defId == null) {
@@ -727,8 +722,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
      */
     private String createVPAuthenticatorIDP() throws Exception {
 
-        // Build the IDP JSON payload inline — avoids importing generated model classes
-        // that may not yet exist for the VP authenticator type.
+        // Build the IDP JSON payload.
         String generatedIdpName = "VPTestIDP-" + UUID.randomUUID();
         String idpJson = "{"
                 + "\"name\": \"" + generatedIdpName + "\","
@@ -761,7 +755,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 JSONObject jsonResponse = (JSONObject) new JSONParser().parse(body);
                 String createdIdpId = jsonResponse.get("id").toString();
                 vpIdpName = generatedIdpName;
-                // Maps the IDP's "given_name" claim so the subject identifier resolves to it.
                 Claims.ClaimMapping givenNameMapping = new Claims.ClaimMapping()
                         .idpClaim("given_name")
                         .localClaim(new Claims.Claim().uri("http://wso2.org/claims/givenname"));
@@ -828,7 +821,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
 
     /**
      * Provision all infrastructure for the secondary-tenant auth flow test.
-     * Best-effort: logs warnings if individual steps fail so the remaining tests can still run.
      */
     private void provisionTenantB() {
 
@@ -967,6 +959,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Builds the OAuth2 authorization URL for the super-tenant test application. */
     private String buildAuthorizationUrl() {
 
         String base = getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, tenantInfo.getDomain());
@@ -992,7 +985,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
 
     /**
      * Initiate the auth flow, follow redirects to extract the requestId and sessionDataKey,
-     * then fetch the nonce + audience from the presentation request JWT.
+     * then fetch the nonce and audience from the presentation request JWT.
      */
     private AuthFlowContext initiateAuthFlowAndFetchNonce() throws Exception {
 
@@ -1007,7 +1000,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
             if (jwtBody.contains(".")) {
                 SignedJWT requestJwt = SignedJWT.parse(jwtBody);
                 ctx.nonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
-                // KB-JWT aud must be the verifier's client_id, not the request JWT's aud.
+                // KB-JWT aud must be the verifier's client_id.
                 ctx.audience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
             }
         } catch (Exception e) {
@@ -1060,6 +1053,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return null;
     }
 
+    /** Builds the OAuth2 authorization URL for the tenant-B test application. */
     private String buildTenantBAuthorizationUrl() {
 
         String base = getTenantQualifiedURL(OAuth2Constant.AUTHORIZE_ENDPOINT_URL, TENANT_AUTH_DOMAIN);
@@ -1073,7 +1067,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
 
     /**
      * Initiate the tenant-B auth flow, follow redirects to extract requestId and sessionDataKey,
-     * then fetch the nonce + audience from the presentation request JWT.
+     * then fetch the nonce and audience from the presentation request JWT.
      */
     private AuthFlowContext initiateAuthFlowTenantBAndFetchNonce() throws Exception {
 
@@ -1164,10 +1158,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
     /**
      * POST to IS commonauth with the sessionDataKey and requestId to complete the callback.
      * Returns the authorization code if the flow succeeds, or {@code null}.
-     *
-     * IS auth flow produces multiple redirects:
-     *   POST /commonauth → 302 /oauth2/authorize → 302 https://localhost/callback?code=...
-     * We follow IS-internal hops until we reach the client callback URL that carries the code.
      */
     private String triggerCommonAuthCallback(String sessionDataKey, String requestId, String vpStatus,
             BasicCookieStore cookieStore) throws Exception {
@@ -1230,6 +1220,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Exchanges an authorization code for tokens at the token endpoint and returns the full token response as JSON. */
     private JSONObject exchangeCodeForTokens(String code) throws Exception {
 
         String tokenEndpoint = getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT, tenantInfo.getDomain());
@@ -1255,11 +1246,13 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Returns an HTTP client configured to not follow redirects, with no shared cookie store. */
     private CloseableHttpClient buildNoRedirectHttpClient() {
 
         return buildNoRedirectHttpClient(null);
     }
 
+    /** Returns an HTTP client configured to not follow redirects, sharing the provided cookie store. */
     private CloseableHttpClient buildNoRedirectHttpClient(BasicCookieStore cookieStore) {
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
@@ -1278,6 +1271,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return builder.build();
     }
 
+    /** Registers the issuer URL and its signing key as a trusted issuer for the given credential type. */
     private void configureTrustedIssuer(String definitionId, String credentialId,
                                         String issuerUrl, ECKey signingKey) throws Exception {
 
@@ -1299,6 +1293,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Builds a minimal self-signed PEM certificate for the EC public key, used as the trusted-issuer key source. */
     private static String buildSelfSignedPemCertificate(ECKey ecKey) throws Exception {
 
         X500Name dn = new X500Name("CN=test-issuer");
@@ -1336,6 +1331,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return "-----BEGIN CERTIFICATE-----\n" + base64 + "\n-----END CERTIFICATE-----";
     }
 
+    /** Sets the global VP response mode (e.g. {@code direct_post} or {@code direct_post.jwt}) via the configs API. */
     private void configureVPResponseMode(String responseMode) throws IOException {
 
         String body = "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"" + responseMode + "\"}";
@@ -1348,6 +1344,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Sends an authenticated HTTP POST to the super-tenant admin API with a JSON body. */
     private CloseableHttpResponse adminPost(String url, String json) throws IOException {
 
         CloseableHttpClient httpClient = org.apache.http.impl.client.HttpClients.createDefault();
@@ -1357,6 +1354,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return httpClient.execute(post);
     }
 
+    /** Sends an authenticated HTTP PUT to the super-tenant admin API with a JSON body. */
     private CloseableHttpResponse adminPut(String url, String json) throws IOException {
 
         CloseableHttpClient httpClient = org.apache.http.impl.client.HttpClients.createDefault();
@@ -1366,6 +1364,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return httpClient.execute(put);
     }
 
+    /** Sends an authenticated HTTP DELETE to the super-tenant admin API. */
     private CloseableHttpResponse adminDelete(String url) throws IOException {
 
         CloseableHttpClient httpClient = org.apache.http.impl.client.HttpClients.createDefault();
@@ -1374,6 +1373,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return httpClient.execute(delete);
     }
 
+    /** Returns HTTP headers for an authenticated super-tenant admin request (Basic auth + Content-Type + User-Agent). */
     private Header[] buildAdminHeaders() {
 
         String credentials = userInfo.getUserName() + ":" + userInfo.getPassword();
@@ -1385,12 +1385,14 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         };
     }
 
+    /** Returns the value of the Location header from the response, or null if absent. */
     private static String getLocationHeader(CloseableHttpResponse response) {
 
         org.apache.http.Header locationHeader = response.getFirstHeader("Location");
         return locationHeader != null ? locationHeader.getValue() : null;
     }
 
+    /** Extracts the value of a named query parameter from a URL string, or null if not present. */
     private static String extractQueryParam(String url, String paramName) {
 
         if (url == null) {
@@ -1409,7 +1411,6 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
                 }
             }
         } catch (URISyntaxException e) {
-            // Fragment-only or malformed URL — try raw split.
             int idx = url.indexOf(paramName + "=");
             if (idx >= 0) {
                 String rest = url.substring(idx + paramName.length() + 1);
@@ -1420,6 +1421,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return null;
     }
 
+    /** Reads a classpath resource by path and returns its contents as a UTF-8 string. */
     private static String readResourceAsString(String resourcePath) throws Exception {
 
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -1432,6 +1434,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Deletes all users matching the given username via SCIM2; no-op if none exist. Used to isolate test runs. */
     private void deleteUserIfExists(String userName) {
 
         try {
@@ -1454,6 +1457,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         }
     }
 
+    /** Configures givenname and lastname as requested claims so that mapped VP credential claims appear in the id_token. */
     private ClaimConfiguration buildClaimConfiguration() {
 
         ClaimConfiguration claimConfig = new ClaimConfiguration();
@@ -1462,6 +1466,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return claimConfig;
     }
 
+    /** Builds a RequestedClaimConfiguration for the given claim URI. */
     private RequestedClaimConfiguration getRequestedClaim(String claimUri) {
 
         RequestedClaimConfiguration requestedClaim = new RequestedClaimConfiguration();
@@ -1471,11 +1476,13 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return requestedClaim;
     }
 
+    /** Polls using the default VP session client; delegates to {@link #pollStatusUntilNotActive(String, int, long, VPSessionRestClient)}. */
     private String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs) throws Exception {
 
         return pollStatusUntilNotActive(requestId, maxRetries, intervalMs, vpSessionRestClient);
     }
 
+    /** Polls the VP session status at {@code intervalMs} intervals until it is no longer ACTIVE, then returns the final status. */
     private String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs,
             VPSessionRestClient client) throws Exception {
 
@@ -1493,6 +1500,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return status;
     }
 
+    /** Sends an authenticated HTTP POST to the tenant-B admin API with a JSON body. */
     private CloseableHttpResponse tenantBAdminPost(String url, String json) throws IOException {
 
         CloseableHttpClient httpClient = org.apache.http.impl.client.HttpClients.createDefault();
@@ -1502,6 +1510,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return httpClient.execute(post);
     }
 
+    /** Sends an authenticated HTTP PUT to the tenant-B admin API with a JSON body. */
     private CloseableHttpResponse tenantBAdminPut(String url, String json) throws IOException {
 
         CloseableHttpClient httpClient = org.apache.http.impl.client.HttpClients.createDefault();
@@ -1511,6 +1520,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return httpClient.execute(put);
     }
 
+    /** Sends an authenticated HTTP DELETE to the tenant-B admin API. */
     private CloseableHttpResponse tenantBAdminDelete(String url) throws IOException {
 
         CloseableHttpClient httpClient = org.apache.http.impl.client.HttpClients.createDefault();
@@ -1520,6 +1530,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return httpClient.execute(delete);
     }
 
+    /** Sends an authenticated HTTP GET to the tenant-B admin API. */
     private CloseableHttpResponse tenantBAdminGet(String url) throws IOException {
 
         CloseableHttpClient httpClient = org.apache.http.impl.client.HttpClients.createDefault();
@@ -1528,6 +1539,7 @@ public class VPAuthenticatorFlowTestCase extends OAuth2ServiceAbstractIntegratio
         return httpClient.execute(get);
     }
 
+    /** Returns HTTP headers for an authenticated tenant-B admin request (Basic auth + Content-Type + User-Agent). */
     private Header[] buildTenantBAdminHeaders() {
 
         String credentials = TENANT_AUTH_ADMIN + ":" + TENANT_AUTH_PASSWORD;
