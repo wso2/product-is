@@ -52,10 +52,6 @@ import java.util.UUID;
 
 /**
  * Base class for VP verification session integration tests.
- *
- * <p>Provides shared constants, helpers for reading JSON resource files, and a factory
- * method for the {@link VPSessionRestClient}.  Subclasses call {@link #initVPSessionClient()}
- * after {@code super.init(TestUserMode.SUPER_TENANT_ADMIN)}.
  */
 public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
 
@@ -327,7 +323,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         return status;
     }
 
-    private CloseableHttpResponse postJson(String url, String json) throws IOException {
+    protected CloseableHttpResponse postJson(String url, String json) throws IOException {
 
         org.apache.http.impl.client.CloseableHttpClient httpClient =
                 org.apache.http.impl.client.HttpClients.createDefault();
@@ -337,7 +333,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         return httpClient.execute(post);
     }
 
-    private CloseableHttpResponse putJson(String url, String json) throws IOException {
+    protected CloseableHttpResponse putJson(String url, String json) throws IOException {
 
         org.apache.http.impl.client.CloseableHttpClient httpClient =
                 org.apache.http.impl.client.HttpClients.createDefault();
@@ -347,7 +343,17 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         return httpClient.execute(put);
     }
 
-    private CloseableHttpResponse deleteResource(String url) throws IOException {
+    protected CloseableHttpResponse patchJson(String url, String json) throws IOException {
+
+        org.apache.http.impl.client.CloseableHttpClient httpClient =
+                org.apache.http.impl.client.HttpClients.createDefault();
+        org.apache.http.client.methods.HttpPatch patch = new org.apache.http.client.methods.HttpPatch(url);
+        patch.setHeaders(buildAdminHeaders());
+        patch.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
+        return httpClient.execute(patch);
+    }
+
+    protected CloseableHttpResponse deleteResource(String url) throws IOException {
 
         org.apache.http.impl.client.CloseableHttpClient httpClient =
                 org.apache.http.impl.client.HttpClients.createDefault();
@@ -356,7 +362,7 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         return httpClient.execute(delete);
     }
 
-    private Header[] buildAdminHeaders() {
+    protected Header[] buildAdminHeaders() {
 
         String credentials = userInfo.getUserName() + ":" + userInfo.getPassword();
         String encoded = Base64.encodeBase64String(credentials.getBytes(StandardCharsets.UTF_8)).trim();

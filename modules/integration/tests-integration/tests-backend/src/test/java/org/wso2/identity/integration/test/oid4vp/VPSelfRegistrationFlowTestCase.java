@@ -20,13 +20,10 @@ package org.wso2.identity.integration.test.oid4vp;
 
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jwt.SignedJWT;
-import io.restassured.http.ContentType;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.Header;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.testng.Assert;
@@ -41,7 +38,7 @@ import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.mod
 import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.model.FlowResponse;
 import org.wso2.identity.integration.test.restclients.FlowExecutionClient;
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.utils.SDJwtVcTestBuilder;
 
 import java.io.IOException;
@@ -54,7 +51,7 @@ import java.util.Map;
  */
 public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBase {
 
-    // Definition resource used by this test — distinct from the auth-flow definition to avoid 409 conflicts.
+    // Definition resource used by this test.
     private static final String FLOW_DEFINITION_RESOURCE =
             "org/wso2/identity/integration/test/oid4vp/create-vp-presentation-definition-registration.json";
 
@@ -77,12 +74,14 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
     private FlowExecutionClient flowExecutionClient;
     private FlowManagementClient flowManagementClient;
+    private SCIM2RestClient scim2RestClient;
 
-    // Snapshot of the REGISTRATION flow before setUp overwrites it — restored in tearDown.
+    private static final String REGISTERED_USERNAME = "Alice";
+    private String registeredUserId;
+
     private FlowResponse originalFlowSteps;
     private FlowConfig originalFlowConfig;
 
-    // Shared state across chained tests.
     private String sharedFlowId;
     private String sharedRequestId;
     private String sharedNonce;
@@ -96,7 +95,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
         flowManagementClient = new FlowManagementClient(serverURL, isServer.getContextTenant());
 
-        // Snapshot the current REGISTRATION flow before overwriting it so tearDown can restore it.
         try {
             originalFlowSteps = flowManagementClient.getFlow(FLOW_TYPE_REGISTRATION);
         } catch (Exception e) {
@@ -117,12 +115,29 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         enableRegistrationFlow();
 
         flowExecutionClient = new FlowExecutionClient(serverURL, isServer.getContextTenant());
+        scim2RestClient = new SCIM2RestClient(serverURL, isServer.getContextTenant());
+        // Delete any user left by a previous test run so self-registration starts clean.
+        deleteUserIfExists(REGISTERED_USERNAME);
         initVPSessionClient();
     }
 
     @AfterClass(alwaysRun = true)
     public void tearDown() {
 
+        if (registeredUserId != null) {
+            try {
+                scim2RestClient.deleteUser(registeredUserId);
+            } catch (Exception e) {
+                log.warn("Failed to delete registered user during teardown: " + e.getMessage());
+            }
+        }
+        if (scim2RestClient != null) {
+            try {
+                scim2RestClient.closeHttpClient();
+            } catch (Exception e) {
+                log.warn("Failed to close SCIM2 client during teardown: " + e.getMessage());
+            }
+        }
         try {
             disableRegistrationFlow();
         } catch (Exception e) {
@@ -169,12 +184,14 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     public void testInitiateSelfRegistrationViaVP() throws Exception {
 
         Object responseObj = flowExecutionClient.initiateFlowExecution(FLOW_TYPE_REGISTRATION);
+        Assert.assertNotNull(responseObj, "Flow execution must return a non-null response.");
         Assert.assertTrue(responseObj instanceof FlowExecutionResponse,
                 "Expected FlowExecutionResponse but got: " + responseObj.getClass().getSimpleName());
 
         FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         sharedFlowId = response.getFlowId();
         Assert.assertNotNull(sharedFlowId, "flowId must not be null.");
+        Assert.assertFalse(sharedFlowId.trim().isEmpty(), "flowId must not be blank.");
         Assert.assertEquals(response.getFlowStatus(), FLOW_STATUS_INCOMPLETE,
                 "Flow status must be INCOMPLETE after initiation.");
         Assert.assertEquals(response.getType().toString(), FLOW_RESP_TYPE_REDIRECTION,
@@ -190,12 +207,10 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         Assert.assertFalse(sharedRequestId.trim().isEmpty(), "'vp_request_id' must not be blank.");
 
         String redirectURL = response.getData().getRedirectURL();
-        if (redirectURL == null || redirectURL.isEmpty()) {
-            Object walletUrlObj = additionalData.get("redirectURL");
-            Assert.assertNotNull(walletUrlObj,
-                    "REDIRECTION response must contain a redirect URL (either data.redirectURL or additionalData.redirectURL).");
-            redirectURL = walletUrlObj.toString();
-        }
+        Assert.assertNotNull(redirectURL,
+                "REDIRECTION response must contain a redirect URL in data.redirectURL.");
+        Assert.assertFalse(redirectURL.isEmpty(),
+                "Redirect URL in data.redirectURL must not be blank.");
         Assert.assertTrue(redirectURL.startsWith("openid4vp://"),
                 "Redirect URL must be a wallet deep-link starting with 'openid4vp://', but was: " + redirectURL);
     }
@@ -211,14 +226,16 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
             Assert.assertEquals(statusCode, HttpStatus.SC_OK,
                     "GET /requests/{id} must return 200.  Body: " + body);
-            Assert.assertTrue(body.split("\\.").length >= 3,
-                    "Presentation request response must be a compact JWT (at least two dots).");
+            Assert.assertEquals(body.split("\\.").length, 3,
+                    "Presentation request response must be a compact-serialized JWT with exactly 3 parts (header.payload.signature).");
 
             SignedJWT requestJwt = SignedJWT.parse(body);
             sharedNonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
-            sharedAudience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
             Assert.assertNotNull(sharedNonce, "Presentation request JWT must contain a 'nonce' claim.");
+            Assert.assertFalse(sharedNonce.trim().isEmpty(), "'nonce' claim must not be blank.");
+            sharedAudience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
             Assert.assertNotNull(sharedAudience, "Presentation request JWT must contain a 'client_id' claim.");
+            Assert.assertFalse(sharedAudience.trim().isEmpty(), "'client_id' claim must not be blank.");
         }
     }
 
@@ -268,13 +285,21 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         request.setInputs(inputs);
 
         Object responseObj = flowExecutionClient.executeFlow(request);
+        Assert.assertNotNull(responseObj, "Flow resume must return a non-null response.");
         Assert.assertTrue(responseObj instanceof FlowExecutionResponse,
                 "Expected FlowExecutionResponse on flow resume but got: "
-                        + (responseObj != null ? responseObj.getClass().getSimpleName() : "null"));
+                        + responseObj.getClass().getSimpleName());
 
         FlowExecutionResponse response = (FlowExecutionResponse) responseObj;
         Assert.assertEquals(response.getFlowStatus(), FLOW_STATUS_COMPLETE,
                 "Registration flow must be COMPLETE after successful VP verification.");
+
+        String filter = java.net.URLEncoder.encode(
+                "userName eq \"" + REGISTERED_USERNAME + "\"", StandardCharsets.UTF_8);
+        JSONObject users = scim2RestClient.filterUsers(filter);
+        Assert.assertEquals(users.get("totalResults"), 1L,
+                "Registration flow must provision exactly one user with userName='" + REGISTERED_USERNAME + "'.");
+        registeredUserId = (String) ((JSONObject) ((JSONArray) users.get("Resources")).get(0)).get("id");
     }
 
     /**
@@ -295,11 +320,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     }
 
     /**
-     * Creates a digital wallet connection IDP with the given fixed name (instead of a random UUID
-     * suffix) so the name can be referenced in the registration flow step's meta.
-     * The {@code definitionId} must be the server-assigned UUID returned at definition creation time,
-     * since {@code PresentationExecutor} looks up the definition by UUID via
-     * {@code startPresentationSession}.
+     * Creates a digital wallet connection IDP with the given fixed name.
      */
     private String createWalletConnectionIdpWithDefinitionId(String idpName, String definitionId) throws Exception {
 
@@ -320,7 +341,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 + "}";
 
         String url = serverURL + "/api/server/v1/identity-providers";
-        try (CloseableHttpResponse response = doPostJson(url, idpJson)) {
+        try (CloseableHttpResponse response = postJson(url, idpJson)) {
             String body = EntityUtils.toString(response.getEntity());
             int status = response.getStatusLine().getStatusCode();
             Assert.assertEquals(status, HttpStatus.SC_CREATED,
@@ -340,13 +361,15 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
         String claimsJson = "{"
                 + "\"userIdClaim\": {\"uri\": \"given_name\"},"
-                + "\"mappings\": [{"
-                + "  \"idpClaim\": \"given_name\","
-                + "  \"localClaim\": {\"uri\": \"http://wso2.org/claims/lastname\"}"
-                + "}]"
+                + "\"mappings\": ["
+                + "  {\"idpClaim\": \"given_name\","
+                + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/givenname\"}},"
+                + "  {\"idpClaim\": \"family_name\","
+                + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/lastname\"}}"
+                + "]"
                 + "}";
         String url = serverURL + "/api/server/v1/identity-providers/" + idpId + "/claims";
-        try (CloseableHttpResponse response = doPutJson(url, claimsJson)) {
+        try (CloseableHttpResponse response = putJson(url, claimsJson)) {
             int status = response.getStatusLine().getStatusCode();
             Assert.assertEquals(status, HttpStatus.SC_OK,
                     "IDP claim configuration update failed with status: " + status);
@@ -394,7 +417,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 + "}";
 
         String url = serverURL + "/api/server/v1/flow";
-        try (CloseableHttpResponse response = doPutJson(url, flowJson)) {
+        try (CloseableHttpResponse response = putJson(url, flowJson)) {
             int status = response.getStatusLine().getStatusCode();
             Assert.assertEquals(status, HttpStatus.SC_OK,
                     "Registration flow configuration failed with status: " + status);
@@ -408,7 +431,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
         String body = "{\"flowType\":\"REGISTRATION\",\"isEnabled\":true}";
         String url = serverURL + "/api/server/v1/flow/config";
-        try (CloseableHttpResponse response = doPatchJson(url, body)) {
+        try (CloseableHttpResponse response = patchJson(url, body)) {
             int status = response.getStatusLine().getStatusCode();
             Assert.assertEquals(status, HttpStatus.SC_OK,
                     "Enabling registration flow failed with status: " + status);
@@ -422,7 +445,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
         String body = "{\"flowType\":\"REGISTRATION\",\"isEnabled\":false}";
         String url = serverURL + "/api/server/v1/flow/config";
-        try (CloseableHttpResponse response = doPatchJson(url, body)) {
+        try (CloseableHttpResponse response = patchJson(url, body)) {
             int status = response.getStatusLine().getStatusCode();
             // Tolerate 200 or 404 (server may already have cleared state).
             Assert.assertTrue(status == HttpStatus.SC_OK || status == HttpStatus.SC_NOT_FOUND,
@@ -430,47 +453,25 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         }
     }
 
-    private CloseableHttpResponse doPostJson(String url, String json) throws IOException {
+    /** Deletes all users matching the given username via SCIM2; no-op if none exist. Used to isolate test runs. */
+    private void deleteUserIfExists(String userName) {
 
-        org.apache.http.impl.client.CloseableHttpClient httpClient =
-                org.apache.http.impl.client.HttpClients.createDefault();
-        org.apache.http.client.methods.HttpPost post =
-                new org.apache.http.client.methods.HttpPost(url);
-        post.setHeaders(buildAdminHeaders());
-        post.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
-        return httpClient.execute(post);
-    }
-
-    private CloseableHttpResponse doPutJson(String url, String json) throws IOException {
-
-        org.apache.http.impl.client.CloseableHttpClient httpClient =
-                org.apache.http.impl.client.HttpClients.createDefault();
-        org.apache.http.client.methods.HttpPut put =
-                new org.apache.http.client.methods.HttpPut(url);
-        put.setHeaders(buildAdminHeaders());
-        put.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
-        return httpClient.execute(put);
-    }
-
-    private CloseableHttpResponse doPatchJson(String url, String json) throws IOException {
-
-        org.apache.http.impl.client.CloseableHttpClient httpClient =
-                org.apache.http.impl.client.HttpClients.createDefault();
-        org.apache.http.client.methods.HttpPatch patch =
-                new org.apache.http.client.methods.HttpPatch(url);
-        patch.setHeaders(buildAdminHeaders());
-        patch.setEntity(new org.apache.http.entity.StringEntity(json, StandardCharsets.UTF_8));
-        return httpClient.execute(patch);
-    }
-
-    private Header[] buildAdminHeaders() {
-
-        String credentials = userInfo.getUserName() + ":" + userInfo.getPassword();
-        String encoded = Base64.encodeBase64String(credentials.getBytes(StandardCharsets.UTF_8)).trim();
-        return new Header[]{
-                new BasicHeader("Authorization", "Basic " + encoded),
-                new BasicHeader("Content-Type", String.valueOf(ContentType.JSON)),
-                new BasicHeader("User-Agent", OAuth2Constant.USER_AGENT)
-        };
+        try {
+            String filter = java.net.URLEncoder.encode("userName eq \"" + userName + "\"", StandardCharsets.UTF_8);
+            JSONObject result = scim2RestClient.filterUsers(filter);
+            Object total = result.get("totalResults");
+            if (!(total instanceof Long) || (Long) total == 0) {
+                return;
+            }
+            JSONArray resources = (JSONArray) result.get("Resources");
+            if (resources == null) {
+                return;
+            }
+            for (Object r : resources) {
+                scim2RestClient.deleteUser((String) ((JSONObject) r).get("id"));
+            }
+        } catch (Exception e) {
+            log.warn("Pre-cleanup: could not delete user '" + userName + "': " + e.getMessage());
+        }
     }
 }
