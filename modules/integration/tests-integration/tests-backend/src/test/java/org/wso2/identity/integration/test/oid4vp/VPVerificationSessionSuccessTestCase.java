@@ -84,15 +84,14 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
     private TenantMgtRestClient tenantMgtRestClient;
 
     /**
-     * The requestId of the session started in test 1 — shared by tests 2, 3, 4, 5.
-     * After test 5 the session enters VERIFIED state.
+     * The requestId of the session.
      */
     private String sharedRequestId;
 
-    /** Nonce returned when the presentation request JWT was fetched (test 4). */
+    /** Nonce returned when the presentation request JWT was fetched. */
     private String sharedNonce;
 
-    /** Audience (verifier URI) returned with the presentation request JWT (test 4). */
+    /** Audience (verifier URI) returned with the presentation request JWT. */
     private String sharedAudience;
 
     @BeforeClass(alwaysRun = true)

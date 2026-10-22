@@ -68,10 +68,6 @@ public class SDJwtVcTestBuilder {
 
     }
 
-    // ------------------------------------------------------------------
-    // Static factory
-    // ------------------------------------------------------------------
-
     /**
      * Create a new builder instance.
      *
@@ -81,10 +77,6 @@ public class SDJwtVcTestBuilder {
 
         return new SDJwtVcTestBuilder();
     }
-
-    // ------------------------------------------------------------------
-    // Fluent setters
-    // ------------------------------------------------------------------
 
     /** Set the Verifiable Credential Type claim ({@code vct}). */
     public SDJwtVcTestBuilder vct(String vct) {
@@ -162,10 +154,6 @@ public class SDJwtVcTestBuilder {
         return this;
     }
 
-    // ------------------------------------------------------------------
-    // Key generation helper
-    // ------------------------------------------------------------------
-
     /**
      * Generate a fresh P-256 EC key pair suitable for use as an issuer or holder signing key.
      *
@@ -178,10 +166,6 @@ public class SDJwtVcTestBuilder {
                 .keyID(UUID.randomUUID().toString())
                 .generate();
     }
-
-    // ------------------------------------------------------------------
-    // Build
-    // ------------------------------------------------------------------
 
     /**
      * Build the SD-JWT-VC token string.
@@ -309,10 +293,6 @@ public class SDJwtVcTestBuilder {
         // Simple JSON construction — avoids pulling in a JSON library dependency.
         return "{\"" + credentialId + "\": \"" + sdJwtVc + "\"}";
     }
-
-    // ------------------------------------------------------------------
-    // Private helpers
-    // ------------------------------------------------------------------
 
     private static String buildDisclosureJson(String salt, String claimName, Object claimValue) {
 

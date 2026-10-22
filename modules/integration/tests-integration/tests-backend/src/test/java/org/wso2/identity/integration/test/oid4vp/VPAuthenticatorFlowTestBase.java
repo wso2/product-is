@@ -112,7 +112,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         return jsonResponse.getString("id");
     }
 
-    /** Deletes the presentation definition with the given ID; no-op if {@code defId} is null. */
+    /** Deletes the presentation definition with the given ID. */
     protected void deletePresentationDefinition(String defId) {
 
         if (defId == null) {
@@ -487,9 +487,6 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
 
     /**
      * Returns the server base URL without a trailing slash.
-     * {@code serverURL} is derived from {@code backendURL} by stripping {@code "services/"}, which leaves a
-     * trailing slash.  Path constants start with {@code /}, so concatenating them directly yields a double-slash
-     * that RestAssured sends verbatim — Tomcat rejects it with HTTP 400.
      */
     protected String serverBaseUrl() {
         return serverURL.endsWith("/") ? serverURL.substring(0, serverURL.length() - 1) : serverURL;
@@ -586,7 +583,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         return null;
     }
 
-    /** Polls using the default VP session client; delegates to {@link #pollStatusUntilNotActive(String, int, long, VPSessionRestClient)}. */
+    /** Polls using the default VP session client. */
     protected String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs) throws Exception {
 
         return pollStatusUntilNotActive(requestId, maxRetries, intervalMs, vpSessionRestClient);
@@ -614,7 +611,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         return lastStatus.get();
     }
 
-    /** Deletes the test application if one was created, logging rather than throwing on failure. */
+    /** Deletes the test application if one was created. */
     protected void deleteApplicationIfExists() {
 
         if (appId != null) {
@@ -626,7 +623,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         }
     }
 
-    /** Deletes the test IDP if one was created, logging rather than throwing on failure. */
+    /** Deletes the test IDP if one was created. */
     protected void deleteIdpIfExists() {
 
         if (idpId != null) {
@@ -638,7 +635,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         }
     }
 
-    /** Deletes the test presentation definition, logging rather than throwing on failure. */
+    /** Deletes the test presentation definition. */
     protected void deletePresentationDefinitionQuietly() {
 
         try {
@@ -648,7 +645,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         }
     }
 
-    /** Closes the VP session REST client, logging rather than throwing on failure. */
+    /** Closes the VP session REST client. */
     protected void closeVpSessionClient() {
 
         if (vpSessionRestClient != null) {
@@ -660,7 +657,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         }
     }
 
-    /** Closes the IDP management REST client, logging rather than throwing on failure. */
+    /** Closes the IDP management REST client. */
     protected void closeIdpMgtClient() {
 
         if (idpMgtRestClient != null) {
@@ -672,7 +669,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         }
     }
 
-    /** Closes the shared OAuth2 REST client, logging rather than throwing on failure. */
+    /** Closes the shared OAuth2 REST client. */
     protected void closeOAuthRestClient() {
 
         if (restClient != null) {

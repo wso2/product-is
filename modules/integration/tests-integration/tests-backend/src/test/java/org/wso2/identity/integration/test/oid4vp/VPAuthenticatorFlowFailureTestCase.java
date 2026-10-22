@@ -160,7 +160,6 @@ public class VPAuthenticatorFlowFailureTestCase extends VPAuthenticatorFlowTestB
         Assert.assertNotNull(redirectUri,
                 "IS must redirect after a failed VP callback — got no Location header.");
 
-        // When retry is enabled IS redirects back to wallet_login.jsp with a fresh requestId.
         if (redirectUri.contains(WALLET_LOGIN_JSP)) {
             String newRequestId = extractQueryParam(redirectUri, "requestId");
             Assert.assertNotNull(newRequestId,

@@ -483,7 +483,7 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
         }
     }
 
-    /** Deletes all users matching the given username via SCIM2; no-op if none exist. Used to isolate test runs. */
+    /** Deletes all users matching the given username via SCIM2. */
     private void deleteUserIfExists(String userName) {
 
         VPTestUtils.deleteUserIfExists(userName, scim2RestClient);

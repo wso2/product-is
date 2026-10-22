@@ -302,7 +302,6 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
 
     /**
      * Restores the REGISTRATION flow steps and enabled state to the values captured before setUp ran.
-     * No-ops if no snapshot was saved (fresh IS install with no pre-existing flow).
      */
     private void restoreOriginalRegistrationFlow() throws Exception {
 

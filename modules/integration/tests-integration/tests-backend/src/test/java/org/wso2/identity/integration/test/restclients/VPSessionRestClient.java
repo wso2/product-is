@@ -66,10 +66,6 @@ public class VPSessionRestClient extends RestBaseClient {
         this.baseUrl = buildBaseUrl(serverUrl, tenantDomain);
     }
 
-    // ------------------------------------------------------------------
-    // Authenticated management calls
-    // ------------------------------------------------------------------
-
     /**
      * Start a new verification session for the given presentation definition identifier.
      *
@@ -164,10 +160,6 @@ public class VPSessionRestClient extends RestBaseClient {
         String url = baseUrl + PATH_SEPARATOR + VERIFICATION_SESSIONS_PATH + PATH_SEPARATOR + requestId;
         return getResponseOfHttpGet(url, getAdminHeaders());
     }
-
-    // ------------------------------------------------------------------
-    // Wallet-facing (unauthenticated) endpoints
-    // ------------------------------------------------------------------
 
     /**
      * Fetch the presentation request JWT from the public {@code /requests/{id}} endpoint.
@@ -265,10 +257,6 @@ public class VPSessionRestClient extends RestBaseClient {
 
         client.close();
     }
-
-    // ------------------------------------------------------------------
-    // Private helpers
-    // ------------------------------------------------------------------
 
     private String buildBaseUrl(String serverUrl, String tenantDomain) {
 
