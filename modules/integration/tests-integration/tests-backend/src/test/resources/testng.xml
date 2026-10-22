@@ -355,20 +355,6 @@
         </classes>
     </test>
 
-    <test name="is-tests-oid4vp" preserve-order="true" parallel="false" group-by-instances="true">
-        <classes>
-            <class name="org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1.PresentationDefinitionsApiSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1.PresentationDefinitionsApiFailureTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.OpenID4VPConfigSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.OpenID4VPConfigFailureTest"/>
-            <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionSuccessTestCase"/>
-            <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionFailureTestCase"/>
-            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowSuccessTestCase"/>
-            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowFailureTestCase"/>
-            <class name="org.wso2.identity.integration.test.oid4vp.VPSelfRegistrationFlowTestCase"/>
-        </classes>
-    </test>
-
     <test name="is-tests-oauth-client-secrets" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementClientSecretSuccessTest"/>
@@ -596,6 +582,20 @@
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.OAuth2AuthorizationForSubOrganizationAppsTestCase"/>
             <class name="org.wso2.identity.integration.test.oidc.OIDCNonPersistentAccessTokenTest"/>
+        </classes>
+    </test>
+
+    <test name="is-tests-oid4vp" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1.PresentationDefinitionsApiSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1.PresentationDefinitionsApiFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.OpenID4VPConfigSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.OpenID4VPConfigFailureTest"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionSuccessTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPVerificationSessionFailureTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowSuccessTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPAuthenticatorFlowFailureTestCase"/>
+            <class name="org.wso2.identity.integration.test.oid4vp.VPSelfRegistrationFlowTestCase"/>
         </classes>
     </test>
 
