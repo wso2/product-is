@@ -280,22 +280,15 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
 
         try (CloseableHttpResponse jwtResponse = vpSessionRestClient.getPresentationRequestJwt(ctx.requestId)) {
             String jwtBody = EntityUtils.toString(jwtResponse.getEntity()).trim();
-            if (jwtBody.contains(".")) {
-                SignedJWT requestJwt = SignedJWT.parse(jwtBody);
-                ctx.nonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
-                // KB-JWT aud must be the verifier's client_id.
-                ctx.audience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
-            }
-        } catch (Exception e) {
-            log.warn("Could not fetch presentation request JWT nonce: " + e.getMessage());
+            Assert.assertEquals(jwtResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                    "GET /requests/{id} must return 200. Body: " + jwtBody);
+            SignedJWT requestJwt = SignedJWT.parse(jwtBody);
+            ctx.nonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
+            // KB-JWT aud must be the verifier's client_id.
+            ctx.audience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
         }
-
-        if (ctx.nonce == null) {
-            ctx.nonce = "fallback-nonce-" + UUID.randomUUID();
-        }
-        if (ctx.audience == null) {
-            ctx.audience = "https://verifier.example.com";
-        }
+        Assert.assertNotNull(ctx.nonce, "Presentation request JWT must contain 'nonce'.");
+        Assert.assertNotNull(ctx.audience, "Presentation request JWT must contain 'client_id'.");
         return ctx;
     }
 
