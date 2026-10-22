@@ -41,6 +41,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
+import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.Owner;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantModel;
 import org.wso2.identity.integration.test.restclients.TenantMgtRestClient;
@@ -160,6 +161,11 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             } catch (Exception e) {
                 log.warn("Failed to close tenant-B VP session client: " + e.getMessage());
             }
+        }
+        try {
+            new TenantManagementServiceClient(backendURL, sessionCookie).deleteTenant(TENANT_B_DOMAIN);
+        } catch (Exception e) {
+            log.warn("Failed to delete tenant-B domain '" + TENANT_B_DOMAIN + "': " + e.getMessage());
         }
         if (tenantMgtRestClient != null) {
             try {
