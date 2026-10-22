@@ -39,6 +39,7 @@ import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.Owner;
 import org.wso2.identity.integration.test.rest.api.server.tenant.management.v1.model.TenantModel;
+import org.wso2.identity.integration.common.clients.TenantManagementServiceClient;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import org.wso2.identity.integration.test.restclients.TenantMgtRestClient;
@@ -109,6 +110,7 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
                 log.warn("Failed to delete JIT-provisioned user: " + e.getMessage());
             }
         }
+        deleteUserIfExists("Alice");
         if (scim2RestClient != null) {
             try {
                 scim2RestClient.closeHttpClient();
@@ -142,6 +144,11 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
             } catch (Exception e) {
                 log.warn("Failed to delete tenant-B presentation definition: " + e.getMessage());
             }
+        }
+        try {
+            new TenantManagementServiceClient(backendURL, sessionCookie).deleteTenant(TENANT_AUTH_DOMAIN);
+        } catch (Exception e) {
+            log.warn("Failed to delete tenant-B domain '" + TENANT_AUTH_DOMAIN + "': " + e.getMessage());
         }
         if (vpSessionRestClientTenantB != null) {
             try {
