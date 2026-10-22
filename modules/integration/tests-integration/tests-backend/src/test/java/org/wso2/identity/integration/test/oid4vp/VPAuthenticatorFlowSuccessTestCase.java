@@ -30,6 +30,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 import org.testng.Assert;
+import org.testng.SkipException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -445,8 +446,7 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
     public void testAuthFlowTenanted() throws Exception {
 
         if (tenantBConsumerKey == null) {
-            log.warn("testAuthFlowTenanted: tenant-B OAuth2 app not provisioned — skipping.");
-            return;
+            throw new SkipException("Tenant-B OAuth2 app not provisioned — skipping testAuthFlowTenanted.");
         }
 
         AuthFlowContext ctx = initiateAuthFlowTenantBAndFetchNonce();
@@ -470,17 +470,16 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
 
         String finalStatus = pollStatusUntilNotActive(ctx.requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS,
                 vpSessionRestClientTenantB);
-        Assert.assertNotEquals(finalStatus, "ACTIVE",
-                "Tenant-B VP session must have left ACTIVE state after submission.");
+        Assert.assertEquals(finalStatus, "VERIFIED",
+                "Tenant-B VP token from trusted issuer with correct nonce must result in a VERIFIED session.");
 
-        if ("VERIFIED".equals(finalStatus) && ctx.sessionDataKey != null) {
-            String code = triggerTenantBCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, "success",
-                    ctx.cookieStore);
-            if (code != null) {
-                Assert.assertFalse(code.isEmpty(),
-                        "Tenant-B auth flow must return a non-empty authorization code.");
-            }
-        }
+        Assert.assertNotNull(ctx.sessionDataKey,
+                "Tenant-B wallet login redirect must carry a sessionDataKey parameter.");
+        String code = triggerTenantBCommonAuthCallback(ctx.sessionDataKey, ctx.requestId, "success",
+                ctx.cookieStore);
+        Assert.assertNotNull(code, "Tenant-B auth flow must return an authorization code.");
+        Assert.assertFalse(code.isEmpty(),
+                "Tenant-B auth flow must return a non-empty authorization code.");
     }
 
     /** Deletes all users matching the given username via SCIM2. */
