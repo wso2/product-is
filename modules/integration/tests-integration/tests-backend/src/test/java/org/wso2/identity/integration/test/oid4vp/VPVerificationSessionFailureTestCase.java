@@ -485,24 +485,19 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
     /**
      * Returns {nonce, audience} extracted from the presentation request JWT for the given session.
      * The audience is the verifier's {@code client_id} claim, which the KB-JWT {@code aud} must match.
-     * Falls back to placeholder strings if the JWT cannot be parsed.
      */
-    private String[] fetchRequestParams(String requestId) {
+    private String[] fetchRequestParams(String requestId) throws Exception {
 
         try (CloseableHttpResponse response = vpSessionRestClient.getPresentationRequestJwt(requestId)) {
             String body = EntityUtils.toString(response.getEntity()).trim();
-            if (body.contains(".")) {
-                SignedJWT requestJwt = SignedJWT.parse(body);
-                String nonce    = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
-                String audience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
-                return new String[]{
-                        nonce    != null ? nonce    : "fallback-nonce-" + UUID.randomUUID(),
-                        audience != null ? audience : "fallback-audience"
-                };
-            }
-        } catch (Exception e) {
-            log.warn("Could not fetch request params from presentation request JWT: " + e.getMessage());
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+                    "GET /requests/{id} must return 200. Body: " + body);
+            SignedJWT requestJwt = SignedJWT.parse(body);
+            String nonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
+            String audience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
+            Assert.assertNotNull(nonce, "Presentation request JWT must contain 'nonce'.");
+            Assert.assertNotNull(audience, "Presentation request JWT must contain 'client_id'.");
+            return new String[]{nonce, audience};
         }
-        return new String[]{"fallback-nonce-" + UUID.randomUUID(), "fallback-audience"};
     }
 }
