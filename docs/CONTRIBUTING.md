@@ -18,7 +18,10 @@ This document provides guidelines for contributing to the WSO2 Identity Server p
 To build the WSO2 Identity Server distribution from source, follow these steps:
 
 1. Install **Java SE Development Kit 11 - 21**.
-2. Install **Apache Maven 3.x.x** ([Download Maven](https://maven.apache.org/download.cgi#)).
+2. Install **Apache Maven 3.9.11** ([Download Maven 3.9.11](https://archive.apache.org/dist/maven/maven-3/3.9.11/binaries/)) to match the version [pinned in GitHub-hosted CI](../.github/workflows/integration-test-runner-jdk25.yml).
+
+    Maven 3.10.0 is incompatible with the current Tycho-based `carbon-p2-plugin` build extension (see [#28571](https://github.com/wso2/product-is/pull/28571)).
+
 3. Clone the repository: `https://github.com/wso2/product-is.git` or download the source.
 4. From the `product-is` directory, run one of the following Maven commands:
     - `mvn clean install`  
