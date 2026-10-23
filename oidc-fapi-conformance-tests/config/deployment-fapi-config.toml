@@ -81,11 +81,18 @@ app_password= "dashboard"
 #port= 587
 
 # FAPI
+[oauth]
+timestamp_skew = 10
+
 [oauth.dcr]
 enable_fapi_enforcement = true
 
 [oauth.oidc]
 id_token.signature_algorithm="PS256"
+
+# FAPI 2.0 limits the authorization code lifetime to 60 seconds.
+[oauth.token_validation]
+authorization_code_validity = 50
 
 # Token endpoint related configurations
 [oauth.oidc.token_endpoint]
@@ -96,7 +103,8 @@ signing_algorithms=["PS256","ES256"]
 jwt_signature_algorithm="PS256"
 
 [transport.https.sslHostConfig.properties]
-ciphers="TLS_DHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+# Only the BCP195 recommended TLS 1.2 ciphers, as required by FAPI 2.0 (also permitted by FAPI 1.0 Advanced).
+ciphers="TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
 
 [oauth.mutualtls]
 client_certificate_header = "x-wso2-mtls-cert"

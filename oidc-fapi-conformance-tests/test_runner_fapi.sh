@@ -38,6 +38,20 @@ echo
  python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi1-advanced-final-test-plan[client_auth_type=mtls][fapi_profile=plain_fapi][fapi_response_mode=plain_response][fapi_auth_request_method=pushed] $PATH_TO_SCRIPTS/config/IS_config_fapi_mtls_par.json 2>&1 | tee fapi-testplan-mtls-par-log.txt
  echo
 
+ echo
+ echo "FAPI 2.0 Security Profile test plan - private_key_jwt, mtls sender constrain, openid_connect, plain_fapi"
+ echo "-----------------------------"
+ echo
+ python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi2-security-profile-final-test-plan[client_auth_type=private_key_jwt][sender_constrain=mtls][openid=openid_connect][fapi_profile=plain_fapi][authorization_request_type=simple] $PATH_TO_SCRIPTS/config/IS_config_fapi2_pvtkeyjwt.json 2>&1 | tee fapi2-testplan-pvtkeyjwt-log.txt
+ echo
+
+ echo
+ echo "FAPI 2.0 Security Profile test plan - mtls, mtls sender constrain, openid_connect, plain_fapi"
+ echo "-----------------------------"
+ echo
+ python3 $CONFORMANCE_SUITE_PATH/scripts/run-test-plan.py fapi2-security-profile-final-test-plan[client_auth_type=mtls][sender_constrain=mtls][openid=openid_connect][fapi_profile=plain_fapi][authorization_request_type=simple] $PATH_TO_SCRIPTS/config/IS_config_fapi2_mtls.json 2>&1 | tee fapi2-testplan-mtls-log.txt
+ echo
+
 # echo
 # echo "FAPI Basic test plan - private_key_jwt, plain_fapi, jarm, by_value"
 # echo "-----------------------------"
