@@ -1,0 +1,10 @@
+{
+  "identifier": "test-second-definition",
+  "displayName": "Second Test Definition",
+  "credentials": [
+    {
+      "id": "IDCredential",
+      "type": "IDCredential"
+    }
+  ]
+}

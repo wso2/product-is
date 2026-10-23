@@ -1,0 +1,9 @@
+{
+  "issuerConfigs": [
+    {
+      "issuerUrl": "https://test-issuer.example.com",
+      "keySourceType": "jwks_uri",
+      "keySource": "https://test-issuer.example.com/.well-known/jwks.json"
+    }
+  ]
+}
