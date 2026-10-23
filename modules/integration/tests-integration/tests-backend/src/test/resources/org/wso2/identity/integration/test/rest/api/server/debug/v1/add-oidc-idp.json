@@ -1,0 +1,65 @@
+{
+  "name": "<IDP_NAME>",
+  "alias": "",
+  "description": "OIDC IDP for debug framework integration tests.",
+  "image": "assets/images/logos/enterprise.svg",
+  "isPrimary": false,
+  "roles": {
+    "mappings": [],
+    "outboundProvisioningRoles": []
+  },
+  "certificate": {
+    "jwksUri": "https://test.com/jwks",
+    "certificates": [
+      ""
+    ]
+  },
+  "claims": {
+    "userIdClaim": {
+      "uri": ""
+    },
+    "provisioningClaims": [],
+    "roleClaim": {
+      "uri": ""
+    }
+  },
+  "federatedAuthenticators": {
+    "defaultAuthenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
+    "authenticators": [
+      {
+        "isEnabled": true,
+        "authenticatorId": "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I",
+        "properties": [
+          {
+            "key": "ClientId",
+            "value": "debug-test-oidc-client-id"
+          },
+          {
+            "key": "ClientSecret",
+            "value": "debug-test-oidc-secret"
+          },
+          {
+            "key": "OAuth2AuthzEPUrl",
+            "value": "https://oidc.example.com/authz"
+          },
+          {
+            "key": "OAuth2TokenEPUrl",
+            "value": "https://oidc.example.com/token"
+          },
+          {
+            "key": "callbackUrl",
+            "value": "https://localhost:9443/commonauth"
+          },
+          {
+            "key": "Scopes",
+            "value": "openid email profile"
+          }
+        ]
+      }
+    ]
+  },
+  "homeRealmIdentifier": "",
+  "isFederationHub": false,
+  "idpIssuerName": "",
+  "templateId": "enterprise-oidc-idp"
+}
