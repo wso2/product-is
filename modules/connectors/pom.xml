@@ -236,6 +236,50 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+                    <!-- Copy the Customer Data Service (CDS) extension jars to the authenticatorCopied/jar folder-->
+                    <execution>
+                        <id>download_cds_extensions</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wso2.identity.customer.data.service</groupId>
+                                    <artifactId>org.wso2.identity.customer.data.service.client</artifactId>
+                                    <version>${identity.customer.data.service.extensions.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.identity.customer.data.service</groupId>
+                                    <artifactId>org.wso2.identity.customer.data.service.event.handler</artifactId>
+                                    <version>${identity.customer.data.service.extensions.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.identity.customer.data.service</groupId>
+                                    <artifactId>org.wso2.identity.customer.data.service.auth.listener</artifactId>
+                                    <version>${identity.customer.data.service.extensions.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.identity.customer.data.service</groupId>
+                                    <artifactId>org.wso2.identity.customer.data.service.auth.handler</artifactId>
+                                    <version>${identity.customer.data.service.extensions.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
