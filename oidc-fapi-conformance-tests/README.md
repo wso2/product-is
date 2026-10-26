@@ -26,7 +26,15 @@ To locally setup and run the test suite, follow the [fapi-oidc-conformance-test.
 
 ## Test Profiles
 
-Running fapi test profiles are in [test_runner_fapi.sh](oidc-fapi-conformance-tests/test_runner_fapi.sh) script. Currently Running profiles,
-* private_key_jwt
-* mtls
+Running fapi test profiles are in [test_runner_fapi.sh](test_runner_fapi.sh) script. FAPI 1.0 and FAPI 2.0 plans run in the same test run against a single IS instance, each against its own set of applications. Currently Running profiles,
+* FAPI 1.0 Advanced (`fapi1-advanced-final-test-plan`)
+  * private_key_jwt
+  * mtls
+  * private_key_jwt with PAR
+  * mtls with PAR
+* FAPI 2.0 Security Profile (`fapi2-security-profile-final-test-plan`, mTLS sender constrained tokens)
+  * private_key_jwt
+  * mtls
+
+Applications are registered via DCR, which applies the tenant level DCR FAPI profile (`FAPI1_ADVANCED` by default). FAPI 2.0 applications are switched to the `FAPI2_SECURITY` profile afterwards through the application management API.
 
