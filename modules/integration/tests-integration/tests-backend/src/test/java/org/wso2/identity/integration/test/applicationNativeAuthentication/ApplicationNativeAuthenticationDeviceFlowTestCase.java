@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.applicationNativeAuthentication;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -67,6 +69,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAY
 public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     private static final String CLIENT_ID_PARAM = "client_id";
+    private static final String IDP_SESSION_KEY_CLAIM_NAME = "isk";
     private static final String DEVICE_CODE = "device_code";
     private static final String USER_CODE = "user_code";
     private static final String INTERVAL = "interval";
@@ -74,6 +77,7 @@ public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2Ser
     private static final String VERIFICATION_URI = "verification_uri";
     private static final String VERIFICATION_URI_COMPLETE = "verification_uri_complete";
     private static final String GRANT_TYPE = "urn:ietf:params:oauth:grant-type:device_code";
+    private static final String JWT = "JWT";
     private CloseableHttpClient client;
     private UserManagementClient userMgtServiceClient;
     private String appId;
@@ -163,7 +167,7 @@ public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2Ser
 
         List<NameValuePair> urlParameters = new ArrayList<>();
         urlParameters.add(new BasicNameValuePair(CLIENT_ID_PARAM, consumerKey));
-        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, "device_01"));
+        urlParameters.add(new BasicNameValuePair(SCOPE_PLAYGROUND_NAME, OAuth2Constant.OAUTH2_SCOPE_OPENID));
         JSONObject responseObject = responseObjectNew(urlParameters, deviceAuthEndpoint);
         deviceCode = responseObject.get(DEVICE_CODE).toString();
         userCode = responseObject.get(USER_CODE).toString();
@@ -235,6 +239,14 @@ public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2Ser
         JSONObject obj = sendTokenRequest(GRANT_TYPE, consumerKey, deviceCode);
         String accessToken = obj.get("access_token").toString();
         Assert.assertNotNull(accessToken, "Assess token is null");
+
+        String idToken = obj.get(OAuth2Constant.ID_TOKEN).toString();
+        Assert.assertNotNull(idToken, "ID token is null");
+
+        JWTClaimsSet claims = SignedJWT.parse(idToken).getJWTClaimsSet();
+        Assert.assertNotNull(claims, "ID token claim set is null");
+        Assert.assertNotNull(claims.getClaim(IDP_SESSION_KEY_CLAIM_NAME),
+                "IDP session key not available in ID token.");
     }
 
     private ApplicationResponseModel createApp() throws Exception {
@@ -248,6 +260,11 @@ public class ApplicationNativeAuthenticationDeviceFlowTestCase extends OAuth2Ser
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
         oidcConfig.setGrantTypes(grantTypes);
         oidcConfig.setPublicClient(true);
+
+        AccessTokenConfiguration accessTokenConfiguration = new AccessTokenConfiguration().type(JWT);
+        accessTokenConfiguration.setUserAccessTokenExpiryInSeconds(3600L);
+        accessTokenConfiguration.setApplicationAccessTokenExpiryInSeconds(3600L);
+        oidcConfig.setAccessToken(accessTokenConfiguration);
 
         InboundProtocols inboundProtocolsConfig = new InboundProtocols();
         inboundProtocolsConfig.setOidc(oidcConfig);
