@@ -2818,7 +2818,7 @@
         <!--<identity.agent-entitlement-filter.version>5.1.1</identity.agent-entitlement-filter.version>-->
 
         <!-- Authenticator Versions -->
-        <identity.outbound.auth.oidc.version>5.15.3</identity.outbound.auth.oidc.version>
+        <identity.outbound.auth.oidc.version>5.15.4</identity.outbound.auth.oidc.version>
         <identity.outbound.auth.oauth2.version>1.1.0</identity.outbound.auth.oauth2.version>
         <identity.outbound.auth.passive.sts.version>5.6.0</identity.outbound.auth.passive.sts.version>
         <identity.outbound.auth.samlsso.version>5.12.9</identity.outbound.auth.samlsso.version>
@@ -2890,7 +2890,7 @@
 
         <!-- Identity REST API feature -->
         <identity.api.dispatcher.version>2.0.19</identity.api.dispatcher.version>
-        <identity.server.api.version>1.6.58</identity.server.api.version>
+        <identity.server.api.version>1.6.59</identity.server.api.version>
         <identity.user.api.version>1.5.20</identity.user.api.version>
 
         <identity.agent.sso.version>5.5.9</identity.agent.sso.version>
