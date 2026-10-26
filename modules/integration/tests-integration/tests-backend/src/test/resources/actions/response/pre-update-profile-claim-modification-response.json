@@ -1,0 +1,22 @@
+{
+  "actionStatus": "SUCCESS",
+  "operations": [
+    {
+      "op": "add",
+      "path": "/user/claims[uri=http://wso2.org/claims/country]",
+      "value": "Sri Lanka"
+    },
+    {
+      "op": "remove",
+      "path": "/user/claims[uri=http://wso2.org/claims/country]"
+    },
+    {
+      "op": "replace",
+      "path": "/user/claims[uri=http://wso2.org/claims/mobileNumbers]",
+      "value": [
+        "0771234567",
+        "0717654329"
+      ]
+    }
+  ]
+}
