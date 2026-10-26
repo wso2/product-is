@@ -86,6 +86,8 @@
                 org.wso2.carbon.identity.api.server.vp.template.management.v1.PresentationDefinitionsApi,
                 org.wso2.carbon.identity.api.server.credential.management.v1.UsersApi,
                 org.wso2.carbon.identity.api.server.moesif.publisher.v1.MoesifPublishersApi,
+                org.wso2.carbon.identity.api.server.policy.v1.PoliciesApi,
+                org.wso2.carbon.identity.api.server.device.mgt.v1.DevicesApi,
 				org.wso2.carbon.identity.api.server.organization.capability.governance.v1.OrgGovernanceApi
             </param-value>
         </init-param>
