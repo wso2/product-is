@@ -725,6 +725,26 @@
                 <artifactId>org.wso2.carbon.identity.api.server.vp.template.management.common</artifactId>
                 <version>${identity.server.api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.policy.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.policy.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.device.mgt.v1</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.server.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.server.device.mgt.common</artifactId>
+                <version>${identity.server.api.version}</version>
+            </dependency>
 
             <!-- Legacy API dependencies -->
             <dependency>
