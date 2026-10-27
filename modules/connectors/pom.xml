@@ -255,6 +255,14 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.wso2.identity.customer.data.service</groupId>
+                                    <artifactId>org.wso2.identity.customer.data.service.config.mgt</artifactId>
+                                    <version>${identity.customer.data.service.extensions.version}</version>
+                                    <type>jar</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${basedir}/target/authenticatorCopied/jar</outputDirectory>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.wso2.identity.customer.data.service</groupId>
                                     <artifactId>org.wso2.identity.customer.data.service.event.handler</artifactId>
                                     <version>${identity.customer.data.service.extensions.version}</version>
                                     <type>jar</type>
