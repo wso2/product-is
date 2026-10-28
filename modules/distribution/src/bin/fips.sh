@@ -22,6 +22,19 @@ EXPECTED_BC_FIPS_CHECKSUM="061fbe8383f70489dda95a11a2a4739eb818ff2c"
 EXPECTED_BCPKIX_FIPS_CHECKSUM="41d15c70437440d63b65225d7c00873a030d25d0"
 EXPECTED_BCUTIL_FIPS_CHECKSUM="30b41ebc759a4f02e2ff7ab9acb09268923ee41f"
 
+# resolve links - $0 may be a softlink
+PRG="$0"
+
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '.*/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
 # Get standard environment variables
 PRGDIR=`dirname "$PRG"`
 
@@ -97,15 +110,43 @@ if [ "$ARGUMENT" = "DISABLE" ] || [ "$ARGUMENT" = "disable" ]; then
 	    fi
 	fi
 
-  bcprov_text="bcprov-jdk18on,$bcprov_version,../plugins/$bcprov_file_name,4,true";
-  bcpkix_text="bcpkix-jdk18on,$bcpkix_version,../plugins/$bcpkix_file_name,4,true";
-	if ! grep -q "$bcprov_text" "$bundles_info" ; then
-		echo  $bcprov_text >> $bundles_info;
-		server_restart_required=true
+	# The jars may already be present in plugins, in which case the blocks above do not run
+	# and the name/version variables stay empty. Resolve them from what is on disk so that a
+	# malformed entry such as "bcprov-jdk18on,,../plugins/,4,true" is never written.
+	if [ -z "$bcprov_file_name" ]; then
+		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcprov-jdk18on*.jar" | head -1)
+		if [ -n "$location" ]; then
+			bcprov_file_name=$(basename "$location")
+			bcprov_version=${bcprov_file_name#*_}
+			bcprov_version=${bcprov_version%.jar}
+		fi
 	fi
-	if ! grep -q "$bcpkix_text" "$bundles_info" ; then
-		echo  $bcpkix_text >> $bundles_info;
-		server_restart_required=true
+	if [ -z "$bcpkix_file_name" ]; then
+		location=$(find "$CARBON_HOME/repository/components/plugins/" -type f -name "bcpkix-jdk18on*.jar" | head -1)
+		if [ -n "$location" ]; then
+			bcpkix_file_name=$(basename "$location")
+			bcpkix_version=${bcpkix_file_name#*_}
+			bcpkix_version=${bcpkix_version%.jar}
+		fi
+	fi
+
+	if [ -n "$bcprov_file_name" ] && [ -n "$bcprov_version" ]; then
+		bcprov_text="bcprov-jdk18on,$bcprov_version,../plugins/$bcprov_file_name,4,true";
+		if ! grep -q "$bcprov_text" "$bundles_info" ; then
+			echo "$bcprov_text" >> "$bundles_info";
+			server_restart_required=true
+		fi
+	else
+		echo "Could not find bcprov-jdk18on jar in components/plugins. Skipping its bundles.info entry."
+	fi
+	if [ -n "$bcpkix_file_name" ] && [ -n "$bcpkix_version" ]; then
+		bcpkix_text="bcpkix-jdk18on,$bcpkix_version,../plugins/$bcpkix_file_name,4,true";
+		if ! grep -q "$bcpkix_text" "$bundles_info" ; then
+			echo "$bcpkix_text" >> "$bundles_info";
+			server_restart_required=true
+		fi
+	else
+		echo "Could not find bcpkix-jdk18on jar in components/plugins. Skipping its bundles.info entry."
 	fi
 
 elif [ "$ARGUMENT" = "VERIFY" ] || [ "$ARGUMENT" = "verify" ]; then
@@ -323,11 +364,11 @@ while getopts "f:m:" opt; do
 		else
 			echo "Downloading required bcpkix-fips jar : bcpkix-fips-$BCPKIX_FIPS_VERSION"
 		    curl $arg2/org/bouncycastle/bcpkix-fips/$BCPKIX_FIPS_VERSION/bcpkix-fips-$BCPKIX_FIPS_VERSION.jar -o $CARBON_HOME/repository/components/lib/bcpkix-fips-$BCPKIX_FIPS_VERSION.jar
-			ACTUAL_CHECKSUM=$(sha1sucam $CARBON_HOME/repository/components/lib/bc-fips*.jar | cut -d' ' -f1)
-	    	if [ "$EXPECTED_BC_FIPS_CHECKSUM" = "$ACTUAL_CHECKSUM" ]; then
-  		    	echo "Checksum verified: The downloaded bc-fips-$BC_FIPS_VERSION.jar is valid."
+			ACTUAL_CHECKSUM=$(sha1sum $CARBON_HOME/repository/components/lib/bcpkix-fips*.jar | cut -d' ' -f1)
+	    	if [ "$EXPECTED_BCPKIX_FIPS_CHECKSUM" = "$ACTUAL_CHECKSUM" ]; then
+  		    	echo "Checksum verified: The downloaded bcpkix-fips-$BCPKIX_FIPS_VERSION.jar is valid."
 	    	else
-  		    	echo "Checksum verification failed: The downloaded bc-fips-$BC_FIPS_VERSION.jar may be corrupted."
+  		    	echo "Checksum verification failed: The downloaded bcpkix-fips-$BCPKIX_FIPS_VERSION.jar may be corrupted."
 	   		fi
 	   	fi
 	fi
