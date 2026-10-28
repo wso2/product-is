@@ -1,9 +1,0 @@
-{
-  "issuerConfigs": [
-    {
-      "issuerUrl": "https://replacement-issuer.example.com",
-      "keySourceType": "jwks_uri",
-      "keySource": "https://replacement-issuer.example.com/.well-known/jwks.json"
-    }
-  ]
-}

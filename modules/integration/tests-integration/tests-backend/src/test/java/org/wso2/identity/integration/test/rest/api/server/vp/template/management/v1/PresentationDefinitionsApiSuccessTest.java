@@ -108,9 +108,12 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test
-    public void testCreatePresentationDefinition() throws IOException {
+    public void testCreatePresentationDefinition() {
 
-        String body = readResource("create-presentation-definition.json");
+        String body = "{\"identifier\":\"test-person-verification\",\"displayName\":\"Test Person Verification\","
+                + "\"description\":\"A test presentation definition for person verification\","
+                + "\"credentials\":[{\"id\":\"PersonCredential\",\"type\":\"PersonCredential\","
+                + "\"format\":\"dc+sd-jwt\"}]}";
         Response response = getResponseOfPost(PRESENTATION_DEFINITIONS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -186,9 +189,9 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test(dependsOnMethods = {"testListPresentationDefinitions"})
-    public void testPatchDisplayName() throws IOException {
+    public void testPatchDisplayName() {
 
-        String body = readResource("patch-presentation-definition-display-name.json");
+        String body = "{\"displayName\":\"Updated Display Name\"}";
         Response response = getResponseOfPatch(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR
                 + presentationDefinitionId, body);
         response.then()
@@ -199,9 +202,9 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test(dependsOnMethods = {"testPatchDisplayName"})
-    public void testPatchDescription() throws IOException {
+    public void testPatchDescription() {
 
-        String body = readResource("patch-presentation-definition-description.json");
+        String body = "{\"description\":\"Updated description\"}";
         Response response = getResponseOfPatch(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR
                 + presentationDefinitionId, body);
         response.then()
@@ -212,9 +215,10 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test(dependsOnMethods = {"testPatchDescription"})
-    public void testPatchCredentials() throws IOException {
+    public void testPatchCredentials() {
 
-        String body = readResource("patch-presentation-definition-credentials.json");
+        String body = "{\"credentials\":[{\"id\":\"UpdatedCredential\",\"type\":\"UpdatedCredential\","
+                + "\"format\":\"dc+sd-jwt\"}]}";
         Response response = getResponseOfPatch(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR
                 + presentationDefinitionId, body);
         response.then()
@@ -239,9 +243,11 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test(dependsOnMethods = {"testGetConnectedIdpsEmpty"})
-    public void testUpdateIssuerConfigsJwksUri() throws IOException {
+    public void testUpdateIssuerConfigsJwksUri() {
 
-        String body = readResource("issuer-config-jwks-uri.json");
+        String body = "{\"issuerConfigs\":[{\"issuerUrl\":\"https://test-issuer.example.com\","
+                + "\"keySourceType\":\"jwks_uri\","
+                + "\"keySource\":\"https://test-issuer.example.com/.well-known/jwks.json\"}]}";
         Response response = getResponseOfPut(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR
                 + presentationDefinitionId + PATH_SEPARATOR + CREDENTIALS_PATH + PATH_SEPARATOR
                 + credentialIdentifier + PATH_SEPARATOR + ISSUER_CONFIGS_PATH, body);
@@ -299,9 +305,11 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test(dependsOnMethods = {"testGetIssuerConfigs"})
-    public void testReplaceIssuerConfigs() throws IOException {
+    public void testReplaceIssuerConfigs() {
 
-        String body = readResource("issuer-config-second.json");
+        String body = "{\"issuerConfigs\":[{\"issuerUrl\":\"https://replacement-issuer.example.com\","
+                + "\"keySourceType\":\"jwks_uri\","
+                + "\"keySource\":\"https://replacement-issuer.example.com/.well-known/jwks.json\"}]}";
         Response response = getResponseOfPut(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR
                 + presentationDefinitionId + PATH_SEPARATOR + CREDENTIALS_PATH + PATH_SEPARATOR
                 + credentialIdentifier + PATH_SEPARATOR + ISSUER_CONFIGS_PATH, body);
@@ -326,9 +334,10 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test
-    public void testCreateSecondDefinition() throws IOException {
+    public void testCreateSecondDefinition() {
 
-        String body = readResource("create-presentation-definition-second.json");
+        String body = "{\"identifier\":\"test-second-definition\",\"displayName\":\"Second Test Definition\","
+                + "\"credentials\":[{\"id\":\"IDCredential\",\"type\":\"IDCredential\"}]}";
         Response response = getResponseOfPost(PRESENTATION_DEFINITIONS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()

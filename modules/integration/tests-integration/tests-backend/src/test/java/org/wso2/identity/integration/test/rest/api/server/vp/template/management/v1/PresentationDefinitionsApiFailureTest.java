@@ -62,7 +62,9 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
         RestAssured.basePath = basePath;
 
         // Create one valid definition to use for duplicate/conflict tests.
-        String body = readResource("create-presentation-definition-conflict.json");
+        String body = "{\"identifier\":\"test-conflict-definition\",\"displayName\":\"Test Conflict Definition\","
+                + "\"credentials\":[{\"id\":\"ConflictCredential\",\"type\":\"ConflictCredential\","
+                + "\"format\":\"dc+sd-jwt\"}]}";
         Response response = getResponseOfPost(PRESENTATION_DEFINITIONS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -104,9 +106,10 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
     }
 
     @Test
-    public void testCreateWithMissingIdentifier() throws IOException {
+    public void testCreateWithMissingIdentifier() {
 
-        String body = readResource("create-presentation-definition-no-identifier.json");
+        String body = "{\"displayName\":\"Missing Identifier Definition\","
+                + "\"credentials\":[{\"id\":\"CredA\",\"type\":\"CredA\"}]}";
         Response response = getResponseOfPostNoFilter(PRESENTATION_DEFINITIONS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -115,9 +118,10 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
     }
 
     @Test
-    public void testCreateWithMissingDisplayName() throws IOException {
+    public void testCreateWithMissingDisplayName() {
 
-        String body = readResource("create-presentation-definition-no-display-name.json");
+        String body = "{\"identifier\":\"no-display-name-def\","
+                + "\"credentials\":[{\"id\":\"CredA\",\"type\":\"CredA\"}]}";
         Response response = getResponseOfPostNoFilter(PRESENTATION_DEFINITIONS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -137,9 +141,10 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
     }
 
     @Test
-    public void testCreateWithEmptyCredentialsList() throws IOException {
+    public void testCreateWithEmptyCredentialsList() {
 
-        String body = readResource("create-presentation-definition-empty-credentials.json");
+        String body = "{\"identifier\":\"empty-credentials-def\",\"displayName\":\"Empty Credentials Definition\","
+                + "\"credentials\":[]}";
         Response response = getResponseOfPostNoFilter(PRESENTATION_DEFINITIONS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
@@ -172,10 +177,12 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
     }
 
     @Test
-    public void testCreateDuplicateIdentifier() throws IOException {
+    public void testCreateDuplicateIdentifier() {
 
         // Attempt to create another definition with the same identifier as existingDefinition.
-        String body = readResource("create-presentation-definition-conflict.json");
+        String body = "{\"identifier\":\"test-conflict-definition\",\"displayName\":\"Test Conflict Definition\","
+                + "\"credentials\":[{\"id\":\"ConflictCredential\",\"type\":\"ConflictCredential\","
+                + "\"format\":\"dc+sd-jwt\"}]}";
         Response response = getResponseOfPost(PRESENTATION_DEFINITIONS_API_BASE_PATH, body);
         response.then()
                 .log().ifValidationFails()
