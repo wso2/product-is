@@ -22,6 +22,19 @@ EXPECTED_BC_FIPS_CHECKSUM="061fbe8383f70489dda95a11a2a4739eb818ff2c"
 EXPECTED_BCPKIX_FIPS_CHECKSUM="41d15c70437440d63b65225d7c00873a030d25d0"
 EXPECTED_BCUTIL_FIPS_CHECKSUM="30b41ebc759a4f02e2ff7ab9acb09268923ee41f"
 
+# resolve links - $0 may be a softlink
+PRG="$0"
+
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '.*/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
 # Get standard environment variables
 PRGDIR=`dirname "$PRG"`
 
