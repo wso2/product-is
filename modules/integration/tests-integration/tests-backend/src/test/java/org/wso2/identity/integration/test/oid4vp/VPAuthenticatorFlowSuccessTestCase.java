@@ -583,6 +583,25 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
             }
             tenantBIdpId = new JSONObject(body).getString("id");
 
+            String claimConfigJson = "{"
+                    + "\"userIdClaim\": {\"uri\": \"given_name\"},"
+                    + "\"mappings\": ["
+                    + "  {\"idpClaim\": \"given_name\","
+                    + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/givenname\"}},"
+                    + "  {\"idpClaim\": \"family_name\","
+                    + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/lastname\"}}"
+                    + "],"
+                    + "\"provisioningClaims\": []"
+                    + "}";
+            r = adminPut(tenantApiPrefix + "/api/server/v1/identity-providers/" + tenantBIdpId + "/claims",
+                    claimConfigJson, TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
+            status = r.getStatusCode();
+            if (status != HttpStatus.SC_OK) {
+                log.warn("Tenant-B IDP claim config update failed (status " + status + "): "
+                        + r.getBody().asString());
+                return;
+            }
+
             String appName = "vp-auth-flow-tenant-b-app-" + UUID.randomUUID();
             String appJson = "{"
                     + "\"name\": \"" + appName + "\","
@@ -591,6 +610,9 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
                     + "    \"grantTypes\": [\"authorization_code\"],"
                     + "    \"callbackURLs\": [\"" + CALLBACK_URL + "\"]"
                     + "  }"
+                    + "},"
+                    + "\"advancedConfigurations\": {"
+                    + "  \"skipLoginConsent\": true"
                     + "},"
                     + "\"authenticationSequence\": {"
                     + "  \"type\": \"USER_DEFINED\","
@@ -605,13 +627,17 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
                     + "}";
             r = adminPost(tenantApiPrefix + "/api/server/v1/applications", appJson,
                     TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-            body = r.getBody().asString();
             status = r.getStatusCode();
             if (status != HttpStatus.SC_CREATED && status != HttpStatus.SC_OK) {
-                log.warn("Tenant-B app creation failed (status " + status + "): " + body);
+                log.warn("Tenant-B app creation failed (status " + status + "): " + r.getBody().asString());
                 return;
             }
-            tenantBAppId = new JSONObject(body).getString("id");
+            String appLocation = r.getHeader("Location");
+            if (appLocation == null) {
+                log.warn("Tenant-B app creation response had no Location header.");
+                return;
+            }
+            tenantBAppId = appLocation.substring(appLocation.lastIndexOf("/") + 1);
 
             String oidcUrl = tenantApiPrefix + "/api/server/v1/applications/" + tenantBAppId
                     + "/inbound-protocols/oidc";
@@ -697,12 +723,14 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
 
     /**
      * POST to IS tenant-B commonauth to complete the callback.
-     * Returns the authorization code if the flow produces one, or {@code null}.
+     * Follows IS-internal redirects (e.g. commonauth → oauth2/authorize → callback) until the
+     * authorization code appears in the Location header or we leave IS's origin.
+     * Returns the authorization code, or {@code null} if the flow does not produce one.
      */
     private String triggerTenantBCommonAuthCallback(String sessionDataKey, String requestId, String status,
             BasicCookieStore cookieStore) throws Exception {
 
-        String commonAuthUrl = serverURL + "/t/" + TENANT_AUTH_DOMAIN + "/" + COMMONAUTH_PATH;
+        String commonAuthUrl = serverBaseUrl() + "/t/" + TENANT_AUTH_DOMAIN + "/" + COMMONAUTH_PATH;
 
         try (CloseableHttpClient httpClient = buildNoRedirectHttpClient(cookieStore)) {
             HttpPost post = new HttpPost(commonAuthUrl);
@@ -711,14 +739,32 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
             nvps.add(new BasicNameValuePair("vp_request_id", requestId));
             nvps.add(new BasicNameValuePair("status", status));
             post.setEntity(new org.apache.http.client.entity.UrlEncodedFormEntity(nvps));
+            String location;
             try (CloseableHttpResponse response = httpClient.execute(post)) {
                 EntityUtils.consume(response.getEntity());
-                String location = getLocationHeader(response);
-                if (location != null && location.contains("code=")) {
-                    return extractQueryParam(location, "code");
-                }
+                location = getLocationHeader(response);
+            }
+
+            if (location == null) {
                 return null;
             }
+            if (location.contains("code=")) {
+                return extractQueryParam(location, "code");
+            }
+
+            // Follow IS-internal redirects (e.g. commonauth → oauth2/authorize → callback URL).
+            for (int hop = 0; hop < 5 && location != null; hop++) {
+                if (location.contains("code=") || !location.startsWith(serverURL)) {
+                    return extractQueryParam(location, "code");
+                }
+                HttpGet get = new HttpGet(location);
+                try (CloseableHttpResponse response = httpClient.execute(get)) {
+                    EntityUtils.consume(response.getEntity());
+                    location = getLocationHeader(response);
+                }
+            }
+
+            return location != null ? extractQueryParam(location, "code") : null;
         } catch (Exception e) {
             log.warn("triggerTenantBCommonAuthCallback failed: " + e.getMessage());
             return null;
