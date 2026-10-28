@@ -184,7 +184,6 @@ public class SDJwtVcTestBuilder {
 
         MessageDigest sha256 = sha256Digest();
 
-        // 1. Build disclosures for each subject claim.
         List<String> disclosures = new ArrayList<>();
         List<String> sdHashes = new ArrayList<>();
 
@@ -193,10 +192,8 @@ public class SDJwtVcTestBuilder {
             String salt = urlSafeBase64(randomBytes(16));
             String disclosureJson = buildDisclosureJson(salt, entry.getKey(), entry.getValue());
 
-            // Optionally corrupt one disclosure for negative testing.
             String disclosureBase64;
             if (corruptDisclosure && claimIndex == 0) {
-                // Replace with a disclosure whose hash will not match the issuer JWT.
                 disclosureBase64 = urlSafeBase64(("CORRUPTED_" + disclosureJson)
                         .getBytes(StandardCharsets.UTF_8));
             } else {
@@ -204,19 +201,16 @@ public class SDJwtVcTestBuilder {
             }
             disclosures.add(disclosureBase64);
 
-            // Hash of the *real* (non-corrupted) disclosure is placed in issuer JWT.
             String realBase64 = urlSafeBase64(disclosureJson.getBytes(StandardCharsets.UTF_8));
             byte[] hash = sha256.digest(realBase64.getBytes(StandardCharsets.US_ASCII));
             sdHashes.add(urlSafeBase64(hash));
             claimIndex++;
         }
 
-        // 2. Generate holder key pair and build the cnf claim.
         ECKey holderKey = generateSigningKey();
         Map<String, Object> cnf = new LinkedHashMap<>();
         cnf.put("jwk", holderKey.toPublicJWK().toJSONObject());
 
-        // 3. Build issuer JWT.
         long nowMs = System.currentTimeMillis();
         Date iat = new Date(nowMs + issuedAtOffsetSeconds * 1000L);
         Date exp = new Date(nowMs + expiresInSeconds * 1000L);
@@ -239,22 +233,16 @@ public class SDJwtVcTestBuilder {
         issuerJwt.sign(new ECDSASigner(signingKey));
         String issuerJwtStr = issuerJwt.serialize();
 
-        // 4. Assemble the disclosure string (without trailing tilde).
         String disclosureChain = String.join("~", disclosures);
 
         if (omitKbJwt) {
-            // Return token without a KB-JWT (invalid format for negative tests).
             return issuerJwtStr + "~" + disclosureChain + "~";
         }
 
-        // 5. Compute sd_hash for the KB-JWT.
-        //    sd_hash = Base64url(SHA-256("<issuer-JWT>~<disclosures>~"))
-        //    The SD-JWT separator is always '~', never '.'.
         String sdJwtWithoutKb = issuerJwtStr + "~" + disclosureChain + "~";
         byte[] sdHashBytes = sha256.digest(sdJwtWithoutKb.getBytes(StandardCharsets.US_ASCII));
         String sdHash = urlSafeBase64(sdHashBytes);
 
-        // 6. Build KB-JWT.
         JWTClaimsSet.Builder kbBuilder = new JWTClaimsSet.Builder()
                 .issueTime(new Date())
                 .claim("sd_hash", sdHash);
@@ -273,7 +261,7 @@ public class SDJwtVcTestBuilder {
         SignedJWT kbJwt = new SignedJWT(kbHeader, kbBuilder.build());
         kbJwt.sign(new ECDSASigner(holderKey));
 
-        // 7. Assemble final token: <issuer-JWT>~<disclosures>~<kb-JWT>
+        // Assemble final token: <issuer-JWT>~<disclosures>~<kb-JWT>
         return issuerJwtStr + "~" + disclosureChain + "~" + kbJwt.serialize();
     }
 
@@ -290,7 +278,6 @@ public class SDJwtVcTestBuilder {
     public String buildVpToken(String credentialId) throws Exception {
 
         String sdJwtVc = build();
-        // Simple JSON construction — avoids pulling in a JSON library dependency.
         return "{\"" + credentialId + "\": \"" + sdJwtVc + "\"}";
     }
 

@@ -49,7 +49,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
 
     private String presentationDefinitionId;
 
-    /** IDP with PresentationAuthenticator which triggers ECDSA key provisioning via VPIdPMgtListener. */
     private String walletConnectionIdpId;
 
     @BeforeClass(alwaysRun = true)
@@ -407,16 +406,13 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
             description = "A second VP submission to an already-VERIFIED session returns 400.")
     public void testSubmitToAlreadyVerifiedSession() throws Exception {
 
-        // Start session.
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
-        // Fetch nonce and audience from presentation request.
         String[] params = fetchRequestParams(requestId);
         String nonce    = params[0];
         String audience = params[1];
 
-        // Build and submit a valid VP using the registered trusted issuer key.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")
@@ -432,12 +428,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                     "First VP submission must be accepted (200) before the session can reach VERIFIED.");
         }
 
-        // VP is valid and wait for VERIFIED.
         String terminalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(terminalStatus, STATUS_VERIFIED,
                 "A valid VP signed by the registered trusted issuer must reach VERIFIED.");
 
-        // Submit again and expect 400 because the session is no longer ACTIVE.
         try (CloseableHttpResponse secondResponse = vpSessionRestClient.submitVPDirectPost(requestId, vpToken)) {
             int status = secondResponse.getStatusLine().getStatusCode();
             EntityUtils.consume(secondResponse.getEntity());
@@ -450,7 +444,6 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
             description = "A VP submission to an already-FAILED session returns 400.")
     public void testSubmitToAlreadyFailedSession() throws Exception {
 
-        // Start session and immediately report an error from the wallet.
         JSONObject session = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) session.get("requestId");
 
@@ -462,12 +455,10 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
                     "Wallet error submission must be accepted (200) to transition the session to FAILED.");
         }
 
-        // Wait for FAILED and assert the session is actually in FAILED state.
         String failedStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(failedStatus, STATUS_FAILED,
                 "Session must be FAILED before testing that a second VP submission is rejected.");
 
-        // Try to submit a valid VP and expect 400.
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
                 .claim("given_name", "Alice")

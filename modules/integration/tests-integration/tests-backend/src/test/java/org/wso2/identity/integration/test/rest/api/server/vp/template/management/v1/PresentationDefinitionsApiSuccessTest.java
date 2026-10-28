@@ -52,8 +52,6 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
 
     private String presentationDefinitionId;
     private String secondDefinitionId;
-    // After testPatchCredentials runs, the definition credential is updated to "UpdatedCredential".
-    // The issuer-config tests depend on testPatchCredentials and therefore target the updated credential id.
     private final String credentialIdentifier = "UpdatedCredential";
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

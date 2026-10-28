@@ -61,38 +61,19 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
     private static final int    POLL_MAX_RETRIES   = 15;
     private static final long   POLL_INTERVAL_MS   = 500L;
 
-    /** The signing key used for both issuer credential and trusted-issuer registration. */
     private static ECKey issuerSigningKey;
-
-    /** Issuer URL registered as trusted for PersonCredential. */
     private static final String ISSUER_URL = "https://test-issuer.example.com";
 
-    /** Secondary tenant used to verify cross-tenant isolation (test 9). */
     private static final String TENANT_B_DOMAIN   = "vptest-tenant-b.com";
     private static final String TENANT_B_ADMIN    = "admin@vptest-tenant-b.com";
     private static final String TENANT_B_PASSWORD = "Admin@123";
 
-    /** Presentation definition server-assigned ID, captured in @BeforeClass. */
     private String presentationDefinitionId;
-
-    /** IDP with PresentationAuthenticator — triggers ECDSA key provisioning via VPIdPMgtListener. */
     private String walletConnectionIdpId;
-
-    /** VP session client scoped to the secondary tenant (test 9). */
     private VPSessionRestClient vpSessionRestClientTenantB;
-
-    /** Tenant management client for creating the secondary tenant in setUp. */
     private TenantMgtRestClient tenantMgtRestClient;
-
-    /**
-     * The requestId of the session.
-     */
     private String sharedRequestId;
-
-    /** Nonce returned when the presentation request JWT was fetched. */
     private String sharedNonce;
-
-    /** Audience (verifier URI) returned with the presentation request JWT. */
     private String sharedAudience;
 
     @BeforeClass(alwaysRun = true)
@@ -238,19 +219,15 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             Assert.assertEquals(statusCode, HttpStatus.SC_OK,
                     "GET /requests/{id} must return 200.  Body: " + body);
 
-            // The response must be a compact JWT (exactly two dots → three parts).
             String compactJwt = body.trim();
             Assert.assertEquals(compactJwt.split("\\.").length, 3,
                     "Presentation request response must be a compact JWT with exactly 3 parts (header.payload.signature).");
 
-            // Parse and extract nonce + audience for use in the VP submission test.
             SignedJWT requestJwt = SignedJWT.parse(compactJwt);
             sharedNonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
             Assert.assertNotNull(sharedNonce, "Presentation request JWT must contain a 'nonce' claim.");
             Assert.assertFalse(sharedNonce.trim().isEmpty(), "'nonce' claim must not be blank.");
 
-            // The KB-JWT aud must be the verifier's client_id, not the request JWT's aud
-            // (which is the fixed protocol audience "https://self-issued.me/v2").
             sharedAudience = requestJwt.getJWTClaimsSet().getStringClaim("client_id");
             Assert.assertNotNull(sharedAudience, "Presentation request JWT must contain a 'client_id' claim.");
             Assert.assertFalse(sharedAudience.trim().isEmpty(), "'client_id' claim must not be blank.");
@@ -337,13 +314,11 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             description = "A session started in the super tenant is not visible from a secondary tenant (returns 404).")
     public void testSessionForTenantA_NotVisibleFromTenantB() throws Exception {
 
-        // Start a session in the super tenant.
         JSONObject sessionResponse = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
         String requestId = (String) sessionResponse.get("requestId");
         Assert.assertNotNull(requestId, "Super-tenant session must return a requestId.");
         Assert.assertFalse(requestId.trim().isEmpty(), "Super-tenant session requestId must not be blank.");
 
-        // Attempt to poll status through tenant-B credentials — session must be invisible.
         try (CloseableHttpResponse response = vpSessionRestClientTenantB.getSessionStatusRaw(requestId)) {
             int statusCode = response.getStatusLine().getStatusCode();
             EntityUtils.consume(response.getEntity());
@@ -358,13 +333,11 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
 
         configureVPResponseMode("direct_post.jwt");
         try {
-            // Start a fresh session under direct_post.jwt mode.
             JSONObject sessionResponse = vpSessionRestClient.startVerificationSession(DEFINITION_IDENTIFIER);
             String requestId = (String) sessionResponse.get("requestId");
             Assert.assertNotNull(requestId, "requestId must be present for direct_post.jwt session.");
             Assert.assertFalse(requestId.trim().isEmpty(), "requestId must not be blank.");
 
-            // Fetch the request JWT.
             String compactJwt;
             try (CloseableHttpResponse response = vpSessionRestClient.getPresentationRequestJwt(requestId)) {
                 Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
@@ -380,11 +353,9 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             Assert.assertNotNull(audience, "Presentation request JWT must contain a 'client_id' claim.");
             Assert.assertFalse(audience.trim().isEmpty(), "'client_id' claim must not be blank.");
 
-            // Extract the ephemeral encryption public key from client_metadata.jwks.keys[0].
             Map<String, Object> clientMetadata = requestClaims.getJSONObjectClaim("client_metadata");
             ECKey ephemeralPublicKey = extractEphemeralPublicKey(clientMetadata);
 
-            // Build the SD-JWT-VC (raw token, nonce + audience bound via KB-JWT).
             String sdJwtVc = SDJwtVcTestBuilder.builder()
                     .vct("PersonCredential")
                     .issuer(ISSUER_URL)
@@ -395,8 +366,6 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                     .signingKey(issuerSigningKey)
                     .build();
 
-            // Build the inner Authorization Response JWT.
-            // vp_token must be a JSON object claim (not a string) — server calls getJSONObjectClaim("vp_token").
             Map<String, Object> vpTokenMap = new LinkedHashMap<>();
             vpTokenMap.put(CREDENTIAL_IDENTIFIER, sdJwtVc);
             JWTClaimsSet innerClaims = new JWTClaimsSet.Builder()
@@ -407,14 +376,12 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
             SignedJWT innerJwt = new SignedJWT(new JWSHeader(JWSAlgorithm.ES256), innerClaims);
             innerJwt.sign(new ECDSASigner(holderKey));
 
-            // Encrypt with ECDH-ES + A256GCM; kid=requestId lets the server look up the session.
             JWEHeader jweHeader = new JWEHeader.Builder(JWEAlgorithm.ECDH_ES, EncryptionMethod.A256GCM)
                     .keyID(requestId)
                     .build();
             JWEObject jweObject = new JWEObject(jweHeader, new Payload(innerJwt));
             jweObject.encrypt(new ECDHEncrypter(ephemeralPublicKey));
 
-            // Submit the JWE and assert 200.
             try (CloseableHttpResponse response = vpSessionRestClient.submitVPDirectPostJwt(jweObject.serialize())) {
                 int statusCode = response.getStatusLine().getStatusCode();
                 String body = EntityUtils.toString(response.getEntity());
@@ -422,12 +389,10 @@ public class VPVerificationSessionSuccessTestCase extends VPVerificationSessionT
                         "Submitting a valid VP via direct_post.jwt must return 200. Body: " + body);
             }
 
-            // Poll until the session reaches VERIFIED.
             String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
             Assert.assertEquals(finalStatus, STATUS_VERIFIED,
                     "Session must reach VERIFIED after a valid direct_post.jwt VP submission.");
         } finally {
-            // Always restore so subsequent tests (or re-runs) see direct_post.
             configureVPResponseMode("direct_post");
         }
     }

@@ -260,12 +260,11 @@ public class VPSessionRestClient extends RestBaseClient {
 
     private String buildBaseUrl(String serverUrl, String tenantDomain) {
 
-        // serverUrl already ends with "/" (e.g. https://localhost:9443/)
-        String normalised = serverUrl.endsWith(PATH_SEPARATOR) ? serverUrl : serverUrl + PATH_SEPARATOR;
+        String normalisedUrl = serverUrl.endsWith(PATH_SEPARATOR) ? serverUrl : serverUrl + PATH_SEPARATOR;
         if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equalsIgnoreCase(tenantDomain)) {
-            return normalised + OID4VP_PATH;
+            return normalisedUrl + OID4VP_PATH;
         }
-        return normalised + TENANT_PATH + tenantDomain + PATH_SEPARATOR + OID4VP_PATH;
+        return normalisedUrl + TENANT_PATH + tenantDomain + PATH_SEPARATOR + OID4VP_PATH;
     }
 
     private Header[] getAdminHeaders() {

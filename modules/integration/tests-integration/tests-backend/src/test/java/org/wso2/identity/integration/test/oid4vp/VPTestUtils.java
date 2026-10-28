@@ -89,7 +89,6 @@ final class VPTestUtils {
         validityVec.add(new DERUTCTime(notBefore));
         validityVec.add(new DERUTCTime(notAfter));
 
-        // TBSCertificate (v3, serial=1, ecdsa-with-SHA256, same issuer/subject, validity, spki)
         ASN1EncodableVector tbsVec = new ASN1EncodableVector();
         tbsVec.add(new DERTaggedObject(true, 0, new ASN1Integer(2)));
         tbsVec.add(new ASN1Integer(BigInteger.ONE));
@@ -100,13 +99,11 @@ final class VPTestUtils {
         tbsVec.add(spki);
         DERSequence tbsCert = new DERSequence(tbsVec);
 
-        // Sign with JCA — no bcpkix involved
         java.security.Signature sig = java.security.Signature.getInstance("SHA256withECDSA");
         sig.initSign(ecKey.toECPrivateKey());
         sig.update(tbsCert.getEncoded());
         byte[] sigBytes = sig.sign();
 
-        // Certificate ::= SEQUENCE { tbsCertificate, signatureAlgorithm, signatureValue }
         ASN1EncodableVector certVec = new ASN1EncodableVector();
         certVec.add(tbsCert);
         certVec.add(sigAlgId);

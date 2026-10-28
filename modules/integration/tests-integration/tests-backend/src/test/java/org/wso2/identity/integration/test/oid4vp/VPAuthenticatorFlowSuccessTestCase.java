@@ -286,9 +286,6 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
 
         Assert.assertNotNull(claims.opt("sub"),
                 "id_token must contain a 'sub' claim.");
-        // The IDP maps VP credential claims to local claims → OIDC id_token claims:
-        // given_name  → http://wso2.org/claims/givenname
-        // family_name → http://wso2.org/claims/lastname
         Assert.assertEquals(claims.opt("given_name"), "Alice",
                 "id_token 'given_name' must reflect the VP credential's 'given_name' value via the IDP claim mapping.");
         Assert.assertEquals(claims.opt("family_name"), "Smith",

@@ -42,10 +42,7 @@ import static org.awaitility.Awaitility.await;
  */
 public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
 
-    /** Identifier of the test presentation definition used across session tests. */
     protected static final String DEFINITION_IDENTIFIER = "test-vp-session-definition";
-
-    /** Credential query ID used inside the presentation definition. */
     protected static final String CREDENTIAL_IDENTIFIER = "PersonCredential";
 
     protected static final String STATUS_ACTIVE   = "ACTIVE";
@@ -54,10 +51,8 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
 
     private static final String PRESENTATION_DEFINITIONS_PATH = "/api/server/v1/presentation-definitions";
 
-    /** Client for the OID4VP verification-session API. */
     protected VPSessionRestClient vpSessionRestClient;
 
-    /** Resource path that locates the JSON file used to create the presentation definition. */
     protected static final String CREATE_DEFINITION_RESOURCE =
             "org/wso2/identity/integration/test/oid4vp/create-vp-presentation-definition.json";
 
@@ -205,7 +200,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
                                           String issuerUrl, ECKey signingKey) throws Exception {
 
         String pemCert = buildSelfSignedPemCertificate(signingKey);
-        // Server expects keySource to be the full PEM string Base64-encoded (decodeBase64Pem on the server side).
         String base64Pem = java.util.Base64.getEncoder()
                 .encodeToString(pemCert.getBytes(StandardCharsets.UTF_8));
         String body = "{\"issuerConfigs\":[{"
@@ -308,11 +302,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
 
     /**
      * Returns the server base URL without a trailing slash.
-     * ISIntegrationTest sets {@code serverURL} by stripping {@code "services/"} from the backend
-     * URL, which leaves a trailing slash (e.g. {@code https://localhost:9853/}).  Path constants
-     * in this class already start with {@code /}, so naively concatenating them yields a
-     * double-slash that Apache HttpClient normalises silently but RestAssured sends verbatim —
-     * causing Tomcat to reject the request with HTTP 400.
      */
     protected String serverBaseUrl() {
         return serverURL.endsWith("/") ? serverURL.substring(0, serverURL.length() - 1) : serverURL;
