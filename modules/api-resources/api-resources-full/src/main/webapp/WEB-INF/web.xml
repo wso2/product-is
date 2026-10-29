@@ -128,7 +128,8 @@
                 org.wso2.carbon.identity.rest.api.server.email.template.v2.EmailApi,
                 org.wso2.carbon.identity.api.server.notification.sender.v2.NotificationSendersApi,
                 org.wso2.carbon.identity.api.server.organization.user.sharing.management.v2.UsersApi,
-                org.wso2.carbon.identity.api.server.webhook.management.v2.WebhooksApi
+                org.wso2.carbon.identity.api.server.webhook.management.v2.WebhooksApi,
+                org.wso2.carbon.identity.api.server.script.library.v2.ScriptLibrariesApi
             </param-value>
         </init-param>
         <init-param>
