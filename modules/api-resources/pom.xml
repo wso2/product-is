@@ -120,6 +120,16 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.identity.user.api</groupId>
+                <artifactId>org.wso2.carbon.identity.api.user.device.common</artifactId>
+                <version>${identity.user.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.api</groupId>
+                <artifactId>org.wso2.carbon.identity.rest.api.user.device.v1</artifactId>
+                <version>${identity.user.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.user.api</groupId>
                 <artifactId>org.wso2.carbon.identity.rest.api.user.password.v1</artifactId>
                 <version>${identity.user.api.version}</version>
             </dependency>
