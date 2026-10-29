@@ -32,6 +32,7 @@ import javax.validation.Valid;
 public class FlowResponse {
 
     private List<Step> steps = null;
+    private FlowVariables variables;
 
 
     /**
@@ -62,6 +63,26 @@ public class FlowResponse {
         return this;
     }
 
+    /**
+     *
+     **/
+    public FlowResponse variables(FlowVariables variables) {
+
+        this.variables = variables;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("variables")
+    @Valid
+    public FlowVariables getVariables() {
+        return variables;
+    }
+
+    public void setVariables(FlowVariables variables) {
+        this.variables = variables;
+    }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -73,12 +94,13 @@ public class FlowResponse {
             return false;
         }
         FlowResponse flowResponse = (FlowResponse) o;
-        return Objects.equals(this.steps, flowResponse.steps);
+        return Objects.equals(this.steps, flowResponse.steps) &&
+                Objects.equals(this.variables, flowResponse.variables);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(steps);
+        return Objects.hash(steps, variables);
     }
 
     @Override
@@ -88,6 +110,7 @@ public class FlowResponse {
         sb.append("class FlowResponse {\n");
 
         sb.append("    steps: ").append(toIndentedString(steps)).append("\n");
+        sb.append("    variables: ").append(toIndentedString(variables)).append("\n");
         sb.append("}");
         return sb.toString();
     }
