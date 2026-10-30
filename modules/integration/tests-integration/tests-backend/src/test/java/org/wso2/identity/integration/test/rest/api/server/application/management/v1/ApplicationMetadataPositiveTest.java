@@ -42,7 +42,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -189,7 +189,7 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     private void sortCertificateAliases(SAMLMetaData samlMetaData) {
 
         if (samlMetaData.getCertificateAlias() != null && samlMetaData.getCertificateAlias().getOptions() != null) {
-            Collections.sort(samlMetaData.getCertificateAlias().getOptions());
+            samlMetaData.getCertificateAlias().getOptions().sort(Comparator.naturalOrder());
         }
     }
 
