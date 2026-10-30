@@ -99,6 +99,9 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
         String body = readResource("disable-password-expiry.json");
         getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/" + CATEGORY_PASSWORD_POLICIES
                 + "/connectors/" + CONNECTOR_PASSWORD_EXPIRY, body);
+        body = readResource("disable-password-history.json");
+        getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/" + CATEGORY_PASSWORD_POLICIES
+                + "/connectors/" + CONNECTOR_PASSWORD_HISTORY, body);
         super.conclude();
     }
 

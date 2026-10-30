@@ -39,7 +39,6 @@ public class RESTAPIUserTestBase extends RESTTestBase {
     private IdentityProviderMgtServiceClient superTenantIDPMgtClient;
     private IdentityProviderMgtServiceClient tenantIDPMgtClient;
     private AuthenticatorClient authenticatorClient;
-    private IdentityProvider superTenantResidentIDP;
 
     protected void testInit(String apiVersion, String apiDefinition, String tenantDomain)
             throws XPathExpressionException, RemoteException {
@@ -72,22 +71,32 @@ public class RESTAPIUserTestBase extends RESTTestBase {
     protected void initUpdateIDPProperty() throws Exception {
 
         this.authenticatorClient = new AuthenticatorClient(backendURL);
-        String tenantCookie = this.authenticatorClient.login(ADMIN, ADMIN, isServer.getInstance()
-                .getHosts().get("default"));
-        superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
-        tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
-        superTenantResidentIDP = superTenantIDPMgtClient.getResidentIdP();
+        initIDPMgtClients();
     }
 
     protected void updateResidentIDPProperty(String propertyKey, String value, boolean isSuperTenant) throws Exception {
 
-        IdentityProviderProperty[] idpProperties = superTenantResidentIDP.getIdpProperties();
+        // Re-login on every update since the admin session can expire between test methods, and read the
+        // latest resident IDP so that properties updated by other tests are not overwritten with stale values.
+        initIDPMgtClients();
+        IdentityProviderMgtServiceClient idpMgtClient = isSuperTenant ? superTenantIDPMgtClient : tenantIDPMgtClient;
+        IdentityProvider residentIDP = idpMgtClient.getResidentIdP();
+        IdentityProviderProperty[] idpProperties = residentIDP.getIdpProperties();
         for (IdentityProviderProperty providerProperty : idpProperties) {
             if (propertyKey.equalsIgnoreCase(providerProperty.getName())) {
                 providerProperty.setValue(value);
             }
         }
-        updateResidentIDP(superTenantResidentIDP, isSuperTenant);
+        updateResidentIDP(residentIDP, isSuperTenant);
+    }
+
+    private void initIDPMgtClients() throws Exception {
+
+        sessionCookie = loginLogoutClient.login();
+        String tenantCookie = this.authenticatorClient.login(ADMIN, ADMIN, isServer.getInstance()
+                .getHosts().get("default"));
+        superTenantIDPMgtClient = new IdentityProviderMgtServiceClient(sessionCookie, backendURL);
+        tenantIDPMgtClient = new IdentityProviderMgtServiceClient(tenantCookie, backendURL);
     }
 
     private void updateResidentIDP(IdentityProvider residentIdentityProvider, boolean isSuperTenant) throws Exception {
