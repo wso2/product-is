@@ -76,6 +76,7 @@
                 org.wso2.carbon.identity.api.server.webhook.management.v1.WebhooksApi,
                 org.wso2.carbon.identity.api.server.webhook.metadata.v1.WebhooksApi,
                 org.wso2.carbon.identity.api.server.rule.metadata.v1.RulesApi,
+                org.wso2.carbon.identity.api.server.policy.v1.PoliciesApi,
                 org.wso2.carbon.identity.api.server.api.resource.v1.AuthorizationDetailsTypesApi,
                 org.wso2.carbon.identity.api.server.flow.management.v1.FlowApi,
                 org.wso2.carbon.identity.api.server.flow.execution.v1.FlowApi,
