@@ -1,0 +1,12 @@
+{
+  "identifier": "test-vp-registration-definition",
+  "displayName": "Test VP Self-Registration Definition",
+  "description": "Presentation definition for VP self-registration end-to-end flow integration tests",
+  "credentials": [
+    {
+      "id": "PersonCredential",
+      "type": "PersonCredential",
+      "format": "dc+sd-jwt"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "issuerConfigs": [
+    {
+      "issuerUrl": "https://x5c-issuer.example.com",
+      "keySourceType": "x5c",
+      "keySource": "MIICvDCCAaQCCQDrFtVPb3RfSzANBgkqhkiG9w0BAQsFADAgMR4wHAYDVQQDDBVUZXN0SXNzdWVyQ2VydGlmaWNhdGUwHhcNMjYwMTAxMDAwMDAwWhcNMjcwMTAxMDAwMDAwWjAgMR4wHAYDVQQDDBVUZXN0SXNzdWVyQ2VydGlmaWNhdGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC2YGgFGbJ6oaHj8eXiB+Hh8TRj/+/JpG2gQYXXzMlIJ1n6NbJxEj6wWgJnKmJxKAEhO7fqXw=="
+    }
+  ]
+}
