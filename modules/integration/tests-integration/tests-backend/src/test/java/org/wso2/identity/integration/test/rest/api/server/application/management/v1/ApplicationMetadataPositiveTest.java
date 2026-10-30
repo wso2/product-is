@@ -42,6 +42,7 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -172,12 +173,23 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
         ObjectMapper jsonWriter = new ObjectMapper(new JsonFactory());
         SAMLMetaData responseFound = jsonWriter.readValue(response.asString(), SAMLMetaData.class);
 
+        // Certificate aliases follow the keystore entry order, which changes whenever the keystore is rewritten.
+        sortCertificateAliases(responseFound);
         if (this.tenant.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
+            sortCertificateAliases(samlMetaDataSuperTenant);
             Assert.assertEquals(responseFound, samlMetaDataSuperTenant,
                     "SAML Metadata returned from the API doesn't match.");
         } else {
+            sortCertificateAliases(samlMetaDataTenant);
             Assert.assertEquals(responseFound, samlMetaDataTenant,
                     "SAML Metadata returned from the API doesn't match.");
+        }
+    }
+
+    private void sortCertificateAliases(SAMLMetaData samlMetaData) {
+
+        if (samlMetaData.getCertificateAlias() != null && samlMetaData.getCertificateAlias().getOptions() != null) {
+            samlMetaData.getCertificateAlias().getOptions().sort(Comparator.naturalOrder());
         }
     }
 
