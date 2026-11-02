@@ -48,7 +48,9 @@ import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbui
 public abstract class SubOrgEventTestBase extends OAuth2ServiceAbstractIntegrationTest {
 
     protected static final String PASSWORD = "TestPassword@123";
-    private static final String MGT_APP_AUTHORIZED_API_RESOURCES = "management-app-authorized-apis.json";
+    // Absolute path, since the resource is kept with the OAuth2 tests rather than in the package of this class.
+    private static final String MGT_APP_AUTHORIZED_API_RESOURCES =
+            "/org/wso2/identity/integration/test/oauth2/management-app-authorized-apis.json";
 
     protected final TestUserMode userMode;
     protected final String testName;
