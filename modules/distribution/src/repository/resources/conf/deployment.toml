@@ -80,3 +80,9 @@ app_password= "dashboard"
 #password= "xxxx"
 #hostname= "smtp.gmail.com"
 #port= 587
+
+# TLS 1.0 and TLS 1.1 are deprecated (RFC 8996) and are already blocked by the JDK's own
+# default security policy; TLS 1.3 is fully supported since JDK 11 (the product's minimum
+# required JDK) but was previously excluded by the platform's default protocol list.
+[transport.https.sslHostConfig.properties]
+protocols = "+TLSv1.2,+TLSv1.3"
