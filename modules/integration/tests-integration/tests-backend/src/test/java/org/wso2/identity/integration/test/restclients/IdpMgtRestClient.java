@@ -46,6 +46,8 @@ public class IdpMgtRestClient extends RestBaseClient {
     private static final String GROUPS_PATH = "/groups/";
     private static final String FEDERATED_AUTHENTICATORS_PATH = "/federated-authenticators/";
     private static final String OUTBOUND_CONNECTORS_PATH = "/provisioning/outbound-connectors/";
+    private static final String SHARE_WITH_ALL_PATH = "/share-with-all";
+    private static final String UNSHARE_WITH_ALL_PATH = "/unshare-with-all";
     private final String serverUrl;
     private final String IDENTITY_PROVIDER_BASE_PATH = "/api/server/v1/identity-providers";
     private final String tenantDomain;
@@ -255,6 +257,47 @@ public class IdpMgtRestClient extends RestBaseClient {
         try (CloseableHttpResponse response = getResponseOfHttpDelete(endPointUrl, getHeaders())) {
             Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_NO_CONTENT,
                     "Idp deletion failed");
+        }
+    }
+
+    /**
+     * Share an Identity Provider with all organizations, including the organizations created in the future.
+     *
+     * @param idpId Identity Provider Id.
+     * @throws IOException If an error occurred while sharing the idp.
+     */
+    public void shareIdentityProviderWithAllOrgs(String idpId) throws IOException {
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("identityProviderId", idpId);
+        requestBody.put("policy", "ALL_EXISTING_AND_FUTURE_ORGS");
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + SHARE_WITH_ALL_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, requestBody.toJSONString(),
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_ACCEPTED,
+                    "Idp sharing failed");
+        }
+    }
+
+    /**
+     * Unshare an Identity Provider from all organizations.
+     *
+     * @param idpId Identity Provider Id.
+     * @throws IOException If an error occurred while unsharing the idp.
+     */
+    public void unshareIdentityProviderFromAllOrgs(String idpId) throws IOException {
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("identityProviderId", idpId);
+        String endPointUrl = serverUrl + ISIntegrationTest.getTenantedRelativePath(IDENTITY_PROVIDER_BASE_PATH,
+                tenantDomain) + UNSHARE_WITH_ALL_PATH;
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(endPointUrl, requestBody.toJSONString(),
+                getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_ACCEPTED,
+                    "Idp unsharing failed");
         }
     }
 

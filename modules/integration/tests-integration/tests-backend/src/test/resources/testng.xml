@@ -525,6 +525,7 @@
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.sharing.IdPSharingSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.sharing.IdPSharingFailureTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.sharing.SharedIdPFederatedLoginTestCase"/>
         </classes>
     </test>
     <test name="is-tests-jdbc-userstore" preserve-order="true" parallel="false" group-by-instances="true">
