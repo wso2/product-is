@@ -3071,7 +3071,7 @@
         <!-- Before adding ANYTHING in here, please start a discussion on the dev list.
 	Ideally the Axis2 build should only use Maven central (which is available
 	by default) and nothing else. We had troubles with other repositories in
-	the past. Therefore configuring additional repositories here should be
+	the past. Therefore, configuring additional repositories here should be
 	considered very carefully. -->
         <repository>
             <id>wso2-nexus</id>
