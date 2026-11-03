@@ -1,0 +1,121 @@
+# This workflow merges the pull requests opened by the Dependency Updater workflow against
+# the master branch, as soon as they are opened. The dependency updater builds the product
+# and runs the integration tests before it opens the PR, so the PR is merged without waiting
+# for the checks on it. Only pull requests authored by jenkins-is-staging, raised from a
+# jenkins-is-staging/product-is dependency updater branch and touching nothing but the
+# dependency version files are eligible. The PR is approved by iam-automation-bot before it
+# is merged, so a required review on master is satisfied.
+name: Dependency Updater Auto Merge
+on:
+  pull_request_target:
+    types: [opened, reopened]
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: "PR number to merge"
+        required: true
+
+# The job authenticates with IAM_AUTOMATION_BOT_TOKEN and never uses GITHUB_TOKEN, so the
+# default token is granted nothing.
+permissions: {}
+
+env:
+  REPO: wso2/product-is
+  BASE_BRANCH: master
+  PR_AUTHOR: jenkins-is-staging
+  HEAD_REPO: jenkins-is-staging/product-is
+  BRANCH_PREFIX: IS_dependency_updater_github_action/
+  # The only files the dependency updater changes.
+  ALLOWED_FILES: |
+    pom.xml
+    modules/p2-profile-gen/carbon.product
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Merge the dependency updater pull request
+        env:
+          # iam-automation-bot, the account that performs the merge.
+          GH_TOKEN: ${{ secrets.IAM_AUTOMATION_BOT_TOKEN }}
+          PR_NUMBER: ${{ github.event.inputs.pr || github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          echo "Evaluating PR #${PR_NUMBER}"
+
+          PR_JSON=$(gh pr view "$PR_NUMBER" --repo "$REPO" \
+            --json number,state,isDraft,author,baseRefName,headRefName,headRefOid,headRepository,headRepositoryOwner,files)
+
+          # The commit the checks below are made against. Both the approval and the merge are
+          # pinned to it, so a push to the head branch in the meantime cannot inherit either.
+          HEAD_SHA=$(jq -r '.headRefOid' <<< "$PR_JSON")
+
+          SKIP_REASON=""
+          check() { # check <condition-result> <reason>
+            if [ "$1" != "true" ] && [ -z "$SKIP_REASON" ]; then
+              SKIP_REASON="$2"
+            fi
+          }
+
+          check "$(jq -r '.state == "OPEN"' <<< "$PR_JSON")" "not open"
+          check "$(jq -r '.isDraft == false' <<< "$PR_JSON")" "draft"
+          check "$(jq -r --arg v "$PR_AUTHOR" '.author.login == $v' <<< "$PR_JSON")" "author is not $PR_AUTHOR"
+          check "$(jq -r --arg v "$BASE_BRANCH" '.baseRefName == $v' <<< "$PR_JSON")" "base branch is not $BASE_BRANCH"
+          check "$(jq -r --arg v "$HEAD_REPO" '(.headRepositoryOwner.login + "/" + .headRepository.name) == $v' <<< "$PR_JSON")" "head repository is not $HEAD_REPO"
+          check "$(jq -r --arg v "$BRANCH_PREFIX" '.headRefName | startswith($v)' <<< "$PR_JSON")" "head branch is not a dependency updater branch"
+
+          # Reject anything that touches a file the dependency updater never changes.
+          ALLOWED_JSON=$(jq -R -s 'split("\n") | map(select(length > 0))' <<< "$ALLOWED_FILES")
+          check "$(jq -r --argjson allowed "$ALLOWED_JSON" '[.files[].path] | all(. as $p | $allowed | index($p) != null)' <<< "$PR_JSON")" \
+            "changes files outside the dependency updater scope: $(jq -r '[.files[].path] | join(", ")' <<< "$PR_JSON")"
+
+          if [ -n "$SKIP_REASON" ]; then
+            echo "::notice::Not merging PR #${PR_NUMBER}: ${SKIP_REASON}"
+            exit 0
+          fi
+
+          # GitHub computes mergeability asynchronously, so it can still be UNKNOWN right
+          # after the PR is opened. Give it a few seconds to settle.
+          MERGEABLE=UNKNOWN
+          for _ in 1 2 3 4 5 6; do
+            MERGEABLE=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json mergeable --jq '.mergeable')
+            [ "$MERGEABLE" = "UNKNOWN" ] || break
+            sleep 10
+          done
+
+          if [ "$MERGEABLE" = "CONFLICTING" ]; then
+            echo "::notice::Not merging PR #${PR_NUMBER}: the branch has conflicts with ${BASE_BRANCH}."
+            exit 0
+          fi
+
+          if [ "$MERGEABLE" != "MERGEABLE" ]; then
+            # Unexpected, and nothing re-runs this workflow for the PR, so fail loudly rather
+            # than leaving the PR open with no trace. Re-run it with workflow_dispatch.
+            echo "::error::Not merging PR #${PR_NUMBER}: mergeable=${MERGEABLE}"
+            exit 1
+          fi
+
+          # Approve first, so the merge satisfies a required review on master. The approval
+          # counts because iam-automation-bot is not the author of the PR and holds write
+          # access on the repository. The REST API is used rather than `gh pr review`, as only
+          # it can bind the approval to a specific commit.
+          echo "Approving PR #${PR_NUMBER} at ${HEAD_SHA}"
+          gh api --method POST "repos/${REPO}/pulls/${PR_NUMBER}/reviews" \
+            -f commit_id="$HEAD_SHA" \
+            -f event=APPROVE \
+            -f body="Approved automatically: dependency updater PR, built and integration tested by the Dependency Updater workflow before it was opened." \
+            --jq '.state'
+
+          # The merge API takes no base, so re-read it as late as possible: a base changed
+          # during the run would otherwise send the merge to a branch that was never checked.
+          CURRENT_BASE=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json baseRefName --jq '.baseRefName')
+          if [ "$CURRENT_BASE" != "$BASE_BRANCH" ]; then
+            echo "::error::Not merging PR #${PR_NUMBER}: base branch changed to ${CURRENT_BASE}."
+            exit 1
+          fi
+
+          echo "Merging PR #${PR_NUMBER} at ${HEAD_SHA}"
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --merge --match-head-commit "$HEAD_SHA"
+          echo "::notice::Merged https://github.com/${REPO}/pull/${PR_NUMBER}"
