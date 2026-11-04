@@ -57,6 +57,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
 
     private String workflowId;
     private String workflowAssociationId;
+    private final List<String> createdAssociationIds = new ArrayList<>();
     private SCIM2RestClient scim2RestClient;
     private String createdUserName;
     private String createdUserId;
@@ -82,7 +83,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        cleanupWorkflowByName("User Approval Workflow");
+        cleanupWorkflowByName(APPROVAL_WORKFLOW_NAME);
         // Prepare SCIM2 client for user operations used in approval flow test.
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
     }
@@ -90,17 +91,18 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
 
-        if (workflowAssociationId != null) {
-            getResponseOfDelete(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId);
-        }
-        if (workflowId != null) {
-            getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId);
-        }
-        if (createdRoleId != null) {
-            scim2RestClient.deleteV2Role(createdRoleId);
-        }
-        if (createdUserId != null) {
-            scim2RestClient.deleteUser(createdUserId);
+        try {
+            deleteWorkflowArtifacts(createdAssociationIds, workflowId);
+        } finally {
+            try {
+                if (createdRoleId != null) {
+                    scim2RestClient.deleteV2Role(createdRoleId);
+                }
+            } finally {
+                if (createdUserId != null) {
+                    scim2RestClient.deleteUser(createdUserId);
+                }
+            }
         }
     }
 
@@ -420,11 +422,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
 
     private void approveFirstPendingTask() {
 
-        Response listResp = getResponseOfGetNoFilter(APPROVAL_API_PATH + "?status=READY");
-        listResp.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
-
-        String taskId = listResp.jsonPath().getString("[0].id");
-        assertNotNull(taskId, "Approval task has not get assigned.");
+        String taskId = awaitFirstApprovalTaskId(APPROVAL_API_PATH + "?status=READY");
 
         String endpoint = String.format(APPROVAL_API_PATH + "/%s/state", taskId);
         String approvePayload = "{\n  \"action\":\"APPROVE\"\n}";
@@ -447,5 +445,6 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
         assertNotNull(location);
         workflowAssociationId = location.substring(location.lastIndexOf("/") + 1);
         assertNotNull(workflowAssociationId);
+        createdAssociationIds.add(workflowAssociationId);
     }
 }
