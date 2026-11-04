@@ -36,7 +36,6 @@ import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.testng.Assert.assertEquals;
@@ -94,7 +93,7 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
         super.testInit(API_VERSION, swaggerDefinition, tenant);
         RestAssured.basePath = basePath;
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
-        cleanupWorkflowByName(APPROVAL_WORKFLOW_NAME);
+        cleanupWorkflowByName("User Approval Workflow");
 
         // Create the workflow.
         String body = readResource("add-workflow.json");
@@ -145,19 +144,20 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
 
-        try {
-            deleteWorkflowArtifacts(workflowAssociationId == null ? Collections.emptyList()
-                    : Collections.singletonList(workflowAssociationId), workflowId);
-        } finally {
-            if (testGroupId != null) {
-                scim2RestClient.deleteGroup(testGroupId);
-            }
-            if (groupMemberUserId != null) {
-                scim2RestClient.attemptUserDelete(groupMemberUserId);
-            }
-            if (nonGroupMemberUserId != null) {
-                scim2RestClient.deleteUser(nonGroupMemberUserId);
-            }
+        if (workflowAssociationId != null) {
+            getResponseOfDelete(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + workflowAssociationId);
+        }
+        if (workflowId != null) {
+            getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId);
+        }
+        if (testGroupId != null) {
+            scim2RestClient.deleteGroup(testGroupId);
+        }
+        if (groupMemberUserId != null) {
+            scim2RestClient.attemptUserDelete(groupMemberUserId);
+        }
+        if (nonGroupMemberUserId != null) {
+            scim2RestClient.deleteUser(nonGroupMemberUserId);
         }
     }
 
@@ -229,7 +229,7 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
      */
     private void approveFirstPendingTask() {
 
-        String taskId = awaitFirstApprovalTaskId(APPROVAL_API_PATH + "?status=READY");
+        String taskId = awaitFirstApprovalTaskId(APPROVAL_API_PATH);
 
         String endpoint = String.format(APPROVAL_API_PATH + "/%s/state", taskId);
         String approvePayload = "{\n  \"action\":\"APPROVE\"\n}";
