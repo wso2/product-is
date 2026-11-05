@@ -81,7 +81,7 @@ public class SubOrgAuthenticationEventTestExpectedEventPayloadBuilder {
     /**
      * Builds the expected payload for a login success event of a sub organization user who logs in to an
      * application of the sub organization with single sign-on. No authenticator is executed in a single sign-on
-     * login, hence the authentication methods are empty.
+     * login, hence the authentication methods are not published.
      *
      * @param userId             ID of the authenticated user.
      * @param usernameClaimValue Value of the username claim of the authenticated user.
@@ -98,7 +98,7 @@ public class SubOrgAuthenticationEventTestExpectedEventPayloadBuilder {
 
         JSONObject loginSuccessEvent = buildExpectedLoginSuccessEventPayload(userId, usernameClaimValue,
                 rootTenantDomain, subOrganization, application, true);
-        loginSuccessEvent.put("authenticationMethods", new JSONArray());
+        loginSuccessEvent.remove("authenticationMethods");
         return loginSuccessEvent;
     }
 

@@ -31,8 +31,8 @@ import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbui
 import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgEventPayloadUtils.createSubOrgUserObject;
 
 /**
- * Utility class to build expected event payloads for the user management events triggered when an administrator
- * manages a user of a sub organization.
+ * Utility class to build expected event payloads for the user management events triggered when a user of a sub
+ * organization is managed with an application access token switched to the sub organization.
  */
 public class SubOrgUserManagementEventTestExpectedEventPayloadBuilder {
 
@@ -153,7 +153,9 @@ public class SubOrgUserManagementEventTestExpectedEventPayloadBuilder {
             throws JSONException {
 
         JSONObject userEvent = new JSONObject();
-        userEvent.put("initiatorType", "ADMIN");
+        // The test manages the users with an access token issued to an application through the client credentials
+        // grant, hence the application is the initiator.
+        userEvent.put("initiatorType", "APPLICATION");
         userEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
         userEvent.put("user", user);
         userEvent.put("tenant", EventPayloadUtils.createTenantObject(rootTenantDomain));
