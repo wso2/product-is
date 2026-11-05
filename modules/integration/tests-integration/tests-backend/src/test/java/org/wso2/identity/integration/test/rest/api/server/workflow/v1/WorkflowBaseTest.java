@@ -22,6 +22,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
+import org.awaitility.Awaitility;
+import org.awaitility.core.ConditionTimeoutException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -29,8 +31,10 @@ import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Base test class for workflow management REST APIs.
@@ -72,6 +76,64 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
     public void testFinish() {
 
         RestAssured.basePath = StringUtils.EMPTY;
+    }
+
+    /**
+     * Waits for an approval task to show up in the given approval task listing and returns its id. The task is
+     * created asynchronously after the request is accepted (202), so a single immediate lookup is racy.
+     */
+    protected String awaitFirstApprovalTaskId(String approvalListPath) {
+
+        try {
+            return Awaitility.await("approval task assignment")
+                    .atMost(Duration.ofSeconds(60))
+                    .pollInterval(Duration.ofSeconds(1))
+                    .ignoreExceptions()
+                    .until(() -> {
+                        Response listResp = getResponseOfGetNoFilter(approvalListPath);
+                        return listResp.getStatusCode() == HttpStatus.SC_OK
+                                ? listResp.jsonPath().getString("[0].id") : null;
+                    }, Objects::nonNull);
+        } catch (ConditionTimeoutException e) {
+            Assert.fail("Approval task has not been assigned within 60 seconds.", e);
+            return null;
+        }
+    }
+
+    /**
+     * Deletes the workflow associations and the workflow a test class created, then checks that none of those
+     * associations is left behind. A leaked association with no rule engages the approval flow for every later
+     * user operation in the tenant, so later tests get 202 instead of 201/204.
+     *
+     * This runs from @AfterClass, where RestAssured.basePath is not the workflow API path: testFinish() resets it
+     * after every test method, and other test classes interleave with this one and overwrite it. Without restoring
+     * it here, the deletes never reach the workflow API.
+     *
+     * Delete status codes are not asserted: the API refuses to delete a workflow's last association (400), and
+     * deleting the workflow cascades its associations, so a later delete of one of them reports it as not found.
+     * Only this class's own ids are touched, since other workflow test classes use the same workflow name and may
+     * still be running.
+     */
+    protected void deleteWorkflowArtifacts(List<String> associationIds, String workflowId) {
+
+        String previousBasePath = RestAssured.basePath;
+        RestAssured.basePath = basePath;
+        try {
+            for (String associationId : associationIds) {
+                getResponseOfDelete(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + associationId);
+            }
+            if (workflowId != null) {
+                getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId);
+            }
+            for (String associationId : associationIds) {
+                Response assocResp = getResponseOfGetNoFilter(
+                        WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + associationId);
+                Assert.assertNotEquals(assocResp.getStatusCode(), HttpStatus.SC_OK, "Workflow association "
+                        + associationId + " was left behind and would engage the approval flow for later tests.");
+            }
+        } finally {
+            RestAssured.basePath = previousBasePath;
+        }
     }
 
     /**
