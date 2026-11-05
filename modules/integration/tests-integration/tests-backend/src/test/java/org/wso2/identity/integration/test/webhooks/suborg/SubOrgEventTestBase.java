@@ -137,7 +137,7 @@ public abstract class SubOrgEventTestBase extends OAuth2ServiceAbstractIntegrati
     }
 
     /**
-     * A sub organization of the test, with its user and application when the test creates them.
+     * A sub organization of the test, with its user and applications when the test creates them.
      */
     protected static class SubOrg {
 
@@ -152,6 +152,10 @@ public abstract class SubOrgEventTestBase extends OAuth2ServiceAbstractIntegrati
         String appName;
         String clientId;
         String clientSecret;
+        String ssoAppId;
+        String ssoAppName;
+        String ssoClientId;
+        String ssoClientSecret;
 
         JSONObject toOrganizationObject() throws Exception {
 

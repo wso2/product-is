@@ -79,6 +79,30 @@ public class SubOrgAuthenticationEventTestExpectedEventPayloadBuilder {
     }
 
     /**
+     * Builds the expected payload for a login success event of a sub organization user who logs in to an
+     * application of the sub organization with single sign-on. No authenticator is executed in a single sign-on
+     * login, hence the authentication methods are empty.
+     *
+     * @param userId             ID of the authenticated user.
+     * @param usernameClaimValue Value of the username claim of the authenticated user.
+     * @param rootTenantDomain   Tenant domain of the root organization.
+     * @param subOrganization    Sub organization of the user, which is also the organization the event belongs to.
+     * @param application        Application the user logged in to.
+     * @return JSONObject representing the expected login success event payload.
+     * @throws JSONException if an error occurs while building the payload.
+     */
+    public static JSONObject buildExpectedSSOLoginSuccessEventPayload(String userId, String usernameClaimValue,
+                                                                      String rootTenantDomain,
+                                                                      JSONObject subOrganization,
+                                                                      JSONObject application) throws JSONException {
+
+        JSONObject loginSuccessEvent = buildExpectedLoginSuccessEventPayload(userId, usernameClaimValue,
+                rootTenantDomain, subOrganization, application, true);
+        loginSuccessEvent.put("authenticationMethods", new JSONArray());
+        return loginSuccessEvent;
+    }
+
+    /**
      * Builds the expected payload for a login failed event, when a sub organization user provides invalid
      * credentials at the basic authenticator step.
      *
@@ -136,27 +160,93 @@ public class SubOrgAuthenticationEventTestExpectedEventPayloadBuilder {
                                                                          JSONObject application, boolean localLogin)
             throws JSONException {
 
+        JSONObject sessionEstablishedEvent = createSessionEventBase(userId, usernameClaimValue, rootTenantDomain,
+                subOrganization, localLogin);
+        sessionEstablishedEvent.put("application", application);
+        sessionEstablishedEvent.put("action", "LOGIN");
+        sessionEstablishedEvent.put("session", createSessionObject(new JSONArray().put(application)));
+        return sessionEstablishedEvent;
+    }
+
+    /**
+     * Builds the expected payload for a session presented event, when a sub organization user logs in to an
+     * application of the sub organization with single sign-on from an existing session.
+     *
+     * @param userId              ID of the user who owns the session.
+     * @param usernameClaimValue  Value of the username claim of the user who owns the session.
+     * @param rootTenantDomain    Tenant domain of the root organization.
+     * @param subOrganization     Sub organization of the user, which is also the organization the event belongs to.
+     * @param application         Application the session was presented to.
+     * @param sessionApplications All the applications of the session, including the one it was presented to.
+     * @return JSONObject representing the expected session presented event payload.
+     * @throws JSONException if an error occurs while building the payload.
+     */
+    public static JSONObject buildExpectedSessionPresentedEventPayload(String userId, String usernameClaimValue,
+                                                                       String rootTenantDomain,
+                                                                       JSONObject subOrganization,
+                                                                       JSONObject application,
+                                                                       JSONArray sessionApplications)
+            throws JSONException {
+
+        JSONObject sessionPresentedEvent = createSessionEventBase(userId, usernameClaimValue, rootTenantDomain,
+                subOrganization, true);
+        sessionPresentedEvent.put("application", application);
+        sessionPresentedEvent.put("action", "LOGIN");
+        sessionPresentedEvent.put("session", createSessionObject(sessionApplications));
+        return sessionPresentedEvent;
+    }
+
+    /**
+     * Builds the expected payload for a session revoked event, when a sub organization user logs out of a session
+     * of the sub organization.
+     *
+     * @param userId              ID of the user who owns the session.
+     * @param usernameClaimValue  Value of the username claim of the user who owns the session.
+     * @param rootTenantDomain    Tenant domain of the root organization.
+     * @param subOrganization     Sub organization of the user, which is also the organization the event belongs to.
+     * @param sessionApplications All the applications of the revoked session.
+     * @return JSONObject representing the expected session revoked event payload.
+     * @throws JSONException if an error occurs while building the payload.
+     */
+    public static JSONObject buildExpectedSessionRevokedEventPayload(String userId, String usernameClaimValue,
+                                                                     String rootTenantDomain,
+                                                                     JSONObject subOrganization,
+                                                                     JSONArray sessionApplications)
+            throws JSONException {
+
+        JSONObject sessionRevokedEvent = createSessionEventBase(userId, usernameClaimValue, rootTenantDomain,
+                subOrganization, true);
+        sessionRevokedEvent.put("action", "LOGOUT");
+        sessionRevokedEvent.put("sessions", new JSONArray().put(createSessionObject(sessionApplications)));
+        return sessionRevokedEvent;
+    }
+
+    private static JSONObject createSessionEventBase(String userId, String usernameClaimValue,
+                                                     String rootTenantDomain, JSONObject subOrganization,
+                                                     boolean localLogin) throws JSONException {
+
         JSONObject user = createSubOrgUserObject(userId, rootTenantDomain, subOrganization);
         user.put("claims", new JSONArray().put(createClaim(USERNAME_CLAIM_URI, usernameClaimValue)));
+
+        JSONObject sessionEvent = new JSONObject();
+        sessionEvent.put("initiatorType", "USER");
+        sessionEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
+        sessionEvent.put("user", user);
+        sessionEvent.put("tenant", EventPayloadUtils.createTenantObject(rootTenantDomain));
+        sessionEvent.put("organization", subOrganization);
+        if (localLogin) {
+            sessionEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
+        }
+        return sessionEvent;
+    }
+
+    private static JSONObject createSessionObject(JSONArray applications) throws JSONException {
 
         JSONObject session = new JSONObject();
         session.put("id", "dummy-session-id");
         session.put("loginTime", "dummy-login-time");
-        session.put("applications", new JSONArray().put(application));
-
-        JSONObject sessionEstablishedEvent = new JSONObject();
-        sessionEstablishedEvent.put("initiatorType", "USER");
-        sessionEstablishedEvent.put("initiatorIpAddress", "dummy-initiator-ip-address");
-        sessionEstablishedEvent.put("user", user);
-        sessionEstablishedEvent.put("tenant", EventPayloadUtils.createTenantObject(rootTenantDomain));
-        sessionEstablishedEvent.put("organization", subOrganization);
-        if (localLogin) {
-            sessionEstablishedEvent.put("userStore", EventPayloadUtils.createUserStoreObject());
-        }
-        sessionEstablishedEvent.put("application", application);
-        sessionEstablishedEvent.put("action", "LOGIN");
-        sessionEstablishedEvent.put("session", session);
-        return sessionEstablishedEvent;
+        session.put("applications", applications);
+        return session;
     }
 
     private static JSONObject createReasonObjectForInvalidCredentials() throws JSONException {

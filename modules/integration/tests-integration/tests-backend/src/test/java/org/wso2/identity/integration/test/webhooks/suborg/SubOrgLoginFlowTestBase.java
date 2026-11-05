@@ -34,6 +34,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
+import org.apache.http.client.utils.URIBuilder;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
@@ -59,12 +60,13 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import static org.wso2.identity.integration.test.utils.OAuth2Constant.OIDC_LOGOUT_ENDPOINT;
 import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgEventPayloadUtils.createApplicationObject;
 import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgEventPayloadUtils.createRootOrganizationObject;
 
 /**
  * Base class for the tests of the events triggered when sub organization users log in, such as the login, session
- * and token events. Creates a user and an application in each sub organization, and two root organization
+ * and token events. Creates a user and two applications in each sub organization, and two root organization
  * applications shared with all the sub organizations, one with enhanced organization authentication enabled and
  * one with it disabled. Provides the
  * following logins for the user of a sub organization.
@@ -229,13 +231,68 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
     protected void loginToSubOrgApp(SubOrg subOrg, boolean validCredentials) throws Exception {
 
         try (CloseableHttpClient client = createHttpClient()) {
-            String sessionDataKey = initiateAuthorizationRequest(client, subOrg.clientId,
-                    getRootTenantQualifiedOrgURL(AUTHORIZE_ENDPOINT_URL, rootTenantDomain, subOrg.id));
-            completeLogin(client, subOrg, validCredentials, sessionDataKey,
-                    getRootTenantQualifiedOrgURL(COMMON_AUTH_URL, rootTenantDomain, subOrg.id),
-                    subOrg.clientId, subOrg.clientSecret,
-                    getRootTenantQualifiedOrgURL(ACCESS_TOKEN_ENDPOINT, rootTenantDomain, subOrg.id));
+            loginToSubOrgApp(client, subOrg, validCredentials);
         }
+    }
+
+    /**
+     * Logs in the sub organization user to the application created in the sub organization, keeping the session
+     * cookies in the given client. A successful login is completed by obtaining an access token.
+     *
+     * @return ID token of a successful login, or null if the login fails.
+     */
+    protected String loginToSubOrgApp(CloseableHttpClient client, SubOrg subOrg, boolean validCredentials)
+            throws Exception {
+
+        String sessionDataKey = initiateAuthorizationRequest(client, subOrg.clientId,
+                getRootTenantQualifiedOrgURL(AUTHORIZE_ENDPOINT_URL, rootTenantDomain, subOrg.id));
+        return completeLogin(client, subOrg, validCredentials, sessionDataKey,
+                getRootTenantQualifiedOrgURL(COMMON_AUTH_URL, rootTenantDomain, subOrg.id),
+                subOrg.clientId, subOrg.clientSecret,
+                getRootTenantQualifiedOrgURL(ACCESS_TOKEN_ENDPOINT, rootTenantDomain, subOrg.id));
+    }
+
+    /**
+     * Logs in the sub organization user to the second application created in the sub organization, with single
+     * sign-on from the session already held by the given client. The login is completed by obtaining an access
+     * token.
+     *
+     * @return ID token of the login.
+     */
+    protected String loginToSubOrgSsoAppWithSSO(CloseableHttpClient client, SubOrg subOrg) throws Exception {
+
+        HttpResponse response = sendPostRequestWithParameters(client, buildAuthorizationParams(subOrg.ssoClientId),
+                getRootTenantQualifiedOrgURL(AUTHORIZE_ENDPOINT_URL, rootTenantDomain, subOrg.id));
+        String location = getLocationHeaderValue(response);
+        Assert.assertFalse(location.contains(AUTHENTICATION_ENDPOINT_PATH),
+                "Single sign-on did not happen, the login page was prompted. Location: " + location);
+
+        JSONObject tokenResponse = requestAccessToken(client, getAuthorizationCode(client, location),
+                subOrg.ssoClientId, subOrg.ssoClientSecret,
+                getRootTenantQualifiedOrgURL(ACCESS_TOKEN_ENDPOINT, rootTenantDomain, subOrg.id));
+        return tokenResponse.optString("id_token", null);
+    }
+
+    /**
+     * Logs out the session held by the given client through the OIDC logout endpoint of the sub organization, and
+     * follows the redirects until the post logout redirect URI.
+     */
+    protected void logoutFromSubOrg(CloseableHttpClient client, SubOrg subOrg, String idTokenHint) throws Exception {
+
+        assertNotNull(idTokenHint, "ID token not found to log out with.");
+        String logoutUrl = new URIBuilder(getRootTenantQualifiedOrgURL(OIDC_LOGOUT_ENDPOINT, rootTenantDomain,
+                subOrg.id))
+                .addParameter("id_token_hint", idTokenHint)
+                .addParameter("post_logout_redirect_uri", CALLBACK_URL)
+                .build().toString();
+
+        String callbackUrl = CALLBACK_URL.split("\\?")[0];
+        String location = logoutUrl;
+        for (int hop = 0; hop < MAX_REDIRECT_HOPS && !location.startsWith(callbackUrl); hop++) {
+            location = getLocationHeaderValue(sendGetRequest(client, location));
+        }
+        assertTrue(location.startsWith(callbackUrl),
+                "Logout did not redirect to the post logout redirect URI. Last redirect location: " + location);
     }
 
     /**
@@ -255,6 +312,15 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
         return createApplicationObject(subOrg.appId, subOrg.appName, subOrg.toOrganizationObject());
     }
 
+    /**
+     * Builds the application object of the second application created in the sub organization, which is logged in
+     * to with single sign-on, as published in the events.
+     */
+    protected JSONObject toSubOrgSsoApplicationObject(SubOrg subOrg) throws Exception {
+
+        return createApplicationObject(subOrg.ssoAppId, subOrg.ssoAppName, subOrg.toOrganizationObject());
+    }
+
     private void createSubOrgUserAndApp(SubOrg subOrg, int index) throws Exception {
 
         subOrg.username = testName + "-user-" + index;
@@ -272,6 +338,14 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
                 oAuth2RestClient.getOIDCInboundDetailsOfOrganizationApp(subOrg.appId, subOrg.switchedToken);
         subOrg.clientId = oidcConfig.getClientId();
         subOrg.clientSecret = oidcConfig.getClientSecret();
+
+        subOrg.ssoAppName = testName + "-sub-org-sso-app-" + index;
+        subOrg.ssoAppId = oAuth2RestClient.createOrganizationApplication(buildOIDCApplication(subOrg.ssoAppName),
+                subOrg.switchedToken);
+        OpenIDConnectConfiguration ssoOidcConfig =
+                oAuth2RestClient.getOIDCInboundDetailsOfOrganizationApp(subOrg.ssoAppId, subOrg.switchedToken);
+        subOrg.ssoClientId = ssoOidcConfig.getClientId();
+        subOrg.ssoClientSecret = ssoOidcConfig.getClientSecret();
     }
 
     private RootApp createAndShareRootApp(String appName, boolean enhancedOrgAuthenticationEnabled)
@@ -356,8 +430,10 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
      * Submits the credentials of the sub organization user at the login page. With valid credentials, follows the
      * redirects to the callback URL and obtains an access token with the authorization code. With invalid
      * credentials, asserts that the login fails.
+     *
+     * @return ID token of a successful login, or null if the login fails.
      */
-    private void completeLogin(CloseableHttpClient client, SubOrg subOrg, boolean validCredentials,
+    private String completeLogin(CloseableHttpClient client, SubOrg subOrg, boolean validCredentials,
                                String sessionDataKey, String commonAuthUrl, String clientId, String clientSecret,
                                String tokenUrl) throws Exception {
 
@@ -372,9 +448,10 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
             assertTrue(location.contains(AUTH_FAILURE_PARAM),
                     "Login with invalid credentials did not redirect with an authentication failure. Location: " +
                             location);
-            return;
+            return null;
         }
-        requestAccessToken(client, getAuthorizationCode(client, location), clientId, clientSecret, tokenUrl);
+        return requestAccessToken(client, getAuthorizationCode(client, location), clientId, clientSecret, tokenUrl)
+                .optString("id_token", null);
     }
 
     /**
@@ -414,8 +491,8 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
         return code;
     }
 
-    private void requestAccessToken(CloseableHttpClient client, String code, String clientId, String clientSecret,
-                                    String tokenUrl) throws Exception {
+    private JSONObject requestAccessToken(CloseableHttpClient client, String code, String clientId,
+                                          String clientSecret, String tokenUrl) throws Exception {
 
         List<NameValuePair> tokenParams = new ArrayList<>();
         tokenParams.add(new BasicNameValuePair("code", code));
@@ -429,8 +506,9 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
 
         HttpResponse response = sendPostRequest(client, headers, tokenParams, tokenUrl);
         String responseBody = EntityUtils.toString(response.getEntity(), "UTF-8");
-        assertTrue(new JSONObject(responseBody).has("access_token"),
-                "Access token not found in the token response: " + responseBody);
+        JSONObject tokenResponse = new JSONObject(responseBody);
+        assertTrue(tokenResponse.has("access_token"), "Access token not found in the token response: " + responseBody);
+        return tokenResponse;
     }
 
     private String getLocationHeaderValue(HttpResponse response) throws Exception {
@@ -444,7 +522,7 @@ public abstract class SubOrgLoginFlowTestBase extends SubOrgEventTestBase {
     /**
      * Creates an HTTP client with its own cookie store, so that each login starts without an existing session.
      */
-    private CloseableHttpClient createHttpClient() {
+    protected CloseableHttpClient createHttpClient() {
 
         Lookup<CookieSpecProvider> cookieSpecRegistry = RegistryBuilder.<CookieSpecProvider>create()
                 .register(CookieSpecs.DEFAULT, new RFC6265CookieSpecProvider())

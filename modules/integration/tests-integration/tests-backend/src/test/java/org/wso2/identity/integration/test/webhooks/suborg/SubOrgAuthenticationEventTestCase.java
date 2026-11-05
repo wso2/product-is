@@ -18,6 +18,8 @@
 
 package org.wso2.identity.integration.test.webhooks.suborg;
 
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,11 +30,14 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgAuthenticationEventTestExpectedEventPayloadBuilder.buildExpectedLoginFailedEventPayloadForInvalidCredentials;
 import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgAuthenticationEventTestExpectedEventPayloadBuilder.buildExpectedLoginSuccessEventPayload;
+import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgAuthenticationEventTestExpectedEventPayloadBuilder.buildExpectedSSOLoginSuccessEventPayload;
 import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgAuthenticationEventTestExpectedEventPayloadBuilder.buildExpectedSessionEstablishedEventPayload;
+import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgAuthenticationEventTestExpectedEventPayloadBuilder.buildExpectedSessionPresentedEventPayload;
+import static org.wso2.identity.integration.test.webhooks.suborg.eventpayloadbuilder.SubOrgAuthenticationEventTestExpectedEventPayloadBuilder.buildExpectedSessionRevokedEventPayload;
 
 /**
- * Tests the login and session events triggered when sub organization users log in, as received by a root
- * organization webhook subscribed to the login and session events of all the sub organizations.
+ * Tests the login and session events triggered when sub organization users log in and log out, as received by a
+ * root organization webhook subscribed to the login and session events of all the sub organizations.
  */
 public class SubOrgAuthenticationEventTestCase extends SubOrgLoginFlowTestBase {
 
@@ -43,6 +48,8 @@ public class SubOrgAuthenticationEventTestCase extends SubOrgLoginFlowTestBase {
     private static final String LOGIN_FAILED_EVENT_URI = LOGIN_EVENT_CHANNEL + "/event-type/loginFailed";
     private static final String SESSION_ESTABLISHED_EVENT_URI = SESSION_EVENT_CHANNEL +
             "/event-type/sessionEstablished";
+    private static final String SESSION_PRESENTED_EVENT_URI = SESSION_EVENT_CHANNEL + "/event-type/sessionPresented";
+    private static final String SESSION_REVOKED_EVENT_URI = SESSION_EVENT_CHANNEL + "/event-type/sessionRevoked";
 
     @Factory(dataProvider = "testExecutionContextProvider")
     public SubOrgAuthenticationEventTestCase(TestUserMode userMode, String[] subOrgNames) {
@@ -169,6 +176,39 @@ public class SubOrgAuthenticationEventTestCase extends SubOrgLoginFlowTestBase {
 
         stackExpectedLoginFailedEvent(subOrg, toSubOrgApplicationObject(subOrg));
         webhookEventTestManager.validateStackedEventPayloads();
+    }
+
+    @Test(dataProvider = "subOrgProvider", dependsOnMethods = "testSubOrgAppLoginFailure",
+            description = "Sub organization user logs in to an application created in the sub organization, logs in " +
+                    "to a second application of the sub organization with single sign-on, and logs out.")
+    public void testSubOrgAppSessionLifecycle(SubOrg subOrg) throws Exception {
+
+        JSONObject subOrganization = subOrg.toOrganizationObject();
+        JSONObject subOrgApp = toSubOrgApplicationObject(subOrg);
+        JSONObject subOrgSsoApp = toSubOrgSsoApplicationObject(subOrg);
+        JSONArray sessionApplications = new JSONArray().put(subOrgApp).put(subOrgSsoApp);
+
+        // The same client keeps the session cookies across the logins and the logout.
+        try (CloseableHttpClient client = createHttpClient()) {
+            loginToSubOrgApp(client, subOrg, true);
+            stackExpectedLocalLoginSuccessEvents(subOrg, subOrgApp);
+            webhookEventTestManager.validateStackedEventPayloads();
+
+            String idToken = loginToSubOrgSsoAppWithSSO(client, subOrg);
+            webhookEventTestManager.stackExpectedEventPayload(LOGIN_SUCCESS_EVENT_URI,
+                    buildExpectedSSOLoginSuccessEventPayload(subOrg.userId, subOrg.username, rootTenantDomain,
+                            subOrganization, subOrgSsoApp));
+            webhookEventTestManager.stackExpectedEventPayload(SESSION_PRESENTED_EVENT_URI,
+                    buildExpectedSessionPresentedEventPayload(subOrg.userId, subOrg.username, rootTenantDomain,
+                            subOrganization, subOrgSsoApp, sessionApplications));
+            webhookEventTestManager.validateStackedEventPayloads();
+
+            logoutFromSubOrg(client, subOrg, idToken);
+            webhookEventTestManager.stackExpectedEventPayload(SESSION_REVOKED_EVENT_URI,
+                    buildExpectedSessionRevokedEventPayload(subOrg.userId, subOrg.username, rootTenantDomain,
+                            subOrganization, sessionApplications));
+            webhookEventTestManager.validateStackedEventPayloads();
+        }
     }
 
     /**
