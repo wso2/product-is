@@ -101,6 +101,42 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
     }
 
     /**
+     * Deletes the workflow associations and the workflow a test class created, then checks that none of those
+     * associations is left behind. A leaked association with no rule engages the approval flow for every later
+     * user operation in the tenant, so later tests get 202 instead of 201/204.
+     *
+     * This runs from @AfterClass, where RestAssured.basePath is not the workflow API path: testFinish() resets it
+     * after every test method, and other test classes interleave with this one and overwrite it. Without restoring
+     * it here, the deletes never reach the workflow API.
+     *
+     * Delete status codes are not asserted: the API refuses to delete a workflow's last association (400), and
+     * deleting the workflow cascades its associations, so a later delete of one of them reports it as not found.
+     * Only this class's own ids are touched, since other workflow test classes use the same workflow name and may
+     * still be running.
+     */
+    protected void deleteWorkflowArtifacts(List<String> associationIds, String workflowId) {
+
+        String previousBasePath = RestAssured.basePath;
+        RestAssured.basePath = basePath;
+        try {
+            for (String associationId : associationIds) {
+                getResponseOfDelete(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + associationId);
+            }
+            if (workflowId != null) {
+                getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId);
+            }
+            for (String associationId : associationIds) {
+                Response assocResp = getResponseOfGetNoFilter(
+                        WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + associationId);
+                Assert.assertNotEquals(assocResp.getStatusCode(), HttpStatus.SC_OK, "Workflow association "
+                        + associationId + " was left behind and would engage the approval flow for later tests.");
+            }
+        } finally {
+            RestAssured.basePath = previousBasePath;
+        }
+    }
+
+    /**
      * Deletes any workflow associations and workflows matching the given name.
      * Used at test setup to handle dirty state left by previous failed runs.
      */

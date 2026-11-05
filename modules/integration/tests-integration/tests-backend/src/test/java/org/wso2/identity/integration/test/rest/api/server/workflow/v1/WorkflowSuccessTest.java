@@ -91,17 +91,16 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
 
-        for (String associationId : createdAssociationIds) {
-            getResponseOfDelete(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + associationId);
-        }
-        if (workflowId != null) {
-            getResponseOfDelete(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId);
-        }
-        if (createdRoleId != null) {
-            scim2RestClient.deleteV2Role(createdRoleId);
-        }
-        if (createdUserId != null) {
-            scim2RestClient.deleteUser(createdUserId);
+        // Remove the workflow first so its associations do not turn the deletes below into pending approvals.
+        try {
+            deleteWorkflowArtifacts(createdAssociationIds, workflowId);
+        } finally {
+            if (createdRoleId != null) {
+                scim2RestClient.deleteV2Role(createdRoleId);
+            }
+            if (createdUserId != null) {
+                scim2RestClient.deleteUser(createdUserId);
+            }
         }
     }
 
