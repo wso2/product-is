@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.webhooks.util;
 
+import com.github.tomakehurst.wiremock.http.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -26,14 +27,19 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.model.WebhookRequest;
 import org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.model.WebhookRequestEventProfile;
 import org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.model.WebhookResponse;
+import org.wso2.identity.integration.test.rest.api.server.webhook.management.v2.model.ChildOrgSubscription;
+import org.wso2.identity.integration.test.rest.api.server.webhook.management.v2.model.EventProfile;
+import org.wso2.identity.integration.test.rest.api.server.webhook.management.v2.model.WebhookCreateRequest;
+import org.wso2.identity.integration.test.rest.api.server.webhook.management.v2.model.WebhookSubscription;
 import org.wso2.identity.integration.test.restclients.WebhooksRestClient;
+import org.wso2.identity.integration.test.restclients.WebhooksV2RestClient;
 import org.wso2.identity.integration.test.webhooks.mockservice.WebhookMockService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * Manager class for handling and verifying webhook events in tests.
@@ -44,6 +50,9 @@ public class WebhookEventTestManager {
     private static final int PORT_LIMIT = 8590;
     private static final int MAX_RETRIES_ON_EVENTS_RECEIVED = 5;
     private static final int WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED = 500;
+    private static final int MAX_RETRIES_ON_WEBHOOK_ACTIVATION = 20;
+    private static final int WAIT_TIME_IN_MILLIS_ON_WEBHOOK_ACTIVATION = 500;
+    private static final String WEBHOOK_STATUS_ACTIVE = "ACTIVE";
     private static final String SERVER_BASE_URL = "https://localhost:9853/";
     private static final String WSO2_EVENT_PROFILE_URI = "https://schemas.identity.wso2.org/events";
     private static final AtomicInteger currentPort = new AtomicInteger(START_PORT);
@@ -52,7 +61,9 @@ public class WebhookEventTestManager {
     private final String eventProfile;
     private final List<String> channelsSubscribed;
     private final String testName;
+    private final ChildOrgSubscription.SubscriptionPolicyEnum childOrgSubscriptionPolicy;
     private final WebhooksRestClient webhooksRestClient;
+    private final WebhooksV2RestClient webhooksV2RestClient;
     private final EventPayloadStack eventPayloadStack;
     private WebhookMockService mockService;
     private String webhookEndpoint;
@@ -73,15 +84,47 @@ public class WebhookEventTestManager {
     public WebhookEventTestManager(String webhookEndpointPath, String eventProfile, List<String> channelsSubscribed,
                                    String testName, AutomationContext automationContext) throws Exception {
 
+        this(webhookEndpointPath, eventProfile, channelsSubscribed, testName, automationContext, null);
+    }
+
+    /**
+     * Constructor to initialize the WebhookEventTestManager with a webhook created through the webhook management
+     * v2 API, which subscribes to the events of the child organizations as per the given subscription policy.
+     *
+     * @param webhookEndpointPath        the path for the webhook endpoint.
+     * @param eventProfile               the event profile to be used for the webhook. Typically, "WSO2".
+     * @param channelsSubscribed         the list of channels to which the webhook is subscribed.
+     * @param testName                   the name of the test case for which the webhook is being set up.
+     * @param automationContext          the automation context containing tenant information and other configurations.
+     * @param childOrgSubscriptionPolicy the child organization subscription policy applied to every subscribed
+     *                                   channel. If null, the webhook is created through the v1 API.
+     * @throws Exception if an error occurs during initialization, such as starting the mock server or creating the
+     *                   webhook.
+     */
+    public WebhookEventTestManager(String webhookEndpointPath, String eventProfile, List<String> channelsSubscribed,
+                                   String testName, AutomationContext automationContext,
+                                   ChildOrgSubscription.SubscriptionPolicyEnum childOrgSubscriptionPolicy)
+            throws Exception {
+
         this.webhookEndpointPath = webhookEndpointPath;
         this.eventProfile = eventProfile;
         this.channelsSubscribed = channelsSubscribed;
         this.testName = testName;
+        this.childOrgSubscriptionPolicy = childOrgSubscriptionPolicy;
         this.eventPayloadStack = new EventPayloadStack();
 
         startMockServer();
-        this.webhooksRestClient = new WebhooksRestClient(SERVER_BASE_URL, automationContext.getContextTenant());
-        this.webhookId = createWebhook();
+        if (childOrgSubscriptionPolicy == null) {
+            this.webhooksRestClient = new WebhooksRestClient(SERVER_BASE_URL, automationContext.getContextTenant());
+            this.webhooksV2RestClient = null;
+            this.webhookId = createWebhook();
+        } else {
+            this.webhooksRestClient = null;
+            this.webhooksV2RestClient =
+                    new WebhooksV2RestClient(SERVER_BASE_URL, automationContext.getContextTenant());
+            this.webhookId = createWebhookV2();
+            waitForWebhookActivation();
+        }
     }
 
     /**
@@ -107,6 +150,16 @@ public class WebhookEventTestManager {
         LOG.info("Stacking expected payload for event URI: {}", eventUri);
 
         eventPayloadStack.addExpectedPayload(eventUri, expectedPayload);
+    }
+
+    /**
+     * Discards the event notifications received to the mock service so far, along with any stacked expected
+     * payloads. Useful to drop events triggered while setting up test data.
+     */
+    public void clearReceivedEvents() {
+
+        mockService.clearOrderedRequests();
+        eventPayloadStack.clearStack();
     }
 
     /**
@@ -139,6 +192,27 @@ public class WebhookEventTestManager {
         }
     }
 
+    /**
+     * Validates that no event notifications are received by the webhook. Waits for the same period allowed for
+     * expected events to arrive, before checking the received notifications.
+     *
+     * @throws Exception if an event notification is received.
+     */
+    public void validateNoEventsReceived() throws Exception {
+
+        try {
+            TimeUnit.MILLISECONDS.sleep((long) MAX_RETRIES_ON_EVENTS_RECEIVED * WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED);
+            if (!mockService.getOrderedRequests().isEmpty()) {
+                throw new AssertionError("Expected no event notifications, but " +
+                        mockService.getOrderedRequests().size() + " event notifications were received to the mock " +
+                        "service.");
+            }
+        } finally {
+            mockService.clearOrderedRequests();
+            eventPayloadStack.clearStack();
+        }
+    }
+
     private void waitForEvents() throws InterruptedException {
 
         int retryCount = 0;
@@ -159,68 +233,40 @@ public class WebhookEventTestManager {
     private void validateEventPayloadForEventUri(String eventUri, JSONObject expectedEventsObjectInPayload)
             throws Exception {
 
-        waitForSpecificEvent(eventUri);
-
-        List<JSONObject> receivedPayloads = extractReceivedPayloads();
-        boolean isMatched = matchAndValidatePayload(eventUri, expectedEventsObjectInPayload, receivedPayloads);
-
-        if (!isMatched) {
-            throw new AssertionError("No matching payload found for event URI: " + eventUri);
-        }
-    }
-
-    private void waitForSpecificEvent(String eventUri) throws InterruptedException {
-
+        List<String> validationErrors = new ArrayList<>();
         int retryCount = 0;
 
         while (retryCount < MAX_RETRIES_ON_EVENTS_RECEIVED) {
-            List<JSONObject> receivedPayloads = extractReceivedPayloads();
-
-            boolean eventExists = receivedPayloads.stream()
-                    .anyMatch(payload -> {
-                        try {
-                            return payload != null && payload.has("events") &&
-                                    payload.getJSONObject("events").has(eventUri);
-                        } catch (JSONException e) {
-                            LOG.error("Error parsing JSON payload for event URI '{}': {}", eventUri, e.getMessage());
-                            return false;
-                        }
-                    });
-
-            if (eventExists) {
+            validationErrors.clear();
+            if (matchAndValidatePayload(eventUri, expectedEventsObjectInPayload, validationErrors)) {
                 return;
             }
 
-            LOG.info("Event for URI '{}' not found in received payloads. Retrying... Attempt: {}/{}",
-                    eventUri, retryCount + 1, MAX_RETRIES_ON_EVENTS_RECEIVED);
+            LOG.info("No received payload matched the expected payload for event URI '{}'. Retrying... " +
+                    "Attempt: {}/{}", eventUri, retryCount + 1, MAX_RETRIES_ON_EVENTS_RECEIVED);
             TimeUnit.MILLISECONDS.sleep(WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED);
             retryCount++;
         }
 
-        throw new AssertionError("Event for URI '" + eventUri + "' not found after " +
-                MAX_RETRIES_ON_EVENTS_RECEIVED + " retries.");
+        if (validationErrors.isEmpty()) {
+            throw new AssertionError("Event for URI '" + eventUri + "' not found after " +
+                    MAX_RETRIES_ON_EVENTS_RECEIVED + " retries.");
+        }
+        throw new AssertionError("Payload validation failed for event URI: " + eventUri +
+                ". None of the received payloads matched the expected payload. Errors: " + validationErrors);
     }
 
-    private List<JSONObject> extractReceivedPayloads() {
-
-        return mockService.getOrderedRequests()
-                .stream()
-                .map(request -> {
-                    try {
-                        return new JSONObject(request.getBodyAsString());
-                    } catch (JSONException e) {
-                        LOG.error("Invalid JSON payload: {}", e.getMessage());
-                        return null;
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * Validates the received payloads of the given event URI against the expected payload, and removes the first
+     * matching payload from the request list of the mock service. Since the same event can be received more than once
+     * (e.g. from the root organization and from a sub organization), every received payload of the event URI is
+     * tried before concluding that there is no match.
+     */
     private boolean matchAndValidatePayload(String eventUri, JSONObject expectedEventsObject,
-                                            List<JSONObject> receivedPayloads) throws Exception {
+                                            List<String> validationErrors) throws Exception {
 
-        for (int i = 0; i < receivedPayloads.size(); i++) {
-            JSONObject receivedPayload = receivedPayloads.get(i);
+        for (Request request : mockService.getOrderedRequests()) {
+            JSONObject receivedPayload = toJSONObject(request);
 
             if (receivedPayload != null && receivedPayload.has("events") &&
                     receivedPayload.getJSONObject("events").has(eventUri)) {
@@ -237,17 +283,27 @@ public class WebhookEventTestManager {
                     LOG.info("Payload validation successful for event URI: {}", eventUri);
                     LOG.info("Removing matched payload from request list of the mock service for event URI: {}",
                             eventUri);
-                    receivedPayloads.remove(i);
-                    mockService.removeRequest(mockService.getOrderedRequests().get(i));
+                    mockService.removeRequest(request);
                     return true;
 
                 } catch (IllegalArgumentException e) {
-                    throw new AssertionError(
-                            "Payload validation failed for event URI: " + eventUri + ". Error: " + e.getMessage(), e);
+                    LOG.info("Received payload did not match the expected payload for event URI: {}. Error: {}",
+                            eventUri, e.getMessage());
+                    validationErrors.add(e.getMessage());
                 }
             }
         }
         return false;
+    }
+
+    private JSONObject toJSONObject(Request request) {
+
+        try {
+            return new JSONObject(request.getBodyAsString());
+        } catch (JSONException e) {
+            LOG.error("Invalid JSON payload: {}", e.getMessage());
+            return null;
+        }
     }
 
     private void startMockServer() throws Exception {
@@ -304,9 +360,53 @@ public class WebhookEventTestManager {
         return response.getId();
     }
 
+    private String createWebhookV2() throws Exception {
+
+        WebhookCreateRequest webhookCreateRequest = new WebhookCreateRequest()
+                .name(testName)
+                .endpoint(webhookEndpoint)
+                .secret("secretKey")
+                .status(WebhookCreateRequest.StatusEnum.ACTIVE)
+                .eventProfile(new EventProfile().name(eventProfile).uri(getEventProfileURI()));
+
+        for (String channel : channelsSubscribed) {
+            webhookCreateRequest.addSubscribedChannelsItem(new WebhookSubscription()
+                    .channelUri(channel)
+                    .childOrgSubscription(new ChildOrgSubscription()
+                            .subscriptionPolicy(childOrgSubscriptionPolicy)));
+        }
+
+        return webhooksV2RestClient.createWebhook(webhookCreateRequest).getId();
+    }
+
+    /**
+     * Waits until the channel subscriptions of the webhook are accepted, since subscribing a v2 webhook against the
+     * event publisher is asynchronous.
+     */
+    private void waitForWebhookActivation() throws Exception {
+
+        String status = null;
+        for (int retryCount = 0; retryCount < MAX_RETRIES_ON_WEBHOOK_ACTIVATION; retryCount++) {
+            status = webhooksV2RestClient.getWebhook(webhookId).getStatus();
+            if (WEBHOOK_STATUS_ACTIVE.equals(status)) {
+                return;
+            }
+            LOG.info("Webhook {} is not active yet. Current status: {}. Retrying... Attempt: {}/{}", webhookId,
+                    status, retryCount + 1, MAX_RETRIES_ON_WEBHOOK_ACTIVATION);
+            TimeUnit.MILLISECONDS.sleep(WAIT_TIME_IN_MILLIS_ON_WEBHOOK_ACTIVATION);
+        }
+        throw new AssertionError("Webhook " + webhookId + " did not become active after " +
+                MAX_RETRIES_ON_WEBHOOK_ACTIVATION + " retries. Last observed status: " + status);
+    }
+
     private void deleteWebhook() throws Exception {
 
-        if (webhookId != null) {
+        if (webhookId == null) {
+            return;
+        }
+        if (webhooksV2RestClient != null) {
+            webhooksV2RestClient.deleteWebhook(webhookId);
+        } else {
             webhooksRestClient.deleteWebhook(webhookId);
         }
     }
