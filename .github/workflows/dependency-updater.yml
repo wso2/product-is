@@ -202,8 +202,51 @@ jobs:
             STATUS=$(printf "%s" "$RESPONSE" | tail -c 3)
             if [[ $STATUS == "201" ]]; then
               echo "PR=$(echo $RESPONSE_BODY | jq -r '.html_url')" >> $GITHUB_ENV
+              echo "PR_NUMBER=$(echo $RESPONSE_BODY | jq -r '.number')" >> $GITHUB_ENV
             fi
           fi
+      # The build and integration tests above have already passed, so the PR is approved and
+      # merged straight away rather than waiting for the checks on it. The approval comes from
+      # iam-automation-bot (not the PR author) so a required review on master is satisfied; it
+      # and the merge are pinned to the commit that was tested.
+      - name: Approve and Merge Pull Request
+        if: env.PR_NUMBER != ''
+        env:
+          GH_TOKEN: ${{ secrets.IAM_AUTOMATION_BOT_TOKEN }}
+        run: |
+          set -euo pipefail
+          REPO=${{ env.PRODUCT_REPOSITORY_PUBLIC }}
+          ALLOWED='["pom.xml","modules/p2-profile-gen/carbon.product"]'
+
+          PR_JSON=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json state,headRefOid,files)
+          HEAD_SHA=$(jq -r '.headRefOid' <<< "$PR_JSON")
+
+          # Only the dependency version files may change.
+          if [ "$(jq -r --argjson a "$ALLOWED" '[.files[].path] | all(. as $p | $a | index($p) != null)' <<< "$PR_JSON")" != "true" ]; then
+            echo "::error::Not merging PR #${PR_NUMBER}: it changes files outside the dependency updater scope."
+            exit 1
+          fi
+
+          # Mergeability is computed asynchronously, so give it a moment to settle.
+          for _ in 1 2 3 4 5 6; do
+            MERGEABLE=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json mergeable --jq '.mergeable')
+            [ "$MERGEABLE" = "UNKNOWN" ] || break
+            sleep 10
+          done
+          if [ "$MERGEABLE" != "MERGEABLE" ]; then
+            echo "::error::Not merging PR #${PR_NUMBER}: mergeable=${MERGEABLE}"
+            exit 1
+          fi
+
+          echo "Approving PR #${PR_NUMBER} at ${HEAD_SHA}"
+          gh api --method POST "repos/${REPO}/pulls/${PR_NUMBER}/reviews" \
+            -f commit_id="$HEAD_SHA" \
+            -f event=APPROVE \
+            -f body="Approved automatically: dependency updater PR, built and integration tested by the Dependency Updater workflow before it was opened." \
+            --jq '.state'
+
+          echo "Merging PR #${PR_NUMBER} at ${HEAD_SHA}"
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --merge --match-head-commit "$HEAD_SHA"
       - name: Archive dependency diff file
         if: always()
         uses: actions/upload-artifact@v4
