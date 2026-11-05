@@ -72,6 +72,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
     private static final String MGT_APP_AUTHORIZED_API_RESOURCES = "management-app-authorized-apis.json";
     private static final String PASSWORD = "TestPassword@123";
     private static final String USERNAME = TEST_NAME + "-user";
+    private static final String EMAIL = USERNAME + "@test.com";
     private static final String ROLE_NAME = TEST_NAME + "-org-role";
     private static final String ORGANIZATION_AUDIENCE = "organization";
     private static final String ACTION_USER_SHARE = "USER_SHARE";
@@ -138,7 +139,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
         userId = scim2RestClient.createUser(new UserObject()
                 .userName(USERNAME)
                 .password(PASSWORD)
-                .addEmail(new Email().value(USERNAME + "@test.com")));
+                .addEmail(new Email().value(EMAIL)));
         assertNotNull(userId, "Failed to create user: " + USERNAME);
         roleId = scim2RestClient.addV2Role(new RoleV2(null, ROLE_NAME, Collections.emptyList(),
                 Collections.emptyList()));
@@ -192,7 +193,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
         subOrg1.sharedUserId = waitForSharedUser(subOrg1);
 
         webhookEventTestManager.stackExpectedEventPayload(USER_SHARED_EVENT_URI,
-                buildExpectedUserSharedEventPayload(userId, USERNAME, rootTenantDomain, subOrg1.sharedUserId,
+                buildExpectedUserSharedEventPayload(userId, USERNAME, EMAIL, rootTenantDomain, subOrg1.sharedUserId,
                         subOrg1.toOrganizationObject(), new JSONArray().put(createRoleObject(roleId, ROLE_NAME)),
                         ACTION_USER_SHARE, INITIATOR_TYPE_ADMIN));
         webhookEventTestManager.validateStackedEventPayloads();
@@ -217,7 +218,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
         waitForUnsharedUser(subOrg1);
 
         webhookEventTestManager.stackExpectedEventPayload(USER_UNSHARED_EVENT_URI,
-                buildExpectedUserUnsharedEventPayload(userId, USERNAME, rootTenantDomain, subOrg1.sharedUserId,
+                buildExpectedUserUnsharedEventPayload(userId, USERNAME, EMAIL, rootTenantDomain, subOrg1.sharedUserId,
                         subOrg1.toOrganizationObject(), ACTION_USER_UNSHARE));
         webhookEventTestManager.validateStackedEventPayloads();
         subOrg1.sharedUserId = null;
@@ -238,7 +239,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         for (Org org : new Org[]{subOrg1, subOrg2}) {
             webhookEventTestManager.stackExpectedEventPayload(USER_SHARED_EVENT_URI,
-                    buildExpectedUserSharedEventPayload(userId, USERNAME, rootTenantDomain, org.sharedUserId,
+                    buildExpectedUserSharedEventPayload(userId, USERNAME, EMAIL, rootTenantDomain, org.sharedUserId,
                             org.toOrganizationObject(), null, ACTION_USER_SHARE, INITIATOR_TYPE_ADMIN));
         }
         webhookEventTestManager.validateStackedEventPayloads();
@@ -259,7 +260,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         // The organization is created with an M2M token, hence the initiator is an application.
         webhookEventTestManager.stackExpectedEventPayload(USER_SHARED_EVENT_URI,
-                buildExpectedUserSharedEventPayload(userId, USERNAME, rootTenantDomain, childOrg.sharedUserId,
+                buildExpectedUserSharedEventPayload(userId, USERNAME, EMAIL, rootTenantDomain, childOrg.sharedUserId,
                         childOrg.toOrganizationObject(), null, ACTION_ORGANIZATION_CREATE,
                         INITIATOR_TYPE_APPLICATION));
         webhookEventTestManager.validateStackedEventPayloads();
@@ -277,7 +278,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
 
         for (Org org : new Org[]{subOrg1, subOrg2, childOrg}) {
             webhookEventTestManager.stackExpectedEventPayload(USER_UNSHARED_EVENT_URI,
-                    buildExpectedUserUnsharedEventPayload(userId, USERNAME, rootTenantDomain, org.sharedUserId,
+                    buildExpectedUserUnsharedEventPayload(userId, USERNAME, EMAIL, rootTenantDomain, org.sharedUserId,
                             org.toOrganizationObject(), ACTION_USER_UNSHARE));
             org.sharedUserId = null;
         }
@@ -291,7 +292,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
         shareUser(subOrg1, SelectiveShareOrgDetails.PolicyEnum.SELECTED_ORG_ONLY);
         subOrg1.sharedUserId = waitForSharedUser(subOrg1);
         webhookEventTestManager.stackExpectedEventPayload(USER_SHARED_EVENT_URI,
-                buildExpectedUserSharedEventPayload(userId, USERNAME, rootTenantDomain, subOrg1.sharedUserId,
+                buildExpectedUserSharedEventPayload(userId, USERNAME, EMAIL, rootTenantDomain, subOrg1.sharedUserId,
                         subOrg1.toOrganizationObject(), null, ACTION_USER_SHARE, INITIATOR_TYPE_ADMIN));
         webhookEventTestManager.validateStackedEventPayloads();
 
@@ -301,7 +302,7 @@ public class UserSharingEventTestCase extends OAuth2ServiceAbstractIntegrationTe
         userId = null;
 
         webhookEventTestManager.stackExpectedEventPayload(USER_UNSHARED_EVENT_URI,
-                buildExpectedUserUnsharedEventPayload(deletedUserId, USERNAME, rootTenantDomain,
+                buildExpectedUserUnsharedEventPayload(deletedUserId, USERNAME, EMAIL, rootTenantDomain,
                         subOrg1.sharedUserId, subOrg1.toOrganizationObject(), ACTION_USER_ACCOUNT_DELETE));
         webhookEventTestManager.validateStackedEventPayloads();
     }

@@ -31,12 +31,14 @@ public class UserSharingEventTestExpectedEventPayloadBuilder {
 
     private static final String SERVER_BASE_URL = "https://localhost:9853";
     private static final String USERNAME_CLAIM_URI = "http://wso2.org/claims/username";
+    private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 
     /**
      * Builds the expected payload of a user shared event.
      *
      * @param userId             ID of the shared user, in the root organization.
      * @param username           Username of the shared user.
+     * @param email              Email address of the shared user.
      * @param rootTenantDomain   Tenant domain of the root organization.
      * @param sharedUserId       ID of the user created by the sharing, in the organization it was shared with.
      * @param sharedOrganization Organization the user was shared with.
@@ -46,25 +48,21 @@ public class UserSharingEventTestExpectedEventPayloadBuilder {
      * @return JSONObject representing the expected event payload.
      * @throws JSONException if an error occurs while building the payload.
      */
-    public static JSONObject buildExpectedUserSharedEventPayload(String userId, String username,
+    public static JSONObject buildExpectedUserSharedEventPayload(String userId, String username, String email,
                                                                  String rootTenantDomain, String sharedUserId,
                                                                  JSONObject sharedOrganization, JSONArray roles,
                                                                  String action, String initiatorType)
             throws JSONException {
 
-        JSONObject sharedUser = new JSONObject();
-        sharedUser.put("id", sharedUserId);
-        sharedUser.put("organization", sharedOrganization);
-        // Users of sub organizations are referred through the organization SCIM2 endpoint of the root tenant.
-        sharedUser.put("ref", SERVER_BASE_URL + "/t/" + rootTenantDomain + "/o/scim2/Users/" + sharedUserId);
+        // The organization the user belongs to gets no reference to the user in the shared organization.
+        JSONObject sharedUserProfile = new JSONObject();
+        sharedUserProfile.put("id", sharedUserId);
+        sharedUserProfile.put("organization", sharedOrganization);
         if (roles != null) {
-            sharedUser.put("roles", roles);
+            sharedUserProfile.put("roles", roles);
         }
-
-        JSONObject userSharedEvent = createUserSharingEventPayload(userId, username, rootTenantDomain, action,
+        return createUserSharingEventPayload(userId, username, email, rootTenantDomain, sharedUserProfile, action,
                 initiatorType);
-        userSharedEvent.put("sharedUser", sharedUser);
-        return userSharedEvent;
     }
 
     /**
@@ -72,6 +70,7 @@ public class UserSharingEventTestExpectedEventPayloadBuilder {
      *
      * @param userId               ID of the unshared user, in the root organization.
      * @param username             Username of the unshared user.
+     * @param email                Email address of the unshared user.
      * @param rootTenantDomain     Tenant domain of the root organization.
      * @param unsharedUserId       ID of the removed user, in the organization it was unshared from.
      * @param unsharedOrganization Organization the user was unshared from.
@@ -79,20 +78,16 @@ public class UserSharingEventTestExpectedEventPayloadBuilder {
      * @return JSONObject representing the expected event payload.
      * @throws JSONException if an error occurs while building the payload.
      */
-    public static JSONObject buildExpectedUserUnsharedEventPayload(String userId, String username,
+    public static JSONObject buildExpectedUserUnsharedEventPayload(String userId, String username, String email,
                                                                    String rootTenantDomain, String unsharedUserId,
                                                                    JSONObject unsharedOrganization, String action)
             throws JSONException {
 
-        // The removed user no longer exists, hence it has no ref.
-        JSONObject unsharedUser = new JSONObject();
-        unsharedUser.put("id", unsharedUserId);
-        unsharedUser.put("organization", unsharedOrganization);
-
-        JSONObject userUnsharedEvent = createUserSharingEventPayload(userId, username, rootTenantDomain, action,
+        JSONObject sharedUserProfile = new JSONObject();
+        sharedUserProfile.put("id", unsharedUserId);
+        sharedUserProfile.put("organization", unsharedOrganization);
+        return createUserSharingEventPayload(userId, username, email, rootTenantDomain, sharedUserProfile, action,
                 "ADMIN");
-        userUnsharedEvent.put("unsharedUser", unsharedUser);
-        return userUnsharedEvent;
     }
 
     /**
@@ -129,9 +124,13 @@ public class UserSharingEventTestExpectedEventPayloadBuilder {
         return new JSONObject().put("id", roleId).put("name", roleName);
     }
 
-    private static JSONObject createUserSharingEventPayload(String userId, String username, String rootTenantDomain,
+    private static JSONObject createUserSharingEventPayload(String userId, String username, String email,
+                                                            String rootTenantDomain, JSONObject sharedUserProfile,
                                                             String action, String initiatorType)
             throws JSONException {
+
+        JSONObject user = createRootOrgUserObject(userId, username, email, rootTenantDomain);
+        user.put("sharedUserProfile", sharedUserProfile);
 
         JSONObject event = new JSONObject();
         event.put("initiatorType", initiatorType);
@@ -139,16 +138,18 @@ public class UserSharingEventTestExpectedEventPayloadBuilder {
         event.put("action", action);
         event.put("tenant", EventPayloadUtils.createTenantObject(rootTenantDomain));
         event.put("organization", EventPayloadUtils.createOrganizationObject(rootTenantDomain));
-        event.put("user", createRootOrgUserObject(userId, username, rootTenantDomain));
+        event.put("user", user);
         return event;
     }
 
-    private static JSONObject createRootOrgUserObject(String userId, String username, String rootTenantDomain)
-            throws JSONException {
+    private static JSONObject createRootOrgUserObject(String userId, String username, String email,
+                                                      String rootTenantDomain) throws JSONException {
 
         JSONObject user = new JSONObject();
         user.put("id", userId);
-        user.put("claims", new JSONArray().put(new JSONObject().put("uri", USERNAME_CLAIM_URI).put("value", username)));
+        user.put("claims", new JSONArray()
+                .put(new JSONObject().put("uri", USERNAME_CLAIM_URI).put("value", username))
+                .put(new JSONObject().put("uri", EMAIL_CLAIM_URI).put("value", email)));
         user.put("organization", EventPayloadUtils.createOrganizationObject(rootTenantDomain));
         if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(rootTenantDomain)) {
             user.put("ref", SERVER_BASE_URL + "/scim2/Users/" + userId);
