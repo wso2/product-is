@@ -82,64 +82,105 @@ JAVA_21_HOME=${JAVA_21_HOME%/}
 echo "    PR_LINK: $PR_LINK"
 echo "    JAVA 21 Home: $JAVA_21_HOME"
 echo "    WORKFLOW_BRANCH (product-is): $WORKFLOW_BRANCH"
-echo "::warning::Build ran for PR $PR_LINK"
 
-USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
-REPO=$(echo $PR_LINK | awk -F'/' '{print $5}')
-PULL_NUMBER=$(echo $PR_LINK | awk -F'/' '{print $7}')
+# In merge queue mode there is no PR to resolve. GitHub has already built the
+# "base branch + queued PRs" commit and actions/checkout has placed it in
+# GITHUB_WORKSPACE, so that tree is what we test.
+MERGE_QUEUE_MODE="false"
+if [ "$GITHUB_EVENT_NAME" = "merge_group" ] || [ -z "$PR_LINK" ]; then
+  MERGE_QUEUE_MODE="true"
+fi
 
-echo "    USER: $USER"
-echo "    REPO: $REPO"
-echo "    PULL_NUMBER: $PULL_NUMBER"
-echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
-echo "=========================================================="
-echo "Cloning product-is"
-echo "=========================================================="
+if [ "$MERGE_QUEUE_MODE" = "true" ]; then
+  REPO="product-is"
+  echo "    MODE: merge queue"
+  echo "    MERGE GROUP REF: ${GITHUB_REF:-unknown}"
+  echo "    MERGE GROUP SHA: ${GITHUB_SHA:-unknown}"
+  echo "::warning::Build ran for merge group ${GITHUB_REF:-unknown} (${GITHUB_SHA:-unknown})"
+  echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
+  echo "=========================================================="
+  echo "Exporting the checked out merge group commit"
+  echo "=========================================================="
 
-git clone --branch "$WORKFLOW_BRANCH" --single-branch https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
+  # Export the checked out tree instead of cloning, because the temporary
+  # gh-readonly-queue/* branch is deleted as soon as the queue entry finishes.
+  rm -rf "product-is-$BUILDER_NUMBER"
+  mkdir -p "product-is-$BUILDER_NUMBER"
+  git -C "${GITHUB_WORKSPACE:-.}" archive HEAD | tar -x -C "product-is-$BUILDER_NUMBER"
+  if [ ! -s "product-is-$BUILDER_NUMBER/pom.xml" ]; then
+    echo 'Exporting the merge group commit failed. Exiting...'
+    echo "::error::Exporting the merge group commit failed - no pom.xml in the exported tree."
+    exit 1
+  fi
+else
+  echo "::warning::Build ran for PR $PR_LINK"
+
+  USER=$(echo $PR_LINK | awk -F'/' '{print $4}')
+  REPO=$(echo $PR_LINK | awk -F'/' '{print $5}')
+  PULL_NUMBER=$(echo $PR_LINK | awk -F'/' '{print $7}')
+
+  echo "    USER: $USER"
+  echo "    REPO: $REPO"
+  echo "    PULL_NUMBER: $PULL_NUMBER"
+  echo "REPO_NAME=$REPO" >> "$GITHUB_OUTPUT"
+  echo "=========================================================="
+  echo "Cloning product-is"
+  echo "=========================================================="
+
+  git clone --branch "$WORKFLOW_BRANCH" --single-branch https://github.com/wso2/product-is product-is-$BUILDER_NUMBER
+fi
 
 if [ "$REPO" = "product-is" ]; then
 
-  echo ""
-  echo "PR is for the product-is itself. Start building with test..."
-  echo "=========================================================="
-  cd product-is-$BUILDER_NUMBER
+  if [ "$MERGE_QUEUE_MODE" = "true" ]; then
+    echo ""
+    echo "Building the merge group commit with tests..."
+    echo "=========================================================="
 
-  echo ""
-  echo "Applying PR $PULL_NUMBER as a diff..."
-  echo "=========================================================="
-  curl -fsSL --retry 5 --retry-all-errors --retry-delay 5 -o diff.diff "$PR_LINK.diff" || {
-    echo 'Downloading diff failed. Exiting...'
-    echo "::error::Downloading diff failed."
-    exit 1
-  }
-  if [ ! -s diff.diff ]; then
-    echo 'Downloaded diff is empty. Exiting...'
-    echo "::error::Downloaded diff is empty."
-    exit 1
+    disable_tests "$ENABLED_TESTS"
+    cd product-is-$BUILDER_NUMBER
+  else
+    echo ""
+    echo "PR is for the product-is itself. Start building with test..."
+    echo "=========================================================="
+    cd product-is-$BUILDER_NUMBER
+
+    echo ""
+    echo "Applying PR $PULL_NUMBER as a diff..."
+    echo "=========================================================="
+    curl -fsSL --retry 5 --retry-all-errors --retry-delay 5 -o diff.diff "$PR_LINK.diff" || {
+      echo 'Downloading diff failed. Exiting...'
+      echo "::error::Downloading diff failed."
+      exit 1
+    }
+    if [ ! -s diff.diff ]; then
+      echo 'Downloaded diff is empty. Exiting...'
+      echo "::error::Downloaded diff is empty."
+      exit 1
+    fi
+    cat diff.diff
+    echo "=========================================================="
+    git apply diff.diff || {
+      echo 'Applying diff failed. Exiting...'
+      echo "::error::Applying diff failed."
+      exit 1
+    }
+
+    # Disable non-selected tests AFTER applying the PR diff, so the diff applies
+    # against a pristine testng.xml. disable_tests expects to run from the workspace
+    # root (its path is relative to product-is-$BUILDER_NUMBER).
+    cd ..
+    disable_tests "$ENABLED_TESTS"
+    cd product-is-$BUILDER_NUMBER
+
+    echo "Last 3 changes:"
+    COMMIT1=$(git log --oneline -1)
+    COMMIT2=$(git log --oneline -2 | tail -1)
+    COMMIT3=$(git log --oneline -3 | tail -1)
+    echo "$COMMIT1"
+    echo "$COMMIT2"
+    echo "$COMMIT3"
   fi
-  cat diff.diff
-  echo "=========================================================="
-  git apply diff.diff || {
-    echo 'Applying diff failed. Exiting...'
-    echo "::error::Applying diff failed."
-    exit 1
-  }
-
-  # Disable non-selected tests AFTER applying the PR diff, so the diff applies
-  # against a pristine testng.xml. disable_tests expects to run from the workspace
-  # root (its path is relative to product-is-$BUILDER_NUMBER).
-  cd ..
-  disable_tests "$ENABLED_TESTS"
-  cd product-is-$BUILDER_NUMBER
-
-  echo "Last 3 changes:"
-  COMMIT1=$(git log --oneline -1)
-  COMMIT2=$(git log --oneline -2 | tail -1)
-  COMMIT3=$(git log --oneline -3 | tail -1)
-  echo "$COMMIT1"
-  echo "$COMMIT2"
-  echo "$COMMIT3"
 
   cat pom.xml
   export JAVA_HOME=$JAVA_21_HOME

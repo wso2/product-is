@@ -6,12 +6,21 @@ on:
         description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481)"
         default:
         required: true
+  # Runs against the "base branch + queued PRs" commit that GitHub builds for
+  # the merge queue.
+  merge_group:
+    types: [checks_requested]
+  # The heavy matrix below is skipped for pull_request. This trigger exists only
+  # so the required "Integration Tests" check is reported on the PR itself,
+  # which GitHub requires before a PR can be added to the merge queue.
+  pull_request:
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 jobs:
   run-test-runners:
+    if: ${{ github.event_name != 'pull_request' }}
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
@@ -29,7 +38,7 @@ jobs:
       - name: Print Input
         run: echo "Running the Test runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
       - name: Comment build info
-        if: ${{ matrix.runner_id == 1 }}
+        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' }}
         run: |
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
@@ -70,7 +79,7 @@ jobs:
         run: |
           bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
       - name: Archive PR diff file
-        if: ${{ matrix.runner_id == 1 }}
+        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' }}
         uses: actions/upload-artifact@v4
         with:
           name: repo-pr-diff
@@ -78,7 +87,7 @@ jobs:
             ${{steps.builder_step.outputs.REPO_NAME}}/diff.diff
           if-no-files-found: warn
       - name: Archive repo mvn build log
-        if: ${{ matrix.runner_id == 1 && steps.builder_step.outputs.REPO_NAME != 'product-is' }}
+        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' && steps.builder_step.outputs.REPO_NAME != 'product-is' }}
         uses: actions/upload-artifact@v4
         with:
           name: repo-mvn-build-log
@@ -113,7 +122,7 @@ jobs:
     name: Comment the status and Approve PR
     needs: run-test-runners
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
-    if: always()
+    if: ${{ always() && github.event_name == 'workflow_dispatch' }}
     steps:
       - name: Comment build status
         run: |
@@ -128,3 +137,27 @@ jobs:
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/pulls/$pr_number/reviews -H 'Authorization:token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"Approving the pull request based on the successful pr build https://github.com/wso2/product-is/actions/runs/${{github.run_id}}","event":"APPROVE"}'
+
+  integration-tests:
+    # Single stable check name to put in branch protection / merge queue
+    # required checks. It is reported for pull_request (trivially green, the
+    # matrix is skipped there) and for merge_group (green only if every runner
+    # passed).
+    name: Integration Tests
+    needs: run-test-runners
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Report result
+        run: |
+          result="${{ needs.run-test-runners.result }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "run-test-runners result: $result"
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Integration tests run in the merge queue, not on the PR."
+            exit 0
+          fi
+          if [ "$result" != "success" ]; then
+            echo "::error::Integration tests did not pass (result: $result)."
+            exit 1
+          fi
