@@ -240,7 +240,8 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
         String errormsg = ((JSONObject) obj).get("error_description").toString();
 
         EntityUtils.consume(response.getEntity());
-        Assert.assertTrue(errormsg.contains("Authentication failed for admin"));
+        Assert.assertTrue(errormsg.contains("Authentication failed for"));
+        Assert.assertFalse(errormsg.contains(username), "Username should be masked in the error description.");
 	}
 
     @Test(groups = "wso2.is", description = "Send token request with invalid consumer secret in Authorization header",
