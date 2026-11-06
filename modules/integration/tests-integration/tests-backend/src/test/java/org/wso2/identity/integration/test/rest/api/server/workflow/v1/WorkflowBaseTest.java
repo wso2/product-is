@@ -22,8 +22,6 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
-import org.awaitility.Awaitility;
-import org.awaitility.core.ConditionTimeoutException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -31,10 +29,8 @@ import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Base test class for workflow management REST APIs.
@@ -79,25 +75,19 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
     }
 
     /**
-     * Waits for an approval task to show up in the given approval task listing and returns its id. The task is
-     * created asynchronously after the request is accepted (202), so a single immediate lookup is racy.
+     * Returns the id of the first approval task in the given approval task listing. The task is stored in the same
+     * request that returns 202, so it is fetched once, without waiting. The listing is included in the failure
+     * message to show what the approver could see.
      */
-    protected String awaitFirstApprovalTaskId(String approvalListPath) {
+    protected String getFirstApprovalTaskId(String approvalListPath) {
 
-        try {
-            return Awaitility.await("approval task assignment")
-                    .atMost(Duration.ofSeconds(60))
-                    .pollInterval(Duration.ofSeconds(1))
-                    .ignoreExceptions()
-                    .until(() -> {
-                        Response listResp = getResponseOfGetNoFilter(approvalListPath);
-                        return listResp.getStatusCode() == HttpStatus.SC_OK
-                                ? listResp.jsonPath().getString("[0].id") : null;
-                    }, Objects::nonNull);
-        } catch (ConditionTimeoutException e) {
-            Assert.fail("Approval task has not been assigned within 60 seconds.", e);
-            return null;
-        }
+        Response listResp = getResponseOfGetNoFilter(approvalListPath);
+        listResp.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
+
+        String taskId = listResp.jsonPath().getString("[0].id");
+        Assert.assertNotNull(taskId, "Approval task has not been assigned. Approval task listing: "
+                + listResp.asString());
+        return taskId;
     }
 
     /**
