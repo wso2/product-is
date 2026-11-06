@@ -231,7 +231,7 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
      */
     private void approveFirstPendingTask() {
 
-        String taskId = awaitFirstApprovalTaskId(APPROVAL_API_PATH);
+        String taskId = getFirstApprovalTaskId(APPROVAL_API_PATH);
 
         String endpoint = String.format(APPROVAL_API_PATH + "/%s/state", taskId);
         String approvePayload = "{\n  \"action\":\"APPROVE\"\n}";
