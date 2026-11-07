@@ -55,6 +55,9 @@ public class ISIntegrationTest {
     protected User userInfo;
     protected ContextUrls identityContextUrls;
     private static String jdbcClassName = "org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager";
+    // Creating an AutomationContext reads the shared automation configuration document, which is not thread safe.
+    // The lock serializes the initialization of test classes that run in parallel.
+    private static final Object AUTOMATION_CONTEXT_LOCK = new Object();
     protected LoginLogoutClient loginLogoutClient;
 
     protected void init() throws Exception {
@@ -62,22 +65,26 @@ public class ISIntegrationTest {
     }
 
     protected void init(TestUserMode userMode) throws Exception {
-        isServer = new AutomationContext("IDENTITY", userMode);
-        backendURL = isServer.getContextUrls().getBackEndUrl();
-        serverURL = backendURL.replace("services/", "");
-        loginLogoutClient = new LoginLogoutClient(isServer);
-        sessionCookie = loginLogoutClient.login();
-        identityContextUrls = isServer.getContextUrls();
-        tenantInfo = isServer.getContextTenant();
-        userInfo = tenantInfo.getContextUser();
+        synchronized (AUTOMATION_CONTEXT_LOCK) {
+            isServer = new AutomationContext("IDENTITY", userMode);
+            backendURL = isServer.getContextUrls().getBackEndUrl();
+            serverURL = backendURL.replace("services/", "");
+            loginLogoutClient = new LoginLogoutClient(isServer);
+            sessionCookie = loginLogoutClient.login();
+            identityContextUrls = isServer.getContextUrls();
+            tenantInfo = isServer.getContextTenant();
+            userInfo = tenantInfo.getContextUser();
+        }
     }
 
     protected void init(String instance, String domainKey, String userKey) throws Exception {
-        isServer = new AutomationContext("IDENTITY", instance, domainKey, userKey);
-        loginLogoutClient = new LoginLogoutClient(isServer);
-        sessionCookie = loginLogoutClient.login();
-        backendURL = isServer.getContextUrls().getBackEndUrl();
-        serverURL = backendURL.replace("services/", "");
+        synchronized (AUTOMATION_CONTEXT_LOCK) {
+            isServer = new AutomationContext("IDENTITY", instance, domainKey, userKey);
+            loginLogoutClient = new LoginLogoutClient(isServer);
+            sessionCookie = loginLogoutClient.login();
+            backendURL = isServer.getContextUrls().getBackEndUrl();
+            serverURL = backendURL.replace("services/", "");
+        }
     }
 
     protected String login() throws Exception{
@@ -96,9 +103,11 @@ public class ISIntegrationTest {
 
     protected void initPublisher(String productGroupName, String instanceName, TestUserMode userMode, String userKey)
             throws XPathExpressionException {
-        isServer = new AutomationContext(productGroupName, instanceName, userMode);
-        backendURL = isServer.getContextUrls().getBackEndUrl();
-        serverURL = backendURL.replace("services/", "");
+        synchronized (AUTOMATION_CONTEXT_LOCK) {
+            isServer = new AutomationContext(productGroupName, instanceName, userMode);
+            backendURL = isServer.getContextUrls().getBackEndUrl();
+            serverURL = backendURL.replace("services/", "");
+        }
     }
 
     protected String getBackendURL() throws XPathExpressionException {
