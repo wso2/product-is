@@ -97,7 +97,7 @@ public class AdaptiveScriptTemporaryClaimPersistenceTestCase extends AbstractAda
     private AuthorizationCode authorizationCode;
     private Header locationHeader;
     private List<NameValuePair> consentParameters = new ArrayList<>();
-    private static final String APPLICATION_NAME = "testOauthApp";
+    private static final String APPLICATION_NAME = "temporaryClaimPersistenceApp";
     // Nickname, which is an already existing OIDC claim, used as the temporary claim for ease of implementation.
     private static final String TEMPORARY_CLAIM_URI = "http://wso2.org/claims/nickname";
     private static final String TEMPORARY_CLAIM_NAME = "nickname";

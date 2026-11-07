@@ -48,9 +48,11 @@ public class AuthenticatorTestBase extends RESTAPIServerTestBase {
     protected static final String AUTHENTICATOR_CONFIG_API_BASE_PATH = "/configs/authenticators/";
     protected static final String PATH_SEPARATOR = "/";
 
-    protected final String AUTHENTICATOR_NAME = "custom-Authenticator";
-    protected final String AUTHENTICATOR_NAME_CC = "custom-AuthenticatorCC";
-    protected final String AUTHENTICATOR_NAME_PWD = "custom-AuthenticatorPWD";
+    // Authenticator names are suffixed with the test class name so that concurrently running test classes do not
+    // collide on the same authenticator.
+    protected final String AUTHENTICATOR_NAME = "custom-Authenticator" + getClass().getSimpleName();
+    protected final String AUTHENTICATOR_NAME_CC = "custom-AuthenticatorCC" + getClass().getSimpleName();
+    protected final String AUTHENTICATOR_NAME_PWD = "custom-AuthenticatorPWD" + getClass().getSimpleName();
     protected final String AUTHENTICATOR_DISPLAY_NAME = "ABC custom authenticator";
     protected final String AUTHENTICATOR_DISPLAY_NAME_CC = "ABC custom authenticator CC";
     protected final String AUTHENTICATOR_DISPLAY_NAME_PWD = "ABC custom authenticator PWD";
