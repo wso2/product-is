@@ -1,0 +1,4 @@
+{
+  "clientIdScheme": "x509_hash",
+  "responseMode": "direct_post.jwt"
+}

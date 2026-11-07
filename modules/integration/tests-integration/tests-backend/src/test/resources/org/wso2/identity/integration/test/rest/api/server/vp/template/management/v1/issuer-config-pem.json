@@ -1,0 +1,9 @@
+{
+  "issuerConfigs": [
+    {
+      "issuerUrl": "https://pem-issuer.example.com",
+      "keySourceType": "pem",
+      "keySource": "MIICvDCCAaQCCQDrFtVPb3RfSzANBgkqhkiG9w0BAQsFADAgMR4wHAYDVQQDDBVUZXN0SXNzdWVyQ2VydGlmaWNhdGUwHhcNMjYwMTAxMDAwMDAwWhcNMjcwMTAxMDAwMDAwWjAgMR4wHAYDVQQDDBVUZXN0SXNzdWVyQ2VydGlmaWNhdGUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC2YGgFGbJ6oaHj8eXiB+Hh8TRj/+/JpG2gQYXXzMlIJ1n6NbJxEj6wWgJnKmJxKAEhO7fqXw=="
+    }
+  ]
+}
