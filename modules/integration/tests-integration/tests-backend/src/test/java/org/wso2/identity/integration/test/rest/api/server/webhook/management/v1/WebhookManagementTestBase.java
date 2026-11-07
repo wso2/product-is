@@ -43,10 +43,13 @@ public class WebhookManagementTestBase extends RESTAPIServerTestBase {
     protected static final String CHANNEL_LOGIN = "https://schemas.identity.wso2.org/events/login";
     protected static final String CHANNEL_REG = "https://schemas.identity.wso2.org/events/registration";
 
-    protected static final String TEST_WEBHOOK_NAME = "Login Webhook";
-    protected static final String TEST_WEBHOOK_UPDATED_NAME = "Login Webhook Updated";
-    protected static final String TEST_ENDPOINT_URI = "https://example.com/webhook";
-    protected static final String TEST_UPDATED_ENDPOINT_URI = "https://example.com/webhook-updated";
+    // Webhook names and endpoints are suffixed with the test class name so that concurrently running test classes
+    // do not collide on the same webhook.
+    protected final String TEST_WEBHOOK_NAME = "Login Webhook " + getClass().getSimpleName();
+    protected final String TEST_WEBHOOK_UPDATED_NAME = "Login Webhook Updated " + getClass().getSimpleName();
+    protected final String TEST_ENDPOINT_URI = "https://example.com/webhook/" + getClass().getSimpleName();
+    protected final String TEST_UPDATED_ENDPOINT_URI =
+            "https://example.com/webhook-updated/" + getClass().getSimpleName();
     protected static final String TEST_EVENT_PROFILE_NAME = "WSO2";
     protected static final String TEST_EVENT_PROFILE_URI = "https://schemas.identity.wso2.org/events";
     protected static final String TEST_SECRET = "my-secret";

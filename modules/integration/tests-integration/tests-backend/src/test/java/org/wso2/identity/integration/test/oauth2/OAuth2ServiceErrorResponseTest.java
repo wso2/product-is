@@ -118,7 +118,7 @@ public class OAuth2ServiceErrorResponseTest extends OAuth2ServiceAbstractIntegra
         inboundProtocolsConfig.setOidc(oidcConfig);
 
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+        application.setName(OAUTH_APPLICATION_NAME);
 
         String appId = addApplication(application);
 

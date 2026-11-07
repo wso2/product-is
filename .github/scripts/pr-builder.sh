@@ -11,6 +11,10 @@ WORKFLOW_BRANCH=${WORKFLOW_BRANCH#refs/heads/}
 
 # Define all available tests.
 declare -a ALL_TESTS=(
+    "is-tests-parallel-1"
+    "is-tests-parallel-2"
+    "is-tests-parallel-3"
+    "is-tests-parallel-4"
     "is-tests-default-configuration"
     "is-test-rest-api"
     "is-tests-oauth-client-secrets"

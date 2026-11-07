@@ -102,11 +102,11 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private final static String SCIM2_USERS_ENDPOINT = "https://localhost:9853/scim2/Users";
     private final static String INTERNAL_USER_MGT_LIST = "internal_user_mgt_list";
-    private static final String TEST_USER = "test_user";
+    private static final String TEST_USER = "dpop_test_user";
     private static final String ADMIN_WSO2 = "Admin@wso2";
     private static final String USER_EMAIL = "dpopUser@wso2.com";
     private static final String APPLICATION_AUDIENCE = "APPLICATION";
-    private static final String TEST_ROLE_APPLICATION = "test_role_application";
+    private static final String TEST_ROLE_APPLICATION = "dpop_test_role";
     private static final String TEST_USER_FIRST_NAME = "DpopUserFirst";
     private static final String TEST_USER_LAST_NAME = "DpopUserLast";
 

@@ -240,7 +240,7 @@ public class OAuth2ServiceRegexCallbackUrlTestCase extends OAuth2ServiceAbstract
 		inboundProtocolsConfig.setOidc(oidcConfig);
 
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+		application.setName(OAUTH_APPLICATION_NAME);
 
 		String appId = addApplication(application);
 
