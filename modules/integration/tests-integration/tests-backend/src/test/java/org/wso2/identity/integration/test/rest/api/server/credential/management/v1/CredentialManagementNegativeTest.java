@@ -35,8 +35,8 @@ import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
  */
 public class CredentialManagementNegativeTest extends CredentialManagementTestBase {
 
-    private static final String PARENT_ORG_NAME = "parentOrganization";
-    private static final String SECONDARY_ORG_NAME = "secondaryOrganization";
+    private static final String PARENT_ORG_NAME = "credentialMgtNegativeParentOrg";
+    private static final String SECONDARY_ORG_NAME = "credentialMgtNegativeSecondaryOrg";
     private static final String VALID_USER_ID = "valid-user-id";
     private static final String VALID_CREDENTIAL_ID = "valid-credential-id";
 

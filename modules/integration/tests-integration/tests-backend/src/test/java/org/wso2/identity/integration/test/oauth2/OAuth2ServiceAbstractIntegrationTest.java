@@ -100,7 +100,6 @@ import java.util.stream.Collectors;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 import static org.wso2.identity.integration.test.saml.SAMLFederationDynamicQueryParametersTestCase.INBOUND_AUTH_TYPE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
-import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH_APPLICATION_NAME;
 
 /**
  * OAuth2 test integration abstraction.
@@ -110,7 +109,11 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	protected String consumerKey;
 	protected String consumerSecret;
 
-	protected final static String SERVICE_PROVIDER_NAME = "PlaygroundServiceProvider";
+	// Application names are suffixed with the test class name so that concurrently running test classes do not
+	// collide on the same application.
+	protected final String SERVICE_PROVIDER_NAME = "PlaygroundServiceProvider_" + getClass().getSimpleName();
+	protected final String OAUTH_APPLICATION_NAME =
+			OAuth2Constant.OAUTH_APPLICATION_NAME + "_" + getClass().getSimpleName();
 	protected final static String SERVICE_PROVIDER_DESC = "Playground Service Provider";
 	protected static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
 	private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
@@ -174,7 +177,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 	public OAuthConsumerAppDTO createApplication() throws Exception {
 
 		OAuthConsumerAppDTO appDTO = new OAuthConsumerAppDTO();
-		appDTO.setApplicationName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+		appDTO.setApplicationName(OAUTH_APPLICATION_NAME);
 		appDTO.setCallbackUrl(OAuth2Constant.CALLBACK_URL);
 		appDTO.setOAuthVersion(OAuth2Constant.OAUTH_VERSION_2);
 		appDTO.setGrantTypes("authorization_code implicit password client_credentials refresh_token "
@@ -1109,7 +1112,7 @@ public class OAuth2ServiceAbstractIntegrationTest extends ISIntegrationTest {
 		inboundProtocolsConfig.setOidc(oidcConfig);
 
 		application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-		application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+		application.setName(OAUTH_APPLICATION_NAME);
 		application.isManagementApp(true);
 
 		String appId = addApplication(application);

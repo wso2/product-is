@@ -32,7 +32,7 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
 
         userMgtClient = new UserManagementClient(backendURL, getSessionCookie());
 
-        userMgtClient.addRole("umRole1", null, new String[]{"login"}, false);
+        userMgtClient.addRole("idpMgtTestRole", null, new String[]{"login"}, false);
     }
 
     @AfterClass(alwaysRun = true)
@@ -40,7 +40,7 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
         identityProviderMgtServiceClient.deleteIdP(TEST_IDENTITY_PROVIDER_UPDATED_NAME_1);
         identityProviderMgtServiceClient.deleteIdP(TEST_IDENTITY_PROVIDER_NAME_2);
         identityProviderMgtServiceClient = null;
-        userMgtClient.deleteRole("umRole1");
+        userMgtClient.deleteRole("idpMgtTestRole");
     }
 
     @Test(alwaysRun = true, description = "Testing create Identity Provider")
@@ -107,7 +107,7 @@ public class IdentityProviderManagementTestCase extends ISIntegrationTest {
             PermissionsAndRoleConfig permissionsAndRoleConfig = new PermissionsAndRoleConfig();
             RoleMapping roleMapping = new RoleMapping();
             LocalRole localRole = new LocalRole();
-            localRole.setLocalRoleName("umRole1");
+            localRole.setLocalRoleName("idpMgtTestRole");
             localRole.setUserStoreId("primary");
             roleMapping.setLocalRole(localRole);
             roleMapping.setRemoteRole("role1");

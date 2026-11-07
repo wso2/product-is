@@ -65,11 +65,11 @@ public class RBACWithAPIAuthorizationTestCase extends OAuth2ServiceAbstractInteg
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String USERS = "users";
-    private static final String TEST_USER = "test_user";
+    private static final String TEST_USER = "rbac_api_auth_test_user";
     private static final String ADMIN_WSO2 = "Admin@wso2";
     private static final String TEST_USER_GIVEN = "test_user_given";
     private static final String TEST_USER_GMAIL_COM = "test.user@gmail.com";
-    private static final String TEST_ROLE_APPLICATION = "test_role_application";
+    private static final String TEST_ROLE_APPLICATION = "rbac_api_auth_test_role";
     private static final String TEST_ROLE_ORGANIZATION = "test_role_organization";
     private static final String INTERNAL_OFFLINE_INVITE = "internal_offline_invite";
     private static final String INTERNAL_BULK_RESOURCE_CREATE = "internal_bulk_resource_create";

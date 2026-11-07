@@ -139,7 +139,6 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
         deleteApplications();
         revertMyAccountConfiguration();
         orgMgtRestClient.deleteOrganization(subOrgID);
-        oAuth2RestClient.deleteApplication(oAuth2RestClient.getAppIdUsingAppName("b2b-app"));
         oAuth2RestClient.closeHttpClient();
         scim2RestClient.closeHttpClient();
         orgMgtRestClient.closeHttpClient();

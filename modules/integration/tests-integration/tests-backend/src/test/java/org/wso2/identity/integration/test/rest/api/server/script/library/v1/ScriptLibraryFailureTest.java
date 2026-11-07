@@ -63,6 +63,10 @@ public class ScriptLibraryFailureTest extends ScriptLibraryTestBase {
     @AfterClass(alwaysRun = true)
     public void testConclude() {
 
+        // Remove the script library created by testAddScriptLibraryConflict.
+        RestAssured.basePath = basePath;
+        getResponseOfDelete(SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + VALID_SCRIPT_LIBRARY_NAME);
+        RestAssured.basePath = StringUtils.EMPTY;
         super.conclude();
     }
 
