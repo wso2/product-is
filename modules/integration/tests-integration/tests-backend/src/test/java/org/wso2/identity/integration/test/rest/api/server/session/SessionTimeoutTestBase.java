@@ -112,6 +112,11 @@ public class SessionTimeoutTestBase extends ISIntegrationTest {
     private static final String TENANT_ADMIN_USERNAME = "admin";
     private static final String TENANT_ADMIN_PASSWORD = "Admin@123";
 
+    // The server fails intermittently when tenants are created concurrently (a ConcurrentModificationException
+    // while the OIDC scope claims are initialized for the new tenant), so the test classes create their tenants
+    // one at a time.
+    private static final Object TENANT_CREATION_LOCK = new Object();
+
     private final String tenantDomain;
 
     private TenantMgtRestClient tenantMgtRestClient;
@@ -297,7 +302,9 @@ public class SessionTimeoutTestBase extends ISIntegrationTest {
         TenantModel tenantReqModel = new TenantModel();
         tenantReqModel.setDomain(tenantDomain);
         tenantReqModel.addOwnersItem(tenantOwner);
-        tenantMgtRestClient.addTenant(tenantReqModel);
+        synchronized (TENANT_CREATION_LOCK) {
+            tenantMgtRestClient.addTenant(tenantReqModel);
+        }
     }
 
     private Tenant getTenantInfo() {
