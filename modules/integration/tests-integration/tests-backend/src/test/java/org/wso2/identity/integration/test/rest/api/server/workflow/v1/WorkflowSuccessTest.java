@@ -420,7 +420,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
 
     private void approveFirstPendingTask() {
 
-        String taskId = awaitFirstApprovalTaskId(APPROVAL_API_PATH + "?status=READY");
+        String taskId = getFirstApprovalTaskId(APPROVAL_API_PATH + "?status=READY");
 
         String endpoint = String.format(APPROVAL_API_PATH + "/%s/state", taskId);
         String approvePayload = "{\n  \"action\":\"APPROVE\"\n}";

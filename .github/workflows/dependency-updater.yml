@@ -278,6 +278,7 @@ jobs:
           path: |
             **/**.hprof
           if-no-files-found: ignore
+      # Successful runs merge their own PR, so only failures and cancellations need attention.
       - name: Google Chat Notification
         run: |
           STATUS_COLOR=$(if [[ ${{ job.status }} == "success" ]];then echo "#009944";
@@ -343,4 +344,4 @@ jobs:
                   }
               ]
           }'
-        if: always()
+        if: failure() || cancelled()
