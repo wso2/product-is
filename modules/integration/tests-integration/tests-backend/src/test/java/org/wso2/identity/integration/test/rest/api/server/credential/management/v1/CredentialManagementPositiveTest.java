@@ -39,8 +39,8 @@ import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
  */
 public class CredentialManagementPositiveTest extends CredentialManagementTestBase {
 
-    private static final String PARENT_ORG_NAME = "parentOrganization";
-    private static final String SECONDARY_ORG_NAME = "secondaryOrganization";
+    private static final String PARENT_ORG_NAME = "credentialMgtPositiveParentOrg";
+    private static final String SECONDARY_ORG_NAME = "credentialMgtPositiveSecondaryOrg";
     private static final String PARENT_ORG_USER_PASSKEY_CREDENTIAL_ID = "parent-org-passkey-001";
     private static final String PARENT_ORG_USER_PUSH_AUTH_CREDENTIAL_ID = "parent-org-push-auth-001";
     private static final String SUB_ORG_USER_PASSKEY_CREDENTIAL_ID = "sub-org-passkey-001";

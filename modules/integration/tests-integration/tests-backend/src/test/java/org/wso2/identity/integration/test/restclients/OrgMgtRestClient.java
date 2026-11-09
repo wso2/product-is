@@ -60,6 +60,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
 import static org.testng.Assert.assertEquals;
 
@@ -74,7 +75,7 @@ public class OrgMgtRestClient extends RestBaseClient {
     private static final String API_RESOURCE_MANAGEMENT_PATH = "/api-resources";
     private static final String SELF_PATH = "/self";
     private static final String AUTHORIZED_APIS_PATH = "/authorized-apis";
-    private static final String B2B_APP_NAME = "b2b-app";
+    private static final String B2B_APP_NAME_PREFIX = "b2b-app-";
     private static final String API_RESOURCES = "apiResources";
     private static final String ID = "id";
     private static final String POLICY_IDENTIFIER = "policyIdentifier";
@@ -91,6 +92,7 @@ public class OrgMgtRestClient extends RestBaseClient {
     private final String authenticatingUserName;
     private final String authenticatingCredential;
 
+    private final String b2bAppName = B2B_APP_NAME_PREFIX + UUID.randomUUID();
     private String b2bAppId;
     private String b2bAppClientId;
     private String b2bAppClientSecret;
@@ -438,7 +440,7 @@ public class OrgMgtRestClient extends RestBaseClient {
         inboundProtocolConfiguration.put("oidc", oidc);
 
         JSONObject b2bSelfServiceApp = new JSONObject();
-        b2bSelfServiceApp.put("name", B2B_APP_NAME);
+        b2bSelfServiceApp.put("name", b2bAppName);
         b2bSelfServiceApp.put("templateId", "custom-application-oidc");
         b2bSelfServiceApp.put("inboundProtocolConfiguration", inboundProtocolConfiguration);
 

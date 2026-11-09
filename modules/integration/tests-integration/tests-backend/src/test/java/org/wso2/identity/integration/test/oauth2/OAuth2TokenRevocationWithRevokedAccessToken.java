@@ -286,7 +286,7 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
         inboundProtocolsConfig.setOidc(oidcConfig);
 
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
-        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+        application.setName(OAUTH_APPLICATION_NAME);
 
         String appId = addApplication(application);
 
