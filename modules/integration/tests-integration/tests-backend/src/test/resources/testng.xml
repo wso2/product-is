@@ -391,6 +391,14 @@
         </classes>
     </test>
 
+    <test name="is-test-webhooks-sub-org" preserve-order="true" parallel="false" group-by-instances="true">
+        <classes>
+            <class name="org.wso2.identity.integration.test.webhooks.suborg.ChildOrgSubscriptionEnabledInitializerTestCase"/>
+            <class name="org.wso2.identity.integration.test.webhooks.suborg.SubOrgAuthenticationEventTestCase"/>
+            <class name="org.wso2.identity.integration.test.webhooks.suborg.SubOrgUserManagementEventTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-scim2" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/>
