@@ -2695,6 +2695,11 @@
                 <artifactId>org.wso2.carbon.identity.moesif.server.feature</artifactId>
                 <version>${identity.moesif.integration.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.flow.executors</groupId>
+                <artifactId>org.wso2.carbon.identity.flow.executors.server.feature</artifactId>
+                <version>${identity.flow.executors.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -2935,6 +2940,9 @@
 
         <!-- Moesif Integration -->
         <identity.moesif.integration.version>1.0.11</identity.moesif.integration.version>
+
+        <!-- Flow Executors -->
+        <identity.flow.executors.version>1.0.0</identity.flow.executors.version>
 
         <!-- Common tool Versions -->
         <cipher-tool.version>1.1.28</cipher-tool.version>

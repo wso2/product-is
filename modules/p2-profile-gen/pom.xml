@@ -709,6 +709,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.moesif:org.wso2.carbon.identity.moesif.server.feature:${identity.moesif.integration.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.identity.flow.executors:org.wso2.carbon.identity.flow.executors.server.feature:${identity.flow.executors.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -1471,6 +1474,10 @@
                                 <feature>
                                     <id>org.wso2.carbon.identity.moesif.server.feature.group</id>
                                     <version>${identity.moesif.integration.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.identity.flow.executors.server.feature.group</id>
+                                    <version>${identity.flow.executors.version}</version>
                                 </feature>
                             </features>
                         </configuration>
