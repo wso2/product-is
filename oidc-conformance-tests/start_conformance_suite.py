@@ -21,9 +21,14 @@ import sys
 def start(file):
     try:
         os.chmod(file, 0o777)
-        process = subprocess.Popen("sudo -E docker-compose -f " + file + " up", shell=True, stdout=subprocess.PIPE)
+        # pass IP explicitly, as sudo-rs (default sudo from Ubuntu 26.04) does not preserve the environment with -E
+        process = subprocess.Popen("sudo env IP=\"$IP\" docker-compose -f " + file + " up", shell=True,
+                                   stdout=subprocess.PIPE)
         while True:
             output = process.stdout.readline()
+            if not output and process.poll() is not None:
+                raise Exception("docker-compose exited with code " + str(process.returncode)
+                                + " before the conformance suite started")
             if b'conformance-suite_server_1 exited with code 1' in output:
                 raise Exception("Conformance suite failed to start")
             elif b'Starting application' in output:

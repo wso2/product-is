@@ -63,8 +63,8 @@ jobs:
     - name: Get Jacoco Agent
       id: download_jacoco
       run: |
-        curl -vLJ -H 'Accept: application/octet-stream' -o jacoco-0.8.12.zip "https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip"
-        unzip jacoco-0.8.12.zip -d jacoco-0.8.12
+        curl -sSLJ -H 'Accept: application/octet-stream' -o jacoco-0.8.12.zip "https://search.maven.org/remotecontent?filepath=org/jacoco/jacoco/0.8.12/jacoco-0.8.12.zip"
+        unzip -qq jacoco-0.8.12.zip -d jacoco-0.8.12
 
     - name: Get IS zip
       run: |
@@ -75,7 +75,7 @@ jobs:
           cd cloned-product-is
           git clone https://github.com/wso2/product-is
           cd product-is
-          mvn clean install -Dmaven.test.skip=true --batch-mode | tee mvn-build.log
+          mvn clean install -Dmaven.test.skip=true --batch-mode --no-transfer-progress | tee mvn-build.log
 
           REPO_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
           echo "==========================================================="
@@ -118,7 +118,7 @@ jobs:
           echo "Artifact=$artifact"
           list_asset_url="https://api.github.com/repos/${owner}/${repo}/releases/tags/${tag_trimmed}"
           asset_url=$(curl "${list_asset_url}" | jq ".assets[] | select(.name==\"${artifact}\") | .url" | sed 's/\"//g')
-          curl -vLJO -H 'Accept: application/octet-stream' \
+          curl -sSLJO -H 'Accept: application/octet-stream' \
             "${asset_url}"
         fi
 
@@ -214,7 +214,7 @@ jobs:
         export IP
         echo ">>> Host ip: " 
         printenv IP
-        mvn clean package
+        mvn clean package --batch-mode --no-transfer-progress -DskipTests
         python3 ../product-is/oidc-fapi-conformance-tests/start_conformance_suite.py $DOCKER_COMPOSE_FILE
         
     - name: Run Tests
@@ -262,7 +262,7 @@ jobs:
     - name: Build Jacoco Report Generator
       run: |
         cd ./product-is/modules/integration/tests-common/jacoco-report-generator
-        mvn clean install
+        mvn clean install --batch-mode --no-transfer-progress
         ARTIFACT_ID=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout)
         VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
         JAR_NAME="${ARTIFACT_ID}-${VERSION}.jar"
@@ -280,8 +280,9 @@ jobs:
         name: jacoco-xml
         path: ./report/jacoco.xml
 
+    # Successful runs need no attention, so only failures and cancellations are notified.
     - name: Send Email
-      if: always()
+      if: failure() || cancelled()
       run: |
         INPUT=${{github.event.inputs.send-email}}
         if [[ -z "${INPUT}" ]]; then
@@ -314,8 +315,9 @@ jobs:
           echo "================================================================="
         fi
     
+    # Successful runs need no attention, so only failures and cancellations are notified.
     - name: Send Chat message
-      if: always()
+      if: failure() || cancelled()
       run: |
         INPUT=${{github.event.inputs.send-chat}}
         if [[ -z "${INPUT}" ]]; then
