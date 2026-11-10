@@ -68,8 +68,13 @@ public final class VPTestUtils {
 
     static String buildVPResponseModeJson(String responseMode) throws Exception {
 
+        return buildVPConfigJson("x509_san_dns", responseMode);
+    }
+
+    static String buildVPConfigJson(String clientIdScheme, String responseMode) throws Exception {
+
         JSONObject obj = new JSONObject();
-        obj.put("clientIdScheme", "x509_san_dns");
+        obj.put("clientIdScheme", clientIdScheme);
         obj.put("responseMode", responseMode);
         return obj.toString();
     }

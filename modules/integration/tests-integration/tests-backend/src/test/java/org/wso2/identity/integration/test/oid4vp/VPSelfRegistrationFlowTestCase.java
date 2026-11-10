@@ -205,8 +205,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
         }
         if (savedClientIdScheme != null) {
             try {
-                String restoreJson = "{\"clientIdScheme\":\"" + savedClientIdScheme
-                        + "\",\"responseMode\":\"" + savedResponseMode + "\"}";
+                String restoreJson = VPTestUtils.buildVPConfigJson(savedClientIdScheme, savedResponseMode);
                 adminPut(serverBaseUrl() + "/api/server/v1/configs/openid4vp", restoreJson);
             } catch (Exception e) {
                 log.warn("Failed to restore VP config in tearDown: " + e.getMessage());
@@ -360,7 +359,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
     private String createWalletConnectionIdpWithDefinitionId(String idpName, String definitionId) throws Exception {
 
         String idpJson = "{"
-                + "\"name\": \"" + idpName + "\","
+                + "\"name\": " + JSONObject.quote(idpName) + ","
                 + "\"description\": \"VP self-registration test IDP\","
                 + "\"federatedAuthenticators\": {"
                 + "  \"defaultAuthenticatorId\": \"" + VPTestUtils.PRESENTATION_AUTHENTICATOR_ID + "\","
@@ -369,7 +368,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 + "    \"isEnabled\": true,"
                 + "    \"properties\": [{"
                 + "      \"key\": \"presentationDefinitionId\","
-                + "      \"value\": \"" + definitionId + "\""
+                + "      \"value\": " + JSONObject.quote(definitionId)
                 + "    }]"
                 + "  }]"
                 + "}"
@@ -424,7 +423,7 @@ public class VPSelfRegistrationFlowTestCase extends VPVerificationSessionTestBas
                 + "        \"type\": \"EXECUTOR\","
                 + "        \"executor\": {"
                 + "          \"name\": \"PresentationExecutor\","
-                + "          \"meta\": {\"idpName\": \"" + idpName + "\"}"
+                + "          \"meta\": {\"idpName\": " + JSONObject.quote(idpName) + "}"
                 + "        },"
                 + "        \"next\": \"END\""
                 + "      }"

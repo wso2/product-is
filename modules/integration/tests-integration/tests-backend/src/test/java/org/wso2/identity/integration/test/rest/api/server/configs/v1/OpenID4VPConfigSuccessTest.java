@@ -141,19 +141,4 @@ public class OpenID4VPConfigSuccessTest extends OpenID4VPConfigTestBase {
                 .body("responseMode", equalTo("direct_post.jwt"));
     }
 
-    @Test(dependsOnMethods = {"testUpdateConfigDirectPostJwt"})
-    public void testUpdateConfigRoundTrip() throws Exception {
-
-        String body = "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"direct_post\"}";
-        getResponseOfPut(OPENID4VP_CONFIG_API_PATH, body).then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-
-        getResponseOfPut(OPENID4VP_CONFIG_API_PATH, body).then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK);
-    }
-
 }

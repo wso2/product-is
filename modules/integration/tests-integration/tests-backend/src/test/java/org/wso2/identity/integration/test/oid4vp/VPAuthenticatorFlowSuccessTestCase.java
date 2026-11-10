@@ -121,8 +121,7 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
         deleteUserIfExists("alice@example.com");
         if (savedClientIdScheme != null) {
             try {
-                String restoreJson = "{\"clientIdScheme\":\"" + savedClientIdScheme
-                        + "\",\"responseMode\":\"" + savedResponseMode + "\"}";
+                String restoreJson = VPTestUtils.buildVPConfigJson(savedClientIdScheme, savedResponseMode);
                 adminPut(serverBaseUrl() + "/api/server/v1/configs/openid4vp", restoreJson);
             } catch (Exception e) {
                 log.warn("Failed to restore VP config in tearDown: " + e.getMessage());
