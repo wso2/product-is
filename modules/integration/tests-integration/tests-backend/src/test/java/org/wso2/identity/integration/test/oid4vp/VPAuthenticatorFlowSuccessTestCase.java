@@ -108,7 +108,7 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
         deleteApplicationIfExists();
         deleteIdpIfExists();
         deletePresentationDefinitionQuietly();
-        closeVpSessionClient();
+        closeVPSessionClient();
         closeIdpMgtClient();
         closeOAuthRestClient();
         if (jitProvisionedUserId != null) {
@@ -541,142 +541,25 @@ public class VPAuthenticatorFlowSuccessTestCase extends VPAuthenticatorFlowTestB
         vpSessionRestClientTenantB = new VPSessionRestClient(serverURL, tenantB);
 
         String tenantApiPrefix = serverBaseUrl() + "/t/" + TENANT_AUTH_DOMAIN;
-        Response r;
-        String body;
-        int status;
 
-        r = adminPut(tenantApiPrefix + "/api/server/v1/configs/openid4vp",
-                "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"direct_post\"}",
-                TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-        status = r.getStatusCode();
-        if (status != HttpStatus.SC_OK) {
-            throw new AssertionError(
-                    "Tenant-B VP config update failed (status " + status + "): " + r.getBody().asString());
-        }
+        configureVPResponseMode("direct_post", tenantApiPrefix, TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
 
-        String defJson = "{\"identifier\":\"test-vp-auth-flow-definition\","
-                + "\"displayName\":\"Test VP Auth Flow Definition\","
-                + "\"description\":\"Presentation definition for VP authenticator end-to-end flow integration tests\","
-                + "\"credentials\":[{\"id\":\"PersonCredential\",\"type\":\"PersonCredential\","
-                + "\"format\":\"dc+sd-jwt\"}]}";
-        r = adminPost(tenantApiPrefix + PRESENTATION_DEFINITIONS_PATH, defJson,
+        tenantBDefinitionId = createPresentationDefinition(tenantApiPrefix,
                 TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-        body = r.getBody().asString();
-        status = r.getStatusCode();
-        if (status != HttpStatus.SC_CREATED && status != HttpStatus.SC_OK) {
-            throw new AssertionError(
-                    "Tenant-B definition creation failed (status " + status + "): " + body);
-        }
-        tenantBDefinitionId = new JSONObject(body).getString("id");
 
-        String pemCert = VPTestUtils.buildSelfSignedPemCertificate(issuerSigningKey);
-        String base64Pem = java.util.Base64.getEncoder()
-                .encodeToString(pemCert.getBytes(StandardCharsets.UTF_8));
-        String issuerBody = "{\"issuerConfigs\":[{"
-                + "\"issuerUrl\":\"" + ISSUER_URL + "\","
-                + "\"keySourceType\":\"pem\","
-                + "\"keySource\":\"" + base64Pem + "\""
-                + "}]}";
-        r = adminPut(tenantApiPrefix + PRESENTATION_DEFINITIONS_PATH + "/" + tenantBDefinitionId
-                + "/credentials/" + CREDENTIAL_IDENTIFIER + "/issuer-configs", issuerBody,
-                TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-        status = r.getStatusCode();
-        if (status != HttpStatus.SC_OK) {
-            throw new AssertionError(
-                    "Tenant-B trusted-issuer config failed (status " + status + "): " + r.getBody().asString());
-        }
+        configureTrustedIssuer(tenantBDefinitionId, CREDENTIAL_IDENTIFIER, ISSUER_URL, issuerSigningKey,
+                tenantApiPrefix, TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
 
         tenantBIdpName = "VPTestIDP-TenantB-" + UUID.randomUUID();
-        String idpJson = "{"
-                + "\"name\": \"" + tenantBIdpName + "\","
-                + "\"description\": \"VP Authenticator IDP for tenant B integration tests\","
-                + "\"federatedAuthenticators\": {"
-                + "  \"defaultAuthenticatorId\": \"UHJlc2VudGF0aW9uQXV0aGVudGljYXRvcg\","
-                + "  \"authenticators\": [{"
-                + "    \"authenticatorId\": \"UHJlc2VudGF0aW9uQXV0aGVudGljYXRvcg\","
-                + "    \"isEnabled\": true,"
-                + "    \"properties\": [{"
-                + "      \"key\": \"presentationDefinitionId\","
-                + "      \"value\": \"" + tenantBDefinitionId + "\""
-                + "    }]"
-                + "  }]"
-                + "}"
-                + "}";
-        r = adminPost(tenantApiPrefix + "/api/server/v1/identity-providers", idpJson,
+        tenantBIdpId = createVPAuthenticatorIDP(tenantBDefinitionId, tenantBIdpName,
+                tenantApiPrefix, TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
+
+        configureIdpClaims(tenantBIdpId, tenantApiPrefix, TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
+
+        String[] tenantBApp = createOAuthApp(tenantBIdpName, tenantApiPrefix,
                 TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-        body = r.getBody().asString();
-        status = r.getStatusCode();
-        if (status != HttpStatus.SC_CREATED && status != HttpStatus.SC_OK) {
-            throw new AssertionError("Tenant-B IDP creation failed (status " + status + "): " + body);
-        }
-        tenantBIdpId = new JSONObject(body).getString("id");
-
-        String claimConfigJson = "{"
-                + "\"userIdClaim\": {\"uri\": \"email\"},"
-                + "\"mappings\": ["
-                + "  {\"idpClaim\": \"given_name\","
-                + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/givenname\"}},"
-                + "  {\"idpClaim\": \"family_name\","
-                + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/lastname\"}},"
-                + "  {\"idpClaim\": \"email\","
-                + "   \"localClaim\": {\"uri\": \"http://wso2.org/claims/emailaddress\"}}"
-                + "],"
-                + "\"provisioningClaims\": []"
-                + "}";
-        r = adminPut(tenantApiPrefix + "/api/server/v1/identity-providers/" + tenantBIdpId + "/claims",
-                claimConfigJson, TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-        status = r.getStatusCode();
-        if (status != HttpStatus.SC_OK) {
-            throw new AssertionError("Tenant-B IDP claim config update failed (status " + status + "): "
-                    + r.getBody().asString());
-        }
-
-        String appName = "vp-auth-flow-tenant-b-app-" + UUID.randomUUID();
-        String appJson = "{"
-                + "\"name\": \"" + appName + "\","
-                + "\"inboundProtocolConfiguration\": {"
-                + "  \"oidc\": {"
-                + "    \"grantTypes\": [\"authorization_code\"],"
-                + "    \"callbackURLs\": [\"" + CALLBACK_URL + "\"]"
-                + "  }"
-                + "},"
-                + "\"advancedConfigurations\": {"
-                + "  \"skipLoginConsent\": true"
-                + "},"
-                + "\"authenticationSequence\": {"
-                + "  \"type\": \"USER_DEFINED\","
-                + "  \"steps\": [{"
-                + "    \"id\": 1,"
-                + "    \"options\": [{"
-                + "      \"idp\": \"" + tenantBIdpName + "\","
-                + "      \"authenticator\": \"PresentationAuthenticator\""
-                + "    }]"
-                + "  }]"
-                + "}"
-                + "}";
-        r = adminPost(tenantApiPrefix + "/api/server/v1/applications", appJson,
-                TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-        status = r.getStatusCode();
-        if (status != HttpStatus.SC_CREATED && status != HttpStatus.SC_OK) {
-            throw new AssertionError(
-                    "Tenant-B app creation failed (status " + status + "): " + r.getBody().asString());
-        }
-        String appLocation = r.getHeader("Location");
-        if (appLocation == null) {
-            throw new AssertionError("Tenant-B app creation response had no Location header.");
-        }
-        tenantBAppId = appLocation.substring(appLocation.lastIndexOf("/") + 1);
-
-        String oidcUrl = tenantApiPrefix + "/api/server/v1/applications/" + tenantBAppId
-                + "/inbound-protocols/oidc";
-        r = adminGet(oidcUrl, TENANT_AUTH_ADMIN, TENANT_AUTH_PASSWORD);
-        body = r.getBody().asString();
-        status = r.getStatusCode();
-        if (status != HttpStatus.SC_OK) {
-            throw new AssertionError(
-                    "Tenant-B OIDC config retrieval failed (status " + status + "): " + body);
-        }
-        tenantBConsumerKey = new JSONObject(body).optString("clientId", null);
+        tenantBAppId = tenantBApp[0];
+        tenantBConsumerKey = tenantBApp[1];
     }
 
     /** Builds the OAuth2 authorization URL for the tenant-B test application. */

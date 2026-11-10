@@ -56,17 +56,22 @@ public final class VPTestUtils {
 
         String pemCert = buildSelfSignedPemCertificate(signingKey);
         String base64Pem = java.util.Base64.getEncoder()
-                .encodeToString(pemCert.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        return "{\"issuerConfigs\":[{"
-                + "\"issuerUrl\":\"" + issuerUrl + "\","
-                + "\"keySourceType\":\"pem\","
-                + "\"keySource\":\"" + base64Pem + "\""
-                + "}]}";
+                .encodeToString(pemCert.getBytes(StandardCharsets.UTF_8));
+        JSONObject issuerConfig = new JSONObject();
+        issuerConfig.put("issuerUrl", issuerUrl);
+        issuerConfig.put("keySourceType", "pem");
+        issuerConfig.put("keySource", base64Pem);
+        JSONObject root = new JSONObject();
+        root.put("issuerConfigs", new JSONArray().put(issuerConfig));
+        return root.toString();
     }
 
-    static String buildVPResponseModeJson(String responseMode) {
+    static String buildVPResponseModeJson(String responseMode) throws Exception {
 
-        return "{\"clientIdScheme\":\"x509_san_dns\",\"responseMode\":\"" + responseMode + "\"}";
+        JSONObject obj = new JSONObject();
+        obj.put("clientIdScheme", "x509_san_dns");
+        obj.put("responseMode", responseMode);
+        return obj.toString();
     }
 
     /**

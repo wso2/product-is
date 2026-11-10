@@ -73,7 +73,7 @@ public class VPAuthenticatorFlowFailureTestCase extends VPAuthenticatorFlowTestB
         deleteApplicationIfExists();
         deleteIdpIfExists();
         deletePresentationDefinitionQuietly();
-        closeVpSessionClient();
+        closeVPSessionClient();
         closeIdpMgtClient();
         closeOAuthRestClient();
         if (savedClientIdScheme != null) {

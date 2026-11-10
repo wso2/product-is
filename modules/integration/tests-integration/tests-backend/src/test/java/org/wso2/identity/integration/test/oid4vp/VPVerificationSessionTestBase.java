@@ -18,48 +18,24 @@
 
 package org.wso2.identity.integration.test.oid4vp;
 
-import com.nimbusds.jose.jwk.ECKey;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.json.JSONObject;
 import org.testng.Assert;
-import org.wso2.identity.integration.common.utils.ISIntegrationTest;
-import org.wso2.identity.integration.test.restclients.VPSessionRestClient;
-import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.awaitility.Awaitility.await;
 
 /**
  * Base class for VP verification session integration tests.
  */
-public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
+public abstract class VPVerificationSessionTestBase extends VPTestBase {
 
     protected static final String DEFINITION_IDENTIFIER = "test-vp-session-definition";
-    protected static final String CREDENTIAL_IDENTIFIER = "PersonCredential";
 
     protected static final String STATUS_ACTIVE   = "ACTIVE";
     protected static final String STATUS_VERIFIED = "VERIFIED";
     protected static final String STATUS_FAILED   = "FAILED";
-
-    private static final String PRESENTATION_DEFINITIONS_PATH = "/api/server/v1/presentation-definitions";
-
-    protected VPSessionRestClient vpSessionRestClient;
-
-    /**
-     * Initialise the {@link VPSessionRestClient}.
-     * Call this from {@code @BeforeClass} after {@code super.init(...)}.
-     */
-    protected void initVPSessionClient() throws Exception {
-
-        vpSessionRestClient = new VPSessionRestClient(serverURL, isServer.getContextTenant());
-    }
 
     /**
      * Create a presentation definition via the admin REST API.
@@ -139,20 +115,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
     }
 
     /**
-     * Close the VP session REST client.  Call from {@code @AfterClass}.
-     */
-    protected void closeVPSessionClient() {
-
-        if (vpSessionRestClient != null) {
-            try {
-                vpSessionRestClient.closeHttpClient();
-            } catch (IOException e) {
-                log.warn("Failed to close VPSessionRestClient: " + e.getMessage());
-            }
-        }
-    }
-
-    /**
      * Create a "digital wallet connection" IDP that has the PresentationAuthenticator as its
      * federated authenticator.  Creating this IDP fires {@code VPIdPMgtListener.doPostAddIdP},
      * which provisions the ECDSA P-256 keypair needed to sign VP request JWTs.
@@ -193,44 +155,6 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
     }
 
     /**
-     * Configure the VP tenant response mode.
-     * Calls PUT /api/server/v1/configs/openid4vp so the server accepts plain direct_post VP submissions.
-     *
-     * @param responseMode One of {@code "direct_post"} or {@code "direct_post.jwt"}.
-     */
-    protected void configureVPResponseMode(String responseMode) throws IOException {
-
-        String url = serverBaseUrl() + "/api/server/v1/configs/openid4vp";
-        Response response = adminPut(url, VPTestUtils.buildVPResponseModeJson(responseMode));
-        int status = response.getStatusCode();
-        String responseBody = response.getBody().asString();
-        Assert.assertEquals(status, HttpStatus.SC_OK,
-                "Failed to configure VP response mode (status " + status + "): " + responseBody);
-    }
-
-    /**
-     * Register an in-memory EC signing key as a trusted issuer for the given credential.
-     * Calls PUT /presentation-definitions/{defId}/credentials/{credId}/issuer-configs.
-     *
-     * @param definitionId  Server-assigned presentation definition ID.
-     * @param credentialId  Credential identifier within the definition.
-     * @param issuerUrl     The issuer URL to register.
-     * @param signingKey    The ECKey whose public part to register (PEM / SubjectPublicKeyInfo).
-     */
-    protected void configureTrustedIssuer(String definitionId, String credentialId,
-                                          String issuerUrl, ECKey signingKey) throws Exception {
-
-        String body = VPTestUtils.buildTrustedIssuerRequestJson(issuerUrl, signingKey);
-        String url = serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId
-                + "/credentials/" + credentialId + "/issuer-configs";
-        Response response = adminPut(url, body);
-        int status = response.getStatusCode();
-        String responseBody = response.getBody().asString();
-        Assert.assertEquals(status, HttpStatus.SC_OK,
-                "Failed to configure trusted issuer (status " + status + "): " + responseBody);
-    }
-
-    /**
      * Delete a digital wallet connection IDP by its server-assigned ID.
      *
      * @param idpId The ID returned at creation time.
@@ -246,82 +170,4 @@ public abstract class VPVerificationSessionTestBase extends ISIntegrationTest {
         Assert.assertTrue(status == HttpStatus.SC_NO_CONTENT || status == HttpStatus.SC_NOT_FOUND,
                 "Unexpected status when deleting digital wallet connection IDP: " + status);
     }
-
-    /**
-     * Poll the session status until it leaves the {@code ACTIVE} state or the overall
-     * timeout ({@code maxRetries * intervalMs}) is exhausted.
-     *
-     * @param requestId     The session ID to poll.
-     * @param maxRetries    Number of polling attempts the timeout budget is sized for.
-     * @param intervalMs    Wait in milliseconds between attempts.
-     * @return The last observed status string.
-     * @throws Exception If any HTTP call fails, or if the status is still {@code ACTIVE} once the timeout elapses.
-     */
-    protected String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs) throws Exception {
-
-        AtomicReference<String> lastStatus = new AtomicReference<>(STATUS_ACTIVE);
-        await().atMost((long) maxRetries * intervalMs, TimeUnit.MILLISECONDS)
-                .pollInterval(intervalMs, TimeUnit.MILLISECONDS)
-                .until(() -> {
-                    JSONObject statusResponse = vpSessionRestClient.getSessionStatus(requestId);
-                    String status = (String) statusResponse.get("status");
-                    lastStatus.set(status);
-                    return !STATUS_ACTIVE.equals(status);
-                });
-        return lastStatus.get();
-    }
-
-    protected Response adminGet(String url) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .get(url);
-    }
-
-    protected Response adminPost(String url, String json) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
-                .contentType(ContentType.JSON)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .body(json)
-                .post(url);
-    }
-
-    protected Response adminPut(String url, String json) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
-                .contentType(ContentType.JSON)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .body(json)
-                .put(url);
-    }
-
-    protected Response adminPatch(String url, String json) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
-                .contentType(ContentType.JSON)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .body(json)
-                .patch(url);
-    }
-
-    protected Response adminDelete(String url) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(userInfo.getUserName(), userInfo.getPassword())
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .delete(url);
-    }
-
-    /**
-     * Returns the server base URL without a trailing slash.
-     */
-    protected String serverBaseUrl() {
-        return serverURL.endsWith("/") ? serverURL.substring(0, serverURL.length() - 1) : serverURL;
-    }
-
 }

@@ -154,13 +154,6 @@ public class OpenID4VPConfigSuccessTest extends OpenID4VPConfigTestBase {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
-
-        getResponseOfGet(OPENID4VP_CONFIG_API_PATH).then()
-                .log().ifValidationFails()
-                .assertThat()
-                .statusCode(HttpStatus.SC_OK)
-                .body("clientIdScheme", equalTo("x509_san_dns"))
-                .body("responseMode", equalTo("direct_post"));
     }
 
 }

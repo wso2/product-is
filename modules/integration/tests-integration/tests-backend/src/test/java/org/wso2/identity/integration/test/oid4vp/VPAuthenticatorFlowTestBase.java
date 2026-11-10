@@ -20,8 +20,6 @@ package org.wso2.identity.integration.test.oid4vp;
 
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jwt.SignedJWT;
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpStatus;
@@ -43,7 +41,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
-import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AdvancedApplicationConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationModel;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.AuthenticationSequence;
@@ -56,7 +53,6 @@ import org.wso2.identity.integration.test.rest.api.server.application.management
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.RequestedClaimConfiguration;
 import org.wso2.identity.integration.test.rest.api.server.idp.v1.model.Claims;
 import org.wso2.identity.integration.test.restclients.IdpMgtRestClient;
-import org.wso2.identity.integration.test.restclients.VPSessionRestClient;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import java.net.URI;
@@ -67,27 +63,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
-
-import static org.awaitility.Awaitility.await;
 
 /**
  * Shared constants, fields and helpers for the VP Authenticator flow tests.
  * Holds no {@code @Test} methods and no shared {@code @BeforeClass}/{@code @AfterClass} —
  * each subclass is responsible for its own setup and teardown.
  */
-public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractIntegrationTest {
+public abstract class VPAuthenticatorFlowTestBase extends VPTestBase {
 
-    protected static final String CALLBACK_URL             = "https://localhost/callback";
-    protected static final String CREDENTIAL_IDENTIFIER    = "PersonCredential";
-    protected static final String ISSUER_URL               = "https://test-issuer.example.com";
-    protected static final String PRESENTATION_DEFINITIONS_PATH = "/api/server/v1/presentation-definitions";
-    protected static final String COMMONAUTH_PATH          = "commonauth";
-    protected static final String WALLET_LOGIN_JSP         = "wallet_login.jsp";
+    protected static final String CALLBACK_URL          = "https://localhost/callback";
+    protected static final String ISSUER_URL             = "https://test-issuer.example.com";
+    protected static final String COMMONAUTH_PATH        = "commonauth";
+    protected static final String WALLET_LOGIN_JSP       = "wallet_login.jsp";
 
-    protected static final int    POLL_MAX_RETRIES         = 15;
-    protected static final long   POLL_INTERVAL_MS         = 500L;
+    protected static final int    POLL_MAX_RETRIES       = 15;
+    protected static final long   POLL_INTERVAL_MS       = 500L;
 
     protected ECKey issuerSigningKey;
 
@@ -95,7 +85,6 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
     protected String appId;
     protected String idpId;
     protected String vpIdpName;
-    protected VPSessionRestClient vpSessionRestClient;
     protected IdpMgtRestClient idpMgtRestClient;
 
     /**
@@ -144,10 +133,135 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
             body = response.getBody().asString();
             status = response.getStatusCode();
         }
-        Assert.assertTrue(status == HttpStatus.SC_CREATED || status == HttpStatus.SC_OK,
+        Assert.assertEquals(status, HttpStatus.SC_CREATED,
                 "Failed to create presentation definition (status " + status + "): " + body);
         JSONObject jsonResponse = new JSONObject(body);
         return jsonResponse.getString("id");
+    }
+
+    protected String createPresentationDefinition(String apiBase, String user, String pass) throws Exception {
+
+        String json = "{\"identifier\":\"test-vp-auth-flow-definition\","
+                + "\"displayName\":\"Test VP Auth Flow Definition\","
+                + "\"description\":\"Presentation definition for VP authenticator end-to-end flow integration tests\","
+                + "\"credentials\":[{\"id\":\"PersonCredential\",\"type\":\"PersonCredential\","
+                + "\"format\":\"dc+sd-jwt\"}]}";
+        String url = apiBase + PRESENTATION_DEFINITIONS_PATH;
+        Response response = adminPost(url, json, user, pass);
+        String body = response.getBody().asString();
+        int status = response.getStatusCode();
+        if (status == HttpStatus.SC_CONFLICT) {
+            String identifier = new JSONObject(json).getString("identifier");
+            Response listResp = adminGet(apiBase + PRESENTATION_DEFINITIONS_PATH + "?limit=100", user, pass);
+            String listBody = listResp.getBody().asString();
+            Assert.assertEquals(listResp.getStatusCode(), HttpStatus.SC_OK,
+                    "POST returned 409 but list-all also failed: " + listBody);
+            JSONArray definitions = new JSONObject(listBody).optJSONArray("presentationDefinitions");
+            String staleId = null;
+            if (definitions != null) {
+                for (int i = 0; i < definitions.length(); i++) {
+                    JSONObject def = definitions.getJSONObject(i);
+                    if (identifier.equals(def.optString("identifier"))) {
+                        staleId = def.getString("id");
+                        break;
+                    }
+                }
+            }
+            Assert.assertNotNull(staleId,
+                    "No matching definition found for identifier='" + identifier + "' after 409.");
+            adminDelete(apiBase + PRESENTATION_DEFINITIONS_PATH + "/" + staleId, user, pass);
+            response = adminPost(url, json, user, pass);
+            body = response.getBody().asString();
+            status = response.getStatusCode();
+        }
+        Assert.assertEquals(status, HttpStatus.SC_CREATED,
+                "Failed to create presentation definition (status " + status + "): " + body);
+        return new JSONObject(body).getString("id");
+    }
+
+    protected String createVPAuthenticatorIDP(String definitionId, String idpName,
+                                               String apiBase, String user, String pass) throws Exception {
+
+        JSONObject property = new JSONObject();
+        property.put("key", "presentationDefinitionId");
+        property.put("value", definitionId);
+        JSONObject authenticator = new JSONObject();
+        authenticator.put("authenticatorId", VPTestUtils.PRESENTATION_AUTHENTICATOR_ID);
+        authenticator.put("isEnabled", true);
+        authenticator.put("properties", new JSONArray().put(property));
+        JSONObject federatedAuthenticators = new JSONObject();
+        federatedAuthenticators.put("defaultAuthenticatorId", VPTestUtils.PRESENTATION_AUTHENTICATOR_ID);
+        federatedAuthenticators.put("authenticators", new JSONArray().put(authenticator));
+        JSONObject idpObj = new JSONObject();
+        idpObj.put("name", idpName);
+        idpObj.put("description", "VP Authenticator IDP for integration tests");
+        idpObj.put("federatedAuthenticators", federatedAuthenticators);
+        String url = apiBase + "/api/server/v1/identity-providers";
+        Response response = adminPost(url, idpObj.toString(), user, pass);
+        String body = response.getBody().asString();
+        int status = response.getStatusCode();
+        if (status != HttpStatus.SC_CREATED && status != HttpStatus.SC_OK) {
+            throw new AssertionError("IDP creation failed (status " + status + "): " + body);
+        }
+        return new JSONObject(body).getString("id");
+    }
+
+    protected void configureIdpClaims(String idpId, String apiBase, String user, String pass) throws Exception {
+
+        JSONObject claimConfig = new JSONObject();
+        claimConfig.put("userIdClaim", new JSONObject().put("uri", "email"));
+        claimConfig.put("mappings", new JSONArray()
+                .put(new JSONObject().put("idpClaim", "given_name")
+                        .put("localClaim", new JSONObject().put("uri", "http://wso2.org/claims/givenname")))
+                .put(new JSONObject().put("idpClaim", "family_name")
+                        .put("localClaim", new JSONObject().put("uri", "http://wso2.org/claims/lastname")))
+                .put(new JSONObject().put("idpClaim", "email")
+                        .put("localClaim", new JSONObject().put("uri", "http://wso2.org/claims/emailaddress"))));
+        claimConfig.put("provisioningClaims", new JSONArray());
+        String url = apiBase + "/api/server/v1/identity-providers/" + idpId + "/claims";
+        Response response = adminPut(url, claimConfig.toString(), user, pass);
+        int status = response.getStatusCode();
+        Assert.assertEquals(status, HttpStatus.SC_OK,
+                "IDP claim config update failed (status " + status + "): " + response.getBody().asString());
+    }
+
+    protected String[] createOAuthApp(String idpName, String apiBase, String user, String pass) throws Exception {
+
+        String appName = "vp-auth-flow-app-" + UUID.randomUUID();
+        JSONObject oidc = new JSONObject()
+                .put("grantTypes", new JSONArray().put("authorization_code"))
+                .put("callbackURLs", new JSONArray().put(CALLBACK_URL));
+        JSONObject step = new JSONObject()
+                .put("id", 1)
+                .put("options", new JSONArray().put(
+                        new JSONObject().put("idp", idpName).put("authenticator", "PresentationAuthenticator")));
+        JSONObject appObj = new JSONObject()
+                .put("name", appName)
+                .put("inboundProtocolConfiguration", new JSONObject().put("oidc", oidc))
+                .put("advancedConfigurations", new JSONObject().put("skipLoginConsent", true))
+                .put("authenticationSequence", new JSONObject()
+                        .put("type", "USER_DEFINED")
+                        .put("steps", new JSONArray().put(step)));
+        String url = apiBase + "/api/server/v1/applications";
+        Response response = adminPost(url, appObj.toString(), user, pass);
+        int status = response.getStatusCode();
+        if (status != HttpStatus.SC_CREATED && status != HttpStatus.SC_OK) {
+            throw new AssertionError("App creation failed (status " + status + "): " + response.getBody().asString());
+        }
+        String appLocation = response.getHeader("Location");
+        if (appLocation == null) {
+            throw new AssertionError("App creation response had no Location header.");
+        }
+        String appId = appLocation.substring(appLocation.lastIndexOf("/") + 1);
+        String oidcUrl = apiBase + "/api/server/v1/applications/" + appId + "/inbound-protocols/oidc";
+        Response oidcResp = adminGet(oidcUrl, user, pass);
+        int oidcStatus = oidcResp.getStatusCode();
+        if (oidcStatus != HttpStatus.SC_OK) {
+            throw new AssertionError("OIDC config retrieval failed (status " + oidcStatus + "): "
+                    + oidcResp.getBody().asString());
+        }
+        String consumerKey = new JSONObject(oidcResp.getBody().asString()).optString("clientId", null);
+        return new String[]{appId, consumerKey};
     }
 
     /** Deletes the presentation definition with the given ID. */
@@ -166,28 +280,26 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
     protected String createVPAuthenticatorIDP() throws Exception {
 
         String generatedIdpName = "VPTestIDP-" + UUID.randomUUID();
-        String idpJson = "{"
-                + "\"name\": \"" + generatedIdpName + "\","
-                + "\"description\": \"VP Authenticator IDP for integration tests\","
-                + "\"federatedAuthenticators\": {"
-                + "  \"defaultAuthenticatorId\": \"" + VPTestUtils.PRESENTATION_AUTHENTICATOR_ID + "\","
-                + "  \"authenticators\": [{"
-                + "    \"authenticatorId\": \"" + VPTestUtils.PRESENTATION_AUTHENTICATOR_ID + "\","
-                + "    \"isEnabled\": true,"
-                + "    \"properties\": [{"
-                + "      \"key\": \"presentationDefinitionId\","
-                + "      \"value\": \"" + presentationDefinitionId + "\""
-                + "    }]"
-                + "  }]"
-                + "},"
-                + "\"provisioning\": {"
-                + "  \"jit\": {"
-                + "    \"isEnabled\": true,"
-                + "    \"userstore\": \"PRIMARY\","
-                + "    \"scheme\": \"PROVISION_SILENTLY\""
-                + "  }"
-                + "}"
-                + "}";
+        JSONObject property = new JSONObject();
+        property.put("key", "presentationDefinitionId");
+        property.put("value", presentationDefinitionId);
+        JSONObject authenticator = new JSONObject();
+        authenticator.put("authenticatorId", VPTestUtils.PRESENTATION_AUTHENTICATOR_ID);
+        authenticator.put("isEnabled", true);
+        authenticator.put("properties", new JSONArray().put(property));
+        JSONObject federatedAuthenticators = new JSONObject();
+        federatedAuthenticators.put("defaultAuthenticatorId", VPTestUtils.PRESENTATION_AUTHENTICATOR_ID);
+        federatedAuthenticators.put("authenticators", new JSONArray().put(authenticator));
+        JSONObject jit = new JSONObject();
+        jit.put("isEnabled", true);
+        jit.put("userstore", "PRIMARY");
+        jit.put("scheme", "PROVISION_SILENTLY");
+        JSONObject idpObj = new JSONObject();
+        idpObj.put("name", generatedIdpName);
+        idpObj.put("description", "VP Authenticator IDP for integration tests");
+        idpObj.put("federatedAuthenticators", federatedAuthenticators);
+        idpObj.put("provisioning", new JSONObject().put("jit", jit));
+        String idpJson = idpObj.toString();
 
         String url = serverBaseUrl() + "/api/server/v1/identity-providers";
         Response response = adminPost(url, idpJson);
@@ -309,7 +421,7 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
 
         try (CloseableHttpResponse jwtResponse = vpSessionRestClient.getPresentationRequestJwt(ctx.requestId)) {
             String jwtBody = EntityUtils.toString(jwtResponse.getEntity()).trim();
-            Assert.assertEquals(jwtResponse.getStatusLine().getStatusCode(), HttpStatus.SC_OK,
+            Assert.assertEquals(jwtResponse.getStatusLine().getStatusCode(), org.apache.http.HttpStatus.SC_OK,
                     "GET /requests/{id} must return 200. Body: " + jwtBody);
             SignedJWT requestJwt = SignedJWT.parse(jwtBody);
             ctx.nonce = requestJwt.getJWTClaimsSet().getStringClaim("nonce");
@@ -472,111 +584,6 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         return builder.build();
     }
 
-    protected void configureTrustedIssuer(String definitionId, String credentialId,
-                                        String issuerUrl, ECKey signingKey) throws Exception {
-
-        String body = VPTestUtils.buildTrustedIssuerRequestJson(issuerUrl, signingKey);
-        String url = serverBaseUrl() + PRESENTATION_DEFINITIONS_PATH + "/" + definitionId
-                + "/credentials/" + credentialId + "/issuer-configs";
-        Response response = adminPut(url, body);
-        int status = response.getStatusCode();
-        String responseBody = response.getBody().asString();
-        Assert.assertEquals(status, HttpStatus.SC_OK,
-                "Failed to configure trusted issuer (status " + status + "): " + responseBody);
-    }
-
-    protected void configureVPResponseMode(String responseMode) {
-
-        String url = serverBaseUrl() + "/api/server/v1/configs/openid4vp";
-        Response response = adminPut(url, VPTestUtils.buildVPResponseModeJson(responseMode));
-        int status = response.getStatusCode();
-        String responseBody = response.getBody().asString();
-        Assert.assertEquals(status, HttpStatus.SC_OK,
-                "Failed to configure VP response mode (status " + status + "): " + responseBody);
-    }
-
-    /**
-     * Returns the server base URL without a trailing slash.
-     */
-    protected String serverBaseUrl() {
-        return serverURL.endsWith("/") ? serverURL.substring(0, serverURL.length() - 1) : serverURL;
-    }
-
-    protected Response adminPost(String url, String json) {
-
-        return adminPost(url, json, userInfo.getUserName(), userInfo.getPassword());
-    }
-
-    protected Response adminPost(String url, String json, String user, String pass) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(user, pass)
-                .contentType(ContentType.JSON)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .body(json)
-                .post(normalizeUrl(url));
-    }
-
-    protected Response adminPut(String url, String json) {
-
-        return adminPut(url, json, userInfo.getUserName(), userInfo.getPassword());
-    }
-
-    protected Response adminPut(String url, String json, String user, String pass) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(user, pass)
-                .contentType(ContentType.JSON)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .body(json)
-                .put(normalizeUrl(url));
-    }
-
-    protected Response adminPatch(String url, String json) {
-
-        return adminPatch(url, json, userInfo.getUserName(), userInfo.getPassword());
-    }
-
-    protected Response adminPatch(String url, String json, String user, String pass) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(user, pass)
-                .contentType(ContentType.JSON)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .body(json)
-                .patch(normalizeUrl(url));
-    }
-
-    protected Response adminDelete(String url) {
-
-        return adminDelete(url, userInfo.getUserName(), userInfo.getPassword());
-    }
-
-    protected Response adminDelete(String url, String user, String pass) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(user, pass)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .delete(normalizeUrl(url));
-    }
-
-    protected Response adminGet(String url) {
-
-        return adminGet(url, userInfo.getUserName(), userInfo.getPassword());
-    }
-
-    protected Response adminGet(String url, String user, String pass) {
-
-        return RestAssured.given()
-                .auth().preemptive().basic(user, pass)
-                .header("User-Agent", OAuth2Constant.USER_AGENT)
-                .get(normalizeUrl(url));
-    }
-
-    private static String normalizeUrl(String url) {
-        return url.replaceAll("([^:])//+", "$1/");
-    }
-
     /** Returns the value of the Location header from the response, or null if absent. */
     protected static String getLocationHeader(CloseableHttpResponse response) {
 
@@ -613,34 +620,6 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
         return null;
     }
 
-    /** Polls using the default VP session client. */
-    protected String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs) throws Exception {
-
-        return pollStatusUntilNotActive(requestId, maxRetries, intervalMs, vpSessionRestClient);
-    }
-
-    /**
-     * Polls the VP session status at {@code intervalMs} intervals until it is no longer ACTIVE, then returns
-     * the final status.
-     *
-     * @throws Exception If any HTTP call fails, or if the status is still ACTIVE once the
-     *                    {@code maxRetries * intervalMs} timeout elapses.
-     */
-    protected String pollStatusUntilNotActive(String requestId, int maxRetries, long intervalMs,
-            VPSessionRestClient client) throws Exception {
-
-        AtomicReference<String> lastStatus = new AtomicReference<>("ACTIVE");
-        await().atMost((long) maxRetries * intervalMs, TimeUnit.MILLISECONDS)
-                .pollInterval(intervalMs, TimeUnit.MILLISECONDS)
-                .until(() -> {
-                    JSONObject statusResponse = client.getSessionStatus(requestId);
-                    String status = (String) statusResponse.get("status");
-                    lastStatus.set(status);
-                    return !"ACTIVE".equals(status);
-                });
-        return lastStatus.get();
-    }
-
     /** Deletes the test application if one was created. */
     protected void deleteApplicationIfExists() {
 
@@ -672,18 +651,6 @@ public abstract class VPAuthenticatorFlowTestBase extends OAuth2ServiceAbstractI
             deletePresentationDefinition(presentationDefinitionId);
         } catch (Exception e) {
             log.warn("Failed to delete presentation definition: " + e.getMessage());
-        }
-    }
-
-    /** Closes the VP session REST client. */
-    protected void closeVpSessionClient() {
-
-        if (vpSessionRestClient != null) {
-            try {
-                vpSessionRestClient.closeHttpClient();
-            } catch (Exception e) {
-                log.warn("Failed to close VP session client: " + e.getMessage());
-            }
         }
     }
 

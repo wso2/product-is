@@ -221,6 +221,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with nonce-mismatched VP must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -253,6 +254,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with an expired credential must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -286,6 +288,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with an untrusted issuer key must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -317,6 +320,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with wrong credential type must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -338,6 +342,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with a malformed VP token must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -370,6 +375,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with a corrupted disclosure hash must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -397,6 +403,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session with a VP missing the KB-JWT must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -417,6 +424,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "Session after wallet access_denied must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -475,6 +483,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String failedStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(failedStatus, STATUS_FAILED,
                 "Session must be FAILED before testing that a second VP submission is rejected.");
+        assertFailedSessionResult(requestId);
 
         String vpToken = SDJwtVcTestBuilder.builder()
                 .vct("PersonCredential")
@@ -520,6 +529,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "VP whose issuer URL is not in the trusted list must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -549,6 +559,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "VP with wrong KB-JWT audience must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -582,6 +593,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "VP whose KB-JWT is signed by a key mismatching cnf must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -613,6 +625,7 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String finalStatus = pollStatusUntilNotActive(requestId, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(finalStatus, STATUS_FAILED,
                 "VP with tampered sd_hash in the KB-JWT must transition to FAILED.");
+        assertFailedSessionResult(requestId);
     }
 
     @Test(groups = "wso2.is",
@@ -656,8 +669,27 @@ public class VPVerificationSessionFailureTestCase extends VPVerificationSessionT
         String statusB = pollStatusUntilNotActive(requestIdB, POLL_MAX_RETRIES, POLL_INTERVAL_MS);
         Assert.assertEquals(statusB, STATUS_FAILED,
                 "Replaying a VP from session A into session B must transition to FAILED (nonce mismatch).");
+        assertFailedSessionResult(requestIdB);
     }
 
+
+    private void assertFailedSessionResult(String requestId) throws Exception {
+
+        try (CloseableHttpResponse resultResp = vpSessionRestClient.getSessionResult(requestId)) {
+            int resultStatus = resultResp.getStatusLine().getStatusCode();
+            String resultBody = EntityUtils.toString(resultResp.getEntity());
+            Assert.assertEquals(resultStatus, HttpStatus.SC_OK,
+                    "GET session result of a FAILED session must return 200. Body: " + resultBody);
+            JSONObject resultJson = new JSONObject(resultBody);
+            Assert.assertEquals(resultJson.optString("status"), STATUS_FAILED,
+                    "Session result 'status' must be FAILED. Body: " + resultBody);
+            String errorType = resultJson.optString("errorType", null);
+            Assert.assertNotNull(errorType,
+                    "FAILED session result must contain 'errorType'. Body: " + resultBody);
+            Assert.assertFalse(errorType.trim().isEmpty(),
+                    "FAILED session result 'errorType' must not be empty. Body: " + resultBody);
+        }
+    }
 
     private String[] fetchRequestParams(String requestId) throws Exception {
 

@@ -114,7 +114,7 @@ public class VPAuthenticatorFlowSecurityTestCase extends VPAuthenticatorFlowTest
         deleteApplicationIfExists();
         deleteIdpIfExists();
         deletePresentationDefinitionQuietly();
-        closeVpSessionClient();
+        closeVPSessionClient();
         closeIdpMgtClient();
         closeOAuthRestClient();
 

@@ -21,7 +21,6 @@ package org.wso2.identity.integration.test.rest.api.server.configs.v1;
 import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
@@ -48,12 +47,6 @@ public class OpenID4VPConfigTestBase extends RESTAPIServerTestBase {
             Assert.fail(String.format("Unable to read the swagger definition %s from %s",
                     API_DEFINITION_NAME, API_PACKAGE_NAME), e);
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void testConclude() throws Exception {
-
-        super.conclude();
     }
 
     @BeforeMethod(alwaysRun = true)
