@@ -231,8 +231,9 @@ jobs:
         name: jacoco-xml
         path: ./report/jacoco.xml
 
+    # Successful runs need no attention, so only failures and cancellations are notified.
     - name: Send Email
-      if: always()
+      if: failure() || cancelled()
       run: |
         INPUT=${{github.event.inputs.send-email}}
         if [[ -z "${INPUT}" ]]; then
@@ -261,8 +262,9 @@ jobs:
           echo "================================================================="
         fi
         
+    # Successful runs need no attention, so only failures and cancellations are notified.
     - name: Send Chat message
-      if: always()
+      if: failure() || cancelled()
       run: |
         INPUT=${{github.event.inputs.send-chat}}
         if [[ -z "${INPUT}" ]]; then
