@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 
@@ -39,8 +40,13 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.identity.integration.test.rest.api.user.common.model.Email;
+import org.wso2.identity.integration.test.rest.api.user.common.model.UserObject;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Test class for OpenID4VP Configuration REST APIs failure paths.
@@ -52,6 +58,7 @@ public class OpenID4VPConfigFailureTest extends OpenID4VPConfigTestBase {
     private static final String NON_ADMIN_BASE_NAME = "vpconfig_nonadmin";
     private static final String NON_ADMIN_PASSWORD  = "Admin@123!VP";
 
+    private SCIM2RestClient scim2Client;
     private String nonAdminUserId;
     private String nonAdminAuthUser;
 
@@ -72,53 +79,44 @@ public class OpenID4VPConfigFailureTest extends OpenID4VPConfigTestBase {
 
         boolean isSuperTenant = "carbon.super".equals(tenant);
         nonAdminAuthUser = isSuperTenant ? NON_ADMIN_BASE_NAME : NON_ADMIN_BASE_NAME + "@" + tenant;
-        String tenantPath = isSuperTenant ? "" : "/t/" + tenant;
-        String scimUrl = RestAssured.baseURI + tenantPath + "/scim2/Users";
 
-        Response listResp = given()
-                .auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .queryParam("filter", "userName eq \"" + NON_ADMIN_BASE_NAME + "\"")
-                .get(scimUrl);
-        if (listResp.getStatusCode() == HttpStatus.SC_OK) {
-            String staleId = listResp.jsonPath().getString("Resources[0].id");
-            if (staleId != null) {
-                given()
-                        .auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                        .delete(scimUrl + "/" + staleId);
+        scim2Client = new SCIM2RestClient(serverURL, isServer.getContextTenant());
+
+        String filter = URLEncoder.encode("userName eq \"" + NON_ADMIN_BASE_NAME + "\"", StandardCharsets.UTF_8);
+        JSONObject existing = new JSONObject(scim2Client.filterUsers(filter).toJSONString());
+        if (existing.optLong("totalResults", 0) > 0) {
+            JSONArray resources = existing.optJSONArray("Resources");
+            if (resources != null) {
+                for (int i = 0; i < resources.length(); i++) {
+                    scim2Client.deleteUser(resources.getJSONObject(i).getString("id"));
+                }
             }
         }
 
-        JSONObject userJson = new JSONObject();
-        userJson.put("schemas", new org.json.JSONArray().put("urn:ietf:params:scim:schemas:core:2.0:User"));
-        userJson.put("userName", NON_ADMIN_BASE_NAME);
-        userJson.put("password", NON_ADMIN_PASSWORD);
-        userJson.put("emails", new org.json.JSONArray().put(
-                new JSONObject().put("primary", true).put("value", NON_ADMIN_BASE_NAME + "@wso2test.com")));
-
-        Response createResp = given()
-                .auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                .contentType(ContentType.JSON)
-                .body(userJson.toString())
-                .post(scimUrl);
-        Assert.assertEquals(createResp.getStatusCode(), HttpStatus.SC_CREATED,
-                "Failed to create non-admin test user '" + nonAdminAuthUser + "' (status "
-                        + createResp.getStatusCode() + "): " + createResp.asString());
-        nonAdminUserId = createResp.jsonPath().getString("id");
+        UserObject user = new UserObject()
+                .userName(NON_ADMIN_BASE_NAME)
+                .password(NON_ADMIN_PASSWORD)
+                .addEmail(new Email().value(NON_ADMIN_BASE_NAME + "@wso2test.com").primary(true));
+        nonAdminUserId = scim2Client.createUser(user);
+        Assert.assertNotNull(nonAdminUserId,
+                "Failed to create non-admin test user '" + nonAdminAuthUser + "'");
     }
 
     @AfterClass(alwaysRun = true)
     public void testConclude() {
 
         if (nonAdminUserId != null) {
-            boolean isSuperTenant = "carbon.super".equals(tenant);
-            String tenantPath = isSuperTenant ? "" : "/t/" + tenant;
-            String deleteUrl = RestAssured.baseURI + tenantPath + "/scim2/Users/" + nonAdminUserId;
             try {
-                given()
-                    .auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
-                    .delete(deleteUrl);
+                scim2Client.deleteUser(nonAdminUserId);
             } catch (Exception e) {
                 log.warn("Failed to delete non-admin test user '" + nonAdminAuthUser + "': " + e.getMessage());
+            }
+        }
+        if (scim2Client != null) {
+            try {
+                scim2Client.closeHttpClient();
+            } catch (IOException e) {
+                log.warn("Failed to close SCIM2 client: " + e.getMessage());
             }
         }
         super.conclude();
