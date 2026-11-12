@@ -3,8 +3,9 @@ name: Dependency Updater
 on:
   workflow_dispatch:
   schedule:
-    # Everyday at 15:00 UTC (8.30 PM SL time)
-    - cron:  '0 15 * * *'
+    # Every 2 hours from 08:00 to 18:00 IST (UTC+5:30), Monday to Friday:
+    # 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 IST = 02:30 ... 12:30 UTC.
+    - cron:  '30 2-12/2 * * 1-5'
 
 env:
   MAVEN_OPTS: -Xmx4g -Xms1g -XX:+HeapDumpOnOutOfMemoryError
@@ -118,54 +119,6 @@ jobs:
           git diff --color > dependency_updates.diff
           cat dependency_updates.diff
 
-      - name: Build
-        working-directory: ${{ env.REPOSITORY }}
-        run: |
-          echo "Building project"
-          echo "=========================================================="
-          mvn clean install -DskipTests | tee mvn-build.log
-          PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-          PR_BUILD_FINAL_RESULT=$(
-            echo "==========================================================="
-            echo "product-is BUILD $PR_BUILD_STATUS"
-            echo "=========================================================="
-          )
-          PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
-          PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
-          echo "::warning::$PR_BUILD_RESULT_LOG"
-          PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-          if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
-            echo "PR BUILD not successfull. Aborting."
-            echo "::error::PR BUILD not successfull. Check artifacts for logs."
-            exit 1
-          fi
-
-      - name: Run Integration Tests
-        working-directory: ${{ env.REPOSITORY }}
-        run: |
-          echo "Running integration tests"
-          echo "=========================================================="
-          cd modules/integration/tests-integration/tests-backend
-          mvn clean install -Dmaven.test.failure.ignore=false | tee mvn-test.log
-          PR_TEST_STATUS=$(cat mvn-test.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
-          PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-test.log)
-          PR_BUILD_FINAL_RESULT=$(
-            echo "==========================================================="
-            echo "product-is TESTS $PR_TEST_STATUS"
-            echo "=========================================================="
-            echo ""
-            echo "$PR_TEST_RESULT"
-          )
-          PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
-          PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
-          echo "::warning::$PR_BUILD_RESULT_LOG"
-          PR_TEST_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-test.log | wc -l)
-          if [ "$PR_TEST_SUCCESS_COUNT" != "17" ]; then
-            echo "Integration tests not successfull. Aborting."
-            echo "::error::Integration tests not successfull. Check artifacts for logs."
-            exit 1
-          fi
-
       - name: Commit and Push Changes
         working-directory: ${{ env.REPOSITORY }}
         run: |
@@ -205,11 +158,11 @@ jobs:
               echo "PR_NUMBER=$(echo $RESPONSE_BODY | jq -r '.number')" >> $GITHUB_ENV
             fi
           fi
-      # The build and integration tests above have already passed, so the PR is approved and
-      # merged straight away rather than waiting for the checks on it. The approval comes from
-      # iam-automation-bot (not the PR author) so a required review on master is satisfied; it
-      # and the merge are pinned to the commit that was tested.
-      - name: Approve and Merge Pull Request
+      # The integration tests run in the merge queue, so the PR is approved and added to the
+      # queue instead of being built and tested here. The approval comes from
+      # iam-automation-bot (not the PR author) so a required review on master is satisfied,
+      # and it is pinned to the head commit that was opened.
+      - name: Approve and Add Pull Request to Merge Queue
         if: env.PR_NUMBER != ''
         env:
           GH_TOKEN: ${{ secrets.IAM_AUTOMATION_BOT_TOKEN }}
@@ -223,7 +176,7 @@ jobs:
 
           # Only the dependency version files may change.
           if [ "$(jq -r --argjson a "$ALLOWED" '[.files[].path] | all(. as $p | $a | index($p) != null)' <<< "$PR_JSON")" != "true" ]; then
-            echo "::error::Not merging PR #${PR_NUMBER}: it changes files outside the dependency updater scope."
+            echo "::error::Not enqueuing PR #${PR_NUMBER}: it changes files outside the dependency updater scope."
             exit 1
           fi
 
@@ -234,7 +187,7 @@ jobs:
             sleep 10
           done
           if [ "$MERGEABLE" != "MERGEABLE" ]; then
-            echo "::error::Not merging PR #${PR_NUMBER}: mergeable=${MERGEABLE}"
+            echo "::error::Not enqueuing PR #${PR_NUMBER}: mergeable=${MERGEABLE}"
             exit 1
           fi
 
@@ -242,11 +195,24 @@ jobs:
           gh api --method POST "repos/${REPO}/pulls/${PR_NUMBER}/reviews" \
             -f commit_id="$HEAD_SHA" \
             -f event=APPROVE \
-            -f body="Approved automatically: dependency updater PR, built and integration tested by the Dependency Updater workflow before it was opened." \
+            -f body="Approved automatically: dependency updater PR. Integration tests run in the merge queue." \
             --jq '.state'
 
-          echo "Merging PR #${PR_NUMBER} at ${HEAD_SHA}"
-          gh pr merge "$PR_NUMBER" --repo "$REPO" --merge --match-head-commit "$HEAD_SHA"
+          # The PR-side required checks (the lightweight "Integration Tests" gate) must pass
+          # before the PR can enter the merge queue. Wait for them to be reported, then for them
+          # to finish.
+          for _ in $(seq 1 30); do
+            REPORTED=$(gh pr checks "$PR_NUMBER" --repo "$REPO" --required 2>/dev/null || true)
+            [ -n "$REPORTED" ] && break
+            sleep 10
+          done
+          gh pr checks "$PR_NUMBER" --repo "$REPO" --required --watch --interval 15
+
+          # master requires a merge queue, so this adds the PR to the queue; the queue runs the
+          # integration tests and merges it if they pass.
+          echo "Adding PR #${PR_NUMBER} at ${HEAD_SHA} to the merge queue"
+          gh pr merge "$PR_NUMBER" --repo "$REPO" --match-head-commit "$HEAD_SHA"
+          echo "PR #${PR_NUMBER} added to the merge queue: ${PR}"
       - name: Archive dependency diff file
         if: always()
         uses: actions/upload-artifact@v4
@@ -254,31 +220,7 @@ jobs:
           name: dependency-updates-diff
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/dependency_updates.diff
-      - name: Archive maven-build-log file
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mvn-build.log
-          path: |
-            ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
-          if-no-files-found: warn
-      - name: Archive maven-test-log file
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: mvn-test.log
-          path: |
-            ${{steps.builder_step.outputs.REPO_NAME}}/modules/integration/tests-integration/tests-backend/mvn-test.log
-          if-no-files-found: warn
-      - name: Archive heap dump
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: heap-dump
-          path: |
-            **/**.hprof
-          if-no-files-found: ignore
-      # Successful runs merge their own PR, so only failures and cancellations need attention.
+      # Successful runs hand their PR to the merge queue, so only failures and cancellations need attention.
       - name: Google Chat Notification
         run: |
           STATUS_COLOR=$(if [[ ${{ job.status }} == "success" ]];then echo "#009944";
