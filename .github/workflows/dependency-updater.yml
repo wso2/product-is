@@ -208,10 +208,21 @@ jobs:
           done
           gh pr checks "$PR_NUMBER" --repo "$REPO" --required --watch --interval 15
 
-          # master requires a merge queue, so this adds the PR to the queue; the queue runs the
-          # integration tests and merges it if they pass.
+          # Add the PR to the merge queue, which runs the integration tests and merges it if they
+          # pass. enqueuePullRequest is called directly because `gh pr merge` falls back to
+          # enabling auto-merge (disabled on this repo) whenever the PR is not CLEAN, e.g. while a
+          # non-required check such as license/cla is still pending.
           echo "Adding PR #${PR_NUMBER} at ${HEAD_SHA} to the merge queue"
-          gh pr merge "$PR_NUMBER" --repo "$REPO" --match-head-commit "$HEAD_SHA"
+          PR_NODE_ID=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json id --jq '.id')
+          gh api graphql \
+            -f query='mutation($id: ID!, $sha: GitObjectID!) {
+              enqueuePullRequest(input: {pullRequestId: $id, expectedHeadOid: $sha}) {
+                mergeQueueEntry { state position }
+              }
+            }' \
+            -f id="$PR_NODE_ID" \
+            -f sha="$HEAD_SHA" \
+            --jq '.data.enqueuePullRequest.mergeQueueEntry | "Merge queue entry: state=\(.state) position=\(.position)"'
           echo "PR #${PR_NUMBER} added to the merge queue: ${PR}"
       - name: Archive dependency diff file
         if: always()
