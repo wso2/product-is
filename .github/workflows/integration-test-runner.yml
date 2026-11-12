@@ -10,17 +10,15 @@ on:
   # the merge queue.
   merge_group:
     types: [checks_requested]
-  # The heavy matrix below is skipped for pull_request. This trigger exists only
-  # so the required "Integration Tests" check is reported on the PR itself,
-  # which GitHub requires before a PR can be added to the merge queue.
-  pull_request:
+  # No pull_request trigger: this workflow is not invoked when a PR is opened or
+  # updated. The required "Integration Tests" check is reported on the PR by
+  # integration-tests-pr-check.yml so the PR can be added to the merge queue.
 
 env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 jobs:
   run-test-runners:
-    if: ${{ github.event_name != 'pull_request' }}
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
@@ -140,9 +138,8 @@ jobs:
 
   integration-tests:
     # Single stable check name to put in branch protection / merge queue
-    # required checks. It is reported for pull_request (trivially green, the
-    # matrix is skipped there) and for merge_group (green only if every runner
-    # passed).
+    # required checks. Green only if every runner passed. The same check name is
+    # reported on PRs by integration-tests-pr-check.yml.
     name: Integration Tests
     needs: run-test-runners
     runs-on: ubuntu-latest
@@ -153,10 +150,6 @@ jobs:
           result="${{ needs.run-test-runners.result }}"
           echo "Event: ${{ github.event_name }}"
           echo "run-test-runners result: $result"
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "Integration tests run in the merge queue, not on the PR."
-            exit 0
-          fi
           if [ "$result" != "success" ]; then
             echo "::error::Integration tests did not pass (result: $result)."
             exit 1

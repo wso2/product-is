@@ -1,0 +1,18 @@
+name: Integration Tests PR Check
+# Reports the required "Integration Tests" check on pull requests so they can be
+# added to the merge queue. The real integration tests run only in the merge
+# queue (merge_group) via integration-test-runner.yml.
+on:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  integration-tests:
+    # Must match the job name in integration-test-runner.yml and the required
+    # check configured for the merge queue.
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Defer to merge queue
+        run: echo "Integration tests run when this PR is added to the merge queue."
