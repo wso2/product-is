@@ -1,0 +1,9 @@
+# Regexes (grep -E) matched against changed file paths. If every file in a merge
+# group matches, the merge queue skips the integration tests.
+\.md$
+^docs/
+^LICENSE
+^\.github/ISSUE_TEMPLATE/
+^\.github/PULL_REQUEST_TEMPLATE
+^\.github/CODEOWNERS$
+^\.github/workflows/.*\.ya?ml$

@@ -19,8 +19,39 @@ env:
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 jobs:
+  # merge_group has no `paths` filter: skip the tests when every changed file matches
+  # .github/merge-queue-skip-paths.txt (read from the base commit). Any doubt runs them.
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      run_tests: ${{ steps.filter.outputs.run_tests }}
+    steps:
+      - id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BASE_SHA: ${{ github.event.merge_group.base_sha }}
+          HEAD_SHA: ${{ github.event.merge_group.head_sha }}
+        run: |
+          run_tests=true
+          # The compare API lists at most 300 files, so a list that long may be incomplete.
+          if [ "${{ github.event_name }}" = "merge_group" ] \
+            && gh api "repos/$GITHUB_REPOSITORY/compare/$BASE_SHA...$HEAD_SHA" > compare.json \
+            && [ "$(jq '.files // [] | length' compare.json)" -gt 0 ] \
+            && [ "$(jq '.files | length' compare.json)" -lt 300 ]; then
+            gh api "repos/$GITHUB_REPOSITORY/contents/.github/merge-queue-skip-paths.txt?ref=$BASE_SHA" \
+              -H "Accept: application/vnd.github.raw" | grep -vE '^\s*(#|$)' > patterns.txt || true
+            jq -r '.files[] | .filename, (.previous_filename // empty)' compare.json | tee changed.txt
+            # grep exits 1 only when every changed file matches a skip pattern.
+            rc=0; grep -qvE -f patterns.txt changed.txt || rc=$?
+            if [ "$rc" -eq 1 ]; then run_tests=false; fi
+          fi
+          echo "run_tests=$run_tests" | tee -a "$GITHUB_OUTPUT"
+
   run-test-runners:
-    if: ${{ github.event_name != 'pull_request' }}
+    needs: changes
+    if: ${{ github.event_name != 'pull_request' && needs.changes.outputs.run_tests == 'true' }}
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
@@ -144,7 +175,7 @@ jobs:
     # matrix is skipped there) and for merge_group (green only if every runner
     # passed).
     name: Integration Tests
-    needs: run-test-runners
+    needs: [changes, run-test-runners]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -155,6 +186,10 @@ jobs:
           echo "run-test-runners result: $result"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             echo "Integration tests run in the merge queue, not on the PR."
+            exit 0
+          fi
+          if [ "${{ needs.changes.outputs.run_tests }}" = "false" ]; then
+            echo "Only skip-listed files changed."
             exit 0
           fi
           if [ "$result" != "success" ]; then
