@@ -3,9 +3,10 @@ name: Dependency Updater
 on:
   workflow_dispatch:
   schedule:
-    # Every 2 hours from 08:00 to 18:00 IST (UTC+5:30), Monday to Friday:
-    # 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 IST = 02:30 ... 12:30 UTC.
-    - cron:  '30 2-12/2 * * 1-5'
+    # Every 2 hours from 08:07 to 18:07 IST (UTC+5:30), Monday to Friday:
+    # 08:07, 10:07, 12:07, 14:07, 16:07, 18:07 IST = 02:37 ... 12:37 UTC.
+    # Off the :00/:30 marks, where GitHub delays or drops scheduled runs under load.
+    - cron:  '37 2-12/2 * * 1-5'
 
 env:
   MAVEN_OPTS: -Xmx4g -Xms1g -XX:+HeapDumpOnOutOfMemoryError
