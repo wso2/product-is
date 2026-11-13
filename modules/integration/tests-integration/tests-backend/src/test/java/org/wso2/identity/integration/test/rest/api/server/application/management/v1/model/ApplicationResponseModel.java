@@ -44,6 +44,7 @@ public class ApplicationResponseModel {
     private Boolean isManagementApp;
     private Boolean isB2BSelfServiceApp;
     private Boolean enhancedOrgAuthenticationEnabled;
+    private Boolean organizationCustomRolesEnabled;
     private Boolean applicationEnabled;
     private AssociatedRolesConfig associatedRoles;
     private ClaimConfiguration claimConfiguration;
@@ -363,6 +364,26 @@ public class ApplicationResponseModel {
     }
 
     /**
+     * For a main application, decides whether organizations can create custom roles for its shared applications.
+     **/
+    public ApplicationResponseModel organizationCustomRolesEnabled(Boolean organizationCustomRolesEnabled) {
+
+        this.organizationCustomRolesEnabled = organizationCustomRolesEnabled;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false", value = "For a main application, decides whether organizations can create " +
+            "custom roles for its shared applications.")
+    @JsonProperty("organizationCustomRolesEnabled")
+    @Valid
+    public Boolean getOrganizationCustomRolesEnabled() {
+        return organizationCustomRolesEnabled;
+    }
+    public void setOrganizationCustomRolesEnabled(Boolean organizationCustomRolesEnabled) {
+        this.organizationCustomRolesEnabled = organizationCustomRolesEnabled;
+    }
+
+    /**
      * Decides whether the application is enabled.
      **/
     public ApplicationResponseModel applicationEnabled(Boolean applicationEnabled) {
@@ -534,6 +555,7 @@ public class ApplicationResponseModel {
                 Objects.equals(this.isManagementApp, applicationResponseModel.isManagementApp) &&
                 Objects.equals(this.isB2BSelfServiceApp, applicationResponseModel.isB2BSelfServiceApp) &&
                 Objects.equals(this.enhancedOrgAuthenticationEnabled, applicationResponseModel.enhancedOrgAuthenticationEnabled) &&
+                Objects.equals(this.organizationCustomRolesEnabled, applicationResponseModel.organizationCustomRolesEnabled) &&
                 Objects.equals(this.applicationEnabled, applicationResponseModel.applicationEnabled) &&
                 Objects.equals(this.associatedRoles, applicationResponseModel.associatedRoles) &&
                 Objects.equals(this.claimConfiguration, applicationResponseModel.claimConfiguration) &&
@@ -546,7 +568,7 @@ public class ApplicationResponseModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, applicationVersion, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, templateVersion, isManagementApp, isB2BSelfServiceApp, enhancedOrgAuthenticationEnabled, applicationEnabled, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
+        return Objects.hash(id, name, description, applicationVersion, imageUrl, accessUrl, logoutReturnUrl, clientId, issuer, realm, templateId, templateVersion, isManagementApp, isB2BSelfServiceApp, enhancedOrgAuthenticationEnabled, organizationCustomRolesEnabled, applicationEnabled, associatedRoles, claimConfiguration, inboundProtocols, authenticationSequence, advancedConfigurations, provisioningConfigurations, access);
     }
 
     @Override
@@ -569,6 +591,7 @@ public class ApplicationResponseModel {
         sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
         sb.append("    isB2BSelfServiceApp: ").append(toIndentedString(isB2BSelfServiceApp)).append("\n");
         sb.append("    enhancedOrgAuthenticationEnabled: ").append(toIndentedString(enhancedOrgAuthenticationEnabled)).append("\n");
+        sb.append("    organizationCustomRolesEnabled: ").append(toIndentedString(organizationCustomRolesEnabled)).append("\n");
         sb.append("    applicationEnabled: ").append(toIndentedString(applicationEnabled)).append("\n");
         sb.append("    associatedRoles: ").append(toIndentedString(associatedRoles)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
