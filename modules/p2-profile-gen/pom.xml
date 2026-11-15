@@ -384,6 +384,11 @@
                                     org.wso2.identity.webhook.event.handlers:org.wso2.identity.webhook.event.handlers.server.feature:${org.wso2.identity.webhook.event.handlers.version}
                                 </featureArtifactDef>
 
+                                <!-- Customer Data Service Feature -->
+                                <featureArtifactDef>
+                                    org.wso2.identity.customer.data.service:org.wso2.identity.customer.data.service.server.feature:${org.wso2.identity.customer.data.service.version}
+                                </featureArtifactDef>
+
                                 <featureArtifactDef>
                                     org.wso2.carbon.identity.framework:org.wso2.carbon.identity.system.config.mgt.server.feature:${carbon.identity.framework.version}
                                 </featureArtifactDef>
@@ -1034,6 +1039,10 @@
                                 <feature>
                                     <id>org.wso2.identity.webhook.event.handlers.server.feature.group</id>
                                     <version>${org.wso2.identity.webhook.event.handlers.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.identity.customer.data.service.server.feature.group</id>
+                                    <version>${org.wso2.identity.customer.data.service.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.identity.certificate.management.server.feature.group</id>
