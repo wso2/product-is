@@ -1,0 +1,142 @@
+{
+  "flowType": "PROFILE_UPDATE",
+  "steps": [
+    {
+      "id": "execution_k3vd",
+      "type": "EXECUTION",
+      "data": {
+        "action": {
+          "type": "EXECUTOR",
+          "executor": {
+            "name": "UserVerificationExecutor"
+          },
+          "next": "execution_p8wq"
+        }
+      },
+      "size": {
+        "height": 99.0,
+        "width": 217.0
+      },
+      "position": {
+        "x": 0.0,
+        "y": 421.0
+      }
+    },
+    {
+      "id": "execution_p8wq",
+      "type": "EXECUTION",
+      "data": {
+        "action": {
+          "type": "EXECUTOR",
+          "executor": {
+            "name": "FlowHandoffExecutor"
+          },
+          "next": "view_d5uf"
+        }
+      },
+      "size": {
+        "height": 154.0,
+        "width": 295.0
+      },
+      "position": {
+        "x": 320.0,
+        "y": 394.0
+      }
+    },
+    {
+      "id": "view_d5uf",
+      "type": "VIEW",
+      "data": {
+        "components": [
+          {
+            "id": "typography_h2lp",
+            "category": "DISPLAY",
+            "type": "TYPOGRAPHY",
+            "variant": "H3",
+            "config": {
+              "text": "Update Profile"
+            }
+          },
+          {
+            "id": "form_b8ny",
+            "category": "BLOCK",
+            "type": "FORM",
+            "components": [
+              {
+                "id": "input_v3gk",
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "TEXT",
+                "config": {
+                  "type": "text",
+                  "hint": "",
+                  "label": "First Name",
+                  "required": false,
+                  "placeholder": "Enter your first name",
+                  "identifier": "http://wso2.org/claims/givenname"
+                }
+              },
+              {
+                "id": "input_e6rm",
+                "category": "FIELD",
+                "type": "INPUT",
+                "variant": "TEXT",
+                "config": {
+                  "type": "text",
+                  "hint": "",
+                  "label": "Last Name",
+                  "required": false,
+                  "placeholder": "Enter your last name",
+                  "identifier": "http://wso2.org/claims/lastname"
+                }
+              },
+              {
+                "id": "button_z1wt",
+                "category": "ACTION",
+                "type": "BUTTON",
+                "variant": "PRIMARY",
+                "action": {
+                  "type": "NEXT",
+                  "next": "END"
+                },
+                "config": {
+                  "type": "submit",
+                  "text": "Continue"
+                }
+              }
+            ],
+            "config": {}
+          }
+        ]
+      },
+      "size": {
+        "height": 291.0,
+        "width": 350.0
+      },
+      "position": {
+        "x": 715.0,
+        "y": 200.0
+      }
+    },
+    {
+      "id": "END",
+      "type": "END",
+      "data": {
+        "action": {
+          "type": "EXECUTOR",
+          "executor": {
+            "name": "UserProvisioningExecutor"
+          }
+        }
+      },
+      "size": {
+        "height": 56.0,
+        "width": 56.0
+      },
+      "position": {
+        "x": 1165.0,
+        "y": 330.0
+      }
+    }
+  ]
+}

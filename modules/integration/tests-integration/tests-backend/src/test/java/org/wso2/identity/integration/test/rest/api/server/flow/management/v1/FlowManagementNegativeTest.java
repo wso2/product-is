@@ -39,6 +39,7 @@ public class FlowManagementNegativeTest extends FlowManagementTestBase {
 
     private FlowManagementClient flowManagementClient;
     private static String registrationFlowRequestJson;
+    private static String profileUpdateFlowRequestJson;
 
     @DataProvider
     public static Object[][] restAPIUserConfigProvider() {
@@ -65,6 +66,7 @@ public class FlowManagementNegativeTest extends FlowManagementTestBase {
         super.testInit(API_VERSION, swaggerDefinition, tenantInfo.getDomain());
         flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         registrationFlowRequestJson = readResource(REGISTRATION_FLOW);
+        profileUpdateFlowRequestJson = readResource(PROFILE_UPDATE_FLOW);
     }
 
     @AfterClass
@@ -83,6 +85,23 @@ public class FlowManagementNegativeTest extends FlowManagementTestBase {
         registrationFlowRequest.getSteps().get(0).setType("INVALID");
         try {
             flowManagementClient.putFlow(registrationFlowRequest);
+            Assert.fail("Invalid registration flow request was accepted.");
+        } catch (Exception e) {
+            Assert.assertNotNull(e.getMessage());
+            Assert.assertTrue(e.getMessage().contains("Error code 400"));
+        }
+    }
+
+    @Test(description = "Test profile update flow request without a user identification step")
+    public void testProfileUpdateFlowRequestWithoutUserIdentification() throws Exception {
+
+        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+        FlowRequest profileUpdateFlowRequest = objectMapper.readValue(profileUpdateFlowRequestJson,
+                FlowRequest.class);
+        profileUpdateFlowRequest.getSteps().subList(0, 2).clear();
+        try {
+            flowManagementClient.putFlow(profileUpdateFlowRequest);
+            Assert.fail("Profile update flow request without a user identification step was accepted.");
         } catch (Exception e) {
             Assert.assertNotNull(e.getMessage());
             Assert.assertTrue(e.getMessage().contains("Error code 400"));
