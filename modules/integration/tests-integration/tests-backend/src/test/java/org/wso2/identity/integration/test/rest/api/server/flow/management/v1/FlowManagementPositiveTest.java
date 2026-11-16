@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.rest.api.server.flow.management.v1;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -114,8 +115,8 @@ public class FlowManagementPositiveTest extends FlowManagementTestBase {
         FlowRequest expectedProfileUpdateFlowRequest = jsonReader.readValue(profileUpdateFlowRequestJson,
                 FlowRequest.class);
         FlowResponse profileUpdateFlowResponse = flowManagementClient.getFlow(PROFILE_UPDATE);
-        assert profileUpdateFlowResponse.getSteps().equals(expectedProfileUpdateFlowRequest.getSteps())
-                : "Profile update flow mismatch";
+        Assert.assertEquals(profileUpdateFlowResponse.getSteps(), expectedProfileUpdateFlowRequest.getSteps(),
+                "Profile update flow mismatch");
     }
 
     private static FlowRequest getFlowRequest(ObjectMapper jsonReader)
