@@ -98,7 +98,7 @@ public class FlowManagementNegativeTest extends FlowManagementTestBase {
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
         FlowRequest profileUpdateFlowRequest = objectMapper.readValue(profileUpdateFlowRequestJson,
                 FlowRequest.class);
-        profileUpdateFlowRequest.getSteps().subList(0, 2).clear();
+        profileUpdateFlowRequest.getSteps().remove(0);
         try {
             flowManagementClient.putFlow(profileUpdateFlowRequest);
             Assert.fail("Profile update flow request without a user identification step was accepted.");
