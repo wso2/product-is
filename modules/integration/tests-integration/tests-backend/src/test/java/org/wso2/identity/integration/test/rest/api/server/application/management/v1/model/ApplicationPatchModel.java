@@ -40,6 +40,8 @@ public class ApplicationPatchModel {
     private AuthenticationSequence authenticationSequence;
     private AdvancedApplicationConfiguration advancedConfigurations;
     private ProvisioningConfiguration provisioningConfigurations;
+    private Boolean enhancedOrgAuthenticationEnabled;
+    private Boolean organizationCustomRolesEnabled;
 
     /**
      **/
@@ -260,6 +262,42 @@ public class ApplicationPatchModel {
 
 
 
+    /**
+    **/
+    public ApplicationPatchModel enhancedOrgAuthenticationEnabled(Boolean enhancedOrgAuthenticationEnabled) {
+
+        this.enhancedOrgAuthenticationEnabled = enhancedOrgAuthenticationEnabled;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false")
+    @JsonProperty("enhancedOrgAuthenticationEnabled")
+    @Valid
+    public Boolean getEnhancedOrgAuthenticationEnabled() {
+        return enhancedOrgAuthenticationEnabled;
+    }
+    public void setEnhancedOrgAuthenticationEnabled(Boolean enhancedOrgAuthenticationEnabled) {
+        this.enhancedOrgAuthenticationEnabled = enhancedOrgAuthenticationEnabled;
+    }
+
+    /**
+    **/
+    public ApplicationPatchModel organizationCustomRolesEnabled(Boolean organizationCustomRolesEnabled) {
+
+        this.organizationCustomRolesEnabled = organizationCustomRolesEnabled;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false")
+    @JsonProperty("organizationCustomRolesEnabled")
+    @Valid
+    public Boolean getOrganizationCustomRolesEnabled() {
+        return organizationCustomRolesEnabled;
+    }
+    public void setOrganizationCustomRolesEnabled(Boolean organizationCustomRolesEnabled) {
+        this.organizationCustomRolesEnabled = organizationCustomRolesEnabled;
+    }
+
     @Override
     public boolean equals(java.lang.Object o) {
 
@@ -281,12 +319,16 @@ public class ApplicationPatchModel {
                 Objects.equals(this.claimConfiguration, applicationPatchModel.claimConfiguration) &&
                 Objects.equals(this.authenticationSequence, applicationPatchModel.authenticationSequence) &&
                 Objects.equals(this.advancedConfigurations, applicationPatchModel.advancedConfigurations) &&
-                Objects.equals(this.provisioningConfigurations, applicationPatchModel.provisioningConfigurations);
+                Objects.equals(this.provisioningConfigurations, applicationPatchModel.provisioningConfigurations) &&
+                Objects.equals(this.enhancedOrgAuthenticationEnabled, applicationPatchModel.enhancedOrgAuthenticationEnabled) &&
+                Objects.equals(this.organizationCustomRolesEnabled, applicationPatchModel.organizationCustomRolesEnabled);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, applicationVersion, imageUrl, accessUrl, templateId, templateVersion, associatedRoles, claimConfiguration, authenticationSequence, advancedConfigurations, provisioningConfigurations);
+        return Objects.hash(name, description, applicationVersion, imageUrl, accessUrl, templateId, templateVersion,
+                associatedRoles, claimConfiguration, authenticationSequence, advancedConfigurations,
+                provisioningConfigurations, enhancedOrgAuthenticationEnabled, organizationCustomRolesEnabled);
     }
 
     @Override
@@ -307,6 +349,8 @@ public class ApplicationPatchModel {
         sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");
         sb.append("    advancedConfigurations: ").append(toIndentedString(advancedConfigurations)).append("\n");
         sb.append("    provisioningConfigurations: ").append(toIndentedString(provisioningConfigurations)).append("\n");
+        sb.append("    enhancedOrgAuthenticationEnabled: ").append(toIndentedString(enhancedOrgAuthenticationEnabled)).append("\n");
+        sb.append("    organizationCustomRolesEnabled: ").append(toIndentedString(organizationCustomRolesEnabled)).append("\n");
         sb.append("}");
         return sb.toString();
     }

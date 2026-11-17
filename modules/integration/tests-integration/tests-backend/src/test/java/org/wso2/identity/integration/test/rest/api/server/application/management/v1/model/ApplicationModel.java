@@ -35,6 +35,8 @@ public class ApplicationModel  {
     private String accessUrl;
     private Boolean isManagementApp;
     private Boolean enhancedOrgAuthenticationEnabled;
+    private Boolean organizationCustomRolesEnabled;
+    private AssociatedRolesConfig associatedRoles;
     private ClaimConfiguration claimConfiguration;
     private InboundProtocols inboundProtocolConfiguration;
     private AuthenticationSequence authenticationSequence;
@@ -171,6 +173,42 @@ public class ApplicationModel  {
 
     /**
     **/
+    public ApplicationModel organizationCustomRolesEnabled(Boolean organizationCustomRolesEnabled) {
+
+        this.organizationCustomRolesEnabled = organizationCustomRolesEnabled;
+        return this;
+    }
+
+    @ApiModelProperty(example = "false")
+    @JsonProperty("organizationCustomRolesEnabled")
+    @Valid
+    public Boolean getOrganizationCustomRolesEnabled() {
+        return organizationCustomRolesEnabled;
+    }
+    public void setOrganizationCustomRolesEnabled(Boolean organizationCustomRolesEnabled) {
+        this.organizationCustomRolesEnabled = organizationCustomRolesEnabled;
+    }
+
+    /**
+    **/
+    public ApplicationModel associatedRoles(AssociatedRolesConfig associatedRoles) {
+
+        this.associatedRoles = associatedRoles;
+        return this;
+    }
+
+    @ApiModelProperty(value = "")
+    @JsonProperty("associatedRoles")
+    @Valid
+    public AssociatedRolesConfig getAssociatedRoles() {
+        return associatedRoles;
+    }
+    public void setAssociatedRoles(AssociatedRolesConfig associatedRoles) {
+        this.associatedRoles = associatedRoles;
+    }
+
+    /**
+    **/
     public ApplicationModel claimConfiguration(ClaimConfiguration claimConfiguration) {
 
         this.claimConfiguration = claimConfiguration;
@@ -278,6 +316,8 @@ public class ApplicationModel  {
             Objects.equals(this.accessUrl, applicationModel.accessUrl) &&
             Objects.equals(this.isManagementApp, applicationModel.isManagementApp) &&
             Objects.equals(this.enhancedOrgAuthenticationEnabled, applicationModel.enhancedOrgAuthenticationEnabled) &&
+            Objects.equals(this.organizationCustomRolesEnabled, applicationModel.organizationCustomRolesEnabled) &&
+            Objects.equals(this.associatedRoles, applicationModel.associatedRoles) &&
             Objects.equals(this.claimConfiguration, applicationModel.claimConfiguration) &&
             Objects.equals(this.inboundProtocolConfiguration, applicationModel.inboundProtocolConfiguration) &&
             Objects.equals(this.authenticationSequence, applicationModel.authenticationSequence) &&
@@ -288,8 +328,8 @@ public class ApplicationModel  {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, imageUrl, accessUrl, isManagementApp, enhancedOrgAuthenticationEnabled,
-                claimConfiguration, inboundProtocolConfiguration, authenticationSequence, advancedConfigurations,
-                provisioningConfigurations);
+                organizationCustomRolesEnabled, associatedRoles, claimConfiguration, inboundProtocolConfiguration,
+                authenticationSequence, advancedConfigurations, provisioningConfigurations);
     }
 
     @Override
@@ -305,6 +345,8 @@ public class ApplicationModel  {
         sb.append("    accessUrl: ").append(toIndentedString(accessUrl)).append("\n");
         sb.append("    isManagementApp: ").append(toIndentedString(isManagementApp)).append("\n");
         sb.append("    enhancedOrgAuthenticationEnabled: ").append(toIndentedString(enhancedOrgAuthenticationEnabled)).append("\n");
+        sb.append("    organizationCustomRolesEnabled: ").append(toIndentedString(organizationCustomRolesEnabled)).append("\n");
+        sb.append("    associatedRoles: ").append(toIndentedString(associatedRoles)).append("\n");
         sb.append("    claimConfiguration: ").append(toIndentedString(claimConfiguration)).append("\n");
         sb.append("    inboundProtocolConfiguration: ").append(toIndentedString(inboundProtocolConfiguration)).append("\n");
         sb.append("    authenticationSequence: ").append(toIndentedString(authenticationSequence)).append("\n");
