@@ -260,6 +260,24 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     }
 
     @Test(dependsOnMethods = {"testPatchCredentials"})
+    public void testPatchedFieldsPersistAfterMultiplePatches() {
+
+        Response response = getResponseOfGet(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR
+                + presentationDefinitionId);
+        response.then()
+                .log().ifValidationFails()
+                .assertThat()
+                .statusCode(HttpStatus.SC_OK)
+                .body("id", equalTo(presentationDefinitionId))
+                .body("identifier", equalTo("test-person-verification"))
+                .body("displayName", equalTo("Updated Display Name"))
+                .body("description", equalTo("Updated description"))
+                .body("credentials", hasSize(1))
+                .body("credentials[0].id", equalTo("UpdatedCredential"))
+                .body("credentials[0].type", equalTo("UpdatedCredential"));
+    }
+
+    @Test(dependsOnMethods = {"testPatchCredentials"})
     public void testGetConnectedIdpsEmpty() {
 
         Response response = getResponseOfGet(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR
@@ -469,7 +487,8 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
                 .body("presentationDefinitions.size()", greaterThanOrEqualTo(1));
     }
 
-    @Test(dependsOnMethods = {"testReplaceIssuerConfigs", "testListWithFilter"})
+    @Test(dependsOnMethods = {"testReplaceIssuerConfigs", "testListWithFilter",
+            "testPatchedFieldsPersistAfterMultiplePatches"})
     public void testDeletePresentationDefinition() {
 
         getResponseOfDelete(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR + presentationDefinitionId)
