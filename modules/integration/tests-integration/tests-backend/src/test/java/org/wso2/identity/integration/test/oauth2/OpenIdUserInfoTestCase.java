@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.oauth2;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
@@ -447,6 +448,68 @@ public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest
                 "Unexpected error message");
     }
 
+    @Test(groups = "wso2.is", description = "Validate userinfo request with leading whitespace in Authorization header",
+            dependsOnMethods = "testValidateAccessToken")
+    public void testUserInfoWithLeadingWhitespaceAuthHeader() throws Exception {
+
+        String userInfoUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.USER_INFO_ENDPOINT : OAuth2Constant.TENANT_USER_INFO_ENDPOINT;
+        HttpGet request = new HttpGet(userInfoUrl);
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        // Header with leading whitespace before 'Bearer' - should be rejected as per RFC 6750 §2.1
+        request.setHeader("Authorization", "   Bearer " + accessToken);
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        HttpResponse response = client.execute(request);
+        int statusCode = response.getStatusLine().getStatusCode();
+        EntityUtils.consume(response.getEntity());
+
+        Assert.assertTrue(statusCode == HttpStatus.SC_BAD_REQUEST || statusCode == HttpStatus.SC_UNAUTHORIZED,
+                "Request with leading whitespace in Authorization header must be rejected. Received status: " + statusCode);
+    }
+
+    @Test(groups = "wso2.is", description = "Validate userinfo request with trailing content in Authorization header",
+            dependsOnMethods = "testValidateAccessToken")
+    public void testUserInfoWithTrailingContentAuthHeader() throws Exception {
+
+        String userInfoUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.USER_INFO_ENDPOINT : OAuth2Constant.TENANT_USER_INFO_ENDPOINT;
+        HttpGet request = new HttpGet(userInfoUrl);
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        // Header with trailing characters after token - should be rejected as per RFC 6750 §2.1
+        request.setHeader("Authorization", "Bearer " + accessToken + " invalid_trailing_content");
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        HttpResponse response = client.execute(request);
+        int statusCode = response.getStatusLine().getStatusCode();
+        EntityUtils.consume(response.getEntity());
+
+        Assert.assertTrue(statusCode == HttpStatus.SC_BAD_REQUEST || statusCode == HttpStatus.SC_UNAUTHORIZED,
+                "Request with trailing content in Authorization header must be rejected. Received status: " + statusCode);
+    }
+
+    @Test(groups = "wso2.is", description = "Validate userinfo request with multiple spaces after Bearer in Authorization header",
+            dependsOnMethods = "testValidateAccessToken")
+    public void testUserInfoWithMultipleSpacesAuthHeader() throws Exception {
+
+        String userInfoUrl = tenantInfo.getDomain().equalsIgnoreCase("carbon.super") ?
+                OAuth2Constant.USER_INFO_ENDPOINT : OAuth2Constant.TENANT_USER_INFO_ENDPOINT;
+        HttpGet request = new HttpGet(userInfoUrl);
+
+        request.setHeader("User-Agent", OAuth2Constant.USER_AGENT);
+        // Header with multiple spaces between 'Bearer' and token - should be rejected as per RFC 6750 §2.1
+        request.setHeader("Authorization", "Bearer   " + accessToken);
+        request.setHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+
+        HttpResponse response = client.execute(request);
+        int statusCode = response.getStatusLine().getStatusCode();
+        EntityUtils.consume(response.getEntity());
+
+        Assert.assertTrue(statusCode == HttpStatus.SC_BAD_REQUEST || statusCode == HttpStatus.SC_UNAUTHORIZED,
+                "Request with multiple spaces in Authorization header must be rejected. Received status: " + statusCode);
+    }
 
     public HttpResponse sendLoginPost(HttpClient client, String sessionDataKey) throws IOException {
 
