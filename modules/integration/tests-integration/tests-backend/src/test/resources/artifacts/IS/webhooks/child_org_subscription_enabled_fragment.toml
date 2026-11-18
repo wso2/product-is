@@ -1,0 +1,5 @@
+# Fragment: append to deployment.toml to let webhooks subscribe to the events of child organizations.
+# Overrides the default (false) value so that sub organization events fan out to root organization webhooks.
+
+[webhooks]
+child_organization_subscription_enabled = true
