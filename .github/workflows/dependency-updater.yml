@@ -167,6 +167,8 @@ jobs:
       # and it is pinned to the head commit that was opened.
       - name: Approve and Add Pull Request to Merge Queue
         if: env.PR_NUMBER != ''
+        # Fail the step instead of hanging if a required check never reports as finished.
+        timeout-minutes: 60
         env:
           GH_TOKEN: ${{ secrets.IAM_AUTOMATION_BOT_TOKEN }}
         run: |
