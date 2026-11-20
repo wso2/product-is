@@ -60,3 +60,5 @@ body:
         - label: "[New Configuration] Does this change introduce a new configuration?"
         - label: " ↳ Label `config` added"
         - label: " ↳ Configuration is properly documented"
+        - label: "[IAM CTL] Does this change affect the behavior of the IAM CTL tool?"
+        - label: " ↳ Necessary changes made in the IAM CTL tool"
