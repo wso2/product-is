@@ -34,6 +34,7 @@ import java.io.IOException;
 public class FlowManagementTestBase extends RESTAPIServerTestBase {
 
     protected static final String REGISTRATION_FLOW = "registration-flow.json";
+    protected static final String PROFILE_UPDATE_FLOW = "profile-update-flow.json";
     private static final String API_DEFINITION_NAME = "flow.yaml";
     protected static final String API_VERSION = "v1";
     private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.flow.management.v1";
@@ -69,5 +70,6 @@ public class FlowManagementTestBase extends RESTAPIServerTestBase {
     protected static class FlowTypes {
 
         public static final String REGISTRATION = "REGISTRATION";
+        public static final String PROFILE_UPDATE = "PROFILE_UPDATE";
     }
 }

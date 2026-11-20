@@ -21,6 +21,7 @@ package org.wso2.identity.integration.test.rest.api.server.flow.management.v1;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -33,6 +34,7 @@ import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 
 import java.io.IOException;
 
+import static org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementTestBase.FlowTypes.PROFILE_UPDATE;
 import static org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementTestBase.FlowTypes.REGISTRATION;
 
 /**
@@ -42,6 +44,7 @@ public class FlowManagementPositiveTest extends FlowManagementTestBase {
 
     private FlowManagementClient flowManagementClient;
     private static String registrationFlowRequestJson;
+    private static String profileUpdateFlowRequestJson;
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
@@ -68,6 +71,7 @@ public class FlowManagementPositiveTest extends FlowManagementTestBase {
         super.testInit(API_VERSION, swaggerDefinition, tenantInfo.getDomain());
         flowManagementClient = new FlowManagementClient(serverURL, tenantInfo);
         registrationFlowRequestJson = readResource(REGISTRATION_FLOW);
+        profileUpdateFlowRequestJson = readResource(PROFILE_UPDATE_FLOW);
     }
 
     @AfterClass(alwaysRun = true)
@@ -93,6 +97,26 @@ public class FlowManagementPositiveTest extends FlowManagementTestBase {
         FlowResponse registrationFlowResponse = flowManagementClient.getFlow(REGISTRATION);
         assert registrationFlowResponse.getSteps().equals(expectedRegistrationFlowRequest.getSteps())
                 : "Registration flow mismatch";
+    }
+
+    @Test(description = "Test update profile update flow")
+    public void testUpdateProfileUpdateFlow() throws Exception {
+
+        ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
+        FlowRequest profileUpdateFlowRequest = jsonReader.readValue(profileUpdateFlowRequestJson,
+                FlowRequest.class);
+        flowManagementClient.putFlow(profileUpdateFlowRequest);
+    }
+
+    @Test(description = "Test get profile update flow", dependsOnMethods = "testUpdateProfileUpdateFlow")
+    public void testGetProfileUpdateFlow() throws Exception {
+
+        ObjectMapper jsonReader = new ObjectMapper(new JsonFactory());
+        FlowRequest expectedProfileUpdateFlowRequest = jsonReader.readValue(profileUpdateFlowRequestJson,
+                FlowRequest.class);
+        FlowResponse profileUpdateFlowResponse = flowManagementClient.getFlow(PROFILE_UPDATE);
+        Assert.assertEquals(profileUpdateFlowResponse.getSteps(), expectedProfileUpdateFlowRequest.getSteps(),
+                "Profile update flow mismatch");
     }
 
     private static FlowRequest getFlowRequest(ObjectMapper jsonReader)
