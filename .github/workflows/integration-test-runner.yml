@@ -196,3 +196,44 @@ jobs:
             echo "::error::Integration tests did not pass (result: $result)."
             exit 1
           fi
+
+  notify-dependency-updater-failure:
+    name: Notify dependency updater failure
+    needs: [integration-tests]
+    # Only a failed merge-queue run. Cancelled runs (PR removed from the queue) stay quiet.
+    if: ${{ always() && github.event_name == 'merge_group' && needs.integration-tests.result == 'failure' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Notify Google Chat if the queued PR is a dependency updater PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.merge_group.head_ref }}
+          WEBHOOK: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          # head_ref looks like refs/heads/gh-readonly-queue/master/pr-28852-<sha>
+          PR_NUMBER=$(sed -nE 's|.*/pr-([0-9]+)-.*|\1|p' <<< "$HEAD_REF")
+          [ -n "$PR_NUMBER" ] || { echo "No PR number in $HEAD_REF"; exit 0; }
+
+          TITLE=$(gh pr view "$PR_NUMBER" --repo "$GITHUB_REPOSITORY" --json title --jq .title)
+          case "$TITLE" in
+            "Bump Dependencies #"*) ;;
+            *) echo "PR #$PR_NUMBER is not a dependency updater PR."; exit 0 ;;
+          esac
+
+          PR_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${PR_NUMBER}"
+          jq -n --arg title "$TITLE" --arg pr "$PR_URL" --arg run "$RUN_URL" '{
+            cards: [{
+              header: {title: "Dependency Updater", subtitle: "Merge queue tests failed"},
+              sections: [{widgets: [
+                {textParagraph: {text: ("<b><font color=\"#ff0000\">failure</font></b><br>" + $title + " was removed from the merge queue.")}},
+                {keyValue: {topLabel: "Test run:", content: "Integration Test Runner",
+                  button: {textButton: {text: "VIEW", onClick: {openLink: {url: $run}}}}}},
+                {keyValue: {topLabel: "Pull Request:", content: "Check Pull Request",
+                  button: {textButton: {text: "VIEW", onClick: {openLink: {url: $pr}}}}}}
+              ]}]
+            }]
+          }' | curl -fsS -X POST "$WEBHOOK" -H 'Content-Type: application/json' --data @-
