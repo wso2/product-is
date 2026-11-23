@@ -1,11 +1,32 @@
 # Regexes (grep -E) matched against changed file paths. If every file in a merge
 # group matches, the merge queue skips the integration tests.
+
+# Documentation, licenses and repo metadata
 \.md$
 ^docs/
-^LICENSE
+^etc/
 ^legal/
-^\.github/
-# .txt/.yaml files only at the repository root. Those under modules/ are test inputs
-# (e.g. TestNG filters.txt, apiSwaggerFiles/scim2.yaml), so changes there still run the tests.
-^[^/]+\.txt$
-^[^/]+\.ya?ml$
+^LICENSE
+^[^/]+\.(txt|ya?ml|html)$
+(^|/)\.gitignore$
+
+# GitHub configuration. The integration test runner workflows and
+# .github/scripts/pr-builder.sh, which they run, are deliberately not skipped.
+^\.github/ISSUE_TEMPLATE/
+^\.github/PULL_REQUEST_TEMPLATE
+^\.github/CODEOWNERS$
+^\.github/claude/
+^\.github/[^/]+\.(txt|ya?ml)$
+^\.github/workflows/[^i][^/]*\.ya?ml$
+^\.github/scripts/(pre-commit-hook\.sh|version_property_finder\.py|zip-based-test-runner\.sh)$
+
+# Folders outside the Maven build used by the integration tests
+^oidc-conformance-tests/
+^oidc-fapi-conformance-tests/
+^product-scenarios/
+^jmeter-tests/
+^usecases/
+^modules/agents/
+
+# Images
+\.(png|jpe?g|gif|svg|ico)$
