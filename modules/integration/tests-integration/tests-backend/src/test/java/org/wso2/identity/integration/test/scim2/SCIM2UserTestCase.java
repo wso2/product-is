@@ -34,6 +34,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -107,6 +108,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     }
 
     private String userId;
+    private String charsetUserId;
 
     private String adminUsername;
     private String adminPassword;
@@ -244,8 +246,9 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
         assertEquals(usernameFromResponse, USERNAME_1);
 
-        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
-        assertNotNull(userId);
+        // Kept separately from userId, which the other tests use for USERNAME. The test order isn't fixed.
+        charsetUserId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(charsetUserId);
 
         String name = ((JSONObject) responseObj).get(NAME_ATTRIBUTE).toString();
         assertNotNull(name);
@@ -392,6 +395,19 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void deleteCharsetUser() throws Exception {
+
+        if (charsetUserId == null) {
+            return;
+        }
+        HttpDelete request = new HttpDelete(getPath() + "/" + charsetUserId);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        HttpResponse response = client.execute(request);
         EntityUtils.consume(response.getEntity());
     }
 

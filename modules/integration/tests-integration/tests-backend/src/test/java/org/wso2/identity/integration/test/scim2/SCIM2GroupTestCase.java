@@ -75,6 +75,9 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     // The user and group names are unique to this class because the SCIM2 test classes run in parallel.
     private static final String GROUPNAME = "scim2GroupTestGroup";
+    // A separate name, because the test order isn't fixed and this group can exist at the same time as GROUPNAME.
+    // It must not match the GROUPNAME filters in testFilterGroup.
+    private static final String CHARSET_GROUPNAME = "scim2GroupCharsetGroup";
     // Prefix of the groups created in the pagination test.
     private static final String PAGINATION_GROUP_PREFIX = "scim2GroupPagination";
     private static final String PASSWORD = "Wso2@test";
@@ -357,7 +360,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         members.add(member1);
         members.add(member2);
 
-        rootObject.put(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, GROUPNAME);
+        rootObject.put(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, CHARSET_GROUPNAME);
 
         rootObject.put(SCIM2BaseTestCase.MEMBERS_ATTRIBUTE, members);
 
@@ -374,7 +377,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
         String groupNameFromResponse = ((JSONObject) responseObj).get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE)
                 .toString();
-        assertTrue(groupNameFromResponse.contains(GROUPNAME));
+        assertTrue(groupNameFromResponse.contains(CHARSET_GROUPNAME));
 
         groupId1 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         assertNotNull(groupId1);
