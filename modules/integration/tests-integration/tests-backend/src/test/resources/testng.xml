@@ -28,7 +28,7 @@
         from (block N runs on runner N). The blocks are placed right after server initialization so they run against
         the default configuration.
     -->
-    <test name="is-tests-parallel-1" preserve-order="false" parallel="classes" thread-count="4">
+    <test name="is-tests-parallel-1" preserve-order="false" parallel="classes" thread-count="5">
         <classes>
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimMetadataManagementServiceTestCase"/>
@@ -56,7 +56,7 @@
         </classes>
     </test>
 
-    <test name="is-tests-parallel-3" preserve-order="false" parallel="classes" thread-count="4">
+    <test name="is-tests-parallel-3" preserve-order="false" parallel="classes" thread-count="5">
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.SubOrgApplicationClientSecretMultiLevelTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMClientSecretExpiryTestCase"/>
