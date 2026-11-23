@@ -54,6 +54,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_T
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.FAMILY_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.GIVEN_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.INIT_LOCK;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
@@ -69,7 +70,9 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_P
  */
 public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
 
-    private static final List<String> GROUPNAMES = new ArrayList<>(Arrays.asList("scim2Group1", "scim2Group2"));
+    // The user and group names are unique to this class because the SCIM2 test classes run in parallel.
+    private static final List<String> GROUPNAMES = new ArrayList<>(
+            Arrays.asList("scim2MultiAttributeGroup1", "scim2MultiAttributeGroup2"));
 
     private static final List<String> FAMILY_NAME_CLAIM_VALUES = new ArrayList<>(
             Arrays.asList("scim1user", "scim2user", "scim3user", "scim4user", "scim5user"));
@@ -81,7 +84,8 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
             Arrays.asList("scim1@gmail.com", "scim2@gmail.com", "scim3@gmail.com", "scim4@gmail.com",
                     "scim5@gmail.com"));
     public static final List<String> USERNAMES = new ArrayList<>(
-            Arrays.asList("scim2user1", "scim2user2", "scim2user3", "scim2user4", "scim2user5"));
+            Arrays.asList("scim2multiuser1", "scim2multiuser2", "scim2multiuser3", "scim2multiuser4",
+                    "scim2multiuser5"));
     public static final List<String> PASSWORDS = new ArrayList<>(
             Arrays.asList("Wso2@test1", "Wso2@test2", "Wso2@test3", "Wso2@test4", "Wso2@test5"));
 
@@ -97,7 +101,9 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
+        synchronized (INIT_LOCK) {
+            super.init();
+        }
         client = HttpClients.createDefault();
     }
 
@@ -268,8 +274,8 @@ public class SCIM2MultiAttributeUserFilterTestCase extends ISIntegrationTest {
                 Arrays.asList(USERNAMES.get(2)));
 
         query = new StringBuilder(USER_NAME_ATTRIBUTE).append(STARTWITH).
-                append(USERNAMES.get(0).substring(0, 3)).append(AND_OPERATION).append(USER_NAME_ATTRIBUTE).
-                append(CONTAINS).append(USERNAMES.get(0).substring(2, 4)).append(AND_OPERATION).append(NAME_ATTRIBUTE).
+                append(USERNAMES.get(0).substring(0, 10)).append(AND_OPERATION).append(USER_NAME_ATTRIBUTE).
+                append(CONTAINS).append(USERNAMES.get(0).substring(2, 9)).append(AND_OPERATION).append(NAME_ATTRIBUTE).
                 append(".").append(FAMILY_NAME_ATTRIBUTE).append(ENDWITH)
                 .append(FAMILY_NAME_CLAIM_VALUES.get(0).substring(5, 9));
 

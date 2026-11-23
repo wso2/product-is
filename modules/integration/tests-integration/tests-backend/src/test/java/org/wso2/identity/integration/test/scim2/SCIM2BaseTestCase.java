@@ -27,6 +27,9 @@ import java.io.File;
 public class SCIM2BaseTestCase extends ISIntegrationTest {
 
     public static final String SERVER_URL = "https://localhost:9853";
+    // Creating an AutomationContext reads the shared automation configuration document, which is not thread safe. The
+    // SCIM2 test classes that run in parallel initialize under this lock.
+    public static final Object INIT_LOCK = new Object();
     public static final String SCIM2_ENDPOINT = "/scim2";
     public static final String SCIM2_ME_ENDPOINT = "/scim2/Me";
     public static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";

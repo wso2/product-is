@@ -57,6 +57,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ERROR_S
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.FAMILY_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.GIVEN_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.INIT_LOCK;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.LIST_SCHEMA;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
@@ -78,10 +79,11 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private static final String GIVEN_NAME_CLAIM_VALUE = "user";
     private static final String FAMILY_NAME_CLAIM_VALUE_1 = "scim1";
     private static final String GIVEN_NAME_CLAIM_VALUE_1 = "user1";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2user@wso2.com";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
-    public static final String USERNAME = "scim2user";
-    public static final String USERNAME_1 = "scim2user1";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2usertestuser@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2usertestuser@gmail.com";
+    // The user names are unique to this class because the SCIM2 test classes run in parallel.
+    public static final String USERNAME = "scim2usertestuser";
+    public static final String USERNAME_1 = "scim2usertestuser1";
     public static final String PASSWORD = "Wso2@test";
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
     private String backendURL;
@@ -98,7 +100,9 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
+        synchronized (INIT_LOCK) {
+            super.init();
+        }
         client = HttpClients.createDefault();
     }
 
@@ -309,8 +313,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     public void testFilterUser() throws Exception {
 
         validateFilteredUser(USER_NAME_ATTRIBUTE, EQUAL, USERNAME);
-        validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 4));
-        validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 3));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 12));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 12));
         validateFilteredUser(USER_NAME_ATTRIBUTE, ENDWITH, USERNAME.substring(4, USERNAME.length()));
         validateFilteredUserByEmailAddresses(EMAIL_ADDRESSES_ATTRIBUTE, CONTAINS, EMAIL_TYPE_HOME_CLAIM_VALUE);
     }

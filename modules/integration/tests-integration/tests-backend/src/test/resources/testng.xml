@@ -392,7 +392,11 @@
         </classes>
     </test>
 
-    <test name="is-tests-scim2" preserve-order="true" parallel="false">
+    <!--
+        These SCIM2 test classes run concurrently. Each class uses user and group names unique to it, and its listing
+        and filter assertions only count its own users and groups.
+    -->
+    <test name="is-tests-scim2-parallel" preserve-order="false" parallel="classes" thread-count="5">
         <classes>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
@@ -400,6 +404,12 @@
             <class name="org.wso2.identity.integration.test.scim2.SCIM2RoleTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
+        </classes>
+    </test>
+
+    <!-- These classes share the static RestAssured configuration, so they run one at a time. -->
+    <test name="is-tests-scim2" preserve-order="true" parallel="false">
+        <classes>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2SchemasTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2BulkResourceTestCase"/>

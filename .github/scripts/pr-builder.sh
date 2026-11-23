@@ -15,6 +15,7 @@ declare -a ALL_TESTS=(
     "is-test-rest-api"
     "is-tests-oauth-client-secrets"
     "is-test-webhooks"
+    "is-tests-scim2-parallel"
     "is-tests-scim2"
     "is-test-adaptive-authentication"
     "is-test-adaptive-authentication-nashorn"

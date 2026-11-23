@@ -54,6 +54,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAILS_
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_TYPE_HOME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.GIVEN_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
+import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.INIT_LOCK;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
@@ -121,7 +122,9 @@ public class SCIM2RoleTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        super.init();
+        synchronized (INIT_LOCK) {
+            super.init();
+        }
         roleIdList = new ArrayList<>();
         client = HttpClients.createDefault();
 
