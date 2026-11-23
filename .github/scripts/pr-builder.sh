@@ -252,6 +252,7 @@ else
       echo ""
       echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
+      git checkout 5.5.x
   else
     if [ "$WORKFLOW_BRANCH" = "next" ]; then
       echo ""
