@@ -15,11 +15,23 @@
 
 import constants
 
+# The login page attaches its submit handler (which copies usernameUserInput into the
+# hidden "username" field) inside $(document).ready and only then removes the "loading"
+# class from the sign-in button. Submitting before that posts username=null and the
+# login fails intermittently, so wait until the button is ready before interacting.
+WAIT_FOR_LOGIN_PAGE_READY = [
+    "wait",
+    "xpath",
+    "//button[@id=\"sign-in-button\" and not(contains(@class, \"loading\"))]",
+    10
+]
+
 FORMPOST_PROMPT_LOGIN = {
     "task": "Login",
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
     "optional": True,
     "commands": [
+        WAIT_FOR_LOGIN_PAGE_READY,
         [
             "wait",
             "xpath",
@@ -72,6 +84,7 @@ FORMPOST_LOGIN = {
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
     "optional": True,
     "commands": [
+        WAIT_FOR_LOGIN_PAGE_READY,
         [
             "text",
             "id",
@@ -97,6 +110,7 @@ FORMPOST_LOGIN_WITHOUT_USERNAME = {
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
     "optional": True,
     "commands": [
+        WAIT_FOR_LOGIN_PAGE_READY,
         [
             "text",
             "id",
@@ -147,6 +161,7 @@ PROMPT_LOGIN = {
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
     "optional": True,
     "commands": [
+        WAIT_FOR_LOGIN_PAGE_READY,
         [
             "wait",
             "xpath",
@@ -221,6 +236,7 @@ LOGIN_REFRESH_TOKEN = {
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
     "optional": True,
     "commands": [
+        WAIT_FOR_LOGIN_PAGE_READY,
         [
             "text",
             "id",
@@ -277,6 +293,7 @@ LOGIN_BASIC = {
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
     "optional": True,
     "commands": [
+        WAIT_FOR_LOGIN_PAGE_READY,
         [
             "text",
             "id",
@@ -308,6 +325,7 @@ LOGIN_BASIC_WITHOUT_USERNAME = {
     "match": constants.BASE_URL + "/authenticationendpoint/login*",
     "optional": True,
     "commands": [
+        WAIT_FOR_LOGIN_PAGE_READY,
         [
             "text",
             "id",
