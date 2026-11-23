@@ -252,6 +252,12 @@ else
       echo ""
       echo "Checking out for 5.5.x branch in carbon-analytics-common..."
       echo "=========================================================="
+      git checkout 5.5.x
+  elif [ "$REPO" = "carbon-registry" ]; then
+      echo ""
+      echo "Checking out for 4.10.x branch in carbon-registry..."
+      echo "=========================================================="
+      git checkout 4.10.x
   else
     if [ "$WORKFLOW_BRANCH" = "next" ]; then
       echo ""
