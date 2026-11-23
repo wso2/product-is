@@ -106,9 +106,8 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
                 .header(HttpHeaders.LOCATION, notNullValue());
         workflowId = extractIdFromLocationHeader(response);
 
-        String adminRoleId = scim2RestClient.getRoleIdByName("admin");
         String updateBody = readResource("update-workflow.json");
-        updateBody = updateBody.replace("{role-id}", adminRoleId);
+        updateBody = updateBody.replace("{role-id}", getApproverRoleId(scim2RestClient));
         getResponseOfPut(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId, updateBody)
                 .then()
                 .log().ifValidationFails()
@@ -231,7 +230,7 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
      */
     private void approveFirstPendingTask() {
 
-        String taskId = getFirstApprovalTaskId(APPROVAL_API_PATH);
+        String taskId = getFirstApprovalTaskId(APPROVAL_API_PATH, scim2RestClient);
 
         String endpoint = String.format(APPROVAL_API_PATH + "/%s/state", taskId);
         String approvePayload = "{\n  \"action\":\"APPROVE\"\n}";
