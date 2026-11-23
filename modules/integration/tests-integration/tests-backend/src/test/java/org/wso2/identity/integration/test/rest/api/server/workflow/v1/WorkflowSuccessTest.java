@@ -176,8 +176,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     public void testUpdateWorkflow() throws Exception {
 
         String body = readResource("update-workflow.json");
-        String adminRoleId = scim2RestClient.getRoleIdByName("admin");
-        body = body.replace("{role-id}", adminRoleId);
+        body = body.replace("{role-id}", getApproverRoleId(scim2RestClient));
         Response response = getResponseOfPut(WORKFLOW_API_BASE_PATH + PATH_SEPARATOR + workflowId, body);
 
         response.then()
@@ -420,7 +419,7 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
 
     private void approveFirstPendingTask() {
 
-        String taskId = getFirstApprovalTaskId(APPROVAL_API_PATH + "?status=READY");
+        String taskId = getFirstApprovalTaskId(APPROVAL_API_PATH + "?status=READY", scim2RestClient);
 
         String endpoint = String.format(APPROVAL_API_PATH + "/%s/state", taskId);
         String approvePayload = "{\n  \"action\":\"APPROVE\"\n}";

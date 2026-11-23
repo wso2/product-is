@@ -27,6 +27,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
+import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -45,7 +46,11 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
 
     public static final String PATH_SEPARATOR = "/";
 
+    protected static final String APPROVER_ROLE_NAME = "admin";
+
     protected static String swaggerDefinition;
+
+    protected String approverRoleId;
 
     static {
         try {
@@ -75,18 +80,40 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
     }
 
     /**
-     * Returns the id of the first approval task in the given approval task listing. The task is stored in the same
-     * request that returns 202, so it is fetched once, without waiting. The listing is included in the failure
-     * message to show what the approver could see.
+     * Returns the id of the organization "admin" role, which the test workflows use as their approver. The tenant
+     * admin holds this role, so tasks assigned to it show up in the tenant admin's approval task listing. A plain
+     * lookup by name is not enough: an application-audience role can also be named "admin", and a task assigned to
+     * that role is invisible to the tenant admin.
      */
-    protected String getFirstApprovalTaskId(String approvalListPath) {
+    protected String getApproverRoleId(SCIM2RestClient scim2RestClient) throws Exception {
+
+        approverRoleId = scim2RestClient.getOrganizationRoleIdByName(APPROVER_ROLE_NAME);
+        return approverRoleId;
+    }
+
+    /**
+     * Returns the id of the first approval task in the given approval task listing. The task is stored in the same
+     * request that returns 202, so it is fetched once, without waiting. When the listing is empty, the failure
+     * message shows the listing, the approver role the workflow was configured with, and every role with the
+     * approver role's name, so a task assigned to a role the tenant admin does not hold can be told apart.
+     */
+    protected String getFirstApprovalTaskId(String approvalListPath, SCIM2RestClient scim2RestClient) {
 
         Response listResp = getResponseOfGetNoFilter(approvalListPath);
         listResp.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
 
         String taskId = listResp.jsonPath().getString("[0].id");
-        Assert.assertNotNull(taskId, "Approval task has not been assigned. Approval task listing: "
-                + listResp.asString());
+        if (taskId == null) {
+            String rolesWithApproverName;
+            try {
+                rolesWithApproverName = scim2RestClient.describeRolesByName(APPROVER_ROLE_NAME);
+            } catch (Exception e) {
+                rolesWithApproverName = "could not be listed: " + e.getMessage();
+            }
+            Assert.fail("Approval task has not been assigned. Approval task listing: " + listResp.asString()
+                    + ". Workflow approver role id: " + approverRoleId + ". Roles named '" + APPROVER_ROLE_NAME
+                    + "': " + rolesWithApproverName);
+        }
         return taskId;
     }
 

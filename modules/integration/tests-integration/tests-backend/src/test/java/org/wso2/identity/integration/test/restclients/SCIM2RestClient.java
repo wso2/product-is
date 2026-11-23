@@ -42,6 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SCIM2RestClient extends RestBaseClient {
 
@@ -64,6 +66,8 @@ public class SCIM2RestClient extends RestBaseClient {
     private static final String SCIM_SCHEMA_EXTENSION_SYSTEM = "scimSchemaExtensionSystem";
     private static final String DISPLAY_NAME_ATTRIBUTE = "displayName";
     private static final String AUDIENCE_VALUE_ATTRIBUTE = "audience.value";
+    private static final String AUDIENCE_TYPE_ATTRIBUTE = "audience.type";
+    private static final String ORGANIZATION_AUDIENCE_TYPE = "organization";
     private static final String ATTRIBUTES_PART = "?attributes=";
     private static final String EQ_OP = "eq";
     private static final String AND_OP = "and";
@@ -640,6 +644,60 @@ public class SCIM2RestClient extends RestBaseClient {
             JSONObject searchResult = (JSONObject) ((JSONArray) jsonResponse.get("Resources")).get(0);
 
             return searchResult.get("id").toString();
+        }
+    }
+
+    /**
+     * Get the id of the organization-audience role with the given name. Unlike {@link #getRoleIdByName(String)},
+     * this ignores application-audience roles that share the name, so it always resolves the role that is assigned
+     * to the organization's users (e.g. the tenant admin's "admin" role).
+     *
+     * @param roleName Role name.
+     * @return Role id.
+     * @throws Exception If an error occurred while searching the roles.
+     */
+    public String getOrganizationRoleIdByName(String roleName) throws Exception {
+
+        JSONArray roles = searchV2Roles(DISPLAY_NAME_ATTRIBUTE + " " + EQ_OP + " " + roleName + " " + AND_OP + " "
+                + AUDIENCE_TYPE_ATTRIBUTE + " " + EQ_OP + " " + ORGANIZATION_AUDIENCE_TYPE);
+        Assert.assertEquals(roles.size(), 1, "Expected exactly one organization role named '" + roleName
+                + "'. Roles with that name: " + describeRolesByName(roleName));
+        return ((JSONObject) roles.get(0)).get("id").toString();
+    }
+
+    /**
+     * Describe every role with the given name, in any audience, as "id (audience type: audience display)" entries.
+     * Used in assertion messages to show which role a lookup could have picked.
+     *
+     * @param roleName Role name.
+     * @return Description of the matching roles.
+     * @throws Exception If an error occurred while searching the roles.
+     */
+    public String describeRolesByName(String roleName) throws Exception {
+
+        List<String> descriptions = new ArrayList<>();
+        for (Object role : searchV2Roles(DISPLAY_NAME_ATTRIBUTE + " " + EQ_OP + " " + roleName)) {
+            JSONObject roleJson = (JSONObject) role;
+            JSONObject audience = (JSONObject) roleJson.get("audience");
+            descriptions.add(roleJson.get("id") + " (" + (audience == null ? "no audience"
+                    : audience.get("type") + ": " + audience.get("display")) + ")");
+        }
+        return descriptions.toString();
+    }
+
+    private JSONArray searchV2Roles(String filter) throws Exception {
+
+        RoleSearchRequestObject roleSearchObj = new RoleSearchRequestObject();
+        roleSearchObj.addSchemas(ROLE_SEARCH_SCHEMA);
+        roleSearchObj.setFilter(filter);
+
+        try (CloseableHttpResponse response = getResponseOfHttpPost(getRolesV2Path() + SCIM2_SEARCH_PATH,
+                toJSONString(roleSearchObj), getHeaders())) {
+            Assert.assertEquals(response.getStatusLine().getStatusCode(), HttpServletResponse.SC_OK,
+                    "Role search failed");
+            JSONArray resources = (JSONArray) getJSONObject(EntityUtils.toString(response.getEntity()))
+                    .get("Resources");
+            return resources == null ? new JSONArray() : resources;
         }
     }
 
