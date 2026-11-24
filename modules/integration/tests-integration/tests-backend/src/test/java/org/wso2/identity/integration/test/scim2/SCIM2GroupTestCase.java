@@ -60,7 +60,6 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_T
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.FAMILY_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.GIVEN_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.INIT_LOCK;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
@@ -73,38 +72,32 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_P
 
 public class SCIM2GroupTestCase extends ISIntegrationTest {
 
-    // The user and group names are unique to this class because the SCIM2 test classes run in parallel.
-    private static final String GROUPNAME = "scim2GroupTestGroup";
-    // A separate name, because the test order isn't fixed and this group can exist at the same time as GROUPNAME.
-    // It must not match the GROUPNAME filters in testFilterGroup.
-    private static final String CHARSET_GROUPNAME = "scim2GroupCharsetGroup";
-    // Prefix of the groups created in the pagination test.
-    private static final String PAGINATION_GROUP_PREFIX = "scim2GroupPagination";
+    private static final String GROUPNAME = "scim2Group";
     private static final String PASSWORD = "Wso2@test";
 
     private static final String FAMILY_NAME_CLAIM_VALUE_1 = "scim1";
     private static final String GIVEN_NAME_CLAIM_VALUE_1 = "user1";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_1 = "scim2groupuser1@wso2.com";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_1 = "scim2groupuser1@gmail.com";
-    private static final String USERNAME_1 = "scim2groupuser1";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_1 = "scim2user1@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_1 = "scim2user1@gmail.com";
+    private static final String USERNAME_1 = "scim2user1";
 
     private static final String FAMILY_NAME_CLAIM_VALUE_2 = "scim2";
     private static final String GIVEN_NAME_CLAIM_VALUE_2 = "user2";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_2 = "scim2groupuser2@wso2.com";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_2 = "scim2groupuser2@gmail.com";
-    private static final String USERNAME_2 = "scim2groupuser2";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_2 = "scim2user2@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_2 = "scim2user2@gmail.com";
+    private static final String USERNAME_2 = "scim2user2";
 
     private static final String FAMILY_NAME_CLAIM_VALUE_3 = "scim2_3";
     private static final String GIVEN_NAME_CLAIM_VALUE_3 = "user_3";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_3 = "scim2_groupuser3@wso2.com";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_3 = "scim2_groupuser3@gmail.com";
-    private static final String USERNAME_3 = "scim2_groupuser3";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_3 = "scim2_user3@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_3 = "scim2_user3@gmail.com";
+    private static final String USERNAME_3 = "scim2_user3";
 
     private static final String FAMILY_NAME_CLAIM_VALUE_4 = "scim2_4";
     private static final String GIVEN_NAME_CLAIM_VALUE_4 = "user_4";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_4 = "scim2_groupuser4@wso2.com";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_4 = "scim2_groupuser4@gmail.com";
-    private static final String USERNAME_4 = "scim2_groupuser4";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE_4 = "scim2_user4@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE_4 = "scim2_user4@gmail.com";
+    private static final String USERNAME_4 = "scim2_user4";
 
     private static final String EQUAL = "+Eq+";
     private static final String STARTWITH = "+Sw+";
@@ -146,9 +139,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
-        synchronized (INIT_LOCK) {
-            super.init(userMode);
-        }
+        super.init(userMode);
         client = HttpClients.createDefault();
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
 
@@ -360,7 +351,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
         members.add(member1);
         members.add(member2);
 
-        rootObject.put(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, CHARSET_GROUPNAME);
+        rootObject.put(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, GROUPNAME);
 
         rootObject.put(SCIM2BaseTestCase.MEMBERS_ATTRIBUTE, members);
 
@@ -377,7 +368,7 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
 
         String groupNameFromResponse = ((JSONObject) responseObj).get(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE)
                 .toString();
-        assertTrue(groupNameFromResponse.contains(CHARSET_GROUPNAME));
+        assertTrue(groupNameFromResponse.contains(GROUPNAME));
 
         groupId1 = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         assertNotNull(groupId1);
@@ -410,8 +401,8 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     public void testFilterGroup() throws Exception {
 
         validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, EQUAL, GROUPNAME);
-        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, STARTWITH, GROUPNAME.substring(0, 14));
-        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, CONTAINS, GROUPNAME.substring(2, 14));
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, STARTWITH, GROUPNAME.substring(0, 4));
+        validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, CONTAINS, GROUPNAME.substring(2, 4));
         validateFilteredGroup(SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE, ENDWITH, GROUPNAME.substring(4, GROUPNAME.length()));
         validateFilteredGroup(SCIM2BaseTestCase.MEMBER_DISPLAY_ATTRIBUTE, EQUAL, USERNAME_1);
         //validateFilteredGroup(SCIM2BaseTestCase.META_LOCATION_ATTRIBUTE, CONTAINS, groupId);
@@ -469,26 +460,27 @@ public class SCIM2GroupTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testDeleteGroup")
     public void testGetGroupsWithPagination() throws Exception {
 
+        int existingGroupsCount = Integer.parseInt(scim2RestClient.getGroups().get("totalResults").toString());
         List<String> GROUP_LIST = Arrays.asList("testGroup4", "testGroup3", "testGroup2", "testGroup1", "group4",
-                "group3", "group2", "group1");
+                "group3", "group2","group1");
         List<String> groupIds = new ArrayList<>();
         for (String groupName : GROUP_LIST) {
-            groupIds.add(scim2RestClient.createGroup(
-                    new GroupRequestObject().displayName(PAGINATION_GROUP_PREFIX + groupName)));
+            groupIds.add(scim2RestClient.createGroup(new GroupRequestObject().displayName(groupName)));
         }
 
-        // Other test classes create groups at the same time, so the listing is filtered to the groups of this test.
-        String allGroupsFilter = SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE + CONTAINS + PAGINATION_GROUP_PREFIX;
-        validateGroupsFromGetWithPagination(allGroupsFilter, null, null, GROUP_LIST.size(), GROUP_LIST.size());
-        validateGroupsFromGetWithPagination(allGroupsFilter, 3, null, GROUP_LIST.size() - 2, GROUP_LIST.size());
-        validateGroupsFromGetWithPagination(allGroupsFilter, null, 4, 4, GROUP_LIST.size());
-        validateGroupsFromGetWithPagination(allGroupsFilter, 4, 5, 5, GROUP_LIST.size());
-        validateGroupsFromGetWithPagination(allGroupsFilter, 20, 5, 0, GROUP_LIST.size());
-        validateGroupsFromGetWithPagination(allGroupsFilter, Integer.MAX_VALUE, 2, 0, GROUP_LIST.size());
-        validateGroupsFromGetWithPagination(allGroupsFilter, 6, Integer.MAX_VALUE, GROUP_LIST.size() - 5,
-                GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, null, null, existingGroupsCount + GROUP_LIST.size(),
+                existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 3, null, existingGroupsCount + GROUP_LIST.size() - 2,
+                existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, null, 4, 4, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 4, 5, 5, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 20, 5, 0, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, Integer.MAX_VALUE, 2, 0, existingGroupsCount + GROUP_LIST.size());
+        validateGroupsFromGetWithPagination(null, 6, Integer.MAX_VALUE, existingGroupsCount + GROUP_LIST.size() - 5,
+                existingGroupsCount + GROUP_LIST.size());
 
-        String filter = SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE + CONTAINS + PAGINATION_GROUP_PREFIX + "test";
+
+        String filter = SCIM2BaseTestCase.DISPLAY_NAME_ATTRIBUTE + CONTAINS + "test";
         validateGroupsFromGetWithPagination(filter, null, null, 4, 4);
         validateGroupsFromGetWithPagination(filter, 3, null, 2, 4);
         validateGroupsFromGetWithPagination(filter, null, 3, 3, 4);

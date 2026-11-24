@@ -39,6 +39,7 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.identity.integration.common.clients.UserManagementClient;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.IOException;
@@ -56,7 +57,6 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.EMAIL_T
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.FAMILY_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.GIVEN_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.ID_ATTRIBUTE;
-import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.INIT_LOCK;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.PASSWORD_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ATTRIBUTE;
@@ -77,15 +77,11 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     public static final String ITEMS_PER_PAGE_ATTRIBUTE = "itemsPerPage";
     public static final String START_INDEX = "2";
     public static final String COUNT = "4";
-    // The user names are unique to this class because the SCIM2 test classes run in parallel. Other test classes
-    // create users at the same time, so the listings are filtered to the users created by this test.
-    private static final String USERNAME_PREFIX = "scim2paginationuser";
-    private static final String USER_FILTER = "filter=" + USER_NAME_ATTRIBUTE + "+sw+" + USERNAME_PREFIX;
     private String adminUsername;
     private String adminPassword;
     private String tenant;
     List<String> userIds = new ArrayList<>();
-    Set<String> userNames = new HashSet<>();
+    UserManagementClient userMgtClient;
     TestUserMode userMode;
     private CloseableHttpClient client;
 
@@ -106,12 +102,12 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {
 
-        synchronized (INIT_LOCK) {
-            super.init(userMode);
-        }
+        super.init(userMode);
         this.adminUsername = isServer.getContextTenant().getTenantAdmin().getUserName();
         this.adminPassword = isServer.getContextTenant().getTenantAdmin().getPassword();
         this.tenant = isServer.getContextTenant().getDomain();
+
+        userMgtClient = new UserManagementClient(backendURL, sessionCookie);
 
         client = HttpClients.createDefault();
     }
@@ -122,9 +118,8 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testCreateUser")
     public void testUserListingPagination() throws Exception {
 
-        int currentUsers = userIds.size();
-        HttpGet request = new HttpGet(getUserPath() + "?" + USER_FILTER + "&startIndex=" + START_INDEX + "&count=" +
-                COUNT);
+        int currentUsers = getCurrentUsersCount();
+        HttpGet request = new HttpGet(getUserPath() + "?startIndex=" + START_INDEX + "&count=" + COUNT);
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
 
@@ -155,6 +150,8 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     @Test(dependsOnMethods = "testCreateUser")
     public void testUserListingPaginationWithoutParams() throws Exception {
 
+        int currentUsers = getCurrentUsersCount();
+
         HttpGet request = new HttpGet(getUserPath());
         request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
         request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -168,30 +165,28 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
 
         JSONArray resourcesResponse = (JSONArray) ((JSONObject) ((Object) responseObj)).get(RESOURCES_ATTRIBUTE);
 
-        // Other test classes create and delete users at the same time, so the number of users in the tenant isn't
-        // fixed. The listing must still return every user in a single page, so the counts in the response must match
-        // the returned resources, and the users created by this test must be among them.
-        int resourcesSize = resourcesResponse.size();
-
         String totalResults = ((JSONObject) responseObj).get(TOTAL_RESULTS_ATTRIBUTE).toString();
-        assertEquals(totalResults, String.valueOf(resourcesSize), "Total results in pagination listing is incorrect.");
+        assertEquals(totalResults, String.valueOf(currentUsers), "Total results in pagination listing is incorrect.");
 
         String startIndex = ((JSONObject) responseObj).get(START_INDEX_ATTRIBUTE).toString();
         assertEquals(startIndex, "1", "StartIndex in pagination listing is incorrect.");
 
         String itemsPerPage = ((JSONObject) responseObj).get(ITEMS_PER_PAGE_ATTRIBUTE).toString();
-        assertEquals(itemsPerPage, String.valueOf(resourcesSize), "ItemsPerPage in pagination listing is incorrect.");
+        assertEquals(itemsPerPage, String.valueOf(currentUsers), "ItemsPerPage in pagination listing is incorrect.");
 
-        assertTrue(isAllUsersExists(resourcesResponse), "Users created by the test are missing from the listing.");
+        int resourcesSize = ((JSONArray) ((JSONObject) responseObj).get(RESOURCES_ATTRIBUTE)).size();
+        assertEquals(resourcesSize, currentUsers, "Resources size in pagination listing is incorrect.");
+
+        assertTrue(isAllUsersExists(resourcesResponse));
+
     }
 
     @Test
     public void testCreateUser() throws Exception {
 
         for (int i = 0; i < 10; i++) {
-            String userName = USERNAME_PREFIX + i;
-            createUser(String.format("Family%s", i), String.format("user%s", i), userName,
-                    userName + "@gmail.com", userName + "@gmail.com", String.format("dummy@PW%s", i));
+            createUser(String.format("Family%s", i), String.format("user%s", i), String.format("user%s", i),
+                    String.format("user%s@gmail.com", i), String.format("user%s@gmail.com", i), String.format("dummy@PW%s", i));
         }
     }
 
@@ -245,7 +240,6 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         String userId;
         userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
         userIds.add(userId);
-        userNames.add(userName);
         assertNotNull(userId);
     }
 
@@ -279,6 +273,11 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         EntityUtils.consume(response.getEntity());
     }
 
+    private int getCurrentUsersCount() throws Exception {
+
+        return userMgtClient.getUserList().size();
+    }
+
     private boolean isAllUsersExists(JSONArray response) throws Exception {
 
         boolean isUsersExists = false;
@@ -286,7 +285,7 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
         for (Object user : response) {
             usersList.add(((JSONObject) user).get(USER_NAME_ATTRIBUTE).toString());
         }
-        if (usersList.containsAll(userNames)) {
+        if (userMgtClient.getUserList().equals(usersList)) {
             isUsersExists = true;
         }
         return isUsersExists;
