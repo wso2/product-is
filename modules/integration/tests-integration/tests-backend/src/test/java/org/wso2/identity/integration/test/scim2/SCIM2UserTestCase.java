@@ -34,6 +34,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
@@ -78,10 +79,11 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private static final String GIVEN_NAME_CLAIM_VALUE = "user";
     private static final String FAMILY_NAME_CLAIM_VALUE_1 = "scim1";
     private static final String GIVEN_NAME_CLAIM_VALUE_1 = "user1";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2user@wso2.com";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
-    public static final String USERNAME = "scim2user";
-    public static final String USERNAME_1 = "scim2user1";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2usertestuser@wso2.com";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2usertestuser@gmail.com";
+    // The user names are unique to this class because the SCIM2 test classes run in parallel.
+    public static final String USERNAME = "scim2usertestuser";
+    public static final String USERNAME_1 = "scim2usertestuser1";
     public static final String PASSWORD = "Wso2@test";
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
     private String backendURL;
@@ -103,6 +105,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     }
 
     private String userId;
+    private String charsetUserId;
 
     private String adminUsername;
     private String adminPassword;
@@ -240,8 +243,9 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         String usernameFromResponse = ((JSONObject) responseObj).get(USER_NAME_ATTRIBUTE).toString();
         assertEquals(usernameFromResponse, USERNAME_1);
 
-        userId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
-        assertNotNull(userId);
+        // Kept separately from userId, which the other tests use for USERNAME. The test order isn't fixed.
+        charsetUserId = ((JSONObject) responseObj).get(ID_ATTRIBUTE).toString();
+        assertNotNull(charsetUserId);
 
         String name = ((JSONObject) responseObj).get(NAME_ATTRIBUTE).toString();
         assertNotNull(name);
@@ -309,8 +313,8 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     public void testFilterUser() throws Exception {
 
         validateFilteredUser(USER_NAME_ATTRIBUTE, EQUAL, USERNAME);
-        validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 4));
-        validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 3));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, CONTAINS, USERNAME.substring(2, 12));
+        validateFilteredUser(USER_NAME_ATTRIBUTE, STARTWITH, USERNAME.substring(0, 12));
         validateFilteredUser(USER_NAME_ATTRIBUTE, ENDWITH, USERNAME.substring(4, USERNAME.length()));
         validateFilteredUserByEmailAddresses(EMAIL_ADDRESSES_ATTRIBUTE, CONTAINS, EMAIL_TYPE_HOME_CLAIM_VALUE);
     }
@@ -388,6 +392,19 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
         response = client.execute(request);
         assertEquals(response.getStatusLine().getStatusCode(), 404, "User " +
                 "has not been deleted successfully");
+        EntityUtils.consume(response.getEntity());
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void deleteCharsetUser() throws Exception {
+
+        if (charsetUserId == null) {
+            return;
+        }
+        HttpDelete request = new HttpDelete(getPath() + "/" + charsetUserId);
+        request.addHeader(HttpHeaders.AUTHORIZATION, getAuthzHeader());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        HttpResponse response = client.execute(request);
         EntityUtils.consume(response.getEntity());
     }
 

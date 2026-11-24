@@ -20,15 +20,22 @@
         </classes>
     </test>
 
+    <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
+    <!--<test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">-->
+    <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
+    <!--<classes>-->
+    <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
+    <!--</classes>-->
+    <!--</test>-->
+
     <!--
-        Self-contained test classes that run concurrently, one thread per class. A self-contained class creates only
-        uniquely named resources, modifies no tenant/server-wide or pre-existing resource, removes everything it
-        creates at the end of the class, and uses no shared fixture (Tomcat sample apps, GreenMail, fixed-port mock
-        servers, secondary IS, static RestAssured state). Each class stays on the CI runner of the block it was moved
-        from (block N runs on runner N). The blocks are placed right after server initialization so they run against
-        the default configuration.
+        A "-parallel" block holds test classes of the block right after it that can run concurrently, one thread per
+        class, against the same server state as the start of that block. A class there uses uniquely named resources,
+        removes what it creates, uses no shared fixture (Tomcat sample apps, GreenMail, fixed-port mock servers,
+        secondary IS) and changes nothing that another class in the block reads or asserts on. Classes that could only
+        run in parallel by changing what they test stay in their original block.
     -->
-    <test name="is-tests-parallel-1" preserve-order="false" parallel="classes" thread-count="5">
+    <test name="is-tests-default-configuration-parallel" preserve-order="false" parallel="classes" thread-count="5">
         <classes>
             <class name="org.wso2.identity.integration.test.AuthenticationAdminTestCase"/>
             <class name="org.wso2.identity.integration.test.claim.metadata.mgt.ClaimMetadataManagementServiceTestCase"/>
@@ -46,7 +53,6 @@
             <class name="org.wso2.identity.integration.test.saml.IDPMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SAMLMetadataTestCase"/>
             <class name="org.wso2.identity.integration.test.saml.SPMetadataTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2BulkResourceTestCase"/>
             <class name="org.wso2.identity.integration.test.sts.TestPassiveSTS"/>
             <class name="org.wso2.identity.integration.test.user.export.UserInfoExportTestCase"/>
             <class name="org.wso2.identity.integration.test.user.profile.mgt.UserProfileMgtTestCase"/>
@@ -55,21 +61,6 @@
             <class name="org.wso2.identity.integration.test.user.store.config.UserStoreConfigTestForIDENTITY5573"/>
         </classes>
     </test>
-
-    <test name="is-tests-parallel-3" preserve-order="false" parallel="classes" thread-count="5">
-        <classes>
-            <class name="org.wso2.identity.integration.test.oauth2.SubOrgApplicationClientSecretMultiLevelTestCase"/>
-            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMClientSecretExpiryTestCase"/>
-        </classes>
-    </test>
-
-    <!--Disabling since the WS-Trust functionality is provided as a connector and it does not exist in the product by default.-->
-    <!--<test name="is-tests-default-configuration-sts" preserve-order="true" parallel="false" group-by-instances="true">-->
-    <!--&lt;!&ndash; Active sts test case needs to run before passive sts test case&ndash;&gt;-->
-    <!--<classes>-->
-    <!--<class name="org.wso2.identity.integration.test.sts.ActiveSTSTestCase"/>-->
-    <!--</classes>-->
-    <!--</test>-->
 
     <test name="is-tests-default-configuration" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
@@ -378,6 +369,14 @@
         </classes>
     </test>
 
+    <!-- Test classes of is-tests-oauth-client-secrets that run concurrently. See is-tests-default-configuration-parallel. -->
+    <test name="is-tests-oauth-client-secrets-parallel" preserve-order="false" parallel="classes" thread-count="5">
+        <classes>
+            <class name="org.wso2.identity.integration.test.oauth2.SubOrgApplicationClientSecretMultiLevelTestCase"/>
+            <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMClientSecretExpiryTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-oauth-client-secrets" preserve-order="true" parallel="false" group-by-instances="true">
         <classes>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementClientSecretSuccessTest"/>
@@ -411,14 +410,25 @@
         </classes>
     </test>
 
+    <!--
+        Test classes of is-tests-scim2 that run concurrently. See is-tests-default-configuration-parallel.
+        SCIM2PaginationTestCase, SCIM2GroupTestCase and SCIM2RoleTestCase stay sequential because they count every user,
+        group or role in the tenant. The rest of is-tests-scim2 shares the static RestAssured configuration.
+    -->
+    <test name="is-tests-scim2-parallel" preserve-order="false" parallel="classes" thread-count="5">
+        <classes>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
+            <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2BulkResourceTestCase"/>
+        </classes>
+    </test>
+
     <test name="is-tests-scim2" preserve-order="true" parallel="false">
         <classes>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2PaginationTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2GroupTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2RoleTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
-            <class name="org.wso2.identity.integration.test.scim2.SCIM2MultiAttributeUserFilterTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIMUserUpdateTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.SCIM2SchemasTest"/>
             <class name="org.wso2.identity.integration.test.scim2.rest.api.customSchema.SCIM2CustomSchemaUserTestCase"/>
