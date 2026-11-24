@@ -370,7 +370,7 @@
     </test>
 
     <!-- Test classes of is-tests-oauth-client-secrets that run concurrently. See is-tests-default-configuration-parallel. -->
-    <test name="is-tests-oauth-client-secrets-parallel" preserve-order="false" parallel="classes" thread-count="5">
+    <test name="is-tests-oauth-client-secrets-parallel" preserve-order="false" parallel="classes" thread-count="2">
         <classes>
             <class name="org.wso2.identity.integration.test.oauth2.SubOrgApplicationClientSecretMultiLevelTestCase"/>
             <class name="org.wso2.identity.integration.test.oauth2.dcrm.api.OAuthDCRMClientSecretExpiryTestCase"/>
@@ -415,7 +415,7 @@
         SCIM2PaginationTestCase, SCIM2GroupTestCase and SCIM2RoleTestCase stay sequential because they count every user,
         group or role in the tenant. The rest of is-tests-scim2 shares the static RestAssured configuration.
     -->
-    <test name="is-tests-scim2-parallel" preserve-order="false" parallel="classes" thread-count="5">
+    <test name="is-tests-scim2-parallel" preserve-order="false" parallel="classes" thread-count="4">
         <classes>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2UserTestCase"/>
             <class name="org.wso2.identity.integration.test.scim2.SCIM2MeTestCase"/>
