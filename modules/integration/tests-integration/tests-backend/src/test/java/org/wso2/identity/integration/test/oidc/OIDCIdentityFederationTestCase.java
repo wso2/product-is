@@ -79,28 +79,29 @@ import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.M
 import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_CLIENT_SECRET;
 import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_LOGOUT_ENDPOINT;
 import static org.wso2.identity.integration.test.base.MockOIDCIdentityProvider.MOCK_IDP_TOKEN_ENDPOINT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test cases for SAML-OIDC federation scenarios.
  */
 public class OIDCIdentityFederationTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
+    private static final String SAML_SSO_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
-    private static final String SAML_LOGOUT_URL = "http://localhost:8490/travelocity.com/logout?SAML2" +
+    private static final String SAML_LOGOUT_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/logout?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
 
     private static final String PRIMARY_IS_SP_NAME = "travelocity";
 
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
-    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
     private static final String PRIMARY_IS_SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
 
     private static final String PRIMARY_IS_IDP_NAME = "trustedIdP";
     private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
     private static final String ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_OIDC = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
-    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/commonauth";
+    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
 
     private final AutomationContext context;
 

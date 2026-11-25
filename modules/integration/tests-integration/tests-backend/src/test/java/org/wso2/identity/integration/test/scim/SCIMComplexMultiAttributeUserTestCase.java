@@ -40,10 +40,11 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class SCIMComplexMultiAttributeUserTestCase extends ISIntegrationTest {
 
-    public static final String SERVER_URL = "https://localhost:9853";
+    public static final String SERVER_URL = "https://localhost:" + TestPorts.IS_HTTPS;
     public static final String SCIM_USERS_ENDPOINT = "/scim/Users";
 
     public static final String USER_NAME_ATTRIBUTE = "userName";

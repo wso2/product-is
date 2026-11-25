@@ -141,6 +141,7 @@ import static org.wso2.identity.integration.test.provisioning.OutboundProvisioni
 import static org.wso2.identity.integration.test.provisioning.OutboundProvisioningTestUtils.createOutboundProvisioningIdP;
 import static org.wso2.identity.integration.test.provisioning.OutboundProvisioningTestUtils.getProvisionedUserId;
 import static org.wso2.identity.integration.test.provisioning.OutboundProvisioningTestUtils.waitForProvisionedUser;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration tests for outbound provisioning triggered through JIT provisioning.
@@ -172,12 +173,12 @@ public class JITOutboundProvisioningSCIM2Test extends AbstractIdentityFederation
     private static final String ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_OIDC =
             "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
 
-    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/commonauth";
-    private static final String PRIMARY_IS_TOKEN_URL = "https://localhost:9853/oauth2/token";
-    private static final String SECONDARY_IS_COMMONAUTH_URL = "https://localhost:9854/commonauth";
-    private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9854/oauth2/authorize";
-    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:9854/oauth2/token";
-    private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:9854/oidc/logout";
+    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
+    private static final String PRIMARY_IS_TOKEN_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token";
+    private static final String SECONDARY_IS_COMMONAUTH_URL = "https://localhost:" + TestPorts.IS2_HTTPS + "/commonauth";
+    private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/authorize";
+    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/token";
+    private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oidc/logout";
     private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
 
     private static final int PORT_OFFSET_0 = 0;

@@ -40,6 +40,7 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 
 import java.io.File;
 import java.rmi.RemoteException;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This test class tests SAML IdP initiated SLO functionality for two SAML applications. Since logout requests are sent
@@ -53,8 +54,8 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
 
     private static final String APPLICATION_ONE = "SAML-TestApplication-01";
     private static final String APPLICATION_TWO = "SAML-TestApplication-02";
-    private static final String SAML_APP_ONE_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
-    private static final String SAML_APP_TWO_ACS_URL = "http://localhost:8490/travelocity.com-saml-supertenantwithoutsigning/home.jsp";
+    private static final String SAML_APP_ONE_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
+    private static final String SAML_APP_TWO_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com-saml-supertenantwithoutsigning/home.jsp";
 
     private final SAMLConfig samlConfigOne;
     private final SAMLConfig samlConfigTwo;

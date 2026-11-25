@@ -36,14 +36,15 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration tests for Oauth2 JWKS endpoint.
  */
 public class Oauth2JWKSEndpointTestCase {
 
-    private static final String JKWS_URI_SUPER_TENANT = "https://localhost:9853/oauth2/jwks";
-    private static final String JKWS_URI_TENANT = "https://localhost:9853/t/wso2.com/oauth2/jwks";
+    private static final String JKWS_URI_SUPER_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/jwks";
+    private static final String JKWS_URI_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/oauth2/jwks";
     private static final String X_509 = "X.509";
     private static final String KEY_TYPE = "kty";
     private static final String EXPONENT = "e";

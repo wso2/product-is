@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.test.webhooks.util.EventPayloadUtils;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Utility class to build expected event payloads for SCIM2 user test cases.
@@ -329,9 +330,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("organization", userOrganization);
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            user.put("ref", "https://localhost:9853/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users/" + userId);
         } else {
-            user.put("ref", "https://localhost:9853/t/" + tenantDomain + "/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + tenantDomain + "/scim2/Users/" + userId);
         }
 
         return user;
@@ -356,9 +357,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("organization", userOrganization);
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            user.put("ref", "https://localhost:9853/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users/" + userId);
         } else {
-            user.put("ref", "https://localhost:9853/t/" + tenantDomain + "/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + tenantDomain + "/scim2/Users/" + userId);
         }
 
         // Added claims
@@ -405,9 +406,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("organization", userOrganization);
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            user.put("ref", "https://localhost:9853/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users/" + userId);
         } else {
-            user.put("ref", "https://localhost:9853/t/" + tenantDomain + "/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + tenantDomain + "/scim2/Users/" + userId);
         }
 
         JSONArray addedClaims = new JSONArray();
@@ -444,9 +445,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("organization", userOrganization);
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            user.put("ref", "https://localhost:9853/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users/" + userId);
         } else {
-            user.put("ref", "https://localhost:9853/t/" + tenantDomain + "/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + tenantDomain + "/scim2/Users/" + userId);
         }
         return user;
     }
@@ -470,9 +471,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("organization", userOrganization);
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            user.put("ref", "https://localhost:9853/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users/" + userId);
         } else {
-            user.put("ref", "https://localhost:9853/t/" + tenantDomain + "/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + tenantDomain + "/scim2/Users/" + userId);
         }
 
         JSONArray addedClaims = new JSONArray();
@@ -510,9 +511,9 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
         user.put("organization", userOrganization);
 
         if (tenantDomain.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            user.put("ref", "https://localhost:9853/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users/" + userId);
         } else {
-            user.put("ref", "https://localhost:9853/t/" + tenantDomain + "/scim2/Users/" + userId);
+            user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + tenantDomain + "/scim2/Users/" + userId);
         }
 
         return user;
@@ -523,7 +524,7 @@ public class AdminInitUserManagementEventTestExpectedEventPayloadBuilder {
 
         JSONObject user = new JSONObject();
         user.put("id", "dummy-user-id");
-        user.put("ref", "https://localhost:9853/scim2/Users/dummy-user-id");
+        user.put("ref", "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users/dummy-user-id");
 
         JSONObject userOrganization = new JSONObject();
         userOrganization.put("id", "dummy-org-id");

@@ -86,6 +86,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This test class is used to check the behaviour of OAuth token revocation on multiple applications after
@@ -107,7 +108,7 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
 
     private static final String USER_SYSTEM_SCHEMA_ATTRIBUTE ="urn:scim:wso2:schema";
     private static final String ACCOUNT_DISABLED_ATTRIBUTE ="accountDisabled";
-    private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
+    private static final String APP_CALLBACK_URL = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2client";
 
     private static final String SERVICE_PROVIDER_1_NAME = "PlaygroundServiceProvider1";
     private static final String SERVICE_PROVIDER_2_NAME = "PlaygroundServiceProvider2";

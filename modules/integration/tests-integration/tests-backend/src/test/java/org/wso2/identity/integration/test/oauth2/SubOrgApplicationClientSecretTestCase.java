@@ -74,6 +74,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_CLIENT_CREDENTIALS;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Tests the multiple client secrets feature on B2B sub-organization applications. The client secret contract of
@@ -98,7 +99,7 @@ public class SubOrgApplicationClientSecretTestCase extends SubOrgClientSecretTes
     private static final String ORG_CLIENT_SECRET_VIEW_SCOPE = "internal_org_application_mgt_client_secret_view";
     private static final String ORG_CLIENT_SECRET_DELETE_SCOPE = "internal_org_application_mgt_client_secret_delete";
 
-    private static final String DCR_REGISTER_ENDPOINT = "https://localhost:9853/api/identity/oauth2/dcr/v1.1/register";
+    private static final String DCR_REGISTER_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/api/identity/oauth2/dcr/v1.1/register";
 
     private static final String CLIENT_NAME = "client_name";
     private static final String GRANT_TYPES = "grant_types";

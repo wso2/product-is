@@ -23,10 +23,11 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class SCIM2BaseTestCase extends ISIntegrationTest {
 
-    public static final String SERVER_URL = "https://localhost:9853";
+    public static final String SERVER_URL = "https://localhost:" + TestPorts.IS_HTTPS;
     public static final String SCIM2_ENDPOINT = "/scim2";
     public static final String SCIM2_ME_ENDPOINT = "/scim2/Me";
     public static final String SCIM2_USERS_ENDPOINT = "/scim2/Users";

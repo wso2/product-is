@@ -59,6 +59,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTestCase {
 
@@ -66,18 +67,18 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
     protected static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
     protected static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
-    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlFedSP";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
+    private static final String SAML_SSO_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2" +
                                                ".HTTPBinding=HTTP-Redirect";
-    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/travelocity"
+    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity"
             + ".com/logout?SAML2.HTTPBinding=HTTP-Redirect";
 
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String AUTHENTICATION_TYPE = "federated";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final int TOMCAT_8490 = 8490;
+    private static final int TOMCAT_8490 = TestPorts.TOMCAT;
     protected static final int PORT_OFFSET_0 = 0;
     protected static final int PORT_OFFSET_1 = 1;
     private static final String SAMLSSOAUTHENTICATOR = "SAMLSSOAuthenticator";
@@ -534,7 +535,7 @@ public class SAMLIdentityFederationTestCase extends AbstractIdentityFederationTe
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9854/samlsso");
+        property.setValue("https://localhost:" + TestPorts.IS2_HTTPS + "/samlsso");
         properties[2] = property;
 
         property = new Property();

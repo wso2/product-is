@@ -74,11 +74,12 @@ import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class Utils {
 
     private static String RESIDENT_CARBON_HOME;
-    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    private static final String SAML_SSO_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
     public static final String MODIFIED_USER_NAME = "modifiedUserName";
     public static final String PASSWORD = "password";
     public static final String USER_AGENT = "User-Agent";

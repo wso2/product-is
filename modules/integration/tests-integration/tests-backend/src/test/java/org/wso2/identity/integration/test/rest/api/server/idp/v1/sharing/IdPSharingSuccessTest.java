@@ -50,6 +50,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Success path integration tests for identity provider (connection) sharing.
@@ -81,7 +82,7 @@ public class IdPSharingSuccessTest extends IdPSharingBaseTest {
     private static final String UPDATE_SHARED_IDP_CLAIMS_JSON = "update-shared-idp-claims.json";
     private static final String UPDATE_SHARED_IDP_JIT_JSON = "update-shared-idp-jit.json";
     private static final String SUB_ORG_APP_NAME = "IdPSharingSubOrgApp";
-    private static final String CALLBACK_URL = "https://localhost:8490/idp-sharing/callback";
+    private static final String CALLBACK_URL = "https://localhost:" + TestPorts.TOMCAT + "/idp-sharing/callback";
 
     private static final String RESTRICTED_UPDATE_ERROR_CODE = "IDP-60016";
     private static final String RESTRICTED_SHARED_IDP_DELETE_ERROR_CODE = "IDP-60018";

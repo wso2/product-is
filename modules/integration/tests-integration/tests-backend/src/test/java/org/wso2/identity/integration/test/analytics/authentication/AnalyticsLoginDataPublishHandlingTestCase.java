@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class tests Analytics login data publish handling and Analytics session data publish handling functionalities.
@@ -118,10 +119,10 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
 
     private void startThriftServer() throws DataBridgeException, StreamDefinitionStoreException {
 
-        ThriftServer thriftServer = new ThriftServer("Wso2EventTestCase", 8021, true);
-        thriftServer.start(8021);
+        ThriftServer thriftServer = new ThriftServer("Wso2EventTestCase", TestPorts.IS_THRIFT, true);
+        thriftServer.start(TestPorts.IS_THRIFT);
         AnalyticsDataHolder.getInstance().setThriftServer(thriftServer);
-        log.info("Thrift Server is Started on port 8021");
+        log.info("Thrift Server is Started on port " + TestPorts.IS_THRIFT);
     }
 
     private void stopThriftServer() {
@@ -131,7 +132,7 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
             thriftServer.stop();
             AnalyticsDataHolder.getInstance().setThriftServer(null);
         }
-        log.info("Thrift Server stopped on port 8021");
+        log.info("Thrift Server stopped on port " + TestPorts.IS_THRIFT);
     }
 
 

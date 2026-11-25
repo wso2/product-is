@@ -52,6 +52,7 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
 
@@ -64,12 +65,12 @@ public abstract class AbstractAnalyticsLoginTestCase extends ISIntegrationTest {
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
 
-    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
-    private static final String SAML_SSO_INDEX_URL = "http://localhost:8490/%s/";
-    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:8490/%s/logout?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
+    private static final String COMMON_AUTH_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_INDEX_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/";
+    private static final String SAML_SSO_LOGOUT_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/logout?SAML2.HTTPBinding=%s";
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String profileName = "default";

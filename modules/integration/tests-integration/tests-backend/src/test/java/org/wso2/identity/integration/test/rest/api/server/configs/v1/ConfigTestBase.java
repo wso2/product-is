@@ -25,6 +25,7 @@ import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Base class for server configuration management tests.
@@ -43,13 +44,13 @@ public class ConfigTestBase extends RESTAPIServerTestBase {
     public static final String HOME_REALM_IDENTIFIERS_API_BASE_PATH = "/configs/home-realm-identifiers";
     public static final String SAML_INBOUND_AUTH_CONFIG_API_PATH = "/configs/authentication/inbound/saml2";
     public static final String PASSIVE_STS_INBOUND_AUTH_CONFIG_API_PATH = "/configs/authentication/inbound/passivests";
-    public static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = "https://localhost:9853/identity/metadata/saml2";
+    public static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/identity/metadata/saml2";
     public static final String SAML_METADATA_ENDPOINT_TENANT =
-            "https://localhost:9853/t/wso2.com/identity/metadata/saml2";
-    public static final String SAML_SSO_URL_SUPER_TENANT = "https://localhost:9853/samlsso";
-    public static final String SAML_SSO_URL_TENANT = "https://localhost:9853/t/wso2.com/samlsso";
-    public static final String PASSIVE_STS_URL_SUPER_TENANT = "https://localhost:9853/passivests";
-    public static final String PASSIVE_STS_URL_TENANT = "https://localhost:9853/t/wso2.com/passivests";
+            "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/identity/metadata/saml2";
+    public static final String SAML_SSO_URL_SUPER_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
+    public static final String SAML_SSO_URL_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/samlsso";
+    public static final String PASSIVE_STS_URL_SUPER_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/passivests";
+    public static final String PASSIVE_STS_URL_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/passivests";
     public static final String CONFIGS_COMPATIBILITY_SETTINGS_API_BASE_PATH = "/configs/compatibility-settings";
     public static final String CONFIGS_AGENT_API_BASE_PATH = "/configs/agent";
     public static final String FAPI_CONFIGS_API_BASE_PATH = "/configs/fapi";

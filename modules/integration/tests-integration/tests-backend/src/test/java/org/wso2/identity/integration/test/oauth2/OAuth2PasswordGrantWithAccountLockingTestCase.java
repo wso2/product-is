@@ -67,6 +67,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This test class is used to verify the OAuth2 password grant flow behavior when a user account is locked.
@@ -249,7 +250,7 @@ public class OAuth2PasswordGrantWithAccountLockingTestCase extends OAuth2Service
         Collections.addAll(grantTypes, "password", "refresh_token");
 
         List<String> callBackUrls = new ArrayList<>();
-        Collections.addAll(callBackUrls, "http://localhost:8490/playground2/oauth2client");
+        Collections.addAll(callBackUrls, "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2client");
 
         AccessTokenConfiguration accessTokenConfig = new AccessTokenConfiguration().type(tokenType);
         accessTokenConfig.setUserAccessTokenExpiryInSeconds(3600L);

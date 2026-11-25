@@ -39,6 +39,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Mock application server to test OIDC related flows.
@@ -60,14 +61,14 @@ public class MockApplicationServer {
 
     public static class Constants {
         public static class APP1 {
-            public static final String CALLBACK_URL = "https://localhost:8091/dummyApp/oauth2client";
+            public static final String CALLBACK_URL = "https://localhost:" + TestPorts.MOCK_APPLICATION + "/dummyApp/oauth2client";
             public static final String NAME = "playground.appone";
             public static final String CALLBACK_URL_PATH = "/dummyApp/oauth2client";
             public static final String FRONTCHANNEL_LOGOUT_PATH = "/dummyApp/fclogout";
         }
 
         public static class APP2 {
-            public static final String CALLBACK_URL = "https://localhost:8091/dummyApp2/oauth2client";
+            public static final String CALLBACK_URL = "https://localhost:" + TestPorts.MOCK_APPLICATION + "/dummyApp2/oauth2client";
             public static final String NAME = "playground.apptwo";
             public static final String CALLBACK_URL_PATH = "/dummyApp2/oauth2client";
             public static final String FRONTCHANNEL_LOGOUT_PATH = "/dummyApp/fclogout";
@@ -89,7 +90,7 @@ public class MockApplicationServer {
     public void start() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
-                .httpsPort(8091)
+                .httpsPort(TestPorts.MOCK_APPLICATION)
                 .httpDisabled(true)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())

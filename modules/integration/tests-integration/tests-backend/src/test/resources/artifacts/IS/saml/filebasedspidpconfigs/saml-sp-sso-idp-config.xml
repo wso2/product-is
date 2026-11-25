@@ -3,10 +3,10 @@
         <ServiceProvider>
             <Issuer>travelocity.com</Issuer>
             <AssertionConsumerServiceURLs>
-                <AssertionConsumerServiceURL>http://localhost:8490/travelocity.com/home.jsp
+                <AssertionConsumerServiceURL>http://localhost:@port.tomcat@/travelocity.com/home.jsp
                 </AssertionConsumerServiceURL>
             </AssertionConsumerServiceURLs>
-            <DefaultAssertionConsumerServiceURL>http://localhost:8490/travelocity.com/home.jsp
+            <DefaultAssertionConsumerServiceURL>http://localhost:@port.tomcat@/travelocity.com/home.jsp
             </DefaultAssertionConsumerServiceURL>
             <SignResponse>true</SignResponse>
             <CertAlias>wso2carbon</CertAlias>

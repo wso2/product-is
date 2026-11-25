@@ -5,44 +5,44 @@
             <nodes>
                 <instance id="isn001">
                     <host>localhost</host>
-                    <httpport>10173</httpport>
-                    <httpsport>9853</httpsport>
+                    <httpport>@port.is.http@</httpport>
+                    <httpsport>@port.is.https@</httpsport>
                 </instance>
             </nodes>
             <workers>
                 <instance id="isw001">
                     <host>localhost</host>
-                    <httpport>10173</httpport>
-                    <httpsport>9853</httpsport>
+                    <httpport>@port.is.http@</httpport>
+                    <httpsport>@port.is.https@</httpsport>
                 </instance>
                 <instance id="isw002">
                     <host>localhost</host>
-                    <httpport>10174</httpport>
-                    <httpsport>9854</httpsport>
+                    <httpport>@port.is2.http@</httpport>
+                    <httpsport>@port.is2.https@</httpsport>
                 </instance>
                 <instance id="isw003">
                     <host>localhost</host>
-                    <httpport>10175</httpport>
-                    <httpsport>9855</httpsport>
+                    <httpport>@port.is3.http@</httpport>
+                    <httpsport>@port.is3.https@</httpsport>
                 </instance>
             </workers>
             <lb>
                 <instance id="worker">
                     <host>localhost</host>
-                    <httpport>10173</httpport>
-                    <httpsport>9853</httpsport>
+                    <httpport>@port.is.http@</httpport>
+                    <httpsport>@port.is.https@</httpsport>
                 </instance>
                 <instance id="manager">
                     <host>localhost</host>
-                    <httpport>10175</httpport>
-                    <httpsport>9855</httpsport>
+                    <httpport>@port.is3.http@</httpport>
+                    <httpsport>@port.is3.https@</httpsport>
                 </instance>
             </lb>
             <managers>
                 <instance id="isw003">
                     <host>localhost</host>
-                    <httpport>10173</httpport>
-                    <httpsport>9853</httpsport>
+                    <httpport>@port.is.http@</httpport>
+                    <httpsport>@port.is.https@</httpsport>
                 </instance>
             </managers>
         </group>
@@ -50,8 +50,8 @@
             <nodes>
                 <instance id="isn002">
                     <host>localhost</host>
-                    <httpport>10175</httpport>
-                    <httpsport>9855</httpsport>
+                    <httpport>@port.is3.http@</httpport>
+                    <httpsport>@port.is3.https@</httpsport>
                 </instance>
             </nodes>
         </group>

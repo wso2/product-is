@@ -36,12 +36,13 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private String consumerKey;
     private String consumerSecret;
-    private static final String TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/token";
-    private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/revoke";
+    private static final String TOKEN_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token";
+    private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/revoke";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {

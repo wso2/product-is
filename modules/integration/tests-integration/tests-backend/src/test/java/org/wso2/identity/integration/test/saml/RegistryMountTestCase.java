@@ -68,6 +68,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class RegistryMountTestCase extends ISIntegrationTest {
 
@@ -76,9 +77,9 @@ public class RegistryMountTestCase extends ISIntegrationTest {
     private static final String APPLICATION_NAME = "SAML-Registry-Mount-Application";
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
 
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
+    private static final String COMMON_AUTH_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s";
 
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     //Claim Uris

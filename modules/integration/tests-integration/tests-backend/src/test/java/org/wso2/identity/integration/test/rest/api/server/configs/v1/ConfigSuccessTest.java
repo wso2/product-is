@@ -42,6 +42,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Test class for Server Configuration Management REST APIs success paths.
@@ -393,7 +394,7 @@ public class ConfigSuccessTest extends ConfigTestBase {
         String[] destinationUrls = response.jsonPath().getString("destinationURLs")
                 .replace("[", "").replace("]", "").replace(" ", "").split(",");
         Assert.assertEquals(2, destinationUrls.length);
-        Assert.assertTrue(Arrays.asList(destinationUrls).contains("https://localhost:9853/test/updated"));
+        Assert.assertTrue(Arrays.asList(destinationUrls).contains("https://localhost:" + TestPorts.IS_HTTPS + "/test/updated"));
     }
 
     @Test

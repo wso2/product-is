@@ -94,6 +94,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.HTTP_RESPO
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_CODE_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY_CONSENT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Test for Session Extender endpoint functionality with claims obtained via an Authorization Code Grant and Refresh
@@ -103,9 +104,9 @@ public class ExtendSessionEndpointAuthCodeGrantTestCase extends OAuth2ServiceAbs
 
     private static final String CALLBACK_URL = "https://localhost/callback";
     private static final String IDP_SESSION_KEY_CLAIM_NAME = "isk";
-    private static final String SESSION_EXTENDER_ENDPOINT_URL = "https://localhost:9853/identity/extend-session";
+    private static final String SESSION_EXTENDER_ENDPOINT_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/identity/extend-session";
     private static final String SESSION_EXTENDER_ENDPOINT_GET_URL = SESSION_EXTENDER_ENDPOINT_URL + "?%s=%s";
-    private static final String SESSIONS_ENDPOINT_URI = "https://localhost:9853/api/users/v1/me/sessions";
+    private static final String SESSIONS_ENDPOINT_URI = "https://localhost:" + TestPorts.IS_HTTPS + "/api/users/v1/me/sessions";
 
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
     private RequestConfig requestConfig;

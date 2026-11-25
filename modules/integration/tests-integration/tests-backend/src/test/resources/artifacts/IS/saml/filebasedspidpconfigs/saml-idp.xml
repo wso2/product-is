@@ -21,7 +21,7 @@
                 </property>
                 <property>
                     <Name>SSOUrl</Name>
-                    <Value>https://localhost:9854/samlsso</Value>
+                    <Value>https://localhost:@port.is2.https@/samlsso</Value>
                 </property>
                 <property>
                     <Name>IsAuthReqSigned</Name>

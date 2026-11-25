@@ -12,9 +12,9 @@
 <samlssoServiceProviderDTO>
     <issuer>carbonServer</issuer>
     <assertionConsumerUrls>
-        <assertionConsumerUrl>https://localhost:9853/acs</assertionConsumerUrl>
+        <assertionConsumerUrl>https://localhost:@port.is.https@/acs</assertionConsumerUrl>
     </assertionConsumerUrls>
-    <defaultAssertionConsumerUrl>https://localhost:9853/acs</defaultAssertionConsumerUrl>
+    <defaultAssertionConsumerUrl>https://localhost:@port.is.https@/acs</defaultAssertionConsumerUrl>
     <certAlias>wso2carbon</certAlias>
     <loginPageURL></loginPageURL>
     <attributeConsumingServiceIndex>1023274381</attributeConsumingServiceIndex>

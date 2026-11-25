@@ -93,6 +93,7 @@ import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test for sub-organization application authentication with shared users via federated login.
@@ -142,11 +143,11 @@ public class SharedUserSubOrgAppFederatedAssociationTestCase extends AbstractIde
     private static final String OIDC_AUTHENTICATOR_ID = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
     private static final String OIDC_AUTHENTICATOR_NAME = "OpenIDConnectAuthenticator";
 
-    private static final String PRIMARY_IS_CALLBACK_URL = "https://localhost:9853/commonauth";
-    private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9854/oauth2/authorize";
-    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:9854/oauth2/token";
-    private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:9854/oidc/logout";
-    private static final String SECONDARY_IS_COMMONAUTH_URL = "https://localhost:9854/commonauth";
+    private static final String PRIMARY_IS_CALLBACK_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
+    private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/authorize";
+    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/token";
+    private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oidc/logout";
+    private static final String SECONDARY_IS_COMMONAUTH_URL = "https://localhost:" + TestPorts.IS2_HTTPS + "/commonauth";
 
     private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";
 

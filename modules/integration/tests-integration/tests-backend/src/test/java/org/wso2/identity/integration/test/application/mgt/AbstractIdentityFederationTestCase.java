@@ -69,6 +69,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTest {
 
@@ -422,7 +423,7 @@ public abstract class AbstractIdentityFederationTestCase extends ISIntegrationTe
 
     private String getSecureServiceUrl(int portOffset, String baseUrl) {
 
-        return baseUrl.replace("9853", String.valueOf(DEFAULT_PORT + portOffset)) + "/";
+        return baseUrl.replace(String.valueOf(TestPorts.IS_HTTPS), String.valueOf(DEFAULT_PORT + portOffset)) + "/";
     }
 
 }

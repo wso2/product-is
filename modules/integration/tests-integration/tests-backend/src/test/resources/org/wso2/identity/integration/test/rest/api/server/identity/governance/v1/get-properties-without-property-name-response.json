@@ -64,7 +64,7 @@
       },
       {
         "name": "SelfRegistration.CallbackRegex",
-        "value": "https:\\/\\/localhost:9853\\/.*"
+        "value": "https:\\/\\/localhost:@port.is.https@\\/.*"
       },
       {
         "name": "_url_listPurposeSelfSignUp",

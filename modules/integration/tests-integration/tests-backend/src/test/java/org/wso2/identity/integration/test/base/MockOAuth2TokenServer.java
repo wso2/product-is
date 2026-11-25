@@ -41,6 +41,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Mock OAuth2 Token Endpoint for testing OAuth2 flows.
@@ -48,9 +49,9 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
  */
 public class MockOAuth2TokenServer {
 
-    public static final String TOKEN_ENDPOINT_URL = "https://localhost:8093/oauth2/token";
+    public static final String TOKEN_ENDPOINT_URL = "https://localhost:" + TestPorts.MOCK_OAUTH2_TOKEN_SERVER + "/oauth2/token";
     public static final String TOKEN_ENDPOINT_PATH = "/oauth2/token";
-    private static final int TOKEN_ENDPOINT_PORT = 8093;
+    private static final int TOKEN_ENDPOINT_PORT = TestPorts.MOCK_OAUTH2_TOKEN_SERVER;
     private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
     private static final String GRANT_TYPE_PASSWORD = "password";
     private static final String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";

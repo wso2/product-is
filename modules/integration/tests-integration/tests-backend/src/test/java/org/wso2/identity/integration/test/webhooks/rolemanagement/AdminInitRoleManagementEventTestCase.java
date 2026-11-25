@@ -60,6 +60,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class tests the role management events triggered by the admin user via the SCIM2 v2 Roles API.
@@ -492,11 +493,11 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
                 .addProperty(new Property().key(IdentityConstants.Authenticator.OIDC.CLIENT_SECRET)
                         .value("dummyClientSecret"))
                 .addProperty(new Property().key(IdentityConstants.Authenticator.OIDC.OAUTH2_AUTHZ_URL)
-                        .value("https://localhost:9853/oauth2/authorize"))
+                        .value("https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/authorize"))
                 .addProperty(new Property().key(IdentityConstants.Authenticator.OIDC.OAUTH2_TOKEN_URL)
-                        .value("https://localhost:9853/oauth2/token"))
+                        .value("https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token"))
                 .addProperty(new Property().key(IdentityConstants.Authenticator.OIDC.CALLBACK_URL)
-                        .value("https://localhost:9853/commonauth"));
+                        .value("https://localhost:" + TestPorts.IS_HTTPS + "/commonauth"));
 
         FederatedAuthenticatorRequest federatedAuthenticatorRequest = new FederatedAuthenticatorRequest()
                 .defaultAuthenticatorId(OIDC_AUTHENTICATOR_ID)

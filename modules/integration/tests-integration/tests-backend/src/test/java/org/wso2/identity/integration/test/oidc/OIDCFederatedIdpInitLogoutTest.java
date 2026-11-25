@@ -94,40 +94,41 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test cases for SAML-OIDC federation scenarios.
  */
 public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTestCase {
 
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String FEDERATED_SAML_SSO_URL =
-            "http://localhost:8490/travelocity.com-saml-supertenantwithoutsigning/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
+            "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com-saml-supertenantwithoutsigning/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String PRIMARY_SAML_SSO_URL =
-            "http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
+            "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
 
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
 
     private static final String PRIMARY_IS_SP_NAME = "travelocity.com";
 
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
     private static final String PRIMARY_IS_SAML_ACS_URL =
-            "http://localhost:8490/travelocity.com/home.jsp";
+            "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
     private static final String PRIMARY_IS_SAML_NAME_ID_FORMAT =
             "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
 
     private static final String FEDERATED_IS_SP_NAME = "travelocity.com-saml-supertenantwithoutsigning";
     private static final String FEDERATED_IS_SAML_ISSUER_NAME = "travelocity.com-saml-supertenantwithoutsigning";
     private static final String FEDERATED_IS_SAML_ACS_URL =
-            "http://localhost:8490/travelocity.com-saml-supertenantwithoutsigning/home.jsp";
+            "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com-saml-supertenantwithoutsigning/home.jsp";
 
     private static final String PRIMARY_IS_IDP_NAME = "trustedIdP";
     private static final String PRIMARY_IS_IDP_AUTHENTICATOR_NAME_OIDC = "OpenIDConnectAuthenticator";
     private static final String ENCODED_PRIMARY_IS_IDP_AUTHENTICATOR_ID_OIDC = "T3BlbklEQ29ubmVjdEF1dGhlbnRpY2F0b3I";
-    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:9853/commonauth";
-    private static final String PRIMARY_IS_BACK_CHANNEL_LOGOUT_ENDPOINT = "https://localhost:9853/identity/oidc/slo";
-    private static final String PRIMARY_IS_SESSION_EXTENSION_ENDPOINT = "https://localhost:9853/identity/extend" +
+    private static final String PRIMARY_IS_IDP_CALLBACK_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
+    private static final String PRIMARY_IS_BACK_CHANNEL_LOGOUT_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/identity/oidc/slo";
+    private static final String PRIMARY_IS_SESSION_EXTENSION_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/identity/extend" +
             "-session?idpSessionKey=";
 
     private static final String SECONDARY_IS_TEST_USERNAME = "testFederatedUser";
@@ -135,13 +136,13 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
     private static final String SECONDARY_IS_TEST_USER_ROLES = "admin";
 
     private static final String SECONDARY_IS_SP_NAME = "secondarySP";
-    private static final String SECONDARY_IS_SAML_SSO_URL = "https://localhost:9854/samlsso";
-    private static final String SECONDARY_IS_COMMONAUTH_URL = "https://localhost:9854/commonauth";
-    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:9854/oauth2/token";
-    private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:9854/oidc/logout";
-    private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:9854/oauth2/authorize";
-    private static final String SECONDARY_IS_JWKS_URI = "https://localhost:9854/oauth2/jwks";
-    private static final String SECONDARY_IS_SESSION_EXTENSION_ENDPOINT = "https://localhost:9854/identity/extend" +
+    private static final String SECONDARY_IS_SAML_SSO_URL = "https://localhost:" + TestPorts.IS2_HTTPS + "/samlsso";
+    private static final String SECONDARY_IS_COMMONAUTH_URL = "https://localhost:" + TestPorts.IS2_HTTPS + "/commonauth";
+    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/token";
+    private static final String SECONDARY_IS_LOGOUT_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oidc/logout";
+    private static final String SECONDARY_IS_AUTHORIZE_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/authorize";
+    private static final String SECONDARY_IS_JWKS_URI = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/jwks";
+    private static final String SECONDARY_IS_SESSION_EXTENSION_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/identity/extend" +
             "-session?idpSessionKey=";
 
     private static final String HTTPS_LOCALHOST_SERVICES = "https://localhost:%s/";

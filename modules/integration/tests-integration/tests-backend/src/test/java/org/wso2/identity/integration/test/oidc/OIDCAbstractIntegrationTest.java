@@ -53,13 +53,14 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class defines basic functionality needed to initiate an OIDC test.
  */
 public class OIDCAbstractIntegrationTest extends OAuth2ServiceAbstractIntegrationTest {
 
-    public static final int TOMCAT_PORT = 8490;
+    public static final int TOMCAT_PORT = TestPorts.TOMCAT;
 
     private static final Log log = LogFactory.getLog(OIDCAbstractIntegrationTest.class);
     protected SCIM2RestClient scim2RestClient;

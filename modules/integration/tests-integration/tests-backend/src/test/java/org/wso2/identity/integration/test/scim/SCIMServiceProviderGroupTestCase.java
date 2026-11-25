@@ -72,7 +72,7 @@ public class SCIMServiceProviderGroupTestCase {
         userInfo = automationContext.getContextTenant().getContextUser();
         backendUrl = automationContext.getContextUrls().getBackEndUrl();
         serviceEndPoint = automationContext.getContextUrls().getServiceUrl();
-        scim_url = backendUrl.substring(0, 22) + "/wso2/scim/";
+        scim_url = backendUrl.replaceFirst("^(https?://[^/]+).*$", "$1") + "/wso2/scim/";
         sessionCookie = new LoginLogoutClient(automationContext).login();
         userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
         scimConfigAdminClient = new SCIMConfigAdminClient(backendUrl, sessionCookie);

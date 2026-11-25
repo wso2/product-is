@@ -104,8 +104,8 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         sessionCookie = loginLogoutClient.login();
         userStoreConfigAdminServiceClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
         userMgtClient = new UserManagementClient(backendURL, sessionCookie);
-        scimUrl = backendURL.substring(0, 22) + "/wso2/scim/";
-        oauth2Endpoint = backendURL.substring(0, 22) + "/oauth2/token";
+        scimUrl = backendURL.replaceFirst("^(https?://[^/]+).*$", "$1") + "/wso2/scim/";
+        oauth2Endpoint = backendURL.replaceFirst("^(https?://[^/]+).*$", "$1") + "/oauth2/token";
     }
 
     @AfterClass(alwaysRun = true)

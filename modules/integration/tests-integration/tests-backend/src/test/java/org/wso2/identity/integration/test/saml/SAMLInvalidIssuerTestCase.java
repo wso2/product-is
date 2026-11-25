@@ -43,6 +43,7 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration tests for SAML invalid issuer.
@@ -55,9 +56,9 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
 
-    private static final String ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
     private static final String SAML_SSO_LOGIN_URL =
-            "http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
+            "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String SAML_ERROR_NOTIFICATION_PATH = "/authenticationendpoint/samlsso_notification.do";
 
     private DefaultHttpClient httpClient;

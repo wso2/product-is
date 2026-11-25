@@ -17,8 +17,10 @@
  */
 package org.wso2.identity.integration.test.oauth2.dcrm.api.util;
 
+import org.wso2.identity.integration.test.utils.TestPorts;
+
 public class OAuthDCRMConstants {
-    public static final String DCR_ENDPOINT_HOST_PART = "https://localhost:9853";
+    public static final String DCR_ENDPOINT_HOST_PART = "https://localhost:" + TestPorts.IS_HTTPS;
     public static final String DCR_ENDPOINT_PATH_PART = "/api/identity/oauth2/dcr/v1.1/register/";
     public static final String CLIENT_NAME = "client_name";
     public static final String GRANT_TYPES = "grant_types";

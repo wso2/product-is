@@ -97,6 +97,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZAT
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -118,7 +119,7 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
 
     // Mock IdP token endpoint constants (mirror of ActionsBaseTestCase values).
     private static final String MOCK_IDP_TOKEN_ENDPOINT_PATH = "/test/idp/token";
-    private static final String MOCK_IDP_TOKEN_ENDPOINT_URI = "http://localhost:8587" + MOCK_IDP_TOKEN_ENDPOINT_PATH;
+    private static final String MOCK_IDP_TOKEN_ENDPOINT_URI = "http://localhost:" + TestPorts.MOCK_SERVICE_EXTENSION + MOCK_IDP_TOKEN_ENDPOINT_PATH;
     private static final String MOCK_IDP_CLIENT_ID = "test-idp-client-id";
     private static final String MOCK_IDP_CLIENT_SECRET = "test-idp-client-secret";
     private static final String MOCK_IDP_SCOPES = "send_scope";

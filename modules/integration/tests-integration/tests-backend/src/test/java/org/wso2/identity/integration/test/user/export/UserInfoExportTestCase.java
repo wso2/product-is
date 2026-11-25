@@ -41,13 +41,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static org.testng.Assert.assertEquals;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * OAuth2 DCRM API Create process test case
  */
 public class UserInfoExportTestCase extends ISIntegrationTest {
 
-    private static final String HOST_PART = "https://localhost:9853";
+    private static final String HOST_PART = "https://localhost:" + TestPorts.IS_HTTPS;
     private static final String PI_INFO = "pi-info/";
     private static final String ME = "me";
     private static final String RESOURCE_PATH = "/api/identity/user/v1.0/";

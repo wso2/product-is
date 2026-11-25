@@ -52,7 +52,7 @@ from_address= "admin@wso2.com"
 username= "admin"
 password= "admin"
 hostname= "localhost"
-port= 3025
+port= @port.smtp@
 enable_start_tls= true
 enable_authentication= true
 

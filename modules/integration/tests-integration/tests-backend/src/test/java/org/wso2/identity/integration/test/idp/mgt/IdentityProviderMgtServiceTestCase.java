@@ -38,6 +38,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
 
@@ -163,7 +164,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
         String testFedAuthDispName = "openidConnect";
 
         String testFedAuthPropName = "OpenIdUrl";
-        String testFedAuthPropValue = "https://testDomain:9853/openid";
+        String testFedAuthPropValue = "https://testDomain:" + TestPorts.IS_HTTPS + "/openid";
         String testFedAuthPropName2 = "IsUserIdInClaims";
         String testFedAuthPropValue2 = "false";
         String testFedAuthPropName3 = "RealmId";
@@ -173,7 +174,7 @@ public class IdentityProviderMgtServiceTestCase extends ISIntegrationTest {
 
         String testProvisionPropName = "scim-user-ep";
         String testProvisionPropDisplayName = "userEndPoint";
-        String testProvisionPropValue = "https://localhost:9853/testProvisionLink";
+        String testProvisionPropValue = "https://localhost:" + TestPorts.IS_HTTPS + "/testProvisionLink";
 
         String testProvisionPropName2 = "scim-username";
         String testProvisionPropDisplayName2 = "userName";

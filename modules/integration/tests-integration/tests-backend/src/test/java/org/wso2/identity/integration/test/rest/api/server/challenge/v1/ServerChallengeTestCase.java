@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class is for ServerChallengeQuestion rest api test cases.
@@ -53,7 +54,7 @@ public class ServerChallengeTestCase {
     private final static String QUESTION_SET_ID = "challengeQuestion7";
     private static final String QUESTION_SET_ID_ATTRIBUTE = "questionSetId";
     private static final String RESOURCE_PATH = "/api/server/v1/challenges";
-    private static final String SERVER_URL = "https://localhost:9853";
+    private static final String SERVER_URL = "https://localhost:" + TestPorts.IS_HTTPS;
 
     /**
      * RestAssured.baseURI, which sets the base URI statically.

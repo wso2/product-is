@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.util.Utils.requestMissingClaims;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Test case of SAMLQuery service.
@@ -68,12 +69,12 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     // SAML Application attributes
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String APPLICATION_NAME = "SAML-SSO-Query-TestApplication";
-    private static final String WSO2IS_URL = "https://localhost:9853/";
+    private static final String WSO2IS_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/";
     private static final String WSO2IS_TENANT_URL = WSO2IS_URL + "t/wso2.com";
     private String tenantedSamlSSOUrl;
     private static final String COMMON_AUTH_URL = WSO2IS_URL + "/commonauth";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String KEYSTORE_ALIAS = "wso2carbon";
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";

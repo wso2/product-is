@@ -41,19 +41,19 @@ public final class OAuth2Constant {
     public final static String OAUTH_VERSION_2 = "OAuth-2.0";
     public static final String OAUTH_2 = "oauth2";
     public final static String REDIRECT_LOCATIONS = "http.protocol.redirect-locations";
-    public final static String ACCESS_TOKEN_ENDPOINT = "https://localhost:9853/oauth2/token";
-    public final static String TOKEN_REVOKE_ENDPOINT = "https://localhost:9853/oauth2/revoke";
-    public final static String OIDC_LOGOUT_ENDPOINT = "https://localhost:9853/oidc/logout";
-    public final static String PAR_ENDPOINT = "https://localhost:9853/oauth2/par";
-    public final static String OAUTH2_DEFAULT_ERROR_URL = "https://localhost:9853/authenticationendpoint/" +
+    public final static String ACCESS_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token";
+    public final static String TOKEN_REVOKE_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/revoke";
+    public final static String OIDC_LOGOUT_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oidc/logout";
+    public final static String PAR_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/par";
+    public final static String OAUTH2_DEFAULT_ERROR_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/authenticationendpoint/" +
             "oauth2_error.do";
-    public final static String USER_INFO_ENDPOINT = "https://localhost:9853/oauth2/userinfo?schema=openid";
-    public final static String DATA_API_ENDPOINT = "https://localhost:9853/api/identity/auth/v1.1/data/OauthConsentKey/";
+    public final static String USER_INFO_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/userinfo?schema=openid";
+    public final static String DATA_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/api/identity/auth/v1.1/data/OauthConsentKey/";
     public final static String AUTHTOKEN_VALIDATE_SERVICE = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
-    public final static String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
+    public final static String COMMON_AUTH_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
-    public final static String AUTHORIZE_ENDPOINT_URL = "https://localhost:9853/oauth2/authorize";
-    public final static String APPROVAL_URL = "https://localhost:9853/oauth2/authorize";
+    public final static String AUTHORIZE_ENDPOINT_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/authorize";
+    public final static String APPROVAL_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/authorize";
     public final static String AUTHORIZE_PARAM = "Authorize";
     public final static String TOKEN_VALIDATION_SERVICE_URL = CommonConstants.DEFAULT_SERVICE_URL + "OAuth2TokenValidationService";
     public final static String HTTP_RESPONSE_HEADER_LOCATION = "location";
@@ -71,13 +71,13 @@ public final class OAuth2Constant {
     public static final String OAUTH_CONSUMER_SECRET = "oauthConsumerSecret";
     public static final String OAUTH_OIDC_REQUEST = "request";
 
-    public final static String CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
-    public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:8490\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
-    public final static String CALLBACK_REQUEST_URL_WITH_PARAMS = "http://localhost:8490/playground2/oauth2client?param=value&param2=value2";
-    public final static String AUTHORIZED_USER_URL = "http://localhost:8490/playground2/oauth2-authorize-user.jsp";
-    public final static String AUTHORIZED_URL = "http://localhost:8490/playground2/oauth2.jsp";
-    public final static String GET_ACCESS_TOKEN_URL = "http://localhost:8490/playground2/oauth2-get-access-token.jsp";
-    public final static String ACCESS_RESOURCES_URL = "http://localhost:8490/playground2/oauth2-access-resource.jsp";
+    public final static String CALLBACK_URL = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2client";
+    public final static String CALLBACK_URL_REGEXP = "regexp=http:\\/\\/localhost:" + TestPorts.TOMCAT + "\\/playground2\\/oauth2client[\\?]?((\\w+)=(\\w+)&?)+";
+    public final static String CALLBACK_REQUEST_URL_WITH_PARAMS = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2client?param=value&param2=value2";
+    public final static String AUTHORIZED_USER_URL = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2-authorize-user.jsp";
+    public final static String AUTHORIZED_URL = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2.jsp";
+    public final static String GET_ACCESS_TOKEN_URL = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2-get-access-token.jsp";
+    public final static String ACCESS_RESOURCES_URL = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2-access-resource.jsp";
     public final static String PLAYGROUND_APP_CONTEXT_ROOT = "/playground2";
     public static final String GRANT_TYPE_PLAYGROUND_NAME = "grantType";
     public static final String CONSUMER_KEY_PLAYGROUND_NAME = "consumerKey";
@@ -106,14 +106,14 @@ public final class OAuth2Constant {
     public static final String OAUTH2_REDIRECT_URI = "redirect_uri";
     public static final String OAUTH2_SCOPE = "scope";
     public static final String OAUTH2_NONCE = "nonce";
-    public static final String INTRO_SPEC_ENDPOINT = "https://localhost:9853/oauth2/introspect";
-    public static final String TENANT_INTRO_SPEC_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/introspect";
-    public static final String TENANT_USER_INFO_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/userinfo?schema=openid";
-    public final static String TENANT_DATA_API_ENDPOINT = "https://localhost:9853/t/wso2.com/api/identity/auth/v1.1/data/OauthConsentKey/";
-    public final static String TENANT_TOKEN_REVOKE_ENDPOINT = "https://localhost:9853/t/wso2.com/oauth2/revoke";
+    public static final String INTRO_SPEC_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/introspect";
+    public static final String TENANT_INTRO_SPEC_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/oauth2/introspect";
+    public static final String TENANT_USER_INFO_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/oauth2/userinfo?schema=openid";
+    public final static String TENANT_DATA_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/api/identity/auth/v1.1/data/OauthConsentKey/";
+    public final static String TENANT_TOKEN_REVOKE_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/oauth2/revoke";
 
-    public static final String SCOPE_ENDPOINT = "https://localhost:9853/api/server/v1/oidc/scopes";
-    public static final String TENANT_SCOPE_ENDPOINT = "https://localhost:9853/t/wso2.com/api/server/v1/oidc/scopes";
+    public static final String SCOPE_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/api/server/v1/oidc/scopes";
+    public static final String TENANT_SCOPE_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/api/server/v1/oidc/scopes";
     public static final String OAUTH2_RESPONSE_MODE = "response_mode";
     public static final String RESPONSE_MODE_QUERY = "query";
     public static final String RESPONSE_MODE_FRAGMENT = "fragment";
@@ -126,11 +126,11 @@ public final class OAuth2Constant {
 
     // Tenanted urls.
     public final static String TENANT_PLACEHOLDER = "<TENANT_PLACEHOLDER>";
-    public final static String TENANT_COMMON_AUTH_URL = "https://localhost:9853/t/<TENANT_PLACEHOLDER>/commonauth";
-    public final static String TENANT_APPROVAL_URL = "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/authorize";
-    public final static String TENANT_TOKEN_ENDPOINT = "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/token";
+    public final static String TENANT_COMMON_AUTH_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/t/<TENANT_PLACEHOLDER>/commonauth";
+    public final static String TENANT_APPROVAL_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/t/<TENANT_PLACEHOLDER>/oauth2/authorize";
+    public final static String TENANT_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/<TENANT_PLACEHOLDER>/oauth2/token";
     public static final String TENANT_INTROSPECT_ENDPOINT =
-            "https://localhost:9853/t/<TENANT_PLACEHOLDER>/oauth2/introspect";
+            "https://localhost:" + TestPorts.IS_HTTPS + "/t/<TENANT_PLACEHOLDER>/oauth2/introspect";
 
     public static final String FIDP_PARAM = "fidp";
 
@@ -138,7 +138,7 @@ public final class OAuth2Constant {
 
     // CIBA (Client Initiated Backchannel Authentication)
     public static final String OAUTH2_GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba";
-    public static final String CIBA_ENDPOINT = "https://localhost:9853/oauth2/ciba";
+    public static final String CIBA_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/ciba";
     public static final String CIBA_AUTH_REQ_ID = "auth_req_id";
     public static final String CIBA_AUTH_URL = "auth_url";
     public static final String CIBA_EXPIRES_IN = "expires_in";

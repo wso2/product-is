@@ -27,7 +27,7 @@
               location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent"/>
     <property name="avis.webapp.classes" location="${avis.webapp}/WEB-INF/classes"/>
     <property name="avis.webapp.lib" location="${avis.webapp}/WEB-INF/lib"/>
-    <property name="properties" location="${basedir}/src/test/resources/artifacts/IS/org.wso2.sample.is.sso.agent"/>
+    <property name="properties" location="${basedir}/target/test-classes/artifacts/IS/org.wso2.sample.is.sso.agent"/>
 
     <target name="clear-slf4j-libs">
 

@@ -56,6 +56,7 @@ import org.wso2.identity.integration.test.utils.CommonConstants;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class tests the different types of authenticators
@@ -66,7 +67,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private static final String profileName = "default";
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String INBOUND_AUTH_TYPE = "samlsso";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
     private static final String IDENTITY_PROVIDER_NAME = "GoogleIDP";
@@ -75,7 +76,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
     private static final String CLIENT_ID = "ClientId";
     private static final String CLIENT_SECRET = "ClientSecret";
     private static final String CALLBACK_URL = "callbackUrl";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String SAML_SSO_URL = "https://localhost:" + CommonConstants.IS_DEFAULT_HTTPS_PORT +
             "/samlsso";

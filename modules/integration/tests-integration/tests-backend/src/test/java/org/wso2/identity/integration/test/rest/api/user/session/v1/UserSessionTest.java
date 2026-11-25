@@ -57,6 +57,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class UserSessionTest extends RESTAPIUserTestBase {
 
@@ -66,11 +67,11 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     private static final String API_DEFINITION_NAME = "session.yaml";
     private static final String ISSUER_TRAVELOCITY_COM = "travelocity.com";
     private static final String ISSUER_AVIS_COM = "avis.com";
-    private static final String SAMPLE_APP_URL = "http://localhost:8490/%s";
+    private static final String SAMPLE_APP_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s";
     protected static final String SERVICE_PROVIDER_NAME_TRAVELOCITY = "travelocity-sessionAPITest";
     protected static final String SERVICE_PROVIDER_NAME_AVIS = "avis-sessionAPITest";
     private static final String SERVICE_PROVIDER_DESC = "Service Provider to test the session management APIs";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
     private static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.rest.api.user.session.v1";
     private static final String COMMONAUTH = "commonauth";
     private static final String SAMLSSO = "samlsso";

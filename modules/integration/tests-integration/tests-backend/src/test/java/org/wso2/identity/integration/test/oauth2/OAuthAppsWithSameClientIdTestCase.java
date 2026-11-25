@@ -74,6 +74,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class contains tests for OAuth apps with same client id in multiple tenants.
@@ -96,7 +97,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
     private static final String TENANT_2_USER_USERNAME = "userTenant2";
     private static final String TENANT_2_USER_PASSWORD = "User@Tenant2";
     private static final String TENANT_2_USER_EMAIL = "userTenant2@wso2.com";
-    public final static String TENANT_1_AUTHORIZE_URL = "https://localhost:9853/t/tenant1.com/oauth2/authorize";
+    public final static String TENANT_1_AUTHORIZE_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/t/tenant1.com/oauth2/authorize";
 
     private TenantMgtRestClient tenantMgtRestClient;
     private OAuth2RestClient oAuth2RestClientTenant1;
@@ -248,7 +249,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         Collections.addAll(grantTypes, OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE);
         tenant1AppConfig.setGrantTypes(grantTypes);
         List<String> callBackUrls = new ArrayList<>();
-        Collections.addAll(callBackUrls, "http://localhost:8490/updated/callback");
+        Collections.addAll(callBackUrls, "http://localhost:" + TestPorts.TOMCAT + "/updated/callback");
         tenant1AppConfig.setCallbackURLs(callBackUrls);
 
         getOAuthRestClient(TENANT_1_DOMAIN).updateInboundDetailsOfApplication(tenant1App.getId(), tenant1AppConfig,

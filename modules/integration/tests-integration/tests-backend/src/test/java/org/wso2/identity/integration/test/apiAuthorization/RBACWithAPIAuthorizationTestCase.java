@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test class for testing the API authorization flow in applications.
@@ -86,7 +87,7 @@ public class RBACWithAPIAuthorizationTestCase extends OAuth2ServiceAbstractInteg
     private String orgAppID;
     private String applicationAppID;
     private String userID;
-    private String tokenURL = "https://localhost:9853/oauth2/token";
+    private String tokenURL = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token";
     private List<String> consumerKeys = new ArrayList<>();
     private List<String> consumerSecrets = new ArrayList<>();
 

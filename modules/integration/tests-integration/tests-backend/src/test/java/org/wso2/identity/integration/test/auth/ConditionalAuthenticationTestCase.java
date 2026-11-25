@@ -65,6 +65,7 @@ import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.CommonConstants.IS_DEFAULT_HTTPS_PORT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Test class to test the conditional authentication support using Javascript feature.
@@ -73,7 +74,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
     private static final String IDENTITY_PROVIDER_ALIAS =
             "https://localhost:" + IS_DEFAULT_HTTPS_PORT + "/oauth2/token/";
-    private static final String SECONDARY_IS_SAMLSSO_URL = "https://localhost:9854/samlsso";
+    private static final String SECONDARY_IS_SAMLSSO_URL = "https://localhost:" + TestPorts.IS2_HTTPS + "/samlsso";
     private static final int PORT_OFFSET_1 = 1;
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String PRIMARY_IS_APPLICATION_NAME = "testOauthApp";
@@ -422,7 +423,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
 
         AutomationContext context = testDataHolder.getAutomationContext();
         String serviceUrl = (context.getContextUrls().getSecureServiceUrl())
-                .replace("9853", String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
+                .replace(String.valueOf(TestPorts.IS_HTTPS), String.valueOf(IS_DEFAULT_HTTPS_PORT + PORT_OFFSET_1)) + "/";
 
         AuthenticatorClient authenticatorClient = new AuthenticatorClient(serviceUrl);
 

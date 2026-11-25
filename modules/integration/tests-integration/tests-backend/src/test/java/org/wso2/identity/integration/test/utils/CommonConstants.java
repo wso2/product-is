@@ -19,10 +19,10 @@ package org.wso2.identity.integration.test.utils;
 
 public class CommonConstants {
 
-    public static final int IS_DEFAULT_OFFSET = 410;
-    public static final int IS_DEFAULT_HTTPS_PORT = 9853;
-    public static final int DEFAULT_TOMCAT_PORT = 8490;
-    public static final String DEFAULT_SERVICE_URL = "https://localhost:9853/services/";
+    public static final int IS_DEFAULT_OFFSET = TestPorts.IS_OFFSET;
+    public static final int IS_DEFAULT_HTTPS_PORT = TestPorts.IS_HTTPS;
+    public static final int DEFAULT_TOMCAT_PORT = TestPorts.TOMCAT;
+    public static final String DEFAULT_SERVICE_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/services/";
     public static final String SAML_REQUEST_PARAM = "SAMLRequest";
     public static final String SAML_RESPONSE_PARAM = "SAMLResponse";
     public static final String SESSION_DATA_KEY = "name=\"sessionDataKey\"";

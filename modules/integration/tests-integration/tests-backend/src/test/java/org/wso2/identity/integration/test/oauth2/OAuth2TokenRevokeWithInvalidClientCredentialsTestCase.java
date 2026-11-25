@@ -40,6 +40,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This test case is for IDENTITY-5128, to check that when the oauth2 revoke endpoint is called with invalid client
@@ -47,7 +48,7 @@ import java.util.ArrayList;
  */
 public class OAuth2TokenRevokeWithInvalidClientCredentialsTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
-    private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/revoke";
+    private static final String REVOKE_TOKEN_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/revoke";
 
     @BeforeClass(alwaysRun = true)
     public void testInit() throws Exception {

@@ -34,17 +34,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Manager class for handling and verifying webhook events in tests.
  */
 public class WebhookEventTestManager {
 
-    private static final int START_PORT = 8580;
-    private static final int PORT_LIMIT = 8590;
+    private static final int START_PORT = TestPorts.WEBHOOK_RANGE_START;
+    private static final int PORT_LIMIT = TestPorts.WEBHOOK_RANGE_END;
     private static final int MAX_RETRIES_ON_EVENTS_RECEIVED = 5;
     private static final int WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED = 500;
-    private static final String SERVER_BASE_URL = "https://localhost:9853/";
+    private static final String SERVER_BASE_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/";
     private static final String WSO2_EVENT_PROFILE_URI = "https://schemas.identity.wso2.org/events";
     private static final AtomicInteger currentPort = new AtomicInteger(START_PORT);
 

@@ -47,6 +47,7 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class WorkflowManagementTestCase extends ISIntegrationTest {
 
@@ -60,7 +61,7 @@ public class WorkflowManagementTestCase extends ISIntegrationTest {
     private String associationId = null;
     private String[] rolesToAdd = {"wfRole1", "wfRole2", "wfRole3"};
     private String sessionCookie2;
-    private String servicesUrl = "https://localhost:9854/services/";
+    private String servicesUrl = "https://localhost:" + TestPorts.IS2_HTTPS + "/services/";
     private String templateId = "MultiStepApprovalTemplate";
     private String workflowImplId = "ApprovalWorkflow";
     private final String WORKFLOW_NAME = "TestWorkflowAddUser";

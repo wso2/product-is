@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class contains test cases for SAML SSO for Admin Console.
@@ -51,13 +52,13 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
             null, null);
 
     // Constants.
-    private static final String SAML_ACS_URL = "https://localhost:9853/acs";
-    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
-    private static final String MANAGEMENT_CONSOLE_LOGIN_URL = "https://localhost:9853/carbon/admin/login.jsp";
-    private static final String MANAGEMENT_CONSOLE_LOGOUT_URL = "https://localhost:9853/carbon/admin/logout_action.jsp";
-    private static final String MANAGEMENT_CONSOLE_HOME_URL = "https://localhost:9853/carbon/admin/index.jsp";
+    private static final String SAML_ACS_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/acs";
+    private static final String SAML_SSO_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
+    private static final String MANAGEMENT_CONSOLE_LOGIN_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/carbon/admin/login.jsp";
+    private static final String MANAGEMENT_CONSOLE_LOGOUT_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/carbon/admin/logout_action.jsp";
+    private static final String MANAGEMENT_CONSOLE_HOME_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/carbon/admin/index.jsp";
     private static final String AUTHENTICATION_PORTAL_LOGIN_URL =
-            "https://localhost:9853/authenticationendpoint/login.do";
+            "https://localhost:" + TestPorts.IS_HTTPS + "/authenticationendpoint/login.do";
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "admin";
 

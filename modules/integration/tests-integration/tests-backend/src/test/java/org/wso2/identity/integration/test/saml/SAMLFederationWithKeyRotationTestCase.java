@@ -92,6 +92,7 @@ import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test for SAML federation between two IS instances with key rotation in place.
@@ -103,9 +104,9 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
 
     // Travelocity app running on embedded Tomcat
     private static final String SAML_SSO_URL =
-            "http://localhost:8490/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
+            "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2.HTTPBinding=HTTP-Redirect";
     private static final String PRIMARY_IS_SAML_ACS_URL =
-            "http://localhost:8490/travelocity.com/home.jsp";
+            "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
 
     // SP / IdP names and SAML issuer IDs
     private static final String PRIMARY_IS_SP_NAME = "travelocity-key-rotation";

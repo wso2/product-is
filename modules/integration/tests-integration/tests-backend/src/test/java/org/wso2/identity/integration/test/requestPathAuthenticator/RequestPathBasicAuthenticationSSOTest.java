@@ -46,6 +46,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Tests Basic authenticator and request path basic authenticator single sign on.
@@ -55,11 +56,11 @@ public class RequestPathBasicAuthenticationSSOTest extends ISIntegrationTest {
     private static final String SERVICE_PROVIDER_NAME_TRAVELOCITY = "travelocity-requestpath";
     private static final String SERVICE_PROVIDER_NAME_AVIS = "avis-basic";
     private static final String SERVICE_PROVIDER_DESC = "Service Provider with Request Path Authentication";
-    protected static final String SAMPLE_APP_URL = "http://localhost:8490/%s";
+    protected static final String SAMPLE_APP_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s";
     protected static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String SAML_SUCCESS_TAG =
             "<saml2p:StatusCode Value=\"urn:oasis:names:tc:SAML:2" + ".0:status:Success\"/>";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
     public static final String ISSUER_TRAVELOCITY_COM = "travelocity.com";
     public static final String ISSUER_AVIS_COM = "avis.com";
 

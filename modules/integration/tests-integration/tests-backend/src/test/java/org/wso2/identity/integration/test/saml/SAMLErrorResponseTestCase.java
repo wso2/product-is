@@ -65,6 +65,7 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class SAMLErrorResponseTestCase extends ISIntegrationTest {
 
@@ -73,10 +74,10 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
     private static final String ARTIFACT_ID = "travelocity.com";
 
-    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String INVALID_ACS_URL = "http://localhost:8490/%s/index.jsp";
-    private static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
+    private static final String SAML_SSO_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
+    private static final String INVALID_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/index.jsp";
+    private static final String SAML_SSO_LOGIN_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s";
 
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String RELAY_STATE = "token";
@@ -85,7 +86,7 @@ public class SAMLErrorResponseTestCase extends ISIntegrationTest {
     private static final String JAVAX_NET_SSL_TRUSTORE_PASSWORD = "javax.net.ssl.trustStorePassword";
     private static final String JAVAX_NET_SSL_TRUSTORE_TYPE = "javax.net.ssl.trustStoreType";
     private static final String ERROR_MSG_SAML = "<saml2p:StatusMessage>ALERT: Invalid Assertion Consumer URL value" +
-            " \'http://localhost:8490/travelocity.com/home.jsp\' in the AuthnRequest message from  the issuer" +
+            " \'http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp\' in the AuthnRequest message from  the issuer" +
             " \'travelocity.com\'. Possibly an attempt for a spoofing attack</saml2p:StatusMessage>";
     protected static final String DEFAULT_CHARSET = "UTF-8";
     private CloseableHttpClient httpClient;

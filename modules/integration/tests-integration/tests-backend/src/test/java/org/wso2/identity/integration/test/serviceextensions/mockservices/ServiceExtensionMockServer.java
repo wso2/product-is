@@ -31,6 +31,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Provides a mock server using WireMock for testing purposes.
@@ -43,7 +44,7 @@ public class ServiceExtensionMockServer {
 
     public void startServer() {
 
-        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(8587));
+        wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig().port(TestPorts.MOCK_SERVICE_EXTENSION));
         wireMockServer.start();
     }
 

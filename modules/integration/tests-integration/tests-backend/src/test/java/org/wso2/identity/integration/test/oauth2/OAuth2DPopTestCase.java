@@ -92,6 +92,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_RESOURCE_OWNER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.PAR_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -100,7 +101,7 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String TOKEN_TYPE = "DPoP";
     private static final String BINDING_TYPE = "DPoP";
     private static final String SCIM2_USERS_API = "/scim2/Users";
-    private final static String SCIM2_USERS_ENDPOINT = "https://localhost:9853/scim2/Users";
+    private final static String SCIM2_USERS_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users";
     private final static String INTERNAL_USER_MGT_LIST = "internal_user_mgt_list";
     private static final String TEST_USER = "dpop_test_user";
     private static final String ADMIN_WSO2 = "Admin@wso2";

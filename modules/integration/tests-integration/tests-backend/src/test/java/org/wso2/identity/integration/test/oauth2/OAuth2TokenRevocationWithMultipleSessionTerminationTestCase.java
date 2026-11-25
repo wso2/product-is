@@ -61,6 +61,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This test class is used to check the behaviour of token revocation when all the user sessions are terminated via
@@ -79,7 +80,7 @@ public class OAuth2TokenRevocationWithMultipleSessionTerminationTestCase extends
     private RequestConfig requestConfig;
     private  HttpClient httpClientForFirstSession;
     private  HttpClient httpClientForSecondSession;
-    private static final String SESSION_API_ENDPOINT = "https://localhost:9853/api/users/v1/me/sessions";
+    private static final String SESSION_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/api/users/v1/me/sessions";
     private String applicationId;
 
     @BeforeClass(alwaysRun = true)

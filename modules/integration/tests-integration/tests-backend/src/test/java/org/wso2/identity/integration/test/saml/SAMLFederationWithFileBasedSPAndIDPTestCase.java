@@ -78,12 +78,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentityFederationTestCase {
 
-    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" + "" +
+    private static final String SAML_SSO_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2" + "" +
             ".HTTPBinding=HTTP-Redirect";
-    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String INBOUND_AUTH_TYPE = "samlsso";

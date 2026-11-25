@@ -92,13 +92,14 @@ import java.util.regex.Pattern;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class PreUpdatePasswordActionBaseTestCase extends ActionsBaseTestCase {
 
     private static final String SCIM2_USERS_API = "/scim2/Users";
     private static final String INTERNAL_USER_MANAGEMENT_UPDATE = "internal_user_mgt_update";
     private static final String INTERNAL_USER_MANAGEMENT_CREATE = "internal_user_mgt_create";
-    private static final String APP_CALLBACK_URL = "http://localhost:8490/playground2/oauth2client";
+    private static final String APP_CALLBACK_URL = "http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2client";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_OFFLINE = "Recovery.AdminPasswordReset.Offline";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_OTP = "Recovery.AdminPasswordReset.OTP";
     private static final String ENABLE_ADMIN_PASSWORD_RESET_WITH_EMAIL_LINK = "Recovery.AdminPasswordReset.RecoveryLink";

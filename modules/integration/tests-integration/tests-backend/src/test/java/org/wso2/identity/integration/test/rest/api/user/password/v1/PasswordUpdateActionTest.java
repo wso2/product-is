@@ -48,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration tests for verifying Pre-Update Password Action integration with the Password Update API.
@@ -61,7 +62,7 @@ public class PasswordUpdateActionTest extends PasswordUpdateTestBase {
     private static final String ACTION_DESCRIPTION = "Pre update password action for password update API test";
     private static final String PRE_UPDATE_PASSWORD_API_PATH = "preUpdatePassword";
     private static final String MOCK_SERVER_ENDPOINT_RESOURCE_PATH = "/test/action";
-    private static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
+    private static final String EXTERNAL_SERVICE_URI = "http://localhost:" + TestPorts.MOCK_SERVICE_EXTENSION + "/test/action";
     private static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
     private static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
 

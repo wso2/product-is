@@ -39,6 +39,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase {
 
@@ -46,10 +47,10 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondarySP";
     private static final String IDENTITY_PROVIDER_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
-    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlFedSP";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
+    private static final String SAML_SSO_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String AUTHENTICATION_TYPE = "federated";
@@ -62,9 +63,9 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
     private static final String emailClaimURI = "http://wso2.org/claims/emailaddress";
     private static final String givenNameClaimURI = "http://wso2.org/claims/givenname";
     private static final String PASSIVE_STS_SAMPLE_APP_URL =
-            "http://localhost:8490/PassiveSTSSampleApp";
+            "http://localhost:" + TestPorts.TOMCAT + "/PassiveSTSSampleApp";
     private static final String COMMON_AUTH_URLL =
-            "https://localhost:9853/commonauth";
+            "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     private static final String PASSIVE_STS_SAMPLE_APP_NAME = "/PassiveSTSSampleApp";
     private String sessionDataKey;
@@ -438,7 +439,7 @@ public class TestPassiveSTSFederation extends AbstractIdentityFederationTestCase
 
         property = new Property();
         property.setName(IdentityConstants.Authenticator.SAML2SSO.SSO_URL);
-        property.setValue("https://localhost:9854/samlsso");
+        property.setValue("https://localhost:" + TestPorts.IS2_HTTPS + "/samlsso");
         properties[2] = property;
 
         property = new Property();

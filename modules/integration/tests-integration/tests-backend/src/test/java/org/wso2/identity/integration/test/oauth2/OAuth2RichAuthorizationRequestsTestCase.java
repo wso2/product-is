@@ -46,6 +46,7 @@ import static org.wso2.identity.integration.test.utils.RichAuthorizationRequests
 import static org.wso2.identity.integration.test.utils.RichAuthorizationRequestsUtils.createTestAPIResource;
 import static org.wso2.identity.integration.test.utils.RichAuthorizationRequestsUtils.getTestAuthorizationDetailsSchema;
 import static org.wso2.identity.integration.test.utils.RichAuthorizationRequestsUtils.getTestAuthorizationDetailsType;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test class for testing the API resource flows and API authorization flows in applications.
@@ -95,7 +96,7 @@ public class OAuth2RichAuthorizationRequestsTestCase extends OAuth2ServiceAbstra
     @Test(groups = "wso2.is", description = "Checks metadata endpoint contains supported authorization details types",
             dependsOnMethods = {"testRegisterApiResourceWithAuthorizationDetails"})
     public void testOIDCMetadataResponseContent() throws IOException, JSONException {
-        HttpResponse httpResponse = sendGetRequest(super.restClient.client, "https://localhost:9853/oauth2/token/.well-known/openid-configuration");
+        HttpResponse httpResponse = sendGetRequest(super.restClient.client, "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token/.well-known/openid-configuration");
         String content = DataExtractUtil.getContentData(httpResponse);
         Assert.assertNotNull(content, "Response content is not received");
 

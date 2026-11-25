@@ -25,6 +25,7 @@ import org.wso2.identity.integration.test.rest.api.server.action.management.v1.c
 import org.wso2.identity.integration.test.restclients.ActionsRestClient;
 
 import java.io.IOException;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Base test case for action-related tests.
@@ -42,11 +43,11 @@ public class ActionsBaseTestCase extends OAuth2ServiceAbstractIntegrationTest {
     protected static final String SCOPES_PROPERTY = "scopes";
     protected static final String MOCK_SERVER_AUTH_BASIC_USERNAME = "test";
     protected static final String MOCK_SERVER_AUTH_BASIC_PASSWORD = "test";
-    protected static final String EXTERNAL_SERVICE_URI = "http://localhost:8587/test/action";
+    protected static final String EXTERNAL_SERVICE_URI = "http://localhost:" + TestPorts.MOCK_SERVICE_EXTENSION + "/test/action";
 
     protected static final String MOCK_IDP_TOKEN_ENDPOINT_PATH = "/test/idp/token";
     protected static final String MOCK_IDP_TOKEN_ENDPOINT_URI =
-            "http://localhost:8587" + MOCK_IDP_TOKEN_ENDPOINT_PATH;
+            "http://localhost:" + TestPorts.MOCK_SERVICE_EXTENSION + MOCK_IDP_TOKEN_ENDPOINT_PATH;
     protected static final String MOCK_IDP_CLIENT_ID = "test-idp-client-id";
     protected static final String MOCK_IDP_CLIENT_SECRET = "test-idp-client-secret";
     protected static final String MOCK_IDP_USERNAME = "test-idp-user";

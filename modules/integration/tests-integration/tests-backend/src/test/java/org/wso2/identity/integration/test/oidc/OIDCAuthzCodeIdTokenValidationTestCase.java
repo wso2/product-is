@@ -66,6 +66,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test cases for validating id token claims.
@@ -231,7 +232,7 @@ public class OIDCAuthzCodeIdTokenValidationTestCase extends OAuth2ServiceAbstrac
         JWTClaimsSet jwtClaimsSet = SignedJWT.parse(idToken).getJWTClaimsSet();
         Assert.assertEquals(jwtClaimsSet.getClaim("nonce"), TEST_NONCE, "Invalid nonce received.");
         Assert.assertEquals(jwtClaimsSet.getSubject(), userId, "Invalid subject received.");
-        Assert.assertEquals(jwtClaimsSet.getIssuer(), "https://localhost:9853/oauth2/token", "Invalid issuer received.");
+        Assert.assertEquals(jwtClaimsSet.getIssuer(), "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token", "Invalid issuer received.");
     }
 
     private String getSessionDataKeyConsent(CloseableHttpClient client, String sessionDataKey)

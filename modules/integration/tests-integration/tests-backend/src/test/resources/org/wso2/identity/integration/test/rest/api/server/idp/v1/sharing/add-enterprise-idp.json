@@ -45,7 +45,7 @@
           },
           {
             "key": "callbackUrl",
-            "value": "https://localhost:9853/commonauth"
+            "value": "https://localhost:@port.is.https@/commonauth"
           }
         ]
       }

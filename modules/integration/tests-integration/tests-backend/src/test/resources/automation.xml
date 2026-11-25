@@ -77,7 +77,7 @@
         <username>admin</username>
         <password>admin</password>
         <hostname>localhost</hostname>
-        <port>3025</port>
+        <port>@port.smtp@</port>
         <enable_start_tls>true</enable_start_tls>
         <enable_authentication>true</enable_authentication>
     </emailSenderConfigs>
@@ -206,8 +206,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">10173</port>
-                    <port type="https">9853</port>
+                    <port type="http">@port.is.http@</port>
+                    <port type="https">@port.is.https@</port>
                 </ports>
                 <properties>
                 </properties>
@@ -217,8 +217,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">10174</port>
-                    <port type="https">9854</port>
+                    <port type="http">@port.is2.http@</port>
+                    <port type="https">@port.is2.https@</port>
                 </ports>
                 <properties>
                 </properties>
@@ -228,8 +228,8 @@
                     <host type="default">localhost</host>
                 </hosts>
                 <ports>
-                    <port type="http">10175</port>
-                    <port type="https">9855</port>
+                    <port type="http">@port.is3.http@</port>
+                    <port type="https">@port.is3.https@</port>
                 </ports>
                 <properties>
                 </properties>
@@ -242,7 +242,7 @@
             <extentionClasses>
                 <class>
                     <name>org.wso2.identity.integration.common.extension.server.IdentityServerExtension</name>
-                    <parameter name="-DportOffset" value="410" />
+                    <parameter name="-DportOffset" value="@port.is.offset@" />
                     <parameter name="-Dsetup" value="true"/>
                     <parameter name="-DenableRemoteShutdownAndRestart" value="true"/>
                     <!--<parameter name="backup-test-pack" value="true"/>-->

@@ -28,7 +28,7 @@
     <property name="playground2.webapp.webinf" location="${playground2.webapp}/WEB-INF"/>
     <property name="playground2.webapp.classes" location="${playground2.webapp}/WEB-INF/classes"/>
     <property name="playground2.webapp.lib" location="${playground2.webapp}/WEB-INF/lib"/>
-    <property name="oauth.properties" location="${basedir}/src/test/resources/artifacts/IS/oauth/"/>
+    <property name="oauth.properties" location="${basedir}/target/test-classes/artifacts/IS/oauth/"/>
     <property name="openid.properties.default" location="${oauth.properties}/playground2"/>
 
     <target name="default">

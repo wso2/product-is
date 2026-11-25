@@ -36,4 +36,4 @@ file_name = "wso2carbon.p12"
 password = "wso2carbon"
 
 [authentication.authenticator.saml.parameters]
-SAMLSSOAssertionConsumerUrl = "https://localhost:9853/commonauth1"
+SAMLSSOAssertionConsumerUrl = "https://localhost:@port.is.https@/commonauth1"

@@ -70,6 +70,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
@@ -77,10 +78,10 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
     private static final String SECONDARY_IS_SERVICE_PROVIDER_NAME = "secondaryChangeACSSP";
     private static final String IDENTITY_PROVIDER_NAME = "ChangeACSIdP";
     private static final String PRIMARY_IS_SAML_ISSUER_NAME = "travelocity.com";
-    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String PRIMARY_IS_SAML_ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
     private static final String SECONDARY_IS_SAML_ISSUER_NAME = "samlChangeACSSP";
     private static final String SAML_NAME_ID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
-    private static final String SAML_SSO_URL = "http://localhost:8490/travelocity.com/samlsso?SAML2" +
+    private static final String SAML_SSO_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/samlsso?SAML2" +
             ".HTTPBinding=HTTP-Redirect";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final int PORT_OFFSET_0 = 0;
@@ -186,7 +187,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
                         .value("samlChangeACSSP"))
                 .addProperty(new Property()
                         .key(IdentityConstants.Authenticator.SAML2SSO.SSO_URL)
-                        .value("https://localhost:9854/samlsso"))
+                        .value("https://localhost:" + TestPorts.IS2_HTTPS + "/samlsso"))
                 .addProperty(new Property()
                         .key(IdentityConstants.Authenticator.SAML2SSO.IS_AUTHN_REQ_SIGNED)
                         .value("false"))

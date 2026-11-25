@@ -27,7 +27,7 @@
               location="${basedir}/target/test-classes/samples/org.wso2.sample.is.sso.agent"/>
     <property name="travelocity.webapp.classes" location="${travelocity.webapp}/WEB-INF/classes"/>
     <property name="travelocity.webapp.lib" location="${travelocity.webapp}/WEB-INF/lib"/>
-    <property name="travelocity.properties" location="${basedir}/src/test/resources/artifacts/IS/saml/"/>
+    <property name="travelocity.properties" location="${basedir}/target/test-classes/artifacts/IS/saml/"/>
     <property name="travelocity.properties.tenantwithoutsigning" location="${travelocity.properties}/tenantwithoutsigning"/>
 
     <target name="saml-tenant-signingdisabled">

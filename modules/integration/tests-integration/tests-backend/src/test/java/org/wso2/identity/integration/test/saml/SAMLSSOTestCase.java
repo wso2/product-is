@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
@@ -48,9 +49,9 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
     // SAML Application attributes
     private static final String APPLICATION_NAME = "SAML-SSO-TestApplication";
 
-    private static final String SAML_SSO_INDEX_URL = "http://localhost:8490/%s/";
+    private static final String SAML_SSO_INDEX_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/";
     private static final String SAML_SSO_LOGOUT_URL =
-            "http://localhost:8490/%s/logout?SAML2.HTTPBinding=%s";
+            "http://localhost:" + TestPorts.TOMCAT + "/%s/logout?SAML2.HTTPBinding=%s";
 
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";

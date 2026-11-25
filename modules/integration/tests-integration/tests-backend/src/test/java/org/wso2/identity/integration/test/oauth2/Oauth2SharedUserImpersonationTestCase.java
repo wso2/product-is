@@ -98,6 +98,7 @@ import static org.wso2.identity.integration.test.rest.api.server.user.sharing.ma
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGANIZATION_PATH;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test for OAuth2 impersonation where the impersonator is a shared user
@@ -149,7 +150,7 @@ public class Oauth2SharedUserImpersonationTestCase extends OAuth2ServiceAbstract
     private static final String GRANT_TYPE_VALUE = "urn:ietf:params:oauth:grant-type:token-exchange";
     private static final String ACTOR_TOKEN_TYPE_VALUE = "urn:ietf:params:oauth:token-type:id_token";
 
-    private static final String ORG_SCIM2_USERS_ENDPOINT = "https://localhost:9853/o/scim2/Users";
+    private static final String ORG_SCIM2_USERS_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/o/scim2/Users";
 
     private SCIM2RestClient scim2RestClient;
     private OrgMgtRestClient orgMgtRestClient;

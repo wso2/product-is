@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Base test class for request path authenticator
@@ -68,11 +69,11 @@ public class SAMLWithRequestPathAuthenticationTest extends ISIntegrationTest {
     private static final String SERVICE_PROVIDER_NAME = "RequestPathTest";
     private static final String SERVICE_PROVIDER_Desc = "Service Provider with Request Path Authentication";
     protected static final String DEFAULT_CHARSET = "UTF-8";
-    protected static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:8490/travelocity.com";
+    protected static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com";
     protected static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
     private static final String SAML_SUCCESS_TAG =
             "<saml2p:StatusCode Value=\"urn:oasis:names:tc:SAML:2" + ".0:status:Success\"/>";
-    private static final String ACS_URL = "http://localhost:8490/travelocity.com/home.jsp";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com/home.jsp";
 
     protected String adminUsername;
     protected String adminPassword;

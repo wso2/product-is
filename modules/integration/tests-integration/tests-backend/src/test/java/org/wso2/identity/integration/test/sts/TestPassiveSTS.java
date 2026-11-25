@@ -52,6 +52,7 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class TestPassiveSTS extends ISIntegrationTest {
 
@@ -59,10 +60,10 @@ public class TestPassiveSTS extends ISIntegrationTest {
     private static final String SERVICE_PROVIDER_Desc = "PassiveSTS Service Provider";
     private static final String EMAIL_CLAIM_URI = "http://wso2.org/claims/emailaddress";
     private static final String GIVEN_NAME_CLAIM_URI = "http://wso2.org/claims/givenname";
-    private static final String PASSIVE_STS_SAMPLE_APP_URL = "http://localhost:8490/PassiveSTSSampleApp";
-    private static final String PASSIVE_STS_SAMPLE_APP_URL_INCORRECT = "http://localhost:8490/Incorrect";
+    private static final String PASSIVE_STS_SAMPLE_APP_URL = "http://localhost:" + TestPorts.TOMCAT + "/PassiveSTSSampleApp";
+    private static final String PASSIVE_STS_SAMPLE_APP_URL_INCORRECT = "http://localhost:" + TestPorts.TOMCAT + "/Incorrect";
     private static final String COMMON_AUTH_URL =
-            "https://localhost:9853/commonauth";
+            "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
     private static final String HTTP_RESPONSE_HEADER_LOCATION = "location";
     public final static String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.6)";
 

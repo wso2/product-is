@@ -72,15 +72,16 @@ import java.util.List;
 import java.util.Set;
 
 import static org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest.OIDC;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFederationTestCase {
 
     private static final String PRIMARY_IS_IDP_NAME = "trustedIdP";
     private static final String PRIMARY_IS_SP_NAME = "primarySP";
-    private static final String PRIMARY_IS_TOKEN_ENDPOINT = "https://localhost:9853/oauth2/token";
+    private static final String PRIMARY_IS_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token";
     private static final String SECONDARY_IS_SP_NAME = "secondarySP";
-    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:9854/oauth2/token";
-    private static final String SECONDARY_IS_JWKS_URI = "https://localhost:9854/oauth2/jwks";
+    private static final String SECONDARY_IS_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/token";
+    private static final String SECONDARY_IS_JWKS_URI = "https://localhost:" + TestPorts.IS2_HTTPS + "/oauth2/jwks";
     private static final String NEW_USER_USERNAME = "secondaryUser";
     private static final String NEW_USER_EMAIL = "secondaryUser@gmail.com";
     private static final String NEW_USER_PASSWORD = "Wso2@123";

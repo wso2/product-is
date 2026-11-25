@@ -55,6 +55,7 @@ import java.rmi.RemoteException;
 import javax.ws.rs.core.MediaType;
 
 import static org.wso2.identity.integration.test.util.Utils.getBasicAuthHeader;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Self sign up tests - with consents.
@@ -65,8 +66,8 @@ public class SelfSignUpConsentTest extends ISIntegrationTest {
 
     public static final String CONSNT_ENDPOINT_SUFFIX = "/api/identity/consent-mgt/v1.0/consents";
     public static final String USER_RECOVERY_ME_ENDPOINT = "/api/identity/user/v1.0/me";
-    private static final String CALLBACK_ENDPOINT = "https://localhost:9853/carbon/callback";
-    private static final String TENANTED_CALLBACK_ENDPOINT = "https://localhost:9853/t/wso2.com/carbon/callback";
+    private static final String CALLBACK_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/carbon/callback";
+    private static final String TENANTED_CALLBACK_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/carbon/callback";
     private static final String COUNTRY_WSO2_CLAIM = "http://wso2.org/claims/country";
     private static final String CALLBACK_QUERY_PARAM = "callback";
     private static final String USERNAME_QUERY_PARAM = "username";

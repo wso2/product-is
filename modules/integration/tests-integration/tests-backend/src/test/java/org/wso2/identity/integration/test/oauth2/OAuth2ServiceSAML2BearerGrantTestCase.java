@@ -74,6 +74,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Test cases related to the OAuth2 SAML2 bearer grant type.
@@ -82,10 +83,10 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
     private static final Log log = LogFactory.getLog(OAuth2ServiceSAML2BearerGrantTestCase.class);
 
-    private static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
+    private static final String COMMON_AUTH_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
     private static final String USER_AGENT = "Apache-HttpClient/4.2.5 (java 1.5)";
-    private static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
-    private static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    private static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
+    private static final String SAML_SSO_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
     private static final String ISSUER = "travelocity.com";
 
     private Lookup<CookieSpecProvider> cookieSpecRegistry;
@@ -236,8 +237,8 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
 
         SAML2ServiceProvider serviceProvider = new SAML2ServiceProvider();
         serviceProvider.setIssuer(ISSUER);
-        serviceProvider.addAssertionConsumerUrl(String.format("http://localhost:8490/%s/home.jsp", ISSUER));
-        serviceProvider.setDefaultAssertionConsumerUrl(String.format("http://localhost:8490/%s/home.jsp", ISSUER));
+        serviceProvider.addAssertionConsumerUrl(String.format("http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp", ISSUER));
+        serviceProvider.setDefaultAssertionConsumerUrl(String.format("http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp", ISSUER));
         serviceProvider.setAttributeProfile(new SAMLAttributeProfile().enabled(true));
         serviceProvider.setSingleLogoutProfile(new SingleLogoutProfile().enabled(true));
         serviceProvider.setResponseSigning(new SAMLResponseSigning().enabled(true));
@@ -266,7 +267,7 @@ public class OAuth2ServiceSAML2BearerGrantTestCase extends OAuth2ServiceAbstract
     private String getSAMLResponse() throws Exception {
 
         HttpResponse response;
-        response = Utils.sendGetRequest(String.format("http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s",
+        response = Utils.sendGetRequest(String.format("http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s",
                 "travelocity.com", "HTTP-POST"), USER_AGENT, client);
 
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "HTTP 200 expected for POST binding " +

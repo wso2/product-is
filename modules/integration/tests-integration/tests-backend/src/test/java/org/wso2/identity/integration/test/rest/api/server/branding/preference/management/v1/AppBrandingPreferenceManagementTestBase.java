@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Base test class for the Application Branding Preference Management Rest APIs.
@@ -53,7 +54,7 @@ public class AppBrandingPreferenceManagementTestBase extends BrandingPreferenceM
 
         OpenIDConnectConfiguration oidcConfig = new OpenIDConnectConfiguration();
         oidcConfig.setGrantTypes(grantTypes);
-        oidcConfig.setCallbackURLs(Collections.singletonList("http://localhost:8490/playground2/oauth2client"));
+        oidcConfig.setCallbackURLs(Collections.singletonList("http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2client"));
 
         InboundProtocols inboundProtocolsConfig = new InboundProtocols();
         inboundProtocolsConfig.setOidc(oidcConfig);

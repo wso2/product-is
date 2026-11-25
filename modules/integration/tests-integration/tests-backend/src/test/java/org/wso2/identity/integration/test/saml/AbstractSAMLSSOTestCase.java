@@ -75,6 +75,7 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
 
@@ -85,16 +86,16 @@ public abstract class AbstractSAMLSSOTestCase extends ISIntegrationTest {
     private static final String ATTRIBUTE_CS_INDEX_VALUE = "1239245949";
     private static final String ATTRIBUTE_CS_INDEX_NAME = "attrConsumServiceIndex";
     protected static final String SAML = "saml";
-    protected static final String SAML_SSO_URL = "https://localhost:9853/samlsso";
+    protected static final String SAML_SSO_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
     protected static final String SAML_IDP_SLO_URL = SAML_SSO_URL + "?slo=true";
-    protected static final String SAML_SSO_LOGIN_URL = "http://localhost:8490/%s/samlsso?SAML2.HTTPBinding=%s";
-    protected static final String COMMON_AUTH_URL = "https://localhost:9853/commonauth";
-    protected static final String ACS_URL = "http://localhost:8490/%s/home.jsp";
+    protected static final String SAML_SSO_LOGIN_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/samlsso?SAML2.HTTPBinding=%s";
+    protected static final String COMMON_AUTH_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/commonauth";
+    protected static final String ACS_URL = "http://localhost:" + TestPorts.TOMCAT + "/%s/home.jsp";
 
     private static final String NAMEID_FORMAT = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress";
     private static final String LOGIN_URL = "/carbon/admin/login.jsp";
 
-    protected static final String SAML_ECP_SSO_URL = "https://localhost:9853/samlecp";
+    protected static final String SAML_ECP_SSO_URL = "https://localhost:" + TestPorts.IS_HTTPS + "/samlecp";
     protected static final String SAML_ECP_ACS_URL = "https://localhost/ECP-SP/SAML2/ECP";
     //Claim Uris
     private static final String firstNameClaimURI = "http://wso2.org/claims/givenname";

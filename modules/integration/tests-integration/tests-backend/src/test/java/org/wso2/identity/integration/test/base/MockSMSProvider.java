@@ -39,13 +39,14 @@ import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.matchingJsonPath;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Mock SMS Provider for testing SMS related flows.
  */
 public class MockSMSProvider {
 
-    public static final String SMS_SENDER_URL = "https://localhost:8090/sms/send";
+    public static final String SMS_SENDER_URL = "https://localhost:" + TestPorts.MOCK_SMS_PROVIDER + "/sms/send";
     public static final String SMS_SENDER_PROVIDER_TYPE = "Custom";
 
     private WireMockServer wireMockServer;
@@ -57,7 +58,7 @@ public class MockSMSProvider {
     public void start() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
-                .httpsPort(8090)
+                .httpsPort(TestPorts.MOCK_SMS_PROVIDER)
                 .httpDisabled(true)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())

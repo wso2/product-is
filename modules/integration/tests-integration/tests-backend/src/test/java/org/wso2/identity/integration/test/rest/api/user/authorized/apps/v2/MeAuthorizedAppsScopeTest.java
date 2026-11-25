@@ -62,6 +62,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.wso2.carbon.automation.engine.context.TestUserMode.SUPER_TENANT_ADMIN;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
 
@@ -85,7 +86,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
     private String accessToken;
     private List<String> accessTokes = new ArrayList<>();
 
-    private static final String AUTHORIZED_API_ENDPOINT = "https://localhost:9853/api/users/v2/me/authorized-apps";
+    private static final String AUTHORIZED_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/api/users/v2/me/authorized-apps";
     private String requestedScopes = "openid test_internal_login test_internal_user_update test_SYSTEM";
 
     @BeforeClass(alwaysRun = true)
@@ -120,7 +121,7 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
                 "    ],\n" +
                 "    \"ext_param_client_id\": \"" + clientId + "\",\n" +
                 "    \"ext_param_client_secret\": \"" + clientSecret + "\",\n" +
-                " \"redirect_uris\":[\"http://localhost:8490/playground2/oauth2client\"]\n"+
+                " \"redirect_uris\":[\"http://localhost:" + TestPorts.TOMCAT + "/playground2/oauth2client\"]\n"+
                 "}";
         Response response = getResponseOfJSONPost(dcrEndpointUri, body, new HashMap<>());
 

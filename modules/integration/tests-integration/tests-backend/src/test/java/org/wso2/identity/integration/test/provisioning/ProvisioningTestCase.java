@@ -64,6 +64,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class ProvisioningTestCase extends ISIntegrationTest {
 
@@ -97,7 +98,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
     public static final String ENABLE_REMOTE_SHUTDOWN_RESTART_PARAM = "-DenableRemoteShutdownAndRestart";
     private static final String DEFAULT_H2_DATABASE_CONFIG = "default_configs_with_h2_db.toml";
 
-    public static final int DEFAULT_PORT = 9853;
+    public static final int DEFAULT_PORT = TestPorts.IS_HTTPS;
     public static final int adminUserId = 0;
     public static final int PORT_OFFSET_0 = 0;
     public static final int PORT_OFFSET_1 = 1;

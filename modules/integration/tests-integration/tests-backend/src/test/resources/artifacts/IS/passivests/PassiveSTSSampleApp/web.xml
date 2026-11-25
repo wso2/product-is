@@ -13,13 +13,13 @@
 		<!-- Passive STS URL -->
 		<init-param>
             <param-name>idpUrl</param-name>
-            <param-value>https://localhost:9853/passivests</param-value>
+            <param-value>https://localhost:@port.is.https@/passivests</param-value>
         </init-param>
 
 		<!-- URL to which responses are directed -->
 		<init-param>
 			<param-name>replyUrl</param-name>
-			<param-value>http://localhost:8490/PassiveSTSSampleApp/</param-value>
+			<param-value>http://localhost:@port.tomcat@/PassiveSTSSampleApp/</param-value>
 		</init-param>
 
 		<!-- URI of the requesting realm -->

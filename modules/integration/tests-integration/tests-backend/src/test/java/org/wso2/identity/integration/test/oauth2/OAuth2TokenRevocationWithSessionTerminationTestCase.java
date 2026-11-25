@@ -67,6 +67,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This test class is used to check the behaviour of token revocation when user session is terminated via Session
@@ -85,7 +86,7 @@ public class OAuth2TokenRevocationWithSessionTerminationTestCase extends OAuth2S
     private HttpClient client;
     private String accessToken;
     private List<String> sessionIdList;
-    private static final String SESSION_API_ENDPOINT = "https://localhost:9853/api/users/v1/me/sessions";
+    private static final String SESSION_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/api/users/v1/me/sessions";
     private static final String USER_EMAIL = "authTokenRevokeUser@wso2.com";
     private static final String USERNAME = "authTokenRevokeUser";
     private static final String PASSWORD = "AuthTokenRevokeUser@123";

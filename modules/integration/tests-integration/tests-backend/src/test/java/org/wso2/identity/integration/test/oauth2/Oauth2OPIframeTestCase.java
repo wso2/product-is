@@ -43,11 +43,12 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
     public static final String CALL_BACK_URL =
-            "https://localhost:9853/oidc/checksession?client_id=%s&redirect_uri=http" +
+            "https://localhost:" + TestPorts.IS_HTTPS + "/oidc/checksession?client_id=%s&redirect_uri=http" +
                     "://localhost:8888/playground2/oauth2client";
     private CloseableHttpClient client;
     private final AutomationContext context;

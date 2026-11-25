@@ -19,6 +19,7 @@
 package org.wso2.identity.integration.test.base;
 
 import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,7 +52,11 @@ public class SMTPServerInitializerListener implements IExecutionListener {
             String smtpPassword = context.getConfigurationValue("//emailSenderConfigs/password");
 
             if (smtpUsername != null && smtpPassword != null) {
-                GreenMail greenMail = new GreenMail(ServerSetupTest.SMTP);
+                // Listen on the port IS sends mail to, so the two always match.
+                String smtpPort = context.getConfigurationValue("//emailSenderConfigs/port");
+                ServerSetup smtpSetup = smtpPort == null ? ServerSetupTest.SMTP :
+                        new ServerSetup(Integer.parseInt(smtpPort.trim()), null, ServerSetup.PROTOCOL_SMTP);
+                GreenMail greenMail = new GreenMail(smtpSetup);
                 greenMail.setUser(smtpUsername, smtpPassword);
                 greenMail.start();
                 Utils.setMailServer(greenMail);

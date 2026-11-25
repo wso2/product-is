@@ -52,15 +52,16 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Mock OIDC Identity Provider for testing OIDC flows.
  */
 public class MockOIDCIdentityProvider {
 
-    public static final String MOCK_IDP_AUTHORIZE_ENDPOINT = "https://localhost:8089/authorize";
-    public static final String MOCK_IDP_TOKEN_ENDPOINT = "https://localhost:8089/token";
-    public static final String MOCK_IDP_LOGOUT_ENDPOINT = "https://localhost:8089/oidc/logout";
+    public static final String MOCK_IDP_AUTHORIZE_ENDPOINT = "https://localhost:" + TestPorts.MOCK_OIDC_IDP + "/authorize";
+    public static final String MOCK_IDP_TOKEN_ENDPOINT = "https://localhost:" + TestPorts.MOCK_OIDC_IDP + "/token";
+    public static final String MOCK_IDP_LOGOUT_ENDPOINT = "https://localhost:" + TestPorts.MOCK_OIDC_IDP + "/oidc/logout";
     public static final String MOCK_IDP_CLIENT_ID = "mockIdPClientID";
     public static final String MOCK_IDP_CLIENT_SECRET = "mockIdPClientSecret";
 
@@ -70,7 +71,7 @@ public class MockOIDCIdentityProvider {
     public void start() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
-                .httpsPort(8089)
+                .httpsPort(TestPorts.MOCK_OIDC_IDP)
                 .httpDisabled(true)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())
@@ -189,7 +190,7 @@ public class MockOIDCIdentityProvider {
 
         // Prepare JWT with claims set
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .issuer("https://localhost:8089/token")
+                .issuer("https://localhost:" + TestPorts.MOCK_OIDC_IDP + "/token")
                 .subject("61b935a1-1915-4792-8916-99c59d03c54a")
                 .audience("LzWfxDK_7LSGxfuL3BlRdXUGEJYa")
                 .claim("azp", "LzWfxDK_7LSGxfuL3BlRdXUGEJYa")

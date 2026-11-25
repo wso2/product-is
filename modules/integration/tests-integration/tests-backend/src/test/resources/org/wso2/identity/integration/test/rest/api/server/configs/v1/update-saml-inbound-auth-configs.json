@@ -1,6 +1,6 @@
 {
   "destinationURLs": [
-    "https://localhost:9853/test/updated"
+    "https://localhost:@port.is.https@/test/updated"
   ],
   "metadataValidityPeriod": 120,
   "enableMetadataSigning": true

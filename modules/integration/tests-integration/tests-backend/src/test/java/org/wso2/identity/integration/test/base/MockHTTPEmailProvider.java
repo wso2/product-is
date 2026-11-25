@@ -35,13 +35,14 @@ import java.util.concurrent.atomic.AtomicReference;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Mock HTTP-based Email Provider for testing custom (non-SMTP) email delivery flows.
  */
 public class MockHTTPEmailProvider {
 
-    public static final String EMAIL_SENDER_URL = "https://localhost:8094/email/send";
+    public static final String EMAIL_SENDER_URL = "https://localhost:" + TestPorts.MOCK_HTTP_EMAIL_PROVIDER + "/email/send";
     public static final String EMAIL_SENDER_PATH = "/email/send";
 
     private WireMockServer wireMockServer;
@@ -51,7 +52,7 @@ public class MockHTTPEmailProvider {
     public void start() {
 
         wireMockServer = new WireMockServer(WireMockConfiguration.wireMockConfig()
-                .httpsPort(8094)
+                .httpsPort(TestPorts.MOCK_HTTP_EMAIL_PROVIDER)
                 .httpDisabled(true)
                 .keystorePath(Paths.get(Utils.getResidentCarbonHome(), "repository", "resources", "security",
                         ISIntegrationTest.KEYSTORE_NAME).toAbsolutePath().toString())

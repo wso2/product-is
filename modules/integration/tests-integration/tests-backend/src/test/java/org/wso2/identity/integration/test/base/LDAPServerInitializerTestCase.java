@@ -27,6 +27,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Test class that will start and stop external ldap server for the tests in the test suite.
@@ -36,7 +37,7 @@ public class LDAPServerInitializerTestCase extends ISIntegrationTest {
     private static final Log LOG = LogFactory.getLog(LDAPServerInitializerTestCase.class);
     private static final String workingDirectoryPath = "ldapWorkingDirectory";
     private static final int ldapServerPort = 10389;
-    private static final int offset = 410;
+    private static final int offset = TestPorts.IS_OFFSET;
     private ExternalLDAPServer ldapServer;
 
     @BeforeSuite(alwaysRun = true)

@@ -54,6 +54,7 @@ import org.wso2.identity.integration.test.utils.IdentityConstants;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test for Dynamic Query parameter support for SAML Federated Authenticator.
@@ -73,7 +74,7 @@ public class SAMLFederationDynamicQueryParametersTestCase extends AbstractIdenti
 
     private static final String DYNAMIC_QUERY_PARAM_KEY = "dynamic_query";
     private static final String DYNAMIC_QUERY = "dynamic_query={inbound_request_param_key}";
-    private static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:8490/travelocity.com";
+    private static final String TRAVELOCITY_SAMPLE_APP_URL = "http://localhost:" + TestPorts.TOMCAT + "/travelocity.com";
     private IdpMgtRestClient idpMgtRestClient;
     private OAuth2RestClient applicationMgtRestClient;
     private String idpId;

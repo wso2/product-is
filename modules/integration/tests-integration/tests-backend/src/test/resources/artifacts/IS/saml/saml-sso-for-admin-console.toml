@@ -38,5 +38,5 @@ password = "wso2carbon"
 [admin_console.authenticator.saml_sso_authenticator]
 enable=true
 priority="1"
-assertion_consumer_service_url = "https://localhost:9853/acs"
-identity_provider_sso_service_url = "https://localhost:9853/samlsso"
+assertion_consumer_service_url = "https://localhost:@port.is.https@/acs"
+identity_provider_sso_service_url = "https://localhost:@port.is.https@/samlsso"

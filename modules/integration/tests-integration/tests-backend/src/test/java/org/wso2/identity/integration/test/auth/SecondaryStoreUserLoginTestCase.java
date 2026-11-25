@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_BODY_ELEMENT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * This class contains test case for authentication of users in both primary and secondary user stores.
@@ -70,7 +71,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTH_CODE_
 
 public class SecondaryStoreUserLoginTestCase extends OIDCAbstractIntegrationTest {
 
-    public static final int TOMCAT_PORT = 8490;
+    public static final int TOMCAT_PORT = TestPorts.TOMCAT;
     public static final String PLAYGROUND_APP_NAME = "playground.app";
     public static final String PLAYGROUND_APP_CONTEXT = "/playground.app";
     public static final String PLAYGROUND_APP_CALLBACK_URI = "http://localhost:" + TOMCAT_PORT +

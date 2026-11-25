@@ -101,6 +101,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_REFRESH_TOKEN;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.REDIRECT_URI_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 /**
  * Integration test cases for OAuth2 Impersonation Flow.
@@ -143,8 +144,8 @@ public class Oauth2ImpersonationTestCase extends OAuth2ServiceAbstractIntegratio
     private static final String ORG_INTERNAL_USER_IMPERSONATE = "internal_org_user_impersonate";
     private static final String END_USER_ROLE_NAME = "EndUserRole";
     private static final String IMPERSONATOR_ROLE_NAME = "ImpersonatorRole";
-    public final static String SCIM2_USERS_ENDPOINT = "https://localhost:9853/scim2/Users";
-    public final static String ORG_SCIM2_USERS_ENDPOINT = "https://localhost:9853/o/scim2/Users";
+    public final static String SCIM2_USERS_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/scim2/Users";
+    public final static String ORG_SCIM2_USERS_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/o/scim2/Users";
     public static final String CONTENT_TYPE = "application/json";
     private static final String USERS_PATH = "users";
     private static final String COUNTRY_CLAIM_VALUE = "USA";

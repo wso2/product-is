@@ -35,6 +35,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static com.github.tomakehurst.wiremock.stubbing.Scenario.STARTED;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class MockCustomAuthenticatorService {
 
@@ -45,7 +46,7 @@ public class MockCustomAuthenticatorService {
     public static final String SCENARIO_SESSION_VALIDATED = "SESSION_VALIDATED";
     public static final String SCENARIO_SESSION_COMPLETED = "SESSION_COMPLETED";
     private WireMockServer wireMockServer;
-    private static final int port = 3999;
+    private static final int port = TestPorts.MOCK_CUSTOM_AUTHENTICATOR;
     private static final String host = "localhost";
     public static final String API_AUTHENTICATE_ENDPOINT = "/api/authenticate";
     public static final String API_VALIDATE_PIN_ENDPOINT = "/api/validate-pin";

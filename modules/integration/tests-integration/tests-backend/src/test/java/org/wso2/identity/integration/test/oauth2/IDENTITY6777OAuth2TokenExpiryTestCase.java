@@ -36,12 +36,13 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.wso2.identity.integration.test.utils.TestPorts;
 
 public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String SCOPE_PRODUCTION = "PRODUCTION";
     private static final String GRANT_TYPE_PASSWORD = "password";
     private static final String GRANT_TYPE_CLIENT_CREDENTIALS = "client_credentials";
-    private static final String TOKEN_API_ENDPOINT = "https://localhost:9853/oauth2/token";
+    private static final String TOKEN_API_ENDPOINT = "https://localhost:" + TestPorts.IS_HTTPS + "/oauth2/token";
 
     private ServerConfigurationManager serverConfigurationManager;
 
