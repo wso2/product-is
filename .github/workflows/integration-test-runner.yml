@@ -16,8 +16,10 @@ on:
   pull_request:
 
 env:
-  # Download POMs and jars in parallel: with an empty Maven cache most of the build is downloading.
-  MAVEN_ARGS: -Daether.dependencyCollector.impl=bf -Daether.connector.basic.threads=10
+  # More parallel downloads: with an empty Maven cache much of the build is downloading.
+  # Don't use the breadth-first collector (aether.dependencyCollector.impl=bf): it drops
+  # net.minidev:accessors-smart from the integration test classpath.
+  MAVEN_ARGS: -Daether.connector.basic.threads=10
   MAVEN_OPTS: -Dhttp.keepAlive=false -Dmaven.wagon.http.pool=false -Dmaven.wagon.http.retryHandler.class=standard -Dmaven.wagon.http.retryHandler.count=3 -Djdk.util.zip.disableZip64ExtraFieldValidation=true -XX:+HeapDumpOnOutOfMemoryError
 
 jobs:
