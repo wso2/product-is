@@ -84,14 +84,18 @@ jobs:
       - name: Build init
         run: |
           echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
-      - name: Cache maven packages
+      # The Maven cache is keyed on the POMs, so a dependency change gets a fresh cache. Without an exact match
+      # it starts from the newest earlier cache instead of from nothing, and it is saved even when tests fail.
+      - name: Restore maven packages
         id: cache-maven-m2
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.m2
             !~/.m2/repository/org/wso2/is/wso2is
-          key: ${{ runner.os }}-pr-builder-${{ env.CURRENT_MONTH }}-${{ matrix.runner_id }}
+          key: ${{ runner.os }}-pr-builder-${{ hashFiles('pom.xml', 'modules/**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-pr-builder-
       - name: Setup pnpm
         id: setup-pnpm
         uses: pnpm/action-setup@v4
@@ -105,6 +109,14 @@ jobs:
           JAVA_21_HOME: ${{env.J21HOME}}
         run: |
           bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
+      - name: Save maven packages
+        if: ${{ always() && steps.cache-maven-m2.outputs.cache-hit != 'true' }}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.m2
+            !~/.m2/repository/org/wso2/is/wso2is
+          key: ${{ steps.cache-maven-m2.outputs.cache-primary-key }}
       - name: Archive PR diff file
         if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' }}
         uses: actions/upload-artifact@v4
