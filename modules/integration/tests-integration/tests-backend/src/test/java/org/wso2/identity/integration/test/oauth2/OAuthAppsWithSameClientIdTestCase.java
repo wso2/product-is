@@ -468,7 +468,7 @@ public class OAuthAppsWithSameClientIdTestCase extends OAuth2ServiceAbstractInte
         inboundProtocolsConfig.setOidc(oidcConfig);
 
         ApplicationModel application = new ApplicationModel();
-        application.setName(OAuth2Constant.OAUTH_APPLICATION_NAME);
+        application.setName(OAUTH_APPLICATION_NAME);
         application.setInboundProtocolConfiguration(inboundProtocolsConfig);
         application.setClaimConfiguration(setApplicationClaimConfig());
 

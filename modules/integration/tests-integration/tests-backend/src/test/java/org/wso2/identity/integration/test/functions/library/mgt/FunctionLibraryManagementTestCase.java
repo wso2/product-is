@@ -52,6 +52,10 @@ public class FunctionLibraryManagementTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() throws Exception {
 
+        // Remove the function library created by testCreateFunctionLibrary.
+        if (functionLibraryManagementServiceClient.getFunctionLibrary("TestFunctionLibrary1") != null) {
+            functionLibraryManagementServiceClient.deleteFunctionLibrary("TestFunctionLibrary1");
+        }
         functionLibraryManagementServiceClient = null;
     }
 

@@ -65,6 +65,12 @@ public class OAuth2ScopesTestCase extends ISIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void atEnd() {
 
+        // SCOPE1 is normally removed by testDeleteScope, so only delete the scopes that still exist.
+        for (String scope : new String[]{SCOPE1, SCOPE2}) {
+            if (isScopeExists(scope).getStatusCode() == Response.Status.OK.getStatusCode()) {
+                deleteScope(scope);
+            }
+        }
     }
 
     @Test(alwaysRun = true, groups = "wso2.is", description = "Add Scope test")

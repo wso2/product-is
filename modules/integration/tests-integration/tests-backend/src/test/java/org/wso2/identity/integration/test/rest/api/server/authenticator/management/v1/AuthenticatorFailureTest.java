@@ -244,8 +244,8 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
                 .statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body("code", equalTo("AUT-60013"))
                 .body("message", equalTo("The authenticator already exists."))
-                .body("description", equalTo("The authenticator already exists for the given name:" +
-                        " custom-Authenticator."));
+                .body("description", equalTo("The authenticator already exists for the given name: " +
+                        AUTHENTICATOR_NAME + "."));
     }
 
     @Test(priority = 10)

@@ -43,7 +43,6 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.integration.common.admin.client.UserManagementClient;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.rest.api.server.api.resource.v1.model.APIResourceListItem;
@@ -86,11 +85,12 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
     private static final String FAMILY_NAME_CLAIM_VALU_1 = "scimUser";
     private static final String GIVEN_NAME_CLAIM_VALUE_1 = "testScimUser";
     private static final String EMAIL_TYPE_WORK_CLAIM_URI = "work";
-    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2user@wso2.com";
+    private static final String EMAIL_TYPE_WORK_CLAIM_VALUE = "scim2meuser@wso2.com";
     private static final String EMAIL_TYPE_HOME_CLAIM_URI = "home";
-    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2user@gmail.com";
-    private static final String USERNAME = "scim2user";
-    private static final String USERNAME_1 = "testScim2user";
+    private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2meuser@gmail.com";
+    // The user names are unique to this class because the SCIM2 test classes run in parallel.
+    private static final String USERNAME = "scim2meuser";
+    private static final String USERNAME_1 = "testScim2meuser";
     private static final String PASSWORD = "Wso2@test123";
     private static final String SCIM2_ME_API_IDENTIFIER = "/scim2/Me";
     private static final String SCIM2_USERS_API_IDENTIFIER = "/scim2/Users";
@@ -110,6 +110,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
     private String clientId;
     private String clientSecret;
     private final Tenant tenantBean;
+    private final TestUserMode userMode;
     private OAuth2RestClient oauth2RestClient;
     private final String tenant;
 
@@ -118,6 +119,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
         AutomationContext context = new AutomationContext("IDENTITY", userMode);
         this.tenantBean = context.getContextTenant();
+        this.userMode = userMode;
         this.tenant = tenantBean.getDomain();
     }
 
@@ -131,7 +133,9 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void initClass() throws Exception {
-        super.init();
+        // Logs in as the admin of the tenant under test. assignUserToGroup uses this session, so the test doesn't
+        // initialize another automation context while the parallel test classes are running.
+        super.init(userMode);
         client = HttpClients.createDefault();
 
         oauth2RestClient = new OAuth2RestClient(serverURL, tenantBean);
@@ -158,7 +162,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void tearDownClass() throws Exception {
-        // scim2user may already be deleted by testDeleteMe; attempt deletion and then verify it is gone.
+        // The user may already be deleted by testDeleteMe; attempt deletion and then verify it is gone.
         if (userId != null) {
             deleteUserById(userId);
             String adminToken = getAdminToken();
@@ -407,16 +411,7 @@ public class SCIM2MeTestCase extends ISIntegrationTest {
 
     private void assignUserToGroup(String username) throws Exception {
 
-        AutomationContext automationContext;
-        if (tenant.equals(org.wso2.carbon.base.MultitenantConstants.SUPER_TENANT_DOMAIN_NAME)) {
-            automationContext = new AutomationContext("IDENTITY", TestUserMode.SUPER_TENANT_ADMIN);
-        } else {
-            automationContext = new AutomationContext("IDENTITY", TestUserMode.TENANT_ADMIN);
-        }
-
-        String backendUrl = automationContext.getContextUrls().getBackEndUrl();
-        String sessionCookie = new LoginLogoutClient(automationContext).login();
-        UserManagementClient userMgtClient = new UserManagementClient(backendUrl, sessionCookie);
+        UserManagementClient userMgtClient = new UserManagementClient(backendURL, sessionCookie);
 
         String[] roles = {ADMIN_ROLE};
         userMgtClient.addRemoveRolesOfUser(username, roles, null);
