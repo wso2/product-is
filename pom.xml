@@ -2859,7 +2859,7 @@
         <identity.oauth2.jwt.bearer.grant.version>2.4.1</identity.oauth2.jwt.bearer.grant.version>
         <identity.oauth2.token.exchange.grant.version>1.4.12</identity.oauth2.token.exchange.grant.version>
 
-        <identity.oauth.dpop.version>2.1.3</identity.oauth.dpop.version>
+        <identity.oauth.dpop.version>2.1.4</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.11.1</identity.metadata.saml.version>
@@ -2869,7 +2869,7 @@
         <identity.user.workflow.version>6.1.3</identity.user.workflow.version>
 
         <!-- Connector Versions -->
-        <authenticator.totp.version>3.4.7</authenticator.totp.version>
+        <authenticator.totp.version>3.4.8</authenticator.totp.version>
         <authenticator.backupcode.version>0.1.2</authenticator.backupcode.version>
         <authenticator.office365.version>2.2.0</authenticator.office365.version>
         <authenticator.smsotp.version>3.4.3</authenticator.smsotp.version>
