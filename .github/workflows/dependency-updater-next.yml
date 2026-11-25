@@ -133,8 +133,8 @@ jobs:
           PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
           PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
           echo "::warning::$PR_BUILD_RESULT_LOG"
-          PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-          if [ "$PR_BUILD_SUCCESS_COUNT" != "1" ]; then
+          PR_BUILD_SUCCESS_STATUS=$(grep -oE "\[INFO\] BUILD (SUCCESS|FAILURE)" mvn-build.log | tail -1)
+          if [ "$PR_BUILD_SUCCESS_STATUS" != "[INFO] BUILD SUCCESS" ]; then
             echo "PR BUILD not successfull. Aborting."
             echo "::error::PR BUILD not successfull. Check artifacts for logs."
             exit 1
@@ -159,8 +159,8 @@ jobs:
           PR_BUILD_RESULT_LOG_TEMP=$(echo "$PR_BUILD_FINAL_RESULT" | sed 's/$/%0A/')
           PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
           echo "::warning::$PR_BUILD_RESULT_LOG"
-          PR_TEST_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-test.log | wc -l)
-          if [ "$PR_TEST_SUCCESS_COUNT" != "17" ]; then
+          PR_TEST_SUCCESS_STATUS=$(grep -oE "\[INFO\] BUILD (SUCCESS|FAILURE)" mvn-test.log | tail -1)
+          if [ "$PR_TEST_SUCCESS_STATUS" != "[INFO] BUILD SUCCESS" ]; then
             echo "Integration tests not successfull. Aborting."
             echo "::error::Integration tests not successfull. Check artifacts for logs."
             exit 1

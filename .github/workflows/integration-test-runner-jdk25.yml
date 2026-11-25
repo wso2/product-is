@@ -62,9 +62,9 @@ jobs:
           PR_BUILD_RESULT_LOG=$(echo $PR_BUILD_RESULT_LOG_TEMP)
           echo "::warning::$PR_BUILD_RESULT_LOG"
           
-          PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" mvn-build.log | wc -l)
-          if [ "$PR_BUILD_SUCCESS_COUNT" != "17" ]; then
-            echo "Success Count $PR_BUILD_SUCCESS_COUNT"
+          PR_BUILD_SUCCESS_STATUS=$(grep -oE "\[INFO\] BUILD (SUCCESS|FAILURE)" mvn-build.log | tail -1)
+          if [ "$PR_BUILD_SUCCESS_STATUS" != "[INFO] BUILD SUCCESS" ]; then
+            echo "Build status: $PR_BUILD_SUCCESS_STATUS"
             echo "PR BUILD is not successful. Aborting."
             echo "::error::PR BUILD is not successful. Check artifacts for logs."
             exit 1

@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       pr:
-        description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481)"
+        description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481). Leave empty to test the selected branch."
         default:
-        required: true
+        required: false
   # Runs against the "base branch + queued PRs" commit that GitHub builds for
   # the merge queue.
   merge_group:
@@ -53,23 +53,19 @@ jobs:
     needs: changes
     if: ${{ github.event_name != 'pull_request' && needs.changes.outputs.run_tests == 'true' }}
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
+    # One runner: the integration tests run as parallel lanes inside one "mvn clean install"
+    # (see modules/integration/tests-integration/tests-backend/src/test/lanes/lanes.conf).
     strategy:
       fail-fast: false
       matrix:
         include:
           - runner_id: 1
-            tests: "is-tests-default-configuration-parallel,is-tests-default-configuration,is-test-rest-api,is-test-webhooks,is-tests-scim2-parallel,is-tests-scim2,is-test-adaptive-authentication"
-          - runner_id: 2
-            tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart,is-tests-connection-sharing,is-tests-oid4vp"
-          - runner_id: 3
-            tests: "is-tests-oauth-client-secrets-parallel,is-tests-oauth-client-secrets,is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption,is-test-session-mgt,is-tests-password-update-api"
-          - runner_id: 4
-            tests: "is-tests-with-individual-configuration-changes"
+            tests: ""
     steps:
       - name: Print Input
         run: echo "Running the Test runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
       - name: Comment build info
-        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' }}
+        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' && github.event.inputs.pr != '' }}
         run: |
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
@@ -141,6 +137,15 @@ jobs:
           path: |
             product-is-${{ matrix.runner_id }}/**/surefire-reports
           if-no-files-found: warn
+      - name: Archive integration test lane logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-is-test-lane-logs
+          path: |
+            product-is-${{ matrix.runner_id }}/**/target/lanes/*/lane.log
+            product-is-${{ matrix.runner_id }}/**/target/lanes/*/server-logs
+          if-no-files-found: warn
       - name: Archive heap dump
         if: always()
         uses: actions/upload-artifact@v4
@@ -153,7 +158,7 @@ jobs:
     name: Comment the status and Approve PR
     needs: run-test-runners
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
-    if: ${{ always() && github.event_name == 'workflow_dispatch' }}
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && github.event.inputs.pr != '' }}
     steps:
       - name: Comment build status
         run: |

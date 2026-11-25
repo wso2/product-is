@@ -27,13 +27,13 @@ jobs:
       matrix:
         include:
           - runner_id: 1
-            tests: "is-tests-default-configuration-parallel,is-tests-default-configuration,is-test-rest-api,is-test-webhooks,is-tests-scim2-parallel,is-tests-scim2,is-test-adaptive-authentication"
+            tests: "is-tests-default-configuration-parallel,is-tests-default-configuration,is-test-rest-api,is-test-rest-api-2,is-test-webhooks,is-tests-scim2-parallel,is-tests-scim2,is-test-adaptive-authentication"
           - runner_id: 2
             tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart,is-tests-connection-sharing,is-tests-oid4vp"
           - runner_id: 3
             tests: "is-tests-oauth-client-secrets-parallel,is-tests-oauth-client-secrets,is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption,is-test-session-mgt,is-tests-password-update-api"
           - runner_id: 4
-            tests: "is-tests-with-individual-configuration-changes"
+            tests: "is-tests-with-individual-configuration-changes,is-tests-with-individual-configuration-changes-2"
 
     services:
       mssql:
@@ -254,6 +254,7 @@ jobs:
             "is-tests-default-configuration-parallel"
             "is-tests-default-configuration"
             "is-test-rest-api"
+            "is-test-rest-api-2"
             "is-tests-oauth-client-secrets-parallel"
             "is-tests-oauth-client-secrets"
             "is-test-webhooks"
@@ -273,6 +274,7 @@ jobs:
             "is-tests-oauth-jwt-token-gen-enabled"
             "is-tests-email-username"
             "is-tests-with-individual-configuration-changes"
+            "is-tests-with-individual-configuration-changes-2"
             "is-tests-saml-query-profile"
             "is-tests-default-encryption"
             "is-test-session-mgt"
@@ -292,7 +294,8 @@ jobs:
           JAVA_HOME: ${{ env.J21HOME }}
         run: |
           cd modules/integration/
-          mvn clean install --batch-mode | tee ../../mvn-integration-test.log
+          # One lane per runner until each lane gets its own MSSQL databases.
+          mvn clean install --batch-mode -Dtest.lanes=1 | tee ../../mvn-integration-test.log
 
           PR_BUILD_STATUS=$(cat ../../mvn-integration-test.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
           PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' ../../mvn-integration-test.log)
@@ -310,14 +313,9 @@ jobs:
           echo "::warning::$PR_BUILD_RESULT_LOG"
 
           ENABLED_TESTS="${{ matrix.tests }}"
-          if [[ "$ENABLED_TESTS" == *"is-test-adaptive-authentication-nashorn"* ]]; then
-            EXPECTED_BUILD_SUCCESS_COUNT="17"
-          else
-            EXPECTED_BUILD_SUCCESS_COUNT="1"
-          fi
 
-          PR_BUILD_SUCCESS_COUNT=$(grep -o -i "\[INFO\] BUILD SUCCESS" ../../mvn-integration-test.log | wc -l)
-          if [ "$PR_BUILD_SUCCESS_COUNT" != "$EXPECTED_BUILD_SUCCESS_COUNT" ]; then
+          PR_BUILD_SUCCESS_STATUS=$(grep -oE "\[INFO\] BUILD (SUCCESS|FAILURE)" ../../mvn-integration-test.log | tail -1)
+          if [ "$PR_BUILD_SUCCESS_STATUS" != "[INFO] BUILD SUCCESS" ]; then
             echo "MSSQL Integration test build not successful. Aborting."
             echo "::error::MSSQL Integration test build not successful. Check artifacts for logs."
             exit 1
