@@ -38,6 +38,18 @@ DISABLE=$2;
 
 LIB_REPO=$CARBON_HOME/repository/components/lib
 
+# Copies a library into the pack's lib folder. The test build fetches these libraries into $ADAPTIVE_SCRIPT_LIBS
+# beforehand, so tests don't download anything; without it, Maven fetches the library.
+fetch_lib() {
+    local group=$1 artifact=$2 version=$3
+    if [ -n "$ADAPTIVE_SCRIPT_LIBS" ] && [ -f "$ADAPTIVE_SCRIPT_LIBS/$artifact-$version.jar" ]; then
+        cp "$ADAPTIVE_SCRIPT_LIBS/$artifact-$version.jar" "$LIB_REPO/"
+    else
+        mvn dependency:get --batch-mode -Dartifact=$group:$artifact:$version
+        mvn dependency:copy --batch-mode -Dartifact=$group:$artifact:$version -DoutputDirectory=$LIB_REPO
+    fi
+}
+
 if [[ "$DISABLE" == "DISABLE" || "$DISABLE" == "disable" ]]; then
     LOCAL_NASHORN_VERSION=""
     LOCAL_ASM_VERSION=""
@@ -134,14 +146,12 @@ else
         echo "Required Nashorn library not found. Remove existing library : ${full_artifact_name}"
         rm $location
         echo "Downloading required Nashorn library : nashorn-core-${NASHORN_VERSION}"
-        mvn dependency:get --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION
-        mvn dependency:copy --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION -DoutputDirectory=$LIB_REPO
+        fetch_lib org.openjdk.nashorn nashorn-core $NASHORN_VERSION
         echo "Nashorn library updated."
       fi
   else
      echo "Nashorn library not found. Starting to download....."
-     mvn dependency:get --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION
-     mvn dependency:copy --batch-mode -Dartifact=org.openjdk.nashorn:nashorn-core:$NASHORN_VERSION -DoutputDirectory=$LIB_REPO
+     fetch_lib org.openjdk.nashorn nashorn-core $NASHORN_VERSION
      echo "Nashorn download completed. Downloaded version : nashorn-core-${NASHORN_VERSION}"
   fi
 
@@ -156,14 +166,12 @@ else
         echo "Required ASM-Util library not found. Remove existing library : ${full_artifact_name}"
         rm $location
         echo "Downloading required ASM-Util library : asm-util-${ASM_VERSION}"
-        mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION
-        mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION -DoutputDirectory=$LIB_REPO
+        fetch_lib org.ow2.asm asm-util $ASM_VERSION
         echo "ASM-Util library updated."
       fi
   else
      echo "ASM-Util library not found. Starting to download....."
-     mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION
-     mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-util:$ASM_VERSION -DoutputDirectory=$LIB_REPO
+     fetch_lib org.ow2.asm asm-util $ASM_VERSION
      echo "ASM-Util download completed. Downloaded version : asm-util-${ASM_VERSION}"
   fi
 
@@ -178,14 +186,12 @@ else
         echo "Required ASM-Commons library not found. Remove existing library : ${full_artifact_name}"
         rm $location
         echo "Downloading required ASM-Commons library : asm-commons-${ASM_VERSION}"
-        mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-commons:$ASM_VERSION
-        mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-commons:$ASM_VERSION -DoutputDirectory=$LIB_REPO
+        fetch_lib org.ow2.asm asm-commons $ASM_VERSION
         echo "ASM-Commons library updated."
       fi
   else
      echo "ASM-Commons library not found. Starting to download....."
-     mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-commons:$ASM_VERSION
-     mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-commons:$ASM_VERSION -DoutputDirectory=$LIB_REPO
+     fetch_lib org.ow2.asm asm-commons $ASM_VERSION
      echo "ASM-Commons download completed. Downloaded version : asm-commons-${ASM_VERSION}"
   fi
 
@@ -200,14 +206,12 @@ else
         echo "Required ASM-Tree library not found. Remove existing library : ${full_artifact_name}"
         rm $location
         echo "Downloading required ASM-Tree library : asm-tree-${ASM_VERSION}"
-        mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-tree:$ASM_VERSION
-        mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-tree:$ASM_VERSION -DoutputDirectory=$LIB_REPO
+        fetch_lib org.ow2.asm asm-tree $ASM_VERSION
         echo "ASM-Tree library updated."
       fi
   else
      echo "ASM-Tree library not found. Starting to download....."
-     mvn dependency:get --batch-mode -Dartifact=org.ow2.asm:asm-tree:$ASM_VERSION
-     mvn dependency:copy --batch-mode -Dartifact=org.ow2.asm:asm-tree:$ASM_VERSION -DoutputDirectory=$LIB_REPO
+     fetch_lib org.ow2.asm asm-tree $ASM_VERSION
      echo "ASM-Tree download completed. Downloaded version : asm-tree-${ASM_VERSION}"
   fi
   echo "Adaptive authentication successfully enabled."

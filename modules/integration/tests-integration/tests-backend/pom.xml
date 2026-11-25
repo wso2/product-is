@@ -41,6 +41,9 @@
         <maven.test.skip>false</maven.test.skip>
         <skipLanes>${maven.test.skip}</skipLanes>
         <skipSurefire>true</skipSurefire>
+        <!-- Libraries that adaptive.sh adds to the IS pack for the Nashorn tests; keep in sync with adaptive.sh. -->
+        <adaptive.nashorn.version>15.3</adaptive.nashorn.version>
+        <adaptive.asm.version>9.2</adaptive.asm.version>
         <!--
           Databases of the IS server under test, passed to it as environment variables (deployment.toml reads them
           with $env{...}). The default is each server's own H2 files. To test another database, override these, e.g.
@@ -134,6 +137,7 @@
                                 </java.util.logging.manager>
                             </systemProperties>
                             <environmentVariables>
+                                <ADAPTIVE_SCRIPT_LIBS>${project.build.directory}/adaptive-script-libraries</ADAPTIVE_SCRIPT_LIBS>
                                 <SHARED_DATABASE_DRIVER>${it.db.shared.driver}</SHARED_DATABASE_DRIVER>
                                 <SHARED_DATABASE_URL>${it.db.shared.url}</SHARED_DATABASE_URL>
                                 <SHARED_DATABASE_USERNAME>${it.db.shared.username}</SHARED_DATABASE_USERNAME>
@@ -183,6 +187,7 @@
                                         <systemProperty><key>lane.sys.emma.output</key><value>${basedir}/target/emma</value></systemProperty>
                                         <systemProperty><key>lane.sys.java.util.logging.manager</key><value>org.apache.logging.log4j.jul.LogManager</value></systemProperty>
                                         <!-- Environment of each lane's test JVM (same as surefire's). -->
+                                        <systemProperty><key>lane.env.ADAPTIVE_SCRIPT_LIBS</key><value>${project.build.directory}/adaptive-script-libraries</value></systemProperty>
                                         <systemProperty><key>lane.env.SHARED_DATABASE_DRIVER</key><value>${it.db.shared.driver}</value></systemProperty>
                                         <systemProperty><key>lane.env.SHARED_DATABASE_URL</key><value>${it.db.shared.url}</value></systemProperty>
                                         <systemProperty><key>lane.env.SHARED_DATABASE_USERNAME</key><value>${it.db.shared.username}</value></systemProperty>
@@ -321,6 +326,42 @@
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
+                    <!--
+                      Fetch what adaptive.sh installs during the Nashorn tests now, so the tests never download
+                      anything: they run with an empty Maven cache too, and parallel lanes never write to it.
+                    -->
+                    <execution>
+                        <id>prefetch-adaptive-script-libraries</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/adaptive-script-libraries</outputDirectory>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.openjdk.nashorn</groupId>
+                                    <artifactId>nashorn-core</artifactId>
+                                    <version>${adaptive.nashorn.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.ow2.asm</groupId>
+                                    <artifactId>asm-util</artifactId>
+                                    <version>${adaptive.asm.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.ow2.asm</groupId>
+                                    <artifactId>asm-commons</artifactId>
+                                    <version>${adaptive.asm.version}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.ow2.asm</groupId>
+                                    <artifactId>asm-tree</artifactId>
+                                    <version>${adaptive.asm.version}</version>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
 
                     <execution>
                         <id>copy­jacoco­dependencies</id>
