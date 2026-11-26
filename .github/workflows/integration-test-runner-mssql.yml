@@ -27,7 +27,7 @@ jobs:
       matrix:
         include:
           - runner_id: 1
-            tests: "is-test-rest-api,is-test-webhooks,is-tests-scim2-parallel,is-tests-scim2,is-test-adaptive-authentication"
+            tests: "is-test-rest-api-parallel,is-test-rest-api,is-test-webhooks,is-tests-scim2-parallel,is-tests-scim2,is-test-adaptive-authentication"
           - runner_id: 2
             tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart,is-tests-connection-sharing,is-tests-oid4vp,is-tests-password-update-api"
           - runner_id: 3
@@ -253,6 +253,7 @@ jobs:
           ALL_TESTS=(
             "is-tests-default-configuration-parallel"
             "is-tests-default-configuration"
+            "is-test-rest-api-parallel"
             "is-test-rest-api"
             "is-tests-oauth-client-secrets-parallel"
             "is-tests-oauth-client-secrets"

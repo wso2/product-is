@@ -13,6 +13,7 @@ WORKFLOW_BRANCH=${WORKFLOW_BRANCH#refs/heads/}
 declare -a ALL_TESTS=(
     "is-tests-default-configuration-parallel"
     "is-tests-default-configuration"
+    "is-test-rest-api-parallel"
     "is-test-rest-api"
     "is-tests-oauth-client-secrets-parallel"
     "is-tests-oauth-client-secrets"
