@@ -73,7 +73,7 @@ public final class TestLaneRunner {
     private static final Pattern TEXT_FILE = Pattern.compile(".*\\.(toml|xml|json|properties)$");
     private static final Pattern WAR_TEXT_ENTRY =
             Pattern.compile(".*\\.(properties|xml|jsp|html|htm|js|json|txt|conf)$");
-    private static final Pattern TOKEN = Pattern.compile("@(port\\.[a-z0-9.]+)@");
+    private static final Pattern TOKEN = Pattern.compile("@((?:port|lane)\\.[a-z0-9.]+)@");
     private static final Pattern TEST_BLOCK = Pattern.compile("<test\\s+name=\"([^\"]+)\"([^>]*)>");
 
     /** Ports that appear as literals in prebuilt sample web apps (values at shift 0). */
@@ -312,7 +312,11 @@ public final class TestLaneRunner {
 
         Map<String, String> values = new LinkedHashMap<>();
         for (String key : ports.stringPropertyNames()) {
-            values.put(key, String.valueOf(Integer.parseInt(ports.getProperty(key).trim()) + lane.shift));
+            String value = ports.getProperty(key).trim();
+            values.put(key, key.startsWith("port.") ? String.valueOf(Integer.parseInt(value) + lane.shift) : value);
+        }
+        if (lane.tenant != null) {
+            values.put("lane.tenant", lane.tenant);
         }
         try (Stream<Path> files = Files.walk(resourcesDir)) {
             for (Path src : (Iterable<Path>) files::iterator) {
@@ -557,6 +561,8 @@ public final class TestLaneRunner {
         final String name;
         final int shift;
         final List<String> blocks;
+        /** Tenant for this lane's tenant-mode tests; null for the default (wso2.com). */
+        String tenant;
         final Path dir;
         final Path resources;
         final Path reports;
@@ -593,6 +599,9 @@ public final class TestLaneRunner {
             cmd.add("-Dbasedir=" + dir);
             cmd.add("-Dframework.resource.location=" + resources + File.separator);
             cmd.add("-Dlane.port.shift=" + shift);
+            if (tenant != null) {
+                cmd.add("-Dlane.tenant=" + tenant);
+            }
             cmd.add("-cp");
             cmd.add(resources + File.pathSeparator + classpath);
             cmd.add("org.testng.TestNG");

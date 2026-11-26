@@ -170,7 +170,7 @@
             </tenant>
         </superTenant>
         <tenants>
-            <tenant domain="wso2.com" key="wso2">
+            <tenant domain="@lane.tenant@" key="wso2">
                 <admin>
                     <user key="admin">
                         <userName>admin</userName>

@@ -26,6 +26,7 @@ import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTe
 
 import java.io.IOException;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.utils.LaneTenant;
 
 /**
  * Base class for server configuration management tests.
@@ -46,11 +47,11 @@ public class ConfigTestBase extends RESTAPIServerTestBase {
     public static final String PASSIVE_STS_INBOUND_AUTH_CONFIG_API_PATH = "/configs/authentication/inbound/passivests";
     public static final String SAML_METADATA_ENDPOINT_SUPER_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/identity/metadata/saml2";
     public static final String SAML_METADATA_ENDPOINT_TENANT =
-            "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/identity/metadata/saml2";
+            "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + LaneTenant.DOMAIN + "/identity/metadata/saml2";
     public static final String SAML_SSO_URL_SUPER_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/samlsso";
-    public static final String SAML_SSO_URL_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/samlsso";
+    public static final String SAML_SSO_URL_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + LaneTenant.DOMAIN + "/samlsso";
     public static final String PASSIVE_STS_URL_SUPER_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/passivests";
-    public static final String PASSIVE_STS_URL_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/wso2.com/passivests";
+    public static final String PASSIVE_STS_URL_TENANT = "https://localhost:" + TestPorts.IS_HTTPS + "/t/" + LaneTenant.DOMAIN + "/passivests";
     public static final String CONFIGS_COMPATIBILITY_SETTINGS_API_BASE_PATH = "/configs/compatibility-settings";
     public static final String CONFIGS_AGENT_API_BASE_PATH = "/configs/agent";
     public static final String FAPI_CONFIGS_API_BASE_PATH = "/configs/fapi";

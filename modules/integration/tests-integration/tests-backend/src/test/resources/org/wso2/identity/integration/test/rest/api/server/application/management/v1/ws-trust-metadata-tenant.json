@@ -1,7 +1,7 @@
 {
   "certificateAlias": {
     "options": [
-      "wso2.com"
+      "@lane.tenant@"
     ]
   }
 }
