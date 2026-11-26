@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.webhooks.util;
 
+import com.github.tomakehurst.wiremock.http.Request;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -29,11 +30,11 @@ import org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.
 import org.wso2.identity.integration.test.restclients.WebhooksRestClient;
 import org.wso2.identity.integration.test.webhooks.mockservice.WebhookMockService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 /**
  * Manager class for handling and verifying webhook events in tests.
@@ -139,6 +140,27 @@ public class WebhookEventTestManager {
         }
     }
 
+    /**
+     * Validates that no event notifications are received by the webhook. Waits for the same period allowed for
+     * expected events to arrive, before checking the received notifications.
+     *
+     * @throws Exception if an event notification is received.
+     */
+    public void validateNoEventsReceived() throws Exception {
+
+        try {
+            TimeUnit.MILLISECONDS.sleep((long) MAX_RETRIES_ON_EVENTS_RECEIVED * WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED);
+            if (!mockService.getOrderedRequests().isEmpty()) {
+                throw new AssertionError("Expected no event notifications, but " +
+                        mockService.getOrderedRequests().size() + " event notifications were received to the mock " +
+                        "service.");
+            }
+        } finally {
+            mockService.clearOrderedRequests();
+            eventPayloadStack.clearStack();
+        }
+    }
+
     private void waitForEvents() throws InterruptedException {
 
         int retryCount = 0;
@@ -159,68 +181,40 @@ public class WebhookEventTestManager {
     private void validateEventPayloadForEventUri(String eventUri, JSONObject expectedEventsObjectInPayload)
             throws Exception {
 
-        waitForSpecificEvent(eventUri);
-
-        List<JSONObject> receivedPayloads = extractReceivedPayloads();
-        boolean isMatched = matchAndValidatePayload(eventUri, expectedEventsObjectInPayload, receivedPayloads);
-
-        if (!isMatched) {
-            throw new AssertionError("No matching payload found for event URI: " + eventUri);
-        }
-    }
-
-    private void waitForSpecificEvent(String eventUri) throws InterruptedException {
-
+        List<String> validationErrors = new ArrayList<>();
         int retryCount = 0;
 
         while (retryCount < MAX_RETRIES_ON_EVENTS_RECEIVED) {
-            List<JSONObject> receivedPayloads = extractReceivedPayloads();
-
-            boolean eventExists = receivedPayloads.stream()
-                    .anyMatch(payload -> {
-                        try {
-                            return payload != null && payload.has("events") &&
-                                    payload.getJSONObject("events").has(eventUri);
-                        } catch (JSONException e) {
-                            LOG.error("Error parsing JSON payload for event URI '{}': {}", eventUri, e.getMessage());
-                            return false;
-                        }
-                    });
-
-            if (eventExists) {
+            validationErrors.clear();
+            if (matchAndValidatePayload(eventUri, expectedEventsObjectInPayload, validationErrors)) {
                 return;
             }
 
-            LOG.info("Event for URI '{}' not found in received payloads. Retrying... Attempt: {}/{}",
-                    eventUri, retryCount + 1, MAX_RETRIES_ON_EVENTS_RECEIVED);
+            LOG.info("No received payload matched the expected payload for event URI '{}'. Retrying... " +
+                    "Attempt: {}/{}", eventUri, retryCount + 1, MAX_RETRIES_ON_EVENTS_RECEIVED);
             TimeUnit.MILLISECONDS.sleep(WAIT_TIME_IN_MILLIS_ON_EVENTS_RECEIVED);
             retryCount++;
         }
 
-        throw new AssertionError("Event for URI '" + eventUri + "' not found after " +
-                MAX_RETRIES_ON_EVENTS_RECEIVED + " retries.");
+        if (validationErrors.isEmpty()) {
+            throw new AssertionError("Event for URI '" + eventUri + "' not found after " +
+                    MAX_RETRIES_ON_EVENTS_RECEIVED + " retries.");
+        }
+        throw new AssertionError("Payload validation failed for event URI: " + eventUri +
+                ". None of the received payloads matched the expected payload. Errors: " + validationErrors);
     }
 
-    private List<JSONObject> extractReceivedPayloads() {
-
-        return mockService.getOrderedRequests()
-                .stream()
-                .map(request -> {
-                    try {
-                        return new JSONObject(request.getBodyAsString());
-                    } catch (JSONException e) {
-                        LOG.error("Invalid JSON payload: {}", e.getMessage());
-                        return null;
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * Validates the received payloads of the given event URI against the expected payload, and removes the first
+     * matching payload from the request list of the mock service. Since the same event can be received more than once
+     * (e.g. from the root organization and from a sub organization), every received payload of the event URI is
+     * tried before concluding that there is no match.
+     */
     private boolean matchAndValidatePayload(String eventUri, JSONObject expectedEventsObject,
-                                            List<JSONObject> receivedPayloads) throws Exception {
+                                            List<String> validationErrors) throws Exception {
 
-        for (int i = 0; i < receivedPayloads.size(); i++) {
-            JSONObject receivedPayload = receivedPayloads.get(i);
+        for (Request request : mockService.getOrderedRequests()) {
+            JSONObject receivedPayload = toJSONObject(request);
 
             if (receivedPayload != null && receivedPayload.has("events") &&
                     receivedPayload.getJSONObject("events").has(eventUri)) {
@@ -237,17 +231,27 @@ public class WebhookEventTestManager {
                     LOG.info("Payload validation successful for event URI: {}", eventUri);
                     LOG.info("Removing matched payload from request list of the mock service for event URI: {}",
                             eventUri);
-                    receivedPayloads.remove(i);
-                    mockService.removeRequest(mockService.getOrderedRequests().get(i));
+                    mockService.removeRequest(request);
                     return true;
 
                 } catch (IllegalArgumentException e) {
-                    throw new AssertionError(
-                            "Payload validation failed for event URI: " + eventUri + ". Error: " + e.getMessage(), e);
+                    LOG.info("Received payload did not match the expected payload for event URI: {}. Error: {}",
+                            eventUri, e.getMessage());
+                    validationErrors.add(e.getMessage());
                 }
             }
         }
         return false;
+    }
+
+    private JSONObject toJSONObject(Request request) {
+
+        try {
+            return new JSONObject(request.getBodyAsString());
+        } catch (JSONException e) {
+            LOG.error("Invalid JSON payload: {}", e.getMessage());
+            return null;
+        }
     }
 
     private void startMockServer() throws Exception {
