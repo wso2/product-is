@@ -155,6 +155,7 @@ jobs:
           name: product-is-mvn-build-log-${{ matrix.runner_id }}
           path: |
             product-is-${{ matrix.runner_id }}/mvn-build.log
+            product-is-${{ matrix.runner_id }}/resource-usage.log
           if-no-files-found: warn
       - name: Archive product-is surefire reports
         if: always()

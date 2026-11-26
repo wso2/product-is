@@ -68,6 +68,20 @@ disable_tests() {
 }
 
 
+# Builds product-is, then runs the integration tests in a separate Maven run. The build's JVM grows to several GB
+# and would keep that memory while the parallel test lanes run, so the lanes start only after it has exited.
+# Memory and load are logged every 30 s to resource-usage.log, so a runner that runs out of resources leaves evidence.
+build_and_run_integration_tests() {
+  ( echo "cores=$(nproc) $(free -m | awk '/Mem:/ {print "mem_total_mb=" $2}')"
+    while true; do echo "$(date -u +%H:%M:%S) used_mb=$(free -m | awk '/Mem:/ {print $3}') avail_mb=$(free -m | awk '/Mem:/ {print $7}') swap_used_mb=$(free -m | awk '/Swap:/ {print $3}') load=$(cut -d' ' -f1 /proc/loadavg)"; sleep 30; done ) > resource-usage.log 2>&1 &
+  local monitor=$!
+  mvn clean install --batch-mode -DskipLanes=true | tee mvn-build.log
+  if [ "$(grep -oE '\[INFO\] BUILD (SUCCESS|FAILURE)' mvn-build.log | tail -1)" = "[INFO] BUILD SUCCESS" ]; then
+    mvn install --batch-mode -f modules/integration/tests-integration/tests-backend/pom.xml | tee -a mvn-build.log
+  fi
+  kill $monitor 2>/dev/null || true
+}
+
 # Main execution starts here.
 BUILDER_NUMBER=$1
 ENABLED_TESTS=$2
@@ -181,7 +195,7 @@ if [ "$REPO" = "product-is" ]; then
 
   cat pom.xml
   export JAVA_HOME=$JAVA_21_HOME
-  mvn clean install --batch-mode | tee mvn-build.log
+  build_and_run_integration_tests
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
   PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
@@ -497,7 +511,7 @@ else
 
   export JAVA_HOME=$JAVA_21_HOME
   cat pom.xml
-  mvn clean install --batch-mode | tee mvn-build.log
+  build_and_run_integration_tests
 
   PR_BUILD_STATUS=$(cat mvn-build.log | grep "\[INFO\] BUILD" | grep -oE '[^ ]+$')
   PR_TEST_RESULT=$(sed -n -e '/\[INFO\] Results:/,/\[INFO\] Tests run:/ p' mvn-build.log)
