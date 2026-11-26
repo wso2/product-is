@@ -235,8 +235,9 @@
         branding preference, a notification sender, the org templates of a notification type), or hold an OAuth token
         of the tenant admin across test methods stay in is-test-rest-api: MeAuthorizedAppsSuccessTest revokes every
         token of the admin. So do classes whose test methods depend on each other without priority or
-        dependsOnMethods, or share static fields between their two tenant instances, because a parallel block runs
-        such methods in a different order and interleaves the instances differently.
+        dependsOnMethods, or share static fields or resources between their instances in the same tenant, because a
+        parallel block runs such methods in a different order and interleaves the instances differently. Only one
+        class here creates organizations: creating a tenant's first organizations concurrently can fail on the server.
     -->
     <test name="is-test-rest-api-parallel" preserve-order="false" parallel="classes" thread-count="5">
         <classes>
@@ -259,7 +260,6 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationImportExportTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationPatchTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementPassiveStsSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationTemplateManagementFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.script.library.v1.ScriptLibrarySuccessTest"/>
@@ -280,14 +280,11 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.webhook.metadata.v1.WebhookMetadataSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.webhook.metadata.v1.WebhookMetadataFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.extension.management.v1.ExtensionManagementSuccessTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.rules.metadata.v1.RulesMetadataSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.rules.metadata.v1.RulesMetadataFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.agent.sharing.management.v1.AgentSharingSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.agent.sharing.management.v1.AgentSharingFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementNegativeTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementPositiveTest"/>
-            <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementNegativeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.consent.management.v2.ConsentManagementV2FailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.consent.management.v2.ConsentManagementV2AdminModeTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.ConsentPurposesSuccessTest"/>
@@ -336,6 +333,7 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.idp.v1.IdPSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.store.v1.UserStoreSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementSAMLSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementOAuthFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.application.management.v1.ApplicationManagementFapiProfileSuccessTest"/>
@@ -371,12 +369,15 @@
             <class name="org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile.PreUpdateProfileActionFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.webhook.management.v1.WebhookManagementSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorSuccessTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1.AuthenticatorFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.UserSharingSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.UserSharingFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v2.UserSharingSuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v2.UserSharingFailureTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.management.v1.FlowManagementPositiveTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionPositiveTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementPositiveTest"/>
+            <class name="org.wso2.identity.integration.test.rest.api.server.credential.management.v1.CredentialManagementNegativeTest"/>
             <!--            <class name="org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionNegativeTest"/>-->
             <class name="org.wso2.identity.integration.test.rest.api.server.consent.management.v2.ConsentManagementV2SuccessTest"/>
             <class name="org.wso2.identity.integration.test.rest.api.server.configs.v1.AgentConfigSuccessTest"/>
