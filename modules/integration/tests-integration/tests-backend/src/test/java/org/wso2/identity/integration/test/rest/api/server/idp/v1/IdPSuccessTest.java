@@ -20,7 +20,6 @@ package org.wso2.identity.integration.test.rest.api.server.idp.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -161,13 +160,13 @@ public class IdPSuccessTest extends IdPTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

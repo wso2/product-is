@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.rest.api.server.authenticator.management.v1;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -103,7 +102,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         creationPayload = UserDefinedLocalAuthenticatorPayload
                 .getBasedUserDefinedLocalAuthenticatorCreation(testAuthenticatorConfig);
         updatePayload = UserDefinedLocalAuthenticatorPayload
@@ -121,7 +120,7 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

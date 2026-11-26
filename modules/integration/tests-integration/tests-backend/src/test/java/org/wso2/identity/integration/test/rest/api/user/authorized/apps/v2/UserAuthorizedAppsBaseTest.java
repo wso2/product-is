@@ -17,7 +17,6 @@ package org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2;
 
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
@@ -124,6 +123,6 @@ public class UserAuthorizedAppsBaseTest extends RESTAPIUserTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 }

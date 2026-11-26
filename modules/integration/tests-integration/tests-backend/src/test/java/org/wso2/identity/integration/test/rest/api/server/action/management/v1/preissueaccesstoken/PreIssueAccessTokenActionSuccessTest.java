@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueaccesstoken;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
@@ -80,7 +79,7 @@ public class PreIssueAccessTokenActionSuccessTest extends PreIssueAccessTokenTes
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @Test

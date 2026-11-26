@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.rest.api.server.flow.execution.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -65,13 +64,13 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     protected void addRegistrationFlow(FlowManagementClient client) throws Exception {

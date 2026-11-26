@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.credential.management.v1;
 
-import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +30,6 @@ import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTe
 
 import java.io.IOException;
 
-import static io.restassured.RestAssured.given;
 
 /**
  * Base test class for the Credential Management REST APIs.
@@ -74,13 +72,13 @@ public class CredentialManagementTestBase extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     /**

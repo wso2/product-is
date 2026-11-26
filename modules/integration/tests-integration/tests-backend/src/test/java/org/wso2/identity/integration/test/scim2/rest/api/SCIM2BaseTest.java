@@ -16,7 +16,6 @@
 
 package org.wso2.identity.integration.test.scim2.rest.api;
 
-import io.restassured.RestAssured;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
@@ -73,12 +72,12 @@ public class SCIM2BaseTest extends RESTTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() throws Exception {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 }
