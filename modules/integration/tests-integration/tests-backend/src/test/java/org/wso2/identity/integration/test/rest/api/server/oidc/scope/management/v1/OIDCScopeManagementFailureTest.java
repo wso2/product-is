@@ -88,7 +88,7 @@ public class OIDCScopeManagementFailureTest extends OIDCScopeManagementBaseTest 
     public void testAddOIDCScope() throws IOException {
 
         Response response = getResponseOfJSONPost(OIDC_SCOPE_MANAGEMENT_API_BASE_PATH,
-                readResource("add-scope-request-body1.json"), new HashMap<>());
+                readResource("add-scope-failure-request-body.json"), new HashMap<>());
         response.then()
                 .log().ifValidationFails()
                 .assertThat()
@@ -105,7 +105,7 @@ public class OIDCScopeManagementFailureTest extends OIDCScopeManagementBaseTest 
     public void testAddExistingOIDCScope() throws IOException {
 
         Response response = getResponseOfJSONPost(OIDC_SCOPE_MANAGEMENT_API_BASE_PATH,
-                readResource("add-scope-request-body1.json"), new HashMap<>());
+                readResource("add-scope-failure-request-body.json"), new HashMap<>());
         validateHttpStatusCode(response, HttpStatus.SC_CONFLICT);
     }
 

@@ -241,7 +241,7 @@ public class ApplicationManagementFailureTest extends ApplicationManagementBaseT
     public void testCreateApplicationsWithConflictingInboundKeys() throws Exception {
 
         // Create the first passive sts app.
-        String payload = readResource("create-passive-sts-app.json");
+        String payload = readResource("create-passive-sts-app-for-conflict-test.json");
         Response createFirstAppResponse = getResponseOfPost(APPLICATION_MANAGEMENT_API_BASE_PATH, payload);
         createFirstAppResponse.then()
                 .log().ifValidationFails()

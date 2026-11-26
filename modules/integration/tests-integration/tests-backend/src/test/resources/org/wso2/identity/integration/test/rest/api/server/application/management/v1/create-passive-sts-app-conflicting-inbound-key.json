@@ -3,8 +3,8 @@
   "description": "Passive STS Application",
   "inboundProtocolConfiguration": {
     "passiveSts": {
-      "realm": "https://myrealm.passivests.com",
-      "replyTo": "https://myrealm.passivests.com/replyTo"
+      "realm": "https://myrealm-conflict-test.passivests.com",
+      "replyTo": "https://myrealm-conflict-test.passivests.com/replyTo"
     }
   }
 }

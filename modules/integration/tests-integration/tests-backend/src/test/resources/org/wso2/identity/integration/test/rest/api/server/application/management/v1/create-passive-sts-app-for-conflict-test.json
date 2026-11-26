@@ -1,0 +1,10 @@
+{
+  "name": "my-passive-sts-app-conflict-test",
+  "description": "Passive STS Application",
+  "inboundProtocolConfiguration": {
+    "passiveSts": {
+      "realm": "https://myrealm-conflict-test.passivests.com",
+      "replyTo": "https://myrealm-conflict-test.passivests.com/replyTo"
+    }
+  }
+}

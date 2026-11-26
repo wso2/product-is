@@ -1,0 +1,26 @@
+{
+  "typeId": "VW5pcXVlSURKREJDVXNlclN0b3JlTWFuYWdlcg",
+  "description": "Sample JDBC user store to add.",
+  "name": "JDBC-NONE",
+  "properties": [
+    {
+      "name": "userName",
+      "value": "wso2automation"
+    },
+    {
+      "name": "password",
+      "value": "wso2automation"
+    },
+    {"name": "driverName",
+      "value": "org.h2.Driver"
+    },
+    {
+      "name":"url",
+      "value":"jdbc:h2:./repository/database/JDBC_H2_DB"
+    },
+    {
+      "name":"disabled",
+      "value":"false"
+    }
+  ]
+}
