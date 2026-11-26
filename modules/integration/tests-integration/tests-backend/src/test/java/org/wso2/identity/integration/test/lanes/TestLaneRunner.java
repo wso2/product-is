@@ -118,100 +118,206 @@ public final class TestLaneRunner {
                 StandardCharsets.UTF_8);
         List<String> declaredBlocks = blocks(suiteText, false);
         List<String> activeBlocks = blocks(suiteText, true);
-        Map<String, List<String>> lanes = lanes(activeBlocks, declaredBlocks);
+        List<LaneSpec> specs = lanes(activeBlocks, declaredBlocks);
         Properties ports = new Properties();
         try (InputStream in = Files.newInputStream(basedir.resolve("src/test/lanes/ports.properties"))) {
             ports.load(in);
         }
         String classpath = childClasspath();
 
+        // One holder per server group: it owns the shared IS server; the group's lanes attach to it.
+        List<Lane> lanes = new ArrayList<>();
+        Map<String, Lane> holders = new LinkedHashMap<>();
+        int index = 0;
+        for (LaneSpec spec : specs) {
+            if (spec.group != null && !holders.containsKey(spec.group)) {
+                Lane holder = new Lane(spec.group + "-server", index++ * PORT_STEP, new ArrayList<>());
+                holder.holdDir = workDir.resolve(holder.name).resolve("hold");
+                holders.put(spec.group, holder);
+                lanes.add(holder);
+            }
+        }
+        for (LaneSpec spec : specs) {
+            Lane lane = new Lane(spec.name, index++ * PORT_STEP, spec.blocks);
+            lane.userModes = spec.modes;
+            if (spec.group != null) {
+                lane.holder = holders.get(spec.group);
+                lane.serverShift = lane.holder.shift;
+                if (spec.modes != null && !spec.modes.contains("SUPER_TENANT_ADMIN")) {
+                    lane.tenant = spec.name.toLowerCase().replaceAll("[^a-z0-9-]", "-") + ".test";
+                }
+            }
+            lanes.add(lane);
+        }
+        if (Boolean.getBoolean("lanes.dryRun")) {
+            lanes.forEach(l -> System.out.println("[INFO] Would start " + describe(l)));
+            return 0;
+        }
         killProcessesUnder(workDir, "left over from an earlier run");
         deleteTree(workDir);
         deleteTree(reportsDir);
         Files.createDirectories(workDir);
-        System.out.println("[INFO] Running integration tests in " + lanes.size() + " parallel lane(s). Logs: "
-                + workDir);
+        System.out.println("[INFO] Running integration tests in " + specs.size() + " parallel lane(s)"
+                + (holders.isEmpty() ? "" : " and " + holders.size() + " shared IS server(s)") + ". Logs: " + workDir);
 
-        List<Lane> running = new ArrayList<>();
+        List<Lane> started = new ArrayList<>();
         // On Ctrl-C or an aborted build, stop every lane's process tree (test JVM, IS servers, ...).
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            running.forEach(Lane::stop);
+            started.forEach(Lane::stop);
             killProcessesUnder(workDir, "still running at shutdown");
         }));
-        int index = 0;
-        for (Map.Entry<String, List<String>> e : lanes.entrySet()) {
-            Lane lane = new Lane(e.getKey(), index * PORT_STEP, e.getValue());
-            prepare(lane, suiteText, activeBlocks, ports);
-            lane.start(classpath);
-            running.add(lane);
-            System.out.println("[INFO] Started " + lane.name + " (ports +" + lane.shift + "): "
-                    + String.join(", ", lane.blocks));
-            index++;
+        for (Lane lane : lanes) {
+            Files.createDirectories(lane.dir);
+            if (lane.holder == null) {
+                prepare(lane, suiteText, activeBlocks, ports);
+                lane.start(classpath);
+                started.add(lane);
+                System.out.println("[INFO] Started " + describe(lane));
+            }
         }
 
         long start = System.currentTimeMillis();
-        while (running.stream().anyMatch(Lane::isAlive)) {
-            for (Lane lane : running) {
-                if (lane.process.waitFor(5, TimeUnit.SECONDS) && lane.endMillis == 0) {
+        long readyTimeout = TimeUnit.MINUTES.toMillis(Long.getLong("lanes.serverReadyTimeoutMinutes", 20));
+        while (started.stream().anyMatch(Lane::isAlive) || lanes.stream().anyMatch(l -> l.process == null
+                && l.endMillis == 0)) {
+            // Start attached lanes once their server is ready; fail them if it never gets there.
+            for (Lane lane : lanes) {
+                if (lane.holder == null || lane.process != null || lane.endMillis != 0) {
+                    continue;
+                }
+                Path ready = lane.holder.holdDir.resolve("ready");
+                if (Files.exists(ready)) {
+                    lane.attachHome = new String(Files.readAllBytes(ready), StandardCharsets.UTF_8).trim();
+                    prepare(lane, suiteText, activeBlocks, ports);
+                    lane.start(classpath);
+                    started.add(lane);
+                    System.out.println("[INFO] Started " + describe(lane));
+                } else if (!lane.holder.isAlive() || System.currentTimeMillis() - start > readyTimeout) {
+                    lane.endMillis = System.currentTimeMillis();
+                    System.out.println("[ERROR] " + lane.name + " not started: shared server " + lane.holder.name
+                            + " did not become ready. See " + lane.holder.dir.resolve("lane.log"));
+                }
+            }
+            // Release a shared server once all lanes attached to it are done.
+            for (Lane holder : holders.values()) {
+                boolean groupDone = lanes.stream().filter(l -> l.holder == holder)
+                        .allMatch(l -> l.endMillis != 0 || (l.process != null && !l.process.isAlive()));
+                if (groupDone && holder.isAlive() && !Files.exists(holder.holdDir.resolve("release"))) {
+                    Files.createDirectories(holder.holdDir);
+                    Files.write(holder.holdDir.resolve("release"), new byte[0]);
+                }
+            }
+            for (Lane lane : started) {
+                if (lane.process.waitFor(2, TimeUnit.SECONDS) && lane.endMillis == 0) {
                     lane.endMillis = System.currentTimeMillis();
                     finish(lane);
                     System.out.println("[INFO] " + lane.summaryLine(start));
                 }
             }
         }
-        for (Lane lane : running) {
+        for (Lane lane : started) {
             if (lane.endMillis == 0) {
                 lane.endMillis = System.currentTimeMillis();
                 finish(lane);
                 System.out.println("[INFO] " + lane.summaryLine(start));
             }
         }
-        return report(running, start);
+        return report(lanes, start);
     }
 
-    /** Reads lanes.conf, or puts every block in one lane when -Dtest.lanes=1. */
-    private Map<String, List<String>> lanes(List<String> activeBlocks, List<String> declaredBlocks)
-            throws IOException {
+    private static String describe(Lane lane) {
 
-        Map<String, List<String>> lanes = new LinkedHashMap<>();
+        String what = lane.holdDir != null ? "shared IS server" : String.join(", ", lane.blocks);
+        String where = lane.holder != null ? " on " + lane.holder.name : "";
+        String modes = lane.userModes != null ? " [" + lane.userModes + (lane.tenant != null ? " in " + lane.tenant
+                : "") + "]" : "";
+        return lane.name + " (ports +" + lane.shift + ")" + where + modes + ": " + what;
+    }
+
+    /** One line of lanes.conf: {@code name[@serverGroup][(MODE,...)]: block, block, ...}. */
+    private static final class LaneSpec {
+
+        final String name;
+        /** Lanes with the same group share one IS server; null for a lane with its own server. */
+        final String group;
+        /** User modes the lane runs (lane.userModes), e.g. TENANT_ADMIN; null for all. */
+        final String modes;
+        final List<String> blocks;
+
+        LaneSpec(String name, String group, String modes, List<String> blocks) {
+
+            this.name = name;
+            this.group = group;
+            this.modes = modes;
+            this.blocks = blocks;
+        }
+    }
+
+    private static final Pattern LANE_HEAD =
+            Pattern.compile("([A-Za-z0-9_-]+)(?:@([A-Za-z0-9_-]+))?(?:\\(([A-Z_,]+)\\))?");
+    private static final List<String> MODES = Arrays.asList("SUPER_TENANT_ADMIN", "TENANT_ADMIN");
+
+    /** Reads lanes.conf, or puts every block in one lane when -Dtest.lanes=1. */
+    private List<LaneSpec> lanes(List<String> activeBlocks, List<String> declaredBlocks) throws IOException {
+
+        List<LaneSpec> lanes = new ArrayList<>();
         if ("1".equals(System.getProperty("test.lanes"))) {
             List<String> all = new ArrayList<>(activeBlocks);
             all.remove(ALWAYS_ON);
-            lanes.put("lane1", all);
+            lanes.add(new LaneSpec("lane1", null, null, all));
             return lanes;
         }
         Path file = Paths.get(System.getProperty("test.lanes.file",
                 basedir.resolve("src/test/lanes/lanes.conf").toString()));
+        List<String> problems = new ArrayList<>();
         for (String line : Files.readAllLines(file, StandardCharsets.UTF_8)) {
             line = line.replaceAll("#.*", "").trim();
             int colon = line.indexOf(':');
             if (colon <= 0) {
                 continue;
             }
+            Matcher head = LANE_HEAD.matcher(line.substring(0, colon).trim());
+            if (!head.matches()) {
+                problems.add("bad lane name '" + line.substring(0, colon).trim() + "'");
+                continue;
+            }
+            String modes = head.group(3);
+            if (modes != null) {
+                for (String mode : modes.split(",")) {
+                    if (!MODES.contains(mode)) {
+                        problems.add("lane " + head.group(1) + ": unknown user mode " + mode);
+                    }
+                }
+            }
             List<String> blocks = Stream.of(line.substring(colon + 1).split(","))
-                    .map(String::trim).filter(s -> !s.isEmpty()).collect(Collectors.toList());
-            lanes.put(line.substring(0, colon).trim(), blocks);
+                    .map(String::trim).filter(x -> !x.isEmpty()).collect(Collectors.toList());
+            lanes.add(new LaneSpec(head.group(1), head.group(2), modes, blocks));
         }
-        // Every active block must be in exactly one lane, so a new block is never skipped silently.
-        List<String> problems = new ArrayList<>();
+        // Every active block must run exactly once in each user mode, so nothing is skipped or run twice.
         for (String block : activeBlocks) {
-            long n = lanes.values().stream().filter(b -> b.contains(block)).count();
-            if (n == 0 && Boolean.getBoolean("lanes.allowPartial")) {
-                continue; // Trial runs only: blocks in no lane are skipped.
+            if (ALWAYS_ON.equals(block)) {
+                continue;
             }
-            if (!ALWAYS_ON.equals(block) && n != 1) {
-                problems.add("block '" + block + "' is in " + n + " lanes");
+            for (String mode : MODES) {
+                long n = lanes.stream().filter(l -> l.blocks.contains(block)
+                        && (l.modes == null || Arrays.asList(l.modes.split(",")).contains(mode))).count();
+                if (n == 0 && Boolean.getBoolean("lanes.allowPartial")) {
+                    continue; // Trial runs only: blocks in no lane are skipped.
+                }
+                if (n != 1) {
+                    problems.add("block '" + block + "' runs " + n + " times in mode " + mode);
+                }
             }
         }
-        lanes.values().stream().flatMap(List::stream).filter(b -> !declaredBlocks.contains(b))
+        lanes.stream().flatMap(l -> l.blocks.stream()).filter(b -> !declaredBlocks.contains(b)).distinct()
                 .forEach(b -> problems.add("lane block '" + b + "' is not a block in testng.xml"));
         if (!problems.isEmpty()) {
             throw new IllegalStateException("Invalid " + file + ": " + String.join("; ", problems));
         }
         // Blocks disabled in testng.xml (enabled="false", e.g. by a CI script that runs a subset) are dropped,
         // and so are lanes left with nothing to run.
-        lanes.values().forEach(b -> b.retainAll(activeBlocks));
-        lanes.values().removeIf(List::isEmpty);
+        lanes.forEach(l -> l.blocks.retainAll(activeBlocks));
+        lanes.removeIf(l -> l.blocks.isEmpty());
         return fitToMachine(lanes);
     }
 
@@ -221,7 +327,7 @@ public final class TestLaneRunner {
      * for Maven and the OS. Lanes are merged round-robin, which keeps them balanced because lanes.conf lanes are
      * balanced. {@code -Dtest.lanes=N} sets the number of lanes directly.
      */
-    private static Map<String, List<String>> fitToMachine(Map<String, List<String>> lanes) {
+    private static List<LaneSpec> fitToMachine(List<LaneSpec> lanes) {
 
         int cores = Runtime.getRuntime().availableProcessors();
         long availableMb = availableMemoryMb();
@@ -239,22 +345,27 @@ public final class TestLaneRunner {
         if (target >= lanes.size()) {
             return lanes;
         }
+        if (lanes.stream().anyMatch(l -> l.group != null || l.modes != null)) {
+            System.out.println("[WARNING] Lanes that share a server or run only some user modes are not merged; "
+                    + "running all " + lanes.size() + " lanes.");
+            return lanes;
+        }
         List<List<String>> merged = new ArrayList<>();
         for (int i = 0; i < target; i++) {
             merged.add(new ArrayList<>());
         }
         int i = 0;
-        for (List<String> blocks : lanes.values()) {
-            merged.get(i++ % target).addAll(blocks);
+        for (LaneSpec lane : lanes) {
+            merged.get(i++ % target).addAll(lane.blocks);
         }
-        Map<String, List<String>> result = new LinkedHashMap<>();
+        List<LaneSpec> result = new ArrayList<>();
         for (int n = 0; n < target; n++) {
-            result.put("lane" + (n + 1), merged.get(n));
+            result.add(new LaneSpec("lane" + (n + 1), null, null, merged.get(n)));
         }
         return result;
     }
 
-    /** MemAvailable from /proc/meminfo (Linux), or the JVM's view of free physical memory; -1 if unknown. */
+    /** MemAvailable from /proc/meminfo (Linux), or 60% of physical memory elsewhere; -1 if unknown. */
     private static long availableMemoryMb() {
 
         try {
@@ -266,9 +377,10 @@ public final class TestLaneRunner {
         } catch (Exception ignored) {
             // Not Linux.
         }
+        // Elsewhere (macOS) "free" memory excludes reclaimable file cache and is far too low; use 60% of the total.
         java.lang.management.OperatingSystemMXBean os = java.lang.management.ManagementFactory.getOperatingSystemMXBean();
         if (os instanceof com.sun.management.OperatingSystemMXBean) {
-            return ((com.sun.management.OperatingSystemMXBean) os).getFreeMemorySize() / (1024 * 1024);
+            return ((com.sun.management.OperatingSystemMXBean) os).getTotalMemorySize() * 6 / 10 / (1024 * 1024);
         }
         return -1;
     }
@@ -307,6 +419,12 @@ public final class TestLaneRunner {
             if (!ALWAYS_ON.equals(block) && !lane.blocks.contains(block)) {
                 suite = suite.replace("<test name=\"" + block + "\"", "<test name=\"" + block + "\" enabled=\"false\"");
             }
+        }
+        if (lane.holdDir != null) {
+            // The holder only starts the server (is-tests-initialize) and keeps it up for the attached lanes.
+            suite = suite.replace("</suite>", "    <test name=\"lane-hold-shared-server\" preserve-order=\"true\">\n"
+                    + "        <classes>\n            <class name=\"" + ServerHoldTestCase.class.getName() + "\"/>\n"
+                    + "        </classes>\n    </test>\n</suite>");
         }
         Files.write(lane.dir.resolve("testng.xml"), suite.getBytes(StandardCharsets.UTF_8));
 
@@ -570,6 +688,14 @@ public final class TestLaneRunner {
         final List<String> blocks;
         /** Tenant for this lane's tenant-mode tests; null for the default (wso2.com). */
         String tenant;
+        /** User modes this lane runs (lane.userModes); null for all. */
+        String userModes;
+        /** For a lane on a shared server: the lane that owns that server. */
+        Lane holder;
+        /** For a lane that owns a shared server: where it signals ready and waits for release. */
+        Path holdDir;
+        /** carbon.home of the shared server this lane attaches to. */
+        String attachHome;
         final Path dir;
         final Path resources;
         final Path reports;
@@ -610,6 +736,15 @@ public final class TestLaneRunner {
             cmd.add("-Dlane.server.port.shift=" + serverShift);
             if (tenant != null) {
                 cmd.add("-Dlane.tenant=" + tenant);
+            }
+            if (userModes != null) {
+                cmd.add("-Dlane.userModes=" + userModes);
+            }
+            if (attachHome != null) {
+                cmd.add("-Dlane.attach.carbonHome=" + attachHome);
+            }
+            if (holdDir != null) {
+                cmd.add("-Dlane.hold.dir=" + holdDir);
             }
             cmd.add("-cp");
             cmd.add(resources + File.pathSeparator + classpath);
