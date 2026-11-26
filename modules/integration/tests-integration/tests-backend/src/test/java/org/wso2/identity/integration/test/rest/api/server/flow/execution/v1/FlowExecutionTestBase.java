@@ -41,6 +41,7 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
     protected static final String TYPE_VIEW = "VIEW";
     protected static final String TYPE_REDIRECTION = "REDIRECTION";
     protected static final String REGISTRATION_FLOW = "registration-flow.json";
+    protected static final String PROFILE_UPDATE_FLOW = "profile-update-flow.json";
     protected static final String API_DEFINITION_NAME = "flow-execution.yaml";
     protected static final String API_VERSION = "v1";
     protected static final String API_PACKAGE_NAME = "org.wso2.carbon.identity.api.server.flow.execution.v1";
@@ -81,15 +82,25 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
         client.putFlow(flowRequest);
     }
 
+    protected void addProfileUpdateFlow(FlowManagementClient client) throws Exception {
+
+        String profileUpdateFlowRequestJson = readResource(PROFILE_UPDATE_FLOW);
+        FlowRequest flowRequest = new ObjectMapper()
+                .readValue(profileUpdateFlowRequestJson, FlowRequest.class);
+        client.putFlow(flowRequest);
+    }
+
     protected void enableFlow(String flowType, FlowManagementClient client) throws Exception {
 
         FlowConfig flowConfigDTO = new FlowConfig();
         flowConfigDTO.setIsEnabled(true);
-        Map<String, String> flowCompletionConfigs = new HashMap<>();
-        flowCompletionConfigs.put("isEmailVerificationEnabled", "true");
-        flowCompletionConfigs.put("isAccountLockOnCreationEnabled", "true");
-        flowConfigDTO.setFlowCompletionConfigs(flowCompletionConfigs);
-        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        if (FlowTypes.REGISTRATION.equals(flowType)) {
+            Map<String, String> flowCompletionConfigs = new HashMap<>();
+            flowCompletionConfigs.put("isEmailVerificationEnabled", "true");
+            flowCompletionConfigs.put("isAccountLockOnCreationEnabled", "true");
+            flowConfigDTO.setFlowCompletionConfigs(flowCompletionConfigs);
+        }
+        flowConfigDTO.setFlowType(flowType);
         client.updateFlowConfig(flowConfigDTO);
     }
 
@@ -97,12 +108,13 @@ public class FlowExecutionTestBase extends RESTAPIServerTestBase {
 
         FlowConfig flowConfigDTO = new FlowConfig();
         flowConfigDTO.setIsEnabled(false);
-        flowConfigDTO.setFlowType(FlowTypes.REGISTRATION);
+        flowConfigDTO.setFlowType(flowType);
         client.updateFlowConfig(flowConfigDTO);
     }
 
     protected static class FlowTypes {
 
         public static final String REGISTRATION = "REGISTRATION";
+        public static final String PROFILE_UPDATE = "PROFILE_UPDATE";
     }
 }
