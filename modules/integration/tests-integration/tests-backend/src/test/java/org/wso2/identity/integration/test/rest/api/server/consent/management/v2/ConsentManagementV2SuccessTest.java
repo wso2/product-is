@@ -18,11 +18,9 @@
 
 package org.wso2.identity.integration.test.rest.api.server.consent.management.v2;
 
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
-import static io.restassured.RestAssured.given;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
@@ -124,8 +122,8 @@ public class ConsentManagementV2SuccessTest extends ConsentManagementV2TestBase 
     @Override
     public void testConclude() throws Exception {
 
-        // @AfterMethod resets RestAssured.basePath; restore it so cleanup requests hit the right endpoints.
-        RestAssured.basePath = basePath;
+        // @AfterMethod resets requestBasePath; restore it so cleanup requests hit the right endpoints.
+        requestBasePath = basePath;
         try {
             if (scim2RestClient != null && testUserId != null) {
                 scim2RestClient.deleteUser(testUserId);

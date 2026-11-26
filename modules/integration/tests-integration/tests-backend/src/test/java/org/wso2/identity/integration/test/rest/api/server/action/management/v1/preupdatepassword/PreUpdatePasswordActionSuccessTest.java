@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdatepassword;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.*;
@@ -67,7 +66,7 @@ public class PreUpdatePasswordActionSuccessTest extends PreUpdatePasswordTestBas
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @Test

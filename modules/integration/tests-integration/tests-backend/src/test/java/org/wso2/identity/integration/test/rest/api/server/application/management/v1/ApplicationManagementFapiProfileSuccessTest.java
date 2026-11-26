@@ -35,7 +35,6 @@ import static org.wso2.identity.integration.test.rest.api.server.application.man
 import org.wso2.identity.integration.test.rest.api.server.configs.v1.ConfigTestBase;
 
 import io.restassured.RestAssured;
-import static io.restassured.RestAssured.given;
 import io.restassured.config.EncoderConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -105,7 +104,7 @@ public class ApplicationManagementFapiProfileSuccessTest extends ApplicationMana
             .assertThat()
             .statusCode(HttpStatus.SC_OK);
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         deleteAppIfPresent(fapi1AppId);
         deleteAppIfPresent(fapi2AppId);
         deleteAppIfPresent(legacyFapiAppId);

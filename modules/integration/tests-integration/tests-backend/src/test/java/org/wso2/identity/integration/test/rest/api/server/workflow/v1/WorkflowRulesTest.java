@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.workflow.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -92,7 +91,7 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
     public void init() throws Exception {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         scim2RestClient = new SCIM2RestClient(serverURL, tenantInfo);
         cleanupWorkflowByName("User Approval Workflow");
 

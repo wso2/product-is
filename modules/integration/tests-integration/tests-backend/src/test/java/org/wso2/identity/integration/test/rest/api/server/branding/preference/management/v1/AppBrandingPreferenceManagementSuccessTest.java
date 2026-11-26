@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -435,7 +434,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL1OrgBrandingAddition"})
     public void testAddL1AppBrandingPreference() throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         String body = readResource(ADD_L1_APP_BRANDING_RESOURCE_FILE)
                 .replace(APP_ID_PLACEHOLDER, level1AppId);
         Response response = getResponseOfPostWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH, body,
@@ -488,7 +487,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL1AppBrandingAddition"})
     public void testUpdateUnpublishedL1AppBrandingPreference() throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         String body = readResource(UPDATE_L1_APP_BRANDING_RESOURCE_FILE)
                 .replace(APP_ID_PLACEHOLDER, level1AppId);
         Response response = getResponseOfPutWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH, body,
@@ -586,7 +585,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2OrgBrandingAddition"})
     public void testAddL2AppBrandingPreference() throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         String body = readResource(ADD_L2_APP_BRANDING_RESOURCE_FILE)
                 .replace(APP_ID_PLACEHOLDER, level2AppId);
         Response response = getResponseOfPostWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH, body,
@@ -624,7 +623,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2AppBrandingAddition"})
     public void testUpdateUnpublishedL2AppBrandingPreference() throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         String body = readResource(UPDATE_L2_APP_BRANDING_RESOURCE_FILE)
                 .replace(APP_ID_PLACEHOLDER, level2AppId);
         Response response = getResponseOfPutWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH, body,
@@ -675,7 +674,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingRestrictedToPublishedAfterL2AppBrandingUpdate"})
     public void testDeleteL2AppBrandingPreference() throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         Response response = getResponseOfDeleteWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH +
                 String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM, APPLICATION_TYPE, level2AppId,
                         DEFAULT_LOCALE), orgMgtRestClient.switchM2MToken(level2OrgId));
@@ -721,7 +720,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @Test(dependsOnMethods = {"testResolveL2AppBrandingAfterL2OrgBrandingDelete"})
     public void testDeleteL1AppBrandingPreference() throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         Response response = getResponseOfDeleteWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH +
                 String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM, APPLICATION_TYPE, level1AppId,
                         DEFAULT_LOCALE), orgMgtRestClient.switchM2MToken(level1OrgId));
@@ -928,7 +927,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
 
     private void addOrgBrandingPreference(String orgId, String orgBrandingRequestBodyFile) throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         String body = readResource(orgBrandingRequestBodyFile)
                 .replace(ORG_NAME_PLACEHOLDER, orgId);
         Response response = getResponseOfPostWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH, body,
@@ -953,7 +952,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
 
     private void deleteOrgBrandingPreference(String orgId) throws Exception {
 
-        RestAssured.basePath = buildTenantedBasePathForOrg(tenant);
+        requestBasePath = buildTenantedBasePathForOrg(tenant);
         Response response = getResponseOfDeleteWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH + String.format
                         (PREFERENCE_COMPONENT_WITH_QUERY_PARAM, ORGANIZATION_TYPE, orgId, DEFAULT_LOCALE),
                 orgMgtRestClient.switchM2MToken(orgId));
@@ -966,7 +965,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     private Response getResolvedAppBrandingInOrg(String orgId, String appId)
             throws Exception {
 
-        RestAssured.basePath = PATH_SEPARATOR + ORGANIZATION_PATH + orgId + PATH_SEPARATOR + API_SERVER_BASE_PATH;
+        requestBasePath = PATH_SEPARATOR + ORGANIZATION_PATH + orgId + PATH_SEPARATOR + API_SERVER_BASE_PATH;
         return getResponseOfGetWithOAuth2(BRANDING_PREFERENCE_RESOLVE_PATH +
                 String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM, APPLICATION_TYPE, appId,
                         DEFAULT_LOCALE), orgMgtRestClient.switchM2MToken(orgId));
@@ -975,7 +974,7 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     private Response getResolvedAppBrandingRestrictedToPublishedInOrg(String orgId, String appId)
             throws Exception {
 
-        RestAssured.basePath = PATH_SEPARATOR + ORGANIZATION_PATH + orgId + PATH_SEPARATOR + API_SERVER_BASE_PATH;
+        requestBasePath = PATH_SEPARATOR + ORGANIZATION_PATH + orgId + PATH_SEPARATOR + API_SERVER_BASE_PATH;
         return getResponseOfGetWithOAuth2(BRANDING_PREFERENCE_RESOLVE_PATH +
                 String.format(PREFERENCE_COMPONENT_WITH_QUERY_PARAM + AMPERSAND + RESTRICTED_TO_PUBLISHED_QUERY_PARAM,
                         APPLICATION_TYPE, appId, DEFAULT_LOCALE, TRUE), orgMgtRestClient.switchM2MToken(orgId));
