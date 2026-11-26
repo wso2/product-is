@@ -33,7 +33,7 @@ import java.io.IOException;
 public class UserStoreFailureTest extends UserStoreTestBase {
 
     private static final String INVALID_DOMAIN_ID = "SkRCQy0x";
-    private static final String INCORRECT_DOMAIN_ID = "SkRCQy1OT05F";
+    private static final String INCORRECT_DOMAIN_ID = "SkRCQy0z";
 
     private static final String INCORRECT_TYPE_ID = "WSDFGHBCVNMLKI";
 
@@ -112,7 +112,7 @@ public class UserStoreFailureTest extends UserStoreTestBase {
     @Test
     public void testUpdateUserStoreByIdNegativeCase() throws IOException {
 
-        String body = readResource("user-store-update-non-existing.json");
+        String body = readResource("user-store-add-secondary-user-store.json");
         Response response = getResponseOfPut(USER_STORE_PATH_COMPONENT + PATH_SEPARATOR +
                 INCORRECT_DOMAIN_ID, body);
         validateErrorResponse(response, HttpStatus.SC_NOT_FOUND, "SUS-60001");

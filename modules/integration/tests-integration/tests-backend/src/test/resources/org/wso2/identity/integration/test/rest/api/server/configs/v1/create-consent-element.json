@@ -1,5 +1,5 @@
 {
-  "name": "consent_purposes_email_address",
+  "name": "email_address",
   "displayName": "Email Address",
   "description": "User email for consent"
 }
