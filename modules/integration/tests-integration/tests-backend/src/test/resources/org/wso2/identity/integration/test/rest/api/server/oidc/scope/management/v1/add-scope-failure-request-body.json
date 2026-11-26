@@ -1,0 +1,9 @@
+{
+  "name": "scope-failure-one",
+  "displayName": "Scope failure one",
+  "description": "Sample scope one",
+  "claims": [
+    "address",
+    "email"
+  ]
+}
