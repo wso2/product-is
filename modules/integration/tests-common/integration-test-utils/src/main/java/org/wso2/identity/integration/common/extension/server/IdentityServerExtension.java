@@ -39,6 +39,17 @@ public class IdentityServerExtension extends CarbonServerExtension {
 
     private static final String BACKUP_TEST_PACK = "backup-test-pack";
     private static final String BACKUP_LOCATION = "backup-location";
+    /**
+     * carbon.home of an IS server that is already running. When set, this test JVM attaches to that server
+     * instead of starting (and later stopping) its own, so several test lanes can share one server.
+     */
+    public static final String ATTACH_CARBON_HOME = "lane.attach.carbonHome";
+
+    /** Whether this test JVM attaches to a server another JVM owns. */
+    public static boolean isAttached() {
+
+        return StringUtils.isNotEmpty(System.getProperty(ATTACH_CARBON_HOME));
+    }
 
     @Override
     public void initiate() {
@@ -53,12 +64,21 @@ public class IdentityServerExtension extends CarbonServerExtension {
 
         // We have to override this method since this class is loaded by reflection and "getDeclaredMethod()" is used to
         // call this method. "getDeclaredMethod()" does not go through inheritance hierarchy.
+        if (isAttached()) {
+            System.setProperty(ExtensionConstants.CARBON_HOME, System.getProperty(ATTACH_CARBON_HOME));
+            log.info("Attaching to the running IS server at {}", System.getProperty(ATTACH_CARBON_HOME));
+            return;
+        }
         super.onExecutionStart();
     }
 
     @Override
     public void onExecutionFinish() {
 
+        if (isAttached()) {
+            // The JVM that started the server stops it.
+            return;
+        }
         Map<String, String> testParameters = getParameters();
 
         if (testParameters.containsKey(BACKUP_TEST_PACK)

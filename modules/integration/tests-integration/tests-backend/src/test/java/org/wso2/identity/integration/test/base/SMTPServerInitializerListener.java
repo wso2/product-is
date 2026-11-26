@@ -34,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import org.wso2.identity.integration.common.extension.server.IdentityServerExtension;
 
 /**
  * Listener that will start and stop mock SMTP server for the tests in the test suite.
@@ -46,6 +47,10 @@ public class SMTPServerInitializerListener implements IExecutionListener {
     @Override
     public void onExecutionStart() {
 
+        if (IdentityServerExtension.isAttached()) {
+            // The shared IS server sends mail to its owner's mail server.
+            return;
+        }
         try {
             AutomationContext context = new AutomationContext();
             String smtpUsername = context.getConfigurationValue("//emailSenderConfigs/username");

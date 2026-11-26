@@ -28,6 +28,7 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.extension.server.IdentityServerExtension;
 
 /**
  * Test class that will start and stop external ldap server for the tests in the test suite.
@@ -43,6 +44,10 @@ public class LDAPServerInitializerTestCase extends ISIntegrationTest {
     @BeforeSuite(alwaysRun = true)
     public void initTest() throws Exception {
 
+        if (IdentityServerExtension.isAttached()) {
+            LOG.info("Attached to a shared IS server: its owner runs the external LDAP.");
+            return;
+        }
         try {
             File workDir = new File(workingDirectoryPath);
             if (workDir.exists()) {
@@ -62,6 +67,10 @@ public class LDAPServerInitializerTestCase extends ISIntegrationTest {
 
     @AfterSuite(alwaysRun = true)
     public void tearDownTest() throws Exception {
+
+        if (IdentityServerExtension.isAttached()) {
+            return;
+        }
 
         try {
             ldapServer.stopServer();

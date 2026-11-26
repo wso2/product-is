@@ -313,7 +313,8 @@ public final class TestLaneRunner {
         Map<String, String> values = new LinkedHashMap<>();
         for (String key : ports.stringPropertyNames()) {
             String value = ports.getProperty(key).trim();
-            values.put(key, key.startsWith("port.") ? String.valueOf(Integer.parseInt(value) + lane.shift) : value);
+            int shift = "port.tomcat".equals(key) ? lane.shift : lane.serverShift;
+            values.put(key, key.startsWith("port.") ? String.valueOf(Integer.parseInt(value) + shift) : value);
         }
         if (lane.tenant != null) {
             values.put("lane.tenant", lane.tenant);
@@ -341,17 +342,18 @@ public final class TestLaneRunner {
 
         // The sample web apps are built once with the default ports; give shifted lanes their own copies.
         Path samples = testClassesDir.resolve("samples");
-        if (lane.shift != 0 && Files.isDirectory(samples)) {
+        if ((lane.shift != 0 || lane.serverShift != 0) && Files.isDirectory(samples)) {
             Files.createDirectories(lane.resources.resolve("samples"));
             try (Stream<Path> wars = Files.list(samples)) {
                 for (Path war : (Iterable<Path>) wars.filter(p -> p.toString().endsWith(".war"))::iterator) {
-                    shiftWarPorts(war, lane.resources.resolve("samples").resolve(war.getFileName()), lane.shift);
+                    shiftWarPorts(war, lane.resources.resolve("samples").resolve(war.getFileName()), lane.serverShift,
+                            lane.shift);
                 }
             }
         }
     }
 
-    private static void shiftWarPorts(Path in, Path out, int shift) throws IOException {
+    private static void shiftWarPorts(Path in, Path out, int serverShift, int tomcatShift) throws IOException {
 
         String alternatives = Arrays.stream(SAMPLE_APP_PORTS).mapToObj(String::valueOf)
                 .collect(Collectors.joining("|"));
@@ -366,7 +368,9 @@ public final class TestLaneRunner {
                         Matcher m = port.matcher(text);
                         StringBuffer sb = new StringBuffer();
                         while (m.find()) {
-                            m.appendReplacement(sb, String.valueOf(Integer.parseInt(m.group(1)) + shift));
+                            int found = Integer.parseInt(m.group(1));
+                            int shift = found == TestPorts.TOMCAT ? tomcatShift : serverShift;
+                            m.appendReplacement(sb, String.valueOf(found + shift));
                         }
                         m.appendTail(sb);
                         data = sb.toString().getBytes(StandardCharsets.UTF_8);
@@ -559,7 +563,10 @@ public final class TestLaneRunner {
     private final class Lane {
 
         final String name;
+        /** Shift of the ports of servers this lane's JVM starts (Tomcat, mocks). */
         final int shift;
+        /** Shift of the IS server's ports; differs from shift only when the lane shares a server. */
+        int serverShift;
         final List<String> blocks;
         /** Tenant for this lane's tenant-mode tests; null for the default (wso2.com). */
         String tenant;
@@ -577,6 +584,7 @@ public final class TestLaneRunner {
 
             this.name = name;
             this.shift = shift;
+            this.serverShift = shift;
             this.blocks = blocks;
             this.dir = workDir.resolve(name);
             this.resources = dir.resolve("src/test/resources");
@@ -599,6 +607,7 @@ public final class TestLaneRunner {
             cmd.add("-Dbasedir=" + dir);
             cmd.add("-Dframework.resource.location=" + resources + File.separator);
             cmd.add("-Dlane.port.shift=" + shift);
+            cmd.add("-Dlane.server.port.shift=" + serverShift);
             if (tenant != null) {
                 cmd.add("-Dlane.tenant=" + tenant);
             }
