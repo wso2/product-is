@@ -83,7 +83,7 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     private static final String EMAIL_TYPE_HOME_CLAIM_VALUE = "scim2usertestuser@gmail.com";
     // The user names are unique to this class because the SCIM2 test classes run in parallel.
     public static final String USERNAME = "scim2usertestuser";
-    public static final String USERNAME_1 = "scim2usertestuser1";
+    public static final String USERNAME_1 = "scim2charsetuser";
     public static final String PASSWORD = "Wso2@test";
     private ClaimMetadataManagementServiceClient claimMetadataManagementServiceClient = null;
     private String backendURL;
