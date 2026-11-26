@@ -82,6 +82,7 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for the graceful refresh token rotation feature.
@@ -136,7 +137,7 @@ public class GracefulRefreshTokenRotationTestCase extends OAuth2ServiceAbstractI
     @DataProvider
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

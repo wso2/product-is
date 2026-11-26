@@ -57,6 +57,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests pre-issue access token action failure scenarios driven by an unhealthy / non-conformant
@@ -93,7 +94,7 @@ public class PreIssueAccessTokenActionFailureClientCredentialAuthTestCase extend
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(401, "Unauthorized"),
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
                 {TestUserMode.SUPER_TENANT_USER,
@@ -106,7 +107,7 @@ public class PreIssueAccessTokenActionFailureClientCredentialAuthTestCase extend
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
                 {TestUserMode.TENANT_USER, new ActionResponse(200, "not-json"),
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

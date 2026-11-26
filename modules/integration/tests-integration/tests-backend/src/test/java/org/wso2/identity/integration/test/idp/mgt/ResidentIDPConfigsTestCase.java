@@ -38,6 +38,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import java.util.HashMap;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This test class is to test the resident IDP config URLs in super tenant legacy URL mode and tenant legacy URL mode.
@@ -56,10 +57,10 @@ public class ResidentIDPConfigsTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "configProvider")

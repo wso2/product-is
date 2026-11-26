@@ -29,6 +29,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class UserDiscoverableApplicationFailureTest extends UserDiscoverableApplicationServiceTestBase {
 
@@ -46,10 +47,10 @@ public class UserDiscoverableApplicationFailureTest extends UserDiscoverableAppl
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

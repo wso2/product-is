@@ -43,6 +43,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for Server Configuration Management REST APIs success paths.
@@ -86,10 +87,10 @@ public class ConfigSuccessTest extends ConfigTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

@@ -26,6 +26,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import java.rmi.RemoteException;
 import java.util.Base64;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test REST API for managing an specific user's challenge question answers
@@ -50,9 +51,9 @@ public class UserSuccessTest extends UserMeSuccessTest {
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 }

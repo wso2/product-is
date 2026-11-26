@@ -52,6 +52,7 @@ import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for Identity Provider Management REST APIs success paths.
@@ -173,10 +174,10 @@ public class IdPSuccessTest extends IdPTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

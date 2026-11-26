@@ -35,6 +35,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test REST API for managing logged in user's challenge question answers
@@ -77,10 +78,10 @@ public class UserMeSuccessTest extends UserChallengeTestBase {
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

@@ -66,6 +66,7 @@ import static org.wso2.identity.integration.test.utils.CommonConstants.IS_DEFAUL
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class to test the conditional authentication support using Javascript feature.
@@ -103,7 +104,7 @@ public class ConditionalAuthenticationTestCase extends AbstractAdaptiveAuthentic
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

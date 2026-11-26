@@ -43,6 +43,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for the Email Templates REST API success path.
@@ -116,10 +117,10 @@ public class EmailTemplatesPositiveTest extends EmailTemplatesTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     // Get all default email template types from the API and match.

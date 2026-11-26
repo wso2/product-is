@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class tests Analytics login data publish handling and Analytics session data publish handling functionalities.
@@ -138,10 +139,10 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
 
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
-        return new SAMLConfig[][]{
+        return LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
-        };
+        });
     }
 
     @Test(description = "Add service provider", groups = "wso2.is", priority = 1)

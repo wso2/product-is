@@ -69,6 +69,7 @@ import java.util.Map;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -105,10 +106,10 @@ public class OAuth2DeviceFlowTestCase extends OAuth2ServiceAbstractIntegrationTe
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_USER, TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "configProvider")

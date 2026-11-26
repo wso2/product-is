@@ -99,6 +99,7 @@ import static org.wso2.identity.integration.test.rest.api.server.user.sharing.ma
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v2.model.SelectiveShareOrgDetails.PolicyEnum.SELECTED_ORG_ONLY;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v2.model.SelectiveShareOrgDetails.PolicyEnum.SELECTED_ORG_WITH_ALL_EXISTING_AND_FUTURE_CHILDREN;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v2.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_AND_FUTURE_ORGS;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for the V2 User Sharing REST API — success cases.
@@ -188,10 +189,10 @@ public class UserSharingSuccessTest extends UserSharingBaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     // =========================================================================

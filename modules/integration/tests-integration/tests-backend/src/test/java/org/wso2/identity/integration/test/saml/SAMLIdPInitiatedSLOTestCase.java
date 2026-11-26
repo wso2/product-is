@@ -41,6 +41,7 @@ import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import java.io.File;
 import java.rmi.RemoteException;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This test class tests SAML IdP initiated SLO functionality for two SAML applications. Since logout requests are sent
@@ -82,12 +83,12 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
 
-        return new SAMLConfig[][]{
+        return LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
                         ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING),
                         new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_POST,
                                 ClaimType.LOCAL, App.SUPER_TENANT_APP_WITHOUT_SIGNING)},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

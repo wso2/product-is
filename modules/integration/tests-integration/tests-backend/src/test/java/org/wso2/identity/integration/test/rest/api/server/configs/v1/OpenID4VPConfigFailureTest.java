@@ -47,6 +47,7 @@ import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for OpenID4VP Configuration REST APIs failure paths.
@@ -137,10 +138,10 @@ public class OpenID4VPConfigFailureTest extends OpenID4VPConfigTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

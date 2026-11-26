@@ -40,6 +40,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
@@ -59,10 +60,10 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
-        return new SAMLConfig[][]{
+        return LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_SOAP,
                         ClaimType.LOCAL, App.ECP_APP)},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

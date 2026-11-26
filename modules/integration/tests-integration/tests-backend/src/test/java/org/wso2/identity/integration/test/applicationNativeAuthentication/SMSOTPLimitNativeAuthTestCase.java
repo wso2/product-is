@@ -43,6 +43,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.FLOW_STATUS;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.INCOMPLETE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.SUCCESS_COMPLETED;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests that validate SMS-OTP retry and resend limit enforcement via
@@ -70,10 +71,10 @@ public class SMSOTPLimitNativeAuthTestCase extends AbstractOTPLimitNativeAuthTes
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

@@ -18,6 +18,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.isA;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1
         .Constants.ATTRIBUTE_DISPLAY_NAME;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1
@@ -74,10 +75,10 @@ public class NotificationTypesPositiveTest extends NotificationTemplatesTestBase
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @DataProvider(name = "notificationChannelDataProvider")

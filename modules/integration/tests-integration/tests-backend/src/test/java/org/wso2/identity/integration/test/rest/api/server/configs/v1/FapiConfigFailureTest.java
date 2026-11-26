@@ -37,6 +37,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for error paths of the tenant FAPI configuration API (GET/PUT /configs/fapi).
@@ -81,10 +82,10 @@ public class FapiConfigFailureTest extends ConfigTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     // Group 2: Tenant FAPI Config — Error Paths

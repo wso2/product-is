@@ -34,6 +34,7 @@ import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTe
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class ActionTestBase extends RESTAPIServerTestBase {
 
@@ -122,10 +123,10 @@ public class ActionTestBase extends RESTAPIServerTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     /**

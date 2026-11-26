@@ -62,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.*;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This test class tests OIDC SSO functionality for two replying party applications.
@@ -72,10 +73,10 @@ public class OIDCFrontChannelLogout extends OIDCAbstractIntegrationTest {
 
     @DataProvider(name = "oidcConfigProvider")
     public static Object[][] oidcConfigProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "oidcConfigProvider")

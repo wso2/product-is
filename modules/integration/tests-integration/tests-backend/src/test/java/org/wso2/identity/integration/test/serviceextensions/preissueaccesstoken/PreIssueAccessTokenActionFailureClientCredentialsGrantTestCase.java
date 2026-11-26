@@ -56,6 +56,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests the pre-issue access token action failure scenarios with password grant type.
@@ -89,7 +90,7 @@ public class PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase exte
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(200,
                         FileUtils.readFileInClassPathAsString("actions/response/incomplete-response.json")),
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
@@ -104,7 +105,7 @@ public class PreIssueAccessTokenActionFailureClientCredentialsGrantTestCase exte
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
                 {TestUserMode.TENANT_USER, new ActionResponse(401, "Unauthorized"),
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

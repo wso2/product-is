@@ -42,6 +42,7 @@ import java.io.InputStreamReader;
 
 import static org.testng.Assert.assertEquals;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * OAuth2 DCRM API Create process test case
@@ -70,10 +71,10 @@ public class UserInfoExportTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "userInfoExportConfigProvider")
     public static Object[][] userInfoExportConfigProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

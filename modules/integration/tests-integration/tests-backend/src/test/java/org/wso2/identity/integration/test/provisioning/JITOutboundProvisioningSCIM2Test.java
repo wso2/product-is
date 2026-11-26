@@ -142,6 +142,7 @@ import static org.wso2.identity.integration.test.provisioning.OutboundProvisioni
 import static org.wso2.identity.integration.test.provisioning.OutboundProvisioningTestUtils.getProvisionedUserId;
 import static org.wso2.identity.integration.test.provisioning.OutboundProvisioningTestUtils.waitForProvisionedUser;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for outbound provisioning triggered through JIT provisioning.
@@ -223,7 +224,7 @@ public class JITOutboundProvisioningSCIM2Test extends AbstractIdentityFederation
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

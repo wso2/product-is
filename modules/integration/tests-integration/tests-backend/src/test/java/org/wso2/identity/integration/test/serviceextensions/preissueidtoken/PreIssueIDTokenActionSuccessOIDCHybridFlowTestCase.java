@@ -87,6 +87,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test class for testing the pre issue ID token flow with OIDC Hybrid flow.
@@ -139,12 +140,12 @@ public class PreIssueIDTokenActionSuccessOIDCHybridFlowTestCase extends ActionsB
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, RESPONSE_TYPE_CODE_ID_TOKEN},
                 {TestUserMode.SUPER_TENANT_USER, RESPONSE_TYPE_CODE_ID_TOKEN_TOKEN},
                 {TestUserMode.TENANT_USER, RESPONSE_TYPE_CODE_ID_TOKEN},
                 {TestUserMode.TENANT_USER, RESPONSE_TYPE_CODE_ID_TOKEN_TOKEN}
-        };
+        });
     }
 
     /**

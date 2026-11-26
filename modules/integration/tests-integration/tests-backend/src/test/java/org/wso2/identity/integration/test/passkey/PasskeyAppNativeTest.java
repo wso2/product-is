@@ -46,6 +46,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * App-native authentication integration tests for passkey flows.
@@ -87,10 +88,10 @@ public class PasskeyAppNativeTest extends PasskeyTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

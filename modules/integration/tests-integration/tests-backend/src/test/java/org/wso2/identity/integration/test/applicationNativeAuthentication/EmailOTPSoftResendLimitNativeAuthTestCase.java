@@ -47,6 +47,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.MESSAGE_ID;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.NEXT_STEP;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.SUCCESS_COMPLETED;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for Email-OTP where Soft resend limits are enforced via adaptive auth script.
@@ -69,10 +70,10 @@ public class EmailOTPSoftResendLimitNativeAuthTestCase extends AbstractOTPLimitN
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

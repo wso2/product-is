@@ -64,6 +64,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for the enableJwtScopeAsArray configuration.
@@ -99,10 +100,10 @@ public class JwtAccessTokenScopeAsArrayTestCase extends OAuth2ServiceAbstractInt
     @DataProvider(name = "userModeConfigProvider")
     public static Object[][] userModeConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "userModeConfigProvider")

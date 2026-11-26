@@ -61,6 +61,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertNotNull;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class tests the role management events triggered by the admin user via the SCIM2 v2 Roles API.
@@ -143,10 +144,10 @@ public class AdminInitRoleManagementEventTestCase extends ISIntegrationTest {
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

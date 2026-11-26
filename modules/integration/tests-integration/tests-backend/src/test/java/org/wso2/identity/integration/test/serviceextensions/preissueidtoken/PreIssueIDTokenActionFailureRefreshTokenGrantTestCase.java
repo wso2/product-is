@@ -72,6 +72,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOK
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class tests the pre issue ID token action failure scenarios with refresh token grant type.
@@ -111,7 +112,7 @@ public class PreIssueIDTokenActionFailureRefreshTokenGrantTestCase extends Actio
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(200,
                         FileUtils.readFileInClassPathAsString("actions/response/incomplete-response.json")),
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
@@ -126,7 +127,7 @@ public class PreIssueIDTokenActionFailureRefreshTokenGrantTestCase extends Actio
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
                 {TestUserMode.TENANT_USER, new ActionResponse(401, "Unauthorized"),
                         new ExpectedTokenResponse(500, "server_error", "Internal Server Error.")},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

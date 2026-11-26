@@ -76,6 +76,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_U
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.HTTP_RESPONSE_HEADER_LOCATION;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for the enhanced org authentication (for B2B SaaS apps) covering the direct authentication path.
@@ -111,9 +112,9 @@ public class EnhancedOrgAuthenticationDirectPathTestCase extends OAuth2ServiceAb
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN, "eoa_direct_sub_org", "eoa_direct_sub_org"},
-                {TestUserMode.TENANT_ADMIN, "eoa_direct_t_sub_org", "eoa_direct_t_sub_org"}};
+                {TestUserMode.TENANT_ADMIN, "eoa_direct_t_sub_org", "eoa_direct_t_sub_org"}});
     }
 
     @Factory(dataProvider = "configProvider")

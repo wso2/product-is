@@ -73,6 +73,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest {
 
@@ -124,10 +125,10 @@ public class ChallengeQuestionPostAuthnHandlerTestCase extends ISIntegrationTest
 
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
-        return new SAMLConfig[][]{
+        return LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

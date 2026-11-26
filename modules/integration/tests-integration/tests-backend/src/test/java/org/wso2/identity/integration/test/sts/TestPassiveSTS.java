@@ -53,6 +53,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class TestPassiveSTS extends ISIntegrationTest {
 
@@ -84,10 +85,10 @@ public class TestPassiveSTS extends ISIntegrationTest {
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.TENANT_ADMIN},
                 {TestUserMode.SUPER_TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "configProvider")

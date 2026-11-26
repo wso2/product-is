@@ -30,6 +30,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 
 import java.io.IOException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class CertificateValidationTestBase extends RESTAPIServerTestBase {
 
@@ -77,10 +78,10 @@ public class CertificateValidationTestBase extends RESTAPIServerTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     /**

@@ -41,6 +41,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class SCIMComplexMultiAttributeUserTestCase extends ISIntegrationTest {
 
@@ -95,10 +96,10 @@ public class SCIMComplexMultiAttributeUserTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "scimComplexMultiAttributeUserConfigProvider")
     public static Object[][] scimComplexMultiAttributeUserConfigProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

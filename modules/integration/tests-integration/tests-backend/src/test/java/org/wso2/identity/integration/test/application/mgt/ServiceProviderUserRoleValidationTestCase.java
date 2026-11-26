@@ -40,6 +40,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This test ensures that the service provider count is maintained properly for a given user so that there would be no
@@ -70,10 +71,10 @@ public class ServiceProviderUserRoleValidationTestCase extends ISIntegrationTest
     @DataProvider
     public static Object[][] roleValidationPropertyData() {
 
-        return new Object[][] {
+        return LaneUserModes.filter(new Object[][] {
                 {false},
                 {true}
-        };
+        });
     }
 
     @Factory(dataProvider = "roleValidationPropertyData")

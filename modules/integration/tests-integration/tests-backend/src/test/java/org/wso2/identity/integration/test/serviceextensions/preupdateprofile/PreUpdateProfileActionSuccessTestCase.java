@@ -52,6 +52,7 @@ import static org.testng.Assert.assertNull;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test class for testing the pre update profile action execution.
@@ -84,10 +85,10 @@ public class PreUpdateProfileActionSuccessTestCase extends PreUpdateProfileActio
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

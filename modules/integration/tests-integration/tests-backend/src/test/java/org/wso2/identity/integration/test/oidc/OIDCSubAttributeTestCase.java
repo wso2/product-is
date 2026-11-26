@@ -78,6 +78,7 @@ import org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegratio
 import org.wso2.identity.integration.test.utils.DataExtractUtil;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import org.wso2.identity.integration.test.utils.UserUtil;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test cases for sub attribute of the OIDC responses (id_token and JWT access token).
@@ -108,12 +109,12 @@ public class OIDCSubAttributeTestCase extends OAuth2ServiceAbstractIntegrationTe
 
     @DataProvider(name = "subAttributeTypeProvider")
     public static Object[][] subAttributeTypeProvider() {
-        return new Object[][] {
+        return LaneUserModes.filter(new Object[][] {
                 {true, "Default"},
                 {false, "Default"},
                 {true, "JWT"},
                 {false, "JWT"},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

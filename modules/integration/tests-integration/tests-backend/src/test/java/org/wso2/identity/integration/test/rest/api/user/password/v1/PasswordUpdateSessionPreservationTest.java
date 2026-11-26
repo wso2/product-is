@@ -32,6 +32,7 @@ import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for verifying session/token behavior after password change based on the
@@ -48,7 +49,7 @@ public class PasswordUpdateSessionPreservationTest extends PasswordUpdateTestBas
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     private static final String SUPER_ORG_USER = "sessionTestUser";

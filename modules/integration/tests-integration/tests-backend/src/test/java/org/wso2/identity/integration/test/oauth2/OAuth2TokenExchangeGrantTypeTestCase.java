@@ -73,6 +73,7 @@ import java.util.Set;
 
 import static org.wso2.identity.integration.test.oauth2.OAuth2ServiceAbstractIntegrationTest.OIDC;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFederationTestCase {
 
@@ -109,7 +110,7 @@ public class OAuth2TokenExchangeGrantTypeTestCase extends AbstractIdentityFedera
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

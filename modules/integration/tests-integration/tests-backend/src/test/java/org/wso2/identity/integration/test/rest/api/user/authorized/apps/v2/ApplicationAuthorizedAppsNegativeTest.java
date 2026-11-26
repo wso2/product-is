@@ -32,6 +32,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.rmi.RemoteException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for authorized apps application REST APIs failure paths.
@@ -62,10 +63,10 @@ public class ApplicationAuthorizedAppsNegativeTest extends UserAuthorizedAppsBas
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

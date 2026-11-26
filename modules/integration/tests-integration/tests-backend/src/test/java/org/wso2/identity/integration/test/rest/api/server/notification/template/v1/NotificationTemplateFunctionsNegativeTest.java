@@ -27,6 +27,7 @@ import static org.wso2.identity.integration.test.rest.api.server.notification.te
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants.ERROR_DESCRIPTION_INVALID_TYPE;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants.ERROR_MESSAGE_INVALID_NOTIFICATION_CHANNEL;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants.ERROR_MESSAGE_INVALID_TYPE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1
         .Constants.PLACE_HOLDER_CHANNEL;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants
@@ -68,10 +69,10 @@ public class NotificationTemplateFunctionsNegativeTest extends NotificationTempl
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @DataProvider(name = "systemTemplateInvalidDataProvider")

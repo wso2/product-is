@@ -38,6 +38,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test REST API for managing user associations.
@@ -104,10 +105,10 @@ public class UserMeNegativeTestBase extends UserAssociationTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

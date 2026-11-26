@@ -74,6 +74,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class adds test cases for configuring email otp and login with a super tenant and a tenant user.
@@ -400,12 +401,12 @@ public class EmailOTPTestCase extends ISIntegrationTest {
     @DataProvider(name = "testConfigProvider")
     public static TestConfig[][] testConfigProvider(){
 
-        return new TestConfig[][] {
+        return LaneUserModes.filter(new TestConfig[][] {
                 {new TestConfig(TestUserMode.SUPER_TENANT_ADMIN, "testuser1", "Wso2@test1",
                 "carbon.super", "testuser1", "testuser1@abc.com", "travelocity.com")},
                 {new TestConfig(TestUserMode.TENANT_ADMIN, "testuser2@wso2.com", "Wso2@test2",
                         "wso2.com", "testuser2", "testuser2@abc.com", "travelocity.com-saml-tenantwithoutsigning")}
-        };
+        });
     }
 
     private static class TestConfig {

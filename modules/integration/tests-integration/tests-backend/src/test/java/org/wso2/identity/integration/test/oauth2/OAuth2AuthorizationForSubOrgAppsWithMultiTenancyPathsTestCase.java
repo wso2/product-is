@@ -112,6 +112,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZAT
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.BASIC_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Holds the integration tests for sub organization application authorizations when a sub organization behaves as
@@ -183,9 +184,9 @@ public class OAuth2AuthorizationForSubOrgAppsWithMultiTenancyPathsTestCase exten
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN, "sub004", "sub004"},
-                {TestUserMode.TENANT_ADMIN, "sub003", "sub003"}};
+                {TestUserMode.TENANT_ADMIN, "sub003", "sub003"}});
     }
 
     @Factory(dataProvider = "configProvider")

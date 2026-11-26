@@ -63,6 +63,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.wso2.carbon.automation.engine.context.TestUserMode.SUPER_TENANT_ADMIN;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
 
@@ -137,9 +138,9 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {SUPER_TENANT_ADMIN},
-        };
+        });
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

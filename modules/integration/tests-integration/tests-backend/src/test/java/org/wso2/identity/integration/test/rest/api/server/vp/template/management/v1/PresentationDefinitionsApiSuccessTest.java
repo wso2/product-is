@@ -48,6 +48,7 @@ import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for Presentation Definition REST API success paths.
@@ -102,10 +103,10 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

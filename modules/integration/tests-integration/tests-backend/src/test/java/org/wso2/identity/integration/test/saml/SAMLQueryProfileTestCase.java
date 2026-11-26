@@ -59,6 +59,7 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.util.Utils.requestMissingClaims;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test case of SAMLQuery service.
@@ -119,7 +120,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
 
-        return new SAMLConfig[][]{
+        return LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
@@ -136,7 +137,7 @@ public class SAMLQueryProfileTestCase extends AbstractSAMLSSOTestCase {
                         ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
                         ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

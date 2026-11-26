@@ -36,6 +36,7 @@ import java.util.HashMap;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for successful cases of the OIDC Scope Management REST APIs.
@@ -81,10 +82,10 @@ public class OIDCScopeManagementSuccessTest extends OIDCScopeManagementBaseTest 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

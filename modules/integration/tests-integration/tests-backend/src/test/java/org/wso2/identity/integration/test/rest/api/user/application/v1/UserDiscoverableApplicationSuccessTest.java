@@ -38,6 +38,7 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableApplicationServiceTestBase {
 
@@ -56,10 +57,10 @@ public class UserDiscoverableApplicationSuccessTest extends UserDiscoverableAppl
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

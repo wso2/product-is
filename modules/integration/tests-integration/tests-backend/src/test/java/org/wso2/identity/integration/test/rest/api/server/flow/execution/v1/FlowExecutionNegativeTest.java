@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.rest.api.server.flow.execution.v1.FlowExecutionTestBase.FlowTypes.REGISTRATION;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for Flow Execution API.
@@ -61,10 +62,10 @@ public class FlowExecutionNegativeTest extends FlowExecutionTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for successful cases of the Keystore Management REST API.
@@ -83,10 +84,10 @@ public class KeystoreManagementSuccessTest extends KeystoreManagementBaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

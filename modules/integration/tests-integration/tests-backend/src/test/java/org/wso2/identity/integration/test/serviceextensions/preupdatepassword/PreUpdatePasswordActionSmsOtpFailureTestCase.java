@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test class for testing the pre update password action failure.
@@ -95,7 +96,7 @@ public class PreUpdatePasswordActionSmsOtpFailureTestCase extends PreUpdatePassw
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws IOException, URISyntaxException {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(HttpServletResponse.SC_OK,
                         FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_BAD_REQUEST,
@@ -106,7 +107,7 @@ public class PreUpdatePasswordActionSmsOtpFailureTestCase extends PreUpdatePassw
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_BAD_REQUEST,
                                 "Some failure reason",
                                 "Some description")}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

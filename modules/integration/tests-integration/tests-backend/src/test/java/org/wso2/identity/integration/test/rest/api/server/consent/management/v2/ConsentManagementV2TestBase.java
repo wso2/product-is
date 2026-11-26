@@ -31,6 +31,7 @@ import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Base test class for Consent Management API v2 REST API tests.
@@ -107,9 +108,9 @@ public class ConsentManagementV2TestBase extends RESTTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 }

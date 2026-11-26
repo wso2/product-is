@@ -106,6 +106,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_RES
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY_CONSENT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests related to OIDC login with a custom scope.
@@ -144,10 +145,10 @@ public class OIDCCustomScopesLoginTest extends OAuth2ServiceAbstractIntegrationT
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN, TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_ADMIN, TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @Factory(dataProvider = "configProvider")

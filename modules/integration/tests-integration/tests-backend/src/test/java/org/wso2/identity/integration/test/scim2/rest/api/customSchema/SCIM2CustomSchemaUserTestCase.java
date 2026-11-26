@@ -57,6 +57,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_ENDPOINT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test cases for SCIM2 /Users api relates operations with custom schema related claims.
@@ -107,10 +108,10 @@ public class SCIM2CustomSchemaUserTestCase extends SCIM2BaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

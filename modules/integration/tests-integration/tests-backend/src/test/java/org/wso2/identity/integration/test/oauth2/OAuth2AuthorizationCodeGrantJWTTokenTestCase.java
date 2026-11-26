@@ -75,6 +75,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZAT
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.INTRO_SPEC_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -117,7 +118,7 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
                 new UserClaimConfig.Builder().localClaimUri("http://wso2.org/claims/lastname")
                         .oidcClaimUri("family_name").build();
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {new ApplicationConfig.Builder().tokenType(ApplicationConfig.TokenType.JWT)
                         .grantTypes(Arrays.asList("authorization_code", "refresh_token")).expiryTime(300)
                         .refreshTokenExpiryTime(86400)
@@ -131,7 +132,7 @@ public class OAuth2AuthorizationCodeGrantJWTTokenTestCase extends OAuth2ServiceA
                                     put(emailClaimConfig, "alice@aol.com");
                                 }}).build()}
                 //todo: add another iteration for authorized api scopes
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

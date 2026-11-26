@@ -40,6 +40,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ENDPOINT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class SCIM2SchemasTest extends SCIM2BaseTest {
 
@@ -63,10 +64,10 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

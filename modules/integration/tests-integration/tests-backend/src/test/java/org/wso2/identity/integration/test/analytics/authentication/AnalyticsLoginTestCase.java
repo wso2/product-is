@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class AnalyticsLoginTestCase extends AbstractAnalyticsLoginTestCase {
 
@@ -75,9 +76,9 @@ public class AnalyticsLoginTestCase extends AbstractAnalyticsLoginTestCase {
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider() {
 
-        return new SAMLConfig[][]{
+        return LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
-        };
+        });
     }
 }

@@ -32,6 +32,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.IOException;
 import java.util.HashMap;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for failure cases of the Keystore Management REST API.
@@ -77,10 +78,10 @@ public class KeystoreManagementFailureTest extends KeystoreManagementBaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

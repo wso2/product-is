@@ -110,6 +110,7 @@ import static org.wso2.identity.integration.test.restclients.RestBaseClient.ORGA
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.TENANT_PATH;
 import static org.wso2.identity.integration.test.restclients.RestBaseClient.USER_AGENT_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCIM2_USERS_ENDPOINT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for successful cases of the Organization Management REST APIs.
@@ -198,10 +199,10 @@ public class OrganizationManagementSuccessTest extends OrganizationManagementBas
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][] {
+        return LaneUserModes.filter(new Object[][] {
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

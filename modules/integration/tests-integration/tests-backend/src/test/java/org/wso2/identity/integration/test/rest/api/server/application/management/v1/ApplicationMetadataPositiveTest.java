@@ -47,6 +47,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for happy paths of the Application Metadata REST API.
@@ -123,7 +124,7 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @Test

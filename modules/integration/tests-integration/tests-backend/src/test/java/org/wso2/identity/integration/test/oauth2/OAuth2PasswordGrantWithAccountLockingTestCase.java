@@ -68,6 +68,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This test class is used to verify the OAuth2 password grant flow behavior when a user account is locked.
@@ -99,9 +100,9 @@ public class OAuth2PasswordGrantWithAccountLockingTestCase extends OAuth2Service
     @DataProvider
     public static Object[][] configProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "configProvider")

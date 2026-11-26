@@ -48,6 +48,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for happy paths of the authentication Management REST API.
@@ -127,10 +128,10 @@ public class AuthenticatorSuccessTest extends AuthenticatorTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

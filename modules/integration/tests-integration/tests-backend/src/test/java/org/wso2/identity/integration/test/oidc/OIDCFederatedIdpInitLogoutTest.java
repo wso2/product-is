@@ -95,6 +95,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test cases for SAML-OIDC federation scenarios.
@@ -173,7 +174,7 @@ public class OIDCFederatedIdpInitLogoutTest extends AbstractIdentityFederationTe
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import java.io.IOException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for Server CORS Management REST APIs failure paths.
@@ -49,10 +50,10 @@ public class CORSFailureTest extends CORSTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

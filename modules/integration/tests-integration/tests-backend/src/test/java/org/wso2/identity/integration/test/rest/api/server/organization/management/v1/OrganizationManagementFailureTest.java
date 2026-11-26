@@ -62,6 +62,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.carbon.identity.application.mgt.ApplicationConstants.SUPER_TENANT;
 import static org.wso2.carbon.identity.organization.management.service.constant.OrganizationManagementConstants.SUPER;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for failure cases of the Organization Management REST APIs.
@@ -138,10 +139,10 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @DataProvider(name = "organizationRequestBodies")

@@ -44,6 +44,7 @@ import java.util.List;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -57,7 +58,7 @@ public class Oauth2OPIframeTestCase extends OAuth2ServiceAbstractIntegrationTest
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

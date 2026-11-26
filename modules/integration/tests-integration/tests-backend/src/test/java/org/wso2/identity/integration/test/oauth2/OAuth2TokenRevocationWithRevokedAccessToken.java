@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This test class is used to check the behaviour of OAuth token revocation flow.
@@ -91,12 +92,12 @@ public class OAuth2TokenRevocationWithRevokedAccessToken extends OAuth2ServiceAb
     public static Object[][] oAuthConsumerApplicationProvider() {
 
         // This test will be carried out for both default and JWT access tokens
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {"Default", TestUserMode.SUPER_TENANT_ADMIN},
                 {"Default", TestUserMode.TENANT_ADMIN},
                 {"JWT", TestUserMode.SUPER_TENANT_ADMIN},
                 {"JWT", TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

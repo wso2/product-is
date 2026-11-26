@@ -35,6 +35,7 @@ import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTe
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * The main test class for permission management.
@@ -95,10 +96,10 @@ public class PermissionManagementTest extends RESTAPIServerTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

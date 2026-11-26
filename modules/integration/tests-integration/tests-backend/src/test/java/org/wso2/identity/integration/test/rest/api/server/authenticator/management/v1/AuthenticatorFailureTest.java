@@ -43,6 +43,7 @@ import org.wso2.identity.integration.test.rest.api.server.authenticator.manageme
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test authenticator failure scenarios.
@@ -98,10 +99,10 @@ public class AuthenticatorFailureTest extends AuthenticatorTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test(priority = 1)

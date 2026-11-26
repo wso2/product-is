@@ -36,6 +36,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.greaterThan;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Success-path integration tests for Agent Sharing v1 APIs.
@@ -126,10 +127,10 @@ public class AgentSharingSuccessTest extends AgentSharingBaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

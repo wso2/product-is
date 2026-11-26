@@ -63,6 +63,7 @@ import java.util.Objects;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_URL;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class contains test cases for SCIM2 Bulk Resource API.
@@ -117,9 +118,9 @@ public class SCIM2BulkResourceTestCase extends ISIntegrationTest {
     @DataProvider(name = "SCIM2MeConfigProvider")
     public static Object[][] SCIM2BulkResourceConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

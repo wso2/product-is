@@ -44,6 +44,7 @@ import static org.wso2.identity.integration.test.rest.api.server.notification.te
         .Constants.PLACE_HOLDER_CONTENT_TYPE;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants.PLACE_HOLDER_FOOTER;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants.PLACE_HOLDER_LOCALE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1
         .Constants.PLACE_HOLDER_SUBJECT;
 
@@ -88,10 +89,10 @@ public class NotificationEmailTemplatesPositiveTest extends NotificationTemplate
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @DataProvider(name = "emailTemplateDataProvider")

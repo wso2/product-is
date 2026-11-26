@@ -79,6 +79,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZAT
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.INTRO_SPEC_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests the pre-issue access token action success scenarios with refresh token grant type.
@@ -118,10 +119,10 @@ public class PreIssueAccessTokenActionSuccessRefreshTokenExpiryTestCase extends 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

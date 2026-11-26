@@ -31,6 +31,7 @@ import org.wso2.identity.integration.test.rest.api.server.flow.management.v1.mod
 import org.wso2.identity.integration.test.restclients.FlowManagementClient;
 
 import java.io.IOException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class contains the test cases for Flow Management API.
@@ -43,10 +44,10 @@ public class FlowManagementNegativeTest extends FlowManagementTestBase {
     @DataProvider
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

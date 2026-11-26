@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.utils.UserUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for SAML artifact binding.
@@ -116,12 +117,12 @@ public class SAMLARTRESOLVETestCase extends AbstractSAMLSSOTestCase {
 
     @DataProvider(name = "samlConfigProvider")
     public static Object[][] samlConfigProvider() {
-        return new SAMLConfig[][]{
+        return LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
-        };
+        });
     }
 
     private String extractDataFromResponse(HttpResponse response) throws IOException {

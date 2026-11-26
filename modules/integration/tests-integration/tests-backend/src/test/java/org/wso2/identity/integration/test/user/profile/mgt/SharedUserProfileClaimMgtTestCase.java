@@ -86,6 +86,7 @@ import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.re
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class to verify shared user profile claim management.
@@ -171,10 +172,10 @@ public class SharedUserProfileClaimMgtTestCase extends OAuth2ServiceAbstractInte
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][] {
+        return LaneUserModes.filter(new Object[][] {
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "testExecutionContextProvider")

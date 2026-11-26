@@ -94,6 +94,7 @@ import static org.wso2.identity.integration.test.rest.api.server.user.sharing.ma
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test for sub-organization application authentication with shared users via federated login.
@@ -174,7 +175,7 @@ public class SharedUserSubOrgAppFederatedAssociationTestCase extends AbstractIde
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

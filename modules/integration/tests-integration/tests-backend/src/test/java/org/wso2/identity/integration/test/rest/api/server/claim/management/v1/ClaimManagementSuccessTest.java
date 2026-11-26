@@ -41,6 +41,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.IsNull.notNullValue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for Claim Management REST APIs success path.
@@ -88,10 +89,10 @@ public class ClaimManagementSuccessTest extends ClaimManagementTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

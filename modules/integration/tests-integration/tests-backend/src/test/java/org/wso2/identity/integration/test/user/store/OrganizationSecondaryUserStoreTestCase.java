@@ -86,6 +86,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_RES
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.REDIRECT_URI_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for secondary user store operations in sub organizations.
@@ -135,10 +136,10 @@ public class OrganizationSecondaryUserStoreTestCase extends OAuth2ServiceAbstrac
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "testExecutionContextProvider")

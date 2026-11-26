@@ -38,6 +38,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for script library management REST APIs success paths.
@@ -88,10 +89,10 @@ public class ScriptLibrarySuccessTest extends ScriptLibraryTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

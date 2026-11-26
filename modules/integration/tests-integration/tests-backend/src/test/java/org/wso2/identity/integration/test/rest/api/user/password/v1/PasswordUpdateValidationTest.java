@@ -46,6 +46,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for verifying all validation and error scenarios of the Password Update API.
@@ -61,7 +62,7 @@ public class PasswordUpdateValidationTest extends PasswordUpdateTestBase {
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     private static final String VALIDATION_USER_1 = "validationTestUser1";

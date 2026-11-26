@@ -28,6 +28,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.credential.management.v1.model.Credential;
 import org.wso2.identity.integration.test.restclients.CredentialManagementRestClient;
 import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for Credential Management API negative scenarios.
@@ -53,10 +54,10 @@ public class CredentialManagementNegativeTest extends CredentialManagementTestBa
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "restAPIUserConfigProvider")

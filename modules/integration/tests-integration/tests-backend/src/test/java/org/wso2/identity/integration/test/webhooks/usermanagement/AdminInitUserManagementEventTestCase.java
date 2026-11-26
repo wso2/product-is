@@ -41,6 +41,7 @@ import org.wso2.identity.integration.test.webhooks.util.WebhookEventTestManager;
 import java.util.Arrays;
 
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class tests the user management events triggered by the admin user via SCIM2 User API.
@@ -93,10 +94,10 @@ public class AdminInitUserManagementEventTestCase extends ISIntegrationTest {
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @Test

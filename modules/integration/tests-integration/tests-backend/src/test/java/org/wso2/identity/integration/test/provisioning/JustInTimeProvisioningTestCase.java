@@ -50,6 +50,7 @@ import java.io.File;
 import java.rmi.RemoteException;
 
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCase {
 
@@ -73,7 +74,7 @@ public class JustInTimeProvisioningTestCase extends SAMLIdentityFederationTestCa
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

@@ -33,6 +33,7 @@ import static org.wso2.identity.integration.test.rest.api.server.notification.te
         .Constants.SAMPLE_APPLICATION_UUID;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants.SMS_TEMPLATES_PATH;
 import static org.wso2.identity.integration.test.rest.api.server.notification.template.v1.Constants.TEMPLATE_TYPES_PATH;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for Notification Template API.
@@ -71,10 +72,10 @@ public class NotificationSMSTemplatesPositiveTest extends NotificationTemplatesT
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @DataProvider(name = "smsTemplateDataProvider")

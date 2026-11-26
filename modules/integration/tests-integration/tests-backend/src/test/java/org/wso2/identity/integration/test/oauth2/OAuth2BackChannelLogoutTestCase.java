@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for OAuth2 Back-Channel Logout.
@@ -94,7 +95,7 @@ public class OAuth2BackChannelLogoutTestCase extends OAuth2ServiceAbstractIntegr
 
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

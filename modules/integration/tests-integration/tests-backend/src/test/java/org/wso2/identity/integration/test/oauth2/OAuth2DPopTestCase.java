@@ -93,6 +93,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.PAR_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -140,10 +141,10 @@ public class OAuth2DPopTestCase extends OAuth2ServiceAbstractIntegrationTest {
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

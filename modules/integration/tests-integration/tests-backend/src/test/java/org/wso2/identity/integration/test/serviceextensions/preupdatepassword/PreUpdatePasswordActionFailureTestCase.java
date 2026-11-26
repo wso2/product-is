@@ -61,6 +61,7 @@ import static org.testng.Assert.assertTrue;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test class for testing the pre update password action execution.
@@ -100,7 +101,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws IOException, URISyntaxException {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, new ActionResponse(HttpServletResponse.SC_OK,
                         FileUtils.readFileInClassPathAsString("actions/response/failure-response.json")),
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_BAD_REQUEST,
@@ -121,7 +122,7 @@ public class PreUpdatePasswordActionFailureTestCase extends PreUpdatePasswordAct
                         new ExpectedPasswordUpdateResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                                 "Compromised password",
                                 "Error while updating attributes of user")},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

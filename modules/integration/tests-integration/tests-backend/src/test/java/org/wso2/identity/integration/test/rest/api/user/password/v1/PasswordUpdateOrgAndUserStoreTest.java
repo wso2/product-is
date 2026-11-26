@@ -43,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for verifying password change across different app types, organizations,
@@ -59,7 +60,7 @@ public class PasswordUpdateOrgAndUserStoreTest extends PasswordUpdateTestBase {
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     private static final String ROOT_APP_NAME = "PasswordUpdateRootApp";

@@ -56,6 +56,7 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.USER_IS_LOCKED;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -81,7 +82,7 @@ public class OAuth2ServiceResourceOwnerTestCase extends OAuth2ServiceAbstractInt
 	@DataProvider(name = "configProvider")
 	public static Object[][] configProvider() {
 
-		return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+		return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
 	}
 
 	@Factory(dataProvider = "configProvider")

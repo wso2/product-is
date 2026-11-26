@@ -44,6 +44,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for Email Senders V2 REST APIs success paths.
@@ -111,10 +112,10 @@ public class EmailSenderSuccessTest extends EmailSenderTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     /**

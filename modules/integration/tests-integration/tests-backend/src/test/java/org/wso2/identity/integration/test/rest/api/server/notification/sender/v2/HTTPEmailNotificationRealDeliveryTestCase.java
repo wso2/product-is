@@ -51,6 +51,7 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Real end-to-end delivery test for the HTTP-based (non-SMTP) Email notification sender, covering
@@ -88,10 +89,10 @@ public class HTTPEmailNotificationRealDeliveryTestCase extends EmailSenderTestBa
     @DataProvider(name = "authTypeProvider")
     public static Object[][] getAuthTypes() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {AUTH_TYPE_CLIENT_CREDENTIAL},
                 {AUTH_TYPE_PASSWORD_CREDENTIAL},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

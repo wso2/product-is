@@ -41,6 +41,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
@@ -285,7 +286,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 
     @DataProvider(name = "samlConfigProvider")
     public static SAMLConfig[][] samlConfigProvider(){
-        return  new SAMLConfig[][]{
+        return  LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                                 ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
@@ -307,7 +308,7 @@ public class SAMLSSOTestCase extends AbstractSAMLSSOTestCase {
 //                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.SUPER_TENANT_APP_WITH_SIGNING)},
 //                {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER_WITHOUT_MANDATORY_CLAIMS,
 //                        HttpBinding.HTTP_REDIRECT, ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-        };
+        });
     }
 
     private void assertLocalClaims(String claims){

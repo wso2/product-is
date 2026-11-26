@@ -43,6 +43,7 @@ import java.util.Map;
 
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_ENDPOINT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test cases for updating users via SCIM PATCH and PUT operations.
@@ -70,10 +71,10 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

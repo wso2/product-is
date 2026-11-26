@@ -68,6 +68,7 @@ import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_SCOPE_OPENID;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for OAuth2 client credentials grant type.
@@ -95,7 +96,7 @@ public class OAuth2ServiceClientCredentialTestCase extends OAuth2ServiceAbstract
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

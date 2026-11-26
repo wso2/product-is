@@ -65,6 +65,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SERVER_
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PARAM;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class to test the SCIM2 pagination.
@@ -94,9 +95,9 @@ public class SCIM2PaginationTestCase extends ISIntegrationTest {
     @DataProvider(name = "scim2UserConfigProvider")
     public static Object[][] scim2UserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

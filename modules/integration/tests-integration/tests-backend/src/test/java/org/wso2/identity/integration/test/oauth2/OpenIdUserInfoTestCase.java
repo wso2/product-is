@@ -71,6 +71,7 @@ import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -96,7 +97,7 @@ public class OpenIdUserInfoTestCase extends OAuth2ServiceAbstractIntegrationTest
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

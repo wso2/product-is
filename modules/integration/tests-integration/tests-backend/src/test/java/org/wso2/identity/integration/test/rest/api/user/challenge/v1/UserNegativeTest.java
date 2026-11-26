@@ -25,6 +25,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import java.rmi.RemoteException;
 import java.util.Base64;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class UserNegativeTest extends UserMeNegativeTest {
 
@@ -37,12 +38,12 @@ public class UserNegativeTest extends UserMeNegativeTest {
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, "restApiUser1", "Pass@123", "testLoginRole1",
                         "/permission/admin/login", true},
                 {TestUserMode.TENANT_USER, "restApiUser1", "Pass@123", "testLoginRole1",
                         "/permission/admin/login", true}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

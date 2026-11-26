@@ -71,6 +71,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.FIDP_PARAM;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for verifying the custom layout feature in both configuration and runtime scenarios.
@@ -154,10 +155,10 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

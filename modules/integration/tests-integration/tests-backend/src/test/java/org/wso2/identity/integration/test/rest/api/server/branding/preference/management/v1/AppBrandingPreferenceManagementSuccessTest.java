@@ -41,6 +41,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.testng.Assert.assertNotNull;
 import static org.wso2.identity.integration.test.util.Utils.areJSONObjectsEqual;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for happy paths of the managing application branding using Branding Preference Management REST API.
@@ -67,10 +68,10 @@ public class AppBrandingPreferenceManagementSuccessTest extends AppBrandingPrefe
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

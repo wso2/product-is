@@ -29,6 +29,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Base test class for Extension Management REST APIs.
@@ -88,9 +89,9 @@ public class ExtensionManagementBaseTest extends RESTAPIServerTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 }

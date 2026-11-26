@@ -56,6 +56,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * OAuth2 DCRM API client secret expiry test case.
@@ -106,7 +107,7 @@ public class OAuthDCRMClientSecretExpiryTestCase extends ISIntegrationTest {
     @DataProvider(name = "dcrmConfigProvider")
     public static Object[][] dcrmConfigProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @BeforeClass(alwaysRun = true)

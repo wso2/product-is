@@ -43,6 +43,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.FLOW_STATUS;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.INCOMPLETE;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.SUCCESS_COMPLETED;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for SMS-OTP where soft resend limits are enforced via adaptive auth script.
@@ -69,10 +70,10 @@ public class SMSOTPSoftResendLimitNativeAuthTestCase extends AbstractOTPLimitNat
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

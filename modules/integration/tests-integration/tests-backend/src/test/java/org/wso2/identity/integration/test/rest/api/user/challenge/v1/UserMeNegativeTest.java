@@ -36,6 +36,7 @@ import org.wso2.identity.integration.common.clients.usermgt.remote.RemoteUserSto
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class UserMeNegativeTest extends UserChallengeTestBase {
     protected String user;
@@ -97,12 +98,12 @@ public class UserMeNegativeTest extends UserChallengeTestBase {
 
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, "restApiMeUser1", "Pass@123", "testLoginRole",
                         "/permission/admin/login", true},
                 {TestUserMode.TENANT_USER, "restApiMeUser1", "Pass@123", "testLoginRole",
                         "/permission/admin/login", true}
-        };
+        });
     }
 
     @Test

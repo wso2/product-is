@@ -53,6 +53,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for enrolling a mobile number during SMS OTP authentication, for a user who does not have a
@@ -108,10 +109,10 @@ public class SMSOTPMobileNumberEnrollmentTestCase extends AbstractOTPProviderFai
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

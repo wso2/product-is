@@ -75,6 +75,7 @@ import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.rest.api.server.user.sharing.management.v1.model.UserShareWithAllRequestBody.PolicyEnum.ALL_EXISTING_ORGS_ONLY;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test for sub-organization application authentication with shared users.
@@ -124,9 +125,9 @@ public class SharedUserSubOrgApplicationAuthenticationTestCase extends OAuth2Ser
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN, "suborg_app_sub_org", "suborg_app_sub_org"},
-                {TestUserMode.TENANT_ADMIN, "suborg_app_t_sub_org", "suborg_app_t_sub_org"}};
+                {TestUserMode.TENANT_ADMIN, "suborg_app_t_sub_org", "suborg_app_t_sub_org"}});
     }
 
     @Factory(dataProvider = "configProvider")

@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.restclients.OrgMgtRestClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class to test the organization notification org templates for override and inheritance capabilities.
@@ -105,10 +106,10 @@ public class OrganizationNotificationOrgTemplatesTestCase extends ISIntegrationT
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][] {
+        return LaneUserModes.filter(new Object[][] {
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "testExecutionContextProvider")

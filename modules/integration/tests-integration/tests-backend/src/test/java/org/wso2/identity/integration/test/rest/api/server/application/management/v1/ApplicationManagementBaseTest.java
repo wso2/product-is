@@ -42,6 +42,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTestBase;
 import org.wso2.identity.integration.test.rest.api.user.common.model.GroupRequestObject;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Base test class for Application Management REST APIs.
@@ -110,10 +111,10 @@ public class ApplicationManagementBaseTest extends RESTAPIServerTestBase {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     protected void cleanUpApplications(Set<String> appsToCleanUp) {

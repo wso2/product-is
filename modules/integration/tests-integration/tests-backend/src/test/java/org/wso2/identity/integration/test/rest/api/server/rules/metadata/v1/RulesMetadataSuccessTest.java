@@ -31,16 +31,17 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class RulesMetadataSuccessTest extends RulesMetadataTestBase {
 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "testExecutionContextProvider")

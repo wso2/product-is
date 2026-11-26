@@ -44,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration tests for SAML invalid issuer.
@@ -162,7 +163,7 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
     @DataProvider(name = "samlConfigProvider")
     public static Object[][] samlConfigProvider(){
 
-        return  new SAMLConfig[][]{
+        return  LaneUserModes.filter(new SAMLConfig[][]{
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
                         ClaimType.NONE, App.SUPER_TENANT_APP_WITH_SIGNING)},
                 {new SAMLConfig(TestUserMode.SUPER_TENANT_ADMIN, User.SUPER_TENANT_USER, HttpBinding.HTTP_REDIRECT,
@@ -179,7 +180,7 @@ public class SAMLInvalidIssuerTestCase extends AbstractSAMLSSOTestCase {
                         ClaimType.NONE, App.TENANT_APP_WITHOUT_SIGNING)},
                 {new SAMLConfig(TestUserMode.TENANT_ADMIN, User.TENANT_USER, HttpBinding.HTTP_POST,
                         ClaimType.LOCAL, App.TENANT_APP_WITHOUT_SIGNING)},
-        };
+        });
     }
 
     public String addApplication(String appName) throws Exception {

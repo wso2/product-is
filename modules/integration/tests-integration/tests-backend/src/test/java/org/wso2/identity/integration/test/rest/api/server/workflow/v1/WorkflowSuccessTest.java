@@ -49,6 +49,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for workflow management REST APIs success paths.
@@ -107,9 +108,9 @@ public class WorkflowSuccessTest extends WorkflowBaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][] {
+        return LaneUserModes.filter(new Object[][] {
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test(description = "Test adding workflows.")

@@ -31,6 +31,7 @@ import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.testng.Assert.assertNotNull;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for error scenarios when managing application branding using Branding Preference Management REST API.
@@ -54,10 +55,10 @@ public class AppBrandingPreferenceManagementFailureTest extends AppBrandingPrefe
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

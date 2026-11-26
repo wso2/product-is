@@ -42,6 +42,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test class for workflow rule evaluation in workflow association REST APIs.
@@ -82,9 +83,9 @@ public class WorkflowRulesTest extends WorkflowBaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Override

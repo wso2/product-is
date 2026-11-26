@@ -57,6 +57,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class tests the different types of authenticators
@@ -301,12 +302,12 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
 
     @DataProvider(name = "spConfigProvider")
     public static SPConfig[][] spConfigProvider() {
-        return new SPConfig[][]{
+        return LaneUserModes.filter(new SPConfig[][]{
                 {new SPConfig(Authenticator.DEFAULT_AUTHENTICATOR, User.SUPER_TENANT_LOCKED_USER, SPApplication
                         .SUPER_TENANT_APP, TestUserMode.SUPER_TENANT_USER, HttpBinding.HTTP_POST)},
                 {new SPConfig(Authenticator.ADVANCED_AUTHENTICATOR, User.SUPER_TENANT_LOCKED_USER, SPApplication
                         .SUPER_TENANT_APP, TestUserMode.SUPER_TENANT_USER, HttpBinding.HTTP_POST)},
-        };
+        });
     }
 
     private void createApplication() throws Exception {

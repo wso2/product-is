@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USERS_ENDPOINT;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test cases for updating users via SCIM PATCH operations in a read-only user store.
@@ -66,10 +67,10 @@ public class SCIMUserUpdateReadOnlyTest extends SCIM2BaseTest {
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

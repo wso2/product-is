@@ -79,6 +79,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOK
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class includes the test cases for passwordless SMS OTP authentication.
@@ -118,14 +119,14 @@ public class PasswordlessSMSOTPAuthTestCase extends OIDCAbstractIntegrationTest 
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, "v1", null},
                 {TestUserMode.SUPER_TENANT_USER, "v2", Authentication.TypeEnum.CLIENT_CREDENTIAL},
                 {TestUserMode.SUPER_TENANT_USER, "v2", Authentication.TypeEnum.PASSWORD_CREDENTIAL},
                 {TestUserMode.TENANT_USER, "v1", null},
                 {TestUserMode.TENANT_USER, "v2", Authentication.TypeEnum.CLIENT_CREDENTIAL},
                 {TestUserMode.TENANT_USER, "v2", Authentication.TypeEnum.PASSWORD_CREDENTIAL},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

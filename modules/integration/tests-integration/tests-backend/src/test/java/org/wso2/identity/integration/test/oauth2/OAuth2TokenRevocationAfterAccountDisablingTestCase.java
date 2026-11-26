@@ -87,6 +87,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This test class is used to check the behaviour of OAuth token revocation on multiple applications after
@@ -132,10 +133,10 @@ public class OAuth2TokenRevocationAfterAccountDisablingTestCase extends OAuth2Se
     @DataProvider
     public static Object[][] oAuthConsumerApplicationProvider() {
 
-        return new Object[][] {
+        return LaneUserModes.filter(new Object[][] {
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "oAuthConsumerApplicationProvider")

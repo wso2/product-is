@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -78,8 +79,8 @@ public class SystemScopePermissionValidationTestCase extends OAuth2ServiceAbstra
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN},
-                {TestUserMode.TENANT_USER}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN},
+                {TestUserMode.TENANT_USER}});
     }
 
     @Factory(dataProvider = "configProvider")

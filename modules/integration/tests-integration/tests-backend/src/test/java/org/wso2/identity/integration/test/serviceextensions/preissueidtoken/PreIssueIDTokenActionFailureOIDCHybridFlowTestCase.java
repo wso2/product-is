@@ -72,6 +72,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * This class tests the pre issue ID token action failure scenarios with OIDC Hybrid flow.
@@ -118,7 +119,7 @@ public class PreIssueIDTokenActionFailureOIDCHybridFlowTestCase extends ActionsB
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
 
                 // Both server and client error scenarios are currently handled identically in the /authz endpoint.
                 // As a result, incomplete and failure responses return the same error response.
@@ -149,7 +150,7 @@ public class PreIssueIDTokenActionFailureOIDCHybridFlowTestCase extends ActionsB
                 {TestUserMode.TENANT_USER, RESPONSE_TYPE_CODE_ID_TOKEN, new ActionResponse(401, "Unauthorized"),
                         new ExpectedTokenResponse(500, "server_error",
                                 "Error occurred when processing the authorization request")},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

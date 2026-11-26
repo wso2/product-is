@@ -98,6 +98,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -166,14 +167,14 @@ public class CustomInternalUserAuthenticatorTestCase extends OAuth2ServiceAbstra
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER, EndpointAuthType.BASIC},
                 {TestUserMode.SUPER_TENANT_USER, EndpointAuthType.CLIENT_CREDENTIAL},
                 {TestUserMode.SUPER_TENANT_USER, EndpointAuthType.PASSWORD_CREDENTIAL},
                 {TestUserMode.TENANT_USER, EndpointAuthType.BASIC},
                 {TestUserMode.TENANT_USER, EndpointAuthType.CLIENT_CREDENTIAL},
                 {TestUserMode.TENANT_USER, EndpointAuthType.PASSWORD_CREDENTIAL},
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

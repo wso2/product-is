@@ -111,6 +111,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.SUCCESS_COMPLETED;
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.UTF_8;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test cases for Application Native Authentication federation scenario.
@@ -172,7 +173,7 @@ public class ApplicationNativeAuthenticationFederationTestCase extends AbstractI
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}});
     }
 
     @Factory(dataProvider = "configProvider")

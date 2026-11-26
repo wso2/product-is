@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.wso2.identity.integration.test.rest.api.common.RESTTestBase.readResource;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Test case for API resource inheritance.
@@ -80,10 +81,10 @@ public class APIResourceInheritanceTestCase extends OAuth2ServiceAbstractIntegra
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() throws Exception {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Factory(dataProvider = "testExecutionContextProvider")

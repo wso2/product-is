@@ -71,6 +71,7 @@ import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.TYPE_PA
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_NAME_ATTRIBUTE;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.USER_SYSTEM_SCHEMA;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.VALUE_PARAM;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class SCIM2UserTestCase extends ISIntegrationTest {
 
@@ -124,10 +125,10 @@ public class SCIM2UserTestCase extends ISIntegrationTest {
     @DataProvider(name = "SCIM2UserConfigProvider")
     public static Object[][] sCIM2UserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN},
                 {TestUserMode.TENANT_ADMIN}
-        };
+        });
     }
 
     @Test

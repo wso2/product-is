@@ -47,6 +47,7 @@ import java.io.InputStreamReader;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * OAuth2 DCRM API Create process test case
@@ -72,7 +73,7 @@ public class OAuthDCRMTestCase extends ISIntegrationTest {
 
     @DataProvider(name = "dcrmConfigProvider")
     public static Object[][] dcrmConfigProvider() {
-        return new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}};
+        return LaneUserModes.filter(new Object[][]{{TestUserMode.SUPER_TENANT_ADMIN}, {TestUserMode.TENANT_ADMIN}});
     }
 
     @BeforeClass(alwaysRun = true)

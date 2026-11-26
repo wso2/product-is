@@ -31,6 +31,7 @@ import org.wso2.identity.integration.test.otpProviderFailure.Constants;
 import org.wso2.identity.integration.test.restclients.NotificationSenderRestClient;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.restclients.SCIM2RestClient;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 public class SMSOTPProviderFailureLoginNativeTest extends AbstractOTPProviderFailureTestBase {
 
@@ -53,10 +54,10 @@ public class SMSOTPProviderFailureLoginNativeTest extends AbstractOTPProviderFai
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     @BeforeClass(alwaysRun = true)

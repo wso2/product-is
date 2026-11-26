@@ -89,6 +89,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZATION_HEADER;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test class for testing the pre issue ID token flow with password grant.
@@ -149,10 +150,10 @@ public class PreIssueIDTokenActionSuccessPasswordGrantTestCase extends ActionsBa
     @DataProvider(name = "testExecutionContextProvider")
     public static Object[][] getTestExecutionContext() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_USER},
                 {TestUserMode.TENANT_USER}
-        };
+        });
     }
 
     /**

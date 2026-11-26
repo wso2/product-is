@@ -28,6 +28,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.extractApplicationIdFromLocationHeader;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Tests for happy paths of the managing SAML applications using Application Management REST API.
@@ -55,7 +56,7 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
     @DataProvider(name = "restAPIUserConfigProvider")
     public static Object[][] restAPIUserConfigProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN, "create-saml-app-with-metadata-file.json",
                         "update-saml-app-with-metadata-file.json", META_DATA_FILE_ISSUER},
                 {TestUserMode.SUPER_TENANT_ADMIN, "create-saml-app-with-manual-config.json",
@@ -65,7 +66,7 @@ public class ApplicationManagementSAMLSuccessTest extends ApplicationManagementB
                         "update-saml-app-with-metadata-file.json", META_DATA_FILE_ISSUER},
                 {TestUserMode.TENANT_ADMIN, "create-saml-app-with-manual-config.json",
                         "update-saml-app-with-manual-config.json", MANUAL_CONFIG_ISSUER}
-        };
+        });
     }
 
     @Test

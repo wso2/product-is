@@ -79,6 +79,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOK
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRANT_TYPE_AUTHORIZATION_CODE;
+import org.wso2.identity.integration.test.lanes.LaneUserModes;
 
 /**
  * Integration test for legacy organization authentication with shared users.
@@ -127,9 +128,9 @@ public class SharedUserLegacyOrgAuthenticationTestCase extends OAuth2ServiceAbst
     @DataProvider(name = "configProvider")
     public static Object[][] configProvider() {
 
-        return new Object[][]{
+        return LaneUserModes.filter(new Object[][]{
                 {TestUserMode.SUPER_TENANT_ADMIN, "legacy_shared_sub_org", "legacy_shared_sub_org"},
-                {TestUserMode.TENANT_ADMIN, "legacy_shared_t_sub_org", "legacy_shared_t_sub_org"}};
+                {TestUserMode.TENANT_ADMIN, "legacy_shared_t_sub_org", "legacy_shared_t_sub_org"}});
     }
 
     @Factory(dataProvider = "configProvider")
