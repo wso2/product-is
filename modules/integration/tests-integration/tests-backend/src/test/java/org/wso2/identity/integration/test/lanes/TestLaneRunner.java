@@ -212,7 +212,65 @@ public final class TestLaneRunner {
         // and so are lanes left with nothing to run.
         lanes.values().forEach(b -> b.retainAll(activeBlocks));
         lanes.values().removeIf(List::isEmpty);
-        return lanes;
+        return fitToMachine(lanes);
+    }
+
+    /**
+     * Merges lanes so that they fit this machine: each lane needs about {@code lanes.memoryPerLaneMb} of memory
+     * (test JVM, IS servers, Tomcat) and {@code lanes.coresPerLane} CPU cores, after {@code lanes.reserveMb} is kept
+     * for Maven and the OS. Lanes are merged round-robin, which keeps them balanced because lanes.conf lanes are
+     * balanced. {@code -Dtest.lanes=N} sets the number of lanes directly.
+     */
+    private static Map<String, List<String>> fitToMachine(Map<String, List<String>> lanes) {
+
+        int cores = Runtime.getRuntime().availableProcessors();
+        long availableMb = availableMemoryMb();
+        int memoryPerLane = Integer.getInteger("lanes.memoryPerLaneMb", 3500);
+        int coresPerLane = Integer.getInteger("lanes.coresPerLane", 2);
+        int reserveMb = Integer.getInteger("lanes.reserveMb", 1500);
+        int byCpu = Math.max(1, cores / coresPerLane);
+        int byMemory = availableMb < 0 ? lanes.size() : (int) Math.max(1, (availableMb - reserveMb) / memoryPerLane);
+        String forced = System.getProperty("test.lanes", "").trim();
+        int target = forced.matches("\\d+") && Integer.parseInt(forced) > 0
+                ? Integer.parseInt(forced) : Math.min(lanes.size(), Math.min(byCpu, byMemory));
+        System.out.println("[INFO] Machine: " + cores + " cores, " + availableMb + " MB memory available. Lanes: "
+                + lanes.size() + " configured, " + target + " used" + (forced.isEmpty() ? "" : " (-Dtest.lanes)")
+                + ".");
+        if (target >= lanes.size()) {
+            return lanes;
+        }
+        List<List<String>> merged = new ArrayList<>();
+        for (int i = 0; i < target; i++) {
+            merged.add(new ArrayList<>());
+        }
+        int i = 0;
+        for (List<String> blocks : lanes.values()) {
+            merged.get(i++ % target).addAll(blocks);
+        }
+        Map<String, List<String>> result = new LinkedHashMap<>();
+        for (int n = 0; n < target; n++) {
+            result.put("lane" + (n + 1), merged.get(n));
+        }
+        return result;
+    }
+
+    /** MemAvailable from /proc/meminfo (Linux), or the JVM's view of free physical memory; -1 if unknown. */
+    private static long availableMemoryMb() {
+
+        try {
+            for (String line : Files.readAllLines(Paths.get("/proc/meminfo"))) {
+                if (line.startsWith("MemAvailable:")) {
+                    return Long.parseLong(line.replaceAll("\\D+", "")) / 1024;
+                }
+            }
+        } catch (Exception ignored) {
+            // Not Linux.
+        }
+        java.lang.management.OperatingSystemMXBean os = java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+        if (os instanceof com.sun.management.OperatingSystemMXBean) {
+            return ((com.sun.management.OperatingSystemMXBean) os).getFreeMemorySize() / (1024 * 1024);
+        }
+        return -1;
     }
 
     /** The {@code <test>} blocks in testng.xml outside comments; only enabled ones if {@code activeOnly}. */

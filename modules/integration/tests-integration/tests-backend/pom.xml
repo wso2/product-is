@@ -33,6 +33,9 @@
           the testng.xml blocks listed for it in src/test/lanes/lanes.conf, in its own JVM, against its own IS
           server, with all ports shifted by 1000 x lane index.
             -Dtest.lanes=1                          run everything in one lane (the old serial run)
+            The number of lanes is fitted to the machine (about 3.5 GB of free memory and 2 CPU cores per lane;
+            tune with -Dlanes.memoryPerLaneMb, -Dlanes.coresPerLane, -Dlanes.reserveMb), merging the lanes of
+            lanes.conf evenly when fewer fit. -Dtest.lanes=N sets the number of lanes directly.
             -Dtest.lanes.file=<file>                use another lanes file (e.g. fewer lanes on a small machine)
             -Dlanes.keep=true|failed                keep every lane's IS packs, or only failed lanes' packs
             -Dlanes.allowPartial=true               allow blocks that are in no lane (skipped), for trial runs

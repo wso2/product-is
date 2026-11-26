@@ -75,6 +75,10 @@ jobs:
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
           curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder started \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}}"}'
+      - name: Report runner resources
+        # As an annotation, so it is kept even if the runner is lost later in the job.
+        run: |
+          echo "::notice title=Runner resources::cores=$(nproc), memory=$(free -m | awk '/Mem:/ {print $2}') MB, available=$(free -m | awk '/Mem:/ {print $7}') MB, swap=$(free -m | awk '/Swap:/ {print $2}') MB, disk free=$(df -BG --output=avail . | tail -1 | tr -d ' ')"
       - uses: actions/checkout@v4
       - name: Set up JDK 21
         uses: actions/setup-java@v4
