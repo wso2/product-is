@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -185,13 +184,13 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     /**
@@ -314,7 +313,7 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
         String body = brandingJSON.replace(RESOURCE_ID_PLACEHOLDER, SUB_ORG);
         body = body.replace(BRANDING_TYPE_PLACEHOLDER, ORG_TYPE);
         body = body.replace(BRANDING_RESOURCE_NAME, subOrgID);
-        RestAssured.basePath = convertToOrgBasePath(this.basePath);
+        requestBasePath = convertToOrgBasePath(this.basePath);
         Response response = getResponseOfPostWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH, body, subOrgToken);
 
         response.then()
@@ -342,7 +341,7 @@ public class CustomLayoutTest extends BrandingPreferenceManagementTestBase {
         String body = brandingJSON.replace(RESOURCE_ID_PLACEHOLDER, SUB_ORG_APP);
         body = body.replace(BRANDING_TYPE_PLACEHOLDER, APP_TYPE);
         body = body.replace(BRANDING_RESOURCE_NAME, sharedAppId1);
-        RestAssured.basePath = convertToOrgBasePath(this.basePath);
+        requestBasePath = convertToOrgBasePath(this.basePath);
         Response response = getResponseOfPostWithOAuth2(BRANDING_PREFERENCE_API_BASE_PATH, body, subOrgToken);
 
         response.then()

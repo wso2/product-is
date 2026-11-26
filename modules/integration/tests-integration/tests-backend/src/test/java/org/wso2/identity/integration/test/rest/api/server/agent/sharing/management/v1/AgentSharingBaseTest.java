@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.agent.sharing.management.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -86,13 +85,13 @@ public class AgentSharingBaseTest extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void setBasePath() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void clearBasePath() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     protected String randomUuid() {

@@ -18,7 +18,6 @@ package org.wso2.identity.integration.test.rest.api.server.identity.governance.v
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -95,7 +94,7 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     @AfterClass(alwaysRun = true)
     public void testConclude() throws IOException {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         String body = readResource("disable-password-expiry.json");
         getResponseOfPatch(IDENTITY_GOVERNANCE_ENDPOINT_URI + "/" + CATEGORY_PASSWORD_POLICIES
                 + "/connectors/" + CONNECTOR_PASSWORD_EXPIRY, body);
@@ -108,13 +107,13 @@ public class IdentityGovernanceSuccessTest extends IdentityGovernanceTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIServerConfigProvider")

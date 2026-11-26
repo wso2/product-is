@@ -16,7 +16,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.email.template.v1;
 
-import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -64,12 +63,12 @@ public class EmailTemplatesTestBase extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 }
