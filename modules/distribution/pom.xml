@@ -670,6 +670,25 @@
                             </transformationSets>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>update-scim-enterprise-claims</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>transform</goal>
+                        </goals>
+                        <configuration>
+                            <transformationSets>
+                                <transformationSet>
+                                    <dir>${basedir}/../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf</dir>
+                                    <includes>
+                                        <include>claim-config.xml</include>
+                                    </includes>
+                                    <stylesheet>${basedir}/claim_config_change.xsl</stylesheet>
+                                </transformationSet>
+                            </transformationSets>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
