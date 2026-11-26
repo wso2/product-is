@@ -2761,7 +2761,7 @@
 
         <!--Carbon Identity Framework Version-->
 
-        <carbon.identity.framework.version>7.11.283</carbon.identity.framework.version>
+        <carbon.identity.framework.version>7.11.284</carbon.identity.framework.version>
 
         <carbon.identity.framework.version.range>[5.14.67, 8.0.0)</carbon.identity.framework.version.range>
 
@@ -2859,7 +2859,7 @@
         <identity.oauth2.jwt.bearer.grant.version>2.4.1</identity.oauth2.jwt.bearer.grant.version>
         <identity.oauth2.token.exchange.grant.version>1.4.12</identity.oauth2.token.exchange.grant.version>
 
-        <identity.oauth.dpop.version>2.1.4</identity.oauth.dpop.version>
+        <identity.oauth.dpop.version>2.1.5</identity.oauth.dpop.version>
 
         <!--SAML Metadata-->
         <identity.metadata.saml.version>1.11.1</identity.metadata.saml.version>
@@ -2911,7 +2911,7 @@
         <!-- Identity Portal Versions -->
         <identity.apps.console.version>4.39.6</identity.apps.console.version>
         <identity.apps.myaccount.version>4.6.2</identity.apps.myaccount.version>
-        <identity.apps.core.version>5.12.5</identity.apps.core.version>
+        <identity.apps.core.version>5.12.6</identity.apps.core.version>
         <identity.apps.tests.version>1.6.392</identity.apps.tests.version>
 
         <!-- Charon -->
