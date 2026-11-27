@@ -2811,7 +2811,7 @@
         <identity.data.publisher.audit.version>1.5.1</identity.data.publisher.audit.version>
 
         <!-- Identity Event Handler Versions -->
-        <identity.event.handler.account.lock.version>1.12.1</identity.event.handler.account.lock.version>
+        <identity.event.handler.account.lock.version>1.12.2</identity.event.handler.account.lock.version>
         <identity.event.handler.notification.version>1.13.12</identity.event.handler.notification.version>
 
         <org.wso2.identity.webhook.event.handlers.version>1.2.26</org.wso2.identity.webhook.event.handlers.version>
