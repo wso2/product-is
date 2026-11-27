@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.user.session.v1;
 
+import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -119,13 +120,13 @@ public class UserSessionTest extends RESTAPIUserTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @BeforeClass(alwaysRun = true)

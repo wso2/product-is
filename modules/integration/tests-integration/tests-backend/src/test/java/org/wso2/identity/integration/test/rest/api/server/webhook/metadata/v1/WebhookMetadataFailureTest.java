@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.webhook.metadata.v1;
 
+import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
@@ -62,13 +63,13 @@ public class WebhookMetadataFailureTest extends WebhookMetadataTestBase {
     @BeforeMethod(alwaysRun = true)
     public void setBasePath() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void clearBasePath() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     /**

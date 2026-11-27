@@ -28,6 +28,7 @@ import org.wso2.identity.integration.test.rest.api.server.common.RESTAPIServerTe
 
 import java.io.IOException;
 
+import static io.restassured.RestAssured.given;
 
 /**
  * Base test class for Script library management REST APIs.
@@ -60,13 +61,13 @@ public class ScriptLibraryTestBase extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     /**

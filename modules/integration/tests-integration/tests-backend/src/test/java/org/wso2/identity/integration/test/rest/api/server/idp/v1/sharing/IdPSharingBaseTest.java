@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.idp.v1.sharing;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -117,13 +118,13 @@ public class IdPSharingBaseTest extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void setBasePath() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void clearBasePath() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     protected void initRestClients() throws Exception {

@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.configs.v1;
 
+import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -63,7 +64,7 @@ public class AgentConfigSuccessTest extends ConfigTestBase {
 
         try {
             // Revert the agent configuration to its default state to avoid affecting subsequent tests.
-            requestBasePath = basePath;
+            RestAssured.basePath = basePath;
             getResponseOfDelete(CONFIGS_AGENT_API_BASE_PATH);
         } finally {
             super.conclude();

@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.user.association.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -105,13 +106,13 @@ public class UserAdminAssociationSuccessBaseTest extends UserAssociationTestBase
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @Test

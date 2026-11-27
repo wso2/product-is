@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.user.selfRegister;
 
+import io.restassured.RestAssured;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBase;
@@ -48,6 +49,6 @@ public class SelfRegisterTestBase extends RESTAPIUserTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() throws Exception {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 }

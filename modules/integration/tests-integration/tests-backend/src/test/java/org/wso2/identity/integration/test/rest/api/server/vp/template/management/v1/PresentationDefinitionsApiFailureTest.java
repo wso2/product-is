@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -58,7 +59,7 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
 
         // Create one valid definition to use for duplicate/conflict tests.
         String body = "{\"identifier\":\"test-conflict-definition\",\"displayName\":\"Test Conflict Definition\","
@@ -76,7 +77,7 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
     @AfterClass(alwaysRun = true)
     public void testConclude() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         if (existingDefinitionId != null) {
             getResponseOfDelete(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR + existingDefinitionId);
         }
@@ -86,13 +87,13 @@ public class PresentationDefinitionsApiFailureTest extends PresentationDefinitio
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

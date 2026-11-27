@@ -16,6 +16,7 @@
 
 package org.wso2.identity.integration.test.rest.api.user.association.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import org.wso2.identity.integration.test.rest.api.user.common.RESTAPIUserTestBa
 
 import java.io.IOException;
 
+import static io.restassured.RestAssured.given;
 
 public class UserAssociationTestBase extends RESTAPIUserTestBase {
 
@@ -68,12 +70,12 @@ public class UserAssociationTestBase extends RESTAPIUserTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 }

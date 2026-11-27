@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.webhook.metadata.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.hamcrest.CoreMatchers;
@@ -63,7 +64,7 @@ public class WebhookMetadataSuccessTest extends WebhookMetadataTestBase {
     @BeforeMethod(alwaysRun = true)
     public void setBasePath() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     /**

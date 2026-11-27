@@ -18,7 +18,9 @@
 
 package org.wso2.identity.integration.test.rest.api.server.consent.management.v2;
 
+import io.restassured.RestAssured;
 
+import static io.restassured.RestAssured.given;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -140,7 +142,7 @@ public class ConsentManagementV2AdminModeTest extends ConsentManagementV2TestBas
             authorizeAPIForApp(CONSENT_MANAGEMENT_API_IDENTIFIER);
         }
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         try {
             Response elementResponse = getResponseOfPost(ELEMENTS_ENDPOINT,
                     "{\"name\": \"consent_admin_mode_elem\", \"displayName\": \"Admin Mode Elem\","
@@ -171,7 +173,7 @@ public class ConsentManagementV2AdminModeTest extends ConsentManagementV2TestBas
             consentResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
             adminTestConsentId = consentResponse.jsonPath().getString("id");
         } finally {
-            requestBasePath = "";
+            RestAssured.basePath = "";
         }
     }
 
@@ -179,7 +181,7 @@ public class ConsentManagementV2AdminModeTest extends ConsentManagementV2TestBas
     @Override
     public void testConclude() throws Exception {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         try {
             if (adminTestUserId != null) {
                 scim2RestClient.deleteUser(adminTestUserId);
@@ -203,7 +205,7 @@ public class ConsentManagementV2AdminModeTest extends ConsentManagementV2TestBas
             if (httpClient != null) {
                 httpClient.close();
             }
-            requestBasePath = "";
+            RestAssured.basePath = "";
             super.testConclude();
         }
     }

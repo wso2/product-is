@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.configs.v1.compatibilitysettings;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -99,13 +100,13 @@ public class CompatibilitySettingsSubOrgInheritanceTest extends ConfigTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")
@@ -166,9 +167,9 @@ public class CompatibilitySettingsSubOrgInheritanceTest extends ConfigTestBase {
 
     private String getEnableLegacyFlowsFromSubOrg() {
 
-        String previousBasePath = requestBasePath;
+        String previousBasePath = RestAssured.basePath;
         try {
-            requestBasePath = subOrgBasePath;
+            RestAssured.basePath = subOrgBasePath;
             Response response = getResponseOfGetWithOAuth2(
                     CONFIGS_COMPATIBILITY_SETTINGS_API_BASE_PATH + PATH_SEPARATOR + FLOW_EXECUTION_GROUP,
                     switchedM2MToken);
@@ -178,7 +179,7 @@ public class CompatibilitySettingsSubOrgInheritanceTest extends ConfigTestBase {
                     .statusCode(HttpStatus.SC_OK);
             return response.then().extract().jsonPath().getString(ENABLE_LEGACY_FLOWS);
         } finally {
-            requestBasePath = previousBasePath;
+            RestAssured.basePath = previousBasePath;
         }
     }
 
@@ -194,9 +195,9 @@ public class CompatibilitySettingsSubOrgInheritanceTest extends ConfigTestBase {
 
     private void patchEnableLegacyFlowsInSubOrg(String value) {
 
-        String previousBasePath = requestBasePath;
+        String previousBasePath = RestAssured.basePath;
         try {
-            requestBasePath = subOrgBasePath;
+            RestAssured.basePath = subOrgBasePath;
             Response patchResponse = getResponseOfPatchWithOAuth2(CONFIGS_COMPATIBILITY_SETTINGS_API_BASE_PATH,
                     buildFlowExecutionPatchBody(value), switchedM2MToken);
             patchResponse.then()
@@ -204,7 +205,7 @@ public class CompatibilitySettingsSubOrgInheritanceTest extends ConfigTestBase {
                     .assertThat()
                     .statusCode(HttpStatus.SC_OK);
         } finally {
-            requestBasePath = previousBasePath;
+            RestAssured.basePath = previousBasePath;
         }
     }
 
@@ -230,7 +231,7 @@ public class CompatibilitySettingsSubOrgInheritanceTest extends ConfigTestBase {
 
     private void restoreCompatibilitySettings() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         try {
             // Restore root first (if we captured it).
             if (rootOriginalValue != null) {
@@ -241,7 +242,7 @@ public class CompatibilitySettingsSubOrgInheritanceTest extends ConfigTestBase {
                 patchEnableLegacyFlowsInSubOrg(rootOriginalValue);
             }
         } finally {
-            requestBasePath = StringUtils.EMPTY;
+            RestAssured.basePath = StringUtils.EMPTY;
         }
     }
 }

@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.action.management.v1.preupdateprofile;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -69,13 +70,13 @@ public class PreUpdateProfileActionFailureTest extends PreUpdateProfileTestBase 
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @Test

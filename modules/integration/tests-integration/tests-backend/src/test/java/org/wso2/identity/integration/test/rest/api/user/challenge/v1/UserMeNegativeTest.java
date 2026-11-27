@@ -16,6 +16,7 @@
 
 package org.wso2.identity.integration.test.rest.api.user.challenge.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang3.StringUtils;
@@ -85,13 +86,13 @@ public class UserMeNegativeTest extends UserChallengeTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

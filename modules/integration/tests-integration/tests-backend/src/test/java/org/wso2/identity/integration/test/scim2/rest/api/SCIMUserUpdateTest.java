@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.scim2.rest.api;
 
+import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.commons.logging.Log;
@@ -91,7 +92,7 @@ public class SCIMUserUpdateTest extends SCIM2BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @Test

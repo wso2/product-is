@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.configs.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,7 +59,7 @@ public class OpenID4VPConfigSuccessTest extends OpenID4VPConfigTestBase {
     public void init() throws IOException {
 
         super.testInit(API_VERSION, swaggerDefinition, tenant);
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         Response existing = getResponseOfGet(OPENID4VP_CONFIG_API_PATH);
         if (existing.getStatusCode() != HttpStatus.SC_OK) {
             throw new AssertionError("Failed to retrieve current OpenID4VP config (status "
