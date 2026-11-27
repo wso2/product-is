@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.branding.preference.management.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -142,7 +141,7 @@ public class LoginPageBackgroundImageTest extends BrandingPreferenceManagementTe
 
         try {
             if (isBrandingPreferenceAdded) {
-                RestAssured.basePath = basePath;
+                requestBasePath = basePath;
                 getResponseOfDeleteWithQueryParams(BRANDING_PREFERENCE_API_BASE_PATH, getBrandingQueryParams())
                         .then()
                         .log().ifValidationFails()
@@ -150,7 +149,7 @@ public class LoginPageBackgroundImageTest extends BrandingPreferenceManagementTe
                         .statusCode(HttpStatus.SC_NO_CONTENT);
             }
         } finally {
-            RestAssured.basePath = StringUtils.EMPTY;
+            requestBasePath = StringUtils.EMPTY;
             try {
                 if (restClient != null && appId != null) {
                     restClient.deleteApplication(appId);
@@ -167,13 +166,13 @@ public class LoginPageBackgroundImageTest extends BrandingPreferenceManagementTe
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "backgroundImageSupportedLayouts")

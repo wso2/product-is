@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.webhook.management.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.hamcrest.CoreMatchers;
@@ -72,7 +71,7 @@ public class WebhookManagementSuccessTest extends WebhookManagementTestBase {
     @BeforeMethod(alwaysRun = true)
     public void setBasePath() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @Test

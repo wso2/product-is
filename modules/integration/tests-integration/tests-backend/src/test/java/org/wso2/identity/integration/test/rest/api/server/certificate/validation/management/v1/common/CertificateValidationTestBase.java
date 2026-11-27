@@ -20,7 +20,6 @@ package org.wso2.identity.integration.test.rest.api.server.certificate.validatio
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.restassured.RestAssured;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -72,7 +71,7 @@ public class CertificateValidationTestBase extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

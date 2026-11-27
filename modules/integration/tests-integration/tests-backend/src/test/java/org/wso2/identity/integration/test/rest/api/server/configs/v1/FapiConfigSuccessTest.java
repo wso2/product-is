@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.configs.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
@@ -75,13 +74,13 @@ public class FapiConfigSuccessTest extends ConfigTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

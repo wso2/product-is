@@ -31,7 +31,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.testng.Assert;
 
-import static io.restassured.RestAssured.given;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
@@ -126,13 +125,13 @@ public class OpenID4VPConfigFailureTest extends OpenID4VPConfigTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

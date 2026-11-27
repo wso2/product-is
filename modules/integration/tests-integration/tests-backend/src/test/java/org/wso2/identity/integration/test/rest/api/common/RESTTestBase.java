@@ -28,6 +28,7 @@ import io.restassured.config.EncoderConfig;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -65,7 +66,6 @@ import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import javax.xml.xpath.XPathExpressionException;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.StringContains.containsString;
@@ -99,6 +99,14 @@ public class RESTTestBase extends ISIntegrationTest {
 
     protected String basePath = StringUtils.EMPTY;
 
+    /**
+     * Base URI and base path of the requests this test instance sends. They are kept per instance instead of in the
+     * static {@link RestAssured#baseURI} and {@link RestAssured#basePath} fields, so that test classes running at the
+     * same time don't change each other's request paths.
+     */
+    protected String requestBaseUri;
+    protected String requestBasePath = StringUtils.EMPTY;
+
     private OpenApiValidationFilter validationFilter;
     private EncoderConfig encoderconfig = new EncoderConfig();
 
@@ -116,7 +124,10 @@ public class RESTTestBase extends ISIntegrationTest {
 
         this.basePath = basePath;
         this.swaggerDefinition = swaggerDefinition;
-        RestAssured.baseURI = backendURL.replace(SERVICES, "");
+        requestBaseUri = backendURL.replace(SERVICES, "");
+        // Kept for code outside this class hierarchy that still relies on the static base URI. It is the same for
+        // every test instance.
+        RestAssured.baseURI = requestBaseUri;
         String swagger = replaceInSwaggerDefinition(swaggerDefinition, basePathInSwagger, basePath);
         OpenApiInteractionValidator openAPIValidator = OpenApiInteractionValidator
                 .createForInlineApiSpecification(swagger)
@@ -130,7 +141,20 @@ public class RESTTestBase extends ISIntegrationTest {
 
     protected void conclude() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
+    }
+
+    /**
+     * Start a RestAssured request with this test instance's base URI and base path. This method takes precedence over
+     * a static import of {@link RestAssured#given()} in subclasses.
+     *
+     * @return Request specification with the base URI and base path of this test instance.
+     */
+    protected RequestSpecification given() {
+
+        return RestAssured.given()
+                .baseUri(requestBaseUri != null ? requestBaseUri : RestAssured.baseURI)
+                .basePath(requestBasePath);
     }
 
     /**
@@ -625,7 +649,7 @@ public class RESTTestBase extends ISIntegrationTest {
         File file = new File(filePath);
         FileInputStream fileInputStream = new FileInputStream(file);
 
-        String completeUri = RestAssured.baseURI.substring(0, RestAssured.baseURI.length() - 1) + this.basePath +
+        String completeUri = requestBaseUri.substring(0, requestBaseUri.length() - 1) + this.basePath +
                 endpointUri;
         URL url = new URL(completeUri);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

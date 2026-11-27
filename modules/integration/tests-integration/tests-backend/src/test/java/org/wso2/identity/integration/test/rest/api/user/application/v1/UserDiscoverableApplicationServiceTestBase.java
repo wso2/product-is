@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.user.application.v1;
 
-import io.restassured.RestAssured;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -147,13 +146,13 @@ public class UserDiscoverableApplicationServiceTestBase extends RESTAPIUserTestB
     @BeforeMethod(alwaysRun = true)
     public void testMethodStart() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testMethodEnd() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     /**

@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.scim2.rest.api.customSchema;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -209,7 +208,7 @@ public class SCIM2CustomSchemaMeTestCase extends SCIM2BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @Test(description = "Creates simple attribute and complex attributes in urn:scim:schemas:extension:custom:User.")

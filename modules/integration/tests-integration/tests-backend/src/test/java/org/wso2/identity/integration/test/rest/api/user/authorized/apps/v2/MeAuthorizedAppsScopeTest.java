@@ -17,7 +17,6 @@
  */
 package org.wso2.identity.integration.test.rest.api.user.authorized.apps.v2;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -104,13 +103,13 @@ public class MeAuthorizedAppsScopeTest extends UserAuthorizedAppsBaseTest {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     public void registerApplication(String appName, String clientId, String clientSecret) {

@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.configs.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
@@ -35,7 +34,6 @@ import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import java.io.IOException;
 import java.util.UUID;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -77,7 +75,7 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
         String consentMgtBasePath = getConsentMgtBasePath(tenant);
 
         // Create element (prerequisite for purpose creation).
-        RestAssured.basePath = consentMgtBasePath;
+        requestBasePath = consentMgtBasePath;
         Response elementResponse = getResponseOfPostNoFilter(CONSENT_MGT_ELEMENTS_PATH,
                 readResource("create-consent-element.json"));
         elementResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
@@ -92,7 +90,7 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
         createdPurposeId = purposeResponse.jsonPath().getString("id");
         Assert.assertNotNull(createdPurposeId, "Purpose creation returned a null ID");
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
 
         // Create application.
         ApplicationModel app = new ApplicationModel();
@@ -110,7 +108,7 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
                 createdAppId = null;
             }
             String consentMgtBasePath = getConsentMgtBasePath(tenant);
-            RestAssured.basePath = consentMgtBasePath;
+            requestBasePath = consentMgtBasePath;
             if (createdPurposeId != null) {
                 deleteNoFilter(CONSENT_MGT_PURPOSES_PATH + "/" + createdPurposeId);
                 createdPurposeId = null;
@@ -119,7 +117,7 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
                 deleteNoFilter(CONSENT_MGT_ELEMENTS_PATH + "/" + createdElementId);
                 createdElementId = null;
             }
-            RestAssured.basePath = basePath;
+            requestBasePath = basePath;
         } finally {
             super.testConclude();
         }
@@ -190,9 +188,9 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
 
         String purposeId = createdPurposeId;
         String consentMgtBasePath = getConsentMgtBasePath(tenant);
-        RestAssured.basePath = consentMgtBasePath;
+        requestBasePath = consentMgtBasePath;
         deleteNoFilter(CONSENT_MGT_PURPOSES_PATH + "/" + purposeId);
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         createdPurposeId = null;
 
         getResponseOfGet(CONSENT_PURPOSES_API_PATH + "/" + purposeId + APPLICATIONS_SUFFIX)
@@ -204,7 +202,7 @@ public class ConsentPurposesSuccessTest extends ConsentPurposesTestBase {
 
     /**
      * Sends a DELETE to the given endpoint path without swagger validation.
-     * Caller is responsible for setting RestAssured.basePath before calling.
+     * Caller is responsible for setting requestBasePath before calling.
      */
     private void deleteNoFilter(String endpointPath) {
 

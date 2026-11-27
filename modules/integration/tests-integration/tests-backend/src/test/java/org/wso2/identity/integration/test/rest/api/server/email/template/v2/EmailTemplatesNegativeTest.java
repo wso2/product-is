@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.email.template.v2;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import java.io.IOException;
 import java.util.HashMap;
@@ -70,13 +69,13 @@ public class EmailTemplatesNegativeTest extends EmailTemplatesTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

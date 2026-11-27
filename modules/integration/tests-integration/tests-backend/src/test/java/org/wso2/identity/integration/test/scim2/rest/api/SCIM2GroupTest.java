@@ -16,7 +16,6 @@
 
 package org.wso2.identity.integration.test.scim2.rest.api;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.apache.axis2.context.ConfigurationContextFactory;
@@ -107,7 +106,7 @@ public class SCIM2GroupTest extends SCIM2BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @Test

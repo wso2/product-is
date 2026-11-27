@@ -160,8 +160,8 @@ public class OrganizationManagementFailureTest extends OrganizationManagementBas
         String apiAuthorizations = readResource(ORGANIZATION_SELF_SERVICE_APIS);
         URI tokenEndpoint = new URI(getTenantQualifiedURL(OAuth2Constant.ACCESS_TOKEN_ENDPOINT,
                                 tenantInfo.getDomain()));
-        applicationID = OAuth2Util.createOIDCApplication(oAuth2RestClient, apiAuthorizations, authenticatingUserName,
-                                                    authenticatingCredential);
+        applicationID = OAuth2Util.createOIDCApplication(this::given, oAuth2RestClient, apiAuthorizations,
+                authenticatingUserName, authenticatingCredential);
         m2mToken = OAuth2Util.getM2MAccessToken(oAuth2RestClient, applicationID, tokenEndpoint);
     }
 

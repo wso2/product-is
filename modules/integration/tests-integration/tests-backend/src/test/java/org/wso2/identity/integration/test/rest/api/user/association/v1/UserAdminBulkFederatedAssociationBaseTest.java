@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.rest.api.user.association.v1;
 
 import com.atlassian.oai.validator.restassured.OpenApiValidationFilter;
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -144,7 +143,7 @@ public class UserAdminBulkFederatedAssociationBaseTest extends UserAssociationTe
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         createFederatedAssociationById(testUser1Id, EXTERNAL_USER_ID_1);
         getFederatedAssociations(testUser1Id);
         createFederatedAssociationById(testUser2Id, EXTERNAL_USER_ID_2);
@@ -156,7 +155,7 @@ public class UserAdminBulkFederatedAssociationBaseTest extends UserAssociationTe
 
         removeFederatedAssociationById(testUser1Id);
         removeFederatedAssociationById(testUser2Id);
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @Test(dataProvider = "bulkDataProvider")

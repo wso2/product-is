@@ -19,7 +19,6 @@
 package org.wso2.identity.integration.test.rest.api.server.notification.sender.v2;
 
 import com.google.gson.Gson;
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -85,7 +84,7 @@ public class EmailSenderSuccessTest extends EmailSenderTestBase {
         try {
             // Cleanup any leftover email sender to prevent conflicts in subsequent test classes.
             if (!StringUtils.equals(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME, tenant)) {
-                RestAssured.basePath = basePath;
+                requestBasePath = basePath;
                 getResponseOfDelete(NOTIFICATION_SENDER_API_BASE_PATH + PATH_SEPARATOR +
                         EMAIL_SENDERS_PATH + PATH_SEPARATOR + emailNotificationSenderName);
                 // Ignore the response status - it may be 204 (deleted) or 404 (not found).
@@ -99,14 +98,14 @@ public class EmailSenderSuccessTest extends EmailSenderTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @Override
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

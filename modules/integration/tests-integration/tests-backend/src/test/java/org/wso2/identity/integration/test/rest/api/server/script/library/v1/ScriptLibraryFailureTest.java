@@ -16,7 +16,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.script.library.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;
@@ -65,22 +64,22 @@ public class ScriptLibraryFailureTest extends ScriptLibraryTestBase {
     public void testConclude() {
 
         // Remove the script library created by testAddScriptLibraryConflict.
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         getResponseOfDelete(SCRIPT_LIBRARY_API_BASE_PATH + PATH_SEPARATOR + VALID_SCRIPT_LIBRARY_NAME);
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
         super.conclude();
     }
 
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.workflow.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -70,13 +69,13 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     /**
@@ -122,7 +121,7 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
      * associations is left behind. A leaked association with no rule engages the approval flow for every later
      * user operation in the tenant, so later tests get 202 instead of 201/204.
      *
-     * This runs from @AfterClass, where RestAssured.basePath is not the workflow API path: testFinish() resets it
+     * This runs from @AfterClass, where requestBasePath is not the workflow API path: testFinish() resets it
      * after every test method, and other test classes interleave with this one and overwrite it. Without restoring
      * it here, the deletes never reach the workflow API.
      *
@@ -133,8 +132,8 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
      */
     protected void deleteWorkflowArtifacts(List<String> associationIds, String workflowId) {
 
-        String previousBasePath = RestAssured.basePath;
-        RestAssured.basePath = basePath;
+        String previousBasePath = requestBasePath;
+        requestBasePath = basePath;
         try {
             for (String associationId : associationIds) {
                 getResponseOfDelete(WORKFLOW_ASSOCIATION_API_BASE_PATH + PATH_SEPARATOR + associationId);
@@ -149,7 +148,7 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
                         + associationId + " was left behind and would engage the approval flow for later tests.");
             }
         } finally {
-            RestAssured.basePath = previousBasePath;
+            requestBasePath = previousBasePath;
         }
     }
 
@@ -159,7 +158,7 @@ public class WorkflowBaseTest extends RESTAPIServerTestBase {
      */
     protected void cleanupWorkflowByName(String name) {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
         Response assocResp = getResponseOfGet(WORKFLOW_ASSOCIATION_API_BASE_PATH);
         if (assocResp.getStatusCode() == HttpStatus.SC_OK) {
             List<Map<String, Object>> assocs = assocResp.jsonPath().getList("workflowAssociations");

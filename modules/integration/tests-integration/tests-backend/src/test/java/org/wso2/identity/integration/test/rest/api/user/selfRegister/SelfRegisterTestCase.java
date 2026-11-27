@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.user.selfRegister;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -54,7 +53,7 @@ public class SelfRegisterTestCase extends SelfRegisterTestBase {
     public void endTest() throws Exception {
 
         updateResidentIDPProperty(ENABLE_SELF_SIGN_UP, "false", true);
-        RestAssured.basePath = StringUtils.EMPTY;
+        requestBasePath = StringUtils.EMPTY;
     }
 
     @Test(

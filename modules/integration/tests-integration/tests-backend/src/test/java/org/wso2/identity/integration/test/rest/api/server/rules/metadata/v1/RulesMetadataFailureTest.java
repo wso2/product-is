@@ -18,7 +18,6 @@
 
 package org.wso2.identity.integration.test.rest.api.server.rules.metadata.v1;
 
-import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
@@ -68,7 +67,7 @@ public class RulesMetadataFailureTest extends RulesMetadataTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        RestAssured.basePath = basePath;
+        requestBasePath = basePath;
     }
 
     @Test
