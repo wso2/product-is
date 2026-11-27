@@ -90,11 +90,6 @@ build_and_run_integration_tests() {
     done ) > resource-usage.log 2>&1 &
   local monitor=$!
   mvn clean install --batch-mode -DskipLanes=true | tee mvn-build.log
-  if [ "$BUILD_ONLY" = "true" ]; then
-    # The integration tests run in separate jobs, from this build's output (see package_build_for_test_runners).
-    kill $monitor 2>/dev/null || true
-    return
-  fi
   if [ "$(grep -oE '\[INFO\] BUILD (SUCCESS|FAILURE)' mvn-build.log | tail -1)" = "[INFO] BUILD SUCCESS" ]; then
     # LANES_FILE (relative to tests-backend) picks the lane layout, LANES_RUNNER the [section] of it this runner
     # runs, and LANES_ALLOW_PARTIAL=true lets an experiment run only some blocks.
