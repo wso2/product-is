@@ -57,21 +57,17 @@ jobs:
           fi
           echo "run_tests=$run_tests" | tee -a "$GITHUB_OUTPUT"
 
-  run-test-runners:
+  # Builds product-is once (with the PR diff or dependency versions applied, and the unit tests) and hands the build
+  # to the test runners, so they don't each build it again.
+  build-pack:
     needs: changes
     if: ${{ github.event_name != 'pull_request' && needs.changes.outputs.run_tests == 'true' }}
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
-    # 4 runners; each runs one [runnerN] section of tests-backend/src/test/lanes/ci-4-runners.conf, which splits
-    # the suite into four balanced shares. A run with the lanes_file input (an experiment) uses one runner.
-    strategy:
-      fail-fast: false
-      matrix:
-        include: ${{ fromJSON(github.event.inputs.lanes_file != '' && '[{"runner_id":1,"tests":""}]' || '[{"runner_id":1,"tests":""},{"runner_id":2,"tests":""},{"runner_id":3,"tests":""},{"runner_id":4,"tests":""}]') }}
     steps:
       - name: Print Input
-        run: echo "Running the Test runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
+        run: echo "Building product-is for PR - ${{ github.event.inputs.pr }}"
       - name: Comment build info
-        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' && github.event.inputs.pr != '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.pr != '' }}
         run: |
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
@@ -130,16 +126,24 @@ jobs:
         with:
           version: latest
           run_install: false
-      - name: Run PR builder ${{ matrix.runner_id }}
+      - name: Build product-is
         id: builder_step
         env:
           PR_LINK: ${{github.event.inputs.pr}}
-          LANES_FILE: ${{ github.event.inputs.lanes_file || 'src/test/lanes/ci-4-runners.conf' }}
-          LANES_RUNNER: ${{ github.event.inputs.lanes_file == '' && format('runner{0}', matrix.runner_id) || '' }}
-          LANES_ALLOW_PARTIAL: ${{ github.event.inputs.lanes_file != '' }}
+          BUILD_ONLY: "true"
           JAVA_21_HOME: ${{env.J21HOME}}
         run: |
-          bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
+          touch "$RUNNER_TEMP/build-start"
+          bash .github/scripts/pr-builder.sh 1 ""
+      - name: Package the build for the test runners
+        run: bash .github/scripts/package-build-for-test-runners.sh product-is-1 "$RUNNER_TEMP/build-start" build-out
+      - name: Upload the build
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-is-build
+          path: build-out
+          retention-days: 1
+          compression-level: 0
       - name: Save maven packages
         if: ${{ always() && steps.cache-maven-m2.outputs.cache-hit != 'true' }}
         uses: actions/cache/save@v4
@@ -149,7 +153,7 @@ jobs:
             !~/.m2/repository/org/wso2/is/wso2is
           key: ${{ steps.cache-maven-m2.outputs.cache-primary-key }}
       - name: Archive PR diff file
-        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' }}
+        if: ${{ github.event_name == 'workflow_dispatch' }}
         uses: actions/upload-artifact@v4
         with:
           name: repo-pr-diff
@@ -157,13 +161,93 @@ jobs:
             ${{steps.builder_step.outputs.REPO_NAME}}/diff.diff
           if-no-files-found: warn
       - name: Archive repo mvn build log
-        if: ${{ matrix.runner_id == 1 && github.event_name == 'workflow_dispatch' && steps.builder_step.outputs.REPO_NAME != 'product-is' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && steps.builder_step.outputs.REPO_NAME != 'product-is' }}
         uses: actions/upload-artifact@v4
         with:
           name: repo-mvn-build-log
           path: |
             ${{steps.builder_step.outputs.REPO_NAME}}/mvn-build.log
           if-no-files-found: warn
+      - name: Archive product-is build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-is-build-log
+          path: |
+            product-is-1/mvn-build.log
+            product-is-1/resource-usage.log
+          if-no-files-found: warn
+
+  # Each runner runs one [runnerN] section of tests-backend/src/test/lanes/ci-8-runners.conf against the build above.
+  # A run with the lanes_file input (an experiment) uses one runner.
+  run-test-runners:
+    needs: [changes, build-pack]
+    if: ${{ github.event_name != 'pull_request' && needs.changes.outputs.run_tests == 'true' }}
+    runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runner_id: ${{ fromJSON(github.event.inputs.lanes_file != '' && '[1]' || '[1,2,3,4,5,6,7,8]') }}
+    steps:
+      - name: Report runner resources
+        # As an annotation, so it is kept even if the runner is lost later in the job.
+        run: |
+          echo "::notice title=Runner resources::cores=$(nproc), memory=$(free -m | awk '/Mem:/ {print $2}') MB, available=$(free -m | awk '/Mem:/ {print $7}') MB, swap=$(free -m | awk '/Swap:/ {print $2}') MB, disk free=$(df -BG --output=avail . | tail -1 | tr -d ' ')"
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+      - name: Set up Maven 3.9.x
+        # Maven 3.10.0 (ubuntu-latest image 20261004+) breaks the Tycho-based carbon-p2-plugin.
+        run: |
+          MAVEN_VERSION=3.9.11
+          MAVEN_SHA512=bcfe4fe305c962ace56ac7b5fc7a08b87d5abd8b7e89027ab251069faebee516b0ded8961445d6d91ec1985dfe30f8153268843c89aa392733d1a3ec956c9978
+          MAVEN_ARCHIVE="$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}-bin.tar.gz"
+          # Maven Central first; archive.apache.org is slow and rate-limited. Same file, checked below.
+          for url in \
+            "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/${MAVEN_VERSION}/apache-maven-${MAVEN_VERSION}-bin.tar.gz" \
+            "https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz"; do
+            curl -fsSL --connect-timeout 20 --max-time 120 --retry 3 --retry-all-errors --retry-delay 5 \
+              -o "$MAVEN_ARCHIVE" "$url" && break
+            echo "::warning::Could not download Maven from $url"
+          done
+          echo "${MAVEN_SHA512}  ${MAVEN_ARCHIVE}" | sha512sum -c -
+          tar -xzf "$MAVEN_ARCHIVE" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/apache-maven-${MAVEN_VERSION}/bin/mvn" --version
+      - name: Echo java 21 home
+        run: |
+          echo "J21HOME=$JAVA_HOME" >> ${GITHUB_ENV}
+        id: java-21-setup
+      - name: Build init
+        run: |
+          echo "CURRENT_MONTH=$(date +%Y-%m)" >> ${GITHUB_ENV}
+      # The Maven cache is keyed on the POMs, so a dependency change gets a fresh cache. Without an exact match
+      # it starts from the newest earlier cache instead of from nothing, and it is saved even when tests fail.
+      - name: Restore maven packages
+        id: cache-maven-m2
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.m2
+            !~/.m2/repository/org/wso2/is/wso2is
+          key: ${{ runner.os }}-pr-builder-${{ hashFiles('pom.xml', 'modules/**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-pr-builder-
+      - name: Download the build
+        uses: actions/download-artifact@v4
+        with:
+          name: product-is-build
+          path: build-in
+      - name: Run integration tests (runner ${{ matrix.runner_id }})
+        env:
+          LANES_FILE: ${{ github.event.inputs.lanes_file || 'src/test/lanes/ci-8-runners.conf' }}
+          LANES_RUNNER: ${{ github.event.inputs.lanes_file == '' && format('runner{0}', matrix.runner_id) || '' }}
+          LANES_ALLOW_PARTIAL: ${{ github.event.inputs.lanes_file != '' }}
+          JAVA_21_HOME: ${{env.J21HOME}}
+        run: bash .github/scripts/run-test-runner-from-build.sh ${{ matrix.runner_id }} build-in
       - name: Archive product-is mvn build log
         if: always()
         uses: actions/upload-artifact@v4
@@ -194,13 +278,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: heap-dump
+          name: heap-dump-${{ matrix.runner_id }}
           path: |
             **/**.hprof
           if-no-files-found: ignore
+
   comment-and-approve:
     name: Comment the status and Approve PR
-    needs: run-test-runners
+    needs: [build-pack, run-test-runners]
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
     if: ${{ always() && github.event_name == 'workflow_dispatch' && github.event.inputs.pr != '' }}
     steps:
@@ -209,7 +294,7 @@ jobs:
           owner=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 4)
           repo=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 5)
           pr_number=$(echo '${{github.event.inputs.pr}}' | cut -d "/" -f 7)
-          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: ${{ needs.run-test-runners.result }}"}'
+          curl -X POST https://api.github.com/repos/$owner/$repo/issues/$pr_number/comments -H 'Authorization: token ${{secrets.PR_BUILDER_COMMENT}}' -d '{"body":"PR builder completed \nLink: https://github.com/wso2/product-is/actions/runs/${{github.run_id}} \nStatus: ${{ needs.build-pack.result == 'success' && needs.run-test-runners.result || needs.build-pack.result }}"}'
       - name: Approve PR
         if: ${{ needs.run-test-runners.result == 'success' }}
         run: |
@@ -224,13 +309,13 @@ jobs:
     # matrix is skipped there) and for merge_group (green only if every runner
     # passed).
     name: Integration Tests
-    needs: [changes, run-test-runners]
+    needs: [changes, build-pack, run-test-runners]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Report result
         run: |
-          result="${{ needs.run-test-runners.result }}"
+          result="${{ needs.build-pack.result == 'success' && needs.run-test-runners.result || needs.build-pack.result }}"
           echo "Event: ${{ github.event_name }}"
           echo "run-test-runners result: $result"
           if [ "${{ github.event_name }}" = "pull_request" ]; then
