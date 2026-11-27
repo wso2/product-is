@@ -71,6 +71,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -403,7 +404,7 @@ public class OAuth2ServiceAuthCodeGrantOpenIdRequestObjectTestCase extends OAuth
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "oauth"
                 + File.separator + "jwt-token-gen-enabled-identity.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
     }

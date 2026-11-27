@@ -76,6 +76,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.OAUTH2_GRA
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.REDIRECT_URI_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SCOPE_PLAYGROUND_NAME;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This class contains the tests for the organization discovery feature with email domain based organization discovery.
@@ -289,7 +290,7 @@ public class OrganizationDiscoveryTestCase extends OAuth2ServiceAbstractIntegrat
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File emailAsUsernameConfigFile = new File(getISResourceLocation() + File.separator +
                 "organizationDiscovery" + File.separator + EMAIL_AS_USERNAME_TOML);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailAsUsernameConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
     }

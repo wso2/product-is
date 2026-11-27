@@ -54,6 +54,7 @@ import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.util.Utils;
 import org.wso2.identity.integration.test.utils.CarbonUtils;
 import org.wso2.identity.integration.test.utils.OAuth2Constant;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -76,7 +77,7 @@ public class OAuth2TokenScopeValidatorTestCase extends OAuth2ServiceAbstractInte
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File emailLoginConfigFile = new File(
                 getISResourceLocation() + File.separator + "oauth" + File.separator + ADD_SCOPE_DEPLOYMENT_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 

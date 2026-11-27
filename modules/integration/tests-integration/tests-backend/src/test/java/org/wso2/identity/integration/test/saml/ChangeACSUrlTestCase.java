@@ -71,6 +71,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
 
@@ -109,7 +110,7 @@ public class ChangeACSUrlTestCase extends AbstractIdentityFederationTestCase {
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "saml" + File.separator
                 + "application_authentication_changed_acs.toml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 

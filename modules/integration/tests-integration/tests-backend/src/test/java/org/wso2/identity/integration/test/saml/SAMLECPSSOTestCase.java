@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
 
@@ -177,7 +178,7 @@ public class SAMLECPSSOTestCase extends AbstractSAMLSSOTestCase {
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "saml" + File.separator
                         + "saml_ecp_consent_management_disabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

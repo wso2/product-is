@@ -35,6 +35,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
 
@@ -178,7 +179,7 @@ public class UserIdentityManagementServiceTestCase extends ISIntegrationTest {
                 + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "identityMgt" + File
                 .separator + "identity-identitymgtlistener-enabled.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);
         serverConfigurationManager.restartGracefully();
     }

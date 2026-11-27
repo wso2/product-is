@@ -56,6 +56,7 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Testcase for https://wso2.org/jira/browse/IDENTITY-4776
@@ -95,7 +96,7 @@ public class IDENTITY4776SCIMServiceWithOAuthTestCase extends OAuth2ServiceAbstr
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File scimConfiguredTomlFile = new File(getISResourceLocation() + File.separator + "scim"
                 + File.separator + "IDENTITY4776" + File.separator + "catalina_server_config.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(scimConfiguredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 

@@ -63,6 +63,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.USER_IS_LOCKED;
 import static org.wso2.identity.integration.test.utils.DataExtractUtil.KeyValue;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class OAuth2ServiceResourceOwnerLockedTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -126,7 +127,7 @@ public class OAuth2ServiceResourceOwnerLockedTestCase extends OAuth2ServiceAbstr
 		File configuredTomlFile = new File
 					(getISResourceLocation() + File.separator + "oauth" +
 							File.separator + OAUTH_2_SERVICE_RESOURCE_OWNER_TOML);
-		serverConfigurationManager = new ServerConfigurationManager(isServer);
+		serverConfigurationManager = new ISServerConfigurationManager(isServer);
 		serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
 		serverConfigurationManager.restartForcefully();
 	}

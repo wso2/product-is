@@ -25,6 +25,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 
 import java.io.File;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Initialize a read-write LDAP user store for the tests in the test suite.
@@ -42,7 +43,7 @@ public class LDAPUserStoreInitializerTestCase extends ISIntegrationTest {
         defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                 + File.separator + "ldap_user_mgt_config.toml");
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
     }
 

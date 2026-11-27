@@ -32,6 +32,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This test case tests provisioning functionality when UM tables and IDN tables are separated into two databases
@@ -53,7 +54,7 @@ public class DBSeperationTestCase extends ISIntegrationTest {
                 "provisioning" + File.separator + "db_separation_config.toml");
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 

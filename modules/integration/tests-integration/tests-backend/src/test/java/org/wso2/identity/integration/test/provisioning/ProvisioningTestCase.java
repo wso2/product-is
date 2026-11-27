@@ -65,6 +65,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class ProvisioningTestCase extends ISIntegrationTest {
 
@@ -436,7 +437,7 @@ public class ProvisioningTestCase extends ISIntegrationTest {
         File defaultTomlFile = getDeploymentTomlFile(server2CarbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "provisioning"
                 + File.separator + DEFAULT_H2_DATABASE_CONFIG);
-        ServerConfigurationManager server2ConfigManager = new ServerConfigurationManager(context2);
+        ServerConfigurationManager server2ConfigManager = new ISServerConfigurationManager(context2);
         server2ConfigManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         server2ConfigManager.restartGracefully();
     }

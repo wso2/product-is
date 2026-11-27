@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This test class is to test the user account locking process while the caseInsensitiveUserName and
@@ -100,7 +101,7 @@ public class AccountLockWhileCaseInsensitiveUserFalseTestCase extends ISIntegrat
                 + File.separator + "case_insensitive_user_false.toml");
 
         log.info("Applying configured toml file.");
-        configurationManager = new ServerConfigurationManager(isServer);
+        configurationManager = new ISServerConfigurationManager(isServer);
         configurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         configurationManager.restartGracefully();
         log.info("Toml configurations applied.");

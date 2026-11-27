@@ -88,6 +88,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This is a test class for self contained access tokens with JWT bearer grant type.
@@ -554,7 +555,7 @@ public class OAuth2ServiceJWTGrantTestCase extends OAuth2ServiceAbstractIntegrat
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }

@@ -56,6 +56,7 @@ import java.io.File;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Integration test class to verify the OIDC inbound client secret property visibility when the
@@ -281,7 +282,7 @@ public class OAuth2SkipEnforceClientSecretPermissionTestCase extends OAuth2Servi
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "oauth" +
                 File.separator + "skip_enforce_client_secret_permission_enabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

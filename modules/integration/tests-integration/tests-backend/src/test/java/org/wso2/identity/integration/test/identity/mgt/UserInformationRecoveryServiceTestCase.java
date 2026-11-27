@@ -47,6 +47,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /*
  * TODO - Need to update all the methods with confirmation return check.
@@ -82,7 +83,7 @@ public class UserInformationRecoveryServiceTestCase extends ISIntegrationTest{
 		File axisConfigFile = new File(getISResourceLocation()
 				+ File.separator + "identityMgt" + File.separator
 				+ "axis2.xml");
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(identityMgtConfigFile, identityMgtServerFile, true);
         scm.applyConfigurationWithoutRestart(axisConfigFile, axisServerFile, true);
         scm.restartGracefully();

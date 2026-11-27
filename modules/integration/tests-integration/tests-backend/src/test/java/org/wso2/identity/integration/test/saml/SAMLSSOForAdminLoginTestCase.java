@@ -40,6 +40,7 @@ import java.io.IOException;
 
 import javax.xml.xpath.XPathExpressionException;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This class contains test cases for SAML SSO for Admin Console.
@@ -186,7 +187,7 @@ public class SAMLSSOForAdminLoginTestCase extends AbstractSAMLSSOTestCase {
      */
     private void changeISConfiguration() throws AutomationUtilException, IOException, XPathExpressionException {
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
 
         // Changing deployment.toml file configs to enable sso for admin login.
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);

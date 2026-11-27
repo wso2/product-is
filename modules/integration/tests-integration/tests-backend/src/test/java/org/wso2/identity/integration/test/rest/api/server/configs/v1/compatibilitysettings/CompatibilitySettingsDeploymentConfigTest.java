@@ -37,6 +37,7 @@ import java.nio.file.Files;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Integration tests that verify compatibility settings reflect deployment.toml overrides
@@ -83,7 +84,7 @@ public class CompatibilitySettingsDeploymentConfigTest extends ConfigTestBase {
         Files.write(mergedTomlFile.toPath(), mergedContent.getBytes(StandardCharsets.UTF_8));
 
         log.info("Merging compatibility-settings fragment into existing deployment.toml and restarting the server.");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(mergedTomlFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 

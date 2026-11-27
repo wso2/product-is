@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class AnalyticsBaseTestCase extends ISIntegrationTest {
 
@@ -85,7 +86,7 @@ public class AnalyticsBaseTestCase extends ISIntegrationTest {
             File configuredSessionPublisherFile = new File(sessionDataPublisherWithOffset);
             File configuredTokenPublisherFile = new File(tokenDataPublisherWithOffset);
 
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
+            serverConfigurationManager = new ISServerConfigurationManager(isServer);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredTokenPublisherFile,
                     defaultTokenDataPublisher, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(analyticsEnabledConfigFile,

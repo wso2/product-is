@@ -49,6 +49,7 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Oauth2 insert token with authorization code grant test case with encryption enabled.
@@ -74,7 +75,7 @@ public class Oauth2PersistenceProcessorInsertTokenTestCase extends OAuth2Service
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
                 + "identity_encryption_enabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);

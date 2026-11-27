@@ -32,6 +32,7 @@ import org.wso2.identity.integration.test.utils.ISTestUtils;
 import java.io.File;
 import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Initialize a read-only LDAP user store at the beginning of the test "is-tests-read-only-userstore"
@@ -90,7 +91,7 @@ public class ReadOnlyUserStoreInitializerTestCase extends ISIntegrationTest {
         log.info("Default TOML: " + defaultConfigFile.toString());
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                 + File.separator + deploymentTomlFile);
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(userMgtConfigFile, defaultConfigFile, true);
         scm.restartGracefully();
     }

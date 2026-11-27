@@ -32,6 +32,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import java.io.File;
 
 import static java.io.File.separator;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
 
@@ -42,7 +43,7 @@ public class SSOSessionTimeoutTestCase extends ISIntegrationTest{
     public void testInit() throws Exception {
         super.init();
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         String identityXMLFile = TestConfigurationProvider.getResourceLocation("IS") +
                 separator + "conf" + separator + "identity.xml";
         File srcFile = new File(identityXMLFile);

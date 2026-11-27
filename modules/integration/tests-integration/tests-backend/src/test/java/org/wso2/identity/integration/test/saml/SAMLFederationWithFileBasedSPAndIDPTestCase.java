@@ -79,6 +79,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentityFederationTestCase {
 
@@ -113,7 +114,7 @@ public class SAMLFederationWithFileBasedSPAndIDPTestCase extends AbstractIdentit
 
         super.initTest();
         // Apply file based configurations
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         applyConfigurationsForPrimaryIS();
         // Start secondary IS server
         testDataHolder = TestDataHolder.getInstance();

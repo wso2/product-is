@@ -58,6 +58,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.wso2.identity.integration.test.utils.TestPorts;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This class tests the different types of authenticators
@@ -460,7 +461,7 @@ public class SAMLLocalAndOutboundAuthenticatorsTestCase extends ISIntegrationTes
                 .separator + "identity" + File.separator + "identity.xml");
         File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "saml" + File.separator +
                 "identity-mgt-listener-enabled.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredApplicationXML, applicationXML, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredProperties, properties, true);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, identityXML, true);

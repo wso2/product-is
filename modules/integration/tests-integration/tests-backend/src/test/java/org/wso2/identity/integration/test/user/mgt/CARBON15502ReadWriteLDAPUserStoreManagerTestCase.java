@@ -33,6 +33,7 @@ import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
 import java.util.Arrays;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class CARBON15502ReadWriteLDAPUserStoreManagerTestCase extends ISIntegrationTest {
 
@@ -55,7 +56,7 @@ public class CARBON15502ReadWriteLDAPUserStoreManagerTestCase extends ISIntegrat
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                                           + File.separator + "readWriteLdapUserMgtConfigWildCard.xml");
 
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(userMgtConfigFile, userMgtServerFile, true);
         scm.restartGracefully();
 

@@ -49,6 +49,7 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Test class to check hashing support for access tokens,refresh tokens and authorization codes.
@@ -76,7 +77,7 @@ public class Oauth2HashAlgorithmTestCase extends OAuth2ServiceAbstractIntegratio
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
                 + "identity_hash_enabled.toml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
         super.init(TestUserMode.SUPER_TENANT_USER);

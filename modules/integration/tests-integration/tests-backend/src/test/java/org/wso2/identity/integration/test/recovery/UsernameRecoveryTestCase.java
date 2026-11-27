@@ -81,6 +81,7 @@ import java.util.stream.Collectors;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.AUTHORIZE_ENDPOINT_URL;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This class contains the test cases for the Username Recovery.
@@ -640,7 +641,7 @@ public class UsernameRecoveryTestCase extends OIDCAbstractIntegrationTest {
                     File.separator + NON_UNIQUE_USER_DISABLE_TOML);
         }
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfiguration(targetTomlFile, defaultTomlFile, true, true);
     }
 

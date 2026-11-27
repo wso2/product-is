@@ -28,6 +28,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class SAMLQueryProfileTestBase extends ISIntegrationTest {
 
@@ -55,7 +56,7 @@ public class SAMLQueryProfileTestBase extends ISIntegrationTest {
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File configuredIdentityXML = new File(getISResourceLocation() + File.separator + "saml"
                 + File.separator + "saml-assertion-query-enabled-deployment.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXML, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
     }

@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -76,7 +77,7 @@ public class OAuth2ServiceAuthCodeGrantCacheDisabledTestCase extends OAuth2Servi
         File defaultIdentityXml = new File(carbonHome + File.separator
                 + "repository" + File.separator + "conf" + File.separator + "identity" + File.separator
                 + "identity.xml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         File srcFile = new File(identityXMLFile);
         serverConfigurationManager.applyConfigurationWithoutRestart(srcFile,
                 defaultIdentityXml, true);

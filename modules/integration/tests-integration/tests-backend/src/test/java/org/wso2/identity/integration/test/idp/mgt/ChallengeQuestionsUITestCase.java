@@ -44,6 +44,7 @@ import java.util.Map;
 
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrationTest {
 
@@ -87,7 +88,7 @@ public class ChallengeQuestionsUITestCase extends OAuth2ServiceAbstractIntegrati
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File challengeQuestionsConfigFile = new File(
                 getISResourceLocation() + File.separator + "challenge-questions" + File.separator + ADD_CHALLENGE_QUESTIONS_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile, true);
         serverConfigurationManager.restartGracefully();
 

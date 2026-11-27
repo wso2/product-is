@@ -35,6 +35,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Oauth2 client id & client secret persistence processor test case.
@@ -129,7 +130,7 @@ public class Oauth2PersistenceProcessorTestCase extends OAuth2ServiceAbstractInt
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
                 + "identity_encryption_enabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

@@ -132,6 +132,7 @@ import static org.wso2.identity.integration.test.applicationNativeAuthentication
 import static org.wso2.identity.integration.test.applicationNativeAuthentication.Constants.UTF_8;
 import org.wso2.identity.integration.test.utils.TestPorts;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Integration test cases for verifying user association behavior after Just-in-Time (JIT) provisioning.
@@ -841,7 +842,7 @@ public class JITUserAssociationTestCase extends AbstractIdentityFederationTestCa
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File emailOTPConfigFile = new File(getISResourceLocation() + File.separator + "jit" + File.separator
                 + "jit_user_association_config.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailOTPConfigFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

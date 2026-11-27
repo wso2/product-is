@@ -25,6 +25,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
 import java.io.IOException;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class JDBCUUIDUMTestCase extends AbstractUUIDUMTestCase {
 
@@ -39,7 +40,7 @@ public class JDBCUUIDUMTestCase extends AbstractUUIDUMTestCase {
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt" + File.separator
                 + "jdbc_user_mgt_config.toml");
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
 
         super.init();

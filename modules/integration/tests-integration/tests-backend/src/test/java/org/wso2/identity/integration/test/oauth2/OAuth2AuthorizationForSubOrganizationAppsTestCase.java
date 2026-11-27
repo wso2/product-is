@@ -111,6 +111,7 @@ import static org.wso2.identity.integration.test.utils.OAuth2Constant.BASIC_HEAD
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.USER_AGENT;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.ACCESS_TOKEN_ENDPOINT;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Holds the integration tests for sub organization application authorizations.
@@ -1125,7 +1126,7 @@ public class OAuth2AuthorizationForSubOrganizationAppsTestCase extends OAuth2Ser
         File introspectionConfigFile = new File(getISResourceLocation() + File.separator + "oauth" +
                 File.separator + "introspection-config.toml");
 
-        staticServerConfigurationManager = new ServerConfigurationManager(isServer);
+        staticServerConfigurationManager = new ISServerConfigurationManager(isServer);
         staticServerConfigurationManager.applyConfigurationWithoutRestart(introspectionConfigFile, defaultTomlFile, true);
         staticServerConfigurationManager.restartForcefully();
     }

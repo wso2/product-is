@@ -38,6 +38,7 @@ import org.wso2.identity.integration.common.utils.ISIntegrationTest;
 import org.wso2.identity.integration.test.util.Utils;
 
 import java.io.File;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class UserInformationRecoveryServiceTenantEmailUserTestCase extends ISIntegrationTest {
 
@@ -71,7 +72,7 @@ public class UserInformationRecoveryServiceTenantEmailUserTestCase extends ISInt
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "identityMgt"
                 + File.separator + "user_mgt_regex_changed.toml");
 
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfigurationWithoutRestart(identityMgtConfigFile, identityMgtServerFile, true);
         scm.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         scm.restartGracefully();

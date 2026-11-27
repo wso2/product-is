@@ -41,6 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class EventPublisherPasswordEncryptionTestCase extends ISIntegrationTest {
 
@@ -52,7 +53,7 @@ public class EventPublisherPasswordEncryptionTestCase extends ISIntegrationTest 
     public void testInit() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
 
         eventPublisherDeploymentDirectory =
                 Utils.getResidentCarbonHome() + File.separator + "repository" + File.separator +

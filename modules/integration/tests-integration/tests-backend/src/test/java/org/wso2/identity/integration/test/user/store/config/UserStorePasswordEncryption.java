@@ -59,6 +59,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.crypto.Cipher;
 import javax.xml.namespace.QName;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Test class to test password encryption
@@ -79,7 +80,7 @@ public class UserStorePasswordEncryption extends ISIntegrationTest {
     public void testInit() throws Exception {
         super.init();
         userStoreConfigurationClient = new UserStoreConfigAdminServiceClient(backendURL, sessionCookie);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         keyStoreFilePath =
                 getTestArtifactLocation() + File.separator + "keystores" + File.separator + "products" + File.separator
                         + ISIntegrationTest.KEYSTORE_NAME;

@@ -23,6 +23,7 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.File;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class ReadWriteLDAPUUIDUMTestCase extends AbstractUUIDUMTestCase {
 
@@ -36,7 +37,7 @@ public class ReadWriteLDAPUUIDUMTestCase extends AbstractUUIDUMTestCase {
         File defaultConfigFile = getDeploymentTomlFile(carbonHome);
         File userMgtConfigFile = new File(getISResourceLocation() + File.separator + "userMgt"
                 + File.separator + "ldap_user_mgt_config.toml");
-        scm = new ServerConfigurationManager(isServer);
+        scm = new ISServerConfigurationManager(isServer);
         scm.applyConfiguration(userMgtConfigFile, defaultConfigFile, true, true);
         scm.restartGracefully();
         super.init();

@@ -51,6 +51,7 @@ import java.util.Map;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.is;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Integration tests for non-persistent access token flows covering two scenarios:
@@ -619,7 +620,7 @@ public class OIDCNonPersistentAccessTokenTest extends OIDCAbstractIntegrationTes
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "oauth" + File.separator
                 + "non_persistent_access_token.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }
@@ -637,7 +638,7 @@ public class OIDCNonPersistentAccessTokenTest extends OIDCAbstractIntegrationTes
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "oauth" + File.separator
                 + "non_persistent_access_token_persistent_refresh_token.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

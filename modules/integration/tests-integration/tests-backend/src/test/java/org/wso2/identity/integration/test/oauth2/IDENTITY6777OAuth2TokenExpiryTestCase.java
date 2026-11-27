@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private static final String SCOPE_PRODUCTION = "PRODUCTION";
@@ -251,7 +252,7 @@ public class IDENTITY6777OAuth2TokenExpiryTestCase extends OAuth2ServiceAbstract
         File configuredIdentityXml = new File(getISResourceLocation()
                 + File.separator + "oauth" + File.separator + "IDENTITY6777-identity.xml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredIdentityXml, identityXML, true);
         serverConfigurationManager.restartGracefully();
     }

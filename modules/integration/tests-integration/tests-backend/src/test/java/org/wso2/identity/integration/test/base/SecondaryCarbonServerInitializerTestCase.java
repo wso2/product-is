@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Test class that will start and stop secondary carbon server for the tests in the test suite.
@@ -99,7 +100,7 @@ public class SecondaryCarbonServerInitializerTestCase extends AbstractIdentityFe
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "provisioning" + File.separator + fileName);
-        serverConfigurationManager = new ServerConfigurationManager(server);
+        serverConfigurationManager = new ISServerConfigurationManager(server);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

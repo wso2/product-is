@@ -34,6 +34,7 @@ import java.io.File;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Tests for happy paths of the Certificate Validation Management REST API CA Certificates.
@@ -66,7 +67,7 @@ public class CACertificatesSuccessTest extends CACertificatesTestBase {
         File challengeQuestionsConfigFile = new File(
                 getISResourceLocation() + File.separator + "certificate-validation-mgt" + File.separator +
                         ADD_CA_CERTIFICATE_VALIDATION_CONFIG);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(challengeQuestionsConfigFile, defaultConfigFile,
                 true);
         serverConfigurationManager.restartGracefully();

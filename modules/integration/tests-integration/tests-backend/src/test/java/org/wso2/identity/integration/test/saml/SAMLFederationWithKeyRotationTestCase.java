@@ -93,6 +93,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Integration test for SAML federation between two IS instances with key rotation in place.
@@ -600,7 +601,7 @@ public class SAMLFederationWithKeyRotationTestCase extends AbstractIdentityFeder
                         + File.separator + "IS"
                         + File.separator + "saml"
                         + File.separator + SAML_KEYSTORE_TOML_CONFIG);
-        secondaryISConfigManager = new ServerConfigurationManager(TestDataHolder.getInstance().getAutomationContext());
+        secondaryISConfigManager = new ISServerConfigurationManager(TestDataHolder.getInstance().getAutomationContext());
         secondaryISConfigManager.applyConfiguration(configuredTomlFile, defaultTomlFile, true, true);
     }
 

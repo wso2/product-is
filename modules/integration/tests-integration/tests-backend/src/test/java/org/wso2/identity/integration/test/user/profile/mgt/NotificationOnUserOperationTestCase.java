@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class NotificationOnUserOperationTestCase extends ISIntegrationTest {
 
@@ -99,7 +100,7 @@ public class NotificationOnUserOperationTestCase extends ISIntegrationTest {
 
         File configuredNotificationProperties = new File(msgMgtPropertiesFileLocation);
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                 notificationMgtProperties, true);
     }

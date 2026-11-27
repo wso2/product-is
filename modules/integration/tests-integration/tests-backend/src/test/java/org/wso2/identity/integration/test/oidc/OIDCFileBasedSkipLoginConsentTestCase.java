@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This class is to handle the test cases to skip the login consent based on the file and per service provider.
@@ -81,7 +82,7 @@ public class OIDCFileBasedSkipLoginConsentTestCase extends OIDCAbstractIntegrati
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File
                 (getISResourceLocation() + File.separator + "oauth" + File.separator + fileName);
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartForcefully();
     }

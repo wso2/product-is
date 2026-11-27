@@ -42,6 +42,7 @@ import java.io.File;
 import java.rmi.RemoteException;
 import org.wso2.identity.integration.test.utils.TestPorts;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This test class tests SAML IdP initiated SLO functionality for two SAML applications. Since logout requests are sent
@@ -124,7 +125,7 @@ public class SAMLIdPInitiatedSLOTestCase extends AbstractSAMLSSOTestCase {
                 + "conf" + File.separator + "log4j2.properties");
         File configuredLo4j2File = new File(getISResourceLocation() + File.separator + "saml" + File.separator
                 + "log4j2_saml_enabled.properties");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredLo4j2File, defaultLog4j2File, true);
         // Waiting to apply the log4j2 changes
         checkForLog(logViewer, "Logging configuration applied successfully");

@@ -39,6 +39,7 @@ import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 import org.wso2.identity.integration.test.utils.TestPorts;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This class tests Analytics login data publish handling and Analytics session data publish handling functionalities.
@@ -98,7 +99,7 @@ public class AnalyticsLoginDataPublishHandlingTestCase extends AbstractAnalytics
             File configuredNotificationProperties = new File(analyticsEnabledIdentityEventProperties);
             File configuredAuthnPublisherFile = new File(authnDataPublisherWithOffset);
             File configuredSessionPublisherFile = new File(sessionDataPublisherWithOffset);
-            serverConfigurationManager = new ServerConfigurationManager(isServer);
+            serverConfigurationManager = new ISServerConfigurationManager(isServer);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredNotificationProperties,
                     defaultIdentityEventProperties, true);
             serverConfigurationManager.applyConfigurationWithoutRestart(configuredAuthnPublisherFile,

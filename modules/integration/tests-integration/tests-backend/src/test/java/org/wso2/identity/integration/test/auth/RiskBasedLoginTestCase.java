@@ -81,6 +81,7 @@ import javax.ws.rs.Produces;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.CALLBACK_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.COMMON_AUTH_URL;
 import static org.wso2.identity.integration.test.utils.OAuth2Constant.SESSION_DATA_KEY;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 @Path("/")
 public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCase {
@@ -147,7 +148,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
                 "successfully. File path: " + authenticatorWarPathString);
 
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl());
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         changeISConfiguration(scriptEngine);
         log.info("Restarting the server at: " + isServer.getContextUrls().getBackEndUrl() + " is successful");
 
@@ -217,7 +218,7 @@ public class RiskBasedLoginTestCase extends AbstractAdaptiveAuthenticationTestCa
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator
                 + identityNewResourceFileName);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

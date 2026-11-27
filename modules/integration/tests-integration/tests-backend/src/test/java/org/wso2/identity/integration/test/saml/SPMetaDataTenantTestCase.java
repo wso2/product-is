@@ -38,6 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.rmi.RemoteException;
 import java.util.Arrays;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * Test case for adding a meta data file in tenant domain.
@@ -96,7 +97,7 @@ public class SPMetaDataTenantTestCase extends ISIntegrationTest {
     public void restartTestServer() throws Exception {
 
         super.init();
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.restartGracefully();
         super.init(TestUserMode.TENANT_ADMIN);
 

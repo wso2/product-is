@@ -54,6 +54,7 @@ import org.wso2.identity.integration.test.utils.OAuth2Constant;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This test class is used to test token renewal and old token revocation per token issue request.
@@ -329,7 +330,7 @@ public class Oauth2TokenRenewalPerRequestTestCase extends OAuth2ServiceAbstractI
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File configuredTomlFile = new File(getISResourceLocation() + File.separator + "oauth" +
                 File.separator + "token_renewal_per_request_enabled.toml");
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredTomlFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
     }

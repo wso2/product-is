@@ -37,6 +37,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import org.wso2.identity.integration.test.utils.TestPorts;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbstractIntegrationTest {
     private String consumerKey;
@@ -129,7 +130,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
                                               + File.separator + "oauth" + File.separator
                                               + "web.xml");
 
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(configuredWebXml, webXml, true);
         serverConfigurationManager.restartGracefully();
     }
@@ -141,7 +142,7 @@ public class OAuth2TokenRevokeAfterCacheTimeOutTestCase extends OAuth2ServiceAbs
      */
     private void resetISConfiguration() throws Exception{
         log.info("Replacing default configurations");
-        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(isServer);
+        ServerConfigurationManager serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.restoreToLastConfiguration();
     }
 }

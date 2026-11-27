@@ -75,6 +75,7 @@ import javax.xml.xpath.XPathExpressionException;
 import static org.wso2.identity.integration.test.utils.CommonConstants.DEFAULT_TOMCAT_PORT;
 import org.wso2.identity.integration.test.utils.TestPorts;
 import org.wso2.identity.integration.test.lanes.LaneUserModes;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 /**
  * This class adds test cases for configuring email otp and login with a super tenant and a tenant user.
@@ -242,7 +243,7 @@ public class EmailOTPTestCase extends ISIntegrationTest {
         File defaultTomlFile = getDeploymentTomlFile(carbonHome);
         File emailOTPConfigFile = new File(getISResourceLocation() + File.separator + "email" + File.separator
                 + EmailOTPTestCase.EMAIL_OTP_CONFIG_TOML);
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailOTPConfigFile, defaultTomlFile, true);
         changeEmailAdminConfigXml(carbonHome);
         serverConfigurationManager.restartGracefully();

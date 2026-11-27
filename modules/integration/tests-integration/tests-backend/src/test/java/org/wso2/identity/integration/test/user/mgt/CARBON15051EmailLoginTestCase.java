@@ -36,6 +36,7 @@ import org.wso2.identity.integration.test.util.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import org.wso2.identity.integration.common.utils.ISServerConfigurationManager;
 
 public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
 
@@ -55,7 +56,7 @@ public class CARBON15051EmailLoginTestCase extends ISIntegrationTest {
         File emailLoginConfigFile = new File (getISResourceLocation() + File.separator +  "userMgt"
                 + File.separator + "carbon15051" + File.separator + "email_login_config.toml");
 
-        serverConfigurationManager = new ServerConfigurationManager(isServer);
+        serverConfigurationManager = new ISServerConfigurationManager(isServer);
         serverConfigurationManager.applyConfigurationWithoutRestart(emailLoginConfigFile, defaultTomlFile, true);
         serverConfigurationManager.restartGracefully();
 
