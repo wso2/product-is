@@ -88,10 +88,17 @@ build_and_run_integration_tests() {
   local monitor=$!
   mvn clean install --batch-mode -DskipLanes=true | tee mvn-build.log
   if [ "$(grep -oE '\[INFO\] BUILD (SUCCESS|FAILURE)' mvn-build.log | tail -1)" = "[INFO] BUILD SUCCESS" ]; then
-    # LANES_FILE (relative to tests-backend) picks another lane layout, e.g. for an experiment on a subset.
+    # LANES_FILE (relative to tests-backend) picks the lane layout, LANES_RUNNER the [section] of it this runner
+    # runs, and LANES_ALLOW_PARTIAL=true lets an experiment run only some blocks.
     local lane_args=()
     if [ -n "$LANES_FILE" ]; then
-      lane_args=("-Dtest.lanes.file=$PWD/modules/integration/tests-integration/tests-backend/$LANES_FILE" "-Dlanes.allowPartial=true")
+      lane_args+=("-Dtest.lanes.file=$PWD/modules/integration/tests-integration/tests-backend/$LANES_FILE")
+    fi
+    if [ -n "$LANES_RUNNER" ]; then
+      lane_args+=("-Dlanes.runner=$LANES_RUNNER")
+    fi
+    if [ "$LANES_ALLOW_PARTIAL" = "true" ]; then
+      lane_args+=("-Dlanes.allowPartial=true")
     fi
     mvn install --batch-mode -f modules/integration/tests-integration/tests-backend/pom.xml "${lane_args[@]}" | tee -a mvn-build.log
   fi

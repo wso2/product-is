@@ -61,14 +61,12 @@ jobs:
     needs: changes
     if: ${{ github.event_name != 'pull_request' && needs.changes.outputs.run_tests == 'true' }}
     runs-on: ${{ github.repository == 'wso2/product-is' && fromJSON(format('["codebuild-wso2_product-is-{0}-{1}"]', github.run_id, github.run_attempt)) || 'ubuntu-latest' }}
-    # One runner: the integration tests run as parallel lanes inside one "mvn clean install"
-    # (see modules/integration/tests-integration/tests-backend/src/test/lanes/lanes.conf).
+    # 4 runners; each runs one [runnerN] section of tests-backend/src/test/lanes/ci-4-runners.conf, which splits
+    # the suite into four balanced shares. A run with the lanes_file input (an experiment) uses one runner.
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - runner_id: 1
-            tests: ""
+        include: ${{ fromJSON(github.event.inputs.lanes_file != '' && '[{"runner_id":1,"tests":""}]' || '[{"runner_id":1,"tests":""},{"runner_id":2,"tests":""},{"runner_id":3,"tests":""},{"runner_id":4,"tests":""}]') }}
     steps:
       - name: Print Input
         run: echo "Running the Test runner ${{ matrix.runner_id }} for PR - ${{ github.event.inputs.pr }}"
@@ -136,7 +134,9 @@ jobs:
         id: builder_step
         env:
           PR_LINK: ${{github.event.inputs.pr}}
-          LANES_FILE: ${{github.event.inputs.lanes_file}}
+          LANES_FILE: ${{ github.event.inputs.lanes_file || 'src/test/lanes/ci-4-runners.conf' }}
+          LANES_RUNNER: ${{ github.event.inputs.lanes_file == '' && format('runner{0}', matrix.runner_id) || '' }}
+          LANES_ALLOW_PARTIAL: ${{ github.event.inputs.lanes_file != '' }}
           JAVA_21_HOME: ${{env.J21HOME}}
         run: |
           bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
@@ -185,7 +185,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: product-is-test-lane-logs
+          name: product-is-test-lane-logs-${{ matrix.runner_id }}
           path: |
             product-is-${{ matrix.runner_id }}/**/target/lanes/*/lane.log
             product-is-${{ matrix.runner_id }}/**/target/lanes/*/server-logs
