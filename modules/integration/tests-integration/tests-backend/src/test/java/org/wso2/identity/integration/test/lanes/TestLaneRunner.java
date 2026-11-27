@@ -37,6 +37,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -150,7 +151,19 @@ public final class TestLaneRunner {
             lanes.add(lane);
         }
         if (Boolean.getBoolean("lanes.dryRun")) {
-            lanes.forEach(l -> System.out.println("[INFO] Would start " + describe(l)));
+            for (Lane l : lanes) {
+                System.out.println("[INFO] Would start " + describe(l));
+                if (l.userModes != null) {
+                    String laneSuite = suiteText;
+                    for (String block : activeBlocks) {
+                        if (!ALWAYS_ON.equals(block) && !l.blocks.contains(block)) {
+                            laneSuite = laneSuite.replace("<test name=\"" + block + "\"", "<test name=\"" + block
+                                    + "\" enabled=\"false\"");
+                        }
+                    }
+                    dropClassesWithoutModes(enabledBlocksOnly(laneSuite), l);
+                }
+            }
             return 0;
         }
         killProcessesUnder(workDir, "left over from an earlier run");
@@ -420,6 +433,11 @@ public final class TestLaneRunner {
                 suite = suite.replace("<test name=\"" + block + "\"", "<test name=\"" + block + "\" enabled=\"false\"");
             }
         }
+        if (lane.userModes != null) {
+            // Only classes of the lane's own blocks matter; the others are disabled anyway.
+            String kept = dropClassesWithoutModes(enabledBlocksOnly(suite), lane);
+            suite = kept.contains("<suite") ? kept : suite;
+        }
         if (lane.holdDir != null) {
             // The holder only starts the server (is-tests-initialize) and keeps it up for the attached lanes.
             suite = suite.replace("</suite>", "    <test name=\"lane-hold-shared-server\" preserve-order=\"true\">\n"
@@ -468,6 +486,125 @@ public final class TestLaneRunner {
                             lane.shift);
                 }
             }
+        }
+    }
+
+    private static final Pattern CLASS_ENTRY = Pattern.compile("[ \\t]*<class\\s+name=\"([^\"]+)\"\\s*/>[ \\t]*\\n?");
+    private static final Pattern TENANT_MODE = Pattern.compile("(?<!SUPER_)TENANT_ADMIN");
+
+    /**
+     * For a lane that runs only some user modes, removes from its suite the test classes that run in none of them:
+     * classes without a @Factory always run as the super tenant; a @Factory class runs in the modes its data
+     * provider lists. Decided here because TestNG neither lets an interceptor see methods with dependencies nor
+     * accepts a factory that returns no instances.
+     */
+    private String dropClassesWithoutModes(String suite, Lane lane) {
+
+        List<String> modes = Arrays.asList(lane.userModes.split(","));
+        List<String> dropped = new ArrayList<>();
+        // is-tests-initialize sets up every lane (Tomcat, LDAP, ...) and always runs.
+        Set<String> alwaysOn = new HashSet<>();
+        Matcher init = Pattern.compile("(?s)<test\\s+name=\"" + ALWAYS_ON + "\"[^>]*>(.*?)</test>").matcher(suite);
+        if (init.find()) {
+            Matcher c = CLASS_ENTRY.matcher(init.group(1));
+            while (c.find()) {
+                alwaysOn.add(c.group(1));
+            }
+        }
+        Matcher m = CLASS_ENTRY.matcher(suite);
+        StringBuffer out = new StringBuffer();
+        while (m.find()) {
+            Set<String> classModes = alwaysOn.contains(m.group(1)) ? null : modesOf(m.group(1));
+            boolean keep = alwaysOn.contains(m.group(1)) || classModes == null
+                    || classModes.stream().anyMatch(modes::contains);
+            if (!keep) {
+                dropped.add(m.group(1).substring(m.group(1).lastIndexOf('.') + 1));
+            }
+            m.appendReplacement(out, Matcher.quoteReplacement(keep ? m.group() : ""));
+        }
+        m.appendTail(out);
+        if (!dropped.isEmpty()) {
+            System.out.println("[INFO] " + lane.name + " skips " + dropped.size() + " classes that don't run in "
+                    + lane.userModes + ": " + String.join(", ", dropped));
+        }
+        return out.toString();
+    }
+
+    /** User modes a test class runs in, or null if it can't be told (the class is then kept). */
+    private Set<String> modesOf(String className) {
+
+        Class<?> testClass;
+        try {
+            testClass = Class.forName(className, false, TestLaneRunner.class.getClassLoader());
+        } catch (Throwable e) {
+            return null;
+        }
+        String provider = null;
+        Class<?> providerClass = null;
+        for (java.lang.reflect.Constructor<?> c : testClass.getConstructors()) {
+            org.testng.annotations.Factory f = c.getAnnotation(org.testng.annotations.Factory.class);
+            if (f != null) {
+                provider = f.dataProvider();
+                providerClass = f.dataProviderClass() == Object.class ? null : f.dataProviderClass();
+            }
+        }
+        if (provider == null) {
+            return new HashSet<>(Collections.singletonList("SUPER_TENANT_ADMIN"));
+        }
+        // Find the provider method (by @DataProvider name, or method name) up the class hierarchy.
+        for (Class<?> k = providerClass != null ? providerClass : testClass; k != null; k = k.getSuperclass()) {
+            for (java.lang.reflect.Method method : k.getDeclaredMethods()) {
+                org.testng.annotations.DataProvider dp = method.getAnnotation(org.testng.annotations.DataProvider.class);
+                String name = dp != null && !dp.name().isEmpty() ? dp.name() : method.getName();
+                if (dp != null && name.equals(provider)) {
+                    String body = methodSource(k, method.getName());
+                    if (body == null) {
+                        return null;
+                    }
+                    Set<String> found = new HashSet<>();
+                    if (body.contains("SUPER_TENANT_ADMIN")) {
+                        found.add("SUPER_TENANT_ADMIN");
+                    }
+                    if (TENANT_MODE.matcher(body).find()) {
+                        found.add("TENANT_ADMIN");
+                    }
+                    return found.isEmpty() ? null : found;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** The suite text with disabled blocks removed, so only classes that will run are considered. */
+    private static String enabledBlocksOnly(String suite) {
+
+        return suite.replaceAll("(?s)<!--.*?-->", "")
+                .replaceAll("(?s)<test\\s+name=\"[^\"]*\"[^>]*enabled=\"false\"[^>]*>.*?</test>", "");
+    }
+
+    /** Source of a method's body, from src/test/java; null if not found. */
+    private String methodSource(Class<?> k, String methodName) {
+
+        Class<?> top = k;
+        while (top.getEnclosingClass() != null) {
+            top = top.getEnclosingClass();
+        }
+        Path file = basedir.resolve("src/test/java").resolve(top.getName().replace('.', '/') + ".java");
+        try {
+            String src = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+            Matcher m = Pattern.compile("\\b" + Pattern.quote(methodName) + "\\s*\\([^)]*\\)[^{;]*\\{").matcher(src);
+            if (!m.find()) {
+                return null;
+            }
+            int depth = 1;
+            int i = m.end();
+            while (i < src.length() && depth > 0) {
+                char c = src.charAt(i++);
+                depth += c == '{' ? 1 : c == '}' ? -1 : 0;
+            }
+            return src.substring(m.end(), i);
+        } catch (IOException e) {
+            return null;
         }
     }
 

@@ -31,7 +31,8 @@ import java.util.Set;
  * runs of the same test classes can run in parallel lanes against one IS server.
  *
  * The modes come from the {@code lane.userModes} system property, e.g. {@code TENANT_ADMIN} or
- * {@code SUPER_TENANT_ADMIN,TENANT_ADMIN}. Without it every mode is allowed and nothing changes.
+ * {@code SUPER_TENANT_ADMIN,TENANT_ADMIN}. Without it every mode is allowed and nothing changes. Classes that run in
+ * none of a lane's modes are left out of the lane's suite by TestLaneRunner, so a provider never ends up empty.
  */
 public final class LaneUserModes {
 
