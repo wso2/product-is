@@ -2782,13 +2782,13 @@
         <carbon.consent.mgt.version>2.9.23</carbon.consent.mgt.version>
 
         <!--Identity Governance Version-->
-        <identity.governance.version>1.16.55</identity.governance.version>
+        <identity.governance.version>1.16.56</identity.governance.version>
 
         <!--Identity Carbon Versions-->
         <identity.carbon.auth.saml2.version>5.12.5</identity.carbon.auth.saml2.version>
         <identity.carbon.auth.mutual.ssl.version>5.6.0</identity.carbon.auth.mutual.ssl.version>
         <identity.carbon.auth.iwa.version>5.5.2</identity.carbon.auth.iwa.version>
-        <identity.carbon.auth.rest.version>1.12.13</identity.carbon.auth.rest.version>
+        <identity.carbon.auth.rest.version>1.12.14</identity.carbon.auth.rest.version>
 
         <!-- Identity Inbound Versions   -->
         <identity.inbound.auth.oauth.version>7.5.110</identity.inbound.auth.oauth.version>
@@ -2876,7 +2876,7 @@
         <authenticator.magiclink.version>1.2.6</authenticator.magiclink.version>
         <authenticator.emailotp.version>4.2.0</authenticator.emailotp.version>
         <authenticator.local.auth.emailotp.version>1.2.8</authenticator.local.auth.emailotp.version>
-        <authenticator.local.auth.smsotp.version>1.1.15</authenticator.local.auth.smsotp.version>
+        <authenticator.local.auth.smsotp.version>1.1.16</authenticator.local.auth.smsotp.version>
         <authenticator.twitter.version>1.2.0</authenticator.twitter.version>
         <authenticator.x509.version>3.2.2</authenticator.x509.version>
         <identity.extension.utils>1.3.0</identity.extension.utils>
