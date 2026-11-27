@@ -9,6 +9,7 @@ WORKFLOW_BRANCH=${WORKFLOW_BRANCH#refs/heads/}
 declare -a ALL_TESTS=(
     "is-tests-default-configuration-parallel"
     "is-tests-default-configuration"
+    "is-tests-default-configuration-multi-server"
     "is-test-rest-api"
     "is-test-rest-api-2"
     "is-tests-oauth-client-secrets-parallel"
@@ -30,7 +31,9 @@ declare -a ALL_TESTS=(
     "is-tests-oauth-jwt-token-gen-enabled"
     "is-tests-email-username"
     "is-tests-with-individual-configuration-changes"
+    "is-tests-with-individual-configuration-changes-3"
     "is-tests-with-individual-configuration-changes-2"
+    "is-tests-with-individual-configuration-changes-4"
     "is-tests-saml-query-profile"
     "is-tests-default-encryption"
     "is-test-session-mgt"

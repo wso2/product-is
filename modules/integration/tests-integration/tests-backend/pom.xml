@@ -44,6 +44,8 @@
         <maven.test.skip>false</maven.test.skip>
         <skipLanes>${maven.test.skip}</skipLanes>
         <skipSurefire>true</skipSurefire>
+        <!-- Heap of each test JVM (the test client; IS servers have their own settings). -->
+        <it.testJvmHeap>1536m</it.testJvmHeap>
         <!-- Libraries that adaptive.sh adds to the IS pack for the Nashorn tests; keep in sync with adaptive.sh. -->
         <adaptive.nashorn.version>15.3</adaptive.nashorn.version>
         <adaptive.asm.version>9.2</adaptive.asm.version>
@@ -65,7 +67,7 @@
         <it.db.agentidentity.url>jdbc:h2:./repository/database/WSO2AGENTIDENTITY_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</it.db.agentidentity.url>
         <it.db.agentidentity.username>wso2carbon</it.db.agentidentity.username>
         <it.db.agentidentity.password>wso2carbon</it.db.agentidentity.password>
-        <it.argLine>-Xmx1536m -XX:+HeapDumpOnOutOfMemoryError -Dorg.apache.jasper.compiler.disablejsr199=true --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.xml/jdk.xml.internal=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/sun.nio.fs=ALL-UNNAMED --add-opens=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/sun.security.util=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/sun.security.rsa=ALL-UNNAMED --add-opens=java.base/java.security.cert=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</it.argLine>
+        <it.argLine>-Xmx${it.testJvmHeap} -XX:+HeapDumpOnOutOfMemoryError -Dorg.apache.jasper.compiler.disablejsr199=true --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.xml/jdk.xml.internal=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/sun.nio.fs=ALL-UNNAMED --add-opens=java.naming/com.sun.jndi.ldap=ALL-UNNAMED --add-opens=java.base/sun.security.util=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/sun.security.rsa=ALL-UNNAMED --add-opens=java.base/java.security.cert=ALL-UNNAMED --add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</it.argLine>
     </properties>
 
     <profiles>

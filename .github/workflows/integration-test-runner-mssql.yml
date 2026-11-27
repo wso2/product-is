@@ -31,9 +31,9 @@ jobs:
           - runner_id: 2
             tests: "is-test-adaptive-authentication-nashorn,is-test-adaptive-authentication-nashorn-with-restart,is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-federation,is-tests-federation-restart,is-tests-connection-sharing,is-tests-oid4vp,is-tests-password-update-api"
           - runner_id: 3
-            tests: "is-tests-default-configuration-parallel,is-tests-default-configuration,is-tests-oauth-client-secrets-parallel,is-tests-oauth-client-secrets,is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption,is-test-session-mgt"
+            tests: "is-tests-default-configuration-parallel,is-tests-default-configuration,is-tests-default-configuration-multi-server,is-tests-oauth-client-secrets-parallel,is-tests-oauth-client-secrets,is-tests-jdbc-userstore,is-tests-read-only-userstore,is-tests-oauth-jwt-token-gen-enabled,is-tests-email-username,is-tests-saml-query-profile,is-tests-default-encryption,is-test-session-mgt"
           - runner_id: 4
-            tests: "is-tests-with-individual-configuration-changes,is-tests-with-individual-configuration-changes-2"
+            tests: "is-tests-with-individual-configuration-changes,is-tests-with-individual-configuration-changes-3,is-tests-with-individual-configuration-changes-2,is-tests-with-individual-configuration-changes-4"
 
     services:
       mssql:
@@ -253,6 +253,7 @@ jobs:
           ALL_TESTS=(
             "is-tests-default-configuration-parallel"
             "is-tests-default-configuration"
+            "is-tests-default-configuration-multi-server"
             "is-test-rest-api"
             "is-test-rest-api-2"
             "is-tests-oauth-client-secrets-parallel"
@@ -274,7 +275,9 @@ jobs:
             "is-tests-oauth-jwt-token-gen-enabled"
             "is-tests-email-username"
             "is-tests-with-individual-configuration-changes"
+            "is-tests-with-individual-configuration-changes-3"
             "is-tests-with-individual-configuration-changes-2"
+            "is-tests-with-individual-configuration-changes-4"
             "is-tests-saml-query-profile"
             "is-tests-default-encryption"
             "is-test-session-mgt"

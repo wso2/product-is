@@ -13,6 +13,7 @@ WORKFLOW_BRANCH=${WORKFLOW_BRANCH#refs/heads/}
 declare -a ALL_TESTS=(
     "is-tests-default-configuration-parallel"
     "is-tests-default-configuration"
+    "is-tests-default-configuration-multi-server"
     "is-test-rest-api"
     "is-test-rest-api-2"
     "is-tests-oauth-client-secrets-parallel"
@@ -34,7 +35,9 @@ declare -a ALL_TESTS=(
     "is-tests-oauth-jwt-token-gen-enabled"
     "is-tests-email-username"
     "is-tests-with-individual-configuration-changes"
+    "is-tests-with-individual-configuration-changes-3"
     "is-tests-with-individual-configuration-changes-2"
+    "is-tests-with-individual-configuration-changes-4"
     "is-tests-saml-query-profile"
     "is-tests-default-encryption"
     "is-test-session-mgt"
@@ -100,7 +103,11 @@ build_and_run_integration_tests() {
     if [ "$LANES_ALLOW_PARTIAL" = "true" ]; then
       lane_args+=("-Dlanes.allowPartial=true")
     fi
-    mvn install --batch-mode -f modules/integration/tests-integration/tests-backend/pom.xml "${lane_args[@]}" | tee -a mvn-build.log
+    # The runners have 4 cores / 7.8 GB: fit two lanes by keeping this Maven JVM small (G1 returns unused heap)
+    # and the test JVMs at 1 GB, and size lanes at ~2.6 GB each.
+    lane_args+=("-Dit.testJvmHeap=1g" "-Dlanes.memoryPerLaneMb=2600" "-Dlanes.reserveMb=800")
+    MAVEN_OPTS="$MAVEN_OPTS -XX:+UseG1GC -XX:G1PeriodicGCInterval=10000 -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=30" \
+      mvn install --batch-mode -f modules/integration/tests-integration/tests-backend/pom.xml "${lane_args[@]}" | tee -a mvn-build.log
   fi
   kill $monitor 2>/dev/null || true
 }

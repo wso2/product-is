@@ -115,6 +115,10 @@ public final class TestLaneRunner {
 
     private int run() throws Exception {
 
+        // This runs inside Maven, whose heap may still hold the build's memory; give it back before measuring the
+        // machine and starting lanes (with G1, a full GC returns unused heap to the OS).
+        System.gc();
+
         String suiteText = new String(Files.readAllBytes(resourcesDir.resolve("testng.xml")),
                 StandardCharsets.UTF_8);
         List<String> declaredBlocks = blocks(suiteText, false);
@@ -384,12 +388,19 @@ public final class TestLaneRunner {
         int byCpu = Math.max(1, cores / coresPerLane);
         int byMemory = availableMb < 0 ? lanes.size() : (int) Math.max(1, (availableMb - reserveMb) / memoryPerLane);
         String forced = System.getProperty("test.lanes", "").trim();
+        // Lanes of different stages never run at the same time, so what must fit is the largest stage.
+        int concurrent = (int) lanes.stream().collect(Collectors.groupingBy(l -> l.stage, Collectors.counting()))
+                .values().stream().mapToLong(Long::longValue).max().orElse(0);
         int target = forced.matches("\\d+") && Integer.parseInt(forced) > 0
-                ? Integer.parseInt(forced) : Math.min(lanes.size(), Math.min(byCpu, byMemory));
-        System.out.println("[INFO] Machine: " + cores + " cores, " + availableMb + " MB memory available. Lanes: "
-                + lanes.size() + " configured, " + target + " used" + (forced.isEmpty() ? "" : " (-Dtest.lanes)")
-                + ".");
-        if (target >= lanes.size()) {
+                ? Integer.parseInt(forced) : Math.min(concurrent, Math.min(byCpu, byMemory));
+        System.out.println("[INFO] Machine: " + cores + " cores, " + availableMb + " MB memory available. Lanes "
+                + "running at once: " + concurrent + " configured, " + target + " used"
+                + (forced.isEmpty() ? "" : " (-Dtest.lanes)") + ".");
+        if (target >= concurrent) {
+            return lanes;
+        }
+        if (lanes.stream().anyMatch(l -> l.stage > 1)) {
+            System.out.println("[WARNING] Lanes with stages are not merged; running them as configured.");
             return lanes;
         }
         if (lanes.stream().anyMatch(l -> l.group != null || l.modes != null)) {
