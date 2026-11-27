@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.vp.template.management.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -76,7 +77,7 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     @AfterClass(alwaysRun = true)
     public void testConclude() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         if (presentationDefinitionId != null) {
             getResponseOfDelete(PRESENTATION_DEFINITIONS_API_BASE_PATH + PATH_SEPARATOR + presentationDefinitionId);
         }
@@ -89,13 +90,13 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")
@@ -163,9 +164,9 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
 
         if (!MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenant)) {
 
-            String superTenantUrl = requestBaseUri.replaceAll("/$", "")
+            String superTenantUrl = RestAssured.baseURI.replaceAll("/$", "")
                     + "/api/server/v1/presentation-definitions";
-            Response crossTenantResponse = given()
+            Response crossTenantResponse = RestAssured.given()
                     .auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                     .when()
                     .get(superTenantUrl);
@@ -187,9 +188,9 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
         String tenantAdminPass = tenantContext.getContextTenant().getTenantAdmin().getPassword();
         String tenantDomain = tenantContext.getContextTenant().getDomain();
 
-        String baseUri = requestBaseUri.replaceAll("/$", "");
+        String baseUri = RestAssured.baseURI.replaceAll("/$", "");
         String tenantAdminUrl = baseUri + "/t/" + tenantDomain + "/api/server/v1/presentation-definitions";
-        Response response = given()
+        Response response = RestAssured.given()
                 .auth().preemptive().basic(tenantAdminUser, tenantAdminPass)
                 .when()
                 .get(tenantAdminUrl);
@@ -207,7 +208,7 @@ public class PresentationDefinitionsApiSuccessTest extends PresentationDefinitio
 
         String directGetUrl = baseUri + "/t/" + tenantDomain + "/api/server/v1/presentation-definitions/"
                 + presentationDefinitionId;
-        Response directResponse = given()
+        Response directResponse = RestAssured.given()
                 .auth().preemptive().basic(tenantAdminUser, tenantAdminPass)
                 .when()
                 .get(directGetUrl);

@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.webhook.management.v1
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -85,7 +86,7 @@ public class WebhookManagementTestBase extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

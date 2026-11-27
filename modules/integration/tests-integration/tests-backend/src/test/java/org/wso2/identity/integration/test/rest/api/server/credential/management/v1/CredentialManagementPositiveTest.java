@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.credential.management.v1;
 
+import io.restassured.RestAssured;
 import org.apache.commons.lang3.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -95,13 +96,13 @@ public class CredentialManagementPositiveTest extends CredentialManagementTestBa
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @Test(description = "Test get credentials for parent org user")
@@ -128,7 +129,7 @@ public class CredentialManagementPositiveTest extends CredentialManagementTestBa
     @Test(description = "Test delete passkey credential for sub-org user")
     public void testDeletePasskeyCredentialForSubOrgUser() throws Exception {
 
-        requestBasePath = convertToOrgBasePath(this.basePath);
+        RestAssured.basePath = convertToOrgBasePath(this.basePath);
         credentialManagementRestClient.deleteUserCredential(SUB_ORG_USER_ID, TYPE_PASSKEY,
                 SUB_ORG_USER_PASSKEY_CREDENTIAL_ID);
     }
@@ -136,7 +137,7 @@ public class CredentialManagementPositiveTest extends CredentialManagementTestBa
     @Test(description = "Test delete push-auth credential for sub-org user")
     public void testDeletePushAuthCredentialForSubOrgUser() throws Exception {
 
-        requestBasePath = convertToOrgBasePath(this.basePath);
+        RestAssured.basePath = convertToOrgBasePath(this.basePath);
         credentialManagementRestClient.deleteUserCredential(SUB_ORG_USER_ID, TYPE_PASSKEY,
                 SUB_ORG_USER_PUSH_AUTH_CREDENTIAL_ID);
     }
@@ -157,7 +158,7 @@ public class CredentialManagementPositiveTest extends CredentialManagementTestBa
     @Test(description = "Test that parent org admin can view sub-org user credentials within same tenant")
     public void testGetCredentialsForSubOrgUser() throws Exception {
 
-        requestBasePath = convertToOrgBasePath(this.basePath);
+        RestAssured.basePath = convertToOrgBasePath(this.basePath);
         Credential[] subOrgUserCredentials = credentialManagementRestClient.getUserCredentials(SUB_ORG_USER_ID);
         Assert.assertNotNull(subOrgUserCredentials, "Credentials array should not be null");
     }

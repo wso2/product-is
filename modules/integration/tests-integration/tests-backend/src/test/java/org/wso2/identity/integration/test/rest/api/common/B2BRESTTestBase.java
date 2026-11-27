@@ -30,6 +30,7 @@ import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import java.rmi.RemoteException;
 import java.util.ResourceBundle;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 

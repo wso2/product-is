@@ -16,6 +16,7 @@
 
 package org.wso2.identity.integration.test.scim2.rest.api;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.apache.http.HttpHeaders;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.core.Is.is;
 import static org.wso2.identity.integration.test.scim2.SCIM2BaseTestCase.SCHEMAS_ENDPOINT;
@@ -82,7 +84,7 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
@@ -163,8 +165,8 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
      */
     private void supportEmailVerifiedClaimByDefault(boolean state) {
 
-        String basePath = requestBasePath;
-        requestBasePath = "";
+        String basePath = RestAssured.basePath;
+        RestAssured.basePath = "";
         String localClaimId = Base64.getEncoder().encodeToString(IDENTITY_EMAIL_VERIFIED_CLAIM_URI.getBytes(StandardCharsets.UTF_8));
         String body = null;
         try {
@@ -184,7 +186,7 @@ public class SCIM2SchemasTest extends SCIM2BaseTest {
                 .log().ifValidationFails()
                 .assertThat()
                 .statusCode(HttpStatus.SC_OK);
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     private String getContext() {

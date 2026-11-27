@@ -18,6 +18,7 @@ package org.wso2.identity.integration.test.rest.api.server.application.managemen
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -110,13 +111,13 @@ public class ApplicationMetadataPositiveTest extends ApplicationManagementBaseTe
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @DataProvider(name = "restAPIUserConfigProvider")

@@ -18,9 +18,11 @@
 
 package org.wso2.identity.integration.test.rest.api.server.consent.management.v2;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
+import static io.restassured.RestAssured.given;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
@@ -86,7 +88,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
     @Override
     public void testConclude() throws Exception {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         try {
             if (crossUserUserAId != null) {
                 scim2RestClient.deleteUser(crossUserUserAId);
@@ -104,7 +106,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
             if (scim2RestClient != null) {
                 scim2RestClient.closeHttpClient();
             }
-            requestBasePath = "";
+            RestAssured.basePath = "";
             super.testConclude();
         }
     }
@@ -806,7 +808,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
 
     private void setupCrossUserTestData() throws Exception {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         try {
             Response elementResponse = getResponseOfPost(ELEMENTS_ENDPOINT,
                     "{\"name\": \"consent_fail_crossuser_elem\", \"displayName\": \"Cross User Elem\","
@@ -839,7 +841,7 @@ public class ConsentManagementV2FailureTest extends ConsentManagementV2TestBase 
             consentResponse.then().assertThat().statusCode(HttpStatus.SC_CREATED);
             crossUserConsentId = consentResponse.jsonPath().getString("id");
         } finally {
-            requestBasePath = "";
+            RestAssured.basePath = "";
         }
     }
 

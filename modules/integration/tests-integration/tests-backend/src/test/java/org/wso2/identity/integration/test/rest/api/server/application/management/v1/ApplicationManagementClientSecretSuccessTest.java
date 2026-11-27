@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.application.management.v1;
 
+import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -76,7 +77,7 @@ public class ApplicationManagementClientSecretSuccessTest extends ApplicationMan
 
         /* An application is only present here when a dependent test failed before the test that deletes it ran. */
         if (StringUtils.isNotBlank(createdAppId)) {
-            requestBasePath = basePath;
+            RestAssured.basePath = basePath;
             cleanUpApplications(Collections.singleton(createdAppId));
             createdAppId = null;
         }

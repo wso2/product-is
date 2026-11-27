@@ -35,8 +35,8 @@ import org.json.JSONObject;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import io.restassured.response.Response;
+import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;
-import io.restassured.specification.RequestSpecification;
 import org.wso2.identity.integration.test.rest.api.common.RESTTestBase;
 import org.wso2.identity.integration.test.restclients.OAuth2RestClient;
 import org.wso2.identity.integration.test.rest.api.server.application.management.v1.model.ApplicationListItem;
@@ -46,33 +46,20 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 /**
  * Utility class for creating OIDC applications and obtaining M2M access tokens via OAuth2.
  */
 public final class OAuth2Util {
 
-    /**
-     * Create an OIDC application and authorize the given APIs for it.
-     *
-     * @param given                    Starts a request with the caller's base URI and base path, for example
-     *                                 {@code this::given} of a {@link RESTTestBase} subclass.
-     * @param oAuth2RestClient         OAuth2 REST client.
-     * @param apiAuthorizations        APIs to authorize, with their scopes, as JSON.
-     * @param authenticatingUserName   Username of the admin creating the application.
-     * @param authenticatingCredential Password of the admin creating the application.
-     * @return ID of the created application.
-     */
-    public static String createOIDCApplication(Supplier<RequestSpecification> given,
-                                               OAuth2RestClient oAuth2RestClient, String apiAuthorizations,
+    public static String createOIDCApplication(OAuth2RestClient oAuth2RestClient, String apiAuthorizations,
                                                String authenticatingUserName, String authenticatingCredential)
             throws IOException, JSONException {
 
         String endpointURL = "applications";
         String body = readResource("create-oidc-app-request-body.json");
 
-        Response response = given.get().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+        Response response = given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                 .contentType(ContentType.JSON)
                 .body(body).when().post(endpointURL);
         response.then()
@@ -88,7 +75,7 @@ public final class OAuth2Util {
         for (Iterator<String> apiNameIterator = jsonObject.keys(); apiNameIterator.hasNext(); ) {
             String apiName = apiNameIterator.next();
             Object requiredScopes = jsonObject.get(apiName);
-            Response apiResource = given.get().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
+            Response apiResource = given().auth().preemptive().basic(authenticatingUserName, authenticatingCredential)
                                 .when().queryParam("filter", "identifier eq " + apiName)
                                 .get("api-resources");
             apiResource.then().log().ifValidationFails().assertThat().statusCode(HttpStatus.SC_OK);
@@ -99,7 +86,7 @@ public final class OAuth2Util {
             authorizedAPIRequestBody.put("policyIdentifier", "RBAC");
             authorizedAPIRequestBody.put("scopes", requiredScopes);
 
-            Response authorizedAPIResponse = given.get().auth().preemptive()
+            Response authorizedAPIResponse = given().auth().preemptive()
                                         .basic(authenticatingUserName, authenticatingCredential)
                                         .contentType(ContentType.JSON).body(authorizedAPIRequestBody.toString()).when()
                                         .post("applications/" + applicationId + "/authorized-apis");

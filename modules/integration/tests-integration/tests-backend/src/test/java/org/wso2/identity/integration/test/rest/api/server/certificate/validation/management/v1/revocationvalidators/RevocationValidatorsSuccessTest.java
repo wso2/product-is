@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.certificate.validatio
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;
@@ -69,7 +70,7 @@ public class RevocationValidatorsSuccessTest extends RevocationValidatorsTestBas
     @Override
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @Test

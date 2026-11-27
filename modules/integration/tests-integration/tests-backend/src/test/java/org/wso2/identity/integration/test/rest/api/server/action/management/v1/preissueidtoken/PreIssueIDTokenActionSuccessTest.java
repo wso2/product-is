@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.server.action.management.v1.preissueidtoken;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.AfterClass;

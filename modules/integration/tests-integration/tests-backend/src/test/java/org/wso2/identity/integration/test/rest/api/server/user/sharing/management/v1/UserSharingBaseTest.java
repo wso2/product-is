@@ -20,6 +20,7 @@ package org.wso2.identity.integration.test.rest.api.server.user.sharing.manageme
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
@@ -198,13 +199,13 @@ public class UserSharingBaseTest extends RESTAPIServerTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void testFinish() {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     // Request Sending Methods.

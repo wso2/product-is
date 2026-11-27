@@ -54,6 +54,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.wso2.identity.integration.test.rest.api.server.application.management.v1.Utils.assertNotBlank;
@@ -131,7 +132,7 @@ public class ApplicationImportExportClientSecretTest extends ApplicationManageme
 
         /* The base class clears the RestAssured base path after every test method, so restore it before the
            cleanup calls. */
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
         cleanUpApplications(appsToCleanUp);
         for (Path temporaryFile : temporaryFiles) {
             Files.deleteIfExists(temporaryFile);

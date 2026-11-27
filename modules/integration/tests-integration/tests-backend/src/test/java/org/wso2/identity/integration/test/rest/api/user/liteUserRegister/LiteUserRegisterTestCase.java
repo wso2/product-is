@@ -18,6 +18,7 @@
 
 package org.wso2.identity.integration.test.rest.api.user.liteUserRegister;
 
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -50,13 +51,13 @@ public class LiteUserRegisterTestCase extends LiteUserRegisterTestBase {
     @BeforeMethod(alwaysRun = true)
     public void testInit() throws Exception {
 
-        requestBasePath = basePath;
+        RestAssured.basePath = basePath;
     }
 
     @AfterMethod(alwaysRun = true)
     public void endTest() throws Exception {
 
-        requestBasePath = StringUtils.EMPTY;
+        RestAssured.basePath = StringUtils.EMPTY;
     }
 
     @AfterClass(alwaysRun = true)
