@@ -478,6 +478,12 @@ public final class TestLaneRunner {
                 suite = suite.replace("<test name=\"" + block + "\"", "<test name=\"" + block + "\" enabled=\"false\"");
             }
         }
+        // The external LDAP (~100 s to start) only runs in lanes with a block that uses it.
+        List<String> ldapBlocks = Arrays.asList(System.getProperty("lanes.ldapBlocks", "").split(","));
+        if (!ldapBlocks.get(0).isEmpty() && lane.holdDir == null && lane.blocks.stream().noneMatch(ldapBlocks::contains)) {
+            suite = suite.replaceAll("[ \\t]*<class\\s+name=\"[^\"]*\\.LDAPServerInitializerTestCase\"\\s*/>[ \\t]*\\n?", "");
+            System.out.println("[INFO] " + lane.name + " doesn't start the external LDAP (none of its blocks use it).");
+        }
         if (lane.userModes != null) {
             // Only classes of the lane's own blocks matter; the others are disabled anyway.
             String kept = dropClassesWithoutModes(enabledBlocksOnly(suite), lane);

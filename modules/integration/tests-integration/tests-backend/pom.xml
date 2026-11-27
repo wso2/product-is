@@ -46,6 +46,9 @@
         <skipSurefire>true</skipSurefire>
         <!-- Heap of each test JVM (the test client; IS servers have their own settings). -->
         <it.testJvmHeap>1536m</it.testJvmHeap>
+        <!-- Blocks that use the external LDAP started by LDAPServerInitializerTestCase; lanes without any of them skip
+             starting it (~100 s). Add a block here if its tests need that LDAP. -->
+        <lanes.ldapBlocks>is-tests-default-configuration-ldap,is-tests-uuid-user-store,is-tests-read-only-userstore</lanes.ldapBlocks>
         <!-- Libraries that adaptive.sh adds to the IS pack for the Nashorn tests; keep in sync with adaptive.sh. -->
         <adaptive.nashorn.version>15.3</adaptive.nashorn.version>
         <adaptive.asm.version>9.2</adaptive.asm.version>
@@ -179,6 +182,7 @@
                                         <systemProperty><key>lanes.basedir</key><value>${basedir}</value></systemProperty>
                                         <systemProperty><key>lanes.jvmArgs</key><value>${it.argLine}</value></systemProperty>
                                         <systemProperty><key>lanes.mavenHome</key><value>${maven.home}</value></systemProperty>
+                                        <systemProperty><key>lanes.ldapBlocks</key><value>${lanes.ldapBlocks}</value></systemProperty>
                                         <!-- System properties for each lane's test JVM (same as surefire's). -->
                                         <systemProperty><key>lane.sys.maven.test.haltafterfailure</key><value>false</value></systemProperty>
                                         <systemProperty><key>lane.sys.carbon.zip</key><value>${basedir}/../../../distribution/target/wso2is-${project.version}.zip</value></systemProperty>

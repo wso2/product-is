@@ -104,8 +104,9 @@ build_and_run_integration_tests() {
       lane_args+=("-Dlanes.allowPartial=true")
     fi
     # The runners have 4 cores / 7.8 GB: fit two lanes by keeping this Maven JVM small (G1 returns unused heap)
-    # and the test JVMs at 1 GB, and size lanes at ~2.6 GB each.
-    lane_args+=("-Dit.testJvmHeap=1g" "-Dlanes.memoryPerLaneMb=2600" "-Dlanes.reserveMb=800")
+    # and the test JVMs at 1 GB.
+    # Budget measured on these runners with two lanes (run 45966249467): ~2.2 GB per lane, >= 1.8 GB left free.
+    lane_args+=("-Dit.testJvmHeap=1g" "-Dlanes.memoryPerLaneMb=2200" "-Dlanes.reserveMb=600")
     MAVEN_OPTS="$MAVEN_OPTS -XX:+UseG1GC -XX:G1PeriodicGCInterval=10000 -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=30" \
       mvn install --batch-mode -f modules/integration/tests-integration/tests-backend/pom.xml "${lane_args[@]}" | tee -a mvn-build.log
   fi
