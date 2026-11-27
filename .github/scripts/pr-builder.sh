@@ -73,11 +73,27 @@ disable_tests() {
 # Memory and load are logged every 30 s to resource-usage.log, so a runner that runs out of resources leaves evidence.
 build_and_run_integration_tests() {
   ( echo "cores=$(nproc) $(free -m | awk '/Mem:/ {print "mem_total_mb=" $2}')"
-    while true; do echo "$(date -u +%H:%M:%S) used_mb=$(free -m | awk '/Mem:/ {print $3}') avail_mb=$(free -m | awk '/Mem:/ {print $7}') swap_used_mb=$(free -m | awk '/Swap:/ {print $3}') load=$(cut -d' ' -f1 /proc/loadavg)"; sleep 30; done ) > resource-usage.log 2>&1 &
+    while true; do
+      # Memory (RSS, MB) per kind of process: IS servers, test JVMs, Maven, other.
+      procs=$(ps -eo rss=,args= | awk '
+        /awk / {next}
+        /-Dcarbon.home=/ {is+=$1; nis++; next}
+        /org.testng.TestNG/ {t+=$1; nt++; next}
+        /plexus-classworlds|org.codehaus.plexus.classworlds/ {m+=$1; next}
+        /java/ {o+=$1}
+        END {printf "is_mb=%d(%d) testjvm_mb=%d(%d) maven_mb=%d otherjava_mb=%d", is/1024, nis, t/1024, nt, m/1024, o/1024}')
+      echo "$(date -u +%H:%M:%S) used_mb=$(free -m | awk '/Mem:/ {print $3}') avail_mb=$(free -m | awk '/Mem:/ {print $7}') swap_used_mb=$(free -m | awk '/Swap:/ {print $3}') load=$(cut -d' ' -f1 /proc/loadavg) $procs"
+      sleep 30
+    done ) > resource-usage.log 2>&1 &
   local monitor=$!
   mvn clean install --batch-mode -DskipLanes=true | tee mvn-build.log
   if [ "$(grep -oE '\[INFO\] BUILD (SUCCESS|FAILURE)' mvn-build.log | tail -1)" = "[INFO] BUILD SUCCESS" ]; then
-    mvn install --batch-mode -f modules/integration/tests-integration/tests-backend/pom.xml | tee -a mvn-build.log
+    # LANES_FILE (relative to tests-backend) picks another lane layout, e.g. for an experiment on a subset.
+    local lane_args=()
+    if [ -n "$LANES_FILE" ]; then
+      lane_args=("-Dtest.lanes.file=$PWD/modules/integration/tests-integration/tests-backend/$LANES_FILE" "-Dlanes.allowPartial=true")
+    fi
+    mvn install --batch-mode -f modules/integration/tests-integration/tests-backend/pom.xml "${lane_args[@]}" | tee -a mvn-build.log
   fi
   kill $monitor 2>/dev/null || true
 }

@@ -6,6 +6,10 @@ on:
         description: "Enter PR link (ex: https://github.com/wso2-extensions/identity-inbound-auth-oauth/pull/1481). Leave empty to test the selected branch."
         default:
         required: false
+      lanes_file:
+        description: "Optional lane layout for the integration tests, relative to tests-backend (e.g. src/test/lanes/experiments/s1-rest-api.conf). Blocks not in it are skipped."
+        default:
+        required: false
   # Runs against the "base branch + queued PRs" commit that GitHub builds for
   # the merge queue.
   merge_group:
@@ -132,6 +136,7 @@ jobs:
         id: builder_step
         env:
           PR_LINK: ${{github.event.inputs.pr}}
+          LANES_FILE: ${{github.event.inputs.lanes_file}}
           JAVA_21_HOME: ${{env.J21HOME}}
         run: |
           bash .github/scripts/pr-builder.sh ${{ matrix.runner_id }} "${{ matrix.tests }}"
