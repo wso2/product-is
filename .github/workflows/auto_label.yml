@@ -97,7 +97,7 @@ jobs:
                 --arg title "$ISSUE_TITLE" \
                 --arg body "$ISSUE_BODY" \
                 '{
-                model: "claude-sonnet-4-5-20250929",
+                model: "claude-sonnet-5-5",
                 max_tokens: 50,
                 system: $system,
                 messages: [{

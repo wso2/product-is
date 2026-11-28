@@ -192,7 +192,7 @@ jobs:
           trigger_phrase: "@wso2-engineering-bot"
           claude_args: |
             --allowedTools "Bash(git:*),Bash(mkdocs:*),Bash(python3:*),Bash(pip3:*),mcp__github__create_pull_request,mcp__github__get_issue,mcp__github__search_pull_requests,mcp__github__list_branches,Edit,Read,Write,mcp__github__update_issue,mcp__github__create_branch,mcp__github__add_issue_comment,mcp__github__get_file_contents"
-            --model claude-sonnet-4-5-20250929
+            --model claude-sonnet-5-5
 
       - name: Get next queued issue
         id: get_next_queued
